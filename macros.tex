@@ -1,0 +1,153 @@
+% !TEX root = ../ccs/paper.tex
+
+% the following commands require xcolor and xpace packages
+\newcommand{\vassilis}[1]{{\color{blue} {\sc Vassilis:} \it #1}\xspace}
+\newcommand{\vvassilis}[1]{{\color{blue} \footnote{\vassilis{#1}}}}
+%\renewcommand{\vvassilis}[1]{\vassilis{#1}}
+
+\newcommand{\ana}[1]{{\color{red} {\sc Ana:} \it #1}\xspace}
+\newcommand{\aana}[1]{{\color{red} \footnote{\ana{#1}}}}
+\newcommand{\ishaq}[1]{{\color{teal} {\sc Ishaq:} \it #1}\xspace}
+\newcommand{\iishaq}[1]{{\color{teal} \footnote{\ishaq{#1}}}}
+
+\newcommand{\revised}[1]{#1}
+\newcommand{\brevised}[1]{#1}
+
+
+
+\newcommand{\rrefer}[2]{%
+    \IfEqCase{#1}{%
+        {proceedings}{\revised{See full version for details.}}%
+        {full}{\revised{See appendix~\ref{#2} for details.}}%
+        % you can add more cases here as desired
+    }[\PackageError{rrefer}{Undefined option for arg1 #1}]%
+}
+\newcommand{\refer}[1]{\rreferx{proceedings}{#1}}
+
+\newcommand{\rrefr}[3]{%
+    \IfEqCase{#1}{%
+        {proceedings}{\revised{#2}}%
+        {full}{\revised{#3}}%
+        % you can add more cases here as desired
+    }[\PackageError{rrefr}{Undefined option for arg1 #1}]%
+}
+\newcommand{\refr}[2]{\rrefr{proceedings}{#1}{#2}}
+
+\newcommand{\para}[1]{\ensuremath{{\textsf{Parallel} (#1)}\xspace}}
+
+\renewcommand{\G}{\ensuremath{\mathcal{G}}\xspace}
+\newcommand{\PA}{\ensuremath{\mathsf{PA}}\xspace}
+\renewcommand{\C}{\ensuremath{\mathcal{C}}\xspace}
+\newcommand{\mG}{\ensuremath{\bar{\mathcal{G}}}\xspace}
+\newcommand{\scheduler}{\ensuremath{\tt S}\xspace}
+\newcommand{\PPI}{\ensuremath{\Pi}\xspace}
+\newcommand{\pcost}{\ensuremath{c}\xspace}
+\newcommand{\fcost}{\ensuremath{\text{Cost}}\xspace}
+\newcommand{\scost}{\ensuremath{c}\xspace}
+\newcommand{\BB}{\ensuremath{B}\xspace}
+\newcommand{\bb}{\ensuremath{B}\xspace}
+\newcommand{\sss}{\ensuremath{\sigma}\xspace}
+\newcommand{\SSS}{\ensuremath{\Sigma}\xspace}
+\newcommand{\pibgw}{\ensuremath{\pi^{A}}\xspace}
+\newcommand{\piyao}{\ensuremath{\pi^{Y}}\xspace}
+
+
+% Ana's macros
+\newcommand{\f}{{\sf f}\xspace}
+\newcommand{\m}{{\sf m}\xspace}
+\newcommand{\n}{{\sf n}\xspace}
+\newcommand{\p}{{\sf p}\xspace}
+\newcommand{\w}{{\sf {w}}\xspace}
+\newcommand{\x}{{\sf {x}}\xspace}
+\newcommand{\y}{{\sf y}\xspace}
+\newcommand{\z}{{\sf z}\xspace}
+\renewcommand{\varv}{{\sf v}\xspace}
+\newcommand{\D}{{\sf D}\xspace}
+\newcommand{\new}{{\sf new}\xspace}
+\newcommand{\this}{{\sf this}\xspace}
+\newcommand{\unit}{{\sf unit}\xspace}
+\newcommand{\ret}{{\sf ret}\xspace}
+% macros for reference (ana)
+\newcommand\secref[1]{\S\ref{#1}}
+\newcommand\figref[1]{Fig.~\ref{#1}} 
+
+
+\newcommand{\op}{{\sf aop}\xspace}
+\newcommand{\cop}{{\sf bop}\xspace}
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\code}[1]{{\sf #1}\xspace}
+\newcommand{\squad}{\;\;\;}
+\newcommand{\trule}[1]{\textsc{\scriptsize ({#1})}}
+
+\lstset{% general command to set parameter(s)                                         
+	basicstyle=\linespread{0.8}\sffamily\small,
+	numbers=left,
+	xleftmargin=16pt,
+	escapechar=@,
+	tabsize=2,
+	columns=fullflexible
+}
+
+  \newcommand{\vnote}[1]{\stepcounter{notecount}\todo[inline,bordercolor=borderamber,linecolor=borderamber,color=lightamber]{\footnotesize{\sc \bf Vassilis:} #1}{}}
+  
+\newcommand{\A}{\ensuremath{\pi^\mathtt{A}}\xspace}
+\newcommand{\B}{\ensuremath{\pi^\mathtt{B}}\xspace}
+\newcommand{\Y}{\ensuremath{\pi^\mathtt{Y}}\xspace}
+\newcommand{\tA}{\ensuremath{\mathtt{A}}\xspace}
+\newcommand{\tB}{\ensuremath{\mathtt{B}}\xspace}
+\newcommand{\tY}{\ensuremath{\mathtt{Y}}\xspace}
+\newcommand{\sh}[1]{\ensuremath{\langle #1\rangle}\xspace}
+\newcommand{\sconv}[1]{\ensuremath{\tt #1}\xspace}
+  
+\newcommand{\impmpc}{\text{IMP-MPC}\xspace}
+\newcommand{\source}{\ensuremath{S}\xspace}
+\newcommand{\cmpc}[1]{\ensuremath{C_{\text{\tiny MPC}} (#1)}\xspace}
+\newcommand{\cssa}[1]{\ensuremath{C_{\text{\tiny SSA}} (#1)}\xspace}
+\newcommand{\linear}[1]{\ensuremath{{\textsf{Linear} (#1)}\xspace}}
+\newcommand{\sst}{\ensuremath{\texttt{st}}\xspace}
+
+
+\newlength{\saveparindent}
+\setlength{\saveparindent}{\parindent}
+\newlength{\saveparskip}
+\setlength{\saveparskip}{\parskip}
+
+
+\newcounter{ctr}
+\newcounter{savectr}
+\newcounter{ectr}
+
+\newenvironment{tiret}{%
+\begin{list}{\hspace{1pt}\rule[0.5ex]{6pt}{1pt}\hfill}{\labelwidth=15pt%
+\labelsep=3pt \leftmargin=18pt \topsep=1pt%
+\setlength{\listparindent}{\saveparindent}%
+\setlength{\parsep}{\saveparskip}%
+\setlength{\itemsep}{1pt}}}{\end{list}}
+
+\newenvironment{eenum}{%
+\begin{list}{{\rm (\arabic{ctr}.\arabic{ectr})}\hfill}{\usecounter{ectr}%
+\labelwidth=28pt\labelsep=6pt \leftmargin=34pt \topsep=0pt%
+\setlength{\listparindent}{\saveparindent}%
+\setlength{\parsep}{\saveparskip}%
+\setlength{\itemsep}{2pt} }}{\end{list}}
+
+\newenvironment{newenum}{%
+\begin{list}{{\rm \arabic{ctr}.}\hfill}{\usecounter{ctr}\labelwidth=5pt%
+\labelsep=6pt \leftmargin=11pt \topsep=.5pt%
+\setlength{\listparindent}{\saveparindent}%
+\setlength{\parsep}{\saveparskip}%
+\setlength{\itemsep}{5pt} }}{\end{list}}
+
+\newenvironment{neweenum}{%
+\begin{list}{{\rm \arabic{ctr}.\arabic{ectr}}\hfill}{\usecounter{ectr}%
+\labelwidth=28pt\labelsep=4pt \leftmargin=34pt \topsep=0pt%
+\setlength{\listparindent}{\saveparindent}%
+\setlength{\parsep}{\saveparskip}%
+\setlength{\itemsep}{2pt} }}{\end{list}}
+
+\newenvironment{parenum}{%
+\begin{list}{{\rm (\arabic{ctr})}\hfill}{\usecounter{ctr}\labelwidth=17pt%
+\labelsep=6pt \leftmargin=23pt \topsep=.5pt%
+\setlength{\listparindent}{\saveparindent}%
+\setlength{\parsep}{\saveparskip}%
+\setlength{\itemsep}{5pt} }}{\end{list}}

@@ -1,0 +1,779 @@
+% !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
+%
+% acm templates v1.57 (sigconf template)
+%
+%\documentclass[sigconf, screen, review, anonymous, natbib=false]{acmart}
+\documentclass[sigconf, screen, natbib=false, dvipsnames, table]{acmart}
+\settopmatter{printacmref=true}
+% mandatory for CCS'19
+\usepackage{balance}
+% for creating a balanced last page (usually last page with references)
+
+% defining the \BibTeX command - from Oren Patashnik's original BibTeX documentation.
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08emT\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% Rights management information. 
+% This information is sent to you when you complete the rights form.
+% These commands have SAMPLE values in them; it is your responsibility as an author to replace
+% the commands and values with those provided to you when you complete the rights form.
+%
+% These commands are for a PROCEEDINGS abstract or paper.
+
+\copyrightyear{2019} 
+\acmYear{2019} 
+\setcopyright{acmcopyright}
+\acmConference[CCS '19]{2019 ACM SIGSAC Conference on Computer and Communications Security}{November 11--15, 2019}{London, United Kingdom}
+\acmBooktitle{2019 ACM SIGSAC Conference on Computer and Communications Security (CCS '19), November 11--15, 2019, London, United Kingdom}
+\acmPrice{15.00}
+\acmDOI{10.1145/3319535.3339818}
+\acmISBN{978-1-4503-6747-9/19/11}
+
+%
+% These commands are for a JOURNAL article.
+%\setcopyright{acmcopyright}
+%\acmJournal{TOG}
+%\acmYear{2018}\acmVolume{37}\acmNumber{4}\acmArticle{111}\acmMonth{8}
+%\acmDOI{10.1145/1122445.1122456}
+
+%
+% Submission ID. 
+% Use this when submitting an article to a sponsored event. You'll receive a unique submission ID from the organizers
+% of the event, and this ID should be used as the parameter to this command.
+%\acmSubmissionID{123-A56-BU3}
+
+%
+% The majority of ACM publications use numbered citations and references. If you are preparing content for an event
+% sponsored by ACM SIGGRAPH, you must use the "author year" style of citations and references. Uncommenting
+% the next command will enable that style.
+%\citestyle{acmauthoryear}
+
+
+ \makeatletter
+ % \renewcommand{\section}{\abovedisplayskip 10\p@ \@plus3\p@ \@minus1\p@%
+ %                       \belowdisplayskip 5\p@ \@plus3\p@ \@minus1\p@%
+ %                       \abovedisplayshortskip 0pt \@plus2\p@%
+ %                       \belowdisplayshortskip 0pt \@plus2\p@ \@minus0\p@%
+ %                       \@startsection{section}{1}{\z@}%
+ %                        {-17\p@ \@plus -4\p@ \@minus -4\p@}%
+ %                        {6\p@ \@plus 4\p@ \@minus 4\p@}%
+ %                        {\normalfont\large\bfseries\boldmath
+ %                         \rightskip=\z@ \@plus 8em\pretolerance=10000 }}
+ \renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+                        {-8\p@ \@plus -4\p@ \@minus -4\p@}%
+                        {5\p@ \@plus 2\p@ \@minus 2\p@}%
+                        {\normalfont\Large\bfseries\boldmath
+                         \rightskip=\z@ \@plus 3em\pretolerance=10000 }}
+  \renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{\z@}%
+                        {-6\p@ \@plus -4\p@ \@minus -4\p@}%
+                        {1\p@ \@plus 1\p@ \@minus 0\p@}%
+                        {\normalfont\normalsize\bfseries\boldmath}}
+% \renewcommand{\paragraph}{\@startsection{paragraph}{4}{\z@}%
+%                       {-8\p@ \@plus -4\p@ \@minus -4\p@}%
+%                       {-2\p@ \@plus -0.22em \@minus -0.1em}%
+%                       {\normalfont\normalsize\bfseries}}
+ \makeatother
+
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{listings}
+% declare the path(s) where your graphic files are
+\graphicspath{{../figures/}}
+% and their extensions so you won't have to specify these with
+% every instance of \includegraphics
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+
+%\usepackage[outputdir=/Volumes/ramdisk/]{minted}
+\usepackage{minted}
+% *** MATH PACKAGES ***
+\usepackage{amsmath}
+
+
+
+% *** SPECIALIZED LIST PACKAGES ***
+\usepackage{algorithmic}
+
+
+
+
+% *** ALIGNMENT PACKAGES ***
+\usepackage{array}
+
+\usepackage{url}
+
+\usepackage[utf8]{inputenc}
+\usepackage[american]{babel}
+\usepackage[backend=biber,style=ACM-Reference-Format]{biblatex}
+\addbibresource{../library.bib} 
+\addbibresource{../cryptobib/abbrev2.bib}
+\addbibresource{../cryptobib/crypto_crossref.bib}
+
+% Used for Theorems and Definitions
+\usepackage{amsthm}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}{Remark}
+
+\usepackage{xcolor} 
+\usepackage{xspace}
+\usepackage{xstring} % required by IfEqCase
+
+\usepackage{booktabs} % better tables
+
+% ishaq: adding our macros
+\input{macros.tex}
+
+\sloppy
+\begin{document}
+\fancyhead{}
+% do not delete this code.    
+
+%
+% paper title
+% Titles are generally capitalized except for words such as a, an, and, as,
+% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+% not capitalized unless they are the first or last word of the title.
+% Linebreaks \\ can be used within to get better formatting as desired.
+% Do not put math or special symbols in the title.
+\title[Scheduling and Parallelization for MPC]{Scheduling and Parallelization for MPC}
+ 
+%
+% The "author" command and its associated commands are used to define the authors and their affiliations.
+% Of note is the shared affiliation of the first two authors, and the "authornote" and "authornotemark" commands
+% used to denote shared contribution to the research.
+\author{Muhammad Ishaq}
+\authornote{This work was done in part while the author was at RPI.}
+\email{m.ishaq@ed.ac.uk}
+%\orcid{1234-5678-9012}
+%\author{G.K.M. Tobin}
+%\authornotemark[1]
+%\email{webmaster@marysville-ohio.com}
+\affiliation{%
+    \institution{University of Edinburgh}
+    %\streetaddress{P.O. Box 1212}
+    \city{Edinburgh}
+    \state{Scotland}
+%    \postcode{43017-6221}
+}
+
+\author{Lindsey Kennard}
+\email{kennal@rpi.edu}
+\affiliation{%
+    \institution{Rensselaer Polytechnic Institute}
+    %\streetaddress{1 Th{\o}rv{\"a}ld Circle}
+    \city{Troy}
+    \state{New York}
+    %\country{Iceland}
+}
+
+\author{Ana L. Milanova}
+\email{milanova@cs.rpi.edu}
+\affiliation{%
+    \institution{Rensselaer Polytechnic Institute}
+    %\streetaddress{1 Th{\o}rv{\"a}ld Circle}
+    \city{Troy}
+    \state{New York}
+    %\country{Iceland}
+}
+
+\author{Vassilis Zikas}
+\authornote{This work was done in part while the author was visiting UCLA and supported in part by DARPA and SPAWAR under contract N66001-15-C-4065 and by a SICSA Cyber Nexus Research Exchanges grant.}
+\email{vzikas@inf.ed.ac.uk}
+%\orcid{1234-5678-9012}
+%\author{G.K.M. Tobin}
+%\authornotemark[1]
+%\email{webmaster@marysville-ohio.com}
+\affiliation{%
+    \institution{University of Edinburgh} 
+    %\streetaddress{P.O. Box 1212}
+    \city{Edinburgh}
+    \state{Scotland}
+    %    \postcode{43017-6221}
+}
+
+
+%
+% By default, the full list of authors will be used in the page headers. Often, this list is too long, and will overlap
+% other information printed in the page headers. This command allows the author to define a more concise list
+% of authors' names for this purpose.
+%\renewcommand{\shortauthors}{Trovato and Tobin, et al.}
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract
+\begin{abstract}
+
+
+\end{abstract}
+
+
+%
+% The code below is generated by the tool at http://dl.acm.org/ccs.cfm.
+% Please copy and paste the code instead of the example below.
+%
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10003752.10010124.10010138.10010143</concept_id>
+<concept_desc>Theory of computation~Program analysis</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10003752.10003777.10003789</concept_id>
+<concept_desc>Theory of computation~Cryptographic protocols</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10002978.10002979</concept_id>
+<concept_desc>Security and privacy~Cryptography</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Theory of computation~Program analysis}
+\ccsdesc[500]{Theory of computation~Cryptographic protocols}
+\ccsdesc[300]{Security and privacy~Cryptography}
+
+%
+% Keywords. The author(s) should pick words that accurately describe the work being
+% presented. Separate the keywords with commas.
+\keywords{protocol mixing; linear programming; multiparty computation; program analysis; cryptography}
+
+
+\begin{comment}
+%
+% A "teaser" image appears between the author and affiliation information and the body 
+% of the document, and typically spans the page. 
+\begin{teaserfigure}
+    \includegraphics[width=\textwidth]{sampleteaser}
+    \caption{Seattle Mariners at Spring Training, 2010.}
+    \Description{Enjoying the baseball game from the third-base seats. Ichiro Suzuki preparing to bat.}
+    \label{fig:teaser}
+\end{teaserfigure}
+\end{comment}
+%
+% This command processes the author and affiliation and title information and builds
+% the first part of the formatted document.
+\maketitle
+
+
+\section{Introduction}
+\label{sec:introduction}
+
+In this short paper we define the problem of \emph{optimal parallelization} for Multi-party Computation (MPC), 
+set it apart from classical work on parallelization for High-performance Computing (HPC), present preliminary 
+results, and set directions for future research. 
+
+\ana{1. Intro to MPC (from a PL point of view). Define the problem.}
+
+\ana{2. Difference with HPC. Why "optimal HPC" = "minimal delay" is NOT "optimal MPC"}
+
+\ana{3. Results statement.}
+
+\ana{4. Future directions.}
+
+% no \IEEEPARstart
+
+\section{Scheduling in MPC}
+
+For this treatment we make the following simplifying assumptions:
+
+\begin{enumerate}
+\item All statements in the program execute using the same protocol (sharing). That is, there is no share conversion.
+\item All MPC instructions have the same unit cost, 1 unit.
+\item There is unlimited bandwidth---i.e., a single MPC-instruction costs as much as $N$ amortized instructions, namely 1 unit.
+\item MPC instructions scheduled in parallel benefit from amortization \emph{only if} they are the same instruction. Given our previous assumption, 
+2 MUL instructions scheduled in parallel benefit from amortization and cost 1, however a MUL and a MUX instructions scheduled 
+in parallel still cost 2.
+\end{enumerate}
+
+\paragraph{Problem 1:} Given a dependence graph of MPC instructions, find the \emph{loop-body} schedule 
+with \emph{minimal cost}.
+
+%\begin{figure*}[tbhp]
+\begin{figure*}[tbhp]
+\begin{tabular}{llll}
+\begin{minipage}[b]{4.25cm}
+
+\begin{minted}[fontsize=\footnotesize, linenos, numbersep=5pt, escapeinside=||]{java}
+for (int i=1; i<=N; i++) {
+  A: A[i] = f_1(B[i]);
+  B: B[i] = f_2(A[i],D[i-1]);
+  C: C[i] = f_3(A[i],D[i-1]);
+  D: D[i] = f_4(B[i],C[i]);
+}
+\end{minted}
+\end{minipage} 
+
+&
+
+\begin{minipage}[b]{4.25cm}
+\includegraphics[width=0.5\textwidth]{figs/dependenceGraph.pdf}
+\end{minipage}
+
+
+&
+
+\begin{minipage}[b]{4.25cm}
+\includegraphics[height=0.15\textheight]{figs/MPCloop.pdf}
+\end{minipage}
+
+&
+
+\begin{minipage}[b]{4.25cm}
+\includegraphics[height=0.20\textheight]{figs/MPCaccrossLoop.pdf}
+\end{minipage}
+\\
+
+
+(a) Source 
+&
+(b) Dependence graph
+&
+(c) Loop-body schedule
+&
+(d) Across-loop schedule
+
+\end{tabular}
+\caption{(a) shows the source code, taken from Aiken and Nicolau~\cite{Aiken:1988}, 
+(b) shows the dependence graph. The solid edges denote within-iteration ordering constraints, e.g., A must run before B
+because B depends on A. The dashed edges denote across-iteration ordering constraints, e.g., B(2), i.e., B in iteration 2
+depends on D(1), i.e., D in iteration 1. (c) shows the optimal loop-body schedule, and (d) shows the
+optimal across-loop schedule. A(1), B(1), etc. denote instruction A in iteration 1, etc.}
+\label{fig:MPCexample}\vspace{-2ex}
+\end{figure*}
+
+\paragraph{Problem 2:} Given a dependence graph of MPC instructions representing a loop body (or given a loop-body schedule), 
+find the \emph{across-loop} schedule with  \emph{minimal cost}.
+
+\figref{fig:MPCexample} illustrates the problem with a code example from the classical high-performance computing (HPC) literature. 
+\figref{fig:MPCexample}(c) shows the optimal loop-body schedule (answer to Problem 1). Instructions B and C can be scheduled in parallel, 
+however, the schedule does not necessarily benefit form parallelization/amortization. If B and C (functions $f_1$ and $f_2$) are the \emph{same}
+MPC instruction (e.g., both are MUX, MUL, ADD, or CMP, etc.), then they \emph{can} benefit from parallelization/amortization. Given
+our assumptions stated above, the cost of running the loop-body schedule is 3. However, if B and C are different MPC-instructions,
+e.g., B is MUL, but C is MUX, then the cost of running the schedule is 4. 
+
+\figref{fig:MPCexample}(d) shows the optimal across-loop schedule (answer to Problem 2). We can schedule all A-instructions, across all iterations, 
+in parallel, as A depends only on the initial value of B. We cannot do better but schedule B, C, and D sequentially, as they each depend on values
+computed in the previous iteration. Again, if B and C are the same instruction, the optimal across-loop schedule will have cost of $1 + 2N$, 
+and if B and C are NOT the same instruction, then it will have cost $1+3N$.
+
+
+
+
+
+
+
+\section{Scheduling in HPC}
+
+In this section, we state the classical HPC scheduling problem, and argue the MPC scheduling problem poses unique challenges.
+
+Similar problems arise in the HPC setting.
+
+%\begin{figure*}[tbhp]
+\begin{figure*}[tbhp]
+\begin{tabular}{lll}
+
+
+\begin{minipage}[b]{4.25cm}
+\includegraphics[width=0.4\textwidth]{figs/HPCloop.pdf}
+\end{minipage}
+
+&
+
+\begin{minipage}[b]{4.25cm}
+\includegraphics[width=0.4\textwidth]{figs/HPCdoacrossLoop.pdf}
+\end{minipage}
+
+&
+
+\begin{minipage}[b]{4.25cm}
+\includegraphics[width=0.6\textwidth]{figs/HPCgreedyLoop.pdf}
+\end{minipage}
+
+\\
+
+(a) Loop-body schedule
+&
+(b) Doacross across-loop schedule
+& 
+(c) Greedy across-loop schedule
+
+\end{tabular}
+\caption{Optimal HPC schedules.}
+\label{fig:HPCexample}\vspace{-2ex}
+\end{figure*}
+
+
+\paragraph{Problem 1:} Given a loop body (i.e., dependence graph), find the loop-body schedule with \emph{minimal delay}. 
+
+\paragraph{Problem 2:} Given a loop body (or a loop-body schedule), find the \emph{doacross} schedule with minimal delay.
+
+\paragraph{Problem 3:} Given a loop body (or a loop-body schedule), find the \emph{greedy schedule} with minimal delay.
+
+\figref{fig:HPCexample} illustrates the problem in HPC. \figref{fig:HPCexample}(a) shows the optimal loop-body schedule
+which results in cost of 3. Again, we assume that all instructions have the same cost, a unit of 1. The key difference with the 
+MPC schedule is that regardless of whether B and C are the same instruction opcode or not, B and C can be scheduled 
+to run in parallel and the overall running time benefits from parallelization. 
+
+The HPC literature has considered different kinds of across-loop scheduling. One scheduling, called \emph{doacross}~\cite{aiken,cytron},
+requires that all instructions in an iteration are scheduled on the same processor. The optimal doacross schedule for our example
+is shown in \figref{fig:HPCexample}(b) (taken directly from~\cite{aiken}). Aiken and Nicolau proposed a new schedule,
+which they called \emph{greedy} schedule, where instructions in an iteration can be scheduled on different processors. 
+The optimal greedy schedule for our example, which achieves better minimal delay than the optimal doaccross schedule, 
+is shown in \figref{fig:HPCexample}(c) (again, taken directly from~\cite{aiken}). 
+
+\ana{Here we have to make the argument that MPC is different from HPC.}
+The example illustrates that optimal MPC scheduling and optimal HPC scheduling are different problems.
+
+
+
+
+%\section{\bf Preliminaries}
+%\label{sec:preliminaries}
+
+\ana{Relevant papers/books: 
+
+\begin{enumerate}
+
+\item Book: "Scheduling and automatic parallelization", Springer 2000, by Alain Darte, Yves Robert and Frederic Vivien. 
+This book describes scheduling and parallelization in HPC: given a dependence graph and unlimited 
+number of processors, one can compute an optimal (minimal delay) schedule in polynomial time. 
+Given a finite number of processors, computing an optimal schedule becomes NP-hard.
+
+\item https://theory.stanford.edu/~aiken/publications/papers/pldi88.pdf. "Optimal loop parallelization", PLDI 1988, by
+Alex Aiken and Alex Nicolau. 
+Given a dependence graph of the loop body, computes an optimal parallelization across loop iterations. 
+The optimality metric is minimal delay. E.g., assuming 2 iterations, the delay is measured by the number 
+of instructions in iteration 2 that are lagging behind iteration 1. 
+
+\item https://www.cs.indiana.edu/~achauhan/Teaching/B629/2006-Fall/CourseMaterial/1998-popl-knobe-arrayssa.pdf.
+"Array SSA", POPL 1998, by Kathleen Knobe and Vivek Sarkar. This paper defines an SSA form for arrays which I think 
+is crucial for parallelization across loop iterations.
+
+\end{enumerate}
+}
+
+\section{Loop Body Parallelization}
+\label{sec:parallelization_within_loop}
+%\input{../sections/analysis.tex}
+
+We first consider the answer to Problem 1 (in MPC). 
+We argue that optimal parallelization within a loop body is NP-complete (under the above stated assumptions). 
+Therefore, compilers must resort to heuristics to compute a schedule for the instructions within a loop body.
+
+We consider two operations, call them $A$ and $M$. Each instruction in the program is either an $A$-instruction or
+an $M$-instruction. In order to benefit from parallelization/amortization, we must schedule two or more 
+$A$-instructions in the same parallel node (or two or more $M$-instructions in the same parallel node). 
+Scheduling $A$-instructions in parallel with $M$-instruction does not benefit from amortization.
+It incurs the exact same cost as scheduling the $A$-instructions in a node $P_A$, scheduling the $M$-instructions 
+in a node $P_M$, and having $P_A$ precede $P_M$ in the parallel schedule. This is the difference 
+between classical scheduling, as studied in parallel computing, and MPC scheduling. 
+
+We make the following assumptions:
+
+\begin{enumerate}
+
+\item $A$ and $M$ are of equal cost, 1 unit.
+\item There is unlimited bandwidth---i.e., a single $A$-instrution (or $M$-instruction) costs as much as $N$ amortized $A$-instructions 
+(or $M$-instructions), namely 1 unit.
+ 
+\end{enumerate}
+
+Consider a loop body that consists of $n$ sequences: $S_1$, ... $S_n$ of $A$ and $M$ instructions. 
+More precisely, the loop body is such that its instructions can be grouped into such sequences. 
+$S_1$, ... $S_n$ can execute in parallel, however, all instructions within a sequence must 
+execute sequentially. For example, consider the three sequences (the right arrow indicates a \emph{dependence},
+meaning that the source node must execute before the target node): 
+\begin{enumerate}
+\item $A \rightarrow M \rightarrow A$
+\item $A \rightarrow A \rightarrow A$
+\item $M \rightarrow A \rightarrow M$
+\end{enumerate} 
+
+A \emph{schedule} $P: P_1 \rightarrow P_2 \dots \rightarrow P_k$ is such that for each sequence 
+$S_i$ in the set, if $S_i[k]$ precedes $S_i[k']$ in $S_i$ then $S_i[k]$ is scheduled in node $P_l$, $S_i[k]$ 
+is scheduled in node $P_{l'}$, and $P_l$ precedes $P_{l'}$ in $P$. 
+
+The cost of a schedule $P$ is 
+\[\mathit{cost}(P) = \sum_{i=1}^k \mathit{cost}(P_i)\]
+where $\mathit{cost}(P_i) = 1$ if $P_i$ consists of $A$-instructions only, or $M$-instructions only, 
+and $\mathit{cost}(P_i) = 2$ if $P_i$ mixes $A$-instructions and $M$-instructions. 
+
+The problem is to find a schedule $P$ with \emph{minimal cost}. For example, 
+a schedule with minimal cost for the sequences above is
+\[ A(1), A(2) \rightarrow M(1), A(2), M(3) \rightarrow A(1), A(2), A(3) \rightarrow M(3) \]
+(The parentheses above indicate the sequence where the instruction comes from: (1), (2), or (3).)
+The cost of this schedule is 5. 
+
+The problem of finding a schedule with minimal cost 
+easily reduces to the problem of finding a \emph{shortest common supersequence}, 
+a known NP-complete problem \ana{citation needed}. To see the reduction, 
+suppose $P$ is a schedule with minimal cost (computed by a black-box algorithm). 
+We can derive a schedule $P'$ with the same cost as $P$, by mapping each mixed node $P_i \in P$ 
+to two consecutive nodes in $P'$: an $A$-instruction node followed by an $M$-instruction node.
+Clearly, $P'$, which now is a sequence of $A$'s and $M$'s, is a supersequence of each sequence 
+$S_i$, i.e., $P'$ is a common supersequence 
+of $S_1 \dots S_n$. It is also a shortest common supersequence. (To see this, suppose, a 
+shorter common supersequence, $P''$, exists. $P''$ is a schedule of $S_1 \dots S_n$
+and the $\mathit{cost}(P'')$ equals the length of $P''$. Since $P'$ is longer than
+$P''$, and $\mathit{cost}(P') = \mathit{cost}(P)$, that means $\mathit{cost}(P'') < \mathit{cost}(P)$, 
+which is a contradiction since $P$ is a schedule with minimal cost.)
+
+\ana{Question: are these two assumptions too strong?} 
+
+\ana{Assumption 1 can be relaxed --- e.g., if $A$ is 5 times cheaper than $M$, 
+we can construct a program where all $A$'s are sequences of five consecutive 
+$A$'s, which reduces to the previous problem.}
+
+\ana{Assumption 2, I am not sure if this is acceptable, or maybe it is too strong. 
+My intuition is that incorporating into the cost a dependence on the number 
+of instructions in each parallel node, is going to make the problem harder, not easier...}
+
+\section{Optimal Loop Parallelization} 
+\label{sec:optimal_loop_parallelization}
+%\input{../sections/optimal_loop_parallelization.tex}
+
+\ana{Aiken's and Array SSA to define the notion of optimal loop parallelization for MPC.}
+
+We now consider the answer to Problem 2 (in MPC). 
+
+\subsection{Problem Overview} 
+
+Recall Problem 2, given a loop-body schedule, compute the across-loop schedule
+with minimal cost. The following examples illustrate. The first example is the inner 
+product computation, and the second is Aiken and Nicolau's example.
+
+\begin{tabular}{lll}
+\begin{lstlisting}[language=Java]
+A = ...
+B = ...
+ip = 0;
+for (i=1; i<=N; i++) {
+  t=A[i]*B[i];
+  ip=ip+t;
+}	
+
+\end{lstlisting}
+& 
+~
+&
+\begin{lstlisting}[language=Java]
+A = ...
+B = ...
+ip = 0;
+for (i=1; i<=N; i++) {
+  if (i%step5==1) para(t[i],...,t[i+step])
+  if (i%step6==1) ip = ip + t[i];
+}  
+\end{lstlisting}
+
+\end{tabular}
+
+\ana{More to introduce what the schedule is.}
+
+In the above example {\sf step5} is N, meaning that all N multiplications are executed in parallel.
+In contrast, {\sf step6} is 1, meaning that the summation statements are executed sequentially.
+
+A more interesting example involves array reads and writes. We return to the Aiken and Nicolau
+example:
+
+\begin{tabular}{lll}
+\begin{lstlisting}[language=Java]
+for (i=1; i<=N; i++) {
+  A[i]=f1(B[i]);
+  B[i]=f2(A[i],D[i-1]);
+  C[i]=f3(A[i],D[i-1]);
+  D[i]=f4(B[i],C[i]);
+}	
+
+\end{lstlisting}
+& 
+~
+&
+\begin{lstlisting}[language=Java]
+for (i=1; i<=N; i++) {
+  if (i%N==1) para(A[i]=f1(B[i]),...);
+  if (i%1==1) para(B[i]=f2(A[i],D[i-1]),...);
+  if (i%1==1) para(C[i]=f3(A[i],D[i-1]),...);
+  if (i%1==1) para(D[i]=f4(B[i],C[i]),...);
+}	
+\end{lstlisting}
+
+\end{tabular}
+
+The above across-loop schedule means that the first instruction is parallelized---all
+N instructions A can be computed at once because each depends only on {\sf B[i]}, which
+is assigned outside of the loop. In contrast, subsequent instructions are executed 
+sequentially. Take B, for example. There is a dependence ``cycle'' from {\sf B[i]} 
+to {\sf D[i]} then {\sf B[i+1]} in the subsequent iteration. (The cycle is shown in~\figref{fig:MPCexample}(b).) 
+{\sf B[i]}'s cannot be computed in parallel because each one depends on the {\sf B[i]} 
+value computed in the previous iteration.
+
+Now consider the above code but slightly modified. {\sf B[i]} and {\sf C[i]} are now 
+computed based on the value of {\sf D[i]} from two iterations ago.
+
+\begin{tabular}{lll}
+\begin{lstlisting}[language=Java]
+for (i=1; i<=N; i++) {
+  A[i]=f1(B[i]);
+  B[i]=f2(A[i],D[i-2]);
+  C[i]=f3(A[i],D[i-2]);
+  D[i]=f4(B[i],C[i]);
+}	
+
+\end{lstlisting}
+& 
+~
+&
+\begin{lstlisting}[language=Java]
+for (i=1; i<=N; i++) {
+  if (i%N==1) para(A[i]=f1(B[i]));
+  if (i%2==1) para(B[i]=f2(A[i],D[i-2]));
+  if (i%2==1) para(C[i]=f3(A[i],D[i-2]));
+  if (i%2==1) para(D[i]=f4(B[i],C[i]));
+}	
+\end{lstlisting}
+
+\end{tabular}
+
+{\sf B[i]} still depends on values computed in earlier iterations, but one of the values, D[i-2] 
+is two iterations earlier. Thus, we can take parallelization steps of 2, e.g., computing 
+{\sf B[1]} and {\sf B[2]} in parallel, then {\sf B[3]} and {\sf B[4]} in parallel, etc.
+Note however, that we cannot take a parallelization step larger than 2.
+The value of B will depend on a value being computed in parallel.
+
+To simplify, we assume that a loop-body schedule is a straight line. \ana{What does this mean?}
+\ana{Will we relax?}
+The problem therefore becomes: compute the maximal parallelization 
+step allowed for each statement. This will account for an MPC schedule with
+minimal cost. \ana{Why?}
+
+\subsection{Preliminaries}
+
+\ana{1. MPC-Source}
+
+%\begin{figure*}[tbhp]
+\begin{figure}[tbhp]
+\begin{tabular}{ll}
+\begin{minipage}[b]{4.25cm}
+
+\begin{minted}[fontsize=\footnotesize, linenos, numbersep=5pt, escapeinside=||]{java}
+// returns val%mod    
+int rem(int val, int mod) {
+  int rem = 0;
+  for (int j = LEN-1; j |$\ge$| 0; j--) 
+  {
+    rem = rem << 1;
+    // rem[0] = val[j]                                                                                                            
+    rem = rem + ((val>>j)&1);   
+    if (rem |$\ge$| mod) 
+    {
+      rem = rem - mod;
+    }
+  }    
+  return rem;
+}
+\end{minted}
+\end{minipage} 
+
+&
+
+\begin{minipage}[b]{4.25cm}
+\begin{minted}[fontsize=\footnotesize, linenos, numbersep=5pt, escapeinside=||]{java}
+// begin inlined rem
+int rem0 = 0;
+for (int j = LEN-1; j >= 0; j--) 
+{
+  rem1 = (j==LEN-1) ? rem0 : rem5;
+  rem2 = rem1 << 1;
+  rem3 = rem2 + (x1>>j)&1; 
+  rem4 = rem3 - y1;
+  cnd1 = CMP(rem3 >= y1);
+  rem5 = MUX(rem3,rem4,cnd1);
+}  
+// end inline rem        
+\end{minted}
+\end{minipage}
+\\
+
+(a) Source 
+&
+(c) MPC-source
+
+\end{tabular}
+\caption{(a) shows standard (IMP-like) source for an MPC-friendly implementation 
+of integer division~\cite{Demmler}, and (b) shows MPC-source. Line 5 {\sf rem1 = (j==LEN-1) ? rem0 : rem5;} 
+is what we call a {\em pseudo-$\phi$} node. Note that the {\sf if}-statement on left
+becomes straight-line code in MPC. The program \emph{runs both branches}, and 
+at the end runs the conditional of the if-statement followed by the multiplexer. 
+If {\sf cnd1} is {\sf true}, then {\sf rem} gets assigned the value along the left branch;
+otherwise, it gets assigned the value along the right branch.}
+    \label{fig:example}\vspace{-2ex}
+\end{figure}
+
+
+\paragraph{MPC-Source.} MPC-Source is an SSA-based intermediate representation
+of MPC programs~\cite{ccs paper}. MPC-Source is, essentially, a straight-line sequence
+of ``components'', where each ``component'' is either a nested for-loop sequence (called for-loop block), 
+or a simple MPC-statement. \figref{fig:example} shows an example. MPC-Source can be constructed
+in a standard way from an SSA-translation of the source---each branch of an 
+{\sf if}-statement is added to the sequence, the conditional becomes an MPC comparison (CMP), 
+and the $\phi$-node becomes an MPC multiplexer (MUX). 
+
+\paragraph{Array SSA.} The other essential concept we build upon is Array SSA. Originally proposed 
+
+\ana{3. MPC-Source with Array SSA}
+
+\begin{lstlisting}[language=Java,escapeinside=`']
+for (i=1; i<=N; i++) {
+
+  Invariant: @A1[j] == j if `$j < i$', @A1[j] == 0 otherwise
+
+  A1 = `$\phi$'(A3,A0); @A1 = max(A3,A0);  
+  B1 = `$\phi$'(B3,B0); @B1 = max(B3,B0);
+  C1 = `$\phi$'(C3,C0); @C1 = max(C3,C0);
+  D1 = `$\phi$'(D3,D0); @D1 = max(D3,D0);
+
+  A2[i] = f1(B1[i]); @A2[i] = i;
+  A3 = `$\phi$'(A2,A1); @A3 = max(A2, A1);
+  B2[i] = f2(A3[i],D1[i-1]); @B2[i] = i;
+  B3 = `$\phi$'(B2,B1); @B3 = max(B2, B1);
+  C3[i] = f3(A3[i],D1[i-1]); @C2[i] = i;
+  C3 = `$\phi$'(C2,C1); @C3 = max(C2, C1);
+  D3[i] = f4(B3[i],C3[i]); @D2[i] = i;
+  D3 = `$\phi$'(D2,D1); @D3 = max(D2, D1); 
+}
+\end{lstlisting}
+
+"Index invariant" makes an assertion about when A[i] is written as a function of i.
+\ana{Figure out how to reason about cycles based on Array SSA.}
+
+\subsection{Algorithm}
+
+for a statement x = f(y,z), follow the reverse def-use link.
+
+\section{Future Work}
+\label{sec:implementation_and_benchmarks}
+%\input{../sections/implementation_and_benchmarks.tex}
+%\input{../sections/evaluation.tex}
+
+\section{Conclusions}
+\label{sec:conclusion}
+%\input{../sections/conclusion.tex}
+
+%\begin{acks}
+%    \ishaq{TODO}
+%\end{acks}
+
+\printbibliography
+
+% that's all folks
+\end{document}
+
+
