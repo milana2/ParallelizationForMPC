@@ -118,6 +118,7 @@
 \newtheorem{lemma}{Lemma}
 \theoremstyle{definition}
 \newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
 
 \usepackage{xcolor} 
 \usepackage{xspace}
@@ -277,6 +278,8 @@ results, and set directions for future research.
 
 \ana{4. Future directions.}
 
+\ana{Scope of paper: Should we expand towards 1) nested loops, 2) conversions, 3) implementation (what will we be saying with an implementation?)}
+
 % no \IEEEPARstart
 
 \section{Scheduling in MPC}
@@ -343,8 +346,9 @@ for (int i=1; i<=N; i++) {
 \caption{(a) shows the source code, taken from Aiken and Nicolau~\cite{Aiken:1988}, 
 (b) shows the dependence graph. The solid edges denote within-iteration ordering constraints, e.g., A must run before B
 because B depends on A. The dashed edges denote across-iteration ordering constraints, e.g., B(2), i.e., B in iteration 2
-depends on D(1), i.e., D in iteration 1. (c) shows the optimal loop-body schedule, and (d) shows the
-optimal across-loop schedule. A(1), B(1), etc. denote instruction A in iteration 1, etc.}
+depends on D(1), i.e., D in iteration 1; in the HPC literature these are known as loop-carried dependencies. 
+(c) shows the optimal loop-body schedule, and (d) shows the optimal across-loop schedule. A(1), B(1), etc. denote 
+instruction A in iteration 1, etc.}
 \label{fig:MPCexample}\vspace{-2ex}
 \end{figure*}
 
@@ -538,6 +542,16 @@ of instructions in each parallel node, is going to make the problem harder, not 
 \section{Optimal Loop Parallelization} 
 \label{sec:optimal_loop_parallelization}
 %\input{../sections/optimal_loop_parallelization.tex}
+
+
+The ``constant rate'' assumption states that a statement $A$ depends on 
+itself at a ``constant rate'', i.e., there cannot be a case where $A(i)$ depends 
+on $A(j), j<i$ and on $A(k), k<i$ s.t. $i \neq j$. \ana{Why the constant rate assumption?}
+
+\begin{assumption} Let $A(j) \dashrightarrow \cdot \longrightarrow A(i)$ be a dependence chain,
+where the dashed arrow denotes the loop carried dependence. For every 
+$A(j) \dashrightarrow \cdot \longrightarrow A(i)$ we have $i = j+m$ for some constant $m$.
+\end{assumption}
 
 \ana{Aiken's and Array SSA to define the notion of optimal loop parallelization for MPC.}
 
