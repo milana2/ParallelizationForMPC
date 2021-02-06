@@ -1,0 +1,22 @@
+digraph G {
+	node [style=rounded,shape=box]
+
+	b0 -> b1
+	b1 -> b2
+	b2 -> b3
+	b3 -> b4
+	b3 -> b5
+	b4 -> b6
+	b5 -> b6
+	b2 -> b6
+	b6 -> b7
+	
+	b0 [label="z = 0;"];
+	b1 [label="..."];
+	b2 [label="if(x > 0)"];
+	b3 [label="if(y > 0)"];
+	b4 [label="z = 1;"];
+	b5 [label="z = -1;"];
+	b6 [label="z = φ(...);"];
+	b7 [label="print(z)"];
+}

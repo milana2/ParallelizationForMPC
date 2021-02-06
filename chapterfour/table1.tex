@@ -1,0 +1,81 @@
+\begin{table}[!h]
+\small\captionsetup{justification=raggedright,width=\linewidth}
+\begin{tabularx}{\textwidth} { 
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X }
+\midrule
+Program Name & Equivalence Assumption & Maintains Constant Rate & Non Vectorized Cost & Vectorized Cost \\
+\midrule
+BothSeqVec & y & y & 2n & log2(n) + 1 \\
+CryptoNets1 & y & y & 6n & 6 \\
+CryptoNets2 & y & y & 0 & 0 \\
+CryptoNets3 & y & y & 0 & 0 \\
+CryptoNets4 & y & y & 16n & log2(n) + 15 \\
+CryptoNets5 & y & y & 0 & 0 \\
+DB_JOIN1 & y & y & 5n & 5 \\
+DB_JOIN2 & y & y & n & 1 \\
+DB_JOIN3 & y & y & 0 & 0 \\
+DB_JOIN3_FIXED & y & y & 2n & 2 \\
+DB_JOIN_TWO1 & y & y & n & 1 \\
+DB_JOIN_TWO2 & y & y & 4n & 4 \\
+GAUSS1 & y & y & 0 & 0 \\
+GAUSS2 & y & y & 3n & 3 \\
+HPL_dgemm1 & y & y & 2n & log2(n) + 1 \\
+HPL_dtrsv1 & y & y & 2n & log2(n) + 1 \\
+HPL_logsort1 & y & y & 10n & 10 \\
+MNIST1 & y & y & 6n & 6 \\
+MNIST2 & y & y & 4n & log2(n) + 3 \\
+PDTrans1 & y & y & n & log2(n) \\
+Sequential & y & y & n & 1 \\
+Stream1 & y & y & 5n & 5 \\
+Stream2 & y & y & 8n & log2(n) + 7 \\
+\end{tabularx}
+\caption{Results of analysis of MPC loops taken from \cite{Buscher2018}.}
+\label{table:resultstablehycc}
+\end{table}
+
+
+\begin{table}[!h]
+\small\captionsetup{justification=raggedright,width=\linewidth}
+\begin{tabularx}{\textwidth} { 
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}X }
+\midrule
+Program Name & Equivalence Assumption & Maintains Constant Rate & Non Vectorized Cost & Vectorized Cost \\
+\midrule
+Test0 & y & y & 4n & 2n \\
+Test1 & y & y & 8n & log2(n) + 7 \\
+Test10 & y & y & 4n & 2n \\
+Test11 & y & y & 4n & 2n \\
+Test12 & y & y & 24n & 3log2(n) + 21 \\
+Test13 & y & y & 4n & 2n \\
+Test14 & y & y & 4n & 2n \\
+Test15 & y & y & 2n & log2(n) + 1 \\
+Test16 & y & y & 5n & 2log2(n) + 5 \\
+Test17 & y & y & 2n & 2 \\
+Test18 & y & y & 4n & n + log2(n) \\
+Test19 & y & y & 3n & 3n \\
+Test2 & y & y & 3n & 3n \\
+Test20 & y & y & 0 & 0 \\
+Test21 & y & y & 4n & 4 \\
+Test22 & y & y & 7n & 7 \\
+Test23 & y & y & 5n & 5 \\
+Test3 & y & y & 2n & 2 \\
+Test4 & y & y & 7n & log2(n) + 6 \\
+Test5 & y & y & 11n & 2log2(n) + 9 \\
+Test6 & y & y & 14n & 2log2(n) + 12 \\
+Test7 & y & y & 0 & 0 \\
+Test8 & y & y & 23n & 3log2(n) + 20 \\
+Test9 & y & y & 23n & 3log2(n) + 20 \\
+Vectorized & y & y & n & log2(n) \\
+InnerProduct & y & y & 2n & log2(n) + 1 \\
+\end{tabularx}
+\caption{Results of analysis of micro benchmarks. }
+\label{table:resultstablemicro}
+\end{table}

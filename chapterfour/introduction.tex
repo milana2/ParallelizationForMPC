@@ -1,0 +1,37 @@
+\section{Introduction}
+\label{sec:intro}
+
+%\ana{Lindsey, look at the figures to format some of them and put the period at the end of the caption if it's missing.}
+
+As the demand for cloud computation has increased so has the demand for secure solutions 
+for cloud platforms. In the last decade cloud serves have become an almost \$100 billion industry. 
+\cite{Synergy2019}. This high consumer demand, as well as the need for high security within these
+frameworks has fueled research into varying cryptographic concepts like Multiparty Computation and 
+Homomorphic Encryption. 
+
+Researchers have proposed different encryption schemes to support 
+a variety of operations, allowing for larger and larger subsets of
+programs to be run this way. Again, Fully Homomorphic Encryption (FHE) \cite{Gentry:2010},\cite{Gentry:20102}  
+can perform arbitrary operations on encrypted data, but in its current state FHE
+is still prohibitively expensive \cite{Gentry:2011}. An alternative to FHE 
+is Partially Homomorphic Encryption (PHE), which scales substantially better, but cannot 
+perform arbitrary operations, and requires the conversions that were discussed in \chapref{chapter:chapterthree}.
+
+As we discussed earlier, Multiparty Computation (MPC) describe groups of protocols that can be used in secure collaborative
+computation. MPC benefits from having high security stemming from extensive theoretical guarantees. 
+%without having to resort to expensive
+%solutions (like FHE) or solutions with lower security (PHE conversion). 
+
+Within MPC certain optimizations can be made in the evaluation of loops bodies. Due to the transformation of problems into an 
+intermediate representation, similar operations within an MPC problem can be amortized. %, or performed in parallel, 
+%with little drawbacks as long as certain assumptions hold. 
+We present a technique for automatically locating opportunities for amortization to improve performance in compiled MPC programs. 
+
+The rests of this chapter is organized as follows: \secref{sec:mpcoverview}, provides a brief over view of our work. 
+\secref{sec:language} shows our language specification.
+\secref{sec:parallelization} briefly outlines outlines dependenceies, and describes HPC Parallelizion as well as 
+MPC Amortization in \secref{sec:hpcparallelization} and \secref{sec:mpcamortization}. 
+\secref{sec:loopbodyanalysis} and \secref{sec:analysis} show our analysis. \secref{sec:loopscheduling} 
+presents our scheduling algorithms. \secref{sec:results} presents our empirical results. 
+% Finally, \secref{sec:conclusions} concludes. 
+%\ana{Broken links again here. I think this needs to be rewritten as we moved stuff into Chapter 2.} \lindsey{fixed!}

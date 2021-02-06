@@ -1,0 +1,810 @@
+\section{Loop-body Analysis}
+\label{sec:loopbodyanalysis}
+
+We first consider the answer to \problemref{problem:prob1} (in MPC). 
+%\ana{Lindsey, you have to define Problem 1. This is the problem to compute the optimal 
+%schedule taking into account just intra-loop dependences.}
+We argue that optimal parallelization within a loop body is NP-Hard (under the above stated assumptions). 
+Therefore, compilers must resort to heuristics to compute a schedule for the instructions within a loop body.
+
+We consider two operations, call them $A$ and $M$. $A$ and $M$ are two abstract MPC instruction, 
+but as an example, $A$ stands for the ADD MPC instruction 
+and $M$ stands for the MUL instruction. Each instruction in the program is either an $A$-instruction or
+an $M$-instruction. In order to benefit from parallelization/amortization, we must schedule two or more 
+$A$-instructions in the same parallel node (or two or more $M$-instructions in the same parallel node). 
+Scheduling $A$-instructions in parallel with $M$-instruction does not benefit from amortization.
+It incurs the exact same cost as scheduling the $A$-instructions in a node $P_A$, scheduling the $M$-instructions 
+in a node $P_M$, and having $P_A$ precede $P_M$ in the parallel schedule. This is the difference 
+between classical scheduling, as studied in parallel computing, and MPC scheduling. 
+
+In our theoretical treatment, we make the following assumptions:
+
+\begin{enumerate}
+
+\item $A$ and $M$ are of equal cost, 1 unit.
+\item There is unlimited bandwidth---i.e., a single $A$-instruction (or $M$-instruction) costs as much as $N$ amortized $A$-instructions 
+(or $M$-instructions), namely 1 unit.
+ 
+\end{enumerate}
+
+%  Furthermore the run time cost of 
+% computing operations of the same type remains the same regardless of the number of operations that are run.
+% Roughly speaking, 1 A operation costs the same as 100 A operations and 1000 A operations. 
+
+Consider a loop body that consists of $n$ sequences: $S_1$, ... $S_n$ of $A$ and $M$ instructions. 
+More precisely, the loop body is such that its instructions can be grouped into such sequences. 
+$S_1$, ... $S_n$ can execute in parallel, however, all instructions within a sequence must 
+execute sequentially. For example, consider the three sequences (the right arrow indicates a \emph{dependence},
+meaning that the source node must execute before the target node): 
+\begin{enumerate}
+\item $A \rightarrow M \rightarrow A$
+\item $A \rightarrow A \rightarrow A$
+\item $M \rightarrow A \rightarrow M$
+\end{enumerate} 
+
+A \emph{schedule} $P: P_1 \rightarrow P_2 \dots \rightarrow P_k$ is such that for each sequence 
+$S_i$ in the set, if $S_i[k]$ precedes $S_i[k']$ in $S_i$ then $S_i[k]$ is scheduled in node $P_l$, $S_i[k]$ 
+is scheduled in node $P_{l'}$, and $P_l$ precedes $P_{l'}$ in $P$. 
+
+The cost of a schedule $P$ is 
+
+\begin{equation}
+\mathit{cost}(P) = \sum_{i=1}^k \mathit{cost}(P_i)
+\end{equation}
+
+where $\mathit{cost}(P_i) = 1$ if $P_i$ consists of $A$-instructions only, or $M$-instructions only, 
+and $\mathit{cost}(P_i) = 2$ if $P_i$ mixes $A$-instructions and $M$-instructions. 
+
+The problem is to find a schedule $P$ with \emph{minimal cost}. For example, 
+a schedule with minimal cost for the sequences above is
+\[ A(1), A(2) \rightarrow M(1), A(2), M(3) \rightarrow A(1), A(2), A(3) \rightarrow M(3) \]
+(The parentheses above indicate the sequence where the instruction comes from: (1), (2), or (3).)
+The cost of this schedule is 5. 
+
+The problem of finding a schedule $P$ with a minimal $cost(P)$ for a given loop body has been shown
+to be an NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, 
+a known NP-Hard problem\cite{Maier1978},\cite{Vazirani2010}. The shortest common supersequence problem is as follows: 
+given two or more sequences find the the shortest sequence that contains all of the original sequences. This can be solved
+in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the 
+number of sequences. For our problem $n$ is the maximum length of a node and $k$ is the number
+of total number of nodes. %\ana{I think it is clear without additional explanation...}
+%\ana{Also, add the full statement of the problem here. Now it's not clear what's NP-hard, what's n, what's k, etc.?}
+%\lindsey{not exactly sure what need to go it there, but does that make it clearer?}
+
+To see the reduction, 
+suppose $P$ is a schedule with minimal cost (computed by a black-box algorithm). 
+We can derive a schedule $P'$ with the same cost as $P$, by mapping each mixed node $P_i \in P$ 
+to two consecutive nodes in $P'$: an $A$-instruction node followed by an $M$-instruction node.
+Clearly, $P'$, which now is a sequence of $A$'s and $M$'s, is a supersequence of each sequence 
+$S_i$, i.e., $P'$ is a common supersequence 
+of $S_1 \dots S_n$. It is also a shortest common supersequence. (To see this, suppose, a 
+shorter common supersequence, $P''$, exists. $P''$ is a schedule of $S_1 \dots S_n$
+and the $\mathit{cost}(P'')$ equals the length of $P''$. Since $P'$ is longer than
+$P''$, and $\mathit{cost}(P') = \mathit{cost}(P)$, that means $\mathit{cost}(P'') < \mathit{cost}(P)$, 
+which is a contradiction since $P$ is a schedule with minimal cost.)
+
+%\ana{Question: are these two assumptions too strong?} \lindsey{I don't think so? makes sense to me}
+
+%\ana{Assumption 1 can be relaxed --- e.g., if $A$ is 5 times cheaper than $M$, 
+%we can construct a program where all $A$'s are sequences of five consecutive 
+%$A$'s, which reduces to the previous problem.} \lindsey{it doesn't matter I think... as long as it is a static 
+%difference.}
+
+%\ana{Assumption 2, I am not sure if this is acceptable, or maybe it is too strong. My intuition is that incorporating into the cost a dependence on the number of instructions in each parallel node, is going to make the problem harder, not easier...} 
+%\lindsey{I think that the important note is that it is mannnnny magnitudes of 10 cheaper}
+%\lindsey{Ana, Is this now a stale comment?}
+
+
+\section{Across-loop Analysis}
+\label{sec:analysis}
+
+We have shown that in general scheduling a loop body is NP-hard. However, in practice loop bodies consist
+of relatively small number of statements. Multiple parallel sequences as in the proofs above, are uncommon.
+Therefore, one can compute the shortest common supersequence using a brute force approach. 
+
+In this section, we describe the computation of the across-loop schedule. The algorithm proceeds in several phases. 
+First, we extend Cytron et al.'s algorithms, outlined in \secref{sec:ssa}
+to construct the MPC-MUX nodes. Even though there is significant overlap between SSA construction 
+and translation to MPC target code, the problem of placing MUX nodes has not been previously addressed.
+We define an algorithm that addresses this problem in~\secref{sec:cfgtompc}. Second, we handle arrays in a way that
+improves parallelization. We describe this handling in~\secref{sec:arrayhandling}. These two parts give rise to a graph where  
+each node is an MPC target code statement. The edges represent the intra-loop control flow and largely 
+overlap with the original CFG edges. The statements are in SSA form and $\phi$-nodes are replaced with MUX nodes. 
+We call this graph the MPC $G$. 
+
+Once we have constructed the MPC $G$ for the loop body, we construct the dependence graph $G$, which reflects
+intra-loop dependences and across-loop dependences. We describe the construction of $G$ 
+in~\secref{sec:depgraph}. % and~\secref{sec:depgraphalgo}. 
+%\ana{Broken link}\lindsey{removed the second one. links to old section of paper that is commented out.}
+This graph gives rise of the across-loop schedule, which we describe in~\secref{sec:loopscheduling}. 
+%\ana{Lindsey, can you fix these references?}
+
+\subsection{High-level CFG to MPC $G$} 
+\label{sec:cfgtompc}
+
+\subsubsection{From $\phi$-nodes to MUX-nodes}
+
+%\ana{Difficulties: Translate to MUX nodes, adapt classical SSA algorithm, arrays, reads and writes!}
+
+% \begin{figure}
+% \small
+% \[
+% \begin{array}{l@{~~~~~}l}
+%   \begin{array}{l@{~}l@{~~~}l}
+%   s & ::= s ; s \\ 
+%   & \mid \x = \y \; \mid \x=\y \; \op \; \z \mid {\sf A[f(i)] = x} \; \mid {\sf x = A[f(i)]} & \mathit{assignment} \\
+% %  & \mid \x = \phi(\y,\z) \\
+%   & \mid {\sf for} \; (i = 0; i \le \mathit{Const}; \mathit{i\!+\!+}) \; \{ \; s \; \} \\
+%   & \mid {\sf if} \; (\x \; \cop \; \y) \; \{ \; s \; \} \; {\sf else} \; \{ \; s \; \} \\
+%  % \bool &::= \x \; \cop \; \y & \mathit{comparison} \\
+%   \op &::= + \mid - \mid * \mid / & \mathit{arithmetic} \; \mathit{operator} \\
+%   \cop &::=  \; == \; \mid \; != \; \mid \; < \; \mid \; \le & \mathit{comparison} \; \mathit{operator}
+
+%   \end{array}
+% \end{array}
+% \]
+% %\vspace{-0.2in}
+% \caption{IMP syntax as defined in \cite{Ishaq2019}: $s$ is a sequence of statements. 
+% \code{x}, \code{y}, \code{z}, and $i$, are variables. \ana{Remove Fig. 16 because you have Fig. 14. But take f(i) for array indices in 14.}
+% } 
+% \label{fig:syntax}
+% \end{figure}
+
+
+Again, we consider a standard IMP-like\cite{Nipkow2014} imperative language.
+Without loss of generality, we assume that the syntax gives rise to a CFG and we can apply the 
+Cytron et al.'s Algorithm for the efficient computation of SSA over this CFG~\cite{Cytron1991}
+(shown in \algref{alg:cytronphiplacement} and \algref{alg:cytronlabeling}). 
+
+% Once we have the code in 
+% SSA form with we can proceed to transform if statements into MUX nodes.
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.7\textwidth}
+\begin{javacode}
+z = 0;
+...
+if (x > 0) {
+  if (y > 0) {
+    z = 1;
+  }  else {
+    z = -1;
+  }
+}
+print(z);
+\end{javacode}
+\end{minipage}
+\caption{Branching Code.}
+\label{fig:examplecfgcode}
+\end{figure}
+
+In particular, we are interested in a sequence of statements that form a loop body, i.e., while 
+the outermost statement is a {\sf for} the remaining statements are assignments and {\sf if}s.
+There are two principal hurdles. One is to translate the CFG into SSA form, where $\phi$ nodes 
+are turned into MUX nodes. One cannot simply reuse the classical algorithm by Cytron et. al. 
+because $V_3 = \phi(V_1,V_2)$ nodes do not retain information about the predicate that triggers 
+$V_1$ vs. $V_2$; all $\phi$ nodes represent is conditional control flow, i.e., that $V_3$ is either 
+$V_1$ or $V_2$. Another issue is that SSA $\phi$ nodes can combine multiple conditionals. 
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.30\textwidth}
+\includegraphics[width=\textwidth]{cfgphinode}    
+\end{minipage}
+\caption{CGF after \algref{alg:cytronphiplacement} is run.
+The $\phi$ node is added but no labeling has taken place.}
+\label{fig:cfgwithphinode}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.38\textwidth}
+\includegraphics[width=\textwidth]{cfgmuxnode}    
+\end{minipage}
+\caption{Result of running \algref{alg:cytronextension}. 
+MUX nodes are added at merges and refer to conditionals.}
+\label{fig:cfgwithmuxnode}
+\end{figure}
+
+To illustrate, consider the code shown in \figref{fig:examplecfgcode}.
+Line 10 is the dominance frontier of the assignments to 
+\z, and Cytron et. al.'s algorithm creates a $\phi$ node at 10: $z_3 = \phi(z_0, z_1, z_2)$. 
+There is no information retained that $z_0$ is triggered when $x \le 0$, $z_1$ is triggered when 
+$x > 0 \; \wedge \; y > 0$, and $z_2$ is triggered when $x > 0 \; \wedge \; y \le 0$. The Multiplexer at the join point
+needs this information in order to assign the correct value to $z_3$ at runtime.
+
+We propose a simple extension to the classical algorithm. Recall from Cytron et. al.'s 
+that efficient static single assignment computation has two phases, phase one is the 
+placement of phi-nodes at dominance frontiers of assignments, and phase two is the 
+renaming of variables $V$ into $V_1$, $V_2$, etc. \figref{fig:cfgwithphinode}
+shows the CFG after \algref{alg:cytronphiplacement} is run. The $\phi$ node is placed but the 
+variables have not been labeled correctly. Instead of transforming the phi node completley
+we instead create MUX nodes that reference the conditionals that are associated with each variable.
+MUX nodes are then placed at the merge points as shown in, and all the variables are labeled,
+\figref{fig:cfgwithmuxnode} shows the CFG after this step. The algorithm for this 
+extension is shown in \algref{alg:cytronextension}. 
+
+%\lindsey{changed font size in algo to footnotesize.... is that too small?} \ana{It's good.}
+\begin{algorithm}
+\footnotesize
+\begin{algorithmic}[1]
+\ForAll {variables $V$}
+\State $C(V) \leftarrow 0$
+\State $S(V) \leftarrow \mathit{EmptyStack}$
+\State $P \leftarrow \mathit{EmptyStack}$
+\EndFor
+\State call SEARCH($\mathit{Entry}$) \\
+\State ... \\
+SEARCH(X) : \\
+\ForAll {statements $A$ in $X$} 
+\If {$A$ is a $\phi$-assignment}
+   \State {remove $A$ and continue}
+\EndIf
+\ForAll {variables $V$ in $\mathit{RHS}(A)$}
+   \State {replace $V$ with $V_i$ where $i = \mathit{Top}(S(V))$}
+\EndFor
+
+\ForAll {variable $V$ in $\mathit{LHS}(A)$}
+   \State { $i \gets C(V)$} 
+   \State {replace $V$ with $V_i$ in $\mathit{LHS}(A)$}
+   \State {push $i$ onto $S(V)$}
+   \State {$C(V) \gets i+1$}
+\EndFor
+\EndFor
+\ForAll {$Y \in Succ(X)$}
+\If {$X$ is a conditional node}
+   \State {push $\mathit{Cond}, \mathit{Branch}$ onto $P$ // $\mathit{Branch}$ is $T$ if $X \rightarrow Y$ is the True branch, $F$ otherwise}     
+\EndIf   
+     \State{// $Y$ is not done if $Y$ has an incomplete MUX predecessor or an original CFG predecessor}
+      \If {$Y$ has $\phi$-assignments and $Y$ is not done} 
+          \State {$\mathit{Cond}, \mathit{Branch} \gets$ pop $P$}
+          \ForAll {$\phi$-assignments in $Y$}
+               \If {$Z\!: V = \mathit{MUX}(Cond, ..., ...) \in \mathit{Pred}(Y)$}
+                  %\STATE {replace $V$ in $RHS(Z)$ with $V_i$, where $i = Top(S(V)$}
+                  \State {remove edge $X\rightarrow Y$, add edge $X\rightarrow Z$ to $\mathit{CFG}$}
+                  \State {call SEARCH($Z$) // updates $V$'s in LHS and RHS} 
+               \Else
+                   \State {$i = Top(S(V))$}
+                   \If {$\mathit{Branch} == T$}
+                      \State {create new node $Z\!: V = \mathit{MUX}(\mathit{Cond}, V_i, V)$}
+                   \Else 
+                      \State {create new node $Z\!: V = \mathit{MUX}(\mathit{Cond}, V, V_i)$}
+                   \EndIf   
+                   \State {remove edge $X\rightarrow Y$, add edge $X\rightarrow Z$ to $\mathit{CFG}$} 
+               \EndIf
+          \EndFor 
+      \EndIf
+\EndFor
+\ForAll {$Y \in \mathit{Children}(X)$}
+   \State {call SEARCH($Y$)}
+\EndFor
+\ForAll {assignments $A$ in $X$}
+   \ForAll {variables $V$ in oldLHS($A$)}
+       \State {pop S(V)}
+   \EndFor
+\EndFor
+\end{algorithmic}
+\caption{Extension of \algref{alg:cytronphiplacement} replacing $\phi$ nodes with MUX nodes}
+\label{alg:cytronextension}
+\end{algorithm}
+
+%\lindsey{Ana, I think I got it now! Check the figures!} \ana{Yes, excellent!}
+% \ana{TODO: Ana: Here we need an explanation for lines 23-45. Turning n-ary phi-nodes into binary MUX nodes, 
+% just the same classical algorithm with minor extension.} \lindsey{which lines/figure?}\ana{Lines in the Algo. I'll do it.}
+% \ana{TODO: Lindsey: Example of CFGs for above example.} \lindsey{I made the CFG.... but am still confused, there
+% are only 10 lines in the example?} \ana{Yes, that one's almost there. But this is the MUX graph, each MERGE becomes a MUX.}
+% \ana{This graph is the After graph, with each MERGE node now a MUX node. In the after graph, show the MUX what arguments it takes.} 
+% \ana{We also need the Before graph which has just a single Dominance Frontier node that merges control from all the conditionals.}
+% \lindsey{now I am really confused.... how many graphs should there be?}
+
+\subsubsection{Handling of Arrays}
+\label{sec:arrayhandling}
+
+So far we focused on the classical SSA analysis and the extension to create MUX nodes. 
+Classical SSA treats arrays as scalars, i.e., an array write, e.g., {\sf A[i] = x+y} is considered
+a modification of {\sf A} and warrants its own indexed variable ${\sf A}_k$. A later use of {\sf A}, 
+even one such as {\sf x = A[i+1]} where there is no def-use link from {\sf A[i] = x+y}, will be 
+considered a use of ${\sf A}_k$. This hinders parallelization. To illustrate, consider 
+what is shown in \figref{fig:arrayhand}.
+%\begin{minted}[fontsize=\footnotesize, numbersep=5pt, escapeinside=||]{java}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.7\textwidth}
+\begin{javacode}
+for (...) {
+  A: A[i] = f_1(B[i]);
+  B: B[i] = f_2(A[i]);
+  ...
+}
+\end{javacode}
+\end{minipage}
+\caption{Array handling.}
+\label{fig:arrayhand}
+\end{figure}
+
+%\end{minted}
+Since {\sf A} and {\sf B} are treated as standard scalars, the dependence analysis will record
+a dependence from {\sf B} to {\sf A} via the back edge. As a result, statement {\sf A} wouldn't 
+be vectorized because each (i+1)-th iteration depends on {\sf B} in the i-th iteration,
+which depends on {\sf A} in the i-th iteration. 
+
+To mitigate against this, we propose a technique, similar to Array-SSA though much simpler and 
+less general, which breaks certain dependence edges and allows for better vectorization. 
+We term this technique \emph{scalar substitution}.
+%\ana{Have to make a claim how often this technique resolves dependences perfectly, and how often it defaults to standard SSA.}
+
+%\ana{TODO: Summary of the technique}
+
+The essence of scalar substitution is that in certain cases, one can treat array accesses as distinct scalar accesses.
+For example, reads and writes of $\A[i]$ are treated as reads and writes to a scalar variable $\A[i]$.
+Our SSA transformation assigns versions $\A[i]_0$, $\A[i]_1$, etc. when $\A[i]$ is written in the loop body. 
+The key issue is that we need to properly account for across-loop dependences. When there is an array write 
+$\A[f(i)] = ...$ and an array read $ ... = \A[f'(i)]$ and the array references have been replaced with scalar variables, 
+our analysis must properly account for across-loop dependences from one scalar variable to another.
+
+In summary, our technique first outlines conditions on arrays that will allow us to safely carry such transformation.
+These are the Array Well-formedness conditions defined below. If these conditions hold for array \A, then when 
+we do scalar substitution for \A: we replace 
+array accesses of {\A} with scalars. Otherwise, we leave {\A} as is, defaulting to the standard treatment in Cytron et al. 
+The standard treatment treats writes to different indices of {\A} as writes to a single variable {\A}, and similarly, reads
+to different indices of {\A} as reads of that single variable. This is safe, however, it may miss opportunities for
+parallelization. In our experience, our Array Well-formedness conditions are not restrictive, as in the majority of benchmarks
+(typical MPC benchmarks), arrays are read-only. However, more experiments are needed, particularly 
+with benchmarks that are standard in HPC, that we hope to transfer to our setting. 
+
+Our technique next constructs the dependence graph taking into account the replacement with scalar variables. 
+This is described in~\secref{sec:depgraph}. The algorithm constructs a correct dependence graph taking into 
+account loop-carried dependences between scalars in the cases when Array Well-formedness holds.
+
+\paragraph {Equivalence and Non-equivalence} Let $f(i)$ and $f'(i)$ be two index functions on induction variables $i$, 
+e.g., we have array accesses ${\A}[f(i)]$ and ${\A}[f'(i)]$. We say that $f(i) \cong f'(i)$ iff for every $1 \le i \le N$,
+$f(i) = f'(i)$. We say that $f(i) \ncong f'(i)$ iff for every $1 \le i \le N$, $f(i) \neq f'(i)$. 
+%\ana{TODO Ana. This needs to be expanded
+%with consideration of equivalence classes of variables in f(i). 
+%For some set of variables functions are equivalent for another set they are non-equivalent, etc.
+%Have to say something, for a fixed set of constants...}
+
+Strictly, equivalence and nonequivalence is defined under conditions on variables in $f(i)$ and $f'(i)$ 
+other than the induction variable $i$. For example if $f(i) = x*i$ and $f'(i) = x*(i-1)$, equivalence and non-equivalence 
+depends on $x$. If $x$ is 0 then the two formulas are equivalent and if $x \neq 0$ then they are non-equivalent. 
+When we write $f(i) \cong f'(i)$ we mean that the following logical formula is valid:
+
+\begin{equation}
+1 \le i \le N \Rightarrow f(i) = f'(i) 
+\end{equation}
+and similarly, 
+\begin{equation}
+1 \le i \le N \Rightarrow f(i) \neq f'(i) 
+\end{equation}
+In future work we will consider conditional equivalence and non-equivalence, i.e, in the above example, we will 
+consider formulas
+\begin{equation}
+x = 0 \Rightarrow (1 \le i \le N \Rightarrow f(i) = f'(i)) 
+\end{equation}
+and
+\begin{equation}
+x \ne 0 \Rightarrow (1 \le i \le N \Rightarrow f(i) \neq f'(i) ) 
+\end{equation}
+
+\paragraph{Array Well-formedness Conditions} Let ${\A}$ be an array mentioned in the loop body. 
+We will treat array accesses ${\A}[f(i)]$ as distinct scalar variables if we can show that the loop body is
+well-formed with respect to \A. Otherwise, we treat array {\A} as a single variable, thus defaulting to the 
+case of standard SSA. The array well-formedness conditions for array {\A} are defined as follows: 
+
+\begin{enumerate}
+\item For each pair of array writes to \A, $n_1\!: \A[f(i)] = ... $ and $n_2\!: \A[f'(i)] = ... $, we have either $f(i) \cong f'(i)$ or 
+$f(i) \ncong f'(i)$. 
+
+\item In addition, for each pair of array writes to \A, $n_1\!: \A[f(i)] = ... $ and $n_2\!: \A[f'(i)] = ... $, there does not exist 
+a pair $1 \le i, j \le N$, $i \neq j$ such that $f(i) = f'(j)$, or in other words array writes are disjoint, i.e., the same array location 
+cannot be written in two different iterations. 
+%\ana{Check whether one of these is sufficient.}
+
+\item For each pair $n_1\!: \A[f(i)] = ... $ and $n_2\!: ... = \A[f'(i)]$ such that $n_1$ reaches $n_2$ on a forward path, 
+we have either $f(i) \cong f'(i)$ or $f(i) \ncong f'(i)$. 
+
+%\item For each pair $n_1\!: A[f(i)] = ... $ and $n_2\!: A[f'(i)] = ... $ either $f(i-d) \cong f'(i)$ for some unique $d > 0$, 
+%or $f(i-d) \ncong f'(i)$ for every $d > 1$. 
+
+\item For each pair $n_1\!: \A[f(i)] = ... $ and $n_2\!: ... = \A[f'(i)]$ %such that $n_1$ reaches the loop exit (we assume that there is
+%a unique loop exit node) on a forward path, and there is  $n_2$ on a forward path, 
+we have either $f(i-d) \cong f'(i)$ for some unique $d$ s.t. $1 \le d < N$, or $f(i-d) \ncong f'(i)$ for every $d$ s. t. $1 \le d \le N$. 
+
+In this $d$ is the distance between the iterations in the loops i.e. For if statement A has a $d$ value of 2 from statement B, 
+statement A was computed 2 loop iterations before statement B.
+
+\end{enumerate}
+
+To see the intuition behind these rules, consider rule (1). 
+In other words, the two array writes are either equivalent, i.e., at each iteration they modify the same
+location, or they are non-equivalent, i.e., at each iteration they modify distinct locations. Note that the two array writes
+``clash'' in one way or another. If $n_1$ reaches $n_2$ (or vice versa, $n_2$ reaches $n_1$), then if $f(i)$ and $f'(i)$ 
+are neither equivalent nor non-equivalent, there would be a kill in some iterations and not in others; in contrast, if
+they are equivalent, there is always a kill, and if they are non-equivalent, there is never a kill. If neither $n_1$ reaches
+$n_2$ nor the other way around, then the two array writes will ''clash'' at a join node. If $f(i)$ and $f'(i)$ are neither 
+equivalent nor non-equivalent, then there would be one kind of MUX for certain iterations and a different kind of MUX 
+for the rest; if $f(i)$ is equivalent to $f'(i)$, then the MUX will be $... = \mathit{MUX}(\mathit{cond}, {\A}[f(i)], {\A[f'(i)]})$, and 
+$f(i)$ and $f'(i)$ are non-equivalent then there will be two MUX nodes: $... = \mathit{MUX}(\mathit{cond}, {\A}[f(i)], {\A'[f(i)]})$
+and $... = \mathit{MUX}(..., {\A}[f'(i)], {\A'[f'(i)]})$. (Note that after SSA, the A's will be properly indexed.)
+%\ana{I need explanations of (2) and (3).} 
+
+Condition (2), disjointness of writes, is necessary for our graph construction algorithm to properly account
+for loop-carried dependences. We have to make sure that a write in a later iteration $i$ does not ''kill'' a write in an earlier iteration $j$.
+
+Similarly, for (3) if an array write reaches an array read they either reference 
+the same location or never reference the same location. In other words, there is either an intra-loop 
+def-use in each iteration, or there is no intra-loop def-use in any iteration. 
+More concretely if we have $A[f(i)] = ...$ flow into $... = A[g(i)]$ then for $1 \le i \le N, f(i) = g(i) ~ | ~ \mbox{ for } 1 \le i \le N, f(i) \neq g(i)$. 
+
+Finally, (4) is a little more involved, if there is an array write and then a read and they always differ, 
+they always differ by a static constant $d$. This would mean that the read always uses the write $d$ iterations before.
+%So then if we again have $A[f(i)] = ...$ flow into $... = A[g(i)]$ and 
+%$\forall i \in \Z, f(i) \neq g(i)$ then $\forall i \in \Z, f(i) - g(i) = d$ where $d \in \Z$. \lindsey{Ana, doe this make sense}
+
+
+\paragraph{Example} Consider our running example in \figref{fig:arrayloop}. 
+There is a single write to each array in the loop body,  so there are no write-write pairs and no 
+tests for (1). There are the following write-read pairs: 2 and 3 (access of \A), 
+2 and 4 (access of \A), 3 and 5 (access of \B), 4 and 5 (access of \C), 3 and 2 (access of \B), 5 and 3 (access of \D) 
+and 5 and 4 (access of \D).
+We apply the forward test, (2), only on the first three pairs, as for the remaining ones, there is no forward path from 
+the write to the read. 
+Test (2) clearly passes because $i$ is obviously equivalent to $i$. For the remaining pairs, we only apply the backward 
+test, test (3). 
+Pair 3 and 2 passes as well because $i-1$ and $i$ are nonequivalent for every $d > 0$. 5 and 3, and analogously 5 and 
+4, pass test (3). 
+In these two cases, the unique $d = 1$ makes $i - d$ and $i-1$ equivalent. 
+
+\paragraph{Checking well-formedness}
+
+%\ana{TODO Ana: Add paragraph on checking.}
+
+We ensure the above conditions as follows:
+For conditions 1. and 3. we check the validity of the following formula: 
+\begin{equation}
+(1 \le i \le N \Rightarrow f(i) = f'(i)) \vee (1 \le i \le N \Rightarrow f(i) \neq f'(i))
+\end{equation}
+For condition 2 we check validity of
+\begin{equation}
+(1 \le i,j \le N \wedge i\neq j \Rightarrow f(i) \neq f'(j))
+\end{equation}
+Finally, for condition 4 we find $d$ by asking satisfiability of
+\begin{equation}
+1 \le i \le N \Rightarrow f(i-d) = f'(i)
+\end{equation}
+and then ensure validity of
+\begin{equation}
+1 \le i \le N \wedge 1 \le d' < N \wedge d' \neq d \Rightarrow f(i-d) \neq f'(i)
+\end{equation}
+
+This checks can be done with off the shelf SMT solvers such as Z3. 
+
+
+%\ana{Where do we put this? Theorem: simple rule is not restrictive} \ana{This one can be left out.}
+%\ana{TODO Ana: Theorem 2: program is equivalent to transformed one where each A[f(i)] is replaced with a scalar.}  
+%\ana{The idea is that we replace each A[f(i)] with scalar, i.e., we treat A[f(i)] like a scalar. E.g., if we have A[i] in our SSA algorithms we are treating it as $A_i$ , a variable. We'll compute versions of Ai like Ai_1, Ai_2, etc., just like for scalars.} 
+%\lindsey{I think we cover this above now? Is this a stale comment?}
+
+
+\subsection{Across-loop Dependence Graph $G$: Overview}
+\label{sec:depgraph}
+
+Our next step is to determine dependences, including intra-loop dependences and more complex 
+across-loop dependencies through the creation of the dependence graph $G$ and analysis and 
+reasoning over $G$. Our transformation analyzes arrays as described earlier, and does scalar substitution
+for well-formed arrays, while treating non-well-formed arrays in the standard way. Then we use \algref{alg:cytronextension}
+on the loop body code to add MUX nodes. 
+
+Each node of the $G$ represents an MPC target code statement in a loop body, while each edge
+represents a def-use dependency between the two connected nodes. The analysis considers
+each statement of the loop. If the statement contains an array reference (Note, 
+that SSA guarantees that there can be only one array reference in any single
+statement) it is classified as a read, or a write. The statement is a write only
+if the statement is an assignment statement, and the array reference is on
+the left-hand side of the assignment, otherwise it is classified as a read.
+This statement, its original source line number, and index of the array
+reference are stored as a node. Scalars that change per iteration are also
+handled. Every scalar that changes in the loop body is defined in a $\phi$
+node at the head of the loop, and the changed variable is defined
+at the end of the loop. This makes tracing reads and writes of 
+changing variables as easy as tracing induction variables through the loop
+and noting the node that defines the changed variable.
+%\ana{Lindsey, you talk about array references, but how about scalar reads and writes?}
+%\lindsey{not explained perfectly, work in progress, but does that make more sense?}
+%\ana{Somewhere here we need to say that we apply Alg. 3 to produce the SSA.}
+%\lindsey{blunt, but effective? Is that OK?}
+
+%\ana{This was repeated from above, removed.}
+%Each node of the SCC represents a statement in a loop body, while each 
+%edge represents a dependency between the two connected nodes. The parser 
+%analyzes each statement of the loop. If the statement contains an array 
+%reference (Note, that SSA guarantees that there can be only one array reference 
+%in any single statement) it is classified as a read, or a write. The statement 
+%is a write only if the statement is an assignment statement, and the array reference 
+%is on the left-hand side of the assignment, otherwise it is classified as a read. 
+%This statement, its original source line number, and index of the array 
+%reference are stored as a node.
+
+After all the nodes have been found, edge creation and labeling begins. 
+For each node, $c$, in the graph the following steps are taken to determine 
+the distance between each pair of def/use statements. This value determines 
+the parallelization schedule for each pair interaction 
+in the context of the larger loop body. The full algorithm is shown in 
+\algref{alg:edgecreation}.
+
+\begin{algorithm}
+\begin{algorithmic}
+\State // Step 1: Forward edge construction 
+\ForAll{$n_1 \in \mathit{Nodes}(G)$}
+\ForAll{$n_2 \in \mathit{Nodes}(G)$}
+\If{$n_1 \neq n_2$}
+\ForAll{$v \in \mathit{Scalars}(G)$}
+%\State $MaxNode \leftarrow GetMaxNodeScalar(v)$
+\If{$v \in \mathit{LHS}(n_1)$ \&\& $v \in \mathit{RHS}(n_2)$}
+\State $\mathit{Edges} \leftarrow \mathit{Edges} \cup \mathit{ForwardEdge}(n_1, n_2)$
+\EndIf
+\EndFor
+\ForAll{$\A \in \mathit{Arrays}(G)$}
+\If{$\A[f(i)] \in \mathit{LHS}(n_1)$ \&\& $\A[f'(i)] \in \mathit{RHS}(n_2)$ \&\& $f(i) \cong f'(i)$} %$\forall i \in \Z, f(i) == f'(i)$}
+\State $\mathit{Edges} \leftarrow \mathit{Edges} \cup \mathit{ForwardEdge}(n_1, n_2)$
+\EndIf
+\EndFor
+\EndIf
+\EndFor
+\EndFor
+\State // Step 2: Backward edges for scalars (including non well-formed arrays)
+\ForAll{$v \in \mathit{Scalars}(G)$}
+\State $\mathit{MaxNode} \leftarrow \mathit{GetMaxNodeScalar}(v)$
+\ForAll{$n \in \mathit{Nodes}(G)$}
+\If{$n \neq \mathit{MaxNode}$ \&\& $V_0 \in \mathit{RHS}(n)$}
+\State $\mathit{Edges} \leftarrow \mathit{Edges} \cup \mathit{BackwardEdge}(\mathit{MaxNode}, n, -1)$
+\EndIf
+\EndFor
+\EndFor
+\State // Step 3: Backward edges for well-formed arrays
+\ForAll{$\A \in \mathit{Arrays}(G)$}
+\State $\mathit{MaxNode} \leftarrow \mathit{GetMaxNodeArray}(\A)$
+\State $f(i) \leftarrow \mathit{ArrayWriteIndex}(\mathit{MaxNode})$
+\ForAll{$n \in \mathit{Nodes}(G)$}
+\If{$\mathit{IsArrayRead}(n)$ \&\& $n \neq \mathit{MaxNode}$ \&\& $A_0 \in \mathit{RHS}(n)$}
+\State $f'(i) \leftarrow \mathit{ArrayReadIndex}(\mathit{MaxNode})$
+\State $d \leftarrow \mathit{Z3}(f(i), f'(i))$
+\State $\mathit{Edges} \leftarrow \mathit{Edges} \cup \mathit{BackwardEdge}(\mathit{MaxNode}, n, d)$
+\EndIf
+\EndFor
+\EndFor
+%\EndFor
+\end{algorithmic}
+\caption{Edge Creation}
+\label{alg:edgecreation}
+\end{algorithm}
+
+%\ana{The above text is good, we may make some edits later on.}
+
+The following constructs are used in the algorithm
+
+\begin{itemize}
+	\item $\mathit{Edges}$ is a set of edges
+	\item $\mathit{Nodes}(G)$ returns all nodes in the graph $G$
+	\item $\mathit{Scalars}(G)$ returns all scalars in the program including non-well-formed arrays
+	\item $\mathit{Arrays}(G)$ returns all well-formed arrays
+	\item $\mathit{IsArrayWrite}(N)$ returns true iff $\mathit{LHS}(N)$ is an array write
+	\item $\mathit{ArrayWriteIndex}(N)$ returns an index $f(i)$ in an array write, where $i$ is the induction variable
+	\item $\mathit{ArrayReadIndex}(N)$ returns an index $f(i)$ in an array read, where $i$ is the induction variable
+	\item $\mathit{GetMaxNodeScalar}(V)$ returns a node $N$ such that $V_{\mathit{max}} \in N$
+	\item $\mathit{GetMaxNodeArray}(A_{\mathit{max}})$ returns a node $N$ such that $A_{\mathit{max}} \in \mathit{LHS}(N)$
+	\item $\mathit{ForwardEdge}(N_1, N_2)$ returns a new node between $N_1$ and $N_2$
+	\item $\mathit{BackwardEdge}(N_1, N_2, d)$ returns a new node between $N_1$ and $N_2$ with a distance of $d$
+	\item $\mathit{Z3}(f(i), g(i))$ returns the distance $d$ between two indices based on the induction variable $i$
+\end{itemize}
+
+
+
+%%% DO NOT DELETE! OLD VERSION THAT IS CORRECT!
+
+% \begin{algorithm}
+% \begin{algorithmic}
+% \ForAll{$n_1 \in Nodes(G)$}
+% \ForAll{$n_2 \in Nodes(G)$}
+% \If{$n_1 \neq \n_2$}
+% \ForAll{$v \in Scalars(G)$}
+% \If{$v \in LHS(n_1)$ \&\& $v \in RHS(n_2)$}
+% \State $Edges \leftarrow Edges \cup ForwardEdge(n_1, n_2)$
+% \EndIf
+% \EndFor
+% \ForAll{$a \in Arrays(G)$}
+% \If{$a[f(i)] \in LHS(n_1)$ \&\& $a[f'(i)] \in RHS(n_2)$ \&\& $\forall i \in \Z, f(i) == f'(i)$}
+% \State $Edges \leftarrow Edges \cup edge(n_1, n_2)$
+% \EndIf
+% \EndFor
+% \EndIf
+% \EndFor
+% \EndFor
+% \ForAll{$v \in Scalars(G)$}
+% \State $MaxNode \leftarrow GetMaxNodeScaler(v)$
+% \ForAll{$n \in Nodes(G)$}
+% \If{$n \neq MaxNode$ \&\& $V_0 \in RHS(n)$}
+% \State $Edges \leftarrow Edges \cup BackwardEdge(MaxNode, n, -1)$
+% \EndIf
+% \EndFor
+% \EndFor
+% \ForAll{$a \in Arrays(G)$}
+% \State $MaxNode \leftarrow GetMaxNodeArray(a)$
+% \State $f(i) \leftarrow ArrayWriteIndex(MaxNode)$
+% \ForAll{$n \in Nodes(G)$}
+% \If{$IsArrayWrite(n)$ \&\& $n \neq MaxNode$ \&\& $A_0 \in RHS(n)$}
+% \State $f'(i) \leftarrow ArrayReadIndex(MaxNode)$
+% \State $d \leftarrow Z3(f(i), f'(i))$
+% \State $Edges \leftarrow Edges \cup BackwardEdge(MaxNode, n, d)$
+% \EndIf
+% \EndFor
+% \EndFor
+% \end{algorithmic}
+% \caption{Edge Creation}
+% \label{alg:edgecreation}
+% \end{algorithm}
+
+%%% DO NOT DELETE! OLD VERSION THAT IS CORRECT!
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.7\textwidth}
+\begin{javacode}
+     label1:
+        i13_1 = Phi(i13 #0, i13_2 #1);
+        if i13_1 > b0 goto label2;
+        $i1 = r3[i13_1];
+        r1[i13_1] = $i1;
+        $i4 = r1[i13_1];
+        $i2 = i13_1 - 1;
+        $i3 = r7[$i2];
+        $i5 = $i4 * $i3;
+        r3[i13_1] = $i5;
+        $i8 = r1[i13_1];
+        $i6 = i13_1 - 1;
+        $i7 = r7[$i6];
+        $i9 = $i8 * $i7;
+        r5[i13_1] = $i9;
+        $i11 = r3[i13_1];
+        $i10 = r5[i13_1];
+        $i12 = $i11 * $i10;
+        r7[i13_1] = $i12;
+        i13_2 = i13_1 + 1;
+(1)     goto label1;
+\end{javacode}
+\end{minipage}
+\caption{Transformed loop body from \figref{fig:arrayloop}.} 
+\label{fig:transformedaikenexample}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.7\textwidth}
+\begin{pythoncode}
+from z3 import *
+# i2 = i13_1 - 1
+# i3 = r7[i2]
+i2 = Int('i2')
+i13_1 = Int('i13_1')
+F = [i2 != 0, i13_1 != 0]
+s = Solver()
+s.add(F)
+s.add(i2 == i13_1 - 1)
+print(s.check())
+if s.check() == z3.sat:
+    m = s.model()
+    for el in m:
+        print(el, m[el])
+\end{pythoncode}
+\end{minipage}
+\caption{Example of Z3 solving for a $d$ value in \figref{fig:transformedaikenexample}.}
+\label{fig:z3example}
+\end{figure}
+
+As an example of Z3 solving for a $d$ value consider the code in \figref{fig:z3example}.
+This code determines a $d$ value for one of the array accesses in our running 
+example taken from Aiken et. al \cite{Aiken1988} and shown in~\figref{fig:arrayloop}. 
+% The original equation defining an index variable is flattened and all 
+% non-induction variables on the right hand side of the equation are replaced with their induction 
+% definitions. \ana{I'm not quite sure what you mean here, can you expand/rewrite?} 
+In this case the index variable $i2$ is comparted with a its definition $i13\_1 - 1$ where 
+$i13\_1$ is an induction varaible that changes every loop iteration. From this we can create an equation to 
+determine distance between the index variable we are interested in (in this case $i2$) and other 
+and the induction variable (in this case $i13\_1$). Z3 then finds the smallest possible values that 
+to satify this equation. By taking the difference of the generated values we determine the $d$ value (in
+this case $d = -1$). 
+
+We also assume the \emph{constant rate assumption} for every statement that we analyze. This ensures
+that any one statement cannot have differing d-values regardless of the number of array accesses on the 
+right hand side of the assignment. Line 6 in \figref{fig:fibconstantrate} violates this assumption,
+as it simultaneously has a d-values of 1 and 2. In other words, the statement at line 6 depends on itself
+1 iteration ago and 2 iterations ago. 
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.7\textwidth}
+\begin{javacode}
+int fib(int n) {
+    int[] arr = new int[n];
+    arr[0] = 1;
+    arr[1] = 1;
+    for(int i = 2; i < n; i++) {
+        arr[i] = arr[i - 1] + arr[i - 2];
+    }
+    return arr[n - 1];
+}
+\end{javacode}
+\end{minipage}
+\caption{The dynamic program solution for solving the $n$-th Fibonacci number violates the Constant Rate
+assumption.}
+\label{fig:fibconstantrate}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.50\textwidth}
+\includegraphics[width=\textwidth]{aikenscc}
+\end{minipage}
+\caption{SCC for \figref{fig:arrayloop}.}  
+\label{fig:aikenscc}  
+\end{figure}
+
+Consider our running example shown in~\figref{fig:arrayloop}. 
+The output of our SCC transformation is shown in~\figref{fig:aikenscc}. The intra-loop dependencies are shown
+as solid black lines, while the cross loop dependencies are shown in dashed black lines. In this case 
+we also have multiple cycles: one between lines 3 and 4 and the other between lines 2 and 4. This is caused
+by the combination of intra-loop dependencies ($B[i] \rightarrow D[i]$ and $C[i] \rightarrow D[i]$) and
+cross-loop ($D[i - 1] \rightarrow B[i]$ and $D[i - 1] \rightarrow C[i]$) dependencies on the same line.
+
+%\ana{Lindsey, here you can give a few examples from the one you have with your code, and draw the graphs. But not the graphs that we construct, but the graphs that we want to compute the SCCs over.} \lindsey{I am not sure which ones you mean? Should I construct them by hand?} \ana{Sorry, yes, this was unclear :). I meant the graphs that we want to compute the SSCs over (not the schedules that we construct). The graph where we have forward edges and backward edges annotated with d, i.e., the graph created by our Alg. 2.} \lindsey{I think it is better to just stick with the aiken example!}
+
+%\subsection{Across-loop Dependence Graph: Algorithm}
+%\label{sec:depgraphalgo}
+
+% \ana{Now I think it will be easiest to describe the above algorithm as an attribute grammar, similarly to what we did in Ishaq's paper to construct the MPC code out of the SSA code.}
+
+% \ana{Try rephrasing the above algorithm in terms of an attribute grammar, and we'll see what happens...}
+
+% \ana{Looking at Ishaq's paper, he must have taken this out from the published version, but here it is I found it from the drafts:}
+
+%Once the SCC graph is complete, it is partitioned into two sub-graphs. 
+%One is the MPC sub-graph (original computation of loop, based on hidden values), 
+%and the other is the index sub-graph  (which is plain-text). By parsing the 
+%index sub-graph the individual components of every index can be placed in a 
+%single equation. This is how we determine the d values for every pair of 
+%Strongly connected components. However if we assume that \emph{all} values
+%are sensetive there is no need to partition the graph, as the plain-text sub
+%graph would be empty.
+
+%Once the analysis creates the SCC graph along with the d values, it then applies  
+%compiler optimizations on each def/use cycle to create a heuristic based schedule. As stated 
+%in \secref{sec:hpcparallelization} and \secref{sec:mpccomp} identical operations can be infinitely
+%amortized, avoiding the hard processor limit that restricts loop scheduling in HPC applications. 
+%This only applies to operations on secret values, which do not include looping variables.
+
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.70\textwidth}
+\includegraphics[width=\textwidth]{unrolledloopdep}
+\end{minipage}
+\caption{Dependencies for running example. %\figref{fig:flattenedloop}
+%\lindsey{Ana, you can copy and paste this for the comment in
+%\secref{sec:theoreticalguarentees}!}
+}
+\label{fig:unrolledloopdep}  
+\end{figure}
+
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{\textwidth}
+\includegraphics[width=\textwidth]{unrolledloopschedule}
+\end{minipage}
+\caption{Schedule for running example. %\figref{fig:flattenedloop} 
+%\lindsey{Ana, you can copy and paste this for the comment in
+%\secref{sec:theoreticalguarentees}!}
+}
+\label{fig:unrolledloopschedule}  
+\end{figure}
