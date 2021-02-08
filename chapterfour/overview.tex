@@ -39,14 +39,14 @@ on secret values (in this case MPC shares of values). This is further expanded o
 \centering
 \begin{minipage}{0.7\textwidth}
 % \begin{figure}[h]
-\begin{javacode}
-int sq_arr(int A[]) {
+\begin{code}
+int sq\_arr(int A[]) {
     for(int i = 0; i < A.length; i++) {
         A[i] = A[i] * A[i];
     }
     return A;
 }
-\end{javacode}
+\end{code}
 % \end{figure}
 \end{minipage}
 \caption{Code to square each member of an array.}
@@ -57,12 +57,12 @@ int sq_arr(int A[]) {
 \centering
 \begin{minipage}{0.7\textwidth}
 % \begin{figure}[h]
-\begin{javacode}
-int sq_arr(Share A[]) {
-    B = MUL_N(A, A);
+\begin{code}
+int sq\_arr(Share A[]) {
+    B = MUL\_N(A, A);
     return B;
 }
-\end{javacode}
+\end{code}
 % \end{figure}
 \end{minipage}
 \caption{Simple MPC transformation to square an array.}
