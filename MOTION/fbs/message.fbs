@@ -1,0 +1,42 @@
+namespace encrypto.motion.communication;
+
+enum MessageType : ubyte {
+  kHelloMessage = 0,
+  kOutputMessage = 1,
+  kTerminationMessage = 2,
+  kSynchronizationMessage = 3,
+  kBaseROtMessageSender = 4,
+  kBaseROtMessageReceiver = 5,
+  kOtExtensionReceiverMasks = 6,
+  kOtExtensionReceiverCorrections = 7,
+  kOtExtensionSender = 8,
+  kBmrInputGate0 = 9,                    // publishes the public value held by the input owner (lambda ^ input)
+  kBmrInputGate1 = 10,                   // publishes the keys on wire under the public value to all parties
+  kBmrAndGate = 11,                      // publishes garbled tables corresponding to a gate (n_wires * n_simd * 3 rows)
+  kSharedBitsMask = 12,
+  kSharedBitsReconstruct = 13,
+  // add new message types here
+  }
+
+// TODO: implement message splitting if the size of a single message goes over 2^32 - 1 bits
+
+// General message interface that contains a header and a payload, where payload is some raw flatbuffers::Struct.
+// This is generally needed because flatbuffers doesn't provide a functionality to transfer serialized binary structures
+// of variable size and type over the network, so we need to manually ensure that the other party knows how many bytes
+// it has to read for this message and what type of message it is. Thus, general idea: send uint32-bit byte-length
+// of the message and the message directly afterwards.
+//
+//  +----------------------------------------------+
+//  | Header (8 bits)    | Body (0--2^32 - 1 bits) |
+//  +--------------------+-------------------------+
+//  |                    |                         |
+//  | uint8 message_type |     uint8[] payload     |
+//  |                    |                         |
+//  +--------------------+-------------------------+
+//
+table Message {
+  message_type:MessageType;
+  payload:[ubyte];
+}
+
+root_type Message;

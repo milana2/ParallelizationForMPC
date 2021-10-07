@@ -1,0 +1,7 @@
+namespace encrypto.motion.communication;
+
+table SharedBitsMessage {
+  payload:[ubyte];
+}
+
+root_type SharedBitsMessage;
