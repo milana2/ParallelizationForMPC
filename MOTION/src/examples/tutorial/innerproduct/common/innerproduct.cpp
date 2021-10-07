@@ -24,6 +24,7 @@
 
 #include <fstream>
 #include <span>
+#include <vector>
 #include "protocols/arithmetic_gmw/arithmetic_gmw_wire.h"
 #include "protocols/bmr/bmr_wire.h"
 #include "protocols/boolean_gmw/boolean_gmw_wire.h"
@@ -35,8 +36,8 @@
 encrypto::motion::RunTimeStatistics EvaluateProtocol(
     encrypto::motion::PartyPointer& party, encrypto::motion::MpcProtocol protocol,
     std::span<const std::uint32_t> input_command_line, const std::string& input_file_path,
-    bool print_output) {
-  std::array<encrypto::motion::SecureUnsignedInteger, 2> shared_input;
+    bool print_output, bool iterative) {
+  std::array<std::vector<encrypto::motion::SecureUnsignedInteger>, 2> shared_input;
   std::vector<std::uint32_t> input;
 
   // Checks if there is no input from command line.
@@ -55,21 +56,28 @@ encrypto::motion::RunTimeStatistics EvaluateProtocol(
   switch (protocol) {
     case encrypto::motion::MpcProtocol::kArithmeticGmw: {
       for (std::size_t i = 0; i < 2; i++) {
-        shared_input[i] = party->In<encrypto::motion::MpcProtocol::kArithmeticGmw>(input, i);
+        for (std::size_t j = 0; j < input.size(); j++) {
+          shared_input[i].push_back(
+              party->In<encrypto::motion::MpcProtocol::kArithmeticGmw>(input[j], i));
+        }
       }
       break;
     }
     case encrypto::motion::MpcProtocol::kBooleanGmw: {
       for (std::size_t i = 0; i < 2; i++) {
-        shared_input[i] = party->In<encrypto::motion::MpcProtocol::kBooleanGmw>(
-            encrypto::motion::ToInput(input), i);
+        for (std::size_t j = 0; j < input.size(); j++) {
+          shared_input[i].push_back(party->In<encrypto::motion::MpcProtocol::kBooleanGmw>(
+              encrypto::motion::ToInput(input[j]), i));
+        }
       }
       break;
     }
     case encrypto::motion::MpcProtocol::kBmr: {
       for (std::size_t i = 0; i < 2; i++) {
-        shared_input[i] =
-            party->In<encrypto::motion::MpcProtocol::kBmr>(encrypto::motion::ToInput(input), i);
+        for (std::size_t j = 0; j < input.size(); j++) {
+          shared_input[i].push_back(party->In<encrypto::motion::MpcProtocol::kBmr>(
+              encrypto::motion::ToInput(input[j]), i));
+        }
       }
       break;
     }
@@ -77,8 +85,12 @@ encrypto::motion::RunTimeStatistics EvaluateProtocol(
       throw std::invalid_argument("Invalid MPC protocol");
   }
 
-  encrypto::motion::SecureUnsignedInteger output =
-      CreateInnerProductCircuit(shared_input[0], shared_input[1]);
+  encrypto::motion::SecureUnsignedInteger output;
+  if (iterative) {
+    output = CreateInnerProductCircuitIterative(shared_input[0], shared_input[1]);
+  } else {
+    output = CreateInnerProductCircuitSimd(shared_input[0], shared_input[1]);
+  }
 
   // Constructs an output gate for the output.
   output = output.Out();
@@ -99,10 +111,14 @@ encrypto::motion::RunTimeStatistics EvaluateProtocol(
 /**
  * Constructs the inner product of the two given inputs.
  */
-encrypto::motion::SecureUnsignedInteger CreateInnerProductCircuit(
-    encrypto::motion::SecureUnsignedInteger a, encrypto::motion::SecureUnsignedInteger b) {
+encrypto::motion::SecureUnsignedInteger CreateInnerProductCircuitSimd(
+    std::vector<encrypto::motion::SecureUnsignedInteger>& a,
+    std::vector<encrypto::motion::SecureUnsignedInteger>& b) {
+  auto a_simd = encrypto::motion::SecureUnsignedInteger::Simdify(a);
+  auto b_simd = encrypto::motion::SecureUnsignedInteger::Simdify(b);
+
   // Multiplies the values in a and b, that usually has more than one SIMD values, simultaneously.
-  encrypto::motion::SecureUnsignedInteger mult = a * b;
+  encrypto::motion::SecureUnsignedInteger mult = a_simd * b_simd;
 
   /* Divides mult into shares with exactly 1 SIMD value. It will return a vector {mult_0, ...,
    * mult_n} with exactly one SIMD value in each. The values can then be operated individually.
@@ -113,6 +129,16 @@ encrypto::motion::SecureUnsignedInteger CreateInnerProductCircuit(
   for (std::size_t i = 1; i < mult_unsimdified.size(); i++) result += mult_unsimdified[i];
 
   return result;
+}
+
+encrypto::motion::SecureUnsignedInteger CreateInnerProductCircuitIterative(
+    std::vector<encrypto::motion::SecureUnsignedInteger>& a,
+    std::vector<encrypto::motion::SecureUnsignedInteger>& b) {
+  auto sum = a[0] * b[0];
+  for (std::size_t i = 1; i < a.size(); i++) {
+    sum += a[i] * b[i];
+  }
+  return sum;
 }
 
 /**

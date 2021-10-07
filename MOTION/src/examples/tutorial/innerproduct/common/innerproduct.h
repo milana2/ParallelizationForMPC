@@ -30,9 +30,14 @@
 encrypto::motion::RunTimeStatistics EvaluateProtocol(
     encrypto::motion::PartyPointer& party, encrypto::motion::MpcProtocol protocol,
     std::span<const std::uint32_t> input_command_line, const std::string& input_file_path,
-    bool print_output);
+    bool print_output, bool iterative);
 
-encrypto::motion::SecureUnsignedInteger CreateInnerProductCircuit(
-    encrypto::motion::SecureUnsignedInteger a, encrypto::motion::SecureUnsignedInteger b);
+encrypto::motion::SecureUnsignedInteger CreateInnerProductCircuitSimd(
+    std::vector<encrypto::motion::SecureUnsignedInteger>& a,
+    std::vector<encrypto::motion::SecureUnsignedInteger>& b);
+
+encrypto::motion::SecureUnsignedInteger CreateInnerProductCircuitIterative(
+    std::vector<encrypto::motion::SecureUnsignedInteger>& a,
+    std::vector<encrypto::motion::SecureUnsignedInteger>& b);
 
 std::vector<std::uint32_t> GetFileInput(const std::string& path);

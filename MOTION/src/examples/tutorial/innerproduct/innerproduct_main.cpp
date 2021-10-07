@@ -61,6 +61,7 @@ int main(int ac, char* av[]) {
         {"BMR", encrypto::motion::MpcProtocol::kBmr},
     };
     bool print_output = flag[1];
+    bool iterative = flag[2];
     std::vector<std::uint32_t> input_command_line;
     std::string input_file_path;
     if (user_options.count("input"))
@@ -77,7 +78,7 @@ int main(int ac, char* av[]) {
     if (protocol_iterator != protocol_conversion.end()) {
       protocol = protocol_iterator->second;
       auto statistics = EvaluateProtocol(party, protocol, input_command_line, input_file_path,
-                                         print_output);
+                                         print_output, iterative);
       accumulated_statistics.Add(statistics);
     } else {
       throw std::invalid_argument("Invalid MPC protocol");
@@ -119,11 +120,12 @@ std::pair<program_options::variables_map, std::vector<bool>> ParseProgramOptions
   using namespace std::string_view_literals;
   constexpr std::string_view kConfigFileMessage =
       "configuration file, other arguments will overwrite the parameters read from the configuration file"sv;
-  bool print, help, print_output;
+  bool print, help, print_output, iterative;
   program_options::options_description description("Allowed options");
   // clang-format off
     description.add_options()
             ("help,h", program_options::bool_switch(&help)->default_value(false), "produce help message")
+            ("iterative", program_options::bool_switch(&iterative)->default_value(false), "use iterative program instead of SIMD program")
             ("disable-logging,l", "disable logging to file")
             ("print-configuration,p", program_options::bool_switch(&print)->default_value(false), "print configuration")
             ("configuration-file,f", program_options::value<std::string>(), kConfigFileMessage.data())
@@ -193,7 +195,7 @@ std::pair<program_options::variables_map, std::vector<bool>> ParseProgramOptions
   if (print) {
     std::cout << "MPC Protocol: " << user_options["protocol"].as<std::string>() << std::endl;
   }
-  return std::make_pair(user_options, std::vector<bool>{help, print_output});
+  return std::make_pair(user_options, std::vector<bool>{help, print_output, iterative});
 }
 
 encrypto::motion::PartyPointer CreateParty(const program_options::variables_map& user_options) {
