@@ -59,6 +59,7 @@ int main(int ac, char* av[]) {
         {"BMR", encrypto::motion::MpcProtocol::kBmr},
     };
     bool print_output = flag[1];
+    bool divide_and_conquer = flag[2];
     std::vector<std::uint32_t> input_command_line;
     std::string input_file_path;
     if (user_options.count("input"))
@@ -74,8 +75,8 @@ int main(int ac, char* av[]) {
     auto protocol_iterator = protocol_conversion.find(protocol_string);
     if (protocol_iterator != protocol_conversion.end()) {
       protocol = protocol_iterator->second;
-      auto statistics =
-          EvaluateProtocol(party, protocol, input_command_line, input_file_path, print_output);
+      auto statistics = EvaluateProtocol(party, protocol, input_command_line, input_file_path,
+                                         print_output, divide_and_conquer);
       accumulated_statistics.Add(statistics);
     } else {
       throw std::invalid_argument("Invalid MPC protocol");
@@ -117,7 +118,7 @@ std::pair<program_options::variables_map, std::vector<bool>> ParseProgramOptions
   using namespace std::string_view_literals;
   constexpr std::string_view kConfigFileMessage =
       "configuration file, other arguments will overwrite the parameters read from the configuration file"sv;
-  bool print, help, print_output;
+  bool print, help, print_output, divide_and_conquer;
   program_options::options_description description("Allowed options");
   // clang-format off
     description.add_options()
@@ -132,6 +133,7 @@ std::pair<program_options::variables_map, std::vector<bool>> ParseProgramOptions
             ("online-after-setup", program_options::value<bool>()->default_value(true),
              "compute the online phase of the gate evaluations after the setup phase for all of them is completed (true/1 or false/0)")
             ("print-output", program_options::bool_switch(&print_output)->default_value(false), "print result")
+            ("divide-and-conquer", program_options::bool_switch(&divide_and_conquer)->default_value(false), "perform divide-and-conquer simd algorithm")
             ("input", program_options::value<std::vector<std::uint32_t>>()->multitoken(),
              "get party's input from command line, e.g 1 2 3")
             ("input-file", program_options::value<std::string>(),
@@ -147,7 +149,7 @@ std::pair<program_options::variables_map, std::vector<bool>> ParseProgramOptions
   if (help) {
     std::cout << description << "\n";
     return std::make_pair<program_options::variables_map, std::vector<bool>>(
-        {}, std::vector<bool>{true, print_output});
+        {}, std::vector<bool>{true, print_output, divide_and_conquer});
   }
 
   // read configuration file
@@ -191,7 +193,7 @@ std::pair<program_options::variables_map, std::vector<bool>> ParseProgramOptions
   if (print) {
     std::cout << "MPC Protocol: " << user_options["protocol"].as<std::string>() << std::endl;
   }
-  return std::make_pair(user_options, std::vector<bool>{help, print_output});
+  return std::make_pair(user_options, std::vector<bool>{help, print_output, divide_and_conquer});
 }
 
 encrypto::motion::PartyPointer CreateParty(const program_options::variables_map& user_options) {

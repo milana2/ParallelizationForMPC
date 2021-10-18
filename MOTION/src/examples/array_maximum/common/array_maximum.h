@@ -30,6 +30,6 @@
 encrypto::motion::RunTimeStatistics EvaluateProtocol(
     encrypto::motion::PartyPointer& party, encrypto::motion::MpcProtocol protocol,
     std::span<const std::uint32_t> input_command_line, const std::string& input_file_path,
-    bool print_output);
+    bool print_output, bool divide_and_conquer);
 
 std::vector<std::uint32_t> GetFileInput(const std::string& path);

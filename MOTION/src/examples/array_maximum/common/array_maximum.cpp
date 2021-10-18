@@ -35,7 +35,7 @@
 /**
  * Constructs the inner product of the two given inputs.
  */
-encrypto::motion::SecureUnsignedInteger CreateArrayMaximumCircuit(
+encrypto::motion::SecureUnsignedInteger CreateArrayMaximumCircuitUnsimd(
     std::vector<encrypto::motion::SecureUnsignedInteger> a,
     std::vector<encrypto::motion::SecureUnsignedInteger> b) {
   encrypto::motion::SecureUnsignedInteger max_val = a[0];
@@ -52,10 +52,41 @@ encrypto::motion::SecureUnsignedInteger CreateArrayMaximumCircuit(
   return max_val;
 }
 
+encrypto::motion::SecureUnsignedInteger CreateArrayMaximumCircuitSimd(
+    std::vector<encrypto::motion::SecureUnsignedInteger> A,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B) {
+  // All of B's values into A
+  std::copy(B.begin(), B.end(), std::back_inserter(A));
+
+  while (A.size() > 1) {
+    std::vector<encrypto::motion::SecureUnsignedInteger> firstHalf(A.begin(),
+                                                                   A.begin() + A.size() / 2);
+    std::vector<encrypto::motion::SecureUnsignedInteger> secondHalf(A.begin() + A.size() / 2,
+                                                                    A.end());
+
+    auto firstHalfSimd = encrypto::motion::SecureUnsignedInteger::Simdify(firstHalf);
+    auto secondHalfSimd = encrypto::motion::SecureUnsignedInteger::Simdify(secondHalf);
+
+    auto C = firstHalfSimd > secondHalfSimd;
+
+    auto A_unsimd = C.Mux(firstHalfSimd.Get(), secondHalfSimd.Get()).Unsimdify();
+
+    // A_unsimd is a vector of ShareWrappers, which for whatever reason cannot
+    // be converted to a vector of SecureUnsignedIntegers (even though an individual
+    // ShareWrapper can be converted to a SecureUnsignedInteger)...
+    A.resize(A_unsimd.size());
+    for (size_t i = 0; i < A.size(); i++) {
+      A[i] = A_unsimd[i];
+    }
+  }
+
+  return A[0];
+}
+
 encrypto::motion::RunTimeStatistics EvaluateProtocol(
     encrypto::motion::PartyPointer& party, encrypto::motion::MpcProtocol protocol,
     std::span<const std::uint32_t> input_command_line, const std::string& input_file_path,
-    bool print_output) {
+    bool print_output, bool divide_and_conquer) {
   std::array<std::vector<encrypto::motion::SecureUnsignedInteger>, 2> shared_input;
   std::vector<std::vector<std::uint32_t>> input;
 
@@ -98,8 +129,12 @@ encrypto::motion::RunTimeStatistics EvaluateProtocol(
       throw std::invalid_argument("Invalid MPC protocol");
   }
 
-  encrypto::motion::SecureUnsignedInteger output =
-      CreateArrayMaximumCircuit(shared_input[0], shared_input[1]);
+  encrypto::motion::SecureUnsignedInteger output;
+  if (!divide_and_conquer) {
+    output = CreateArrayMaximumCircuitUnsimd(shared_input[0], shared_input[1]);
+  } else {
+    output = CreateArrayMaximumCircuitSimd(shared_input[0], shared_input[1]);
+  }
 
   // Constructs an output gate for the output.
   output = output.Out();
