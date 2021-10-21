@@ -56,6 +56,9 @@ class Block:
         return id(self)
 
 
+BranchKind = Enum("BranchKind", "UNCONDITIONAL TRUE FALSE")
+
+
 @dataclass
 class Function:
     parameters: list[Var]

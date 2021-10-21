@@ -56,7 +56,11 @@ class _CFGBuilder:
     def add_jump(self, target_block: tac_cfg.Block):
         assert self._current_block.terminator is None
         self._current_block.terminator = tac_cfg.Jump()
-        self._cfg.add_edge(self._current_block, target_block)
+        self._cfg.add_edge(
+            u_of_edge=self._current_block,
+            v_of_edge=target_block,
+            branch_kind=tac_cfg.BranchKind.UNCONDITIONAL,
+        )
 
     def add_conditional_jump(
         self,
@@ -66,8 +70,16 @@ class _CFGBuilder:
     ):
         assert self._current_block.terminator is None
         self._current_block.terminator = tac_cfg.ConditionalJump(condition)
-        self._cfg.add_edge(self._current_block, false_block, condition=False)
-        self._cfg.add_edge(self._current_block, true_block, condition=True)
+        self._cfg.add_edge(
+            u_of_edge=self._current_block,
+            v_of_edge=false_block,
+            branch_kind=tac_cfg.BranchKind.FALSE,
+        )
+        self._cfg.add_edge(
+            u_of_edge=self._current_block,
+            v_of_edge=true_block,
+            branch_kind=tac_cfg.BranchKind.TRUE,
+        )
 
     def build_function(self, parameters: list[tac_cfg.Var]) -> tac_cfg.Function:
         assert self._current_block.terminator is not None
