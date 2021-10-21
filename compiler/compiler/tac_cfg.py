@@ -44,12 +44,16 @@ class Return:
 BlockTerminator = Union[Jump, ConditionalJump, Return]
 
 
-@dataclass
+@dataclass(eq=False)
 class Block:
     assignments: list[Assign]
     # The block is invalid if it has no terminator.
     # The `Optional` is only for ease of construction.
     terminator: Optional[BlockTerminator]
+
+    # Allow creating graph of blocks
+    def __hash__(self):
+        return id(self)
 
 
 @dataclass

@@ -152,6 +152,7 @@ def _build_for(for_loop: restricted_ast.For, builder: _CFGBuilder):
     # Jump to a new block so the end of the loop can jump back here
     condition_block = builder.make_empty_block()
     builder.add_jump(condition_block)
+    builder.set_current_block(condition_block)
 
     # condition_var = counter < bound
     condition_var = _generate_variable()

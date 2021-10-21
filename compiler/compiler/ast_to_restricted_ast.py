@@ -15,8 +15,8 @@ class _StrictNodeVisitor(ast.NodeVisitor):
 
 
 class _NameGetter(_StrictNodeVisitor):
-    def visit_Name(self, node: ast.Name) -> str:
-        return node.id
+    def visit_Name(self, node: ast.Name) -> restricted_ast.Var:
+        return restricted_ast.Var(node.id)
 
 
 @dataclass
