@@ -4,7 +4,6 @@ a three-address code control flow graph
 """
 
 
-from dataclasses import dataclass
 import networkx
 
 import restricted_ast
