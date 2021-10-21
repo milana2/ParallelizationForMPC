@@ -50,9 +50,9 @@ class If:
     else_body: list[Statement]
 
 
-BinOpLHS = Union[Subscript, Var]
+BinOpLHS = Union[Index, Var]
 
-BinOpRHS = Union[Subscript, Var, ConstantInt]
+BinOpRHS = Union[Index, Var, ConstantInt]
 
 
 @dataclass
@@ -64,9 +64,9 @@ class BinOp:
     right: BinOpRHS
 
 
-AssignLHS = Union[Subscript, Var]
+AssignLHS = Union[Index, Var]
 
-AssignRHS = Union[Subscript, Var, BinOp, ConstantInt]
+AssignRHS = Union[Index, Var, BinOp, ConstantInt]
 
 
 @dataclass

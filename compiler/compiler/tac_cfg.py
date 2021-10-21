@@ -15,12 +15,12 @@ class BinOp:
     right: Var
 
 
-AssignLHS = Union[Subscript, Var]
+AssignLHS = Union[Index, Var]
 
-AssignRHS = Union[Subscript, Var, BinOp, ConstantInt]
+AssignRHS = Union[Index, Var, BinOp, ConstantInt]
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Assign:
     lhs: AssignLHS
     rhs: AssignRHS

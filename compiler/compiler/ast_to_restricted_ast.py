@@ -52,15 +52,15 @@ class _RangeBoundGetter(_StrictNodeVisitor):
         return _LoopBoundConverter().visit(node.args[-1])
 
 
-def _convert_subscript(node: ast.Subscript) -> restricted_ast.Subscript:
-    return restricted_ast.Subscript(
+def _convert_subscript(node: ast.Subscript) -> restricted_ast.Index:
+    return restricted_ast.Index(
         array=_NameGetter().visit(node.value),
         index=_NameGetter().visit(node.slice),
     )
 
 
 class _BinOpLHSConverter(_StrictNodeVisitor):
-    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Subscript:
+    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Index:
         return _convert_subscript(node)
 
     def visit_Name(self, node: ast.Name) -> restricted_ast.Var:
@@ -68,7 +68,7 @@ class _BinOpLHSConverter(_StrictNodeVisitor):
 
 
 class _BinOpRHSConverter(_StrictNodeVisitor):
-    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Subscript:
+    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Index:
         return _convert_subscript(node)
 
     def visit_Name(self, node: ast.Name) -> restricted_ast.Var:
@@ -79,7 +79,7 @@ class _BinOpRHSConverter(_StrictNodeVisitor):
 
 
 class _AssignLHSConverter(_StrictNodeVisitor):
-    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Subscript:
+    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Index:
         return _convert_subscript(node)
 
     def visit_Name(self, node: ast.Name) -> restricted_ast.Var:
@@ -104,7 +104,7 @@ def _convert_binary_operator(op: ast.operator) -> restricted_ast.BinOpKind:
 
 
 class _AssignRHSConverter(_StrictNodeVisitor):
-    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Subscript:
+    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Index:
         return _convert_subscript(node)
 
     def visit_Name(self, node: ast.Name) -> restricted_ast.Var:

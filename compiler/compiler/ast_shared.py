@@ -17,8 +17,8 @@ class ConstantInt:
 
 
 @dataclass(frozen=True)
-class Subscript:
-    """An array subscript expression of the form `array[index]`"""
+class Index:
+    """An array index expression of the form `array[index]`"""
 
     array: Var
     index: Var

@@ -93,7 +93,7 @@ class _CFGBuilder:
 
 def _build_assignment(assignment: restricted_ast.Assign, builder: _CFGBuilder):
     if (
-        isinstance(assignment.rhs, restricted_ast.Subscript)
+        isinstance(assignment.rhs, restricted_ast.Index)
         or isinstance(assignment.rhs, restricted_ast.Var)
         or isinstance(assignment.rhs, restricted_ast.ConstantInt)
     ):
@@ -101,7 +101,7 @@ def _build_assignment(assignment: restricted_ast.Assign, builder: _CFGBuilder):
     elif isinstance(assignment.rhs, restricted_ast.BinOp):
         bin_op = assignment.rhs
 
-        if isinstance(bin_op.left, restricted_ast.Subscript):
+        if isinstance(bin_op.left, restricted_ast.Index):
             tmp_var = _generate_variable()
             builder.add_assignment(tac_cfg.Assign(lhs=tmp_var, rhs=bin_op.left))
             left = tmp_var
@@ -110,7 +110,7 @@ def _build_assignment(assignment: restricted_ast.Assign, builder: _CFGBuilder):
         else:
             assert_never(bin_op.left)
 
-        if isinstance(bin_op.right, restricted_ast.Subscript) or isinstance(
+        if isinstance(bin_op.right, restricted_ast.Index) or isinstance(
             bin_op.right, restricted_ast.ConstantInt
         ):
             tmp_var = _generate_variable()

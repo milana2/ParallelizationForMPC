@@ -22,9 +22,8 @@ from tac_cfg import (
 
 @dataclass
 class Phi:
-    target_var: AssignLHS
-    left_branch_var: AssignLHS
-    right_branch_var: AssignLHS
+    lhs: AssignLHS
+    rhs: list[AssignLHS]
 
 
 @dataclass(eq=False)

@@ -6,9 +6,11 @@ to static single assignment form
 from collections import Counter
 
 import networkx
+from networkx.algorithms.shortest_paths.unweighted import predecessor
 
 import tac_cfg
 import ssa
+from util import assert_never
 
 
 def _compute_blocks_setting_vars(
@@ -21,10 +23,28 @@ def _compute_blocks_setting_vars(
         block: ssa.Block = block
         for assignment in block.assignments:
             var = assignment.lhs
-            try:
-                result[var].add(block)
-            except KeyError:
+
+            if var not in result:
                 result[var] = set()
+
+            result[var].add(block)
+
+    return result
+
+
+def _compute_dominance_tree(function: ssa.Function) -> dict[ssa.Block, set[ssa.Block]]:
+    dominance_tree_dict: dict[
+        ssa.Block, ssa.Block
+    ] = networkx.algorithms.immediate_dominators(
+        G=function.body, start=function.entry_block
+    )
+
+    result: dict[ssa.Block, set[ssa.Block]] = dict()
+    for k, v in dominance_tree_dict.items():
+        if v not in result:
+            result[v] = set()
+
+        result[v].add(k)
 
     return result
 
@@ -71,12 +91,18 @@ def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
     )
 
 
+def _subscript_var(var: ssa.Var, i: int):
+    return ssa.Var(f"{var.name}!{i}")
+
+
 def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
     result = _tac_cfg_to_ssa_struct(tac_cfg_function)
 
     dominance_frontiers: dict[
         ssa.Block, set[ssa.Block]
     ] = networkx.algorithms.dominance_frontiers(G=result.body, start=result.entry_block)
+
+    dominance_tree = _compute_dominance_tree(result)
 
     blocks_setting_vars = _compute_blocks_setting_vars(result)
 
@@ -99,12 +125,83 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
             for Y in dominance_frontiers[X]:
                 Y: ssa.Block = Y
                 if has_already[Y] < iter_count:
-                    Y.phi_functions.append(
-                        ssa.Phi(target_var=V, left_branch_var=V, right_branch_var=V)
-                    )
+                    num_predecessors = sum(1 for _ in result.body.predecessors(Y))
+                    Y.phi_functions.append(ssa.Phi(lhs=V, rhs=[V] * num_predecessors))
                     has_already[Y] = iter_count
                     if work[Y] < iter_count:
                         work[Y] = iter_count
                         W.add(Y)
+
+    # Rename variables
+
+    S: dict[ssa.AssignLHS, list[int]] = dict()
+    C: dict[ssa.AssignLHS, int] = dict()
+
+    for V in result.parameters:
+        C[V] = 1
+        S[V] = [0]
+
+    for V in blocks_setting_vars.keys():
+        C[V] = 0
+        S[V] = list()
+
+    def search(X: ssa.Block):
+        old_lhs: dict[ssa.Assign, ssa.AssignLHS] = dict()
+
+        for A in X.assignments:
+            if isinstance(A.rhs, ssa.Index):
+                pass  # TODO: Support this
+            elif isinstance(A.rhs, ssa.ConstantInt):
+                pass
+            elif isinstance(A.rhs, ssa.Var):
+                V = A.rhs
+                A.rhs = _subscript_var(V, S[V][-1])
+            elif isinstance(A.rhs, ssa.BinOp):
+                V = A.rhs.left
+                A.rhs.left = _subscript_var(V, S[V][-1])
+                V = A.rhs.right
+                A.rhs.right = _subscript_var(V, S[V][-1])
+            else:
+                assert_never(A.rhs)
+
+            V = A.lhs
+            i = C[V]
+
+            if isinstance(V, ssa.Index):
+                pass  # TODO: Support this
+            elif isinstance(V, ssa.Var):
+                old_lhs[A] = A.lhs
+                A.lhs = _subscript_var(V, i)
+            else:
+                assert_never(V)
+
+            S[V].append(i)
+            C[V] = i + 1
+
+        for Y in result.body.successors(X):
+            Y: ssa.Block
+            j = [
+                i
+                for i, predecessor in enumerate(result.body.predecessors(Y))
+                if predecessor == X
+            ][0]
+            for F in Y.phi_functions:
+                V = F.rhs[j]
+                i = S[V][-1]
+                if isinstance(V, ssa.Index):
+                    pass  # TODO: Support this
+                elif isinstance(V, ssa.Var):
+                    F.rhs[j] = _subscript_var(V, i)
+                else:
+                    assert_never(V)
+
+        for Y in dominance_tree[X]:
+            search(Y)
+
+        for A in X.assignments:
+            V = old_lhs[A]
+            S[V].pop()
+
+    search(result.entry_block)
 
     return result
