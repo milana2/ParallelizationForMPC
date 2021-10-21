@@ -1,28 +1,17 @@
-"""Data types representing three-address code"""
+"""
+Data types representing a restricted subset of Python's abstract syntax tree
+"""
 
 from typing import Union
 from dataclasses import dataclass
-from enum import Enum
 
-
-@dataclass
-class Var:
-    """A variable named `name`"""
-
-    name: str
-
-
-@dataclass
-class ConstantInt:
-    """A constant integer with value `value`"""
-
-    value: int
+from ast_shared import *
 
 
 Statement = Union["For", "If", "Assign", "Return"]
 
 
-LoopBound = Union[Var, int]
+LoopBound = Union[Var, ConstantInt]
 
 
 @dataclass
@@ -61,20 +50,7 @@ class If:
     else_body: list[Statement]
 
 
-Expression = Union["Subscript", "BinOp"]
-
-
-@dataclass
-class Subscript:
-    """An array subscript expression of the form `array[index]`"""
-
-    array: Var
-    index: Var
-
-
 BinOpLHS = Union[Subscript, Var]
-
-BinOpKind = Enum("BinOpKind", "ADD SUB MUL DIV MOD SHL SHR")
 
 BinOpRHS = Union[Subscript, Var, ConstantInt]
 
@@ -90,7 +66,7 @@ class BinOp:
 
 AssignLHS = Union[Subscript, Var]
 
-AssignRHS = Union[Subscript, Var, BinOp]
+AssignRHS = Union[Subscript, Var, BinOp, ConstantInt]
 
 
 @dataclass

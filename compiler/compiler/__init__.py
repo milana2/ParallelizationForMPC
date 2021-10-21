@@ -3,7 +3,7 @@
 import argparse
 import ast
 
-from ast_to_tac import ast_to_tac
+from ast_to_restricted_ast import ast_to_restricted_ast
 
 
 def parse_args():
@@ -15,9 +15,9 @@ def parse_args():
 def main():
     args = parse_args()
     ast_node = ast.parse(args.input.read())
-    tac_node = ast_to_tac(ast_node)
+    ast_node = ast_to_restricted_ast(ast_node)
 
-    print(tac_node)
+    print(ast_node)
 
 
 if __name__ == "__main__":
