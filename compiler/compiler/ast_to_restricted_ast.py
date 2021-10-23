@@ -34,22 +34,27 @@ class _ConstantIntGetter(_StrictNodeVisitor):
 
 
 class _LoopBoundConverter(_StrictNodeVisitor):
-    def visit_Constant(self, node: ast.Constant) -> int:
+    def visit_Constant(self, node: ast.Constant) -> restricted_ast.LoopBound:
         assert type(node.value) == int
         return node.value
 
-    def visit_Name(self, node: ast.Name) -> restricted_ast.Var:
+    def visit_Name(self, node: ast.Name) -> restricted_ast.LoopBound:
         return restricted_ast.Var(name=node.id)
 
 
-class _RangeBoundGetter(_StrictNodeVisitor):
-    def visit_Call(self, node: ast.Call) -> int:
+class _RangeBoundsGetter(_StrictNodeVisitor):
+    def visit_Call(
+        self, node: ast.Call
+    ) -> tuple[restricted_ast.LoopBound, restricted_ast.LoopBound]:
         _NameExpector("range").visit(node.func)
         assert node.keywords == []
-        assert len(node.args) == 1 or (
-            len(node.args) == 2 and _ConstantIntGetter().visit(node.args[0]) == 0
-        )
-        return _LoopBoundConverter().visit(node.args[-1])
+        bounds = [_LoopBoundConverter().visit(arg) for arg in node.args]
+        if len(bounds) == 1:
+            return (restricted_ast.ConstantInt(0), bounds[0])
+        elif len(bounds) == 2:
+            return (bounds[0], bounds[1])
+        else:
+            assert False
 
 
 def _convert_subscript(node: ast.Subscript) -> restricted_ast.Index:
@@ -139,9 +144,11 @@ def _convert_statements(statements: list[ast.stmt]) -> list[restricted_ast.State
 class _StatementConverter(_StrictNodeVisitor):
     def visit_For(self, node: ast.For) -> restricted_ast.For:
         assert node.orelse == []
+        (bound_low, bound_high) = _RangeBoundsGetter().visit(node.iter)
         return restricted_ast.For(
             counter=_NameGetter().visit(node.target),
-            bound=_RangeBoundGetter().visit(node.iter),
+            bound_low=bound_low,
+            bound_high=bound_high,
             body=_convert_statements(node.body),
         )
 

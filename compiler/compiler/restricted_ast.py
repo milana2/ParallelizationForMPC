@@ -20,13 +20,14 @@ class For:
     A for loop of the form
 
     ```python
-    for counter in range(bound):
+    for counter in range(bound_low, bound_high):
         body
     ```
     """
 
     counter: Var
-    bound: LoopBound
+    bound_low: LoopBound
+    bound_high: LoopBound
     body: list[Statement]
 
 

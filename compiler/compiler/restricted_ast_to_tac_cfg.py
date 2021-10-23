@@ -184,21 +184,19 @@ def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
 
 
 def _build_for(for_loop: restricted_ast.For, builder: _CFGBuilder):
-    # counter = 0
-    builder.add_assignment(
-        tac_cfg.Assign(lhs=for_loop.counter, rhs=tac_cfg.ConstantInt(value=0))
-    )
+    # counter = bound_low
+    builder.add_assignment(tac_cfg.Assign(lhs=for_loop.counter, rhs=for_loop.bound_low))
 
-    # bound_var = bound
+    # bound_high_var = bound_high
     bound_var = _generate_variable()
-    builder.add_assignment(tac_cfg.Assign(lhs=bound_var, rhs=for_loop.bound))
+    builder.add_assignment(tac_cfg.Assign(lhs=bound_var, rhs=for_loop.bound_high))
 
     # Jump to a new block so the end of the loop can jump back here
     condition_block = builder.make_empty_block()
     builder.add_jump(condition_block)
     builder.set_current_block(condition_block)
 
-    # condition_var = counter < bound
+    # condition_var = counter < bound_high
     condition_var = _generate_variable()
     builder.add_assignment(
         tac_cfg.Assign(
