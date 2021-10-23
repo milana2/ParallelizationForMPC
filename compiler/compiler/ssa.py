@@ -2,11 +2,9 @@
 
 from typing import Optional
 from dataclasses import dataclass
-from enum import Enum
 
-import networkx
-
-from ast_shared import *
+from ast_shared import Var, ConstantInt
+from ast_shared import CFGFunction as _CFGFunction
 from tac_cfg import (
     BinOp,
     UnaryOp,
@@ -30,6 +28,10 @@ class Phi:
     def __hash__(self):
         return id(self)
 
+    def __str__(self) -> str:
+        rhs = ", ".join([str(v) for v in self.rhs])
+        return f"{self.lhs} = Φ({rhs})"
+
 
 @dataclass(eq=False)
 class Block:
@@ -43,10 +45,14 @@ class Block:
     def __hash__(self):
         return id(self)
 
+    def __str__(self) -> str:
+        return (
+            "\n".join([str(phi) for phi in self.phi_functions])
+            + ("" if self.phi_functions == [] else "\n")
+            + "\n".join([str(assignment) for assignment in self.assignments])
+            + ("" if self.assignments == [] else "\n")
+            + str(self.terminator)
+        )
 
-@dataclass
-class Function:
-    parameters: list[Var]
-    body: networkx.DiGraph
-    entry_block: Block
-    exit_block: Block
+
+Function = _CFGFunction[Block]

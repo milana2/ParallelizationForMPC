@@ -30,6 +30,16 @@ class For:
     bound_high: LoopBound
     body: list[Statement]
 
+    def __str__(self, indent_level: int = 0) -> str:
+        indent = "    " * indent_level
+        body = "\n".join(
+            [statement.__str__(indent_level + 1) for statement in self.body]
+        )
+        return (
+            f"{indent}for {self.counter} in range({self.bound_low}, {self.bound_high}):\n"
+            + body
+        )
+
 
 @dataclass
 class If:
@@ -50,6 +60,22 @@ class If:
     then_body: list[Statement]
     else_body: list[Statement]
 
+    def __str__(self, indent_level: int = 0) -> str:
+        indent = "    " * indent_level
+        then_body = "\n".join(
+            [statement.__str__(indent_level + 1) for statement in self.then_body]
+        )
+        else_body = (
+            ""
+            if self.else_body == []
+            else "\n"
+            + f"{indent}else:\n"
+            + "\n".join(
+                [statement.__str__(indent_level + 1) for statement in self.else_body]
+            )
+        )
+        return f"{indent}if {self.condition}:\n" + then_body + else_body
+
 
 Expression = Union[Var, ConstantInt, "Index", "BinOp", "UnaryOp"]
 
@@ -61,6 +87,9 @@ class Index:
     array: Var
     index: Expression
 
+    def __str__(self) -> str:
+        return f"{self.array}[{self.index}]"
+
 
 @dataclass
 class BinOp:
@@ -70,6 +99,9 @@ class BinOp:
     operator: BinOpKind
     right: Expression
 
+    def __str__(self) -> str:
+        return f"({self.left} {self.operator} {self.right})"
+
 
 @dataclass
 class UnaryOp:
@@ -77,6 +109,9 @@ class UnaryOp:
 
     operator: UnaryOpKind
     operand: Expression
+
+    def __str__(self) -> str:
+        return f"{self.operator} {self.operand}"
 
 
 AssignLHS = Union[Index, Var]
@@ -88,6 +123,10 @@ class Assign:
 
     lhs: AssignLHS
     rhs: Expression
+
+    def __str__(self, indent_level: int = 0) -> str:
+        indent = "    " * indent_level
+        return f"{indent}{self.lhs} = {self.rhs}"
 
 
 @dataclass
@@ -105,3 +144,8 @@ class Function:
     parameters: list[Var]
     body: list[Statement]
     return_var: Var
+
+    def __str__(self) -> str:
+        parameters = ", ".join([str(parameter) for parameter in self.parameters])
+        body = "\n".join([statement.__str__(1) for statement in self.body]) + "\n"
+        return f"def foo({parameters}):\n" + body + f"    return {self.return_var}"

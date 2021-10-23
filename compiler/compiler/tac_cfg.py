@@ -1,11 +1,11 @@
 """Data types representing a three-address code control flow graph"""
 
+from enum import Enum
 from typing import Union, Optional
 from dataclasses import dataclass
 
-import networkx
-
-from ast_shared import *
+from ast_shared import Var, BinOpKind, UnaryOpKind, ConstantInt
+from ast_shared import CFGFunction as _CFGFunction
 
 
 @dataclass
@@ -14,17 +14,26 @@ class BinOp:
     operator: BinOpKind
     right: Var
 
+    def __str__(self) -> str:
+        return f"{self.left} {self.operator} {self.right}"
+
 
 @dataclass
 class UnaryOp:
     operator: UnaryOpKind
     operand: Var
 
+    def __str__(self) -> str:
+        return f"{self.operator} {self.operand}"
+
 
 @dataclass
 class Index:
     array: Var
     index: Var
+
+    def __str__(self) -> str:
+        return f"{self.array}[{self.index}]"
 
 
 AssignLHS = Union[Index, Var]
@@ -40,10 +49,14 @@ class Assign:
     def __hash__(self):
         return id(self)
 
+    def __str__(self) -> str:
+        return f"{self.lhs} = {self.rhs}"
+
 
 @dataclass
 class Jump:
-    pass
+    def __str__(self) -> str:
+        return "jump"
 
 
 @dataclass(eq=False)
@@ -53,6 +66,9 @@ class ConditionalJump:
     def __hash__(self):
         return id(self)
 
+    def __str__(self) -> str:
+        return f"conditional jump {self.condition}"
+
 
 @dataclass(eq=False)
 class Return:
@@ -60,6 +76,9 @@ class Return:
 
     def __hash__(self):
         return id(self)
+
+    def __str__(self) -> str:
+        return f"return {self.value}"
 
 
 BlockTerminator = Union[Jump, ConditionalJump, Return]
@@ -76,13 +95,15 @@ class Block:
     def __hash__(self):
         return id(self)
 
+    def __str__(self) -> str:
+        return (
+            "\n".join([str(assignment) for assignment in self.assignments])
+            + ("" if self.assignments == [] else "\n")
+            + str(self.terminator)
+        )
+
 
 BranchKind = Enum("BranchKind", "UNCONDITIONAL TRUE FALSE")
 
 
-@dataclass
-class Function:
-    parameters: list[Var]
-    body: networkx.DiGraph
-    entry_block: Block
-    exit_block: Block
+Function = _CFGFunction[Block]
