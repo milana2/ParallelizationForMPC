@@ -36,17 +36,15 @@
  * Constructs the inner product of the two given inputs.
  */
 encrypto::motion::SecureUnsignedInteger CreateArrayMaximumCircuitUnsimd(
-    std::vector<encrypto::motion::SecureUnsignedInteger> a,
-    std::vector<encrypto::motion::SecureUnsignedInteger> b) {
-  encrypto::motion::SecureUnsignedInteger max_val = a[0];
-  for (std::size_t i = 1; i < a.size(); i++) {
-    auto cmp = max_val > a[i];
-    max_val = cmp.Mux(max_val.Get(), a[i].Get());
-  }
+    std::vector<encrypto::motion::SecureUnsignedInteger> A,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B) {
+  // All of B's values into A
+  std::copy(B.begin(), B.end(), std::back_inserter(A));
 
-  for (std::size_t i = 0; i < b.size(); i++) {
-    auto cmp = max_val > b[i];
-    max_val = cmp.Mux(max_val.Get(), b[i].Get());
+  encrypto::motion::SecureUnsignedInteger max_val = A[0];
+  for (std::size_t i = 1; i < A.size(); i++) {
+    auto cmp = max_val > A[i];
+    max_val = cmp.Mux(max_val.Get(), A[i].Get());
   }
 
   return max_val;
