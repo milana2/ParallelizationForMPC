@@ -146,4 +146,8 @@ class Function:
     def __str__(self) -> str:
         parameters = ", ".join([str(parameter) for parameter in self.parameters])
         body = "\n".join([str(statement) for statement in self.body]) + "\n"
-        return f"def foo({parameters}):\n" + body + f"    return {self.return_var}"
+        return (
+            f"def foo({parameters}):\n"
+            + indent(body, "    ")
+            + f"    return {self.return_var}"
+        )
