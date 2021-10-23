@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Generic, TypeVar
 from dataclasses import dataclass
+from textwrap import indent
 
 import networkx
 
@@ -60,7 +61,10 @@ class CFGFunction(Generic[BLOCK]):
         parameters = ", ".join([str(parameter) for parameter in self.parameters])
         block_indices = {block: i for i, block in enumerate(self.body.nodes)}
         blocks = "\n".join(
-            [f"Block {i}:\n{block}" for i, block in enumerate(self.body.nodes)]
+            [
+                f"Block {i}:\n{indent(str(block), '    ')}"
+                for i, block in enumerate(self.body.nodes)
+            ]
         )
         edges = " ".join(
             [

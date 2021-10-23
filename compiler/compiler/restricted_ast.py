@@ -4,6 +4,7 @@ Data types representing a restricted subset of Python's abstract syntax tree
 
 from typing import Union
 from dataclasses import dataclass
+from textwrap import indent
 
 from ast_shared import *
 
@@ -30,14 +31,11 @@ class For:
     bound_high: LoopBound
     body: list[Statement]
 
-    def __str__(self, indent_level: int = 0) -> str:
-        indent = "    " * indent_level
-        body = "\n".join(
-            [statement.__str__(indent_level + 1) for statement in self.body]
-        )
+    def __str__(self) -> str:
+        body = "\n".join([str(statement) for statement in self.body])
         return (
-            f"{indent}for {self.counter} in range({self.bound_low}, {self.bound_high}):\n"
-            + body
+            f"for {self.counter} in range({self.bound_low}, {self.bound_high}):\n"
+            + indent(body, "    ")
         )
 
 
@@ -60,21 +58,22 @@ class If:
     then_body: list[Statement]
     else_body: list[Statement]
 
-    def __str__(self, indent_level: int = 0) -> str:
-        indent = "    " * indent_level
+    def __str__(self) -> str:
         then_body = "\n".join(
-            [statement.__str__(indent_level + 1) for statement in self.then_body]
+            [indent(str(statement), "    ") for statement in self.then_body]
         )
         else_body = (
             ""
             if self.else_body == []
-            else "\n"
-            + f"{indent}else:\n"
-            + "\n".join(
-                [statement.__str__(indent_level + 1) for statement in self.else_body]
+            else (
+                "\n"
+                + f"else:\n"
+                + "\n".join(
+                    [indent(str(statement), "    ") for statement in self.else_body]
+                )
             )
         )
-        return f"{indent}if {self.condition}:\n" + then_body + else_body
+        return f"if {self.condition}:\n" + then_body + else_body
 
 
 Expression = Union[Var, ConstantInt, "Index", "BinOp", "UnaryOp"]
@@ -124,9 +123,8 @@ class Assign:
     lhs: AssignLHS
     rhs: Expression
 
-    def __str__(self, indent_level: int = 0) -> str:
-        indent = "    " * indent_level
-        return f"{indent}{self.lhs} = {self.rhs}"
+    def __str__(self) -> str:
+        return f"{self.lhs} = {self.rhs}"
 
 
 @dataclass
@@ -147,5 +145,5 @@ class Function:
 
     def __str__(self) -> str:
         parameters = ", ".join([str(parameter) for parameter in self.parameters])
-        body = "\n".join([statement.__str__(1) for statement in self.body]) + "\n"
+        body = "\n".join([str(statement) for statement in self.body]) + "\n"
         return f"def foo({parameters}):\n" + body + f"    return {self.return_var}"
