@@ -9,8 +9,10 @@ import networkx
 from ast_shared import *
 from tac_cfg import (
     BinOp,
+    UnaryOp,
     AssignLHS,
     AssignRHS,
+    Index,
     Assign,
     Jump,
     ConditionalJump,

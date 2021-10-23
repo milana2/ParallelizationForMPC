@@ -166,6 +166,9 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
                     A.rhs.left = _subscript_var(V, S[V][-1])
                     V = A.rhs.right
                     A.rhs.right = _subscript_var(V, S[V][-1])
+                elif isinstance(A.rhs, ssa.UnaryOp):
+                    V = A.rhs.operand
+                    A.rhs.operand = _subscript_var(V, S[V][-1])
                 else:
                     assert_never(A.rhs)
 
