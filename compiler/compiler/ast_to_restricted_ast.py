@@ -27,12 +27,6 @@ class _NameExpector(_StrictNodeVisitor):
         assert node.id == self.name
 
 
-class _ConstantIntGetter(_StrictNodeVisitor):
-    def visit_Constant(self, node: ast.Constant) -> int:
-        assert type(node.value) == int
-        return node.value
-
-
 class _LoopBoundConverter(_StrictNodeVisitor):
     def visit_Constant(self, node: ast.Constant) -> restricted_ast.LoopBound:
         assert type(node.value) == int
