@@ -118,21 +118,7 @@ class _ExpressionConverter(_StrictNodeVisitor):
 
 
 def _convert_statements(statements: list[ast.stmt]) -> list[restricted_ast.Statement]:
-    result: list[restricted_ast.Statement] = [
-        _StatementConverter().visit(statement) for statement in statements
-    ]
-    # Ensure there isn't a return in the middle of a list of statements
-    assert (
-        len(
-            [
-                statement
-                for statement in result[:-1]
-                if isinstance(statement, restricted_ast.Return)
-            ]
-        )
-        == 0
-    )
-    return result
+    return [_StatementConverter().visit(statement) for statement in statements]
 
 
 class _StatementConverter(_StrictNodeVisitor):
@@ -167,19 +153,23 @@ class _StatementConverter(_StrictNodeVisitor):
             rhs=_ExpressionConverter().visit(node.value),
         )
 
-    def visit_Return(self, node: ast.Return) -> restricted_ast.Return:
+
+class _ReturnVarGetter(_StrictNodeVisitor):
+    def visit_Return(self, node: ast.Return) -> restricted_ast.Var:
         assert node.value is not None
-        return restricted_ast.Return(value=_NameGetter().visit(node.value))
+        return _NameGetter().visit(node.value)
 
 
 class _FunctionConverter(_StrictNodeVisitor):
     def visit_FunctionDef(self, node: ast.FunctionDef) -> restricted_ast.Function:
         # TODO: Check parameter and return types
         assert node.decorator_list == []
+        assert len(node.body) != 0
         return restricted_ast.Function(
             # TODO: Exclude other kinds of arguments
             parameters=[restricted_ast.Var(name=arg.arg) for arg in node.args.args],
-            body=_convert_statements(node.body),
+            body=_convert_statements(node.body[:-1]),
+            return_var=_ReturnVarGetter().visit(node.body[-1]),
         )
 
 

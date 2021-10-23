@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from ast_shared import *
 
 
-Statement = Union["For", "If", "Assign", "Return"]
+Statement = Union["For", "If", "Assign"]
 
 
 LoopBound = Union[Var, ConstantInt]
@@ -91,13 +91,6 @@ class Assign:
 
 
 @dataclass
-class Return:
-    """A return statement of the form `return value`"""
-
-    value: Var
-
-
-@dataclass
 class Function:
     """
     A function definition of the form
@@ -105,8 +98,10 @@ class Function:
     ```python
     def foo(parameters):
         body
+        return return_var
     ```
     """
 
     parameters: list[Var]
     body: list[Statement]
+    return_var: Var

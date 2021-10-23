@@ -22,18 +22,11 @@ def _generate_variable() -> tac_cfg.Var:
 class _CFGBuilder:
     _cfg: networkx.DiGraph
     _entry_block: tac_cfg.Block
-    _exit_block: tac_cfg.Block
     _current_block: tac_cfg.Block
-    _return_variable: tac_cfg.Var
 
     def __init__(self):
         self._cfg = networkx.DiGraph()
         self._entry_block = self.make_empty_block()
-        self._return_variable = _generate_variable()
-        self._exit_block = tac_cfg.Block(
-            assignments=[],
-            terminator=tac_cfg.Return(value=self._return_variable),
-        )
         self._current_block = self._entry_block
 
     def make_empty_block(self) -> tac_cfg.Block:
@@ -46,12 +39,6 @@ class _CFGBuilder:
     def add_assignment(self, assignment: tac_cfg.Assign):
         assert self._current_block.terminator is None
         self._current_block.assignments.append(assignment)
-
-    def add_return(self, var: tac_cfg.Var):
-        assert self._current_block.terminator is None
-        self.add_assignment(tac_cfg.Assign(self._return_variable, var))
-        self._current_block.terminator = tac_cfg.Jump()
-        self._cfg.add_edge(self._current_block, self._exit_block)
 
     def add_jump(self, target_block: tac_cfg.Block):
         assert self._current_block.terminator is None
@@ -81,13 +68,16 @@ class _CFGBuilder:
             branch_kind=tac_cfg.BranchKind.TRUE,
         )
 
-    def build_function(self, parameters: list[tac_cfg.Var]) -> tac_cfg.Function:
-        assert self._current_block.terminator is not None
+    def build_function(
+        self, parameters: list[tac_cfg.Var], return_var: tac_cfg.Var
+    ) -> tac_cfg.Function:
+        assert self._current_block.terminator is None
+        self._current_block.terminator = tac_cfg.Return(value=return_var)
         return tac_cfg.Function(
             parameters=parameters,
             body=self._cfg,
             entry_block=self._entry_block,
-            exit_block=self._exit_block,
+            exit_block=self._current_block,
         )
 
 
@@ -240,8 +230,6 @@ def _build_statements(statements: list[restricted_ast.Statement], builder: _CFGB
             _build_if(statement, builder)
         elif isinstance(statement, restricted_ast.Assign):
             _build_assignment(statement, builder)
-        elif isinstance(statement, restricted_ast.Return):
-            builder.add_return(statement.value)
         else:
             assert_never(statement)
 
@@ -249,4 +237,4 @@ def _build_statements(statements: list[restricted_ast.Statement], builder: _CFGB
 def restricted_ast_to_tac_cfg(node: restricted_ast.Function) -> tac_cfg.Function:
     builder = _CFGBuilder()
     _build_statements(node.body, builder)
-    return builder.build_function(node.parameters)
+    return builder.build_function(node.parameters, node.return_var)
