@@ -16,12 +16,6 @@ class ConstantInt:
     value: int
 
 
-@dataclass(frozen=True)
-class Index:
-    """An array index expression of the form `array[index]`"""
-
-    array: Var
-    index: Var
-
-
 BinOpKind = Enum("BinOpKind", "ADD SUB MUL DIV MOD SHL SHR LESS_THAN")
+
+UnaryOpKind = Enum("UnaryOpKind", "NEGATE")

@@ -55,34 +55,15 @@ class _RangeBoundGetter(_StrictNodeVisitor):
 def _convert_subscript(node: ast.Subscript) -> restricted_ast.Index:
     return restricted_ast.Index(
         array=_NameGetter().visit(node.value),
-        index=_NameGetter().visit(node.slice),
+        index=_ExpressionConverter().visit(node.slice),
     )
 
 
-class _BinOpLHSConverter(_StrictNodeVisitor):
-    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Index:
-        return _convert_subscript(node)
-
-    def visit_Name(self, node: ast.Name) -> restricted_ast.Var:
-        return restricted_ast.Var(name=node.id)
-
-
-class _BinOpRHSConverter(_StrictNodeVisitor):
-    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Index:
-        return _convert_subscript(node)
-
-    def visit_Name(self, node: ast.Name) -> restricted_ast.Var:
-        return restricted_ast.Var(name=node.id)
-
-    def visit_Constant(self, node: ast.Constant) -> int:
-        return node.value
-
-
 class _AssignLHSConverter(_StrictNodeVisitor):
-    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Index:
+    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.AssignLHS:
         return _convert_subscript(node)
 
-    def visit_Name(self, node: ast.Name) -> restricted_ast.Var:
+    def visit_Name(self, node: ast.Name) -> restricted_ast.AssignLHS:
         return restricted_ast.Var(name=node.id)
 
 
@@ -95,7 +76,6 @@ def _convert_binary_operator(op: ast.operator) -> restricted_ast.BinOpKind:
         ast.Mod: restricted_ast.BinOpKind.MOD,
         ast.LShift: restricted_ast.BinOpKind.SHL,
         ast.RShift: restricted_ast.BinOpKind.SHR,
-        ast.Lt: restricted_ast.BinOpKind.LESS_THAN,
     }
     try:
         return TABLE[type(op)]
@@ -103,22 +83,39 @@ def _convert_binary_operator(op: ast.operator) -> restricted_ast.BinOpKind:
         assert False
 
 
-class _AssignRHSConverter(_StrictNodeVisitor):
-    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Index:
-        return _convert_subscript(node)
-
-    def visit_Name(self, node: ast.Name) -> restricted_ast.Var:
+class _ExpressionConverter(_StrictNodeVisitor):
+    def visit_Name(self, node: ast.Name) -> restricted_ast.Expression:
         return restricted_ast.Var(name=node.id)
 
-    def visit_BinOp(self, node: ast.BinOp) -> restricted_ast.BinOp:
+    def visit_Constant(self, node: ast.Constant) -> restricted_ast.Expression:
+        return restricted_ast.ConstantInt(value=node.value)
+
+    def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Expression:
+        return _convert_subscript(node)
+
+    def visit_BinOp(self, node: ast.BinOp) -> restricted_ast.Expression:
         return restricted_ast.BinOp(
-            left=_BinOpLHSConverter().visit(node.left),
+            left=_ExpressionConverter().visit(node.left),
             operator=_convert_binary_operator(node.op),
-            right=_BinOpRHSConverter().visit(node.right),
+            right=_ExpressionConverter().visit(node.right),
         )
 
-    def visit_Constant(self, node: ast.Constant) -> restricted_ast.ConstantInt:
-        return restricted_ast.ConstantInt(value=node.value)
+    def visit_Compare(self, node: ast.Compare) -> restricted_ast.Expression:
+        assert len(node.ops) == 1
+        assert type(node.ops[0]) == ast.Lt
+        assert len(node.comparators) == 1
+        return restricted_ast.BinOp(
+            left=_ExpressionConverter().visit(node.left),
+            operator=restricted_ast.BinOpKind.LESS_THAN,
+            right=_ExpressionConverter().visit(node.comparators[0]),
+        )
+
+    def visit_UnaryOp(self, node: ast.UnaryOp) -> restricted_ast.Expression:
+        assert type(node.op) == ast.USub
+        return restricted_ast.UnaryOp(
+            operator=restricted_ast.UnaryOpKind.NEGATE,
+            operand=_ExpressionConverter().visit(node.operand),
+        )
 
 
 def _convert_statements(statements: list[ast.stmt]) -> list[restricted_ast.Statement]:
@@ -150,7 +147,7 @@ class _StatementConverter(_StrictNodeVisitor):
 
     def visit_If(self, node: ast.If) -> restricted_ast.If:
         return restricted_ast.If(
-            condition=_NameGetter().visit(node.test),
+            condition=_ExpressionConverter().visit(node.test),
             then_body=_convert_statements(node.body),
             else_body=_convert_statements(node.orelse),
         )
@@ -159,7 +156,14 @@ class _StatementConverter(_StrictNodeVisitor):
         assert len(node.targets) == 1
         return restricted_ast.Assign(
             lhs=_AssignLHSConverter().visit(node.targets[0]),
-            rhs=_AssignRHSConverter().visit(node.value),
+            rhs=_ExpressionConverter().visit(node.value),
+        )
+
+    def visit_AnnAssign(self, node: ast.AnnAssign) -> restricted_ast.Assign:
+        assert node.value is not None
+        return restricted_ast.Assign(
+            lhs=_AssignLHSConverter().visit(node.target),
+            rhs=_ExpressionConverter().visit(node.value),
         )
 
     def visit_Return(self, node: ast.Return) -> restricted_ast.Return:

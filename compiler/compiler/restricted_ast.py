@@ -45,28 +45,40 @@ class If:
     If there is no `else` block, then `else_body` is an empty list.
     """
 
-    condition: Var
+    condition: "Expression"
     then_body: list[Statement]
     else_body: list[Statement]
 
 
-BinOpLHS = Union[Index, Var]
+Expression = Union[Var, ConstantInt, "Index", "BinOp", "UnaryOp"]
 
-BinOpRHS = Union[Index, Var, ConstantInt]
+
+@dataclass(frozen=True)
+class Index:
+    """An array index expression of the form `array[index]`"""
+
+    array: Var
+    index: Expression
 
 
 @dataclass
 class BinOp:
     """A binary operator expression of the form `left operator right`"""
 
-    left: BinOpLHS
+    left: Expression
     operator: BinOpKind
-    right: BinOpRHS
+    right: Expression
+
+
+@dataclass
+class UnaryOp:
+    """A unary operator expression of the form `operator operand`"""
+
+    operator: UnaryOpKind
+    operand: Expression
 
 
 AssignLHS = Union[Index, Var]
-
-AssignRHS = Union[Index, Var, BinOp, ConstantInt]
 
 
 @dataclass
@@ -74,7 +86,7 @@ class Assign:
     """An assignment statement of the form `lhs = rhs`"""
 
     lhs: AssignLHS
-    rhs: AssignRHS
+    rhs: Expression
 
 
 @dataclass

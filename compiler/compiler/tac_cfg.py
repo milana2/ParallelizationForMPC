@@ -15,9 +15,21 @@ class BinOp:
     right: Var
 
 
+@dataclass
+class UnaryOp:
+    operator: UnaryOpKind
+    operand: Var
+
+
+@dataclass
+class Index:
+    array: Var
+    index: Var
+
+
 AssignLHS = Union[Index, Var]
 
-AssignRHS = Union[Index, Var, BinOp, ConstantInt]
+AssignRHS = Union[Index, Var, BinOp, UnaryOp, ConstantInt]
 
 
 @dataclass(eq=False)

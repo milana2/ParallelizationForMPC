@@ -91,39 +91,72 @@ class _CFGBuilder:
         )
 
 
-def _build_assignment(assignment: restricted_ast.Assign, builder: _CFGBuilder):
-    if (
-        isinstance(assignment.rhs, restricted_ast.Index)
-        or isinstance(assignment.rhs, restricted_ast.Var)
-        or isinstance(assignment.rhs, restricted_ast.ConstantInt)
-    ):
-        builder.add_assignment(tac_cfg.Assign(lhs=assignment.lhs, rhs=assignment.rhs))
-    elif isinstance(assignment.rhs, restricted_ast.BinOp):
-        bin_op = assignment.rhs
-
-        if isinstance(bin_op.left, restricted_ast.Index):
-            tmp_var = _generate_variable()
-            builder.add_assignment(tac_cfg.Assign(lhs=tmp_var, rhs=bin_op.left))
-            left = tmp_var
-        elif isinstance(bin_op.left, restricted_ast.Var):
-            left = bin_op.left
-        else:
-            assert_never(bin_op.left)
-
-        if isinstance(bin_op.right, restricted_ast.Index) or isinstance(
-            bin_op.right, restricted_ast.ConstantInt
-        ):
-            tmp_var = _generate_variable()
-            builder.add_assignment(tac_cfg.Assign(lhs=tmp_var, rhs=bin_op.right))
-            right = tmp_var
-        elif isinstance(bin_op.right, restricted_ast.Var):
-            right = bin_op.right
-        else:
-            assert_never(bin_op.right)
-
-        builder.add_assignment(tac_cfg.Assign(lhs=left, rhs=right))
+def _build_expression(
+    expression: restricted_ast.Expression, builder: _CFGBuilder
+) -> tac_cfg.Var:
+    if isinstance(expression, restricted_ast.Var):
+        return expression
+    elif isinstance(expression, restricted_ast.ConstantInt):
+        result_var = _generate_variable()
+        builder.add_assignment(tac_cfg.Assign(lhs=result_var, rhs=expression))
+        return result_var
+    elif isinstance(expression, restricted_ast.Index):
+        index_var = _build_expression(expression.index, builder)
+        result_var = _generate_variable()
+        builder.add_assignment(
+            tac_cfg.Assign(
+                lhs=result_var,
+                rhs=tac_cfg.Index(array=expression.array, index=index_var),
+            )
+        )
+        return result_var
+    elif isinstance(expression, restricted_ast.BinOp):
+        left_var = _build_expression(expression.left, builder)
+        right_var = _build_expression(expression.right, builder)
+        result_var = _generate_variable()
+        builder.add_assignment(
+            tac_cfg.Assign(
+                lhs=result_var,
+                rhs=tac_cfg.BinOp(
+                    left=left_var,
+                    operator=expression.operator,
+                    right=right_var,
+                ),
+            )
+        )
+        return result_var
+    elif isinstance(expression, restricted_ast.UnaryOp):
+        operand_var = _build_expression(expression.operand, builder)
+        result_var = _generate_variable()
+        builder.add_assignment(
+            tac_cfg.Assign(
+                lhs=result_var,
+                rhs=tac_cfg.UnaryOp(
+                    operator=expression.operator,
+                    operand=operand_var,
+                ),
+            )
+        )
+        return result_var
     else:
-        assert_never(assignment.rhs)
+        assert_never(expression)
+
+
+def _build_assignment(assignment: restricted_ast.Assign, builder: _CFGBuilder):
+    if isinstance(assignment.lhs, restricted_ast.Index):
+        lhs = tac_cfg.Index(
+            array=assignment.lhs.array,
+            index=_build_expression(assignment.lhs.index, builder),
+        )
+    else:
+        lhs = assignment.lhs
+
+    builder.add_assignment(
+        tac_cfg.Assign(
+            lhs=lhs,
+            rhs=_build_expression(assignment.rhs, builder),
+        )
+    )
 
 
 def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
@@ -132,7 +165,7 @@ def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
     after_block = builder.make_empty_block()
 
     builder.add_conditional_jump(
-        condition=if_statement.condition,
+        condition=_build_expression(if_statement.condition, builder),
         false_block=else_block,
         true_block=then_block,
     )
