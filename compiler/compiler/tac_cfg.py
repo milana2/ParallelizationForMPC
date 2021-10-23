@@ -46,14 +46,20 @@ class Jump:
     pass
 
 
-@dataclass
+@dataclass(eq=False)
 class ConditionalJump:
     condition: Var
 
+    def __hash__(self):
+        return id(self)
 
-@dataclass
+
+@dataclass(eq=False)
 class Return:
     value: Var
+
+    def __hash__(self):
+        return id(self)
 
 
 BlockTerminator = Union[Jump, ConditionalJump, Return]

@@ -149,10 +149,42 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
         C[V] = 0
         S[V] = list()
 
-    def search(X: ssa.Block):
-        old_lhs: dict[Union[ssa.Assign, ssa.Phi], ssa.AssignLHS] = dict()
+    VarLocation = Union[ssa.Phi, ssa.Assign, ssa.ConditionalJump, ssa.Return]
 
-        for A in itertools.chain(X.phi_functions, X.assignments):
+    def get_lhs(A: VarLocation) -> ssa.AssignLHS:
+        if isinstance(A, ssa.Phi) or isinstance(A, ssa.Assign):
+            return A.lhs
+        elif isinstance(A, ssa.ConditionalJump):
+            return A.condition
+        elif isinstance(A, ssa.Return):
+            return A.value
+        else:
+            assert_never(A)
+
+    def set_lhs(A: VarLocation, value: ssa.Var) -> None:
+        if isinstance(A, ssa.Phi) or isinstance(A, ssa.Assign):
+            A.lhs = value
+        elif isinstance(A, ssa.ConditionalJump):
+            A.condition = value
+        elif isinstance(A, ssa.Return):
+            A.value = value
+        else:
+            assert_never(A)
+
+    def search(X: ssa.Block):
+        old_lhs: dict[VarLocation, ssa.AssignLHS] = dict()
+
+        if isinstance(X.terminator, ssa.ConditionalJump) or isinstance(
+            X.terminator, ssa.Return
+        ):
+            var_terminators = [X.terminator]
+        elif isinstance(X.terminator, ssa.Jump):
+            var_terminators = []
+        else:
+            assert X.terminator is not None
+            assert_never(X.terminator)
+
+        for A in itertools.chain(X.phi_functions, X.assignments, var_terminators):
             if isinstance(A, ssa.Assign):
                 if isinstance(A.rhs, ssa.Index):
                     pass  # TODO: Support this
@@ -172,14 +204,14 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
                 else:
                     assert_never(A.rhs)
 
-            V = A.lhs
+            V = get_lhs(A)
             i = C[V]
 
             if isinstance(V, ssa.Index):
                 pass  # TODO: Support this
             elif isinstance(V, ssa.Var):
-                old_lhs[A] = A.lhs
-                A.lhs = _subscript_var(V, i)
+                old_lhs[A] = get_lhs(A)
+                set_lhs(A, _subscript_var(V, i))
             else:
                 assert_never(V)
 
