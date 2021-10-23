@@ -5,7 +5,7 @@ to static single assignment form
 
 from collections import Counter
 import itertools
-from typing import Union
+from typing import Optional, Union
 
 import networkx
 
@@ -95,10 +95,6 @@ def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
     )
 
 
-def _subscript_var(var: ssa.Var, i: int):
-    return ssa.Var(f"{var.name}!{i}")
-
-
 def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
     result = _tac_cfg_to_ssa_struct(tac_cfg_function)
 
@@ -149,30 +145,14 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
         C[V] = 0
         S[V] = list()
 
-    VarLocation = Union[ssa.Phi, ssa.Assign, ssa.ConditionalJump, ssa.Return]
+    def subscript_var(V: ssa.Var, i: Optional[int] = None):
+        if i is None:
+            i = S[V][-1]
 
-    def get_lhs(A: VarLocation) -> ssa.AssignLHS:
-        if isinstance(A, ssa.Phi) or isinstance(A, ssa.Assign):
-            return A.lhs
-        elif isinstance(A, ssa.ConditionalJump):
-            return A.condition
-        elif isinstance(A, ssa.Return):
-            return A.value
-        else:
-            assert_never(A)
-
-    def set_lhs(A: VarLocation, value: ssa.Var) -> None:
-        if isinstance(A, ssa.Phi) or isinstance(A, ssa.Assign):
-            A.lhs = value
-        elif isinstance(A, ssa.ConditionalJump):
-            A.condition = value
-        elif isinstance(A, ssa.Return):
-            A.value = value
-        else:
-            assert_never(A)
+        return ssa.Var(f"{V.name}!{i}")
 
     def search(X: ssa.Block):
-        old_lhs: dict[VarLocation, ssa.AssignLHS] = dict()
+        old_lhs: dict[Union[ssa.Phi, ssa.Assign], ssa.AssignLHS] = dict()
 
         if isinstance(X.terminator, ssa.ConditionalJump) or isinstance(
             X.terminator, ssa.Return
@@ -192,31 +172,42 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
                     pass
                 elif isinstance(A.rhs, ssa.Var):
                     V = A.rhs
-                    A.rhs = _subscript_var(V, S[V][-1])
+                    A.rhs = subscript_var(V)
                 elif isinstance(A.rhs, ssa.BinOp):
                     V = A.rhs.left
-                    A.rhs.left = _subscript_var(V, S[V][-1])
+                    A.rhs.left = subscript_var(V)
                     V = A.rhs.right
-                    A.rhs.right = _subscript_var(V, S[V][-1])
+                    A.rhs.right = subscript_var(V)
                 elif isinstance(A.rhs, ssa.UnaryOp):
                     V = A.rhs.operand
-                    A.rhs.operand = _subscript_var(V, S[V][-1])
+                    A.rhs.operand = subscript_var(V)
                 else:
                     assert_never(A.rhs)
-
-            V = get_lhs(A)
-            i = C[V]
-
-            if isinstance(V, ssa.Index):
-                pass  # TODO: Support this
-            elif isinstance(V, ssa.Var):
-                old_lhs[A] = get_lhs(A)
-                set_lhs(A, _subscript_var(V, i))
+            elif isinstance(A, ssa.ConditionalJump):
+                V = A.condition
+                A.condition = subscript_var(V)
+            elif isinstance(A, ssa.Return):
+                V = A.value
+                A.value = subscript_var(V)
+            elif isinstance(A, ssa.Phi):
+                pass
             else:
-                assert_never(V)
+                assert_never(A)
 
-            S[V].append(i)
-            C[V] = i + 1
+            if isinstance(A, ssa.Phi) or isinstance(A, ssa.Assign):
+                V = A.lhs
+                i = C[V]
+
+                if isinstance(V, ssa.Index):
+                    pass  # TODO: Support this
+                elif isinstance(V, ssa.Var):
+                    old_lhs[A] = A.lhs
+                    A.lhs = subscript_var(V, i)
+                else:
+                    assert_never(V)
+
+                S[V].append(i)
+                C[V] = i + 1
 
         for Y in result.body.successors(X):
             Y: ssa.Block
@@ -231,7 +222,7 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
                 if isinstance(V, ssa.Index):
                     pass  # TODO: Support this
                 elif isinstance(V, ssa.Var):
-                    F.rhs[j] = _subscript_var(V, i)
+                    F.rhs[j] = subscript_var(V, i)
                 else:
                     assert_never(V)
 
