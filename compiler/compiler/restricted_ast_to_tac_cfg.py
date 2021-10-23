@@ -215,6 +215,31 @@ def _build_for(for_loop: restricted_ast.For, builder: _CFGBuilder):
     # Add the loop body
     builder.set_current_block(body_block)
     _build_statements(for_loop.body, builder)
+
+    # Increment loop counter
+
+    # one = 1
+    one_var = _generate_variable()
+    builder.add_assignment(
+        tac_cfg.Assign(
+            lhs=one_var,
+            rhs=tac_cfg.ConstantInt(1),
+        )
+    )
+
+    # counter = counter + one
+    builder.add_assignment(
+        tac_cfg.Assign(
+            lhs=for_loop.counter,
+            rhs=tac_cfg.BinOp(
+                left=for_loop.counter,
+                operator=tac_cfg.BinOpKind.ADD,
+                right=one_var,
+            ),
+        )
+    )
+
+    # Jump back to condition
     if body_block.terminator is None:
         builder.add_jump(condition_block)
 
