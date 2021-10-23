@@ -4,6 +4,8 @@ to static single assignment form
 """
 
 from collections import Counter
+import itertools
+from typing import Union
 
 import networkx
 from networkx.algorithms.shortest_paths.unweighted import predecessor
@@ -39,10 +41,13 @@ def _compute_dominance_tree(function: ssa.Function) -> dict[ssa.Block, set[ssa.B
         G=function.body, start=function.entry_block
     )
 
-    result: dict[ssa.Block, set[ssa.Block]] = dict()
+    result: dict[ssa.Block, set[ssa.Block]] = {
+        block: set() for block in function.body.nodes
+    }
+
     for k, v in dominance_tree_dict.items():
-        if v not in result:
-            result[v] = set()
+        if k == v:
+            continue
 
         result[v].add(k)
 
@@ -146,23 +151,24 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
         S[V] = list()
 
     def search(X: ssa.Block):
-        old_lhs: dict[ssa.Assign, ssa.AssignLHS] = dict()
+        old_lhs: dict[Union[ssa.Assign, ssa.Phi], ssa.AssignLHS] = dict()
 
-        for A in X.assignments:
-            if isinstance(A.rhs, ssa.Index):
-                pass  # TODO: Support this
-            elif isinstance(A.rhs, ssa.ConstantInt):
-                pass
-            elif isinstance(A.rhs, ssa.Var):
-                V = A.rhs
-                A.rhs = _subscript_var(V, S[V][-1])
-            elif isinstance(A.rhs, ssa.BinOp):
-                V = A.rhs.left
-                A.rhs.left = _subscript_var(V, S[V][-1])
-                V = A.rhs.right
-                A.rhs.right = _subscript_var(V, S[V][-1])
-            else:
-                assert_never(A.rhs)
+        for A in itertools.chain(X.phi_functions, X.assignments):
+            if isinstance(A, ssa.Assign):
+                if isinstance(A.rhs, ssa.Index):
+                    pass  # TODO: Support this
+                elif isinstance(A.rhs, ssa.ConstantInt):
+                    pass
+                elif isinstance(A.rhs, ssa.Var):
+                    V = A.rhs
+                    A.rhs = _subscript_var(V, S[V][-1])
+                elif isinstance(A.rhs, ssa.BinOp):
+                    V = A.rhs.left
+                    A.rhs.left = _subscript_var(V, S[V][-1])
+                    V = A.rhs.right
+                    A.rhs.right = _subscript_var(V, S[V][-1])
+                else:
+                    assert_never(A.rhs)
 
             V = A.lhs
             i = C[V]

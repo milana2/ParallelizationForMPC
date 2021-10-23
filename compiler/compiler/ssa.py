@@ -20,10 +20,13 @@ from tac_cfg import (
 )
 
 
-@dataclass
+@dataclass(eq=False)
 class Phi:
     lhs: AssignLHS
     rhs: list[AssignLHS]
+
+    def __hash__(self):
+        return id(self)
 
 
 @dataclass(eq=False)

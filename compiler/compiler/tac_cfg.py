@@ -20,10 +20,13 @@ AssignLHS = Union[Index, Var]
 AssignRHS = Union[Index, Var, BinOp, ConstantInt]
 
 
-@dataclass(unsafe_hash=True)
+@dataclass(eq=False)
 class Assign:
     lhs: AssignLHS
     rhs: AssignRHS
+
+    def __hash__(self):
+        return id(self)
 
 
 @dataclass
