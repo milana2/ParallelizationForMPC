@@ -29,8 +29,8 @@ class _NameExpector(_StrictNodeVisitor):
 
 class _LoopBoundConverter(_StrictNodeVisitor):
     def visit_Constant(self, node: ast.Constant) -> restricted_ast.LoopBound:
-        assert type(node.value) == int
-        return node.value
+        assert isinstance(node.value, int)
+        return restricted_ast.ConstantInt(node.value)
 
     def visit_Name(self, node: ast.Name) -> restricted_ast.LoopBound:
         return restricted_ast.Var(name=node.id)
@@ -101,7 +101,7 @@ class _ExpressionConverter(_StrictNodeVisitor):
 
     def visit_Compare(self, node: ast.Compare) -> restricted_ast.Expression:
         assert len(node.ops) == 1
-        assert type(node.ops[0]) == ast.Lt
+        assert isinstance(node.ops[0], ast.Lt)
         assert len(node.comparators) == 1
         return restricted_ast.BinOp(
             left=_ExpressionConverter().visit(node.left),
@@ -110,7 +110,7 @@ class _ExpressionConverter(_StrictNodeVisitor):
         )
 
     def visit_UnaryOp(self, node: ast.UnaryOp) -> restricted_ast.Expression:
-        assert type(node.op) == ast.USub
+        assert isinstance(node.op, ast.USub)
         return restricted_ast.UnaryOp(
             operator=restricted_ast.UnaryOpKind.NEGATE,
             operand=_ExpressionConverter().visit(node.operand),
@@ -180,7 +180,7 @@ class _ModuleConverter(_StrictNodeVisitor):
             [
                 statement
                 for statement in node.body
-                if type(statement) == ast.FunctionDef
+                if isinstance(statement, ast.FunctionDef)
             ][0]
         )
 
