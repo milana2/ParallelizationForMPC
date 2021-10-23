@@ -8,7 +8,6 @@ import itertools
 from typing import Union
 
 import networkx
-from networkx.algorithms.shortest_paths.unweighted import predecessor
 
 import tac_cfg
 import ssa
