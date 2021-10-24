@@ -137,13 +137,9 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
     S: dict[ssa.AssignLHS, list[int]] = dict()
     C: dict[ssa.AssignLHS, int] = dict()
 
-    for V in result.parameters:
+    for V in itertools.chain(result.parameters, blocks_setting_vars.keys()):
         C[V] = 1
         S[V] = [0]
-
-    for V in blocks_setting_vars.keys():
-        C[V] = 0
-        S[V] = list()
 
     def subscript_var(V: ssa.Var, i: Optional[int] = None):
         if i is None:
