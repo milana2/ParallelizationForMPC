@@ -225,7 +225,7 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
         for Y in dominance_tree[X]:
             search(Y)
 
-        for A in X.assignments:
+        for A in itertools.chain(X.phi_functions, X.assignments):
             V = old_lhs[A]
             S[V].pop()
 
