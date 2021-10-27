@@ -85,6 +85,10 @@ class List:
 
     items: list[Expression]
 
+    def __str__(self) -> str:
+        items = ", ".join([str(item) for item in self.items])
+        return f"[{items}]"
+
 
 @dataclass(frozen=True)
 class Index:
