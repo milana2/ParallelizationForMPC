@@ -35,6 +35,7 @@ class BinOpKind(Enum):
     SHL = "<<"
     SHR = ">>"
     LESS_THAN = "<"
+    EQUALS = "=="
 
     def __str__(self) -> str:
         return self.value

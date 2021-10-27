@@ -82,6 +82,17 @@ def _convert_binary_operator(op: ast.operator) -> restricted_ast.BinOpKind:
         assert False
 
 
+def _convert_comparison_operator(op: ast.cmpop) -> restricted_ast.BinOpKind:
+    TABLE: dict[type[ast.cmpop], restricted_ast.BinOpKind] = {
+        ast.Lt: restricted_ast.BinOpKind.LESS_THAN,
+        ast.Eq: restricted_ast.BinOpKind.EQUALS,
+    }
+    try:
+        return TABLE[type(op)]
+    except KeyError:
+        assert False
+
+
 class _ExpressionConverter(_StrictNodeVisitor):
     def visit_Name(self, node: ast.Name) -> restricted_ast.Expression:
         return restricted_ast.Var(name=node.id)
@@ -106,11 +117,10 @@ class _ExpressionConverter(_StrictNodeVisitor):
 
     def visit_Compare(self, node: ast.Compare) -> restricted_ast.Expression:
         assert len(node.ops) == 1
-        assert isinstance(node.ops[0], ast.Lt)
         assert len(node.comparators) == 1
         return restricted_ast.BinOp(
             left=_ExpressionConverter().visit(node.left),
-            operator=restricted_ast.BinOpKind.LESS_THAN,
+            operator=_convert_comparison_operator(node.ops[0]),
             right=_ExpressionConverter().visit(node.comparators[0]),
         )
 
