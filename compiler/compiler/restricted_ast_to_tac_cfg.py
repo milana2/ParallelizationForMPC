@@ -100,6 +100,8 @@ def _build_expression(
             )
         )
         return result_var
+    elif isinstance(expression, restricted_ast.List):
+        assert False, "TODO: How do we represent lists in three-address code?"
     elif isinstance(expression, restricted_ast.BinOp):
         left_var = _build_expression(expression.left, builder)
         right_var = _build_expression(expression.right, builder)

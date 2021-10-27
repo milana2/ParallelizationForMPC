@@ -92,6 +92,11 @@ class _ExpressionConverter(_StrictNodeVisitor):
     def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Expression:
         return _convert_subscript(node)
 
+    def visit_List(self, node: ast.List) -> restricted_ast.Expression:
+        return restricted_ast.List(
+            items=[_ExpressionConverter().visit(elt) for elt in node.elts]
+        )
+
     def visit_BinOp(self, node: ast.BinOp) -> restricted_ast.Expression:
         return restricted_ast.BinOp(
             left=_ExpressionConverter().visit(node.left),

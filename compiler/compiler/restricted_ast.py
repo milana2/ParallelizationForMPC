@@ -76,7 +76,14 @@ class If:
         return f"if {self.condition}:\n" + then_body + else_body
 
 
-Expression = Union[Var, ConstantInt, "Index", "BinOp", "UnaryOp"]
+Expression = Union[Var, ConstantInt, "List", "Index", "BinOp", "UnaryOp"]
+
+
+@dataclass
+class List:
+    """A list expression of the form `[items]` (e.g. `[1, a, b + 2]`)"""
+
+    items: list[Expression]
 
 
 @dataclass(frozen=True)
