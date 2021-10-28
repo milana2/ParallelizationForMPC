@@ -177,6 +177,9 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
                 elif isinstance(A.rhs, ssa.UnaryOp):
                     V = A.rhs.operand
                     A.rhs.operand = subscript_var(V)
+                elif isinstance(A.rhs, ssa.List):
+                    for n, V in enumerate(A.rhs.items):
+                        A.rhs.items[n] = subscript_var(V)
                 else:
                     assert_never(A.rhs)
             elif isinstance(A, ssa.ConditionalJump):

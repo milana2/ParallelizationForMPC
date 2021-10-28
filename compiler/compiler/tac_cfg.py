@@ -36,9 +36,18 @@ class Index:
         return f"{self.array}[{self.index}]"
 
 
+@dataclass
+class List:
+    items: list[Var]
+
+    def __str__(self) -> str:
+        items = ", ".join([str(item) for item in self.items])
+        return f"[{items}]"
+
+
 AssignLHS = Union[Index, Var]
 
-AssignRHS = Union[Index, Var, BinOp, UnaryOp, ConstantInt]
+AssignRHS = Union[Index, Var, BinOp, UnaryOp, ConstantInt, List]
 
 
 @dataclass(eq=False)

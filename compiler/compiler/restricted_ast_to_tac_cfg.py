@@ -101,7 +101,15 @@ def _build_expression(
         )
         return result_var
     elif isinstance(expression, restricted_ast.List):
-        assert False, "TODO: How do we represent lists in three-address code?"
+        item_vars = [_build_expression(item, builder) for item in expression.items]
+        result_var = _generate_variable()
+        builder.add_assignment(
+            tac_cfg.Assign(
+                lhs=result_var,
+                rhs=tac_cfg.List(items=item_vars),
+            )
+        )
+        return result_var
     elif isinstance(expression, restricted_ast.BinOp):
         left_var = _build_expression(expression.left, builder)
         right_var = _build_expression(expression.right, builder)

@@ -17,6 +17,7 @@ from .tac_cfg import (
     Return,
     BlockTerminator,
     BranchKind,
+    List,
 )
 
 
