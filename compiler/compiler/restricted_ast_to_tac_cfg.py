@@ -272,4 +272,5 @@ def _build_statements(statements: list[restricted_ast.Statement], builder: _CFGB
 def restricted_ast_to_tac_cfg(node: restricted_ast.Function) -> tac_cfg.Function:
     builder = _CFGBuilder()
     _build_statements(node.body, builder)
-    return builder.build_function(node.parameters, node.return_var)
+    return_var = _build_expression(node.return_value, builder)
+    return builder.build_function(node.parameters, return_var)

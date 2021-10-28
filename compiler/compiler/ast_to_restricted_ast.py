@@ -170,10 +170,10 @@ class _StatementConverter(_StrictNodeVisitor):
         )
 
 
-class _ReturnVarGetter(_StrictNodeVisitor):
-    def visit_Return(self, node: ast.Return) -> restricted_ast.Var:
+class _ReturnValueGetter(_StrictNodeVisitor):
+    def visit_Return(self, node: ast.Return) -> restricted_ast.Expression:
         assert node.value is not None
-        return _NameGetter().visit(node.value)
+        return _ExpressionConverter().visit(node.value)
 
 
 class _FunctionConverter(_StrictNodeVisitor):
@@ -185,7 +185,7 @@ class _FunctionConverter(_StrictNodeVisitor):
             # TODO: Exclude other kinds of arguments
             parameters=[restricted_ast.Var(name=arg.arg) for arg in node.args.args],
             body=_convert_statements(node.body[:-1]),
-            return_var=_ReturnVarGetter().visit(node.body[-1]),
+            return_value=_ReturnValueGetter().visit(node.body[-1]),
         )
 
 

@@ -146,13 +146,13 @@ class Function:
     ```python
     def foo(parameters):
         body
-        return return_var
+        return return_value
     ```
     """
 
     parameters: list[Var]
     body: list[Statement]
-    return_var: Var
+    return_value: Expression
 
     def __str__(self) -> str:
         parameters = ", ".join([str(parameter) for parameter in self.parameters])
@@ -160,5 +160,5 @@ class Function:
         return (
             f"def foo({parameters}):\n"
             + indent(body, "    ")
-            + f"    return {self.return_var}"
+            + f"    return {self.return_value}"
         )
