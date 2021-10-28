@@ -33,22 +33,23 @@ def _compute_blocks_setting_vars(
     return result
 
 
-def _compute_dominance_tree(function: ssa.Function) -> dict[ssa.Block, set[ssa.Block]]:
+def _compute_dominance_tree(function: ssa.Function) -> dict[ssa.Block, list[ssa.Block]]:
     dominance_tree_dict: dict[
         ssa.Block, ssa.Block
     ] = networkx.algorithms.immediate_dominators(
         G=function.body, start=function.entry_block
     )
 
-    result: dict[ssa.Block, set[ssa.Block]] = {
-        block: set() for block in function.body.nodes
+    result: dict[ssa.Block, list[ssa.Block]] = {
+        block: [] for block in function.body.nodes
     }
 
     for k, v in dominance_tree_dict.items():
         if k == v:
             continue
 
-        result[v].add(k)
+        assert k not in result[v]
+        result[v].append(k)
 
     return result
 
