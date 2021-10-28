@@ -41,7 +41,7 @@ def biometric_matching_fast(D, N, C:list[int], C_sqr_sum:int, two_C:list[int], S
         min_diff = differences[k]
         min_index = k
 
-  return (min_diff, min_index)
+  return [min_diff, min_index]
 
 
 
