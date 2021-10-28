@@ -172,12 +172,12 @@ def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
 
     builder.set_current_block(then_block)
     _build_statements(if_statement.then_body, builder)
-    if then_block.terminator is None:
+    if not builder.current_block_done():
         builder.add_jump(after_block)
 
     builder.set_current_block(else_block)
     _build_statements(if_statement.else_body, builder)
-    if else_block.terminator is None:
+    if not builder.current_block_done():
         builder.add_jump(after_block)
 
     builder.set_current_block(after_block)
