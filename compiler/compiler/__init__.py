@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
-
 import argparse
 import ast
 
-from ast_to_restricted_ast import ast_to_restricted_ast
-from restricted_ast_to_tac_cfg import restricted_ast_to_tac_cfg
-from tac_cfg_to_ssa import tac_cfg_to_ssa
+from .ast_to_restricted_ast import ast_to_restricted_ast
+from .restricted_ast_to_tac_cfg import restricted_ast_to_tac_cfg
+from .tac_cfg_to_ssa import tac_cfg_to_ssa
 
 
 def parse_args():
@@ -32,7 +30,3 @@ def main():
     print("Static single assignment form:")
     print(ssa)
     print()
-
-
-if __name__ == "__main__":
-    main()

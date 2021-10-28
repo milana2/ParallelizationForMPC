@@ -4,8 +4,8 @@ from enum import Enum
 from typing import Union, Optional
 from dataclasses import dataclass
 
-from ast_shared import Var, BinOpKind, UnaryOpKind, ConstantInt
-from ast_shared import CFGFunction as _CFGFunction
+from .ast_shared import Var, BinOpKind, UnaryOpKind, ConstantInt
+from .ast_shared import CFGFunction as _CFGFunction
 
 
 @dataclass

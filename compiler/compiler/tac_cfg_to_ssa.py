@@ -9,9 +9,9 @@ from typing import Optional, Union
 
 import networkx
 
-import tac_cfg
-import ssa
-from util import assert_never
+from . import tac_cfg
+from . import ssa
+from .util import assert_never
 
 
 def _compute_blocks_setting_vars(

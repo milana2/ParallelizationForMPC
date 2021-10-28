@@ -6,9 +6,9 @@ a three-address code control flow graph
 
 import networkx
 
-import restricted_ast
-import tac_cfg
-from util import assert_never
+from . import restricted_ast
+from . import tac_cfg
+from .util import assert_never
 
 _TMP_NAME_COUNTER = 0
 

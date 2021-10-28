@@ -3,9 +3,9 @@
 from typing import Optional
 from dataclasses import dataclass
 
-from ast_shared import Var, ConstantInt
-from ast_shared import CFGFunction as _CFGFunction
-from tac_cfg import (
+from .ast_shared import Var, ConstantInt
+from .ast_shared import CFGFunction as _CFGFunction
+from .tac_cfg import (
     BinOp,
     UnaryOp,
     AssignLHS,

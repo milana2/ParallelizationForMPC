@@ -6,7 +6,7 @@ from typing import Union
 from dataclasses import dataclass
 from textwrap import indent
 
-from ast_shared import *
+from .ast_shared import *
 
 
 Statement = Union["For", "If", "Assign"]

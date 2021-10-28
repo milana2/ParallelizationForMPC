@@ -6,7 +6,7 @@ and for converting to a data type that reflects that restricted subset.
 import ast
 from dataclasses import dataclass
 
-import restricted_ast
+from . import restricted_ast
 
 
 class _StrictNodeVisitor(ast.NodeVisitor):
