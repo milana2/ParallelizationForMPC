@@ -85,6 +85,7 @@ def _convert_binary_operator(op: ast.operator) -> restricted_ast.BinOpKind:
 def _convert_comparison_operator(op: ast.cmpop) -> restricted_ast.BinOpKind:
     TABLE: dict[type[ast.cmpop], restricted_ast.BinOpKind] = {
         ast.Lt: restricted_ast.BinOpKind.LESS_THAN,
+        ast.Gt: restricted_ast.BinOpKind.GREATER_THAN,
         ast.Eq: restricted_ast.BinOpKind.EQUALS,
     }
     try:
