@@ -230,8 +230,13 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
             search(Y)
 
         for A in itertools.chain(X.phi_functions, X.assignments):
-            V = old_lhs[A]
-            S[V].pop()
+            if isinstance(A.lhs, ssa.Index):
+                pass  # TODO: Support this
+            elif isinstance(A.lhs, ssa.Var):
+                V = old_lhs[A]
+                S[V].pop()
+            else:
+                assert_never(A.lhs)
 
     search(result.entry_block)
 

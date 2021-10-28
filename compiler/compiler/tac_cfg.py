@@ -27,7 +27,7 @@ class UnaryOp:
         return f"{self.operator} {self.operand}"
 
 
-@dataclass
+@dataclass(frozen=True)
 class Index:
     array: Var
     index: Var
