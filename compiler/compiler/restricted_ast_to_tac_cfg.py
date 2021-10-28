@@ -36,6 +36,9 @@ class _CFGBuilder:
         self._current_block = block
         assert self._current_block.terminator is None
 
+    def current_block_done(self) -> bool:
+        return self._current_block.terminator is not None
+
     def add_assignment(self, assignment: tac_cfg.Assign):
         assert self._current_block.terminator is None
         self._current_block.assignments.append(assignment)
@@ -250,7 +253,7 @@ def _build_for(for_loop: restricted_ast.For, builder: _CFGBuilder):
     )
 
     # Jump back to condition
-    if body_block.terminator is None:
+    if not builder.current_block_done():
         builder.add_jump(condition_block)
 
     # Move to end of loop
