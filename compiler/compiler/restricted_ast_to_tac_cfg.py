@@ -10,24 +10,21 @@ from . import restricted_ast
 from . import tac_cfg
 from .util import assert_never
 
-_TMP_NAME_COUNTER = 0
-
-
-def _generate_variable() -> tac_cfg.Var:
-    global _TMP_NAME_COUNTER
-    _TMP_NAME_COUNTER += 1
-    return tac_cfg.Var(name=f"!{_TMP_NAME_COUNTER}")
-
 
 class _CFGBuilder:
     _cfg: networkx.DiGraph
     _entry_block: tac_cfg.Block
     _current_block: tac_cfg.Block
+    _tmp_name_counter: int = 0
 
     def __init__(self):
         self._cfg = networkx.DiGraph()
         self._entry_block = self.make_empty_block()
         self._current_block = self._entry_block
+
+    def generate_variable(self) -> tac_cfg.Var:
+        self._tmp_name_counter += 1
+        return tac_cfg.Var(name=f"!{self._tmp_name_counter}")
 
     def make_empty_block(self) -> tac_cfg.Block:
         return tac_cfg.Block(assignments=[], terminator=None)
@@ -90,12 +87,12 @@ def _build_expression(
     if isinstance(expression, restricted_ast.Var):
         return expression
     elif isinstance(expression, restricted_ast.ConstantInt):
-        result_var = _generate_variable()
+        result_var = builder.generate_variable()
         builder.add_assignment(tac_cfg.Assign(lhs=result_var, rhs=expression))
         return result_var
     elif isinstance(expression, restricted_ast.Index):
         index_var = _build_expression(expression.index, builder)
-        result_var = _generate_variable()
+        result_var = builder.generate_variable()
         builder.add_assignment(
             tac_cfg.Assign(
                 lhs=result_var,
@@ -105,7 +102,7 @@ def _build_expression(
         return result_var
     elif isinstance(expression, restricted_ast.List):
         item_vars = [_build_expression(item, builder) for item in expression.items]
-        result_var = _generate_variable()
+        result_var = builder.generate_variable()
         builder.add_assignment(
             tac_cfg.Assign(
                 lhs=result_var,
@@ -116,7 +113,7 @@ def _build_expression(
     elif isinstance(expression, restricted_ast.BinOp):
         left_var = _build_expression(expression.left, builder)
         right_var = _build_expression(expression.right, builder)
-        result_var = _generate_variable()
+        result_var = builder.generate_variable()
         builder.add_assignment(
             tac_cfg.Assign(
                 lhs=result_var,
@@ -130,7 +127,7 @@ def _build_expression(
         return result_var
     elif isinstance(expression, restricted_ast.UnaryOp):
         operand_var = _build_expression(expression.operand, builder)
-        result_var = _generate_variable()
+        result_var = builder.generate_variable()
         builder.add_assignment(
             tac_cfg.Assign(
                 lhs=result_var,
@@ -191,7 +188,7 @@ def _build_for(for_loop: restricted_ast.For, builder: _CFGBuilder):
     builder.add_assignment(tac_cfg.Assign(lhs=for_loop.counter, rhs=for_loop.bound_low))
 
     # bound_high_var = bound_high
-    bound_var = _generate_variable()
+    bound_var = builder.generate_variable()
     builder.add_assignment(tac_cfg.Assign(lhs=bound_var, rhs=for_loop.bound_high))
 
     # Jump to a new block so the end of the loop can jump back here
@@ -200,7 +197,7 @@ def _build_for(for_loop: restricted_ast.For, builder: _CFGBuilder):
     builder.set_current_block(condition_block)
 
     # condition_var = counter < bound_high
-    condition_var = _generate_variable()
+    condition_var = builder.generate_variable()
     builder.add_assignment(
         tac_cfg.Assign(
             lhs=condition_var,
@@ -232,7 +229,7 @@ def _build_for(for_loop: restricted_ast.For, builder: _CFGBuilder):
     # Increment loop counter
 
     # one = 1
-    one_var = _generate_variable()
+    one_var = builder.generate_variable()
     builder.add_assignment(
         tac_cfg.Assign(
             lhs=one_var,
