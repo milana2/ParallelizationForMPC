@@ -5,6 +5,7 @@ and for converting to a data type that reflects that restricted subset.
 
 import ast
 from dataclasses import dataclass
+from typing import Optional
 
 from . import restricted_ast
 
@@ -25,6 +26,11 @@ class _NameExpector(_StrictNodeVisitor):
 
     def visit_Name(self, node: ast.Name):
         assert node.id == self.name
+
+
+class _StringExpector(_StrictNodeVisitor):
+    def visit_Constant(self, node: ast.Constant) -> None:
+        assert type(node.value) == str
 
 
 class _LoopBoundConverter(_StrictNodeVisitor):
@@ -134,11 +140,14 @@ class _ExpressionConverter(_StrictNodeVisitor):
 
 
 def _convert_statements(statements: list[ast.stmt]) -> list[restricted_ast.Statement]:
-    return [_StatementConverter().visit(statement) for statement in statements]
+    converted_statements: list[Optional[restricted_ast.Statement]] = [
+        _StatementConverter().visit(statement) for statement in statements
+    ]
+    return [statement for statement in converted_statements if statement is not None]
 
 
 class _StatementConverter(_StrictNodeVisitor):
-    def visit_For(self, node: ast.For) -> restricted_ast.For:
+    def visit_For(self, node: ast.For) -> Optional[restricted_ast.Statement]:
         assert node.orelse == []
         (bound_low, bound_high) = _RangeBoundsGetter().visit(node.iter)
         return restricted_ast.For(
@@ -148,26 +157,32 @@ class _StatementConverter(_StrictNodeVisitor):
             body=_convert_statements(node.body),
         )
 
-    def visit_If(self, node: ast.If) -> restricted_ast.If:
+    def visit_If(self, node: ast.If) -> Optional[restricted_ast.Statement]:
         return restricted_ast.If(
             condition=_ExpressionConverter().visit(node.test),
             then_body=_convert_statements(node.body),
             else_body=_convert_statements(node.orelse),
         )
 
-    def visit_Assign(self, node: ast.Assign) -> restricted_ast.Assign:
+    def visit_Assign(self, node: ast.Assign) -> Optional[restricted_ast.Statement]:
         assert len(node.targets) == 1
         return restricted_ast.Assign(
             lhs=_AssignLHSConverter().visit(node.targets[0]),
             rhs=_ExpressionConverter().visit(node.value),
         )
 
-    def visit_AnnAssign(self, node: ast.AnnAssign) -> restricted_ast.Assign:
+    def visit_AnnAssign(
+        self, node: ast.AnnAssign
+    ) -> Optional[restricted_ast.Statement]:
         assert node.value is not None
         return restricted_ast.Assign(
             lhs=_AssignLHSConverter().visit(node.target),
             rhs=_ExpressionConverter().visit(node.value),
         )
+
+    def visit_Expr(self, node: ast.Expr) -> Optional[restricted_ast.Statement]:
+        # Ignore docstrings
+        _StringExpector().visit(node.value)
 
 
 class _ReturnValueGetter(_StrictNodeVisitor):
