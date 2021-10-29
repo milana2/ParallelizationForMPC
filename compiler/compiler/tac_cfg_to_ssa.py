@@ -33,27 +33,6 @@ def _compute_blocks_setting_vars(
     return result
 
 
-def _compute_dominance_tree(function: ssa.Function) -> dict[ssa.Block, list[ssa.Block]]:
-    dominance_tree_dict: dict[
-        ssa.Block, ssa.Block
-    ] = networkx.algorithms.immediate_dominators(
-        G=function.body, start=function.entry_block
-    )
-
-    result: dict[ssa.Block, list[ssa.Block]] = {
-        block: [] for block in function.body.nodes
-    }
-
-    for k, v in dominance_tree_dict.items():
-        if k == v:
-            continue
-
-        assert k not in result[v]
-        result[v].append(k)
-
-    return result
-
-
 def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
     """
     Convert a `tac_cfg.Function` to an `ssa.Function` without
@@ -96,18 +75,12 @@ def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
     )
 
 
-def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
-    result = _tac_cfg_to_ssa_struct(tac_cfg_function)
-
+def place_phi_functions(result: ssa.Function) -> None:
     dominance_frontiers: dict[
         ssa.Block, set[ssa.Block]
     ] = networkx.algorithms.dominance_frontiers(G=result.body, start=result.entry_block)
 
-    dominance_tree = _compute_dominance_tree(result)
-
     blocks_setting_vars = _compute_blocks_setting_vars(result)
-
-    # Place Phi-functions
 
     iter_count = 0
     has_already: Counter[ssa.Block] = Counter()
@@ -133,7 +106,10 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
                         work[Y] = iter_count
                         W.add(Y)
 
-    # Rename variables
+
+def rename_variables(result: ssa.Function) -> None:
+    dominance_tree = result.compute_dominance_tree()
+    blocks_setting_vars = _compute_blocks_setting_vars(result)
 
     S: dict[ssa.AssignLHS, list[int]] = dict()
     C: dict[ssa.AssignLHS, int] = dict()
@@ -181,6 +157,10 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
                 elif isinstance(A.rhs, ssa.List):
                     for n, V in enumerate(A.rhs.items):
                         A.rhs.items[n] = subscript_var(V)
+                elif isinstance(A.rhs, ssa.Mux):
+                    A.rhs.condition = subscript_var(A.rhs.condition)
+                    A.rhs.false_value = subscript_var(A.rhs.false_value)
+                    A.rhs.true_value = subscript_var(A.rhs.true_value)
                 else:
                     assert_never(A.rhs)
             elif isinstance(A, ssa.ConditionalJump):
@@ -240,4 +220,9 @@ def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
 
     search(result.entry_block)
 
+
+def tac_cfg_to_ssa(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
+    result = _tac_cfg_to_ssa_struct(tac_cfg_function)
+    place_phi_functions(result)
+    rename_variables(result)
     return result

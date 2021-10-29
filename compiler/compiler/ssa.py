@@ -1,6 +1,6 @@
 """Data types representing code in static single assignment form"""
 
-from typing import Optional
+import networkx
 from dataclasses import dataclass
 
 from .ast_shared import Var, ConstantInt
@@ -18,7 +18,9 @@ from .tac_cfg import (
     BlockTerminator,
     BranchKind,
     List,
+    Mux,
 )
+from .tac_cfg import Block as _BaseBlock
 
 
 @dataclass(eq=False)
@@ -35,25 +37,32 @@ class Phi:
 
 
 @dataclass(eq=False)
-class Block:
+class Block(_BaseBlock):
     phi_functions: list[Phi]
-    assignments: list[Assign]
-    # The block is invalid if it has no terminator.
-    # The `Optional` is only for ease of construction.
-    terminator: Optional[BlockTerminator]
-
-    # Allow creating graph of blocks
-    def __hash__(self):
-        return id(self)
 
     def __str__(self) -> str:
         return (
             "\n".join([str(phi) for phi in self.phi_functions])
             + ("" if self.phi_functions == [] else "\n")
-            + "\n".join([str(assignment) for assignment in self.assignments])
-            + ("" if self.assignments == [] else "\n")
-            + str(self.terminator)
+            + super().__str__()
         )
 
 
-Function = _CFGFunction[Block]
+class Function(_CFGFunction[Block]):
+    def compute_dominance_tree(self) -> dict[Block, list[Block]]:
+        dominance_tree_dict: dict[
+            Block, Block
+        ] = networkx.algorithms.immediate_dominators(
+            G=self.body, start=self.entry_block
+        )
+
+        result: dict[Block, list[Block]] = {block: [] for block in self.body.nodes}
+
+        for k, v in dominance_tree_dict.items():
+            if k == v:
+                continue
+
+            assert k not in result[v]
+            result[v].append(k)
+
+        return result

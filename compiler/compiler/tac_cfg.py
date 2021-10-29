@@ -45,9 +45,20 @@ class List:
         return f"[{items}]"
 
 
+# TODO: Convert ast.IfExp to this?
+@dataclass
+class Mux:
+    condition: Var
+    false_value: Var
+    true_value: Var
+
+    def __str__(self) -> str:
+        return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
+
+
 AssignLHS = Union[Index, Var]
 
-AssignRHS = Union[Index, Var, BinOp, UnaryOp, ConstantInt, List]
+AssignRHS = Union[Index, Var, BinOp, UnaryOp, ConstantInt, List, Mux]
 
 
 @dataclass(eq=False)
