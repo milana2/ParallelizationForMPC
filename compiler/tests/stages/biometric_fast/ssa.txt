@@ -1,0 +1,132 @@
+Function(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
+Entry block: 0
+Exit block: 2
+Block 0:
+    !1!1 = 0
+    !2!1 = [!1!1]
+    !3!1 = !2!1 * D!0
+    differences!1 = !3!1
+    i!1 = 0
+    !4!1 = N!0
+    jump
+Block 1:
+    i!2 = Φ(i!1, i!3)
+    !5!1 = Φ(!5!0, !5!2)
+    !6!1 = Φ(!6!0, !6!2)
+    !7!1 = Φ(!7!0, !7!2)
+    a_sqr_plus_b_sqr!1 = Φ(a_sqr_plus_b_sqr!0, a_sqr_plus_b_sqr!2)
+    !8!1 = Φ(!8!0, !8!2)
+    two_a_b!1 = Φ(two_a_b!0, two_a_b!3)
+    j!1 = Φ(j!0, j!3)
+    !9!1 = Φ(!9!0, !9!2)
+    !10!1 = Φ(!10!0, !10!3)
+    !18!1 = Φ(!18!0, !18!2)
+    this_diff!1 = Φ(this_diff!0, this_diff!2)
+    differences[i] = Φ(differences[i], differences[i])
+    !19!1 = Φ(!19!0, !19!2)
+    !20!1 = Φ(!20!0, !20!2)
+    min_diff!1 = Φ(min_diff!0, min_diff!3)
+    !21!1 = Φ(!21!0, !21!2)
+    min_index!1 = Φ(min_index!0, min_index!3)
+    k!1 = Φ(k!0, k!3)
+    !22!1 = Φ(!22!0, !22!2)
+    !11!1 = Φ(!11!0, !11!2)
+    !12!1 = Φ(!12!0, !12!2)
+    !13!1 = Φ(!13!0, !13!2)
+    !14!1 = Φ(!14!0, !14!2)
+    !15!1 = Φ(!15!0, !15!2)
+    tmp!1 = Φ(tmp!0, tmp!2)
+    !16!1 = Φ(!16!0, !16!2)
+    !17!1 = Φ(!17!0, !17!2)
+    !23!1 = Φ(!23!0, !23!3)
+    !28!1 = Φ(!28!0, !28!2)
+    !24!1 = Φ(!24!0, !24!2)
+    !25!1 = Φ(!25!0, !25!2)
+    !26!1 = Φ(!26!0, !26!2)
+    !27!1 = Φ(!27!0, !27!2)
+    !5!2 = i!2 < !4!1
+    conditional jump !5!2
+Block 2:
+    !29!1 = [min_diff!1, min_index!1]
+    return !29!1
+Block 3:
+    !6!2 = S_sqr_sum[i]
+    !7!2 = !6!2 + C_sqr_sum!0
+    a_sqr_plus_b_sqr!2 = !7!2
+    !8!2 = 0
+    two_a_b!2 = !8!2
+    j!2 = 0
+    !9!2 = D!0
+    jump
+Block 4:
+    two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
+    j!3 = Φ(j!2, j!4)
+    !10!2 = Φ(!10!1, !10!3)
+    !11!2 = Φ(!11!1, !11!3)
+    !12!2 = Φ(!12!1, !12!3)
+    !13!2 = Φ(!13!1, !13!3)
+    !14!2 = Φ(!14!1, !14!3)
+    !15!2 = Φ(!15!1, !15!3)
+    tmp!2 = Φ(tmp!1, tmp!3)
+    !16!2 = Φ(!16!1, !16!3)
+    !17!2 = Φ(!17!1, !17!3)
+    !10!3 = j!3 < !9!2
+    conditional jump !10!3
+Block 5:
+    !18!2 = a_sqr_plus_b_sqr!2 - two_a_b!3
+    this_diff!2 = !18!2
+    differences[i] = this_diff!2
+    !19!2 = 0
+    !20!2 = differences[!19]
+    min_diff!2 = !20!2
+    !21!2 = 0
+    min_index!2 = !21!2
+    k!2 = 0
+    !22!2 = N!0
+    jump
+Block 6:
+    !11!3 = i!2 * D!0
+    !12!3 = !11!3 + j!3
+    !13!3 = S[!12]
+    !14!3 = two_C[j]
+    !15!3 = !13!3 * !14!3
+    tmp!3 = !15!3
+    !16!3 = two_a_b!3 + tmp!3
+    two_a_b!4 = !16!3
+    !17!3 = 1
+    j!4 = j!3 + !17!3
+    jump
+Block 7:
+    min_diff!3 = Φ(min_diff!2, min_diff!5)
+    min_index!3 = Φ(min_index!2, min_index!5)
+    k!3 = Φ(k!2, k!4)
+    !23!2 = Φ(!23!1, !23!3)
+    !24!2 = Φ(!24!1, !24!3)
+    !25!2 = Φ(!25!1, !25!3)
+    !26!2 = Φ(!26!1, !26!4)
+    !27!2 = Φ(!27!1, !27!3)
+    !23!3 = k!3 < !22!2
+    conditional jump !23!3
+Block 8:
+    !28!2 = 1
+    i!3 = i!2 + !28!2
+    jump
+Block 9:
+    !24!3 = differences[k]
+    !25!3 = !24!3 < min_diff!3
+    conditional jump !25!3
+Block 10:
+    jump
+Block 11:
+    !26!3 = differences[k]
+    min_diff!4 = !26!3
+    min_index!4 = k!3
+    jump
+Block 12:
+    min_diff!5 = Φ(min_diff!3, min_diff!4)
+    min_index!5 = Φ(min_index!3, min_index!4)
+    !26!4 = Φ(!26!2, !26!3)
+    !27!3 = 1
+    k!4 = k!3 + !27!3
+    jump
+Edges: (0, 1, BranchKind.UNCONDITIONAL) (1, 2, BranchKind.FALSE) (1, 3, BranchKind.TRUE) (3, 4, BranchKind.UNCONDITIONAL) (4, 5, BranchKind.FALSE) (4, 6, BranchKind.TRUE) (5, 7, BranchKind.UNCONDITIONAL) (6, 4, BranchKind.UNCONDITIONAL) (7, 8, BranchKind.FALSE) (7, 9, BranchKind.TRUE) (8, 1, BranchKind.UNCONDITIONAL) (9, 10, BranchKind.FALSE) (9, 11, BranchKind.TRUE) (10, 12, BranchKind.UNCONDITIONAL) (11, 12, BranchKind.UNCONDITIONAL) (12, 7, BranchKind.UNCONDITIONAL)

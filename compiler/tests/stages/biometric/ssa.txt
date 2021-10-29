@@ -1,0 +1,91 @@
+Function(C, D, S, N):
+Entry block: 0
+Exit block: 2
+Block 0:
+    !1!1 = 10000
+    min_sum!1 = !1!1
+    !2!1 = 1
+    !3!1 = - !2!1
+    min_index!1 = !3!1
+    i!1 = 0
+    !4!1 = N!0
+    jump
+Block 1:
+    min_sum!2 = Φ(min_sum!1, min_sum!4)
+    min_index!2 = Φ(min_index!1, min_index!4)
+    i!2 = Φ(i!1, i!3)
+    !5!1 = Φ(!5!0, !5!2)
+    !6!1 = Φ(!6!0, !6!2)
+    sum!1 = Φ(sum!0, sum!3)
+    j!1 = Φ(j!0, j!3)
+    !7!1 = Φ(!7!0, !7!2)
+    !8!1 = Φ(!8!0, !8!3)
+    !17!1 = Φ(!17!0, !17!2)
+    !9!1 = Φ(!9!0, !9!2)
+    !10!1 = Φ(!10!0, !10!2)
+    !11!1 = Φ(!11!0, !11!2)
+    !12!1 = Φ(!12!0, !12!2)
+    !13!1 = Φ(!13!0, !13!2)
+    d!1 = Φ(d!0, d!2)
+    !14!1 = Φ(!14!0, !14!2)
+    p!1 = Φ(p!0, p!2)
+    !15!1 = Φ(!15!0, !15!2)
+    !16!1 = Φ(!16!0, !16!2)
+    !18!1 = Φ(!18!0, !18!2)
+    !5!2 = i!2 < !4!1
+    conditional jump !5!2
+Block 2:
+    !19!1 = [min_sum!2, min_index!2]
+    return !19!1
+Block 3:
+    !6!2 = 0
+    sum!2 = !6!2
+    j!2 = 0
+    !7!2 = D!0
+    jump
+Block 4:
+    sum!3 = Φ(sum!2, sum!4)
+    j!3 = Φ(j!2, j!4)
+    !8!2 = Φ(!8!1, !8!3)
+    !9!2 = Φ(!9!1, !9!3)
+    !10!2 = Φ(!10!1, !10!3)
+    !11!2 = Φ(!11!1, !11!3)
+    !12!2 = Φ(!12!1, !12!3)
+    !13!2 = Φ(!13!1, !13!3)
+    d!2 = Φ(d!1, d!3)
+    !14!2 = Φ(!14!1, !14!3)
+    p!2 = Φ(p!1, p!3)
+    !15!2 = Φ(!15!1, !15!3)
+    !16!2 = Φ(!16!1, !16!3)
+    !8!3 = j!3 < !7!2
+    conditional jump !8!3
+Block 5:
+    !17!2 = sum!3 < min_sum!2
+    conditional jump !17!2
+Block 6:
+    !9!3 = i!2 * D!0
+    !10!3 = !9!3 + j!3
+    !11!3 = S[!10]
+    !12!3 = C[j]
+    !13!3 = !11!3 - !12!3
+    d!3 = !13!3
+    !14!3 = d!3 * d!3
+    p!3 = !14!3
+    !15!3 = sum!3 + p!3
+    sum!4 = !15!3
+    !16!3 = 1
+    j!4 = j!3 + !16!3
+    jump
+Block 7:
+    jump
+Block 8:
+    min_sum!3 = sum!3
+    min_index!3 = i!2
+    jump
+Block 9:
+    min_sum!4 = Φ(min_sum!2, min_sum!3)
+    min_index!4 = Φ(min_index!2, min_index!3)
+    !18!2 = 1
+    i!3 = i!2 + !18!2
+    jump
+Edges: (0, 1, BranchKind.UNCONDITIONAL) (1, 2, BranchKind.FALSE) (1, 3, BranchKind.TRUE) (3, 4, BranchKind.UNCONDITIONAL) (4, 5, BranchKind.FALSE) (4, 6, BranchKind.TRUE) (5, 7, BranchKind.FALSE) (5, 8, BranchKind.TRUE) (6, 4, BranchKind.UNCONDITIONAL) (7, 9, BranchKind.UNCONDITIONAL) (8, 9, BranchKind.UNCONDITIONAL) (9, 1, BranchKind.UNCONDITIONAL)

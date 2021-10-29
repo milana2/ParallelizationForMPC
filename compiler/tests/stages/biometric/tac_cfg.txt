@@ -1,0 +1,55 @@
+Function(C, D, S, N):
+Entry block: 0
+Exit block: 2
+Block 0:
+    !1 = 10000
+    min_sum = !1
+    !2 = 1
+    !3 = - !2
+    min_index = !3
+    i = 0
+    !4 = N
+    jump
+Block 1:
+    !5 = i < !4
+    conditional jump !5
+Block 2:
+    !19 = [min_sum, min_index]
+    return !19
+Block 3:
+    !6 = 0
+    sum = !6
+    j = 0
+    !7 = D
+    jump
+Block 4:
+    !8 = j < !7
+    conditional jump !8
+Block 5:
+    !17 = sum < min_sum
+    conditional jump !17
+Block 6:
+    !9 = i * D
+    !10 = !9 + j
+    !11 = S[!10]
+    !12 = C[j]
+    !13 = !11 - !12
+    d = !13
+    !14 = d * d
+    p = !14
+    !15 = sum + p
+    sum = !15
+    !16 = 1
+    j = j + !16
+    jump
+Block 7:
+    jump
+Block 8:
+    min_sum = sum
+    min_index = i
+    jump
+Block 9:
+    !18 = 1
+    i = i + !18
+    jump
+Edges: (0, 1, BranchKind.UNCONDITIONAL) (1, 2, BranchKind.FALSE) (1, 3, BranchKind.TRUE) (3, 4, BranchKind.UNCONDITIONAL) (4, 5, BranchKind.FALSE) (4, 6, BranchKind.TRUE) (5, 7, BranchKind.FALSE) (5, 8, BranchKind.TRUE) (6, 4, BranchKind.UNCONDITIONAL) (7, 9, BranchKind.UNCONDITIONAL) (8, 9, BranchKind.UNCONDITIONAL) (9, 1, BranchKind.UNCONDITIONAL)
