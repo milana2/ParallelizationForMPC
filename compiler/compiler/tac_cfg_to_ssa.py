@@ -50,6 +50,7 @@ def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
             phi_functions=[],
             assignments=tac_cfg_block.assignments,
             terminator=tac_cfg_block.terminator,
+            merge_condition=tac_cfg_block.merge_condition,
         )
         cfg.add_node(ssa_block)
         mapping[tac_cfg_block] = ssa_block

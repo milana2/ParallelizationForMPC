@@ -49,6 +49,7 @@ Block 8:
     min_index = i
     jump
 Block 9:
+    (merge from condition: conditional jump !17)
     !18 = 1
     i = i + !18
     jump

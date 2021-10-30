@@ -49,8 +49,8 @@ class List:
 @dataclass
 class Mux:
     condition: Var
-    false_value: Var
-    true_value: Var
+    false_value: "AssignLHS"
+    true_value: "AssignLHS"
 
     def __str__(self) -> str:
         return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
@@ -107,9 +107,14 @@ BlockTerminator = Union[Jump, ConditionalJump, Return]
 @dataclass(eq=False)
 class Block:
     assignments: list[Assign]
+
     # The block is invalid if it has no terminator.
     # The `Optional` is only for ease of construction.
     terminator: Optional[BlockTerminator]
+
+    # If this node is the merge of the branches of an if-statement,
+    # this contains its condition.
+    merge_condition: Optional[ConditionalJump]
 
     # Allow creating graph of blocks
     def __hash__(self):
@@ -117,7 +122,12 @@ class Block:
 
     def __str__(self) -> str:
         return (
-            "\n".join([str(assignment) for assignment in self.assignments])
+            (
+                ""
+                if self.merge_condition is None
+                else f"(merge from condition: {self.merge_condition})\n"
+            )
+            + "\n".join([str(assignment) for assignment in self.assignments])
             + ("" if self.assignments == [] else "\n")
             + str(self.terminator)
         )

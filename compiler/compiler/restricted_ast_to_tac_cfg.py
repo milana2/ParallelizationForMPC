@@ -27,7 +27,10 @@ class _CFGBuilder:
         return tac_cfg.Var(name=f"!{self._tmp_name_counter}")
 
     def make_empty_block(self) -> tac_cfg.Block:
-        return tac_cfg.Block(assignments=[], terminator=None)
+        return tac_cfg.Block(assignments=[], terminator=None, merge_condition=None)
+
+    def get_current_block(self) -> tac_cfg.Block:
+        return self._current_block
 
     def set_current_block(self, block: tac_cfg.Block):
         self._current_block = block
@@ -160,6 +163,7 @@ def _build_assignment(assignment: restricted_ast.Assign, builder: _CFGBuilder):
 
 
 def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
+    condition_block = builder.get_current_block()
     then_block = builder.make_empty_block()
     else_block = builder.make_empty_block()
     after_block = builder.make_empty_block()
@@ -181,6 +185,8 @@ def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
         builder.add_jump(after_block)
 
     builder.set_current_block(after_block)
+    assert isinstance(condition_block.terminator, tac_cfg.ConditionalJump)
+    after_block.merge_condition = condition_block.terminator
 
 
 def _build_for(for_loop: restricted_ast.For, builder: _CFGBuilder):

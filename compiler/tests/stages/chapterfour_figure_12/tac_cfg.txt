@@ -23,7 +23,9 @@ Block 4:
     z = !6
     jump
 Block 5:
+    (merge from condition: conditional jump !5)
     jump
 Block 6:
+    (merge from condition: conditional jump !3)
     return z
 Edges: (0, 1, BranchKind.FALSE) (0, 2, BranchKind.TRUE) (1, 6, BranchKind.UNCONDITIONAL) (2, 3, BranchKind.FALSE) (2, 4, BranchKind.TRUE) (3, 5, BranchKind.UNCONDITIONAL) (4, 5, BranchKind.UNCONDITIONAL) (5, 6, BranchKind.UNCONDITIONAL)

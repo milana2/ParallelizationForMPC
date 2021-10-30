@@ -37,6 +37,7 @@ Block 8:
     result = !11
     jump
 Block 9:
+    (merge from condition: conditional jump !8)
     !12 = 1
     j = j + !12
     jump

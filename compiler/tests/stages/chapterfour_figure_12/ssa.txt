@@ -27,6 +27,7 @@ Block 5:
     !7!2 = Φ(!7!1, !7!0)
     !8!2 = Φ(!8!1, !8!0)
     !6!2 = Φ(!6!0, !6!1)
+    (merge from condition: conditional jump !5!1)
     jump
 Block 6:
     z!5 = Φ(z!1, z!4)
@@ -35,5 +36,6 @@ Block 6:
     !7!3 = Φ(!7!0, !7!2)
     !8!3 = Φ(!8!0, !8!2)
     !6!3 = Φ(!6!0, !6!2)
+    (merge from condition: conditional jump !3!1)
     return z!5
 Edges: (0, 1, BranchKind.FALSE) (0, 2, BranchKind.TRUE) (1, 6, BranchKind.UNCONDITIONAL) (2, 3, BranchKind.FALSE) (2, 4, BranchKind.TRUE) (3, 5, BranchKind.UNCONDITIONAL) (4, 5, BranchKind.UNCONDITIONAL) (5, 6, BranchKind.UNCONDITIONAL)
