@@ -15,9 +15,10 @@ def parse_args():
 
 def main():
     args = parse_args()
-    ast_node = ast.parse(args.input.read())
+    text = args.input.read()
+    ast_node = ast.parse(text)
 
-    ast_node = ast_to_restricted_ast(ast_node)
+    ast_node = ast_to_restricted_ast(node=ast_node, filename=args.input.name, text=text)
     print("Restricted AST:")
     print(ast_node)
     print()

@@ -22,7 +22,7 @@ class StagesTestCase(unittest.TestCase):
 
             node = ast.parse(stages["input.py"])
 
-            node = compiler.ast_to_restricted_ast(node)
+            node = compiler.ast_to_restricted_ast(node, "input.py", stages["input.py"])
             self.assertEqual(str(node), stages["restricted_ast.py"])
 
             cfg = compiler.restricted_ast_to_tac_cfg(node)
