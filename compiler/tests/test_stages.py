@@ -8,8 +8,12 @@ from compiler.restricted_ast import *
 
 
 class StagesTestCase(unittest.TestCase):
+    maxDiff = None
+
     def test_stages(self):
         for test_case_dir in os.scandir(STAGES_DIR):
+            print(f"Testing {test_case_dir.name}...")
+
             stages = dict()
 
             for stage_file in os.scandir(test_case_dir.path):
