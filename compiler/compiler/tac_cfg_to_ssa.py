@@ -191,6 +191,7 @@ def rename_variables(result: ssa.Function) -> None:
 
         for Y in result.body.successors(X):
             Y: ssa.Block
+            assert len(list(result.body.predecessors(Y))) in (1, 2)
             j = [
                 i
                 for i, predecessor in enumerate(result.body.predecessors(Y))
