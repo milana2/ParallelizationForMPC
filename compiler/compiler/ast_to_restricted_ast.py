@@ -5,7 +5,7 @@ and for converting to a data type that reflects that restricted subset.
 
 import ast
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, final, NoReturn
 
 from . import restricted_ast
 
@@ -23,9 +23,15 @@ class _StrictNodeVisitor(ast.NodeVisitor):
     def error_message(self) -> str:
         return "Unknown error"
 
-    def generic_visit(self, node: ast.AST):
+    @final
+    def raise_syntax_error(
+        self, node: ast.AST, message: Optional[str] = None
+    ) -> NoReturn:
+        if message is None:
+            message = self.error_message()
+
         raise SyntaxError(
-            self.error_message(),
+            message,
             (
                 self.source_code_info.filename,
                 node.lineno,
@@ -33,6 +39,10 @@ class _StrictNodeVisitor(ast.NodeVisitor):
                 self.source_code_info.text.splitlines()[node.lineno - 1],
             ),
         )
+
+    @final
+    def generic_visit(self, node: ast.AST):
+        self.raise_syntax_error(node)
 
 
 class _NameGetter(_StrictNodeVisitor):
@@ -51,7 +61,8 @@ class _NameExpector(_StrictNodeVisitor):
         return f"Expected `{self.name}`"
 
     def visit_Name(self, node: ast.Name):
-        assert node.id == self.name
+        if node.id != self.name:
+            self.raise_syntax_error(node)
 
 
 class _DocstringExpector(_StrictNodeVisitor):
@@ -59,15 +70,17 @@ class _DocstringExpector(_StrictNodeVisitor):
         return "Expected docstring"
 
     def visit_Constant(self, node: ast.Constant) -> None:
-        assert type(node.value) == str
+        if type(node.value) != str:
+            self.raise_syntax_error(node)
 
 
 class _LoopBoundConverter(_StrictNodeVisitor):
     def error_message(self) -> str:
-        return "Expected an integer or variable"
+        return "Invalid loop bound: Expected an integer or variable"
 
     def visit_Constant(self, node: ast.Constant) -> restricted_ast.LoopBound:
-        assert isinstance(node.value, int)
+        if not isinstance(node.value, int):
+            self.raise_syntax_error(node)
         return restricted_ast.ConstantInt(node.value)
 
     def visit_Name(self, node: ast.Name) -> restricted_ast.LoopBound:
@@ -82,7 +95,10 @@ class _RangeBoundsGetter(_StrictNodeVisitor):
         self, node: ast.Call
     ) -> tuple[restricted_ast.LoopBound, restricted_ast.LoopBound]:
         _NameExpector(self.source_code_info, "range").visit(node.func)
-        assert node.keywords == []
+        if node.keywords != []:
+            self.raise_syntax_error(
+                node, "Keyword arguments in call to `range()` unsupported"
+            )
         bounds = [
             _LoopBoundConverter(self.source_code_info).visit(arg) for arg in node.args
         ]
@@ -91,7 +107,9 @@ class _RangeBoundsGetter(_StrictNodeVisitor):
         elif len(bounds) == 2:
             return (bounds[0], bounds[1])
         else:
-            assert False
+            self.raise_syntax_error(
+                node, "Number of `range()` arguments must be 1 or 2"
+            )
 
 
 def _convert_subscript(
@@ -114,7 +132,7 @@ class _AssignLHSConverter(_StrictNodeVisitor):
         return restricted_ast.Var(name=node.id)
 
 
-def _convert_binary_operator(op: ast.operator) -> restricted_ast.BinOpKind:
+def _convert_binary_operator(op: ast.operator) -> Optional[restricted_ast.BinOpKind]:
     TABLE: dict[type[ast.operator], restricted_ast.BinOpKind] = {
         ast.Add: restricted_ast.BinOpKind.ADD,
         ast.Sub: restricted_ast.BinOpKind.SUB,
@@ -127,10 +145,10 @@ def _convert_binary_operator(op: ast.operator) -> restricted_ast.BinOpKind:
     try:
         return TABLE[type(op)]
     except KeyError:
-        assert False
+        return None
 
 
-def _convert_comparison_operator(op: ast.cmpop) -> restricted_ast.BinOpKind:
+def _convert_comparison_operator(op: ast.cmpop) -> Optional[restricted_ast.BinOpKind]:
     TABLE: dict[type[ast.cmpop], restricted_ast.BinOpKind] = {
         ast.Lt: restricted_ast.BinOpKind.LESS_THAN,
         ast.Gt: restricted_ast.BinOpKind.GREATER_THAN,
@@ -139,7 +157,7 @@ def _convert_comparison_operator(op: ast.cmpop) -> restricted_ast.BinOpKind:
     try:
         return TABLE[type(op)]
     except KeyError:
-        assert False
+        return None
 
 
 class _ExpressionConverter(_StrictNodeVisitor):
@@ -164,25 +182,40 @@ class _ExpressionConverter(_StrictNodeVisitor):
         )
 
     def visit_BinOp(self, node: ast.BinOp) -> restricted_ast.Expression:
+        operator = _convert_binary_operator(node.op)
+        if operator is None:
+            self.raise_syntax_error(node, "Unsupported binary operator")
         return restricted_ast.BinOp(
             left=_ExpressionConverter(self.source_code_info).visit(node.left),
-            operator=_convert_binary_operator(node.op),
+            operator=operator,
             right=_ExpressionConverter(self.source_code_info).visit(node.right),
         )
 
     def visit_Compare(self, node: ast.Compare) -> restricted_ast.Expression:
-        assert len(node.ops) == 1
-        assert len(node.comparators) == 1
+        if len(node.ops) != 1:
+            self.raise_syntax_error(
+                node, "Comparisons with multiple operators are unsupported"
+            )
+        if len(node.comparators) != 1:
+            self.raise_syntax_error(
+                node, "Comparisons with multiple comparators are unsupported"
+            )
+        operator = _convert_comparison_operator(node.ops[0])
+        if operator is None:
+            self.raise_syntax_error(node, "Unsupported comparison operator")
         return restricted_ast.BinOp(
             left=_ExpressionConverter(self.source_code_info).visit(node.left),
-            operator=_convert_comparison_operator(node.ops[0]),
+            operator=operator,
             right=_ExpressionConverter(self.source_code_info).visit(
                 node.comparators[0]
             ),
         )
 
     def visit_UnaryOp(self, node: ast.UnaryOp) -> restricted_ast.Expression:
-        assert isinstance(node.op, ast.USub)
+        if not isinstance(node.op, ast.USub):
+            self.raise_syntax_error(
+                node, "Unary operators besides negation are unsupported"
+            )
         return restricted_ast.UnaryOp(
             operator=restricted_ast.UnaryOpKind.NEGATE,
             operand=_ExpressionConverter(self.source_code_info).visit(node.operand),
@@ -204,7 +237,8 @@ class _StatementConverter(_StrictNodeVisitor):
         return "Expected a statement"
 
     def visit_For(self, node: ast.For) -> Optional[restricted_ast.Statement]:
-        assert node.orelse == []
+        if node.orelse != []:
+            self.raise_syntax_error(node, "Unsupported `else` in `for` loop")
         (bound_low, bound_high) = _RangeBoundsGetter(self.source_code_info).visit(
             node.iter
         )
@@ -223,7 +257,8 @@ class _StatementConverter(_StrictNodeVisitor):
         )
 
     def visit_Assign(self, node: ast.Assign) -> Optional[restricted_ast.Statement]:
-        assert len(node.targets) == 1
+        if len(node.targets) != 1:
+            self.raise_syntax_error(node, "Assignments must have one target")
         return restricted_ast.Assign(
             lhs=_AssignLHSConverter(self.source_code_info).visit(node.targets[0]),
             rhs=_ExpressionConverter(self.source_code_info).visit(node.value),
@@ -232,7 +267,8 @@ class _StatementConverter(_StrictNodeVisitor):
     def visit_AnnAssign(
         self, node: ast.AnnAssign
     ) -> Optional[restricted_ast.Statement]:
-        assert node.value is not None
+        if node.value is None:
+            self.raise_syntax_error(node, "Annotated assignment without a value")
         return restricted_ast.Assign(
             lhs=_AssignLHSConverter(self.source_code_info).visit(node.target),
             rhs=_ExpressionConverter(self.source_code_info).visit(node.value),
@@ -248,15 +284,18 @@ class _ReturnValueGetter(_StrictNodeVisitor):
         return "Expected `return`"
 
     def visit_Return(self, node: ast.Return) -> restricted_ast.Expression:
-        assert node.value is not None
+        if node.value is None:
+            self.raise_syntax_error(node, "Expected `return` value")
         return _ExpressionConverter(self.source_code_info).visit(node.value)
 
 
 class _FunctionConverter(_StrictNodeVisitor):
     def visit_FunctionDef(self, node: ast.FunctionDef) -> restricted_ast.Function:
         # TODO: Check parameter and return types
-        assert node.decorator_list == []
-        assert len(node.body) != 0
+        if node.decorator_list != []:
+            self.raise_syntax_error(node, "Decorators unsupported")
+        if len(node.body) == 0:
+            self.raise_syntax_error(node, "Function has empty body")
         return restricted_ast.Function(
             # TODO: Exclude other kinds of arguments
             parameters=[restricted_ast.Var(name=arg.arg) for arg in node.args.args],
