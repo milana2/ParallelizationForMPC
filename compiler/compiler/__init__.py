@@ -1,5 +1,7 @@
 import argparse
 import ast
+import sys
+import traceback
 
 from .ast_to_restricted_ast import ast_to_restricted_ast
 from .restricted_ast_to_tac_cfg import restricted_ast_to_tac_cfg
@@ -15,10 +17,16 @@ def parse_args():
 
 def main():
     args = parse_args()
+    filename = args.input.name
     text = args.input.read()
-    ast_node = ast.parse(text)
 
-    ast_node = ast_to_restricted_ast(node=ast_node, filename=args.input.name, text=text)
+    try:
+        ast_node = ast.parse(text, filename=filename)
+        ast_node = ast_to_restricted_ast(node=ast_node, filename=filename, text=text)
+    except SyntaxError as err:
+        traceback.print_exception(etype=None, value=err, tb=None)
+        sys.exit(1)
+
     print("Restricted AST:")
     print(ast_node)
     print()
