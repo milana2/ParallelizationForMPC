@@ -70,7 +70,7 @@ Block 11:
     min_index = k
     jump
 Block 12:
-    (merge from condition: conditional jump !25)
+    (merge from conditional jump !25)
     !27 = 1
     k = k + !27
     jump

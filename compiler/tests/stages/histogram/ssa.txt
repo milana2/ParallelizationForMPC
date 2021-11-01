@@ -84,7 +84,7 @@ Block 12:
     !15!4 = Φ(!15!2, !15!3)
     !16!4 = Φ(!16!2, !16!3)
     result[i] = Φ(result[i], result[i])
-    (merge from condition: conditional jump !13!3)
+    (merge from conditional jump !13!3)
     !17!3 = 1
     j!4 = j!3 + !17!3
     jump

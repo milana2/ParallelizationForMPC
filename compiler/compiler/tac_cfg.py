@@ -125,7 +125,7 @@ class Block:
             (
                 ""
                 if self.merge_condition is None
-                else f"(merge from condition: {self.merge_condition})\n"
+                else f"(merge from {self.merge_condition})\n"
             )
             + "\n".join([str(assignment) for assignment in self.assignments])
             + ("" if self.assignments == [] else "\n")

@@ -65,7 +65,7 @@ Block 9:
     !9!4 = Φ(!9!2, !9!3)
     !10!4 = Φ(!10!2, !10!3)
     !11!4 = Φ(!11!2, !11!3)
-    (merge from condition: conditional jump !8!3)
+    (merge from conditional jump !8!3)
     !12!3 = 1
     j!4 = j!3 + !12!3
     jump

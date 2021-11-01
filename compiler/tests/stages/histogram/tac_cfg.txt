@@ -51,7 +51,7 @@ Block 11:
     result[i] = !16
     jump
 Block 12:
-    (merge from condition: conditional jump !13)
+    (merge from conditional jump !13)
     !17 = 1
     j = j + !17
     jump
