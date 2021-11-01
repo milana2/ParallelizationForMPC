@@ -69,4 +69,4 @@ Block 9:
     !12!3 = 1
     j!4 = j!3 + !12!3
     jump
-Edges: (0, 1, BranchKind.UNCONDITIONAL) (1, 2, BranchKind.FALSE) (1, 3, BranchKind.TRUE) (3, 4, BranchKind.UNCONDITIONAL) (4, 5, BranchKind.FALSE) (4, 6, BranchKind.TRUE) (5, 1, BranchKind.UNCONDITIONAL) (6, 7, BranchKind.FALSE) (6, 8, BranchKind.TRUE) (7, 9, BranchKind.UNCONDITIONAL) (8, 9, BranchKind.UNCONDITIONAL) (9, 4, BranchKind.UNCONDITIONAL)
+Edges: (0, 1, *) (1, 2, F) (1, 3, T) (3, 4, *) (4, 5, F) (4, 6, T) (5, 1, *) (6, 7, F) (6, 8, T) (7, 9, *) (8, 9, *) (9, 4, *)

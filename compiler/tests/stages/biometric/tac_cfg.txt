@@ -53,4 +53,4 @@ Block 9:
     !18 = 1
     i = i + !18
     jump
-Edges: (0, 1, BranchKind.UNCONDITIONAL) (1, 2, BranchKind.FALSE) (1, 3, BranchKind.TRUE) (3, 4, BranchKind.UNCONDITIONAL) (4, 5, BranchKind.FALSE) (4, 6, BranchKind.TRUE) (5, 7, BranchKind.FALSE) (5, 8, BranchKind.TRUE) (6, 4, BranchKind.UNCONDITIONAL) (7, 9, BranchKind.UNCONDITIONAL) (8, 9, BranchKind.UNCONDITIONAL) (9, 1, BranchKind.UNCONDITIONAL)
+Edges: (0, 1, *) (1, 2, F) (1, 3, T) (3, 4, *) (4, 5, F) (4, 6, T) (5, 7, F) (5, 8, T) (6, 4, *) (7, 9, *) (8, 9, *) (9, 1, *)

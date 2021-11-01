@@ -49,7 +49,7 @@ class _CFGBuilder:
         self._cfg.add_edge(
             u_of_edge=self._current_block,
             v_of_edge=target_block,
-            branch_kind=tac_cfg.BranchKind.UNCONDITIONAL,
+            label=tac_cfg.BranchKind.UNCONDITIONAL,
         )
 
     def add_conditional_jump(
@@ -63,12 +63,12 @@ class _CFGBuilder:
         self._cfg.add_edge(
             u_of_edge=self._current_block,
             v_of_edge=false_block,
-            branch_kind=tac_cfg.BranchKind.FALSE,
+            label=tac_cfg.BranchKind.FALSE,
         )
         self._cfg.add_edge(
             u_of_edge=self._current_block,
             v_of_edge=true_block,
-            branch_kind=tac_cfg.BranchKind.TRUE,
+            label=tac_cfg.BranchKind.TRUE,
         )
 
     def build_function(

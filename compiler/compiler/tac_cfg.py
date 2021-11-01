@@ -133,7 +133,13 @@ class Block:
         )
 
 
-BranchKind = Enum("BranchKind", "UNCONDITIONAL TRUE FALSE")
+class BranchKind(Enum):
+    UNCONDITIONAL = "*"
+    TRUE = "T"
+    FALSE = "F"
+
+    def __str__(self) -> str:
+        return self.value
 
 
 Function = _CFGFunction[Block]

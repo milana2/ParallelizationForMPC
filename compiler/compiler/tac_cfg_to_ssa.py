@@ -55,17 +55,15 @@ def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
         cfg.add_node(ssa_block)
         mapping[tac_cfg_block] = ssa_block
 
-    for source_block, dest_block, branch_kind in tac_cfg_function.body.edges(
-        data="branch_kind"
-    ):
+    for source_block, dest_block, label in tac_cfg_function.body.edges(data="label"):
         source_block: tac_cfg.Block = source_block
         dest_block: tac_cfg.Block = dest_block
-        branch_kind: tac_cfg.BranchKind = branch_kind
-        branch_kind: ssa.BranchKind = branch_kind
+        label: tac_cfg.BranchKind = label
+        label: ssa.BranchKind = label
         cfg.add_edge(
             u_of_edge=mapping[source_block],
             v_of_edge=mapping[dest_block],
-            branch_kind=branch_kind,
+            label=label,
         )
 
     return ssa.Function(

@@ -71,7 +71,7 @@ class CFGFunction(Generic[BLOCK]):
         edges = " ".join(
             [
                 f"({block_indices[u]}, {block_indices[v]}, {label})"
-                for u, v, label in self.body.edges(data="branch_kind")
+                for u, v, label in self.body.edges(data="label")
             ]
         )
         return (
