@@ -30,3 +30,6 @@ class StagesTestCase(unittest.TestCase):
 
             ssa = compiler.tac_cfg_to_ssa(cfg)
             self.assertEqual(str(ssa), stages["ssa.txt"])
+
+            compiler.replace_phi_with_mux(ssa)
+            self.assertEqual(str(ssa), stages["ssa_mux.txt"])
