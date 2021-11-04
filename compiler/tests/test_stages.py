@@ -2,7 +2,9 @@ import os
 import unittest
 import ast
 
-from .context import compiler, STAGES_DIR
+import compiler
+
+from .context import STAGES_DIR
 
 
 class StagesTestCase(unittest.TestCase):
