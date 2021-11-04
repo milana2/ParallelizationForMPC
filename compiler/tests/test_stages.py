@@ -4,8 +4,6 @@ import ast
 
 from .context import compiler, STAGES_DIR
 
-from compiler.restricted_ast import *
-
 
 class StagesTestCase(unittest.TestCase):
     maxDiff = None
