@@ -37,6 +37,8 @@ class BinOpKind(Enum):
     LESS_THAN = "<"
     GREATER_THAN = ">"
     EQUALS = "=="
+    AND = "and"
+    OR = "or"
 
     def __str__(self) -> str:
         return self.value

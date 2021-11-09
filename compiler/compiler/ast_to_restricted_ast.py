@@ -160,6 +160,17 @@ def _convert_comparison_operator(op: ast.cmpop) -> Optional[restricted_ast.BinOp
         return None
 
 
+def _convert_boolean_operator(op: ast.boolop) -> Optional[restricted_ast.BinOpKind]:
+    TABLE: dict[type[ast.boolop], restricted_ast.BinOpKind] = {
+        ast.And: restricted_ast.BinOpKind.AND,
+        ast.Or: restricted_ast.BinOpKind.OR,
+    }
+    try:
+        return TABLE[type(op)]
+    except KeyError:
+        return None
+
+
 class _ExpressionConverter(_StrictNodeVisitor):
     def error_message(self) -> str:
         return "Expected an expression"
@@ -210,6 +221,23 @@ class _ExpressionConverter(_StrictNodeVisitor):
                 node.comparators[0]
             ),
         )
+
+    def visit_BoolOp(self, node: ast.BoolOp) -> restricted_ast.Expression:
+        operator = _convert_boolean_operator(node.op)
+        if operator is None:
+            self.raise_syntax_error(node, "Unsupported boolean operator")
+        result = restricted_ast.BinOp(
+            left=_ExpressionConverter(self.source_code_info).visit(node.values[0]),
+            operator=operator,
+            right=_ExpressionConverter(self.source_code_info).visit(node.values[1]),
+        )
+        for operand in node.values[2:]:
+            result = restricted_ast.BinOp(
+                left=result,
+                operator=operator,
+                right=_ExpressionConverter(self.source_code_info).visit(operand),
+            )
+        return result
 
     def visit_UnaryOp(self, node: ast.UnaryOp) -> restricted_ast.Expression:
         if not isinstance(node.op, ast.USub):
