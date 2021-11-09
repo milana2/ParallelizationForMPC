@@ -16,6 +16,8 @@ def cfg_to_image(G: networkx.DiGraph, path: str):
     Write a PNG image of the control flow graph in `G` to `path`.
     This is useful for debugging.
     """
+    # The node labels must be unique for pydot to consider nodes separate
+    G = networkx.convert_node_labels_to_integers(G, label_attribute="label")
     G.graph["node"] = {"shape": "box", "fontname": "monospace"}
     dot = networkx.nx_pydot.to_pydot(G)
     dot.write(path, format="png")
