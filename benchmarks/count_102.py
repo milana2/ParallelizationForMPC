@@ -1,0 +1,22 @@
+def count_102(Seq: list[int], N, Syms: list[int]):
+    """
+    Computes the number of instances of regex a(b*)c in a provided sequence.
+    Syms is a list of form [a, b, c].
+    """
+    s0 = False
+    c = 0
+
+    # assert len(Syms) == 2
+
+    for i in range(0, N):
+        if s0 and Seq[i] == Syms[2]:
+            c = c + 1
+
+        s0 = (Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0]))
+
+    return c
+
+
+seq = [1, 0, 2, 1, 0, 0, 2, 1, 2, 2]
+num_102s = count_102(seq, len(seq), [1, 0, 2])
+print(num_102s)
