@@ -27,7 +27,9 @@ class _CFGBuilder:
         return tac_cfg.Var(name=f"!{self._tmp_name_counter}")
 
     def make_empty_block(self) -> tac_cfg.Block:
-        return tac_cfg.Block(assignments=[], terminator=None, merge_condition=None)
+        block = tac_cfg.Block(assignments=[], terminator=None, merge_condition=None)
+        self._cfg.add_node(block)
+        return block
 
     def get_current_block(self) -> tac_cfg.Block:
         return self._current_block

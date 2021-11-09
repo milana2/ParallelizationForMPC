@@ -1,6 +1,6 @@
 Function(A, B, N):
 Entry block: 0
-Exit block: 2
+Exit block: 3
 Block 0:
     !1 = 0
     sum = !1
@@ -11,8 +11,6 @@ Block 1:
     !3 = i < !2
     conditional jump !3
 Block 2:
-    return sum
-Block 3:
     !4 = A[i]
     !5 = B[i]
     !6 = !4 * !5
@@ -22,4 +20,6 @@ Block 3:
     !8 = 1
     i = i + !8
     jump
-Edges: (0, 1, *) (1, 2, F) (1, 3, T) (3, 1, *)
+Block 3:
+    return sum
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 1, *)

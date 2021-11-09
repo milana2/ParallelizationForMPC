@@ -1,6 +1,6 @@
 Function(A, B, N, num_bins):
 Entry block: 0
-Exit block: 5
+Exit block: 6
 Block 0:
     !1 = []
     result = !1
@@ -11,10 +11,6 @@ Block 1:
     !3 = i < !2
     conditional jump !3
 Block 2:
-    i = 0
-    !8 = num_bins
-    jump
-Block 3:
     !4 = 0
     !5 = [!4]
     !6 = result + !5
@@ -22,37 +18,41 @@ Block 3:
     !7 = 1
     i = i + !7
     jump
+Block 3:
+    i = 0
+    !8 = num_bins
+    jump
 Block 4:
     !9 = i < !8
     conditional jump !9
 Block 5:
-    return result
-Block 6:
     j = 0
     !10 = N
     jump
+Block 6:
+    return result
 Block 7:
     !11 = j < !10
     conditional jump !11
 Block 8:
-    !18 = 1
-    i = i + !18
-    jump
-Block 9:
     !12 = A[j]
     !13 = !12 == i
     conditional jump !13
-Block 10:
+Block 9:
+    !18 = 1
+    i = i + !18
     jump
-Block 11:
+Block 10:
     !14 = result[i]
     !15 = B[j]
     !16 = !14 + !15
     result[i] = !16
+    jump
+Block 11:
     jump
 Block 12:
     (merge from conditional jump !13)
     !17 = 1
     j = j + !17
     jump
-Edges: (0, 1, *) (1, 2, F) (1, 3, T) (2, 4, *) (3, 1, *) (4, 5, F) (4, 6, T) (6, 7, *) (7, 8, F) (7, 9, T) (8, 4, *) (9, 10, F) (9, 11, T) (10, 12, *) (11, 12, *) (12, 7, *)
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 1, *) (3, 4, *) (4, 6, F) (4, 5, T) (5, 7, *) (7, 9, F) (7, 8, T) (8, 11, F) (8, 10, T) (9, 4, *) (10, 12, *) (11, 12, *) (12, 7, *)
