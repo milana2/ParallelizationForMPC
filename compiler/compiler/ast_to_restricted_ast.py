@@ -171,6 +171,17 @@ def _convert_boolean_operator(op: ast.boolop) -> Optional[restricted_ast.BinOpKi
         return None
 
 
+def _convert_unary_operator(op: ast.unaryop) -> Optional[restricted_ast.UnaryOpKind]:
+    TABLE: dict[type[ast.unaryop], restricted_ast.UnaryOpKind] = {
+        ast.USub: restricted_ast.UnaryOpKind.NEGATE,
+        ast.Not: restricted_ast.UnaryOpKind.NOT,
+    }
+    try:
+        return TABLE[type(op)]
+    except KeyError:
+        return None
+
+
 class _ExpressionConverter(_StrictNodeVisitor):
     def error_message(self) -> str:
         return "Expected an expression"
@@ -240,12 +251,11 @@ class _ExpressionConverter(_StrictNodeVisitor):
         return result
 
     def visit_UnaryOp(self, node: ast.UnaryOp) -> restricted_ast.Expression:
-        if not isinstance(node.op, ast.USub):
-            self.raise_syntax_error(
-                node, "Unary operators besides negation are unsupported"
-            )
+        operator = _convert_unary_operator(node.op)
+        if operator is None:
+            self.raise_syntax_error(node, "Unsupported unary operator")
         return restricted_ast.UnaryOp(
-            operator=restricted_ast.UnaryOpKind.NEGATE,
+            operator=operator,
             operand=_ExpressionConverter(self.source_code_info).visit(node.operand),
         )
 

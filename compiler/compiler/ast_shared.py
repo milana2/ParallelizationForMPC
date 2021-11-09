@@ -46,6 +46,7 @@ class BinOpKind(Enum):
 
 class UnaryOpKind(Enum):
     NEGATE = "-"
+    NOT = "not"
 
     def __str__(self) -> str:
         return self.value
