@@ -45,23 +45,19 @@ class _CFGBuilder:
         assert self._current_block.terminator is None
         self._current_block.assignments.append(assignment)
 
-    def add_jump(self, target_block: tac_cfg.Block):
+    def _add_terminator(self, terminator: tac_cfg.BlockTerminator):
         assert self._current_block.terminator is None
-        self._current_block.terminator = tac_cfg.Jump()
+        self._current_block.terminator = terminator
+
+    def add_jump(self, target_block: tac_cfg.Block):
+        self._add_terminator(tac_cfg.Jump())
         self._cfg.add_edge(
             u_of_edge=self._current_block,
             v_of_edge=target_block,
             label=tac_cfg.BranchKind.UNCONDITIONAL,
         )
 
-    def add_conditional_jump(
-        self,
-        condition: tac_cfg.Var,
-        false_block: tac_cfg.Block,
-        true_block: tac_cfg.Block,
-    ):
-        assert self._current_block.terminator is None
-        self._current_block.terminator = tac_cfg.ConditionalJump(condition)
+    def _add_conditional_jump_edges(self, false_block, true_block):
         self._cfg.add_edge(
             u_of_edge=self._current_block,
             v_of_edge=false_block,
@@ -72,6 +68,26 @@ class _CFGBuilder:
             v_of_edge=true_block,
             label=tac_cfg.BranchKind.TRUE,
         )
+
+    def add_conditional_jump(
+        self,
+        condition: tac_cfg.Var,
+        false_block: tac_cfg.Block,
+        true_block: tac_cfg.Block,
+    ):
+        self._add_terminator(tac_cfg.ConditionalJump(condition))
+        self._add_conditional_jump_edges(false_block, true_block)
+
+    def add_for(
+        self,
+        counter: tac_cfg.Var,
+        bound_low: tac_cfg.LoopBound,
+        bound_high: tac_cfg.LoopBound,
+        body_block: tac_cfg.Block,
+        after_block: tac_cfg.Block,
+    ):
+        self._add_terminator(tac_cfg.For(counter, bound_low, bound_high))
+        self._add_conditional_jump_edges(after_block, body_block)
 
     def build_function(
         self, parameters: list[tac_cfg.Var], return_var: tac_cfg.Var
@@ -192,30 +208,10 @@ def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
 
 
 def _build_for(for_loop: restricted_ast.For, builder: _CFGBuilder):
-    # counter = bound_low
-    builder.add_assignment(tac_cfg.Assign(lhs=for_loop.counter, rhs=for_loop.bound_low))
-
-    # bound_high_var = bound_high
-    bound_var = builder.generate_variable()
-    builder.add_assignment(tac_cfg.Assign(lhs=bound_var, rhs=for_loop.bound_high))
-
     # Jump to a new block so the end of the loop can jump back here
     condition_block = builder.make_empty_block()
     builder.add_jump(condition_block)
     builder.set_current_block(condition_block)
-
-    # condition_var = counter < bound_high
-    condition_var = builder.generate_variable()
-    builder.add_assignment(
-        tac_cfg.Assign(
-            lhs=condition_var,
-            rhs=tac_cfg.BinOp(
-                left=for_loop.counter,
-                operator=tac_cfg.BinOpKind.LESS_THAN,
-                right=bound_var,
-            ),
-        )
-    )
 
     # Block for loop body
     body_block = builder.make_empty_block()
@@ -223,45 +219,23 @@ def _build_for(for_loop: restricted_ast.For, builder: _CFGBuilder):
     # Block for code after the loop
     after_block = builder.make_empty_block()
 
-    # Condition for whether to terminate or continue the loop
-    builder.add_conditional_jump(
-        condition=condition_var,
-        false_block=after_block,
-        true_block=body_block,
+    # Build the loop condition
+    builder.add_for(
+        counter=for_loop.counter,
+        bound_low=for_loop.bound_low,
+        bound_high=for_loop.bound_high,
+        body_block=body_block,
+        after_block=after_block,
     )
 
     # Add the loop body
     builder.set_current_block(body_block)
     _build_statements(for_loop.body, builder)
 
-    # Increment loop counter
-
-    # one = 1
-    one_var = builder.generate_variable()
-    builder.add_assignment(
-        tac_cfg.Assign(
-            lhs=one_var,
-            rhs=tac_cfg.ConstantInt(1),
-        )
-    )
-
-    # counter = counter + one
-    builder.add_assignment(
-        tac_cfg.Assign(
-            lhs=for_loop.counter,
-            rhs=tac_cfg.BinOp(
-                left=for_loop.counter,
-                operator=tac_cfg.BinOpKind.ADD,
-                right=one_var,
-            ),
-        )
-    )
-
     # Jump back to condition
-    if not builder.current_block_done():
-        builder.add_jump(condition_block)
+    builder.add_jump(condition_block)
 
-    # Move to end of loop
+    # Continue writing code after the loop
     builder.set_current_block(after_block)
 
 

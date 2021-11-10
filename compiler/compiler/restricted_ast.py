@@ -12,9 +12,6 @@ from .ast_shared import *
 Statement = Union["For", "If", "Assign"]
 
 
-LoopBound = Union[Var, ConstantInt]
-
-
 @dataclass
 class For:
     """

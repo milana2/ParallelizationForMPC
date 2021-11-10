@@ -119,15 +119,20 @@ def rename_variables(result: ssa.Function) -> None:
 
     def subscript_var(V: ssa.Var, i: Optional[int] = None):
         if i is None:
-            i = S[V][-1]
+            try:
+                i = S[V][-1]
+            except KeyError:
+                return V
 
         return ssa.Var(f"{V.name}!{i}")
 
     def search(X: ssa.Block):
         old_lhs: dict[Union[ssa.Phi, ssa.Assign], ssa.AssignLHS] = dict()
 
-        if isinstance(X.terminator, ssa.ConditionalJump) or isinstance(
-            X.terminator, ssa.Return
+        if (
+            isinstance(X.terminator, ssa.ConditionalJump)
+            or isinstance(X.terminator, ssa.For)
+            or isinstance(X.terminator, ssa.Return)
         ):
             var_terminators = [X.terminator]
         elif isinstance(X.terminator, ssa.Jump):
@@ -168,6 +173,11 @@ def rename_variables(result: ssa.Function) -> None:
             elif isinstance(A, ssa.Return):
                 V = A.value
                 A.value = subscript_var(V)
+            elif isinstance(A, ssa.For):
+                if isinstance(A.bound_low, ssa.Var):
+                    A.bound_low = subscript_var(A.bound_low)
+                if isinstance(A.bound_high, ssa.Var):
+                    A.bound_high = subscript_var(A.bound_high)
             elif isinstance(A, ssa.Phi):
                 pass
             else:

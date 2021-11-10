@@ -14,6 +14,7 @@ from .tac_cfg import (
     Assign,
     Jump,
     ConditionalJump,
+    For,
     Return,
     BlockTerminator,
     BranchKind,

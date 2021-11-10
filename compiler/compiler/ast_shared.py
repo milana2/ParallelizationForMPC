@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Union
 from dataclasses import dataclass
 from textwrap import indent
 
@@ -24,6 +24,9 @@ class ConstantInt:
 
     def __str__(self) -> str:
         return str(self.value)
+
+
+LoopBound = Union[Var, ConstantInt]
 
 
 class BinOpKind(Enum):

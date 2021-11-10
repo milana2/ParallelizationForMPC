@@ -4,8 +4,14 @@ from enum import Enum
 from typing import Union, Optional
 from dataclasses import dataclass
 
-from .ast_shared import Var, BinOpKind, UnaryOpKind, ConstantInt
-from .ast_shared import CFGFunction as _CFGFunction
+from .ast_shared import (
+    Var,
+    BinOpKind,
+    UnaryOpKind,
+    ConstantInt,
+    LoopBound,
+    CFGFunction as _CFGFunction,
+)
 
 
 @dataclass
@@ -90,6 +96,16 @@ class ConditionalJump:
         return f"conditional jump {self.condition}"
 
 
+@dataclass
+class For:
+    counter: Var
+    bound_low: LoopBound
+    bound_high: LoopBound
+
+    def __str__(self) -> str:
+        return f"for {self.counter} in range({self.bound_low}, {self.bound_high})"
+
+
 @dataclass(eq=False)
 class Return:
     value: Var
@@ -101,7 +117,7 @@ class Return:
         return f"return {self.value}"
 
 
-BlockTerminator = Union[Jump, ConditionalJump, Return]
+BlockTerminator = Union[Jump, ConditionalJump, For, Return]
 
 
 @dataclass(eq=False)
