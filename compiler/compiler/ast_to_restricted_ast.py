@@ -150,9 +150,12 @@ def _convert_binary_operator(op: ast.operator) -> Optional[restricted_ast.BinOpK
 
 def _convert_comparison_operator(op: ast.cmpop) -> Optional[restricted_ast.BinOpKind]:
     TABLE: dict[type[ast.cmpop], restricted_ast.BinOpKind] = {
-        ast.Lt: restricted_ast.BinOpKind.LESS_THAN,
-        ast.Gt: restricted_ast.BinOpKind.GREATER_THAN,
-        ast.Eq: restricted_ast.BinOpKind.EQUALS,
+        ast.Eq: restricted_ast.BinOpKind.EQ,
+        ast.NotEq: restricted_ast.BinOpKind.NOT_EQ,
+        ast.Lt: restricted_ast.BinOpKind.LT,
+        ast.LtE: restricted_ast.BinOpKind.LT_E,
+        ast.Gt: restricted_ast.BinOpKind.GT,
+        ast.GtE: restricted_ast.BinOpKind.GT_E,
     }
     try:
         return TABLE[type(op)]
