@@ -7,10 +7,8 @@ def count_10s(Seq: list[int], N, Syms: list[int]):
     s1 = False
     scount = 0
 
-    # assert len(Syms) == 2
-
     for i in range(0, N):
-        if s1 and not (Seq[i] == Syms[0]):
+        if s1 and (Seq[i] != Syms[0]):
             scount = scount + 1
 
         s1 = (Seq[i] == Syms[0]) and (s0 or s1)

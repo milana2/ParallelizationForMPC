@@ -6,10 +6,8 @@ def count_102(Seq: list[int], N, Syms: list[int]):
     s0 = False
     c = 0
 
-    # assert len(Syms) == 2
-
     for i in range(0, N):
-        if s0 and Seq[i] == Syms[2]:
+        if s0 and (Seq[i] == Syms[2]):
             c = c + 1
 
         s0 = (Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0]))
