@@ -315,6 +315,24 @@ class _StatementConverter(_StrictNodeVisitor):
             rhs=_ExpressionConverter(self.source_code_info).visit(node.value),
         )
 
+    def visit_AugAssign(
+        self, node: ast.AugAssign
+    ) -> Optional[restricted_ast.Statement]:
+        operator = _convert_binary_operator(node.op)
+        if operator is None:
+            self.raise_syntax_error(node, "Unsupported binary operator")
+        target: restricted_ast.AssignLHS = _AssignLHSConverter(
+            self.source_code_info
+        ).visit(node.target)
+        return restricted_ast.Assign(
+            lhs=target,
+            rhs=restricted_ast.BinOp(
+                left=target,
+                operator=operator,
+                right=_ExpressionConverter(self.source_code_info).visit(node.value),
+            ),
+        )
+
     def visit_Expr(self, node: ast.Expr) -> Optional[restricted_ast.Statement]:
         # Ignore docstrings
         _DocstringExpector(self.source_code_info).visit(node.value)
