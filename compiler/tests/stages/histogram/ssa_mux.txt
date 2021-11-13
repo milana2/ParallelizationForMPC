@@ -14,7 +14,7 @@ Block 1:
 Block 2:
     !2!2 = 0
     !3!2 = [!2!2]
-    !4!2 = result!2 + !3!2
+    !4!2 = (result!2 + !3!2)
     result!3 = !4!2
     jump
 Block 3:
@@ -41,14 +41,14 @@ Block 7:
     for j in range(0, N!0)
 Block 8:
     !5!3 = A[j]
-    !6!3 = !5!3 == i
+    !6!3 = (!5!3 == i)
     conditional jump !6!3
 Block 9:
     jump
 Block 10:
     !7!3 = result[i]
     !8!3 = B[j]
-    !9!3 = !7!3 + !8!3
+    !9!3 = (!7!3 + !8!3)
     result[i] = !9!3
     jump
 Block 11:

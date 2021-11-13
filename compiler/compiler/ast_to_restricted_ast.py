@@ -112,12 +112,42 @@ class _RangeBoundsGetter(_StrictNodeVisitor):
             )
 
 
+class _SubscriptIndexConverter(_StrictNodeVisitor):
+    def error_message(self) -> str:
+        return "Expected a list subscript index"
+
+    def visit_Name(self, node: ast.Name) -> restricted_ast.SubscriptIndex:
+        return restricted_ast.Var(name=node.id)
+
+    def visit_Constant(self, node: ast.Constant) -> restricted_ast.SubscriptIndex:
+        return restricted_ast.ConstantInt(value=node.value)
+
+    def visit_BinOp(self, node: ast.BinOp) -> restricted_ast.SubscriptIndex:
+        operator = _convert_binary_operator(node.op)
+        if operator is None:
+            self.raise_syntax_error(node, "Unsupported binary operator")
+        return restricted_ast.SubscriptIndexBinOp(
+            left=_SubscriptIndexConverter(self.source_code_info).visit(node.left),
+            operator=operator,
+            right=_SubscriptIndexConverter(self.source_code_info).visit(node.right),
+        )
+
+    def visit_UnaryOp(self, node: ast.UnaryOp) -> restricted_ast.SubscriptIndex:
+        operator = _convert_unary_operator(node.op)
+        if operator is None:
+            self.raise_syntax_error(node, "Unsupported unary operator")
+        return restricted_ast.SubscriptIndexUnaryOp(
+            operator=operator,
+            operand=_SubscriptIndexConverter(self.source_code_info).visit(node.operand),
+        )
+
+
 def _convert_subscript(
     source_code_info: _SourceCodeInfo, node: ast.Subscript
 ) -> restricted_ast.Subscript:
     return restricted_ast.Subscript(
         array=_NameGetter(source_code_info).visit(node.value),
-        index=_ExpressionConverter(source_code_info).visit(node.slice),
+        index=_SubscriptIndexConverter(source_code_info).visit(node.slice),
     )
 
 

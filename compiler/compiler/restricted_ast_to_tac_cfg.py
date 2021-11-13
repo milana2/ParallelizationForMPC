@@ -107,19 +107,11 @@ def _build_expression(
 ) -> tac_cfg.Var:
     if isinstance(expression, restricted_ast.Var):
         return expression
-    elif isinstance(expression, restricted_ast.ConstantInt):
+    elif isinstance(expression, restricted_ast.ConstantInt) or isinstance(
+        expression, restricted_ast.Subscript
+    ):
         result_var = builder.generate_variable()
         builder.add_assignment(tac_cfg.Assign(lhs=result_var, rhs=expression))
-        return result_var
-    elif isinstance(expression, restricted_ast.Subscript):
-        index_var = _build_expression(expression.index, builder)
-        result_var = builder.generate_variable()
-        builder.add_assignment(
-            tac_cfg.Assign(
-                lhs=result_var,
-                rhs=tac_cfg.Subscript(array=expression.array, index=index_var),
-            )
-        )
         return result_var
     elif isinstance(expression, restricted_ast.List):
         item_vars = [_build_expression(item, builder) for item in expression.items]
@@ -174,17 +166,9 @@ def _build_expression(
 
 
 def _build_assignment(assignment: restricted_ast.Assign, builder: _CFGBuilder):
-    if isinstance(assignment.lhs, restricted_ast.Subscript):
-        lhs = tac_cfg.Subscript(
-            array=assignment.lhs.array,
-            index=_build_expression(assignment.lhs.index, builder),
-        )
-    else:
-        lhs = assignment.lhs
-
     builder.add_assignment(
         tac_cfg.Assign(
-            lhs=lhs,
+            lhs=assignment.lhs,
             rhs=_build_expression(assignment.rhs, builder),
         )
     )

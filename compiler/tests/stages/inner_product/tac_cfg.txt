@@ -10,9 +10,9 @@ Block 1:
 Block 2:
     !2 = A[i]
     !3 = B[i]
-    !4 = !2 * !3
+    !4 = (!2 * !3)
     temp = !4
-    !5 = sum + temp
+    !5 = (sum + temp)
     sum = !5
     jump
 Block 3:

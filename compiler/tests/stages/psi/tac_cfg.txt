@@ -16,14 +16,14 @@ Block 4:
 Block 5:
     !2 = A[i]
     !3 = B[j]
-    !4 = !2 == !3
+    !4 = (!2 == !3)
     conditional jump !4
 Block 6:
     jump
 Block 7:
     !5 = A[i]
     !6 = [!5]
-    !7 = result + !6
+    !7 = (result + !6)
     result = !7
     jump
 Block 8:
