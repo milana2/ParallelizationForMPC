@@ -5,11 +5,11 @@ Block 0:
     !1 = 0
     z = !1
     !2 = 0
-    !3 = x > !2
+    !3 = (x > !2)
     conditional jump !3
 Block 1:
     !4 = 0
-    !5 = y > !4
+    !5 = (y > !4)
     conditional jump !5
 Block 2:
     jump

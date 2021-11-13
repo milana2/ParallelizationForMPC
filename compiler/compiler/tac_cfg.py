@@ -10,36 +10,21 @@ from .ast_shared import (
     UnaryOpKind,
     ConstantInt,
     LoopBound,
+    Subscript,
+    AssignLHS,
+    SubscriptIndex,
     CFGFunction as _CFGFunction,
+    BinOp as _BinOp,
+    UnaryOp as _UnaryOp,
 )
 
 
-@dataclass
-class BinOp:
-    left: Var
-    operator: BinOpKind
-    right: Var
-
-    def __str__(self) -> str:
-        return f"{self.left} {self.operator} {self.right}"
+class BinOp(_BinOp[Var]):
+    pass
 
 
-@dataclass
-class UnaryOp:
-    operator: UnaryOpKind
-    operand: Var
-
-    def __str__(self) -> str:
-        return f"{self.operator} {self.operand}"
-
-
-@dataclass(frozen=True)
-class Subscript:
-    array: Var
-    index: Var
-
-    def __str__(self) -> str:
-        return f"{self.array}[{self.index}]"
+class UnaryOp(_UnaryOp[Var]):
+    pass
 
 
 @dataclass
@@ -70,8 +55,6 @@ class Mux:
     def __str__(self) -> str:
         return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
 
-
-AssignLHS = Union[Subscript, Var]
 
 AssignRHS = Union[Subscript, Var, BinOp, UnaryOp, ConstantInt, List, Tuple, Mux]
 

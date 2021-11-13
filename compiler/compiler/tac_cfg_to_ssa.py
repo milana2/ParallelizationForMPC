@@ -126,6 +126,31 @@ def rename_variables(result: ssa.Function) -> None:
 
         return ssa.Var(f"{V.name}!{i}")
 
+    def rename_subscript_index(index: ssa.SubscriptIndex) -> ssa.SubscriptIndex:
+        if isinstance(index, ssa.Var):
+            return subscript_var(index)
+        elif isinstance(index, ssa.ConstantInt):
+            return index
+        elif isinstance(index, ssa.SubscriptIndexBinOp):
+            return ssa.SubscriptIndexBinOp(
+                left=rename_subscript_index(index.left),
+                operator=index.operator,
+                right=rename_subscript_index(index.right),
+            )
+        elif isinstance(index, ssa.SubscriptIndexUnaryOp):
+            return ssa.SubscriptIndexUnaryOp(
+                operator=index.operator,
+                operand=rename_subscript_index(index.operand),
+            )
+        else:
+            assert_never(index)
+
+    def rename_subscript(subscript: ssa.Subscript) -> ssa.Subscript:
+        return ssa.Subscript(
+            array=subscript.array,
+            index=rename_subscript_index(subscript.index),
+        )
+
     def search(X: ssa.Block):
         old_lhs: dict[Union[ssa.Phi, ssa.Assign], ssa.AssignLHS] = dict()
 
@@ -144,7 +169,7 @@ def rename_variables(result: ssa.Function) -> None:
         for A in itertools.chain(X.phi_functions, X.assignments, var_terminators):
             if isinstance(A, ssa.Assign):
                 if isinstance(A.rhs, ssa.Subscript):
-                    pass  # TODO: Support this
+                    A.rhs = rename_subscript(A.rhs)
                 elif isinstance(A.rhs, ssa.ConstantInt):
                     pass
                 elif isinstance(A.rhs, ssa.Var):
@@ -188,7 +213,7 @@ def rename_variables(result: ssa.Function) -> None:
                 i = C[V]
 
                 if isinstance(V, ssa.Subscript):
-                    pass  # TODO: Support this
+                    A.lhs = rename_subscript(V)
                 elif isinstance(V, ssa.Var):
                     old_lhs[A] = A.lhs
                     A.lhs = subscript_var(V, i)

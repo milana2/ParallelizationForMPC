@@ -3,8 +3,14 @@
 import networkx
 from dataclasses import dataclass
 
-from .ast_shared import Var, ConstantInt
-from .ast_shared import CFGFunction as _CFGFunction
+from .ast_shared import (
+    Var,
+    ConstantInt,
+    CFGFunction as _CFGFunction,
+    SubscriptIndex,
+    SubscriptIndexBinOp,
+    SubscriptIndexUnaryOp,
+)
 from .tac_cfg import (
     BinOp,
     UnaryOp,

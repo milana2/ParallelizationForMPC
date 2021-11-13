@@ -58,6 +58,57 @@ class UnaryOpKind(Enum):
         return self.value
 
 
+OPERAND = TypeVar("OPERAND")
+
+
+@dataclass
+class BinOp(Generic[OPERAND]):
+    """A binary operator expression of the form `left operator right`"""
+
+    left: OPERAND
+    operator: BinOpKind
+    right: OPERAND
+
+    def __str__(self) -> str:
+        return f"({self.left} {self.operator} {self.right})"
+
+
+@dataclass
+class UnaryOp(Generic[OPERAND]):
+    """A unary operator expression of the form `operator operand`"""
+
+    operator: UnaryOpKind
+    operand: OPERAND
+
+    def __str__(self) -> str:
+        return f"{self.operator} {self.operand}"
+
+
+class SubscriptIndexBinOp(BinOp["SubscriptIndex"]):
+    pass
+
+
+class SubscriptIndexUnaryOp(UnaryOp["SubscriptIndex"]):
+    pass
+
+
+SubscriptIndex = Union[Var, ConstantInt, SubscriptIndexBinOp, SubscriptIndexUnaryOp]
+
+
+@dataclass(frozen=True)
+class Subscript:
+    """An array subscript expression of the form `array[index]`"""
+
+    array: Var
+    index: SubscriptIndex
+
+    def __str__(self) -> str:
+        return f"{self.array}[{self.index}]"
+
+
+AssignLHS = Union[Subscript, Var]
+
+
 BLOCK = TypeVar("BLOCK")
 
 

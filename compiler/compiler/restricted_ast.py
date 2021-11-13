@@ -6,7 +6,20 @@ from typing import Union
 from dataclasses import dataclass
 from textwrap import indent
 
-from .ast_shared import *
+from .ast_shared import (
+    Var,
+    LoopBound,
+    ConstantInt,
+    BinOp as _BinOp,
+    UnaryOp as _UnaryOp,
+    Subscript,
+    AssignLHS,
+    SubscriptIndex,
+    SubscriptIndexBinOp,
+    SubscriptIndexUnaryOp,
+    BinOpKind,
+    UnaryOpKind,
+)
 
 
 Statement = Union["For", "If", "Assign"]
@@ -98,41 +111,12 @@ class Tuple:
         return f"({items})"
 
 
-@dataclass(frozen=True)
-class Subscript:
-    """An array subscript expression of the form `array[index]`"""
-
-    array: Var
-    index: Expression
-
-    def __str__(self) -> str:
-        return f"{self.array}[{self.index}]"
+class BinOp(_BinOp[Expression]):
+    pass
 
 
-@dataclass
-class BinOp:
-    """A binary operator expression of the form `left operator right`"""
-
-    left: Expression
-    operator: BinOpKind
-    right: Expression
-
-    def __str__(self) -> str:
-        return f"({self.left} {self.operator} {self.right})"
-
-
-@dataclass
-class UnaryOp:
-    """A unary operator expression of the form `operator operand`"""
-
-    operator: UnaryOpKind
-    operand: Expression
-
-    def __str__(self) -> str:
-        return f"{self.operator} {self.operand}"
-
-
-AssignLHS = Union[Subscript, Var]
+class UnaryOp(_UnaryOp[Expression]):
+    pass
 
 
 @dataclass
