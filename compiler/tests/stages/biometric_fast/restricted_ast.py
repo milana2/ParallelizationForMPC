@@ -14,4 +14,4 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
             if (differences[k] < min_diff):
                 min_diff = differences[k]
                 min_index = k
-    return [min_diff, min_index]
+    return (min_diff, min_index)

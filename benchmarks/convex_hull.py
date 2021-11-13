@@ -19,4 +19,4 @@ def convex_hull(X_coords: list[int], Y_coords: list[int], N):
             hull_X = hull_X + [p1_X]
             hull_Y = hull_Y + [p1_Y]
 
-    return [hull_X, hull_Y]
+    return (hull_X, hull_Y)

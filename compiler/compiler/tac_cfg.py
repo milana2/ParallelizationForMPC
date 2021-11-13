@@ -51,6 +51,15 @@ class List:
         return f"[{items}]"
 
 
+@dataclass
+class Tuple:
+    items: list[Var]
+
+    def __str__(self) -> str:
+        items = ", ".join([str(item) for item in self.items])
+        return f"({items})"
+
+
 # TODO: Convert ast.IfExp to this?
 @dataclass
 class Mux:
@@ -64,7 +73,7 @@ class Mux:
 
 AssignLHS = Union[Index, Var]
 
-AssignRHS = Union[Index, Var, BinOp, UnaryOp, ConstantInt, List, Mux]
+AssignRHS = Union[Index, Var, BinOp, UnaryOp, ConstantInt, List, Tuple, Mux]
 
 
 @dataclass(eq=False)

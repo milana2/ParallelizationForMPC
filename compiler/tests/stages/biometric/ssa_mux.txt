@@ -29,7 +29,7 @@ Block 2:
     sum!2 = !4!2
     jump
 Block 3:
-    !13!1 = [min_sum!2, min_index!2]
+    !13!1 = (min_sum!2, min_index!2)
     return !13!1
 Block 4:
     sum!3 = Φ(sum!2, sum!4)

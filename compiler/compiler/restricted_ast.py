@@ -73,7 +73,7 @@ class If:
         return f"if {self.condition}:\n" + then_body + else_body
 
 
-Expression = Union[Var, ConstantInt, "List", "Index", "BinOp", "UnaryOp"]
+Expression = Union[Var, ConstantInt, "List", "Tuple", "Index", "BinOp", "UnaryOp"]
 
 
 @dataclass
@@ -85,6 +85,17 @@ class List:
     def __str__(self) -> str:
         items = ", ".join([str(item) for item in self.items])
         return f"[{items}]"
+
+
+@dataclass
+class Tuple:
+    """A tuple expression of the form `(items)` (e.g. `(1, a, b + 2)`)"""
+
+    items: list[Expression]
+
+    def __str__(self) -> str:
+        items = ", ".join([str(item) for item in self.items])
+        return f"({items})"
 
 
 @dataclass(frozen=True)

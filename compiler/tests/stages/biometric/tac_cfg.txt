@@ -15,7 +15,7 @@ Block 2:
     sum = !4
     jump
 Block 3:
-    !13 = [min_sum, min_index]
+    !13 = (min_sum, min_index)
     return !13
 Block 4:
     for j in range(0, D)

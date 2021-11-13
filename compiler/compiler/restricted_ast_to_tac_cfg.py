@@ -131,6 +131,16 @@ def _build_expression(
             )
         )
         return result_var
+    elif isinstance(expression, restricted_ast.Tuple):
+        item_vars = [_build_expression(item, builder) for item in expression.items]
+        result_var = builder.generate_variable()
+        builder.add_assignment(
+            tac_cfg.Assign(
+                lhs=result_var,
+                rhs=tac_cfg.Tuple(items=item_vars),
+            )
+        )
+        return result_var
     elif isinstance(expression, restricted_ast.BinOp):
         left_var = _build_expression(expression.left, builder)
         right_var = _build_expression(expression.right, builder)

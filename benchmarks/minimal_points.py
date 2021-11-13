@@ -10,7 +10,7 @@ def minimal_points(X_coords: list[int], Y_coords: list[int], N):
             min_X = min_X + [X_coords[i]]
             min_Y = min_Y + [Y_coords[i]]
 
-    return [min_X, min_Y]
+    return (min_X, min_Y)
 
 
 X_coords = [1, 2, 3]

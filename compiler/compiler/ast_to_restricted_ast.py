@@ -206,6 +206,14 @@ class _ExpressionConverter(_StrictNodeVisitor):
             ]
         )
 
+    def visit_Tuple(self, node: ast.Tuple) -> restricted_ast.Expression:
+        return restricted_ast.Tuple(
+            items=[
+                _ExpressionConverter(self.source_code_info).visit(elt)
+                for elt in node.elts
+            ]
+        )
+
     def visit_BinOp(self, node: ast.BinOp) -> restricted_ast.Expression:
         operator = _convert_binary_operator(node.op)
         if operator is None:
