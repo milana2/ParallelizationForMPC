@@ -73,7 +73,7 @@ class If:
         return f"if {self.condition}:\n" + then_body + else_body
 
 
-Expression = Union[Var, ConstantInt, "List", "Tuple", "Index", "BinOp", "UnaryOp"]
+Expression = Union[Var, ConstantInt, "List", "Tuple", "Subscript", "BinOp", "UnaryOp"]
 
 
 @dataclass
