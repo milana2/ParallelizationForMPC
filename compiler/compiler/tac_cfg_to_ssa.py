@@ -158,7 +158,7 @@ def rename_variables(result: ssa.Function) -> None:
                 elif isinstance(A.rhs, ssa.UnaryOp):
                     V = A.rhs.operand
                     A.rhs.operand = subscript_var(V)
-                elif isinstance(A.rhs, ssa.List):
+                elif isinstance(A.rhs, ssa.List) or isinstance(A.rhs, ssa.Tuple):
                     for n, V in enumerate(A.rhs.items):
                         A.rhs.items[n] = subscript_var(V)
                 elif isinstance(A.rhs, ssa.Mux):

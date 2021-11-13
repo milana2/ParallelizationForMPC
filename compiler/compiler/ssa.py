@@ -19,6 +19,7 @@ from .tac_cfg import (
     BlockTerminator,
     BranchKind,
     List,
+    Tuple,
     Mux,
 )
 from .tac_cfg import Block as _BaseBlock
