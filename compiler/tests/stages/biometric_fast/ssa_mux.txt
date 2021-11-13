@@ -40,7 +40,7 @@ Block 2:
     two_a_b!2 = !6!2
     jump
 Block 3:
-    !20!1 = [min_diff!1, min_index!1]
+    !20!1 = (min_diff!1, min_index!1)
     return !20!1
 Block 4:
     two_a_b!3 = Φ(two_a_b!2, two_a_b!4)

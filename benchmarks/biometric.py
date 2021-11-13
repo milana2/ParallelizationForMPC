@@ -18,7 +18,7 @@ def biometric(C: list[int], D, S: list[int], N):
       min_sum = sum
       min_index = i
 
-  return [min_sum,min_index]
+  return (min_sum,min_index)
 
 C = [1,2,3,4]
 S = [4,5,2,10,2,120,4,10,99,88,77,66,55,44,33,22]

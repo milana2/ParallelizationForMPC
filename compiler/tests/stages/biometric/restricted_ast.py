@@ -10,4 +10,4 @@ def foo(C, D, S, N):
         if (sum < min_sum):
             min_sum = sum
             min_index = i
-    return [min_sum, min_index]
+    return (min_sum, min_index)
