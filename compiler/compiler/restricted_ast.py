@@ -99,8 +99,8 @@ class Tuple:
 
 
 @dataclass(frozen=True)
-class Index:
-    """An array index expression of the form `array[index]`"""
+class Subscript:
+    """An array subscript expression of the form `array[index]`"""
 
     array: Var
     index: Expression
@@ -132,7 +132,7 @@ class UnaryOp:
         return f"{self.operator} {self.operand}"
 
 
-AssignLHS = Union[Index, Var]
+AssignLHS = Union[Subscript, Var]
 
 
 @dataclass

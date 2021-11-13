@@ -143,7 +143,7 @@ def rename_variables(result: ssa.Function) -> None:
 
         for A in itertools.chain(X.phi_functions, X.assignments, var_terminators):
             if isinstance(A, ssa.Assign):
-                if isinstance(A.rhs, ssa.Index):
+                if isinstance(A.rhs, ssa.Subscript):
                     pass  # TODO: Support this
                 elif isinstance(A.rhs, ssa.ConstantInt):
                     pass
@@ -187,7 +187,7 @@ def rename_variables(result: ssa.Function) -> None:
                 V = A.lhs
                 i = C[V]
 
-                if isinstance(V, ssa.Index):
+                if isinstance(V, ssa.Subscript):
                     pass  # TODO: Support this
                 elif isinstance(V, ssa.Var):
                     old_lhs[A] = A.lhs
@@ -209,7 +209,7 @@ def rename_variables(result: ssa.Function) -> None:
             for F in Y.phi_functions:
                 V = F.rhs[j]
                 i = S[V][-1]
-                if isinstance(V, ssa.Index):
+                if isinstance(V, ssa.Subscript):
                     pass  # TODO: Support this
                 elif isinstance(V, ssa.Var):
                     F.rhs[j] = subscript_var(V, i)
@@ -220,7 +220,7 @@ def rename_variables(result: ssa.Function) -> None:
             search(Y)
 
         for A in itertools.chain(X.phi_functions, X.assignments):
-            if isinstance(A.lhs, ssa.Index):
+            if isinstance(A.lhs, ssa.Subscript):
                 pass  # TODO: Support this
             elif isinstance(A.lhs, ssa.Var):
                 V = old_lhs[A]

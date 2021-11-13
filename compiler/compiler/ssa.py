@@ -10,7 +10,7 @@ from .tac_cfg import (
     UnaryOp,
     AssignLHS,
     AssignRHS,
-    Index,
+    Subscript,
     Assign,
     Jump,
     ConditionalJump,

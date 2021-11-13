@@ -114,8 +114,8 @@ class _RangeBoundsGetter(_StrictNodeVisitor):
 
 def _convert_subscript(
     source_code_info: _SourceCodeInfo, node: ast.Subscript
-) -> restricted_ast.Index:
-    return restricted_ast.Index(
+) -> restricted_ast.Subscript:
+    return restricted_ast.Subscript(
         array=_NameGetter(source_code_info).visit(node.value),
         index=_ExpressionConverter(source_code_info).visit(node.slice),
     )

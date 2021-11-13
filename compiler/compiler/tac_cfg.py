@@ -34,7 +34,7 @@ class UnaryOp:
 
 
 @dataclass(frozen=True)
-class Index:
+class Subscript:
     array: Var
     index: Var
 
@@ -71,9 +71,9 @@ class Mux:
         return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
 
 
-AssignLHS = Union[Index, Var]
+AssignLHS = Union[Subscript, Var]
 
-AssignRHS = Union[Index, Var, BinOp, UnaryOp, ConstantInt, List, Tuple, Mux]
+AssignRHS = Union[Subscript, Var, BinOp, UnaryOp, ConstantInt, List, Tuple, Mux]
 
 
 @dataclass(eq=False)
