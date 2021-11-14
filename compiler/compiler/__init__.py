@@ -9,6 +9,7 @@ from .ast_to_restricted_ast import ast_to_restricted_ast
 from .restricted_ast_to_tac_cfg import restricted_ast_to_tac_cfg
 from .tac_cfg_to_ssa import tac_cfg_to_ssa
 from .ssa_phi_to_mux import replace_phi_with_mux
+from .ssa_to_loop_linear_code import ssa_to_loop_linear_code
 
 
 def cfg_to_image(G: networkx.DiGraph, path: str):
@@ -58,4 +59,9 @@ def main():
     replace_phi_with_mux(ssa)
     print("MUX static single assignment form:")
     print(ssa)
+    print()
+
+    linear = ssa_to_loop_linear_code(ssa)
+    print("Linear code with loops:")
+    print(linear)
     print()

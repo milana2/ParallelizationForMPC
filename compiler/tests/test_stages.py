@@ -33,3 +33,6 @@ class StagesTestCase(unittest.TestCase):
 
             compiler.replace_phi_with_mux(ssa)
             self.assertEqual(str(ssa), stages["ssa_mux.txt"])
+
+            loop_linear = compiler.ssa_to_loop_linear_code(ssa)
+            self.assertEqual(str(loop_linear), stages["loop_linear.txt"])
