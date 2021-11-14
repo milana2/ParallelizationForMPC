@@ -3,25 +3,11 @@ import ast
 import sys
 import traceback
 
-import networkx
-
 from .ast_to_restricted_ast import ast_to_restricted_ast
 from .restricted_ast_to_tac_cfg import restricted_ast_to_tac_cfg
 from .tac_cfg_to_ssa import tac_cfg_to_ssa
 from .ssa_phi_to_mux import replace_phi_with_mux
 from .ssa_to_loop_linear_code import ssa_to_loop_linear_code
-
-
-def cfg_to_image(G: networkx.DiGraph, path: str):
-    """
-    Write a PNG image of the control flow graph in `G` to `path`.
-    This is useful for debugging.
-    """
-    # The node labels must be unique for pydot to consider nodes separate
-    G = networkx.convert_node_labels_to_integers(G, label_attribute="label")
-    G.graph["node"] = {"shape": "box", "fontname": "monospace"}
-    dot = networkx.nx_pydot.to_pydot(G)
-    dot.write(path, format="png")
 
 
 def parse_args():

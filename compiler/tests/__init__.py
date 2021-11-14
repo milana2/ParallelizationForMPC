@@ -1,5 +1,6 @@
 import unittest
 
+from .context import STAGES_DIR
 from .test_stages import StagesTestCase
 
 
