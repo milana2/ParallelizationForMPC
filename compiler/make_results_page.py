@@ -28,6 +28,11 @@ def main():
     parser.add_argument("path", help="Directory to store web page")
     args = parser.parse_args()
 
+    try:
+        os.mkdir(args.path)
+    except FileExistsError:
+        pass
+
     html = """
     <html>
         <head>
