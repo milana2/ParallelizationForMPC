@@ -27,6 +27,7 @@ from .tac_cfg import (
     List,
     Tuple,
     Mux,
+    LoopBound,
 )
 from .tac_cfg import Block as _BaseBlock
 
