@@ -20,8 +20,8 @@ jobs:
           sudo apt-get install -y graphviz
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Build results page
-        run: ./compiler/make_results_page.py static
+      - name: Build results markdown
+        run: ./compiler/make_results_markdown.py static
       - name: Push to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
