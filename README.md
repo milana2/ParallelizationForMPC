@@ -1,31 +1,107 @@
+# `biometric`
+## Input
+```python
+import typing
 
-    <html>
-        <head>
-            <style>
-                .table-container {
-                    width: 100% !important;
-                    overflow-x: scroll;
-                }
-                table, th, td {
-                    border: 1px solid;
-                    border-collapse: collapse;
-                }
-                pre {
-                    font-size: 18px;
-                }
-            </style>
-        </head>
-        <body>
-    <h1><pre>biometric_fast</pre></h1><div class=table-container> <table>
-        <tr>
-            <th>Input</th>
-            <th>Restricted AST</th>
-            <th>Three-address code CFG</th>
-            <th>SSA</th>
-            <th>SSA ϕ→MUX</th>
-            <th>Linear code with loops</th>
-        </tr>
-        <tr><td><pre>import typing
+# Biometric matching
+# D is the number of features we are matching. Usually small, e.g., D=4
+# N is the size of the database S
+# C is the vector of features we are tryign to match.
+# S is the (originally two dimentional) database array: S[0,0],S[0,1],..S[0,D-1],S[1,0]... S[N-1,D-1]
+def biometric(C: list[int], D, S: list[int], N):
+  min_sum: int = 10000
+  min_index = -1
+  for i in range(N):
+    sum = 0
+    for j in range(D):
+      d: int = S[i*D+j]-C[j] 
+      p: int = d*d      
+      sum = sum + p
+    if sum < min_sum:
+      min_sum = sum
+      min_index = i
+
+  return (min_sum,min_index)
+
+C = [1,2,3,4]
+S = [4,5,2,10,2,120,4,10,99,88,77,66,55,44,33,22]
+print(biometric(C,4,S,4))
+
+```
+## Restricted AST
+```python
+def foo(C, D, S, N):
+    min_sum = 10000
+    min_index = - 1
+    for i in range(0, N):
+        sum = 0
+        for j in range(0, D):
+            d = (S[((i * D) + j)] - C[j])
+            p = (d * d)
+            sum = (sum + p)
+        if (sum < min_sum):
+            min_sum = sum
+            min_index = i
+    return (min_sum, min_index)
+```
+## Three-address code CFG
+![](biometric_tac_cfg.png)
+## SSA
+![](biometric_ssa.png)
+## SSA ϕ→MUX
+![](biometric_ssa_mux.png)
+## Linear code with loops
+```python
+def foo(C, D, S, N):
+    !1!1 = 10000
+    min_sum!1 = !1!1
+    !2!1 = 1
+    !3!1 = - !2!1
+    min_index!1 = !3!1
+    min_sum!2 = Φ(min_sum!1, min_sum!4)
+    min_index!2 = Φ(min_index!1, min_index!4)
+    !4!1 = Φ(!4!0, !4!2)
+    sum!1 = Φ(sum!0, sum!3)
+    !5!1 = Φ(!5!0, !5!2)
+    !6!1 = Φ(!6!0, !6!2)
+    !7!1 = Φ(!7!0, !7!2)
+    d!1 = Φ(d!0, d!2)
+    !8!1 = Φ(!8!0, !8!2)
+    p!1 = Φ(p!0, p!2)
+    !9!1 = Φ(!9!0, !9!2)
+    !10!1 = Φ(!10!0, !10!2)
+    for i in range(0, N!0):
+        !4!2 = 0
+        sum!2 = !4!2
+        sum!3 = Φ(sum!2, sum!4)
+        !5!2 = Φ(!5!1, !5!3)
+        !6!2 = Φ(!6!1, !6!3)
+        !7!2 = Φ(!7!1, !7!3)
+        d!2 = Φ(d!1, d!3)
+        !8!2 = Φ(!8!1, !8!3)
+        p!2 = Φ(p!1, p!3)
+        !9!2 = Φ(!9!1, !9!3)
+        for j in range(0, D!0):
+            !5!3 = S[((i * D!0) + j)]
+            !6!3 = C[j]
+            !7!3 = (!5!3 - !6!3)
+            d!3 = !7!3
+            !8!3 = (d!3 * d!3)
+            p!3 = !8!3
+            !9!3 = (sum!3 + p!3)
+            sum!4 = !9!3
+        !10!2 = (sum!3 < min_sum!2)
+        min_sum!3 = sum!3
+        min_index!3 = i
+        min_sum!4 = MUX(!10!2, min_sum!3, min_sum!2)
+        min_index!4 = MUX(!10!2, min_index!3, min_index!2)
+    !11!1 = (min_sum!2, min_index!2)
+    return !11!1
+```
+# `biometric_fast`
+## Input
+```python
+import typing
 
 def biometric_matching_fast(D, N, C:list[int], C_sqr_sum:int, two_C:list[int], S: List[int], S_sqr_sum: list[int]):
   """
@@ -93,7 +169,11 @@ def test_biometric_matching_fast(D, N, C, S):
 C = [1,2,3,4]
 S = [4,5,2,10,2,120,4,10,99,88,77,66,55,44,33,22]
 test_biometric_matching_fast(4, 4, C, S)
-</pre></td><td><pre>def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
+
+```
+## Restricted AST
+```python
+def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
     differences = ([0] * D)
     for i in range(0, N):
         a_sqr_plus_b_sqr = (S_sqr_sum[i] + C_sqr_sum)
@@ -109,7 +189,17 @@ test_biometric_matching_fast(4, 4, C, S)
             if (differences[k] < min_diff):
                 min_diff = differences[k]
                 min_index = k
-    return (min_diff, min_index)</pre></td><td><img src='biometric_fast_tac_cfg.png'/></td><td><img src='biometric_fast_ssa.png'/></td><td><img src='biometric_fast_ssa_mux.png'/></td><td><pre>def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
+    return (min_diff, min_index)
+```
+## Three-address code CFG
+![](biometric_fast_tac_cfg.png)
+## SSA
+![](biometric_fast_ssa.png)
+## SSA ϕ→MUX
+![](biometric_fast_ssa_mux.png)
+## Linear code with loops
+```python
+def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
     !1!1 = 0
     !2!1 = [!1!1]
     !3!1 = (!2!1 * D!0)
@@ -175,16 +265,12 @@ test_biometric_matching_fast(4, 4, C, S)
             min_index!5 = MUX(!15!3, min_index!4, min_index!3)
             !16!4 = MUX(!15!3, !16!3, !16!2)
     !17!1 = (min_diff!1, min_index!1)
-    return !17!1</pre></td></tr></table></div><h1><pre>chapterfour_figure_12</pre></h1><div class=table-container> <table>
-        <tr>
-            <th>Input</th>
-            <th>Restricted AST</th>
-            <th>Three-address code CFG</th>
-            <th>SSA</th>
-            <th>SSA ϕ→MUX</th>
-            <th>Linear code with loops</th>
-        </tr>
-        <tr><td><pre>def foo(x, y):
+    return !17!1
+```
+# `chapterfour_figure_12`
+## Input
+```python
+def foo(x, y):
     z = 0
     if x > 0:
         if y > 0:
@@ -192,14 +278,28 @@ test_biometric_matching_fast(4, 4, C, S)
         else:
             z = -1
     return z
-</pre></td><td><pre>def foo(x, y):
+
+```
+## Restricted AST
+```python
+def foo(x, y):
     z = 0
     if (x > 0):
         if (y > 0):
             z = 1
         else:
             z = - 1
-    return z</pre></td><td><img src='chapterfour_figure_12_tac_cfg.png'/></td><td><img src='chapterfour_figure_12_ssa.png'/></td><td><img src='chapterfour_figure_12_ssa_mux.png'/></td><td><pre>def foo(x, y):
+    return z
+```
+## Three-address code CFG
+![](chapterfour_figure_12_tac_cfg.png)
+## SSA
+![](chapterfour_figure_12_ssa.png)
+## SSA ϕ→MUX
+![](chapterfour_figure_12_ssa_mux.png)
+## Linear code with loops
+```python
+def foo(x, y):
     !1!1 = 0
     z!1 = !1!1
     !2!1 = 0
@@ -221,171 +321,12 @@ test_biometric_matching_fast(4, 4, C, S)
     !6!3 = MUX(!3!1, !6!0, !6!2)
     !7!3 = MUX(!3!1, !7!0, !7!2)
     !8!3 = MUX(!3!1, !8!0, !8!2)
-    return z!5</pre></td></tr></table></div><h1><pre>biometric</pre></h1><div class=table-container> <table>
-        <tr>
-            <th>Input</th>
-            <th>Restricted AST</th>
-            <th>Three-address code CFG</th>
-            <th>SSA</th>
-            <th>SSA ϕ→MUX</th>
-            <th>Linear code with loops</th>
-        </tr>
-        <tr><td><pre>import typing
-
-# Biometric matching
-# D is the number of features we are matching. Usually small, e.g., D=4
-# N is the size of the database S
-# C is the vector of features we are tryign to match.
-# S is the (originally two dimentional) database array: S[0,0],S[0,1],..S[0,D-1],S[1,0]... S[N-1,D-1]
-def biometric(C: list[int], D, S: list[int], N):
-  min_sum: int = 10000
-  min_index = -1
-  for i in range(N):
-    sum = 0
-    for j in range(D):
-      d: int = S[i*D+j]-C[j] 
-      p: int = d*d      
-      sum = sum + p
-    if sum < min_sum:
-      min_sum = sum
-      min_index = i
-
-  return (min_sum,min_index)
-
-C = [1,2,3,4]
-S = [4,5,2,10,2,120,4,10,99,88,77,66,55,44,33,22]
-print(biometric(C,4,S,4))
-</pre></td><td><pre>def foo(C, D, S, N):
-    min_sum = 10000
-    min_index = - 1
-    for i in range(0, N):
-        sum = 0
-        for j in range(0, D):
-            d = (S[((i * D) + j)] - C[j])
-            p = (d * d)
-            sum = (sum + p)
-        if (sum < min_sum):
-            min_sum = sum
-            min_index = i
-    return (min_sum, min_index)</pre></td><td><img src='biometric_tac_cfg.png'/></td><td><img src='biometric_ssa.png'/></td><td><img src='biometric_ssa_mux.png'/></td><td><pre>def foo(C, D, S, N):
-    !1!1 = 10000
-    min_sum!1 = !1!1
-    !2!1 = 1
-    !3!1 = - !2!1
-    min_index!1 = !3!1
-    min_sum!2 = Φ(min_sum!1, min_sum!4)
-    min_index!2 = Φ(min_index!1, min_index!4)
-    !4!1 = Φ(!4!0, !4!2)
-    sum!1 = Φ(sum!0, sum!3)
-    !5!1 = Φ(!5!0, !5!2)
-    !6!1 = Φ(!6!0, !6!2)
-    !7!1 = Φ(!7!0, !7!2)
-    d!1 = Φ(d!0, d!2)
-    !8!1 = Φ(!8!0, !8!2)
-    p!1 = Φ(p!0, p!2)
-    !9!1 = Φ(!9!0, !9!2)
-    !10!1 = Φ(!10!0, !10!2)
-    for i in range(0, N!0):
-        !4!2 = 0
-        sum!2 = !4!2
-        sum!3 = Φ(sum!2, sum!4)
-        !5!2 = Φ(!5!1, !5!3)
-        !6!2 = Φ(!6!1, !6!3)
-        !7!2 = Φ(!7!1, !7!3)
-        d!2 = Φ(d!1, d!3)
-        !8!2 = Φ(!8!1, !8!3)
-        p!2 = Φ(p!1, p!3)
-        !9!2 = Φ(!9!1, !9!3)
-        for j in range(0, D!0):
-            !5!3 = S[((i * D!0) + j)]
-            !6!3 = C[j]
-            !7!3 = (!5!3 - !6!3)
-            d!3 = !7!3
-            !8!3 = (d!3 * d!3)
-            p!3 = !8!3
-            !9!3 = (sum!3 + p!3)
-            sum!4 = !9!3
-        !10!2 = (sum!3 < min_sum!2)
-        min_sum!3 = sum!3
-        min_index!3 = i
-        min_sum!4 = MUX(!10!2, min_sum!3, min_sum!2)
-        min_index!4 = MUX(!10!2, min_index!3, min_index!2)
-    !11!1 = (min_sum!2, min_index!2)
-    return !11!1</pre></td></tr></table></div><h1><pre>psi</pre></h1><div class=table-container> <table>
-        <tr>
-            <th>Input</th>
-            <th>Restricted AST</th>
-            <th>Three-address code CFG</th>
-            <th>SSA</th>
-            <th>SSA ϕ→MUX</th>
-            <th>Linear code with loops</th>
-        </tr>
-        <tr><td><pre>import typing
-
-# returns a list[int] which is the intersection 
-# of privite sets of integers A and B
-# requires: no repetition of elements in either A or B
-# requires: len(A) = SA, len(B) = SB
-def psi(A: list[int], SA, B: list[int], SB) -> list[int]:
-  result: list[int] = []
-  for i in range(0,SA):
-    for j in range(0,SB):
-      if A[i] == B[j]:
-        #overloaded +. This is append actually.
-        result = result + [A[i]]
-  return result
-
-A = [1,2,3]
-B = [2]
-intersect = psi(A,3,B,1)
-print(intersect)
-
-</pre></td><td><pre>def foo(A, SA, B, SB):
-    result = []
-    for i in range(0, SA):
-        for j in range(0, SB):
-            if (A[i] == B[j]):
-                result = (result + [A[i]])
-    return result</pre></td><td><img src='psi_tac_cfg.png'/></td><td><img src='psi_ssa.png'/></td><td><img src='psi_ssa_mux.png'/></td><td><pre>def foo(A, SA, B, SB):
-    !1!1 = []
-    result!1 = !1!1
-    result!2 = Φ(result!1, result!3)
-    !2!1 = Φ(!2!0, !2!2)
-    !3!1 = Φ(!3!0, !3!2)
-    !4!1 = Φ(!4!0, !4!2)
-    !5!1 = Φ(!5!0, !5!2)
-    !6!1 = Φ(!6!0, !6!2)
-    !7!1 = Φ(!7!0, !7!2)
-    for i in range(0, SA!0):
-        result!3 = Φ(result!2, result!5)
-        !2!2 = Φ(!2!1, !2!3)
-        !3!2 = Φ(!3!1, !3!3)
-        !4!2 = Φ(!4!1, !4!3)
-        !5!2 = Φ(!5!1, !5!4)
-        !6!2 = Φ(!6!1, !6!4)
-        !7!2 = Φ(!7!1, !7!4)
-        for j in range(0, SB!0):
-            !2!3 = A[i]
-            !3!3 = B[j]
-            !4!3 = (!2!3 == !3!3)
-            !5!3 = A[i]
-            !6!3 = [!5!3]
-            !7!3 = (result!3 + !6!3)
-            result!4 = !7!3
-            result!5 = MUX(!4!3, result!4, result!3)
-            !5!4 = MUX(!4!3, !5!3, !5!2)
-            !6!4 = MUX(!4!3, !6!3, !6!2)
-            !7!4 = MUX(!4!3, !7!3, !7!2)
-    return result!2</pre></td></tr></table></div><h1><pre>histogram</pre></h1><div class=table-container> <table>
-        <tr>
-            <th>Input</th>
-            <th>Restricted AST</th>
-            <th>Three-address code CFG</th>
-            <th>SSA</th>
-            <th>SSA ϕ→MUX</th>
-            <th>Linear code with loops</th>
-        </tr>
-        <tr><td><pre>import typing
+    return z!5
+```
+# `histogram`
+## Input
+```python
+import typing
 
 # Array A contains a list of integers i in [1,num_bins]
 # Array B is a same-size array, contains number of collected ratings for that bin
@@ -418,7 +359,11 @@ B = [10,1,5,2,15,0,10,1000]
 N = len(A)
 result = histogram(A,B,N,5)
 print(result)
-</pre></td><td><pre>def foo(A, B, N, num_bins):
+
+```
+## Restricted AST
+```python
+def foo(A, B, N, num_bins):
     result = []
     for i in range(0, num_bins):
         result = (result + [0])
@@ -426,7 +371,17 @@ print(result)
         for j in range(0, N):
             if (A[j] == i):
                 result[i] = (result[i] + B[j])
-    return result</pre></td><td><img src='histogram_tac_cfg.png'/></td><td><img src='histogram_ssa.png'/></td><td><img src='histogram_ssa_mux.png'/></td><td><pre>def foo(A, B, N, num_bins):
+    return result
+```
+## Three-address code CFG
+![](histogram_tac_cfg.png)
+## SSA
+![](histogram_ssa.png)
+## SSA ϕ→MUX
+![](histogram_ssa_mux.png)
+## Linear code with loops
+```python
+def foo(A, B, N, num_bins):
     !1!1 = []
     result!1 = !1!1
     result!2 = Φ(result!1, result!3)
@@ -462,16 +417,12 @@ print(result)
             !8!4 = MUX(!6!3, !8!3, !8!2)
             !9!4 = MUX(!6!3, !9!3, !9!2)
             result[i] = MUX(!6!3, result[i], result[i])
-    return result!2</pre></td></tr></table></div><h1><pre>inner_product</pre></h1><div class=table-container> <table>
-        <tr>
-            <th>Input</th>
-            <th>Restricted AST</th>
-            <th>Three-address code CFG</th>
-            <th>SSA</th>
-            <th>SSA ϕ→MUX</th>
-            <th>Linear code with loops</th>
-        </tr>
-        <tr><td><pre>import typing
+    return result!2
+```
+# `inner_product`
+## Input
+```python
+import typing
 
 def ip(A: list[int], B: list[int], N):
   sum = 0
@@ -484,12 +435,26 @@ A = [1,2,3]
 B = [4,5,6]
 sum = ip(A,B,3)
 print(sum)
-</pre></td><td><pre>def foo(A, B, N):
+
+```
+## Restricted AST
+```python
+def foo(A, B, N):
     sum = 0
     for i in range(0, N):
         temp = (A[i] * B[i])
         sum = (sum + temp)
-    return sum</pre></td><td><img src='inner_product_tac_cfg.png'/></td><td><img src='inner_product_ssa.png'/></td><td><img src='inner_product_ssa_mux.png'/></td><td><pre>def foo(A, B, N):
+    return sum
+```
+## Three-address code CFG
+![](inner_product_tac_cfg.png)
+## SSA
+![](inner_product_ssa.png)
+## SSA ϕ→MUX
+![](inner_product_ssa_mux.png)
+## Linear code with loops
+```python
+def foo(A, B, N):
     !1!1 = 0
     sum!1 = !1!1
     sum!2 = Φ(sum!1, sum!3)
@@ -505,4 +470,80 @@ print(sum)
         temp!2 = !4!2
         !5!2 = (sum!2 + temp!2)
         sum!3 = !5!2
-    return sum!2</pre></td></tr></table></div></body></html>
+    return sum!2
+```
+# `psi`
+## Input
+```python
+import typing
+
+# returns a list[int] which is the intersection 
+# of privite sets of integers A and B
+# requires: no repetition of elements in either A or B
+# requires: len(A) = SA, len(B) = SB
+def psi(A: list[int], SA, B: list[int], SB) -> list[int]:
+  result: list[int] = []
+  for i in range(0,SA):
+    for j in range(0,SB):
+      if A[i] == B[j]:
+        #overloaded +. This is append actually.
+        result = result + [A[i]]
+  return result
+
+A = [1,2,3]
+B = [2]
+intersect = psi(A,3,B,1)
+print(intersect)
+
+
+```
+## Restricted AST
+```python
+def foo(A, SA, B, SB):
+    result = []
+    for i in range(0, SA):
+        for j in range(0, SB):
+            if (A[i] == B[j]):
+                result = (result + [A[i]])
+    return result
+```
+## Three-address code CFG
+![](psi_tac_cfg.png)
+## SSA
+![](psi_ssa.png)
+## SSA ϕ→MUX
+![](psi_ssa_mux.png)
+## Linear code with loops
+```python
+def foo(A, SA, B, SB):
+    !1!1 = []
+    result!1 = !1!1
+    result!2 = Φ(result!1, result!3)
+    !2!1 = Φ(!2!0, !2!2)
+    !3!1 = Φ(!3!0, !3!2)
+    !4!1 = Φ(!4!0, !4!2)
+    !5!1 = Φ(!5!0, !5!2)
+    !6!1 = Φ(!6!0, !6!2)
+    !7!1 = Φ(!7!0, !7!2)
+    for i in range(0, SA!0):
+        result!3 = Φ(result!2, result!5)
+        !2!2 = Φ(!2!1, !2!3)
+        !3!2 = Φ(!3!1, !3!3)
+        !4!2 = Φ(!4!1, !4!3)
+        !5!2 = Φ(!5!1, !5!4)
+        !6!2 = Φ(!6!1, !6!4)
+        !7!2 = Φ(!7!1, !7!4)
+        for j in range(0, SB!0):
+            !2!3 = A[i]
+            !3!3 = B[j]
+            !4!3 = (!2!3 == !3!3)
+            !5!3 = A[i]
+            !6!3 = [!5!3]
+            !7!3 = (result!3 + !6!3)
+            result!4 = !7!3
+            result!5 = MUX(!4!3, result!4, result!3)
+            !5!4 = MUX(!4!3, !5!3, !5!2)
+            !6!4 = MUX(!4!3, !6!3, !6!2)
+            !7!4 = MUX(!4!3, !7!3, !7!2)
+    return result!2
+```
