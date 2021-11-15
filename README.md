@@ -1,5 +1,6 @@
-# `biometric`
-## Input
+# Compiler stages with different benchmarks
+## `biometric`
+### Input
 ```python
 import typing
 
@@ -28,7 +29,7 @@ S = [4,5,2,10,2,120,4,10,99,88,77,66,55,44,33,22]
 print(biometric(C,4,S,4))
 
 ```
-## Restricted AST
+### Restricted AST
 ```python
 def foo(C, D, S, N):
     min_sum = 10000
@@ -44,13 +45,13 @@ def foo(C, D, S, N):
             min_index = i
     return (min_sum, min_index)
 ```
-## Three-address code CFG
+### Three-address code CFG
 ![](biometric_tac_cfg.png)
-## SSA
+### SSA
 ![](biometric_ssa.png)
-## SSA ϕ→MUX
+### SSA ϕ→MUX
 ![](biometric_ssa_mux.png)
-## Linear code with loops
+### Linear code with loops
 ```python
 def foo(C, D, S, N):
     !1!1 = 10000
@@ -98,8 +99,8 @@ def foo(C, D, S, N):
     !11!1 = (min_sum!2, min_index!2)
     return !11!1
 ```
-# `biometric_fast`
-## Input
+## `biometric_fast`
+### Input
 ```python
 import typing
 
@@ -171,7 +172,7 @@ S = [4,5,2,10,2,120,4,10,99,88,77,66,55,44,33,22]
 test_biometric_matching_fast(4, 4, C, S)
 
 ```
-## Restricted AST
+### Restricted AST
 ```python
 def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
     differences = ([0] * D)
@@ -191,13 +192,13 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
                 min_index = k
     return (min_diff, min_index)
 ```
-## Three-address code CFG
+### Three-address code CFG
 ![](biometric_fast_tac_cfg.png)
-## SSA
+### SSA
 ![](biometric_fast_ssa.png)
-## SSA ϕ→MUX
+### SSA ϕ→MUX
 ![](biometric_fast_ssa_mux.png)
-## Linear code with loops
+### Linear code with loops
 ```python
 def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
     !1!1 = 0
@@ -267,8 +268,8 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
     !17!1 = (min_diff!1, min_index!1)
     return !17!1
 ```
-# `chapterfour_figure_12`
-## Input
+## `chapterfour_figure_12`
+### Input
 ```python
 def foo(x, y):
     z = 0
@@ -280,7 +281,7 @@ def foo(x, y):
     return z
 
 ```
-## Restricted AST
+### Restricted AST
 ```python
 def foo(x, y):
     z = 0
@@ -291,13 +292,13 @@ def foo(x, y):
             z = - 1
     return z
 ```
-## Three-address code CFG
+### Three-address code CFG
 ![](chapterfour_figure_12_tac_cfg.png)
-## SSA
+### SSA
 ![](chapterfour_figure_12_ssa.png)
-## SSA ϕ→MUX
+### SSA ϕ→MUX
 ![](chapterfour_figure_12_ssa_mux.png)
-## Linear code with loops
+### Linear code with loops
 ```python
 def foo(x, y):
     !1!1 = 0
@@ -323,8 +324,8 @@ def foo(x, y):
     !8!3 = MUX(!3!1, !8!0, !8!2)
     return z!5
 ```
-# `histogram`
-## Input
+## `histogram`
+### Input
 ```python
 import typing
 
@@ -361,7 +362,7 @@ result = histogram(A,B,N,5)
 print(result)
 
 ```
-## Restricted AST
+### Restricted AST
 ```python
 def foo(A, B, N, num_bins):
     result = []
@@ -373,13 +374,13 @@ def foo(A, B, N, num_bins):
                 result[i] = (result[i] + B[j])
     return result
 ```
-## Three-address code CFG
+### Three-address code CFG
 ![](histogram_tac_cfg.png)
-## SSA
+### SSA
 ![](histogram_ssa.png)
-## SSA ϕ→MUX
+### SSA ϕ→MUX
 ![](histogram_ssa_mux.png)
-## Linear code with loops
+### Linear code with loops
 ```python
 def foo(A, B, N, num_bins):
     !1!1 = []
@@ -419,8 +420,8 @@ def foo(A, B, N, num_bins):
             result[i] = MUX(!6!3, result[i], result[i])
     return result!2
 ```
-# `inner_product`
-## Input
+## `inner_product`
+### Input
 ```python
 import typing
 
@@ -437,7 +438,7 @@ sum = ip(A,B,3)
 print(sum)
 
 ```
-## Restricted AST
+### Restricted AST
 ```python
 def foo(A, B, N):
     sum = 0
@@ -446,13 +447,13 @@ def foo(A, B, N):
         sum = (sum + temp)
     return sum
 ```
-## Three-address code CFG
+### Three-address code CFG
 ![](inner_product_tac_cfg.png)
-## SSA
+### SSA
 ![](inner_product_ssa.png)
-## SSA ϕ→MUX
+### SSA ϕ→MUX
 ![](inner_product_ssa_mux.png)
-## Linear code with loops
+### Linear code with loops
 ```python
 def foo(A, B, N):
     !1!1 = 0
@@ -472,8 +473,8 @@ def foo(A, B, N):
         sum!3 = !5!2
     return sum!2
 ```
-# `psi`
-## Input
+## `psi`
+### Input
 ```python
 import typing
 
@@ -497,7 +498,7 @@ print(intersect)
 
 
 ```
-## Restricted AST
+### Restricted AST
 ```python
 def foo(A, SA, B, SB):
     result = []
@@ -507,13 +508,13 @@ def foo(A, SA, B, SB):
                 result = (result + [A[i]])
     return result
 ```
-## Three-address code CFG
+### Three-address code CFG
 ![](psi_tac_cfg.png)
-## SSA
+### SSA
 ![](psi_ssa.png)
-## SSA ϕ→MUX
+### SSA ϕ→MUX
 ![](psi_ssa_mux.png)
-## Linear code with loops
+### Linear code with loops
 ```python
 def foo(A, SA, B, SB):
     !1!1 = []
