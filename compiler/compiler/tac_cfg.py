@@ -19,17 +19,20 @@ from .ast_shared import (
 )
 
 
-class BinOp(_BinOp[Var]):
+Atom = Union[Var, ConstantInt]
+
+
+class BinOp(_BinOp[Atom]):
     pass
 
 
-class UnaryOp(_UnaryOp[Var]):
+class UnaryOp(_UnaryOp[Atom]):
     pass
 
 
 @dataclass
 class List:
-    items: list[Var]
+    items: list[Atom]
 
     def __str__(self) -> str:
         items = ", ".join([str(item) for item in self.items])
@@ -38,7 +41,7 @@ class List:
 
 @dataclass
 class Tuple:
-    items: list[Var]
+    items: list[Atom]
 
     def __str__(self) -> str:
         items = ", ".join([str(item) for item in self.items])
@@ -56,7 +59,7 @@ class Mux:
         return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
 
 
-AssignRHS = Union[Subscript, Var, BinOp, UnaryOp, ConstantInt, List, Tuple, Mux]
+AssignRHS = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux]
 
 
 @dataclass(eq=False)
@@ -79,7 +82,7 @@ class Jump:
 
 @dataclass(eq=False)
 class ConditionalJump:
-    condition: Var
+    condition: Atom
 
     def __hash__(self):
         return id(self)
@@ -100,7 +103,7 @@ class For:
 
 @dataclass(eq=False)
 class Return:
-    value: Var
+    value: Atom
 
     def __hash__(self):
         return id(self)

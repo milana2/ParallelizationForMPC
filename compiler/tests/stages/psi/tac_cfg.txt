@@ -2,8 +2,7 @@ Function(A, SA, B, SB):
 Entry block: 0
 Exit block: 3
 Block 0:
-    !1 = []
-    result = !1
+    result = []
     jump
 Block 1:
     for i in range(0, SA)
@@ -14,21 +13,20 @@ Block 3:
 Block 4:
     for j in range(0, SB)
 Block 5:
-    !2 = A[i]
-    !3 = B[j]
-    !4 = (!2 == !3)
-    conditional jump !4
+    !1 = A[i]
+    !2 = B[j]
+    !3 = (!1 == !2)
+    conditional jump !3
 Block 6:
     jump
 Block 7:
-    !5 = A[i]
-    !6 = [!5]
-    !7 = (result + !6)
-    result = !7
+    !4 = A[i]
+    !5 = [!4]
+    result = (result + !5)
     jump
 Block 8:
     jump
 Block 9:
-    (merge from conditional jump !4)
+    (merge from conditional jump !3)
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 8, F) (5, 7, T) (6, 1, *) (7, 9, *) (8, 9, *) (9, 4, *)

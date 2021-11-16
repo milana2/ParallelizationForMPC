@@ -1,7 +1,7 @@
 import unittest
 
 from .context import STAGES_DIR
-from .test_stages import StagesTestCase
+from .test_stages import StagesTestCase, regenerate_stages
 
 
 def run_tests():

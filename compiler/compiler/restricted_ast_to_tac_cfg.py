@@ -71,7 +71,7 @@ class _CFGBuilder:
 
     def add_conditional_jump(
         self,
-        condition: tac_cfg.Var,
+        condition: tac_cfg.Atom,
         false_block: tac_cfg.Block,
         true_block: tac_cfg.Block,
     ):
@@ -90,10 +90,10 @@ class _CFGBuilder:
         self._add_conditional_jump_edges(after_block, body_block)
 
     def build_function(
-        self, parameters: list[tac_cfg.Var], return_var: tac_cfg.Var
+        self, parameters: list[tac_cfg.Var], return_value: tac_cfg.Atom
     ) -> tac_cfg.Function:
         assert self._current_block.terminator is None
-        self._current_block.terminator = tac_cfg.Return(value=return_var)
+        self._current_block.terminator = tac_cfg.Return(value=return_value)
         return tac_cfg.Function(
             parameters=parameters,
             body=self._cfg,
@@ -102,65 +102,48 @@ class _CFGBuilder:
         )
 
 
+def _build_atom(
+    expression: restricted_ast.Expression, builder: _CFGBuilder
+) -> tac_cfg.Atom:
+    assign_rhs = _build_expression(expression, builder)
+    if isinstance(assign_rhs, tac_cfg.Var) or isinstance(
+        assign_rhs, tac_cfg.ConstantInt
+    ):
+        return assign_rhs
+    else:
+        var = builder.generate_variable()
+        builder.add_assignment(tac_cfg.Assign(lhs=var, rhs=assign_rhs))
+        return var
+
+
 def _build_expression(
     expression: restricted_ast.Expression, builder: _CFGBuilder
-) -> tac_cfg.Var:
-    if isinstance(expression, restricted_ast.Var):
-        return expression
-    elif isinstance(expression, restricted_ast.ConstantInt) or isinstance(
-        expression, restricted_ast.Subscript
+) -> tac_cfg.AssignRHS:
+    if (
+        isinstance(expression, restricted_ast.Var)
+        or isinstance(expression, restricted_ast.ConstantInt)
+        or isinstance(expression, restricted_ast.Subscript)
     ):
-        result_var = builder.generate_variable()
-        builder.add_assignment(tac_cfg.Assign(lhs=result_var, rhs=expression))
-        return result_var
+        return expression
     elif isinstance(expression, restricted_ast.List):
-        item_vars = [_build_expression(item, builder) for item in expression.items]
-        result_var = builder.generate_variable()
-        builder.add_assignment(
-            tac_cfg.Assign(
-                lhs=result_var,
-                rhs=tac_cfg.List(items=item_vars),
-            )
+        return tac_cfg.List(
+            items=[_build_atom(item, builder) for item in expression.items]
         )
-        return result_var
     elif isinstance(expression, restricted_ast.Tuple):
-        item_vars = [_build_expression(item, builder) for item in expression.items]
-        result_var = builder.generate_variable()
-        builder.add_assignment(
-            tac_cfg.Assign(
-                lhs=result_var,
-                rhs=tac_cfg.Tuple(items=item_vars),
-            )
+        return tac_cfg.Tuple(
+            items=[_build_atom(item, builder) for item in expression.items]
         )
-        return result_var
     elif isinstance(expression, restricted_ast.BinOp):
-        left_var = _build_expression(expression.left, builder)
-        right_var = _build_expression(expression.right, builder)
-        result_var = builder.generate_variable()
-        builder.add_assignment(
-            tac_cfg.Assign(
-                lhs=result_var,
-                rhs=tac_cfg.BinOp(
-                    left=left_var,
-                    operator=expression.operator,
-                    right=right_var,
-                ),
-            )
+        return tac_cfg.BinOp(
+            left=_build_atom(expression.left, builder),
+            operator=expression.operator,
+            right=_build_atom(expression.right, builder),
         )
-        return result_var
     elif isinstance(expression, restricted_ast.UnaryOp):
-        operand_var = _build_expression(expression.operand, builder)
-        result_var = builder.generate_variable()
-        builder.add_assignment(
-            tac_cfg.Assign(
-                lhs=result_var,
-                rhs=tac_cfg.UnaryOp(
-                    operator=expression.operator,
-                    operand=operand_var,
-                ),
-            )
+        return tac_cfg.UnaryOp(
+            operator=expression.operator,
+            operand=_build_atom(expression.operand, builder),
         )
-        return result_var
     else:
         assert_never(expression)
 
@@ -181,7 +164,7 @@ def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
     after_block = builder.make_empty_block()
 
     builder.add_conditional_jump(
-        condition=_build_expression(if_statement.condition, builder),
+        condition=_build_atom(if_statement.condition, builder),
         false_block=else_block,
         true_block=then_block,
     )
@@ -248,5 +231,5 @@ def _build_statements(statements: list[restricted_ast.Statement], builder: _CFGB
 def restricted_ast_to_tac_cfg(node: restricted_ast.Function) -> tac_cfg.Function:
     builder = _CFGBuilder()
     _build_statements(node.body, builder)
-    return_var = _build_expression(node.return_value, builder)
-    return builder.build_function(node.parameters, return_var)
+    return_value = _build_atom(node.return_value, builder)
+    return builder.build_function(node.parameters, return_value)

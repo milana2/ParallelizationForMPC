@@ -36,3 +36,31 @@ class StagesTestCase(unittest.TestCase):
 
             loop_linear = compiler.ssa_to_loop_linear_code(ssa)
             self.assertEqual(str(loop_linear), stages["loop_linear.txt"])
+
+
+def regenerate_stages():
+    for test_case_dir in os.scandir(STAGES_DIR):
+        with open(os.path.join(test_case_dir, "input.py"), "r") as f:
+            input_text = f.read()
+
+        node = ast.parse(input_text)
+
+        node = compiler.ast_to_restricted_ast(node, "input.py", input_text)
+        with open(os.path.join(test_case_dir, "restricted_ast.py"), "w") as f:
+            f.write(f"{node}\n")
+
+        cfg = compiler.restricted_ast_to_tac_cfg(node)
+        with open(os.path.join(test_case_dir, "tac_cfg.txt"), "w") as f:
+            f.write(f"{cfg}\n")
+
+        ssa = compiler.tac_cfg_to_ssa(cfg)
+        with open(os.path.join(test_case_dir, "ssa.txt"), "w") as f:
+            f.write(f"{ssa}\n")
+
+        compiler.replace_phi_with_mux(ssa)
+        with open(os.path.join(test_case_dir, "ssa_mux.txt"), "w") as f:
+            f.write(f"{ssa}\n")
+
+        loop_linear = compiler.ssa_to_loop_linear_code(ssa)
+        with open(os.path.join(test_case_dir, "loop_linear.txt"), "w") as f:
+            f.write(f"{loop_linear}\n")
