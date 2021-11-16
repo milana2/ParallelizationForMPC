@@ -32,7 +32,6 @@ def ssa_to_loop_linear_code(ssa_function: ssa.Function) -> loop_linear_code.Func
         empty: list[loop_linear_code.Statement] = []  # Required for type checker
         return (
             empty
-            + [a for a in node.phi_functions]
             + [a for a in node.assignments]
             + (
                 (
@@ -42,7 +41,9 @@ def ssa_to_loop_linear_code(ssa_function: ssa.Function) -> loop_linear_code.Func
                             counter=node.terminator.counter,
                             bound_low=node.terminator.bound_low,
                             bound_high=node.terminator.bound_high,
-                            body=search(successors[1][1]),
+                            body=empty
+                            + [a for a in node.phi_functions]
+                            + search(successors[1][1]),
                         )
                     ]
                     + search(successors[0][1])

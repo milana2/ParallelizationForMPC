@@ -1,27 +1,27 @@
 def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
     !1!1 = [0]
     differences!1 = (!1!1 * D!0)
-    !2!1 = Φ(!2!0, !2!2)
-    a_sqr_plus_b_sqr!1 = Φ(a_sqr_plus_b_sqr!0, a_sqr_plus_b_sqr!2)
-    two_a_b!1 = Φ(two_a_b!0, two_a_b!3)
-    !3!1 = Φ(!3!0, !3!2)
-    !4!1 = Φ(!4!0, !4!2)
-    tmp!1 = Φ(tmp!0, tmp!2)
-    this_diff!1 = Φ(this_diff!0, this_diff!2)
-    differences[i] = Φ(differences[i], differences[i])
-    min_diff!1 = Φ(min_diff!0, min_diff!3)
-    min_index!1 = Φ(min_index!0, min_index!3)
-    !5!1 = Φ(!5!0, !5!2)
-    !6!1 = Φ(!6!0, !6!2)
     for i in range(0, N!0):
+        !2!1 = Φ(!2!0, !2!2)
+        a_sqr_plus_b_sqr!1 = Φ(a_sqr_plus_b_sqr!0, a_sqr_plus_b_sqr!2)
+        two_a_b!1 = Φ(two_a_b!0, two_a_b!3)
+        !3!1 = Φ(!3!0, !3!2)
+        !4!1 = Φ(!4!0, !4!2)
+        tmp!1 = Φ(tmp!0, tmp!2)
+        this_diff!1 = Φ(this_diff!0, this_diff!2)
+        differences[i] = Φ(differences[i], differences[i])
+        min_diff!1 = Φ(min_diff!0, min_diff!3)
+        min_index!1 = Φ(min_index!0, min_index!3)
+        !5!1 = Φ(!5!0, !5!2)
+        !6!1 = Φ(!6!0, !6!2)
         !2!2 = S_sqr_sum[i]
         a_sqr_plus_b_sqr!2 = (!2!2 + C_sqr_sum!0)
         two_a_b!2 = 0
-        two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
-        !3!2 = Φ(!3!1, !3!3)
-        !4!2 = Φ(!4!1, !4!3)
-        tmp!2 = Φ(tmp!1, tmp!3)
         for j in range(0, D!0):
+            two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
+            !3!2 = Φ(!3!1, !3!3)
+            !4!2 = Φ(!4!1, !4!3)
+            tmp!2 = Φ(tmp!1, tmp!3)
             !3!3 = S[((i * D!0) + j)]
             !4!3 = two_C[j]
             tmp!3 = (!3!3 * !4!3)
@@ -30,11 +30,11 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
         differences[i] = this_diff!2
         min_diff!2 = differences[0]
         min_index!2 = 0
-        min_diff!3 = Φ(min_diff!2, min_diff!5)
-        min_index!3 = Φ(min_index!2, min_index!5)
-        !5!2 = Φ(!5!1, !5!3)
-        !6!2 = Φ(!6!1, !6!3)
         for k in range(0, N!0):
+            min_diff!3 = Φ(min_diff!2, min_diff!5)
+            min_index!3 = Φ(min_index!2, min_index!5)
+            !5!2 = Φ(!5!1, !5!3)
+            !6!2 = Φ(!6!1, !6!3)
             !5!3 = differences[k]
             !6!3 = (!5!3 < min_diff!3)
             min_diff!4 = differences[k]
