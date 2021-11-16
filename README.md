@@ -54,50 +54,36 @@ def foo(C, D, S, N):
 ### Linear code with loops
 ```python
 def foo(C, D, S, N):
-    !1!1 = 10000
-    min_sum!1 = !1!1
-    !2!1 = 1
-    !3!1 = - !2!1
-    min_index!1 = !3!1
+    min_sum!1 = 10000
+    min_index!1 = - 1
     min_sum!2 = Φ(min_sum!1, min_sum!4)
     min_index!2 = Φ(min_index!1, min_index!4)
-    !4!1 = Φ(!4!0, !4!2)
     sum!1 = Φ(sum!0, sum!3)
-    !5!1 = Φ(!5!0, !5!2)
-    !6!1 = Φ(!6!0, !6!2)
-    !7!1 = Φ(!7!0, !7!2)
+    !1!1 = Φ(!1!0, !1!2)
+    !2!1 = Φ(!2!0, !2!2)
     d!1 = Φ(d!0, d!2)
-    !8!1 = Φ(!8!0, !8!2)
     p!1 = Φ(p!0, p!2)
-    !9!1 = Φ(!9!0, !9!2)
-    !10!1 = Φ(!10!0, !10!2)
+    !3!1 = Φ(!3!0, !3!2)
     for i in range(0, N!0):
-        !4!2 = 0
-        sum!2 = !4!2
+        sum!2 = 0
         sum!3 = Φ(sum!2, sum!4)
-        !5!2 = Φ(!5!1, !5!3)
-        !6!2 = Φ(!6!1, !6!3)
-        !7!2 = Φ(!7!1, !7!3)
+        !1!2 = Φ(!1!1, !1!3)
+        !2!2 = Φ(!2!1, !2!3)
         d!2 = Φ(d!1, d!3)
-        !8!2 = Φ(!8!1, !8!3)
         p!2 = Φ(p!1, p!3)
-        !9!2 = Φ(!9!1, !9!3)
         for j in range(0, D!0):
-            !5!3 = S[((i * D!0) + j)]
-            !6!3 = C[j]
-            !7!3 = (!5!3 - !6!3)
-            d!3 = !7!3
-            !8!3 = (d!3 * d!3)
-            p!3 = !8!3
-            !9!3 = (sum!3 + p!3)
-            sum!4 = !9!3
-        !10!2 = (sum!3 < min_sum!2)
+            !1!3 = S[((i * D!0) + j)]
+            !2!3 = C[j]
+            d!3 = (!1!3 - !2!3)
+            p!3 = (d!3 * d!3)
+            sum!4 = (sum!3 + p!3)
+        !3!2 = (sum!3 < min_sum!2)
         min_sum!3 = sum!3
         min_index!3 = i
-        min_sum!4 = MUX(!10!2, min_sum!3, min_sum!2)
-        min_index!4 = MUX(!10!2, min_index!3, min_index!2)
-    !11!1 = (min_sum!2, min_index!2)
-    return !11!1
+        min_sum!4 = MUX(!3!2, min_sum!3, min_sum!2)
+        min_index!4 = MUX(!3!2, min_index!3, min_index!2)
+    !4!1 = (min_sum!2, min_index!2)
+    return !4!1
 ```
 ## `biometric_fast`
 ### Input
@@ -201,72 +187,50 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
 ### Linear code with loops
 ```python
 def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
-    !1!1 = 0
-    !2!1 = [!1!1]
-    !3!1 = (!2!1 * D!0)
-    differences!1 = !3!1
-    !4!1 = Φ(!4!0, !4!2)
-    !5!1 = Φ(!5!0, !5!2)
+    !1!1 = [0]
+    differences!1 = (!1!1 * D!0)
+    !2!1 = Φ(!2!0, !2!2)
     a_sqr_plus_b_sqr!1 = Φ(a_sqr_plus_b_sqr!0, a_sqr_plus_b_sqr!2)
-    !6!1 = Φ(!6!0, !6!2)
     two_a_b!1 = Φ(two_a_b!0, two_a_b!3)
-    !7!1 = Φ(!7!0, !7!2)
-    !8!1 = Φ(!8!0, !8!2)
-    !9!1 = Φ(!9!0, !9!2)
+    !3!1 = Φ(!3!0, !3!2)
+    !4!1 = Φ(!4!0, !4!2)
     tmp!1 = Φ(tmp!0, tmp!2)
-    !10!1 = Φ(!10!0, !10!2)
-    !11!1 = Φ(!11!0, !11!2)
     this_diff!1 = Φ(this_diff!0, this_diff!2)
     differences[i] = Φ(differences[i], differences[i])
-    !12!1 = Φ(!12!0, !12!2)
     min_diff!1 = Φ(min_diff!0, min_diff!3)
-    !13!1 = Φ(!13!0, !13!2)
     min_index!1 = Φ(min_index!0, min_index!3)
-    !14!1 = Φ(!14!0, !14!2)
-    !15!1 = Φ(!15!0, !15!2)
-    !16!1 = Φ(!16!0, !16!2)
+    !5!1 = Φ(!5!0, !5!2)
+    !6!1 = Φ(!6!0, !6!2)
     for i in range(0, N!0):
-        !4!2 = S_sqr_sum[i]
-        !5!2 = (!4!2 + C_sqr_sum!0)
-        a_sqr_plus_b_sqr!2 = !5!2
-        !6!2 = 0
-        two_a_b!2 = !6!2
+        !2!2 = S_sqr_sum[i]
+        a_sqr_plus_b_sqr!2 = (!2!2 + C_sqr_sum!0)
+        two_a_b!2 = 0
         two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
-        !7!2 = Φ(!7!1, !7!3)
-        !8!2 = Φ(!8!1, !8!3)
-        !9!2 = Φ(!9!1, !9!3)
+        !3!2 = Φ(!3!1, !3!3)
+        !4!2 = Φ(!4!1, !4!3)
         tmp!2 = Φ(tmp!1, tmp!3)
-        !10!2 = Φ(!10!1, !10!3)
         for j in range(0, D!0):
-            !7!3 = S[((i * D!0) + j)]
-            !8!3 = two_C[j]
-            !9!3 = (!7!3 * !8!3)
-            tmp!3 = !9!3
-            !10!3 = (two_a_b!3 + tmp!3)
-            two_a_b!4 = !10!3
-        !11!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
-        this_diff!2 = !11!2
+            !3!3 = S[((i * D!0) + j)]
+            !4!3 = two_C[j]
+            tmp!3 = (!3!3 * !4!3)
+            two_a_b!4 = (two_a_b!3 + tmp!3)
+        this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
         differences[i] = this_diff!2
-        !12!2 = differences[0]
-        min_diff!2 = !12!2
-        !13!2 = 0
-        min_index!2 = !13!2
+        min_diff!2 = differences[0]
+        min_index!2 = 0
         min_diff!3 = Φ(min_diff!2, min_diff!5)
         min_index!3 = Φ(min_index!2, min_index!5)
-        !14!2 = Φ(!14!1, !14!3)
-        !15!2 = Φ(!15!1, !15!3)
-        !16!2 = Φ(!16!1, !16!4)
+        !5!2 = Φ(!5!1, !5!3)
+        !6!2 = Φ(!6!1, !6!3)
         for k in range(0, N!0):
-            !14!3 = differences[k]
-            !15!3 = (!14!3 < min_diff!3)
-            !16!3 = differences[k]
-            min_diff!4 = !16!3
+            !5!3 = differences[k]
+            !6!3 = (!5!3 < min_diff!3)
+            min_diff!4 = differences[k]
             min_index!4 = k
-            min_diff!5 = MUX(!15!3, min_diff!4, min_diff!3)
-            min_index!5 = MUX(!15!3, min_index!4, min_index!3)
-            !16!4 = MUX(!15!3, !16!3, !16!2)
-    !17!1 = (min_diff!1, min_index!1)
-    return !17!1
+            min_diff!5 = MUX(!6!3, min_diff!4, min_diff!3)
+            min_index!5 = MUX(!6!3, min_index!4, min_index!3)
+    !7!1 = (min_diff!1, min_index!1)
+    return !7!1
 ```
 ## `chapterfour_figure_12`
 ### Input
@@ -301,27 +265,14 @@ def foo(x, y):
 ### Linear code with loops
 ```python
 def foo(x, y):
-    !1!1 = 0
-    z!1 = !1!1
-    !2!1 = 0
-    !3!1 = (x!0 > !2!1)
-    !4!1 = 0
-    !5!1 = (y!0 > !4!1)
-    !7!1 = 1
-    !8!1 = - !7!1
-    z!3 = !8!1
-    !6!1 = 1
-    z!2 = !6!1
-    z!4 = MUX(!5!1, z!2, z!3)
-    !6!2 = MUX(!5!1, !6!1, !6!0)
-    !7!2 = MUX(!5!1, !7!0, !7!1)
-    !8!2 = MUX(!5!1, !8!0, !8!1)
-    z!5 = MUX(!3!1, z!1, z!4)
-    !4!2 = MUX(!3!1, !4!0, !4!1)
-    !5!2 = MUX(!3!1, !5!0, !5!1)
-    !6!3 = MUX(!3!1, !6!0, !6!2)
-    !7!3 = MUX(!3!1, !7!0, !7!2)
-    !8!3 = MUX(!3!1, !8!0, !8!2)
+    z!1 = 0
+    !1!1 = (x!0 > 0)
+    !2!1 = (y!0 > 0)
+    z!3 = - 1
+    z!2 = 1
+    z!4 = MUX(!2!1, z!2, z!3)
+    z!5 = MUX(!1!1, z!1, z!4)
+    !2!2 = MUX(!1!1, !2!0, !2!1)
     return z!5
 ```
 ## `histogram`
@@ -383,41 +334,32 @@ def foo(A, B, N, num_bins):
 ### Linear code with loops
 ```python
 def foo(A, B, N, num_bins):
-    !1!1 = []
-    result!1 = !1!1
+    result!1 = []
     result!2 = Φ(result!1, result!3)
+    !1!1 = Φ(!1!0, !1!2)
+    for i in range(0, num_bins!0):
+        !1!2 = [0]
+        result!3 = (result!2 + !1!2)
     !2!1 = Φ(!2!0, !2!2)
     !3!1 = Φ(!3!0, !3!2)
     !4!1 = Φ(!4!0, !4!2)
-    for i in range(0, num_bins!0):
-        !2!2 = 0
-        !3!2 = [!2!2]
-        !4!2 = (result!2 + !3!2)
-        result!3 = !4!2
     !5!1 = Φ(!5!0, !5!2)
-    !6!1 = Φ(!6!0, !6!2)
-    !7!1 = Φ(!7!0, !7!2)
-    !8!1 = Φ(!8!0, !8!2)
-    !9!1 = Φ(!9!0, !9!2)
     result[i] = Φ(result[i], result[i])
     for i in range(0, num_bins!0):
-        !5!2 = Φ(!5!1, !5!3)
-        !6!2 = Φ(!6!1, !6!3)
-        !7!2 = Φ(!7!1, !7!4)
-        !8!2 = Φ(!8!1, !8!4)
-        !9!2 = Φ(!9!1, !9!4)
+        !2!2 = Φ(!2!1, !2!3)
+        !3!2 = Φ(!3!1, !3!3)
+        !4!2 = Φ(!4!1, !4!4)
+        !5!2 = Φ(!5!1, !5!4)
         result[i] = Φ(result[i], result[i])
         for j in range(0, N!0):
-            !5!3 = A[j]
-            !6!3 = (!5!3 == i)
-            !7!3 = result[i]
-            !8!3 = B[j]
-            !9!3 = (!7!3 + !8!3)
-            result[i] = !9!3
-            !7!4 = MUX(!6!3, !7!3, !7!2)
-            !8!4 = MUX(!6!3, !8!3, !8!2)
-            !9!4 = MUX(!6!3, !9!3, !9!2)
-            result[i] = MUX(!6!3, result[i], result[i])
+            !2!3 = A[j]
+            !3!3 = (!2!3 == i)
+            !4!3 = result[i]
+            !5!3 = B[j]
+            result[i] = (!4!3 + !5!3)
+            !4!4 = MUX(!3!3, !4!3, !4!2)
+            !5!4 = MUX(!3!3, !5!3, !5!2)
+            result[i] = MUX(!3!3, result[i], result[i])
     return result!2
 ```
 ## `inner_product`
@@ -456,21 +398,16 @@ def foo(A, B, N):
 ### Linear code with loops
 ```python
 def foo(A, B, N):
-    !1!1 = 0
-    sum!1 = !1!1
+    sum!1 = 0
     sum!2 = Φ(sum!1, sum!3)
+    !1!1 = Φ(!1!0, !1!2)
     !2!1 = Φ(!2!0, !2!2)
-    !3!1 = Φ(!3!0, !3!2)
-    !4!1 = Φ(!4!0, !4!2)
     temp!1 = Φ(temp!0, temp!2)
-    !5!1 = Φ(!5!0, !5!2)
     for i in range(0, N!0):
-        !2!2 = A[i]
-        !3!2 = B[i]
-        !4!2 = (!2!2 * !3!2)
-        temp!2 = !4!2
-        !5!2 = (sum!2 + temp!2)
-        sum!3 = !5!2
+        !1!2 = A[i]
+        !2!2 = B[i]
+        temp!2 = (!1!2 * !2!2)
+        sum!3 = (sum!2 + temp!2)
     return sum!2
 ```
 ## `psi`
@@ -517,34 +454,29 @@ def foo(A, SA, B, SB):
 ### Linear code with loops
 ```python
 def foo(A, SA, B, SB):
-    !1!1 = []
-    result!1 = !1!1
+    result!1 = []
     result!2 = Φ(result!1, result!3)
+    !1!1 = Φ(!1!0, !1!2)
     !2!1 = Φ(!2!0, !2!2)
     !3!1 = Φ(!3!0, !3!2)
     !4!1 = Φ(!4!0, !4!2)
     !5!1 = Φ(!5!0, !5!2)
-    !6!1 = Φ(!6!0, !6!2)
-    !7!1 = Φ(!7!0, !7!2)
     for i in range(0, SA!0):
         result!3 = Φ(result!2, result!5)
+        !1!2 = Φ(!1!1, !1!3)
         !2!2 = Φ(!2!1, !2!3)
         !3!2 = Φ(!3!1, !3!3)
-        !4!2 = Φ(!4!1, !4!3)
+        !4!2 = Φ(!4!1, !4!4)
         !5!2 = Φ(!5!1, !5!4)
-        !6!2 = Φ(!6!1, !6!4)
-        !7!2 = Φ(!7!1, !7!4)
         for j in range(0, SB!0):
-            !2!3 = A[i]
-            !3!3 = B[j]
-            !4!3 = (!2!3 == !3!3)
-            !5!3 = A[i]
-            !6!3 = [!5!3]
-            !7!3 = (result!3 + !6!3)
-            result!4 = !7!3
-            result!5 = MUX(!4!3, result!4, result!3)
-            !5!4 = MUX(!4!3, !5!3, !5!2)
-            !6!4 = MUX(!4!3, !6!3, !6!2)
-            !7!4 = MUX(!4!3, !7!3, !7!2)
+            !1!3 = A[i]
+            !2!3 = B[j]
+            !3!3 = (!1!3 == !2!3)
+            !4!3 = A[i]
+            !5!3 = [!4!3]
+            result!4 = (result!3 + !5!3)
+            result!5 = MUX(!3!3, result!4, result!3)
+            !4!4 = MUX(!3!3, !4!3, !4!2)
+            !5!4 = MUX(!3!3, !5!3, !5!2)
     return result!2
 ```
