@@ -85,6 +85,8 @@ def foo(C, D, S, N):
     !4!1 = (min_sum!2, min_index!2)
     return !4!1
 ```
+### Dependency graph
+![](biometric_dep_graph.png)
 ## `biometric_fast`
 ### Input
 ```python
@@ -232,6 +234,8 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
     !7!1 = (min_diff!1, min_index!1)
     return !7!1
 ```
+### Dependency graph
+![](biometric_fast_dep_graph.png)
 ## `chapterfour_figure_12`
 ### Input
 ```python
@@ -275,6 +279,8 @@ def foo(x, y):
     !2!2 = MUX(!1!1, !2!0, !2!1)
     return z!5
 ```
+### Dependency graph
+![](chapterfour_figure_12_dep_graph.png)
 ## `histogram`
 ### Input
 ```python
@@ -362,6 +368,8 @@ def foo(A, B, N, num_bins):
             result[i] = MUX(!3!3, result[i], result[i])
     return result!2
 ```
+### Dependency graph
+![](histogram_dep_graph.png)
 ## `inner_product`
 ### Input
 ```python
@@ -410,6 +418,8 @@ def foo(A, B, N):
         sum!3 = (sum!2 + temp!2)
     return sum!2
 ```
+### Dependency graph
+![](inner_product_dep_graph.png)
 ## `psi`
 ### Input
 ```python
@@ -480,3 +490,5 @@ def foo(A, SA, B, SB):
             !5!4 = MUX(!3!3, !5!3, !5!2)
     return result!2
 ```
+### Dependency graph
+![](psi_dep_graph.png)
