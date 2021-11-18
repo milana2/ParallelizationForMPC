@@ -8,6 +8,8 @@ from .restricted_ast_to_tac_cfg import restricted_ast_to_tac_cfg
 from .tac_cfg_to_ssa import tac_cfg_to_ssa
 from .ssa_phi_to_mux import replace_phi_with_mux
 from .ssa_to_loop_linear_code import ssa_to_loop_linear_code
+from .dep_graph import compute_dep_graph
+from . import loop_linear_code
 
 
 def parse_args():
@@ -50,4 +52,12 @@ def main():
     linear = ssa_to_loop_linear_code(ssa)
     print("Linear code with loops:")
     print(linear)
+    print()
+
+    dep_graph = compute_dep_graph(linear)
+    print("Dependence graph:")
+    for var_def, var_uses in dep_graph.items():
+        print(var_def)
+        for var_use in var_uses:
+            print(f"    {var_use}")
     print()

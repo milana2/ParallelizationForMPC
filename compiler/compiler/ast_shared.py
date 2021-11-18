@@ -102,6 +102,9 @@ class Subscript:
     array: Var
     index: SubscriptIndex
 
+    def __hash__(self) -> int:
+        return id(self)
+
     def __str__(self) -> str:
         return f"{self.array}[{self.index}]"
 

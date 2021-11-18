@@ -2,25 +2,42 @@ from dataclasses import dataclass
 from typing import Union
 from textwrap import indent
 
-from .ssa import Var, Phi, Assign, LoopBound
+from .ssa import (
+    Var,
+    Phi,
+    Assign,
+    LoopBound,
+    AssignLHS,
+    AssignRHS,
+    ConstantInt,
+    Subscript,
+    BinOp,
+    UnaryOp,
+    List,
+    Tuple,
+    Mux,
+)
 
 
 Statement = Union[Phi, Assign, "For"]
 
 
-@dataclass
+@dataclass(frozen=True)
 class For:
     counter: Var
     bound_low: LoopBound
     bound_high: LoopBound
     body: list[Statement]
 
+    def __hash__(self):
+        return id(self)
+
+    def heading_str(self) -> str:
+        return f"for {self.counter} in range({self.bound_low}, {self.bound_high}):"
+
     def __str__(self) -> str:
         body = "\n".join([str(statement) for statement in self.body])
-        return (
-            f"for {self.counter} in range({self.bound_low}, {self.bound_high}):\n"
-            + indent(body, "    ")
-        )
+        return self.heading_str() + "\n" + indent(body, "    ")
 
 
 @dataclass
