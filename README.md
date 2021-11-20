@@ -68,7 +68,7 @@ def foo(C, D, S, N):
             sum!3 = Φ(sum!2, sum!4)
             d!2 = Φ(d!1, d!3)
             p!2 = Φ(p!1, p!3)
-            d!3 = (S[((i * D!0) + j)] - C[j])
+            d!3 = (S!0[((i * D!0) + j)] - C!0[j])
             p!3 = (d!3 * d!3)
             sum!4 = (sum!3 + p!3)
         !1!2 = (sum!3 < min_sum!2)
@@ -194,23 +194,23 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
         min_diff!1 = Φ(min_diff!0, min_diff!3)
         min_index!1 = Φ(min_index!0, min_index!3)
         !2!1 = Φ(!2!0, !2!2)
-        a_sqr_plus_b_sqr!2 = (S_sqr_sum[i] + C_sqr_sum!0)
+        a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i] + C_sqr_sum!0)
         two_a_b!2 = 0
         for j in range(0, D!0):
             two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
             tmp!2 = Φ(tmp!1, tmp!3)
-            tmp!3 = (S[((i * D!0) + j)] * two_C[j])
+            tmp!3 = (S!0[((i * D!0) + j)] * two_C!0[j])
             two_a_b!4 = (two_a_b!3 + tmp!3)
         this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
         differences!3 = Update(differences!2, i, this_diff!2)
-        min_diff!2 = differences[0]
+        min_diff!2 = differences!3[0]
         min_index!2 = 0
         for k in range(0, N!0):
             min_diff!3 = Φ(min_diff!2, min_diff!5)
             min_index!3 = Φ(min_index!2, min_index!5)
             !2!2 = Φ(!2!1, !2!3)
-            !2!3 = (differences[k] < min_diff!3)
-            min_diff!4 = differences[k]
+            !2!3 = (differences!3[k] < min_diff!3)
+            min_diff!4 = differences!3[k]
             min_index!4 = k
             min_diff!5 = MUX(!2!3, min_diff!4, min_diff!3)
             min_index!5 = MUX(!2!3, min_index!4, min_index!3)
@@ -335,8 +335,8 @@ def foo(A, B, N, num_bins):
         for j in range(0, N!0):
             result!5 = Φ(result!4, result!7)
             !2!2 = Φ(!2!1, !2!3)
-            !2!3 = (A[j] == i)
-            result!6 = Update(result!5, i, (result[i] + B[j]))
+            !2!3 = (A!0[j] == i)
+            result!6 = Update(result!5, i, (result!5[i] + B!0[j]))
             result!7 = MUX(!2!3, result!6, result!5)
     return result!4
 ```
@@ -382,7 +382,7 @@ def foo(A, B, N):
     for i in range(0, N!0):
         sum!2 = Φ(sum!1, sum!3)
         temp!1 = Φ(temp!0, temp!2)
-        temp!2 = (A[i] * B[i])
+        temp!2 = (A!0[i] * B!0[i])
         sum!3 = (sum!2 + temp!2)
     return sum!2
 ```
@@ -445,9 +445,9 @@ def foo(A, SA, B, SB):
             !2!2 = Φ(!2!1, !2!4)
             !3!2 = Φ(!3!1, !3!4)
             !4!2 = Φ(!4!1, !4!4)
-            !1!3 = (A[i] == B[j])
-            !2!3 = A[i]
-            !3!3 = A[i]
+            !1!3 = (A!0[i] == B!0[j])
+            !2!3 = A!0[i]
+            !3!3 = A!0[i]
             !4!3 = [!3!3]
             result!4 = (result!3 + !4!3)
             result!5 = MUX(!1!3, result!4, result!3)
