@@ -186,11 +186,11 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
     !1!1 = [0]
     differences!1 = (!1!1 * D!0)
     for i in range(0, N!0):
+        differences!2 = Φ(differences!1, differences!3)
         a_sqr_plus_b_sqr!1 = Φ(a_sqr_plus_b_sqr!0, a_sqr_plus_b_sqr!2)
         two_a_b!1 = Φ(two_a_b!0, two_a_b!3)
         tmp!1 = Φ(tmp!0, tmp!2)
         this_diff!1 = Φ(this_diff!0, this_diff!2)
-        differences[i] = Φ(differences[i], differences[i])
         min_diff!1 = Φ(min_diff!0, min_diff!3)
         min_index!1 = Φ(min_index!0, min_index!3)
         !2!1 = Φ(!2!0, !2!2)
@@ -202,7 +202,7 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
             tmp!3 = (S[((i * D!0) + j)] * two_C[j])
             two_a_b!4 = (two_a_b!3 + tmp!3)
         this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
-        differences[i] = this_diff!2
+        differences!3 = Update(differences!2, i, this_diff!2)
         min_diff!2 = differences[0]
         min_index!2 = 0
         for k in range(0, N!0):
@@ -330,15 +330,15 @@ def foo(A, B, N, num_bins):
         !1!2 = [0]
         result!3 = (result!2 + !1!2)
     for i in range(0, num_bins!0):
+        result!4 = Φ(result!2, result!5)
         !2!1 = Φ(!2!0, !2!2)
-        result[i] = Φ(result[i], result[i])
         for j in range(0, N!0):
+            result!5 = Φ(result!4, result!7)
             !2!2 = Φ(!2!1, !2!3)
-            result[i] = Φ(result[i], result[i])
             !2!3 = (A[j] == i)
-            result[i] = (result[i] + B[j])
-            result[i] = MUX(!2!3, result[i], result[i])
-    return result!2
+            result!6 = Update(result!5, i, (result[i] + B[j]))
+            result!7 = MUX(!2!3, result!6, result!5)
+    return result!4
 ```
 ### Dependency graph
 ![](histogram_dep_graph.png)
