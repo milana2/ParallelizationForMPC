@@ -374,6 +374,7 @@ class _StatementConverter(_StrictNodeVisitor):
     def visit_Expr(self, node: ast.Expr) -> Optional[restricted_ast.Statement]:
         # Ignore docstrings
         _DocstringExpector(self.source_code_info).visit(node.value)
+        return None
 
 
 class _ReturnValueGetter(_StrictNodeVisitor):

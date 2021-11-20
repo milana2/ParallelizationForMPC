@@ -1,7 +1,8 @@
 """Data types representing code in static single assignment form"""
 
-import networkx
 from dataclasses import dataclass
+
+import networkx  # type: ignore
 
 from .ast_shared import (
     Var,

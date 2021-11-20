@@ -7,7 +7,7 @@ from collections import Counter
 import itertools
 from typing import Optional, Union
 
-import networkx
+import networkx  # type: ignore
 
 from . import tac_cfg
 from . import ssa
@@ -20,8 +20,8 @@ def _compute_blocks_setting_vars(
 
     result: dict[ssa.Var, set[ssa.Block]] = dict()
 
+    block: ssa.Block
     for block in function.body.nodes:
-        block: ssa.Block = block
         for assignment in block.assignments:
             var = assignment.lhs
 
@@ -44,8 +44,8 @@ def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
     cfg = networkx.DiGraph()
     mapping: dict[tac_cfg.Block, ssa.Block] = dict()
 
+    tac_cfg_block: tac_cfg.Block
     for tac_cfg_block in tac_cfg_function.body.nodes:
-        tac_cfg_block: tac_cfg.Block = tac_cfg_block
         ssa_block = ssa.Block(
             phi_functions=[],
             assignments=tac_cfg_block.assignments,
@@ -55,11 +55,10 @@ def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
         cfg.add_node(ssa_block)
         mapping[tac_cfg_block] = ssa_block
 
+    source_block: tac_cfg.Block
+    dest_block: tac_cfg.Block
+    label: ssa.BranchKind
     for source_block, dest_block, label in tac_cfg_function.body.edges(data="label"):
-        source_block: tac_cfg.Block = source_block
-        dest_block: tac_cfg.Block = dest_block
-        label: tac_cfg.BranchKind = label
-        label: ssa.BranchKind = label
         cfg.add_edge(
             u_of_edge=mapping[source_block],
             v_of_edge=mapping[dest_block],
@@ -95,8 +94,8 @@ def place_phi_functions(result: ssa.Function) -> None:
 
         while W != set():
             X = W.pop()
+            Y: ssa.Block
             for Y in dominance_frontiers[X]:
-                Y: ssa.Block = Y
                 if has_already[Y] < iter_count:
                     num_predecessors = sum(1 for _ in result.body.predecessors(Y))
                     Y.phi_functions.append(ssa.Phi(lhs=V, rhs=[V] * num_predecessors))
@@ -235,7 +234,16 @@ def rename_variables(result: ssa.Function) -> None:
             assert X.terminator is not None
             assert_never(X.terminator)
 
-        for A in itertools.chain(X.phi_functions, X.assignments, var_terminators):
+        # Required for type checker
+        empty1: list[
+            Union[ssa.Phi, ssa.Assign, ssa.ConditionalJump, ssa.For, ssa.Return]
+        ] = []
+        for A in (
+            empty1
+            + [a for a in X.phi_functions]
+            + [a for a in X.assignments]
+            + [a for a in var_terminators]
+        ):
             if isinstance(A, ssa.Assign):
                 A.rhs = rename_rhs(A.rhs)
             elif isinstance(A, ssa.ConditionalJump):
@@ -260,8 +268,8 @@ def rename_variables(result: ssa.Function) -> None:
                 S[V].append(i)
                 C[V] = i + 1
 
+        Y: ssa.Block
         for Y in result.body.successors(X):
-            Y: ssa.Block
             assert len(list(result.body.predecessors(Y))) in (1, 2)
             j = [
                 i
@@ -281,14 +289,10 @@ def rename_variables(result: ssa.Function) -> None:
         for Y in dominance_tree[X]:
             search(Y)
 
-        for A in itertools.chain(X.phi_functions, X.assignments):
-            if isinstance(A.lhs, ssa.Subscript):
-                pass  # TODO: Support this
-            elif isinstance(A.lhs, ssa.Var):
-                V = old_lhs[A]
-                S[V].pop()
-            else:
-                assert_never(A.lhs)
+        empty2: list[Union[ssa.Phi, ssa.Assign]] = []  # Required for type checker
+        for A in empty2 + [a for a in X.phi_functions] + [a for a in X.assignments]:
+            V = old_lhs[A]
+            S[V].pop()
 
     search(result.entry_block)
 

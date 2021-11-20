@@ -2,8 +2,8 @@ from . import ssa
 
 
 def replace_phi_with_mux(result: ssa.Function) -> None:
+    block: ssa.Block
     for block in result.body.nodes:
-        block: ssa.Block
         if block.merge_condition is not None:
             mux_calls = []
             for phi in block.phi_functions:

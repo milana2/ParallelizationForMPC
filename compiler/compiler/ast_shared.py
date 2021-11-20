@@ -3,7 +3,7 @@ from typing import Generic, TypeVar, Union
 from dataclasses import dataclass
 from textwrap import indent
 
-import networkx
+import networkx  # type: ignore
 
 
 @dataclass(frozen=True)

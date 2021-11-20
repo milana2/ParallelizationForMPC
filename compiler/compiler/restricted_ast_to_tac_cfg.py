@@ -4,7 +4,7 @@ a three-address code control flow graph
 """
 
 
-import networkx
+import networkx  # type: ignore
 
 from . import restricted_ast
 from . import tac_cfg
@@ -178,11 +178,12 @@ def _build_expression_as_update_value(
 
 def _build_assignment(assignment: restricted_ast.Assign, builder: _CFGBuilder):
     lhs = assignment.lhs
-    rhs = _build_expression_as_update_value(assignment.rhs, builder)
+    rhs_update_value = _build_expression_as_update_value(assignment.rhs, builder)
+    rhs: tac_cfg.AssignRHS
     if isinstance(lhs, restricted_ast.Var):
-        pass
+        rhs = rhs_update_value
     elif isinstance(lhs, restricted_ast.Subscript):
-        rhs = tac_cfg.Update(array=lhs.array, index=lhs.index, value=rhs)
+        rhs = tac_cfg.Update(array=lhs.array, index=lhs.index, value=rhs_update_value)
         lhs = lhs.array
     else:
         assert_never(lhs)
