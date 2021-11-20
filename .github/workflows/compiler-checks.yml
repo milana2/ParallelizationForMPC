@@ -1,4 +1,4 @@
-name: Compiler tests
+name: Compiler checks
 
 on:
   push:
@@ -7,12 +7,13 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  checks:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10"]
+        check-command: ["pytest", "mypy -m compiler"]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -23,8 +24,8 @@ jobs:
         working-directory: compiler
         run: |
           python -m pip install --upgrade pip
-          python -m pip install pytest
+          python -m pip install pytest mypy
           pip install -r requirements.txt
-      - name: Test with pytest
+      - name: Check with ${{ matrix.check-command }}
         working-directory: compiler
-        run: pytest
+        run: ${{ matrix.check-command }}
