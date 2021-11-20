@@ -13,7 +13,6 @@ from .ast_shared import (
     BinOp as _BinOp,
     UnaryOp as _UnaryOp,
     Subscript,
-    AssignLHS,
     SubscriptIndex,
     SubscriptIndexBinOp,
     SubscriptIndexUnaryOp,
@@ -117,6 +116,9 @@ class BinOp(_BinOp[Expression]):
 
 class UnaryOp(_UnaryOp[Expression]):
     pass
+
+
+AssignLHS = Union[Var, Subscript]
 
 
 @dataclass

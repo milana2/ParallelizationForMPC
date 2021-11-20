@@ -14,7 +14,6 @@ from .ast_shared import (
 from .tac_cfg import (
     BinOp,
     UnaryOp,
-    AssignLHS,
     AssignRHS,
     Subscript,
     Assign,
@@ -30,14 +29,16 @@ from .tac_cfg import (
     LoopBound,
     Atom,
     Operand,
+    Update,
+    UpdateValue,
 )
 from .tac_cfg import Block as _BaseBlock
 
 
 @dataclass(eq=False)
 class Phi:
-    lhs: AssignLHS
-    rhs: list[AssignLHS]
+    lhs: Var
+    rhs: list[Var]
 
     def __hash__(self):
         return id(self)

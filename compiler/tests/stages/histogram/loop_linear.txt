@@ -6,12 +6,12 @@ def foo(A, B, N, num_bins):
         !1!2 = [0]
         result!3 = (result!2 + !1!2)
     for i in range(0, num_bins!0):
+        result!4 = Φ(result!2, result!5)
         !2!1 = Φ(!2!0, !2!2)
-        result[i] = Φ(result[i], result[i])
         for j in range(0, N!0):
+            result!5 = Φ(result!4, result!7)
             !2!2 = Φ(!2!1, !2!3)
-            result[i] = Φ(result[i], result[i])
             !2!3 = (A[j] == i)
-            result[i] = (result[i] + B[j])
-            result[i] = MUX(!2!3, result[i], result[i])
-    return result!2
+            result!6 = Update(result!5, i, (result[i] + B[j]))
+            result!7 = MUX(!2!3, result!6, result!5)
+    return result!4

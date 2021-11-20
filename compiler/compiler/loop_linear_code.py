@@ -7,7 +7,6 @@ from .ssa import (
     Phi,
     Assign,
     LoopBound,
-    AssignLHS,
     AssignRHS,
     ConstantInt,
     Subscript,
@@ -16,6 +15,8 @@ from .ssa import (
     List,
     Tuple,
     Mux,
+    Update,
+    UpdateValue,
 )
 
 

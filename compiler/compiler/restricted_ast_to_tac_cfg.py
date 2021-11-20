@@ -119,7 +119,7 @@ def _build_expression_as_var(
 def _build_expression_as_atom(
     expression: restricted_ast.Expression, builder: _CFGBuilder
 ) -> tac_cfg.Atom:
-    assign_rhs = _build_expression_as_assign_rhs(expression, builder)
+    assign_rhs = _build_expression_as_update_value(expression, builder)
     if isinstance(assign_rhs, tac_cfg.Var) or isinstance(
         assign_rhs, tac_cfg.ConstantInt
     ):
@@ -133,16 +133,16 @@ def _build_expression_as_atom(
 def _build_expression_as_operand(
     expression: restricted_ast.Expression, builder: _CFGBuilder
 ) -> tac_cfg.Operand:
-    assign_rhs = _build_expression_as_assign_rhs(expression, builder)
+    assign_rhs = _build_expression_as_update_value(expression, builder)
     if isinstance(assign_rhs, tac_cfg.Subscript):
         return assign_rhs
     else:
         return _build_expression_as_atom(expression, builder)
 
 
-def _build_expression_as_assign_rhs(
+def _build_expression_as_update_value(
     expression: restricted_ast.Expression, builder: _CFGBuilder
-) -> tac_cfg.AssignRHS:
+) -> tac_cfg.UpdateValue:
     if (
         isinstance(expression, restricted_ast.Var)
         or isinstance(expression, restricted_ast.ConstantInt)
@@ -177,12 +177,16 @@ def _build_expression_as_assign_rhs(
 
 
 def _build_assignment(assignment: restricted_ast.Assign, builder: _CFGBuilder):
-    builder.add_assignment(
-        tac_cfg.Assign(
-            lhs=assignment.lhs,
-            rhs=_build_expression_as_assign_rhs(assignment.rhs, builder),
-        )
-    )
+    lhs = assignment.lhs
+    rhs = _build_expression_as_update_value(assignment.rhs, builder)
+    if isinstance(lhs, restricted_ast.Var):
+        pass
+    elif isinstance(lhs, restricted_ast.Subscript):
+        rhs = tac_cfg.Update(array=lhs.array, index=lhs.index, value=rhs)
+        lhs = lhs.array
+    else:
+        assert_never(lhs)
+    builder.add_assignment(tac_cfg.Assign(lhs=lhs, rhs=rhs))
 
 
 def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):

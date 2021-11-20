@@ -11,7 +11,6 @@ from .ast_shared import (
     ConstantInt,
     LoopBound,
     Subscript,
-    AssignLHS,
     SubscriptIndex,
     CFGFunction as _CFGFunction,
     BinOp as _BinOp,
@@ -54,19 +53,32 @@ class Tuple:
 @dataclass
 class Mux:
     condition: Var
-    false_value: "AssignLHS"
-    true_value: "AssignLHS"
+    false_value: Operand
+    true_value: Operand
 
     def __str__(self) -> str:
         return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
 
 
-AssignRHS = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux]
+UpdateValue = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux]
+
+
+@dataclass
+class Update:
+    array: Var
+    index: SubscriptIndex
+    value: UpdateValue
+
+    def __str__(self) -> str:
+        return f"Update({self.array}, {self.index}, {self.value})"
+
+
+AssignRHS = Union[UpdateValue, Update]
 
 
 @dataclass(eq=False)
 class Assign:
-    lhs: AssignLHS
+    lhs: Var
     rhs: AssignRHS
 
     def __hash__(self):

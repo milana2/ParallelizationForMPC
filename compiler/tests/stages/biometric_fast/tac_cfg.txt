@@ -22,7 +22,7 @@ Block 5:
     jump
 Block 6:
     this_diff = (a_sqr_plus_b_sqr - two_a_b)
-    differences[i] = this_diff
+    differences = Update(differences, i, this_diff)
     min_diff = differences[0]
     min_index = 0
     jump

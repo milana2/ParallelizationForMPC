@@ -109,9 +109,6 @@ class Subscript:
         return f"{self.array}[{self.index}]"
 
 
-AssignLHS = Union[Subscript, Var]
-
-
 BLOCK = TypeVar("BLOCK")
 
 

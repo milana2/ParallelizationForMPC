@@ -2,11 +2,11 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
     !1!1 = [0]
     differences!1 = (!1!1 * D!0)
     for i in range(0, N!0):
+        differences!2 = Φ(differences!1, differences!3)
         a_sqr_plus_b_sqr!1 = Φ(a_sqr_plus_b_sqr!0, a_sqr_plus_b_sqr!2)
         two_a_b!1 = Φ(two_a_b!0, two_a_b!3)
         tmp!1 = Φ(tmp!0, tmp!2)
         this_diff!1 = Φ(this_diff!0, this_diff!2)
-        differences[i] = Φ(differences[i], differences[i])
         min_diff!1 = Φ(min_diff!0, min_diff!3)
         min_index!1 = Φ(min_index!0, min_index!3)
         !2!1 = Φ(!2!0, !2!2)
@@ -18,7 +18,7 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
             tmp!3 = (S[((i * D!0) + j)] * two_C[j])
             two_a_b!4 = (two_a_b!3 + tmp!3)
         this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
-        differences[i] = this_diff!2
+        differences!3 = Update(differences!2, i, this_diff!2)
         min_diff!2 = differences[0]
         min_index!2 = 0
         for k in range(0, N!0):
