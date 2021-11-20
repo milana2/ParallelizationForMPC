@@ -10,7 +10,6 @@ Block 1:
     !2!1 = Φ(!2!0, !2!2)
     !3!1 = Φ(!3!0, !3!2)
     !4!1 = Φ(!4!0, !4!2)
-    !5!1 = Φ(!5!0, !5!2)
     for i in range(0, SA!0)
 Block 2:
     jump
@@ -19,29 +18,28 @@ Block 3:
 Block 4:
     result!3 = Φ(result!2, result!5)
     !1!2 = Φ(!1!1, !1!3)
-    !2!2 = Φ(!2!1, !2!3)
-    !3!2 = Φ(!3!1, !3!3)
+    !2!2 = Φ(!2!1, !2!4)
+    !3!2 = Φ(!3!1, !3!4)
     !4!2 = Φ(!4!1, !4!4)
-    !5!2 = Φ(!5!1, !5!4)
     for j in range(0, SB!0)
 Block 5:
-    !1!3 = A[i]
-    !2!3 = B[j]
-    !3!3 = (!1!3 == !2!3)
-    conditional jump !3!3
+    !1!3 = (A[i] == B[j])
+    conditional jump !1!3
 Block 6:
     jump
 Block 7:
-    !4!3 = A[i]
-    !5!3 = [!4!3]
-    result!4 = (result!3 + !5!3)
+    !2!3 = A[i]
+    !3!3 = A[i]
+    !4!3 = [!3!3]
+    result!4 = (result!3 + !4!3)
     jump
 Block 8:
     jump
 Block 9:
-    (merge from conditional jump !3!3)
-    result!5 = MUX(!3!3, result!4, result!3)
-    !4!4 = MUX(!3!3, !4!3, !4!2)
-    !5!4 = MUX(!3!3, !5!3, !5!2)
+    (merge from conditional jump !1!3)
+    result!5 = MUX(!1!3, result!4, result!3)
+    !2!4 = MUX(!1!3, !2!3, !2!2)
+    !3!4 = MUX(!1!3, !3!3, !3!2)
+    !4!4 = MUX(!1!3, !4!3, !4!2)
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 8, F) (5, 7, T) (6, 1, *) (7, 9, *) (8, 9, *) (9, 4, *)

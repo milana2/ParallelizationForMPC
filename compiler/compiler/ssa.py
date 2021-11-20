@@ -28,6 +28,8 @@ from .tac_cfg import (
     Tuple,
     Mux,
     LoopBound,
+    Atom,
+    Operand,
 )
 from .tac_cfg import Block as _BaseBlock
 

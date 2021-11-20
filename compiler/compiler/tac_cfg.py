@@ -21,12 +21,14 @@ from .ast_shared import (
 
 Atom = Union[Var, ConstantInt]
 
+Operand = Union[Atom, Subscript]
 
-class BinOp(_BinOp[Atom]):
+
+class BinOp(_BinOp[Operand]):
     pass
 
 
-class UnaryOp(_UnaryOp[Atom]):
+class UnaryOp(_UnaryOp[Operand]):
     pass
 
 
@@ -82,7 +84,7 @@ class Jump:
 
 @dataclass(eq=False)
 class ConditionalJump:
-    condition: Atom
+    condition: Var
 
     def __hash__(self):
         return id(self)
@@ -103,7 +105,7 @@ class For:
 
 @dataclass(eq=False)
 class Return:
-    value: Atom
+    value: Var
 
     def __hash__(self):
         return id(self)

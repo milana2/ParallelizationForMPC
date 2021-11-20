@@ -117,7 +117,7 @@ def rename_variables(result: ssa.Function) -> None:
         C[V] = 1
         S[V] = [0]
 
-    def subscript_var(V: ssa.Var, i: Optional[int] = None):
+    def rename_var(V: ssa.Var, i: Optional[int] = None):
         if i is None:
             try:
                 i = S[V][-1]
@@ -128,7 +128,7 @@ def rename_variables(result: ssa.Function) -> None:
 
     def rename_subscript_index(index: ssa.SubscriptIndex) -> ssa.SubscriptIndex:
         if isinstance(index, ssa.Var):
-            return subscript_var(index)
+            return rename_var(index)
         elif isinstance(index, ssa.ConstantInt):
             return index
         elif isinstance(index, ssa.SubscriptIndexBinOp):
@@ -151,6 +151,62 @@ def rename_variables(result: ssa.Function) -> None:
             index=rename_subscript_index(subscript.index),
         )
 
+    def rename_atom(atom: ssa.Atom) -> ssa.Atom:
+        if isinstance(atom, ssa.Var):
+            return rename_var(atom)
+        elif isinstance(atom, ssa.ConstantInt):
+            return atom
+        else:
+            assert_never(atom)
+
+    def rename_operand(operand: ssa.Operand) -> ssa.Operand:
+        if isinstance(operand, ssa.Var):
+            return rename_var(operand)
+        elif isinstance(operand, ssa.ConstantInt):
+            return operand
+        elif isinstance(operand, ssa.Subscript):
+            return rename_subscript(operand)
+        else:
+            assert_never(operand)
+
+    def rename_lhs(lhs: ssa.AssignLHS) -> ssa.AssignLHS:
+        if isinstance(lhs, ssa.Var):
+            return rename_var(lhs)
+        elif isinstance(lhs, ssa.Subscript):
+            return rename_subscript(lhs)
+        else:
+            assert_never(lhs)
+
+    def rename_rhs(rhs: ssa.AssignRHS) -> ssa.AssignRHS:
+        if isinstance(rhs, ssa.Var):
+            return rename_var(rhs)
+        elif isinstance(rhs, ssa.ConstantInt):
+            return rhs
+        elif isinstance(rhs, ssa.Subscript):
+            return rename_subscript(rhs)
+        elif isinstance(rhs, ssa.BinOp):
+            return ssa.BinOp(
+                left=rename_operand(rhs.left),
+                operator=rhs.operator,
+                right=rename_operand(rhs.right),
+            )
+        elif isinstance(rhs, ssa.UnaryOp):
+            return ssa.UnaryOp(
+                operator=rhs.operator, operand=rename_operand(rhs.operand)
+            )
+        elif isinstance(rhs, ssa.List):
+            return ssa.List(items=[rename_atom(item) for item in rhs.items])
+        elif isinstance(rhs, ssa.Tuple):
+            return ssa.Tuple(items=[rename_atom(item) for item in rhs.items])
+        elif isinstance(rhs, ssa.Mux):
+            return ssa.Mux(
+                condition=rename_var(rhs.condition),
+                false_value=rename_lhs(rhs.false_value),
+                true_value=rename_lhs(rhs.true_value),
+            )
+        else:
+            assert_never(rhs)
+
     def search(X: ssa.Block):
         old_lhs: dict[Union[ssa.Phi, ssa.Assign], ssa.AssignLHS] = dict()
 
@@ -168,41 +224,16 @@ def rename_variables(result: ssa.Function) -> None:
 
         for A in itertools.chain(X.phi_functions, X.assignments, var_terminators):
             if isinstance(A, ssa.Assign):
-                if isinstance(A.rhs, ssa.Subscript):
-                    A.rhs = rename_subscript(A.rhs)
-                elif isinstance(A.rhs, ssa.ConstantInt):
-                    pass
-                elif isinstance(A.rhs, ssa.Var):
-                    V = A.rhs
-                    A.rhs = subscript_var(V)
-                elif isinstance(A.rhs, ssa.BinOp):
-                    V = A.rhs.left
-                    A.rhs.left = subscript_var(V)
-                    V = A.rhs.right
-                    A.rhs.right = subscript_var(V)
-                elif isinstance(A.rhs, ssa.UnaryOp):
-                    V = A.rhs.operand
-                    A.rhs.operand = subscript_var(V)
-                elif isinstance(A.rhs, ssa.List) or isinstance(A.rhs, ssa.Tuple):
-                    for n, V in enumerate(A.rhs.items):
-                        A.rhs.items[n] = subscript_var(V)
-                elif isinstance(A.rhs, ssa.Mux):
-                    A.rhs.condition = subscript_var(A.rhs.condition)
-                    A.rhs.false_value = subscript_var(A.rhs.false_value)
-                    A.rhs.true_value = subscript_var(A.rhs.true_value)
-                else:
-                    assert_never(A.rhs)
+                A.rhs = rename_rhs(A.rhs)
             elif isinstance(A, ssa.ConditionalJump):
-                V = A.condition
-                A.condition = subscript_var(V)
+                A.condition = rename_var(A.condition)
             elif isinstance(A, ssa.Return):
-                V = A.value
-                A.value = subscript_var(V)
+                A.value = rename_var(A.value)
             elif isinstance(A, ssa.For):
                 if isinstance(A.bound_low, ssa.Var):
-                    A.bound_low = subscript_var(A.bound_low)
+                    A.bound_low = rename_var(A.bound_low)
                 if isinstance(A.bound_high, ssa.Var):
-                    A.bound_high = subscript_var(A.bound_high)
+                    A.bound_high = rename_var(A.bound_high)
             elif isinstance(A, ssa.Phi):
                 pass
             else:
@@ -216,7 +247,7 @@ def rename_variables(result: ssa.Function) -> None:
                     A.lhs = rename_subscript(V)
                 elif isinstance(V, ssa.Var):
                     old_lhs[A] = A.lhs
-                    A.lhs = subscript_var(V, i)
+                    A.lhs = rename_var(V, i)
                 else:
                     assert_never(V)
 
@@ -237,7 +268,7 @@ def rename_variables(result: ssa.Function) -> None:
                 if isinstance(V, ssa.Subscript):
                     pass  # TODO: Support this
                 elif isinstance(V, ssa.Var):
-                    F.rhs[j] = subscript_var(V, i)
+                    F.rhs[j] = rename_var(V, i)
                 else:
                     assert_never(V)
 

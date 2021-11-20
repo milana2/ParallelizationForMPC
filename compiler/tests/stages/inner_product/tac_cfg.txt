@@ -7,9 +7,7 @@ Block 0:
 Block 1:
     for i in range(0, N)
 Block 2:
-    !1 = A[i]
-    !2 = B[i]
-    temp = (!1 * !2)
+    temp = (A[i] * B[i])
     sum = (sum + temp)
     jump
 Block 3:

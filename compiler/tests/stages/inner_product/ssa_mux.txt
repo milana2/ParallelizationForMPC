@@ -6,14 +6,10 @@ Block 0:
     jump
 Block 1:
     sum!2 = Φ(sum!1, sum!3)
-    !1!1 = Φ(!1!0, !1!2)
-    !2!1 = Φ(!2!0, !2!2)
     temp!1 = Φ(temp!0, temp!2)
     for i in range(0, N!0)
 Block 2:
-    !1!2 = A[i]
-    !2!2 = B[i]
-    temp!2 = (!1!2 * !2!2)
+    temp!2 = (A[i] * B[i])
     sum!3 = (sum!2 + temp!2)
     jump
 Block 3:
