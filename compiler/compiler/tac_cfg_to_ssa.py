@@ -147,7 +147,7 @@ def rename_variables(result: ssa.Function) -> None:
 
     def rename_subscript(subscript: ssa.Subscript) -> ssa.Subscript:
         return ssa.Subscript(
-            array=subscript.array,
+            array=rename_var(subscript.array),
             index=rename_subscript_index(subscript.index),
         )
 

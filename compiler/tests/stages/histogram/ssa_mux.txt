@@ -27,12 +27,12 @@ Block 7:
     !2!2 = Φ(!2!1, !2!3)
     for j in range(0, N!0)
 Block 8:
-    !2!3 = (A[j] == i)
+    !2!3 = (A!0[j] == i)
     conditional jump !2!3
 Block 9:
     jump
 Block 10:
-    result!6 = Update(result!5, i, (result[i] + B[j]))
+    result!6 = Update(result!5, i, (result!5[i] + B!0[j]))
     jump
 Block 11:
     jump

@@ -13,7 +13,7 @@ def foo(C, D, S, N):
             sum!3 = Φ(sum!2, sum!4)
             d!2 = Φ(d!1, d!3)
             p!2 = Φ(p!1, p!3)
-            d!3 = (S[((i * D!0) + j)] - C[j])
+            d!3 = (S!0[((i * D!0) + j)] - C!0[j])
             p!3 = (d!3 * d!3)
             sum!4 = (sum!3 + p!3)
         !1!2 = (sum!3 < min_sum!2)

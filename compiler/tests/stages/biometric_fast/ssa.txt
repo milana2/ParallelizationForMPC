@@ -16,7 +16,7 @@ Block 1:
     !2!1 = Φ(!2!0, !2!2)
     for i in range(0, N!0)
 Block 2:
-    a_sqr_plus_b_sqr!2 = (S_sqr_sum[i] + C_sqr_sum!0)
+    a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i] + C_sqr_sum!0)
     two_a_b!2 = 0
     jump
 Block 3:
@@ -27,13 +27,13 @@ Block 4:
     tmp!2 = Φ(tmp!1, tmp!3)
     for j in range(0, D!0)
 Block 5:
-    tmp!3 = (S[((i * D!0) + j)] * two_C[j])
+    tmp!3 = (S!0[((i * D!0) + j)] * two_C!0[j])
     two_a_b!4 = (two_a_b!3 + tmp!3)
     jump
 Block 6:
     this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
     differences!3 = Update(differences!2, i, this_diff!2)
-    min_diff!2 = differences[0]
+    min_diff!2 = differences!3[0]
     min_index!2 = 0
     jump
 Block 7:
@@ -42,12 +42,12 @@ Block 7:
     !2!2 = Φ(!2!1, !2!3)
     for k in range(0, N!0)
 Block 8:
-    !2!3 = (differences[k] < min_diff!3)
+    !2!3 = (differences!3[k] < min_diff!3)
     conditional jump !2!3
 Block 9:
     jump
 Block 10:
-    min_diff!4 = differences[k]
+    min_diff!4 = differences!3[k]
     min_index!4 = k
     jump
 Block 11:
