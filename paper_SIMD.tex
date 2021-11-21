@@ -1,0 +1,553 @@
+% !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
+%
+% acm templates v1.57 (sigconf template)
+%
+%\documentclass[sigconf, screen, review, anonymous, natbib=false]{acmart}
+\documentclass[sigconf, screen, natbib=false, dvipsnames, table]{acmart}
+\settopmatter{printacmref=true}
+% mandatory for CCS'19
+\usepackage{balance}
+\usepackage{mathtools}
+% for creating a balanced last page (usually last page with references)
+
+% defining the \BibTeX command - from Oren Patashnik's original BibTeX documentation.
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08emT\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% Rights management information. 
+% This information is sent to you when you complete the rights form.
+% These commands have SAMPLE values in them; it is your responsibility as an author to replace
+% the commands and values with those provided to you when you complete the rights form.
+%
+% These commands are for a PROCEEDINGS abstract or paper.
+
+\copyrightyear{2019} 
+\acmYear{2019} 
+\setcopyright{acmcopyright}
+\acmConference[CCS '19]{2019 ACM SIGSAC Conference on Computer and Communications Security}{November 11--15, 2019}{London, United Kingdom}
+\acmBooktitle{2019 ACM SIGSAC Conference on Computer and Communications Security (CCS '19), November 11--15, 2019, London, United Kingdom}
+\acmPrice{15.00}
+\acmDOI{10.1145/3319535.3339818}
+\acmISBN{978-1-4503-6747-9/19/11}
+
+%
+% These commands are for a JOURNAL article.
+%\setcopyright{acmcopyright}
+%\acmJournal{TOG}
+%\acmYear{2018}\acmVolume{37}\acmNumber{4}\acmArticle{111}\acmMonth{8}
+%\acmDOI{10.1145/1122445.1122456}
+
+%
+% Submission ID. 
+% Use this when submitting an article to a sponsored event. You'll receive a unique submission ID from the organizers
+% of the event, and this ID should be used as the parameter to this command.
+%\acmSubmissionID{123-A56-BU3}
+
+%
+% The majority of ACM publications use numbered citations and references. If you are preparing content for an event
+% sponsored by ACM SIGGRAPH, you must use the "author year" style of citations and references. Uncommenting
+% the next command will enable that style.
+%\citestyle{acmauthoryear}
+
+
+ \makeatletter
+ % \renewcommand{\section}{\abovedisplayskip 10\p@ \@plus3\p@ \@minus1\p@%
+ %                       \belowdisplayskip 5\p@ \@plus3\p@ \@minus1\p@%
+ %                       \abovedisplayshortskip 0pt \@plus2\p@%
+ %                       \belowdisplayshortskip 0pt \@plus2\p@ \@minus0\p@%
+ %                       \@startsection{section}{1}{\z@}%
+ %                        {-17\p@ \@plus -4\p@ \@minus -4\p@}%
+ %                        {6\p@ \@plus 4\p@ \@minus 4\p@}%
+ %                        {\normalfont\large\bfseries\boldmath
+ %                         \rightskip=\z@ \@plus 8em\pretolerance=10000 }}
+ \renewcommand{\subsection}{\@startsection{subsection}{2}{\z@}%
+                        {-8\p@ \@plus -4\p@ \@minus -4\p@}%
+                        {5\p@ \@plus 2\p@ \@minus 2\p@}%
+                        {\normalfont\Large\bfseries\boldmath
+                         \rightskip=\z@ \@plus 3em\pretolerance=10000 }}
+  \renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{\z@}%
+                        {-6\p@ \@plus -4\p@ \@minus -4\p@}%
+                        {1\p@ \@plus 1\p@ \@minus 0\p@}%
+                        {\normalfont\normalsize\bfseries\boldmath}}
+% \renewcommand{\paragraph}{\@startsection{paragraph}{4}{\z@}%
+%                       {-8\p@ \@plus -4\p@ \@minus -4\p@}%
+%                       {-2\p@ \@plus -0.22em \@minus -0.1em}%
+%                       {\normalfont\normalsize\bfseries}}
+ \makeatother
+
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{listings}
+% declare the path(s) where your graphic files are
+\graphicspath{{../figures/}}
+% and their extensions so you won't have to specify these with
+% every instance of \includegraphics
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+
+%\usepackage[outputdir=/Volumes/ramdisk/]{minted}
+\usepackage{minted}
+% *** MATH PACKAGES ***
+\usepackage{amsmath}
+
+
+
+% *** SPECIALIZED LIST PACKAGES ***
+%\usepackage{algorithm2e}
+\usepackage{algorithmic}
+
+
+
+% *** ALIGNMENT PACKAGES ***
+\usepackage{array}
+
+\usepackage{url}
+
+\usepackage[utf8]{inputenc}
+\usepackage[american]{babel}
+\usepackage[backend=biber,style=ACM-Reference-Format]{biblatex}
+\addbibresource{../library.bib} 
+\addbibresource{../cryptobib/abbrev2.bib}
+\addbibresource{../cryptobib/crypto_crossref.bib}
+
+% Used for Theorems and Definitions
+\usepackage{amsthm}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+
+\usepackage{xcolor} 
+\usepackage{xspace}
+\usepackage{xstring} % required by IfEqCase
+
+\usepackage{booktabs} % better tables
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+
+% ishaq: adding our macros
+\input{macros.tex}
+
+\sloppy
+\begin{document}
+\fancyhead{}
+% do not delete this code.    
+
+%
+% paper title
+% Titles are generally capitalized except for words such as a, an, and, as,
+% at, but, by, for, in, nor, of, on, or, the, to and up, which are usually
+% not capitalized unless they are the first or last word of the title.
+% Linebreaks \\ can be used within to get better formatting as desired.
+% Do not put math or special symbols in the title.
+\title[Scheduling and Amortization for MPC]{Scheduling and Amortization for MPC}
+ 
+%
+% The "author" command and its associated commands are used to define the authors and their affiliations.
+% Of note is the shared affiliation of the first two authors, and the "authornote" and "authornotemark" commands
+% used to denote shared contribution to the research.
+
+\author{Benjamin Levy}
+\email{levyb3@rpi.edu}
+\affiliation{%
+    \institution{Rensselaer Polytechnic Institute}
+    %\streetaddress{1 Th{\o}rv{\"a}ld Circle}
+    \city{Troy}
+    \state{New York}
+    %\country{Iceland}
+}
+
+\author{Benjamin Sherman}
+\email{shermb@rpi.edu}
+\affiliation{%
+    \institution{Rensselaer Polytechnic Institute}
+    %\streetaddress{1 Th{\o}rv{\"a}ld Circle}
+    \city{Troy}
+    \state{New York}
+    %\country{Iceland}
+}
+
+
+\author{Lindsey Kennard}
+\email{kennal@rpi.edu}
+\affiliation{%
+    \institution{Rensselaer Polytechnic Institute}
+    %\streetaddress{1 Th{\o}rv{\"a}ld Circle}
+    \city{Troy}
+    \state{New York}
+    %\country{Iceland}
+}
+
+\author{Ana L. Milanova}
+\email{milanova@cs.rpi.edu}
+\affiliation{%
+    \institution{Rensselaer Polytechnic Institute}
+    %\streetaddress{1 Th{\o}rv{\"a}ld Circle}
+    \city{Troy}
+    \state{New York}
+    %\country{Iceland}
+}
+
+\author{Muhammad Ishaq}
+\authornote{This work was done in part while the author was at RPI.}
+\email{m.ishaq@ed.ac.uk}
+%\orcid{1234-5678-9012}
+%\author{G.K.M. Tobin}
+%\authornotemark[1]
+%\email{webmaster@marysville-ohio.com}
+\affiliation{%
+    \institution{University of Edinburgh}
+    %\streetaddress{P.O. Box 1212}
+    \city{Edinburgh}
+    \state{Scotland}
+%    \postcode{43017-6221}
+}
+
+\author{Vassilis Zikas}
+\authornote{This work was done in part while the author was visiting UCLA and supported in part by DARPA and SPAWAR under contract N66001-15-C-4065 and by a SICSA Cyber Nexus Research Exchanges grant.}
+\email{vzikas@inf.ed.ac.uk}
+%\orcid{1234-5678-9012}
+%\author{G.K.M. Tobin}
+%\authornotemark[1]
+%\email{webmaster@marysville-ohio.com}
+\affiliation{%
+    \institution{University of Edinburgh} 
+    %\streetaddress{P.O. Box 1212}
+    \city{Edinburgh}
+    \state{Scotland}
+    %    \postcode{43017-6221}
+}
+
+
+%
+% By default, the full list of authors will be used in the page headers. Often, this list is too long, and will overlap
+% other information printed in the page headers. This command allows the author to define a more concise list
+% of authors' names for this purpose.
+%\renewcommand{\shortauthors}{Trovato and Tobin, et al.}
+
+\renewcommand{\A}{{\sf A}}
+\renewcommand{\B}{{\sf B}}
+\renewcommand{\C}{{\sf C}}
+\renewcommand{\D}{{\sf D}}
+
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract
+\begin{abstract}
+
+
+\end{abstract}
+
+
+%
+% The code below is generated by the tool at http://dl.acm.org/ccs.cfm.
+% Please copy and paste the code instead of the example below.
+%
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10003752.10010124.10010138.10010143</concept_id>
+<concept_desc>Theory of computation~Program analysis</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10003752.10003777.10003789</concept_id>
+<concept_desc>Theory of computation~Cryptographic protocols</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10002978.10002979</concept_id>
+<concept_desc>Security and privacy~Cryptography</concept_desc>
+<concept_significance>300</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Theory of computation~Program analysis}
+\ccsdesc[500]{Theory of computation~Cryptographic protocols}
+\ccsdesc[300]{Security and privacy~Cryptography}
+
+%
+% Keywords. The author(s) should pick words that accurately describe the work being
+% presented. Separate the keywords with commas.
+\keywords{protocol mixing; linear programming; multiparty computation; program analysis; cryptography}
+
+
+\begin{comment}
+%
+% A "teaser" image appears between the author and affiliation information and the body 
+% of the document, and typically spans the page. 
+\begin{teaserfigure}
+    \includegraphics[width=\textwidth]{sampleteaser}
+    \caption{Seattle Mariners at Spring Training, 2010.}
+    \Description{Enjoying the baseball game from the third-base seats. Ichiro Suzuki preparing to bat.}
+    \label{fig:teaser}
+\end{teaserfigure}
+\end{comment}
+%
+% This command processes the author and affiliation and title information and builds
+% the first part of the formatted document.
+\maketitle
+
+
+\section{Introduction}
+\label{sec:introduction}
+
+
+\section{Background and Problem Statement}
+\label{sec:background}
+
+\subsection{Scheduling in MPC}
+
+\ana{Here we need more on MPC before jumping to scheduling. MPC-source, basic assumptions about static loop bounds, etc.}
+
+For this treatment we make the following simplifying assumptions:
+
+\begin{enumerate}
+\item All statements in the program execute using the same protocol (sharing). That is, there is no share conversion.
+\item All MPC instructions have the same unit cost, 1 unit.
+\item There is unlimited bandwidth---i.e., a single MPC-instruction costs as much as $N$ amortized instructions, namely 1 unit.
+\item MPC instructions scheduled in parallel benefit from amortization \emph{only if} they are the same instruction. Given our previous assumption, 
+2 MUL instructions scheduled in parallel benefit from amortization and cost 1, however a MUL and a MUX instructions scheduled 
+in parallel still cost 2. 
+\end{enumerate}
+
+
+\subsection{Scheduling in HPC}
+\label{sec:hpc}
+
+
+
+\section{\bf Preliminaries}
+\label{sec:preliminaries}
+
+We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. We write $i_1,i_2,...i_k$ to denote the loop nest: $i_1$ is the outermost loop, $i_2$, is immediately nested in $i_1$, and so on until $i_k$. As an example, a statement nested in $i_1,i_2,...i_k$ can access array $A[f(i_1,i_2,...i_k)]$. We write $A[i_1,i_2,...i_k]$ interchangeably. 
+
+The dependence graph computes def-use edges:
+
+\begin{itemize}
+\item same-level $X\rightarrow Y$ where $X = ...$ and $Y = ...$ are in the same loop nest $i_1,i_2,...i_k$. E.g., $\texttt{d} = \mathit{SUM}(\texttt{S}[i,j], \texttt{C}[j])$ to $\texttt{p} = \mathit{MUL}(\texttt{d},\texttt{d})$ in Biometric is a same-level edge. 
+\item outer-to-inner $X\rightarrow Y$ where $X$ is in an outer loop nest, $i_1,i_2,...i_j$, and $Y$ is in an inner one, $i_1,i_2,...i_j,...,i_k$.
+\item inner-to-outer $X\rightarrow Y$ where $X$ is in an inner loop nest, $i_1,i_2,...i_j,...,i_k$, and $Y$ is in an outer one, $i_1,i_2,...i_j$. E.g. $\texttt{sum}_1 = \texttt{ADD}(\texttt{sum}_0,\texttt{p})$ to
+$\texttt{c} = \mathit{CMP}(\texttt{sum}_1,\texttt{min}_0)$ is an inner-to-outer edge.
+\item same-level back-edge $X\rightarrow Y$. $Y$ is a phi-node in the header of the loop and $X$ is a definition of the variable in the loop body. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
+\item outer-to-inner back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in an immediately nested loop of $Y$'s loop. 
+ \end{itemize}
+
+We also define the $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of statements that form a cycle in the loop with $n$. The closure of $n$ is defined as follows:
+\begin{itemize}
+\item $n$ is in $\mathit{closure}(n)$
+\item $X$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $X$, and $X \rightarrow n$ is a same-level back-edge. 
+\item $Y$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $Y$ and there is a same-level path from $Y$ to some $X$ in $\mathit{closure}(n)$.
+\end{itemize}
+
+
+\section{Basic Vectorization}
+
+\ana{Add back-edges into Phase 1. A back-edge from a non-phi-node in loop $i$ to a phi-node in loop $i$'s header is a same-level edge. The only difference with the handling of normal def-use is that the operand index will become $i-1$. A back edge from a phi-node in loop $j$ to a phi-node in loop $i$, where $j$ is immediately nested in $i$ is an inner-to-outer edge and will require dropping dimension. We can show these are the only kinds of back-edges that may occur.}
+
+%\subsection{Algorithm (Still work in progress.)}
+
+\begin{algorithmic} 
+
+\STATE \COMMENT {Phase 1: Raise dimension of scalar variables to corresponding loop nest. We may assume linear traversal of the MPC-source. \ana{Double check!}}
+
+\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i_1,...,i_k$}
+\FOR {each $Y_i$}
+\STATE {case def-use edge $Y_i \rightarrow X$ of} \\
+\STATE \hspace{0.25cm} {same-level $\rightarrow$ add $Y_i = Y_i$} \\
+\STATE \hspace{0.25cm} {outer-to-inner $\rightarrow$ add $Y'_i[i_1,...,i_k] = \mathit{raise\_dim}(Y_i)$} 
+\STATE \hspace{0.25cm} {inner-to-outer $\rightarrow$ add $Y'_i[i_1,...,i_k] = \mathit{drop\_dim}(Y_i)$} 
+\ENDFOR
+
+\COMMENT {Optimistically vectorize all. $\stackrel{\rightarrow}{i}$ means vectorized dimension.}
+\STATE {change to $X[\stackrel{\rightarrow}{i_1},...\stackrel{\rightarrow}{i_k}] = \mathit{Op}(Y'_1[i_1,...,i_k],Y'_2[i_1,...,i_k])$ }
+\ENDFOR
+
+\COMMENT {Phase 2: Recreating FOR loops for cycles; vectorizable statements hoisted up.}
+
+\FOR {each dimension $d$ from highest to 0}
+\FOR {each $\phi$-node $n$ in loop $i_1,...,i_k$}
+\STATE {compute $\mathit{closure}(n)$}
+\WHILE {there are closure $cl_1$ and $cl_2$ that intersect}
+\STATE {merge $cl_1$ and $cl_2$}
+\ENDWHILE 
+\FOR {each closure $cl$ (after merge)}
+\STATE {create FOR $i_k = 0; ...$ loop}  
+\STATE {add $\phi$-nodes in $cl$ to header block} 
+\STATE {add statements in $cl$ to loop body in some order of dependences} 
+\STATE \COMMENT {Dimension is not vectorizable: }
+\STATE {change $\stackrel{\rightarrow}{i_k}$ to $i_k$ in all statements in loop}
+\STATE {treat FOR loop as monolith node: change def-use edges accordingly.}
+\ENDFOR
+\ENDFOR
+\ENDFOR
+
+\COMMENT {Phase 3:}
+\STATE {add SIMD for simdified dimensions}
+
+\end{algorithmic}
+
+\subsection{Example: Biometric}
+
+\subsubsection{MPC-source} 
+
+Below is the MPC-source resulting from Benjamin's analysis. It gives rise to a corresponding dependence graph. (Not shown.)
+
+\begin{algorithmic}
+
+\STATE \COMMENT {Begin of outer loop $i$.}
+\STATE {$\texttt{index}_0 = \phi(\texttt{index}_1, -1)$} 
+\STATE {$\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$}
+
+\STATE \COMMENT {Begin of inner loop $j$.}
+\STATE {$\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$}
+\STATE {$\texttt{d} = \mathit{SUM}(\texttt{S}[i,j], \texttt{C}[j])$}
+\STATE {$\texttt{p} = \mathit{MUL}(\texttt{d},\texttt{d})$}
+\STATE {$\texttt{sum}_1 = \texttt{ADD}(\texttt{sum}_0,\texttt{p})$}
+\STATE \COMMENT {End of inner loop $j$.}
+\STATE {$\texttt{c} = \mathit{CMP}(\texttt{sum}_1,\texttt{min}_0)$}
+\STATE {$\texttt{index}_1 = \mathit{MUX}(\texttt{c},\texttt{index}_1,i)$}
+\STATE {$\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$}
+\STATE \COMMENT {End of outer loop $i$.}
+
+\end{algorithmic}
+
+\subsubsection{Phase 1 of Vectorization algorithm:}
+
+The transformation preserves the dependence edges. It raises the dimensions of scalars and optimistically vectorizes all operations. The last phase discovers loop-carried dependences and removes affected vectorization. 
+
+\begin{algorithmic}
+
+\STATE \COMMENT {Begin of outer loop $i$.}
+\STATE {$\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$} 
+\STATE {$\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$}
+
+\STATE \COMMENT {Begin of inner loop $j$.}
+\STATE {$\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j-1], [0,0,...])$}
+\STATE {$\texttt{C}'[i,j] = \mathit{raise\_dim}(\texttt{C}[j],i)$}
+\STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUM}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
+\STATE {$\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{MUL}(\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
+\STATE {$\texttt{sum}_1[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{ADD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
+\STATE \COMMENT {End of inner loop $j$.}
+\STATE {$\texttt{sum}'_1[i] = \mathit{drop\_dim}(\texttt{sum}_1[i,j],j)$}
+\STATE {$\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}])$}
+\STATE {$\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{index}_1[\stackrel{\rightarrow}{i}],[0,1,...N])$}
+\STATE {$\texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_1[\stackrel{\rightarrow}{i}])$}
+\STATE \COMMENT {End of outer loop $i$.}
+
+\end{algorithmic}
+
+\subsubsection{Phase 2}
+
+This phase analyzes statements from the innermost loop to the outermost. The key point is to discover loop-carried dependencies and re-introduce loops whenever dependencies make this necessary. 
+
+Starting at the inner phi-node $\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j], [0,0,...])$, the algorithm first computes it's closure. The closure amounts to the phi-node itself and $\texttt{sum}_1[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{ADD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$, accounting for the loop-carried dependency of the computation of \texttt{sum}. The algorithm replaces this closure with a FOR loop on $j$ removing vectoriaztion on $j$. Note that the SUB and MUL computations remain outside of the loop as they do not depend on phi-nodes that are part of cycles. The algorithm adds same-level edges, one from $\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = ...$ to the monolithic FOR-loop node, and one from the FOR-loop node to $\texttt{c}[\stackrel{\rightarrow}{i}] = ...$.
+
+\begin{algorithmic}
+
+\STATE \COMMENT {Begin of outer loop $i$.}
+\STATE {$\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$} 
+\STATE {$\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$}
+
+
+
+\STATE {$\texttt{C}'[i,j] = \mathit{raise\_dim}(\texttt{C}[j],i)$}
+\STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUM}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
+\STATE {$\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{MUL}(\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
+
+\STATE \COMMENT {Begin of inner loop $j$. Loop is now much "shorter"!}
+\STATE {$\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j], [0,0,...])$}
+\STATE {FOR j=0; j<=D; j++} \COMMENT{ Will turn into a MOTION loop.}
+\STATE \hspace{0.25cm}{$\texttt{sum}_1[\stackrel{\rightarrow}{i},{j}] = \mathit{ADD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},{j}],\texttt{p}[\stackrel{\rightarrow}{i},{j}])$}
+\STATE \COMMENT {End of inner loop $j$.}
+
+\STATE {$\texttt{sum}'_1[i] = \mathit{drop\_dim}(\texttt{sum}_1[i,j],j)$}
+\STATE {$\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}])$}
+\STATE {$\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{index}_1[\stackrel{\rightarrow}{i}],[0,1,...N])$}
+\STATE {$\texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_1[\stackrel{\rightarrow}{i}])$}
+\STATE \COMMENT {End of outer loop $i$.}
+
+\end{algorithmic}
+
+Next, analysis moves to outer dimension $i$. There are two phi-nodes, $\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$ and $\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$.
+The closure of the first is 
+\[
+\begin{array}{l}
+\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1), \\ 
+\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}]), \\
+\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{index}_1[\stackrel{\rightarrow}{i}],[0,1,...N]) 
+\end{array}
+\]
+and the closure of the second one is
+\[
+\begin{array}{l}
+\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000) \\
+\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}]), \\
+\texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_1[\stackrel{\rightarrow}{i}])
+\end{array}
+\]
+Since the two closures intersect, we merge them into a single loop. We can now rewrite those statements, getting rid of the vectorization on $i$ in second FOR loop. Notably, the SUB and MUL computations are fully vectorizable and the ADD computation is vectorizable across the $i$-dimension. 
+
+\begin{algorithmic}
+
+\STATE 
+\STATE {$\texttt{C}'[i,j] = \mathit{raise\_dim}(\texttt{C}[j],i)$}
+\STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUM\_SIMD}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
+\STATE {$\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{MUL\_SIMD}(\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$} \\
+\STATE {} 
+\STATE {$\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j-1], [0,0,...])$}
+\STATE {FOR j=0; j<=D; j++} \COMMENT{ Turns into a MOTION loop, was $j$-loop.}
+\STATE \hspace{0.25cm}{$\texttt{sum}_1[\stackrel{\rightarrow}{i},{j}] = \mathit{ADD\_SIMD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},{j}],\texttt{p}[\stackrel{\rightarrow}{i},{j}])$}
+\STATE {} 
+\STATE {$\texttt{sum}'_1[i] = \mathit{drop\_dim}(\texttt{sum}_1[i,j],j)$}
+\STATE {} 
+\STATE {$\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$} 
+\STATE {$\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$}
+\STATE {FOR i=0; i<=N; i++} \COMMENT{ Turns into a MOTION loop, was $i$-loop.}
+\STATE \hspace{0.25cm}{$\texttt{c}[{i}] = \mathit{CMP}(\texttt{sum}'_1[{i}],\texttt{min}_0[{i}])$}
+\STATE \hspace{0.25cm}{$\texttt{index}_1[{i}] = \mathit{MUX}(\texttt{c}[{i}],\texttt{index}_1[{i}],[0,1,...N])$}
+\STATE \hspace{0.25cm}{$\texttt{min}_1[{i}] = \mathit{MUX}(\texttt{c}[{i}],\texttt{sum}'_1[{i}],\texttt{min}_1[{i}])$}
+
+\end{algorithmic}
+
+\subsection{Correctness Argument}
+
+\subsection{Extensions of Basic Vectorization}
+
+\ana{TODO: Will extend with read/write arrays and removal of (certain) infeasible edges.}
+
+\ana{Conjecture: Basic Vectorization still works with minor extensions and correctness argument still hods. }
+
+\section{Divide-and-Conquer}
+
+\ana{TODO: Now that we have broken FOR loops into smaller chunks, we can add Divide-and-conquer reasoning with Z3 and implement this additional transform.}
+
+\section{Implementation and Evaluation}
+\label{sec:implementation}
+
+
+\section{Future Work}
+\label{sec:implementation_and_benchmarks}
+%\input{../sections/implementation_and_benchmarks.tex}
+%\input{../sections/evaluation.tex}
+
+\section{Conclusions}
+\label{sec:conclusion}
+%\input{../sections/conclusion.tex}
+
+%\begin{acks}
+%    \ishaq{TODO}
+%\end{acks}
+
+\printbibliography
+
+% that's all folks
+\end{document}
+
+
