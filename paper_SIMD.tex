@@ -335,7 +335,7 @@ The dependence graph has the following def-use edges:
 \item outer-to-inner (forward) $X\rightarrow Y$ where $X$ is in an outer loop nest, $i_1,i_2,...i_j$, and $Y$ is in an inner one, $i_1,i_2,...i_j,...,i_k$.
 \item inner-to-outer (forward) $X\rightarrow Y$ where $X$ is in an inner loop nest, $i_1,i_2,...i_j,...,i_k$, and $Y$ is in an outer one, $i_1,i_2,...i_j$. E.g. $\texttt{sum}_1 = \texttt{ADD}(\texttt{sum}_0,\texttt{p})$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_1,\texttt{min}_0)$ is an inner-to-outer edge.
 \item same-level back-edge $X\rightarrow Y$. $Y$ is a phi-node in the header of the loop and $X$ is a definition of the variable in the loop body. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
-\item outer-to-inner back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in an immediately nested loop of $Y$'s loop. 
+\item inner-to-outer back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in an immediately nested loop of $Y$'s loop. 
  \end{itemize}
 
 We also define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. \ana{Cycle(n) is probably a better name.} The closure of $n$ is defined as follows:
@@ -346,11 +346,13 @@ We also define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it co
 \end{itemize}
 
 
-\section{Basic Vectorization}
+\section{Vectorization}
 
 \ana{Add back-edges into Phase 1. A back-edge from a non-phi-node in loop $i$ to a phi-node in loop $i$'s header is a same-level edge. The only difference with the handling of normal same-level forward def-use is that the operand index will become $i-1$. A back edge from a phi-node in loop $j$ to a phi-node in loop $i$, where $j$ is immediately nested in $i$ is an inner-to-outer edge and will require dropping dimension. We can show these are the only kinds of back-edges that may occur.}
 
 %\subsection{Algorithm (Still work in progress.)}
+
+\subsection{Basic Vectorization}
 
 \begin{algorithmic} 
 
@@ -359,13 +361,13 @@ We also define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it co
 \FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i_1,...,i_k$}
 \FOR {each $Y_i$}
 \STATE {case def-use edge $Y_i \rightarrow X$ of} \\
-\STATE \hspace{0.25cm} {same-level $\rightarrow$ add $Y_i = Y_i$} \\
+\STATE \hspace{0.25cm} {same-level $\rightarrow$ add $Y'_i = Y_i$} \\
 \STATE \hspace{0.25cm} {outer-to-inner $\rightarrow$ add $Y'_i[i_1,...,i_k] = \mathit{raise\_dim}(Y_i)$} 
 \STATE \hspace{0.25cm} {inner-to-outer $\rightarrow$ add $Y'_i[i_1,...,i_k] = \mathit{drop\_dim}(Y_i)$} 
 \ENDFOR
 
 \COMMENT {Optimistically vectorize all. $\stackrel{\rightarrow}{i}$ means vectorized dimension.}
-\STATE {change to $X[\stackrel{\rightarrow}{i_1},...\stackrel{\rightarrow}{i_k}] = \mathit{Op}(Y'_1[i_1,...,i_k],Y'_2[i_1,...,i_k])$ }
+\STATE {change to $X[\stackrel{\rightarrow}{i_1},...\stackrel{\rightarrow}{i_k}] = \mathit{Op}(Y'_1[\stackrel{\rightarrow}{i_1},...,\stackrel{\rightarrow}{i_k}],Y'_2[\stackrel{\rightarrow}{i_1},...,\stackrel{\rightarrow}{i_k}])$ }
 \ENDFOR
 
 \COMMENT {Phase 2: Recreating FOR loops for cycles; vectorizable statements hoisted up.}
