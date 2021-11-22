@@ -394,6 +394,8 @@ We also define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it co
 
 \end{algorithmic}
 
+\ishaq{We need to think of a way to handle 4th case for def-use, when a nested block B def is followed by another, different, nested block B' use. Note: The handwritten notes say we can break it into 2 edges. One idea to this end is to insert a def' node which is a copy of the original def. The def' should be placed in a block that contains both B and B'.}
+
 \subsection{Example: Biometric}
 
 \subsubsection{MPC-source} 
@@ -444,11 +446,17 @@ The transformation preserves the dependence edges. It raises the dimensions of s
 
 \end{algorithmic}
 
+\ishaq{At least for input variables: when raising dimensions, we should keep some meta data around so we can later write code that could use 1 share if it knows the other N shares are just duplicates of it.}
+
+\ishaq{Naive question: Which index of $\texttt{min}_{1}[\stackrel{\rightarrow}{i}]$ would contain the minimum, how are we reducing it?}
+
 \subsubsection{Phase 2}
 
 This phase analyzes statements from the innermost loop to the outermost. The key point is to discover loop-carried dependencies and re-introduce loops whenever dependencies make this necessary. 
 
 Starting at the inner phi-node $\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j], [0,0,...])$, the algorithm first computes its closure. The closure amounts to the phi-node itself and $\texttt{sum}_1[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{ADD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$, accounting for the loop-carried dependency of the computation of \texttt{sum}. The algorithm replaces this closure with a FOR loop on $j$ removing vectoriaztion on $j$. Note that the SUB and MUL computations remain outside of the loop as they do not depend on phi-nodes that are part of cycles. The algorithm adds same-level edges, one from $\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = ...$ to the monolithic FOR-loop node, and one from the FOR-loop node to $\texttt{c}[\stackrel{\rightarrow}{i}] = ...$.
+
+\ishaq{For our rader: Such dependencies will not involve phi nodes only. e.g. $a[i] = a[i] + a[i-1]$}
 
 \begin{algorithmic}
 
@@ -493,6 +501,9 @@ and the closure of the second one is
 \texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}],\texttt{sum}'_1[\stackrel{\rightarrow}{i}])
 \end{array}
 \]
+
+\ishaq{I don't think I understand closures. Why does the closure for $\texttt{index}_0[i]$ include $\texttt{c}[\stackrel{\rightarrow}{i}]$ but the closure for $\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$ not include $\texttt{p}$.}
+
 Since the two closures intersect, we merge them into a single loop. We can now rewrite those statements, getting rid of the vectorization on $i$ in second FOR loop. Notably, the SUB and MUL computations are fully vectorizable and the ADD computation is vectorizable across the $i$-dimension. 
 
 \begin{algorithmic}
