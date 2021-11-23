@@ -328,14 +328,17 @@ in parallel still cost 2.
 
 We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. We write $i_1,i_2,...i_k$ to denote the loop nest: $i_1$ is the outermost loop, $i_2$, is immediately nested in $i_1$, and so on until $i_k$. As an example, a statement nested in $i_1,i_2,...i_k$ can access array $A[f(i_1,i_2,...i_k)]$. We write $A[i_1,i_2,...i_k]$ interchangeably. 
 
+A pseudo $\phi$-node $X_1 = \phi(X_0,X_2)$ in a loop header is evaluated during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to $X_0$, otherwise, it evaluates to $X_2$. 
+
+\ana{Have to double check and make sure we capture all the cases.}
 The dependence graph has the following def-use edges:
 
 \begin{itemize}
-\item same-level (forward) $X\rightarrow Y$ where $X = ...$ and $Y = ...$ are in the same loop nest $i_1,i_2,...i_k$. E.g., $\texttt{d} = \mathit{SUM}(\texttt{S}[i,j], \texttt{C}[j])$ to $\texttt{p} = \mathit{MUL}(\texttt{d},\texttt{d})$ in Biometric is a same-level edge. 
-\item outer-to-inner (forward) $X\rightarrow Y$ where $X$ is in an outer loop nest, $i_1,i_2,...i_j$, and $Y$ is in an inner one, $i_1,i_2,...i_j,...,i_k$.
-\item inner-to-outer (forward) $X\rightarrow Y$ where $X$ is in an inner loop nest, $i_1,i_2,...i_j,...,i_k$, and $Y$ is in an outer one, $i_1,i_2,...i_j$. E.g. $\texttt{sum}_1 = \texttt{ADD}(\texttt{sum}_0,\texttt{p})$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_1,\texttt{min}_0)$ is an inner-to-outer edge.
-\item same-level back-edge $X\rightarrow Y$. $Y$ is a phi-node in the header of the loop and $X$ is a definition of the variable in the loop body. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
-\item inner-to-outer back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in an immediately nested loop of $Y$'s loop. 
+\item same-level forward $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest $i_1,i_2,...i_k$. E.g., $\texttt{d} = \mathit{SUM}(\texttt{S}[i,j], \texttt{C}[j])$ to $\texttt{p} = \mathit{MUL}(\texttt{d},\texttt{d})$ in Biometric is a same-level edge. A $\phi$ node can be a source of a same-level forward edge but not a target. 
+\item outer-to-inner forward $X\rightarrow Y$ where $X$ is in an outer loop nest, $i_1,i_2,...i_j$, and $Y$ is in an inner one, $i_1,i_2,...i_j,...,i_k$. A $\phi$-node can be a source or a target of an outer-to-inner forward edge. 
+\item inner-to-outer forward $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i_1,i_2,...i_k,i_{k+1}$, and $Y$ is in the enclosing loop nest $i_1,i_2,...i_k$. E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer forward edge. Note that the source is \emph{always} a $\phi$-node in the immediately enclosing loop. The interpretation of this edge is that the use node $Y$ uses the definition made in the last iteration of the inner loop. 
+\item same-level back-edge $X\rightarrow Y$. $Y$ is a phi-node in the header of the loop and $X$ is a definition of the variable in the loop body. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge. 
+\item inner-to-outer back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in a loop nest immediately nested into $Y$'s loop nest. 
  \end{itemize}
 
 We also define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. \ana{Cycle(n) is probably a better name.} The closure of $n$ is defined as follows:
@@ -360,7 +363,7 @@ We also define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it co
 
 \FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i_1,...,i_k$}
 \FOR {each $Y_i$}
-\STATE {case def-use edge $Y_i \rightarrow X$ of} \\
+\STATE {case def-use edge $\mathit{stmt}' (\mbox{def of } Y_i) \rightarrow \mathit{stmt} (\mbox{def of } X)$ of} \\
 \STATE \hspace{0.25cm} {same-level $\rightarrow$ add $Y'_i = Y_i$} \\
 \STATE \hspace{0.25cm} {outer-to-inner $\rightarrow$ add $Y'_i[i_1,...,i_k] = \mathit{raise\_dim}(Y_i)$} 
 \STATE \hspace{0.25cm} {inner-to-outer $\rightarrow$ add $Y'_i[i_1,...,i_k] = \mathit{drop\_dim}(Y_i)$} 
@@ -414,9 +417,9 @@ Below is the MPC-source resulting from Benjamin's analysis. It gives rise to a c
 \STATE {$\texttt{p} = \mathit{MUL}(\texttt{d},\texttt{d})$}
 \STATE {$\texttt{sum}_1 = \texttt{ADD}(\texttt{sum}_0,\texttt{p})$}
 \STATE \COMMENT {End of inner loop $j$.}
-\STATE {$\texttt{c} = \mathit{CMP}(\texttt{sum}_1,\texttt{min}_0)$}
+\STATE {$\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$}
 \STATE {$\texttt{index}_1 = \mathit{MUX}(\texttt{c},\texttt{index}_0,i)$}
-\STATE {$\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{min}_0,\texttt{sum}_1)$}
+\STATE {$\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{min}_0,\texttt{sum}_0)$}
 \STATE \COMMENT {End of outer loop $i$.}
 
 \end{algorithmic}
@@ -438,10 +441,10 @@ The transformation preserves the dependence edges. It raises the dimensions of s
 \STATE {$\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{MUL}(\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 \STATE {$\texttt{sum}_1[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{ADD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 \STATE \COMMENT {End of inner loop $j$.}
-\STATE {$\texttt{sum}'_1[i] = \mathit{drop\_dim}(\texttt{sum}_1[i,j],j)$}
-\STATE {$\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}])$}
+\STATE {$\texttt{sum}'_0[i] = \mathit{drop\_dim}(\texttt{sum}_0[i,j],j)$}
+\STATE {$\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_0[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}])$}
 \STATE {$\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{index}_0[\stackrel{\rightarrow}{i}],[0,1,...N])$}
-\STATE {$\texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}],\texttt{sum}'_1[\stackrel{\rightarrow}{i}])$}
+\STATE {$\texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}],\texttt{sum}'_0[\stackrel{\rightarrow}{i}])$}
 \STATE \COMMENT {End of outer loop $i$.}
 
 \end{algorithmic}
@@ -476,35 +479,37 @@ Starting at the inner phi-node $\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j], 
 \STATE \hspace{0.25cm}{$\texttt{sum}_1[\stackrel{\rightarrow}{i},{j}] = \mathit{ADD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},{j}],\texttt{p}[\stackrel{\rightarrow}{i},{j}])$}
 \STATE \COMMENT {End of inner loop $j$.}
 
-\STATE {$\texttt{sum}'_1[i] = \mathit{drop\_dim}(\texttt{sum}_1[i,j],j)$}
-\STATE {$\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}])$}
+\STATE {$\texttt{sum}'_0[i] = \mathit{drop\_dim}(\texttt{sum}_0[i,j],j)$}
+\STATE {$\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_0[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}])$}
 \STATE {$\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{index}_0[\stackrel{\rightarrow}{i}],[0,1,...N])$}
-\STATE {$\texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}],\texttt{sum}'_1[\stackrel{\rightarrow}{i}])$}
+\STATE {$\texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}],\texttt{sum}'_0[\stackrel{\rightarrow}{i}])$}
 \STATE \COMMENT {End of outer loop $i$.}
 
 \end{algorithmic}
 
-Next, analysis moves to outer dimension $i$. There are two phi-nodes, $\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$ and $\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$.
+Next, analysis moves to outer dimension $i$. There are two phi-nodes, $\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$ and $\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$.
 The closure of the first is 
 \[
 \begin{array}{l}
-\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1), \\ 
-\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}]), \\
-\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{index}_0[\stackrel{\rightarrow}{i}],[0,1,...N]) 
+\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000) \\
+\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_0[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}]), \\
+\texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}],\texttt{sum}'_0[\stackrel{\rightarrow}{i}])
 \end{array}
 \]
 and the closure of the second one is
 \[
 \begin{array}{l}
-\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000) \\
-\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}]), \\
-\texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}],\texttt{sum}'_1[\stackrel{\rightarrow}{i}])
+\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1), \\ 
+%\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}]), \\
+\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{index}_0[\stackrel{\rightarrow}{i}],[0,1,...N]) 
 \end{array}
 \]
 
+
 \ishaq{I don't think I understand closures. Why does the closure for $\texttt{index}_0[i]$ include $\texttt{c}[\stackrel{\rightarrow}{i}]$ but the closure for $\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$ not include $\texttt{p}$.}
 
-Since the two closures intersect, we merge them into a single loop. We can now rewrite those statements, getting rid of the vectorization on $i$ in second FOR loop. Notably, the SUB and MUL computations are fully vectorizable and the ADD computation is vectorizable across the $i$-dimension. 
+Since the two closures \emph{do not} intersect, we have two distinct FOR-loops on $i$. The first FOR loop (on \texttt{min}) is scheduled first, because of the dependence edge from $\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_0[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}])$ to 
+$\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{index}_0[\stackrel{\rightarrow}{i}],[0,1,...N])$. We can now rewrite those statements, getting rid of the vectorization on $i$ in the two FOR loops. Notably, the SUB and MUL computations are fully vectorizable and the ADD computation is vectorizable across the $i$-dimension. 
 
 \begin{algorithmic}
 
@@ -517,14 +522,16 @@ Since the two closures intersect, we merge them into a single loop. We can now r
 \STATE {FOR j=0; j<=D; j++} \COMMENT{ Turns into a MOTION loop, was $j$-loop.}
 \STATE \hspace{0.25cm}{$\texttt{sum}_1[\stackrel{\rightarrow}{i},{j}] = \mathit{ADD\_SIMD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},{j}],\texttt{p}[\stackrel{\rightarrow}{i},{j}])$}
 \STATE {} 
-\STATE {$\texttt{sum}'_1[i] = \mathit{drop\_dim}(\texttt{sum}_1[i,j],j)$}
+\STATE {$\texttt{sum}'_0[i] = \mathit{drop\_dim}(\texttt{sum}_0[i,j],j)$}
 \STATE {} 
-\STATE {$\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$} 
 \STATE {$\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$}
 \STATE {FOR i=0; i<=N; i++} \COMMENT{ Turns into a MOTION loop, was $i$-loop.}
-\STATE \hspace{0.25cm}{$\texttt{c}[{i}] = \mathit{CMP}(\texttt{sum}'_1[{i}],\texttt{min}_0[{i}])$}
-\STATE \hspace{0.25cm}{$\texttt{index}_1[{i}] = \mathit{MUX}(\texttt{c}[{i}],\texttt{index}_0[{i}],[0,1,...N])$}
+\STATE \hspace{0.25cm}{$\texttt{c}[{i}] = \mathit{CMP}(\texttt{sum}'_0[{i}],\texttt{min}_0[{i}])$}
 \STATE \hspace{0.25cm}{$\texttt{min}_1[{i}] = \mathit{MUX}(\texttt{c}[{i}],\texttt{min}_0[{i}],\texttt{sum}'_1[{i}])$}
+\STATE {}
+\STATE {$\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$} 
+\STATE {FOR i=0; i<=N; i++} \COMMENT{ Turns into a MOTION loop, was $i$-loop.}
+\STATE \hspace{0.25cm}{$\texttt{index}_1[{i}] = \mathit{MUX}(\texttt{c}[{i}],\texttt{index}_0[{i}],i)$}
 
 \end{algorithmic}
 
