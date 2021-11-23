@@ -330,7 +330,7 @@ We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We
 
 A pseudo $\phi$-node $X_1 = \phi(X_0,X_2)$ in a loop header is evaluated during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to $X_0$, otherwise, it evaluates to $X_2$. 
 
-\ana{Have to double check and make sure we capture all the cases.}
+\ana{We need to double check that the following captures all cases of def-use edges.}
 The dependence graph has the following def-use edges:
 
 \begin{itemize}
