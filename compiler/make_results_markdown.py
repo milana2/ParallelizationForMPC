@@ -26,41 +26,49 @@ def dep_graph_to_image(
     dep_graph: compiler.dep_graph.DepGraph, function: llc.Function, path: str
 ):
     dot = pydot.Dot()
-    dot.set_graph_defaults(rankdir="LR")
     dot.set_node_defaults(fontname="monospace")
 
-    statement_ints: dict[llc.Statement, int] = dict()
-
-    def search(statements: list[llc.Statement], i: int = 0) -> str:
-        result: list[str] = []
+    def search(
+        statements: list[llc.Statement], indent: str
+    ) -> list[tuple[str, llc.Statement]]:
+        result: list[tuple[str, llc.Statement]] = []
 
         for statement in statements:
-            i += 1
-            statement_ints[statement] = i
+            result.append((indent, statement))
             if isinstance(statement, llc.Phi) or isinstance(statement, llc.Assign):
-                s = str(statement).replace("<", r"\<").replace(">", r"\>")
-                result.append(f"<{i}> [{i}] {s}")
+                pass
             elif isinstance(statement, llc.For):
-                result.append(
-                    f"<{i}> {statement.heading_str()} | {{ | {{ {search(statement.body, i)} }} }}"
-                )
+                result += search(statement.body, indent + "    ")
             else:
                 assert_never(statement)
 
-        return " | ".join(result)
+        return result
 
-    dot.add_node(
-        pydot.Node(
-            name="main_node",
-            label=search(function.body),
-            shape="record",
-        )
-    )
+    all_statements = search(function.body, "")
+
+    main_label = ""
+    for i, (indent, statement) in enumerate(all_statements):
+        if isinstance(statement, llc.Phi) or isinstance(statement, llc.Assign):
+            s = str(statement)
+        elif isinstance(statement, llc.For):
+            s = statement.heading_str()
+        else:
+            assert_never(statement)
+        num = str(i).rjust(3)
+        main_label += fr"{num} {indent}{s}\l"
+
+    dot.add_node(pydot.Node(name="main_node", label=main_label, shape="box"))
+
+    statement_indices: dict[llc.Statement, int] = {
+        statement: i for i, (_, statement) in enumerate(all_statements)
+    }
 
     for var_def, var_uses in dep_graph.items():
         for var_use in var_uses:
             dot.add_edge(
-                pydot.Edge(src=statement_ints[var_def], dst=statement_ints[var_use])
+                pydot.Edge(
+                    src=statement_indices[var_def], dst=statement_indices[var_use]
+                )
             )
 
     dot.write(path, format="png")
