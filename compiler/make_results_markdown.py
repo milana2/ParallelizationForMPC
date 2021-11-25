@@ -29,22 +29,22 @@ def dep_graph_to_image(
     dot.set_node_defaults(fontname="monospace")
 
     def search(
-        statements: list[llc.Statement], indent: str
-    ) -> list[tuple[str, llc.Statement]]:
-        result: list[tuple[str, llc.Statement]] = []
+        statements: list[llc.Statement], indent: int
+    ) -> list[tuple[int, llc.Statement]]:
+        result: list[tuple[int, llc.Statement]] = []
 
         for statement in statements:
             result.append((indent, statement))
             if isinstance(statement, llc.Phi) or isinstance(statement, llc.Assign):
                 pass
             elif isinstance(statement, llc.For):
-                result += search(statement.body, indent + "    ")
+                result += search(statement.body, indent + 1)
             else:
                 assert_never(statement)
 
         return result
 
-    all_statements = search(function.body, "")
+    all_statements = search(function.body, 0)
 
     main_label = ""
     for i, (indent, statement) in enumerate(all_statements):
@@ -55,6 +55,7 @@ def dep_graph_to_image(
         else:
             assert_never(statement)
         num = str(i).rjust(3)
+        indent = "    " * indent
         main_label += fr"{num} {indent}{s}\l"
 
     dot.add_node(pydot.Node(name="main_node", label=main_label, shape="box"))
@@ -65,11 +66,21 @@ def dep_graph_to_image(
 
     for var_def, var_uses in dep_graph.items():
         for var_use in var_uses:
-            dot.add_edge(
-                pydot.Edge(
-                    src=statement_indices[var_def], dst=statement_indices[var_use]
-                )
+            def_index = statement_indices[var_def]
+            use_index = statement_indices[var_use]
+            def_indent, _ = all_statements[def_index]
+            use_indent, _ = all_statements[use_index]
+            is_same_level_back_edge = def_indent == use_indent and isinstance(
+                var_use, llc.Phi
             )
+            is_inner_to_outer_back_edge = (
+                def_indent > use_indent
+                and isinstance(var_def, llc.Phi)
+                and isinstance(var_use, llc.Phi)
+            )
+            is_back_edge = is_same_level_back_edge or is_inner_to_outer_back_edge
+            style = "dashed" if is_back_edge else "solid"
+            dot.add_edge(pydot.Edge(src=def_index, dst=use_index, style=style))
 
     dot.write(path, format="png")
 
