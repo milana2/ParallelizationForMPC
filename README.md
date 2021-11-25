@@ -51,6 +51,8 @@ def foo(C, D, S, N):
 ![](biometric_ssa.png)
 ### SSA ϕ→MUX
 ![](biometric_ssa_mux.png)
+### Dead code elimination
+![](biometric_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def foo(C, D, S, N):
@@ -59,15 +61,9 @@ def foo(C, D, S, N):
     for i in range(0, N!0):
         min_sum!2 = Φ(min_sum!1, min_sum!4)
         min_index!2 = Φ(min_index!1, min_index!4)
-        sum!1 = Φ(sum!0, sum!3)
-        d!1 = Φ(d!0, d!2)
-        p!1 = Φ(p!0, p!2)
-        !1!1 = Φ(!1!0, !1!2)
         sum!2 = 0
         for j in range(0, D!0):
             sum!3 = Φ(sum!2, sum!4)
-            d!2 = Φ(d!1, d!3)
-            p!2 = Φ(p!1, p!3)
             d!3 = (S!0[((i * D!0) + j)] - C!0[j])
             p!3 = (d!3 * d!3)
             sum!4 = (sum!3 + p!3)
@@ -180,6 +176,8 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
 ![](biometric_fast_ssa.png)
 ### SSA ϕ→MUX
 ![](biometric_fast_ssa_mux.png)
+### Dead code elimination
+![](biometric_fast_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
@@ -187,18 +185,12 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
     differences!1 = (!1!1 * D!0)
     for i in range(0, N!0):
         differences!2 = Φ(differences!1, differences!3)
-        a_sqr_plus_b_sqr!1 = Φ(a_sqr_plus_b_sqr!0, a_sqr_plus_b_sqr!2)
-        two_a_b!1 = Φ(two_a_b!0, two_a_b!3)
-        tmp!1 = Φ(tmp!0, tmp!2)
-        this_diff!1 = Φ(this_diff!0, this_diff!2)
         min_diff!1 = Φ(min_diff!0, min_diff!3)
         min_index!1 = Φ(min_index!0, min_index!3)
-        !2!1 = Φ(!2!0, !2!2)
         a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i] + C_sqr_sum!0)
         two_a_b!2 = 0
         for j in range(0, D!0):
             two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
-            tmp!2 = Φ(tmp!1, tmp!3)
             tmp!3 = (S!0[((i * D!0) + j)] * two_C!0[j])
             two_a_b!4 = (two_a_b!3 + tmp!3)
         this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
@@ -208,7 +200,6 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
         for k in range(0, N!0):
             min_diff!3 = Φ(min_diff!2, min_diff!5)
             min_index!3 = Φ(min_index!2, min_index!5)
-            !2!2 = Φ(!2!1, !2!3)
             !2!3 = (differences!3[k] < min_diff!3)
             min_diff!4 = differences!3[k]
             min_index!4 = k
@@ -249,6 +240,8 @@ def foo(x, y):
 ![](chapterfour_figure_12_ssa.png)
 ### SSA ϕ→MUX
 ![](chapterfour_figure_12_ssa_mux.png)
+### Dead code elimination
+![](chapterfour_figure_12_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def foo(x, y):
@@ -259,7 +252,6 @@ def foo(x, y):
     z!2 = 1
     z!4 = MUX(!2!1, z!2, z!3)
     z!5 = MUX(!1!1, z!1, z!4)
-    !2!2 = MUX(!1!1, !2!0, !2!1)
     return z!5
 ```
 ### Dependency graph
@@ -320,21 +312,20 @@ def foo(A, B, N, num_bins):
 ![](histogram_ssa.png)
 ### SSA ϕ→MUX
 ![](histogram_ssa_mux.png)
+### Dead code elimination
+![](histogram_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def foo(A, B, N, num_bins):
     result!1 = []
     for i in range(0, num_bins!0):
         result!2 = Φ(result!1, result!3)
-        !1!1 = Φ(!1!0, !1!2)
         !1!2 = [0]
         result!3 = (result!2 + !1!2)
     for i in range(0, num_bins!0):
         result!4 = Φ(result!2, result!5)
-        !2!1 = Φ(!2!0, !2!2)
         for j in range(0, N!0):
             result!5 = Φ(result!4, result!7)
-            !2!2 = Φ(!2!1, !2!3)
             !2!3 = (A!0[j] == i)
             result!6 = Update(result!5, i, (result!5[i] + B!0[j]))
             result!7 = MUX(!2!3, result!6, result!5)
@@ -375,13 +366,14 @@ def foo(A, B, N):
 ![](inner_product_ssa.png)
 ### SSA ϕ→MUX
 ![](inner_product_ssa_mux.png)
+### Dead code elimination
+![](inner_product_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def foo(A, B, N):
     sum!1 = 0
     for i in range(0, N!0):
         sum!2 = Φ(sum!1, sum!3)
-        temp!1 = Φ(temp!0, temp!2)
         temp!2 = (A!0[i] * B!0[i])
         sum!3 = (sum!2 + temp!2)
     return sum!2
@@ -429,31 +421,21 @@ def foo(A, SA, B, SB):
 ![](psi_ssa.png)
 ### SSA ϕ→MUX
 ![](psi_ssa_mux.png)
+### Dead code elimination
+![](psi_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def foo(A, SA, B, SB):
     result!1 = []
     for i in range(0, SA!0):
         result!2 = Φ(result!1, result!3)
-        !1!1 = Φ(!1!0, !1!2)
-        !2!1 = Φ(!2!0, !2!2)
-        !3!1 = Φ(!3!0, !3!2)
-        !4!1 = Φ(!4!0, !4!2)
         for j in range(0, SB!0):
             result!3 = Φ(result!2, result!5)
-            !1!2 = Φ(!1!1, !1!3)
-            !2!2 = Φ(!2!1, !2!4)
-            !3!2 = Φ(!3!1, !3!4)
-            !4!2 = Φ(!4!1, !4!4)
             !1!3 = (A!0[i] == B!0[j])
-            !2!3 = A!0[i]
             !3!3 = A!0[i]
             !4!3 = [!3!3]
             result!4 = (result!3 + !4!3)
             result!5 = MUX(!1!3, result!4, result!3)
-            !2!4 = MUX(!1!3, !2!3, !2!2)
-            !3!4 = MUX(!1!3, !3!3, !3!2)
-            !4!4 = MUX(!1!3, !4!3, !4!2)
     return result!2
 ```
 ### Dependency graph
