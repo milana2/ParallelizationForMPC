@@ -124,6 +124,13 @@ def main():
         md += "### SSA ϕ→MUX\n"
         md += f"![]({filename})\n"
 
+        compiler.dead_code_elim(ssa)
+        filename = f"{test_case_dir.name}_dead_code_elim.png"
+        path = os.path.join(args.path, filename)
+        cfg_to_image(ssa.body, path)
+        md += "### Dead code elimination\n"
+        md += f"![]({filename})\n"
+
         loop_linear_code = compiler.ssa_to_loop_linear_code(ssa)
         md += "### Linear code with loops\n"
         md += f"```python\n{loop_linear_code}\n```\n"

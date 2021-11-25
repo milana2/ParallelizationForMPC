@@ -111,6 +111,9 @@ class For:
     bound_low: LoopBound
     bound_high: LoopBound
 
+    def __hash__(self):
+        return id(self)
+
     def __str__(self) -> str:
         return f"for {self.counter} in range({self.bound_low}, {self.bound_high})"
 

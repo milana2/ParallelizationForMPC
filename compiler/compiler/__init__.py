@@ -7,6 +7,7 @@ from .ast_to_restricted_ast import ast_to_restricted_ast
 from .restricted_ast_to_tac_cfg import restricted_ast_to_tac_cfg
 from .tac_cfg_to_ssa import tac_cfg_to_ssa
 from .ssa_phi_to_mux import replace_phi_with_mux
+from .dead_code_elim import dead_code_elim
 from .ssa_to_loop_linear_code import ssa_to_loop_linear_code
 from .dep_graph import compute_dep_graph
 from . import loop_linear_code
@@ -46,6 +47,11 @@ def main():
 
     replace_phi_with_mux(ssa)
     print("MUX static single assignment form:")
+    print(ssa)
+    print()
+
+    dead_code_elim(ssa)
+    print("Dead code elimination:")
     print(ssa)
     print()
 

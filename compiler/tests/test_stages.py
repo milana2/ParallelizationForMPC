@@ -34,6 +34,9 @@ class StagesTestCase(unittest.TestCase):
             compiler.replace_phi_with_mux(ssa)
             self.assertEqual(str(ssa), stages["ssa_mux.txt"])
 
+            compiler.dead_code_elim(ssa)
+            self.assertEqual(str(ssa), stages["dead_code_elim.txt"])
+
             loop_linear = compiler.ssa_to_loop_linear_code(ssa)
             self.assertEqual(str(loop_linear), stages["loop_linear.txt"])
 
@@ -59,6 +62,10 @@ def regenerate_stages():
 
         compiler.replace_phi_with_mux(ssa)
         with open(os.path.join(test_case_dir, "ssa_mux.txt"), "w") as f:
+            f.write(f"{ssa}\n")
+
+        compiler.dead_code_elim(ssa)
+        with open(os.path.join(test_case_dir, "dead_code_elim.txt"), "w") as f:
             f.write(f"{ssa}\n")
 
         loop_linear = compiler.ssa_to_loop_linear_code(ssa)
