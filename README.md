@@ -390,17 +390,23 @@ import typing
 # requires: no repetition of elements in either A or B
 # requires: len(A) = SA, len(B) = SB
 def psi(A: list[int], SA, B: list[int], SB) -> list[int]:
+  dummy : int = 0
   result: list[int] = []
   for i in range(0,SA):
+    flag : Bool = False
     for j in range(0,SB):
       if A[i] == B[j]:
-        #overloaded +. This is append actually.
-        result = result + [A[i]]
+        flag = True
+    val : int = dummy
+    if flag:
+      val : int = A[i]
+    #overloaded +. This is append actually.
+    result = result + [val]
   return result
 
-A = [1,2,3]
-B = [2]
-intersect = psi(A,3,B,1)
+A = [4,2,3,1,10]
+B = [2,10,3,4,5,6,7]
+intersect = psi(A,5,B,7)
 print(intersect)
 
 
@@ -408,11 +414,17 @@ print(intersect)
 ### Restricted AST
 ```python
 def foo(A, SA, B, SB):
+    dummy = 0
     result = []
     for i in range(0, SA):
+        flag = False
         for j in range(0, SB):
             if (A[i] == B[j]):
-                result = (result + [A[i]])
+                flag = True
+        val = dummy
+        if flag:
+            val = A[i]
+        result = (result + [val])
     return result
 ```
 ### Three-address code CFG
@@ -426,16 +438,21 @@ def foo(A, SA, B, SB):
 ### Linear code with loops
 ```python
 def foo(A, SA, B, SB):
+    dummy!1 = 0
     result!1 = []
     for i in range(0, SA!0):
         result!2 = Φ(result!1, result!3)
+        flag!2 = False
         for j in range(0, SB!0):
-            result!3 = Φ(result!2, result!5)
+            flag!3 = Φ(flag!2, flag!5)
             !1!3 = (A!0[i] == B!0[j])
-            !3!3 = A!0[i]
-            !4!3 = [!3!3]
-            result!4 = (result!3 + !4!3)
-            result!5 = MUX(!1!3, result!4, result!3)
+            flag!4 = True
+            flag!5 = MUX(!1!3, flag!4, flag!3)
+        val!2 = dummy!1
+        val!3 = A!0[i]
+        val!4 = MUX(flag!3, val!3, val!2)
+        !2!2 = [val!4]
+        result!3 = (result!2 + !2!2)
     return result!2
 ```
 ### Dependency graph
