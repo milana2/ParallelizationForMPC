@@ -592,7 +592,7 @@ nested at $i,j,k$. Here $i$ represents the enclosing loops of $j$ and $k$ repres
 \end{algorithmic}
 
 Consider a loop $j$ enclosed in some fixed $\underline{i}$. Only if an update (definition) $\texttt{A}_m[f(i,j,k)] = ... $ at some iteration $\underline{j}$ 
-references the \emph{same} array element as an use $ ... = \texttt{A}_n[f'(i,j,k)]$ at some later iteration $\underline{j}$, 
+references the \emph{same} array element as an use $ ... = \texttt{A}_n[f'(i,j,k)]$ at some later iteration $\underline{j}'$, 
 we may have a loop-carried dependence for $\texttt{A}$ due to this def-use pair. (In contrast, Cytron's algorithm inserts a loop-carried dependency every time there is an array update.)
 The algorithm above examines all def-use pairs in loop $j$, including defs and uses in nested loops, searching for values $\underline{i}, \underline{j}, \underline{j}', \underline{k}, \underline{k}'$ that satisfy 
 $f(\underline{i},\underline{j},\underline{k}) = f'(\underline{i},\underline{j}',\underline{k}')$. If such values exist for some def-use pair, then there is a potential 
@@ -606,7 +606,7 @@ Therefore, we remove the back edge from 6 to 1. Analogously, we remove the back 
 Next, the algorithm refines array MUX statement. 
 MPC-source after Cytron's SSA may result in statements $\texttt{A}_j = \emph{MUX}(..., \texttt{A}_k, \texttt{A}_l)$, which imply that any index 
 of A can be written at this point and therefore there is a loop-carried dependency. In some cases the MUX can be refined to just a single 
-index or a pair of indices, e.g., $\texttt{A}_j[i] = \emph{MUX}(c, \texttt{A}_k[i], \texttt{A}_l[i])$. \ana{Clarify why this helps.}
+index or a pair of indices, e.g., $\texttt{A}_j[i] = \emph{MUX}(c, \texttt{A}_k[i], \texttt{A}_l[i])$. \ana{Clarify why this helps. Still work in progress.}
 
 \begin{algorithmic}
 \FOR {each $\mathit{stmt}$: $\texttt{A}_j = \emph{MUX}(c, \texttt{A}_k, \texttt{A}_l)$ in the MPC-source seq.}
