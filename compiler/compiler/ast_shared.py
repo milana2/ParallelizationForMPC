@@ -15,6 +15,9 @@ class Var:
     def __str__(self) -> str:
         return self.name
 
+    def name_without_ssa_rename(self) -> str:
+        return self.name.strip("!")[0]
+
 
 @dataclass(frozen=True)
 class ConstantInt:

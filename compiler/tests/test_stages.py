@@ -40,6 +40,9 @@ class StagesTestCase(unittest.TestCase):
             loop_linear = compiler.ssa_to_loop_linear_code(ssa)
             self.assertEqual(str(loop_linear), stages["loop_linear.txt"])
 
+            dep_graph = compiler.compute_dep_graph(loop_linear)
+            compiler.vectorize.remove_infeasible_edges(loop_linear, dep_graph)
+
 
 def regenerate_stages():
     for test_case_dir in os.scandir(STAGES_DIR):

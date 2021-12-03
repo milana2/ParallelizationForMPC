@@ -10,6 +10,9 @@ from .ssa import (
     AssignRHS,
     ConstantInt,
     Subscript,
+    SubscriptIndex,
+    SubscriptIndexBinOp,
+    SubscriptIndexUnaryOp,
     BinOp,
     UnaryOp,
     List,
@@ -18,6 +21,7 @@ from .ssa import (
     Update,
     UpdateValue,
 )
+from .ast_shared import BinOpKind, UnaryOpKind
 
 
 Statement = Union[Phi, Assign, "For"]

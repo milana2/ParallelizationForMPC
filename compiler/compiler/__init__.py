@@ -11,6 +11,7 @@ from .dead_code_elim import dead_code_elim
 from .ssa_to_loop_linear_code import ssa_to_loop_linear_code
 from .dep_graph import compute_dep_graph
 from . import loop_linear_code
+from . import vectorize
 
 
 def parse_args():

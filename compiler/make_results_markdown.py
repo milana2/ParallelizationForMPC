@@ -66,6 +66,7 @@ def dep_graph_to_image(
 
     for var_def, var_uses in dep_graph.items():
         for var_use in var_uses:
+            var_use = var_use.assignment
             def_index = statement_indices[var_def]
             use_index = statement_indices[var_use]
             def_indent, _ = all_statements[def_index]
@@ -151,6 +152,13 @@ def main():
         path = os.path.join(args.path, filename)
         dep_graph_to_image(dep_graph, loop_linear_code, path)
         md += "### Dependency graph\n"
+        md += f"![]({filename})\n"
+
+        compiler.vectorize.remove_infeasible_edges(loop_linear_code, dep_graph)
+        filename = f"{test_case_dir.name}_remove_infeasible_edges.png"
+        path = os.path.join(args.path, filename)
+        dep_graph_to_image(dep_graph, loop_linear_code, path)
+        md += "### Removal of infeasible edges\n"
         md += f"![]({filename})\n"
 
     md_path = os.path.join(args.path, "README.md")

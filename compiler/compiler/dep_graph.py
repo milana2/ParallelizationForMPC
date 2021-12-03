@@ -1,11 +1,28 @@
-from typing import NewType, Union
+from typing import NewType, Optional, Union
+from dataclasses import dataclass
 
 from .util import assert_never
 from . import loop_linear_code as llc
 
 
 PhiOrAssign = Union[llc.Phi, llc.Assign]
-DepGraph = NewType("DepGraph", dict[PhiOrAssign, list[PhiOrAssign]])
+
+
+@dataclass
+class DepGraphUse:
+    """
+    Target node of edges of dependency graph
+
+    * `assignment` - assignment where the variable is used
+    * `enclosing_loop` - the innermost loop containing `assignment`,
+      or `None` if the assignment is at the top level and not inside any loops
+    """
+
+    assignment: PhiOrAssign
+    enclosing_loop: Optional[llc.For]
+
+
+DepGraph = NewType("DepGraph", dict[PhiOrAssign, list[DepGraphUse]])
 
 
 def _vars_in_rhs(rhs: llc.AssignRHS) -> list[llc.Var]:
@@ -34,35 +51,45 @@ def _vars_in_rhs(rhs: llc.AssignRHS) -> list[llc.Var]:
 
 
 def compute_dep_graph(function: llc.Function) -> DepGraph:
-    assignments: list[PhiOrAssign] = []
+    # Store all possible uses in def-use pairs.
+    # This contains all assignments and their enclosing loops.
+    possible_uses: list[DepGraphUse] = []
 
     # TODO: Handle parameters
 
-    def add_assignments(statements: list[llc.Statement]):
+    def add_assignments(
+        statements: list[llc.Statement], enclosing_loop: Optional[llc.For]
+    ):
         for statement in statements:
             if isinstance(statement, llc.Phi) or isinstance(statement, llc.Assign):
-                assignments.append(statement)
+                possible_uses.append(
+                    DepGraphUse(assignment=statement, enclosing_loop=enclosing_loop)
+                )
             elif isinstance(statement, llc.For):
-                add_assignments(statement.body)
+                add_assignments(statement.body, statement)
             else:
                 assert_never(statement)
 
-    add_assignments(function.body)
+    add_assignments(function.body, None)
 
     var_to_assignment: dict[llc.Var, PhiOrAssign] = dict()
 
-    for assignment in assignments:
-        # This should be true if the SSA renaming is correct
-        assert assignment.lhs not in var_to_assignment
+    for use in possible_uses:
+        assignment = use.assignment
+        lhs = assignment.lhs
 
-        var_to_assignment[assignment.lhs] = assignment
+        # This should be true if the SSA renaming is correct
+        assert lhs not in var_to_assignment
+
+        var_to_assignment[lhs] = assignment
 
     result = DepGraph(dict())
 
-    for assignment in assignments:
-        result[assignment] = []
+    for use in possible_uses:
+        result[use.assignment] = []
 
-    for assignment in assignments:
+    for use in possible_uses:
+        assignment = use.assignment
         if isinstance(assignment, llc.Phi):
             lhss = assignment.rhs
         elif isinstance(assignment, llc.Assign):
@@ -76,7 +103,7 @@ def compute_dep_graph(function: llc.Function) -> DepGraph:
             except KeyError:
                 pass
             else:
-                result[var_def].append(assignment)
+                result[var_def].append(use)
 
     # TODO: Handle return value
 
