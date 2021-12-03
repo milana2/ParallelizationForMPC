@@ -77,6 +77,8 @@ def foo(C, D, S, N):
 ```
 ### Dependency graph
 ![](biometric_dep_graph.png)
+### Removal of infeasible edges
+![](biometric_remove_infeasible_edges.png)
 ## `biometric_fast`
 ### Input
 ```python
@@ -210,6 +212,8 @@ def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
 ```
 ### Dependency graph
 ![](biometric_fast_dep_graph.png)
+### Removal of infeasible edges
+![](biometric_fast_remove_infeasible_edges.png)
 ## `chapterfour_figure_12`
 ### Input
 ```python
@@ -256,6 +260,8 @@ def foo(x, y):
 ```
 ### Dependency graph
 ![](chapterfour_figure_12_dep_graph.png)
+### Removal of infeasible edges
+![](chapterfour_figure_12_remove_infeasible_edges.png)
 ## `histogram`
 ### Input
 ```python
@@ -333,6 +339,57 @@ def foo(A, B, N, num_bins):
 ```
 ### Dependency graph
 ![](histogram_dep_graph.png)
+### Removal of infeasible edges
+![](histogram_remove_infeasible_edges.png)
+## `infeasible_edges_example`
+### Input
+```python
+def foo(A, B, C, D, N):
+    for i in range(N):
+        A[i] = B[i] + 10
+        B[i] = A[i] * D[i - 1]
+        C[i] = A[i] * D[i - 1]
+        D[i] = B[i] * C[i]
+    return (A, B, C, D)
+
+```
+### Restricted AST
+```python
+def foo(A, B, C, D, N):
+    for i in range(0, N):
+        A[i] = (B[i] + 10)
+        B[i] = (A[i] * D[(i - 1)])
+        C[i] = (A[i] * D[(i - 1)])
+        D[i] = (B[i] * C[i])
+    return (A, B, C, D)
+```
+### Three-address code CFG
+![](infeasible_edges_example_tac_cfg.png)
+### SSA
+![](infeasible_edges_example_ssa.png)
+### SSA ϕ→MUX
+![](infeasible_edges_example_ssa_mux.png)
+### Dead code elimination
+![](infeasible_edges_example_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(A, B, C, D, N):
+    for i in range(0, N!0):
+        A!1 = Φ(A!0, A!2)
+        B!1 = Φ(B!0, B!2)
+        C!1 = Φ(C!0, C!2)
+        D!1 = Φ(D!0, D!2)
+        A!2 = Update(A!1, i, (B!1[i] + 10))
+        B!2 = Update(B!1, i, (A!2[i] * D!1[(i - 1)]))
+        C!2 = Update(C!1, i, (A!2[i] * D!1[(i - 1)]))
+        D!2 = Update(D!1, i, (B!2[i] * C!2[i]))
+    !1!1 = (A!1, B!1, C!1, D!1)
+    return !1!1
+```
+### Dependency graph
+![](infeasible_edges_example_dep_graph.png)
+### Removal of infeasible edges
+![](infeasible_edges_example_remove_infeasible_edges.png)
 ## `inner_product`
 ### Input
 ```python
@@ -380,6 +437,8 @@ def foo(A, B, N):
 ```
 ### Dependency graph
 ![](inner_product_dep_graph.png)
+### Removal of infeasible edges
+![](inner_product_remove_infeasible_edges.png)
 ## `psi`
 ### Input
 ```python
@@ -457,3 +516,5 @@ def foo(A, SA, B, SB):
 ```
 ### Dependency graph
 ![](psi_dep_graph.png)
+### Removal of infeasible edges
+![](psi_remove_infeasible_edges.png)
