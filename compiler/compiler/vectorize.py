@@ -211,7 +211,12 @@ def _prune_edges_from_statement(
     enclosing_loops: list[llc.For], statement: llc.Statement, dep_graph: DepGraph
 ) -> None:
     if isinstance(statement, llc.For):
-        _prune_edges_from_loop(enclosing_loops, statement, dep_graph)
+        loop = statement
+
+        _prune_edges_from_loop(enclosing_loops, loop, dep_graph)
+
+        for statement in loop.body:
+            _prune_edges_from_statement(enclosing_loops + [loop], statement, dep_graph)
 
 
 def remove_infeasible_edges(function: llc.Function, dep_graph: DepGraph) -> None:
