@@ -31,7 +31,6 @@ from .tac_cfg import (
     Atom,
     Operand,
     Update,
-    UpdateValue,
 )
 from .tac_cfg import Block as _BaseBlock
 

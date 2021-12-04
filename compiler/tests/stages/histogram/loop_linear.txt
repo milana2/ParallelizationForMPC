@@ -9,6 +9,7 @@ def foo(A, B, N, num_bins):
         for j in range(0, N!0):
             result!5 = Φ(result!4, result!7)
             !2!3 = (A!0[j] == i)
-            result!6 = Update(result!5, i, (result!5[i] + B!0[j]))
+            !3!3 = (result!5[i] + B!0[j])
+            result!6 = Update(result!5, i, !3!3)
             result!7 = MUX(!2!3, result!6, result!5)
     return result!4

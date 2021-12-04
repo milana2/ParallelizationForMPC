@@ -60,20 +60,17 @@ class Mux:
         return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
 
 
-UpdateValue = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux]
-
-
 @dataclass
 class Update:
     array: Var
     index: SubscriptIndex
-    value: UpdateValue
+    value: Atom
 
     def __str__(self) -> str:
         return f"Update({self.array}, {self.index}, {self.value})"
 
 
-AssignRHS = Union[UpdateValue, Update]
+AssignRHS = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux, Update]
 
 
 @dataclass(eq=False)

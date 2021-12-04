@@ -29,7 +29,8 @@ Block 8:
 Block 9:
     jump
 Block 10:
-    result!6 = Update(result!5, i, (result!5[i] + B!0[j]))
+    !3!3 = (result!5[i] + B!0[j])
+    result!6 = Update(result!5, i, !3!3)
     jump
 Block 11:
     jump

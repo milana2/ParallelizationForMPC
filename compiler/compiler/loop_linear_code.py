@@ -19,7 +19,6 @@ from .ssa import (
     Tuple,
     Mux,
     Update,
-    UpdateValue,
 )
 from .ast_shared import BinOpKind, UnaryOpKind
 

@@ -26,7 +26,8 @@ Block 8:
 Block 9:
     jump
 Block 10:
-    result = Update(result, i, (result[i] + B[j]))
+    !3 = (result[i] + B[j])
+    result = Update(result, i, !3)
     jump
 Block 11:
     jump

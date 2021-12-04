@@ -168,53 +168,38 @@ def rename_variables(result: ssa.Function) -> None:
         else:
             assert_never(operand)
 
-    def rename_update_value(value: ssa.UpdateValue) -> ssa.UpdateValue:
-        if isinstance(value, ssa.Var):
-            return rename_var(value)
-        elif isinstance(value, ssa.ConstantInt):
-            return value
-        elif isinstance(value, ssa.Subscript):
-            return rename_subscript(value)
-        elif isinstance(value, ssa.BinOp):
-            return ssa.BinOp(
-                left=rename_operand(value.left),
-                operator=value.operator,
-                right=rename_operand(value.right),
-            )
-        elif isinstance(value, ssa.UnaryOp):
-            return ssa.UnaryOp(
-                operator=value.operator, operand=rename_operand(value.operand)
-            )
-        elif isinstance(value, ssa.List):
-            return ssa.List(items=[rename_atom(item) for item in value.items])
-        elif isinstance(value, ssa.Tuple):
-            return ssa.Tuple(items=[rename_atom(item) for item in value.items])
-        elif isinstance(value, ssa.Mux):
-            return ssa.Mux(
-                condition=rename_var(value.condition),
-                false_value=rename_operand(value.false_value),
-                true_value=rename_operand(value.true_value),
-            )
-        else:
-            assert_never(value)
-
     def rename_rhs(rhs: ssa.AssignRHS) -> ssa.AssignRHS:
-        if (
-            isinstance(rhs, ssa.Var)
-            or isinstance(rhs, ssa.ConstantInt)
-            or isinstance(rhs, ssa.Subscript)
-            or isinstance(rhs, ssa.BinOp)
-            or isinstance(rhs, ssa.UnaryOp)
-            or isinstance(rhs, ssa.List)
-            or isinstance(rhs, ssa.Tuple)
-            or isinstance(rhs, ssa.Mux)
-        ):
-            return rename_update_value(rhs)
+        if isinstance(rhs, ssa.Var):
+            return rename_var(rhs)
+        elif isinstance(rhs, ssa.ConstantInt):
+            return rhs
+        elif isinstance(rhs, ssa.Subscript):
+            return rename_subscript(rhs)
+        elif isinstance(rhs, ssa.BinOp):
+            return ssa.BinOp(
+                left=rename_operand(rhs.left),
+                operator=rhs.operator,
+                right=rename_operand(rhs.right),
+            )
+        elif isinstance(rhs, ssa.UnaryOp):
+            return ssa.UnaryOp(
+                operator=rhs.operator, operand=rename_operand(rhs.operand)
+            )
+        elif isinstance(rhs, ssa.List):
+            return ssa.List(items=[rename_atom(item) for item in rhs.items])
+        elif isinstance(rhs, ssa.Tuple):
+            return ssa.Tuple(items=[rename_atom(item) for item in rhs.items])
+        elif isinstance(rhs, ssa.Mux):
+            return ssa.Mux(
+                condition=rename_var(rhs.condition),
+                false_value=rename_operand(rhs.false_value),
+                true_value=rename_operand(rhs.true_value),
+            )
         elif isinstance(rhs, ssa.Update):
             return ssa.Update(
                 array=rename_var(rhs.array),
                 index=rename_subscript_index(rhs.index),
-                value=rename_update_value(rhs.value),
+                value=rename_atom(rhs.value),
             )
         else:
             assert_never(rhs)
