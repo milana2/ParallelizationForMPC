@@ -333,7 +333,8 @@ def foo(A, B, N, num_bins):
         for j in range(0, N!0):
             result!5 = Φ(result!4, result!7)
             !2!3 = (A!0[j] == i)
-            result!6 = Update(result!5, i, (result!5[i] + B!0[j]))
+            !3!3 = (result!5[i] + B!0[j])
+            result!6 = Update(result!5, i, !3!3)
             result!7 = MUX(!2!3, result!6, result!5)
     return result!4
 ```
@@ -379,12 +380,16 @@ def foo(A, B, C, D, N):
         B!1 = Φ(B!0, B!2)
         C!1 = Φ(C!0, C!2)
         D!1 = Φ(D!0, D!2)
-        A!2 = Update(A!1, i, (B!1[i] + 10))
-        B!2 = Update(B!1, i, (A!2[i] * D!1[(i - 1)]))
-        C!2 = Update(C!1, i, (A!2[i] * D!1[(i - 1)]))
-        D!2 = Update(D!1, i, (B!2[i] * C!2[i]))
-    !1!1 = (A!1, B!1, C!1, D!1)
-    return !1!1
+        !1!2 = (B!1[i] + 10)
+        A!2 = Update(A!1, i, !1!2)
+        !2!2 = (A!2[i] * D!1[(i - 1)])
+        B!2 = Update(B!1, i, !2!2)
+        !3!2 = (A!2[i] * D!1[(i - 1)])
+        C!2 = Update(C!1, i, !3!2)
+        !4!2 = (B!2[i] * C!2[i])
+        D!2 = Update(D!1, i, !4!2)
+    !5!1 = (A!1, B!1, C!1, D!1)
+    return !5!1
 ```
 ### Dependency graph
 ![](infeasible_edges_example_dep_graph.png)
