@@ -173,7 +173,9 @@ def _check_dep(
     solver.add(j_ < j__)
     solver.add([0 <= kk for kk in k_])
     solver.add(f_ijk == f__ijk)
-    return solver.check() == z3.sat
+    # This check is allowed to have false positives, but not false negatives,
+    # so we treat `z3.unknown` the same as `z3.sat`.
+    return solver.check() in (z3.sat, z3.unknown)
 
 
 def _get_k(j: llc.For, A_use: ArrayRead) -> list[llc.For]:
