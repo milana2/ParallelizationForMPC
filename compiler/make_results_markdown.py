@@ -64,24 +64,22 @@ def dep_graph_to_image(
         statement: i for i, (_, statement) in enumerate(all_statements)
     }
 
-    for var_def, var_uses in dep_graph.items():
-        for var_use in var_uses:
-            var_use = var_use.assignment
-            def_index = statement_indices[var_def]
-            use_index = statement_indices[var_use]
-            def_indent, _ = all_statements[def_index]
-            use_indent, _ = all_statements[use_index]
-            is_same_level_back_edge = def_indent == use_indent and isinstance(
-                var_use, llc.Phi
-            )
-            is_inner_to_outer_back_edge = (
-                def_indent > use_indent
-                and isinstance(var_def, llc.Phi)
-                and isinstance(var_use, llc.Phi)
-            )
-            is_back_edge = is_same_level_back_edge or is_inner_to_outer_back_edge
-            style = "dashed" if is_back_edge else "solid"
-            dot.add_edge(pydot.Edge(src=def_index, dst=use_index, style=style))
+    for var_def, var_use in dep_graph.edges():
+        def_index = statement_indices[var_def]
+        use_index = statement_indices[var_use]
+        def_indent, _ = all_statements[def_index]
+        use_indent, _ = all_statements[use_index]
+        is_same_level_back_edge = def_indent == use_indent and isinstance(
+            var_use, llc.Phi
+        )
+        is_inner_to_outer_back_edge = (
+            def_indent > use_indent
+            and isinstance(var_def, llc.Phi)
+            and isinstance(var_use, llc.Phi)
+        )
+        is_back_edge = is_same_level_back_edge or is_inner_to_outer_back_edge
+        style = "dashed" if is_back_edge else "solid"
+        dot.add_edge(pydot.Edge(src=def_index, dst=use_index, style=style))
 
     dot.write(path, format="png")
 
@@ -147,7 +145,7 @@ def main():
         md += "### Linear code with loops\n"
         md += f"```python\n{loop_linear_code}\n```\n"
 
-        dep_graph = compiler.compute_dep_graph(loop_linear_code)
+        dep_graph = compiler.DepGraph(loop_linear_code)
         filename = f"{test_case_dir.name}_dep_graph.png"
         path = os.path.join(args.path, filename)
         dep_graph_to_image(dep_graph, loop_linear_code, path)

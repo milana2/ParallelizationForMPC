@@ -1,5 +1,5 @@
 from . import loop_linear_code as llc
-from .dep_graph import DepGraph
+from .dep_graph import DepGraph, PhiOrAssign
 from .util import assert_never
 
 from dataclasses import dataclass
@@ -182,29 +182,31 @@ def _get_k(j: llc.For, A_use: ArrayRead) -> list[llc.For]:
     return k[1:]
 
 
-def _remove_back_edge(A_def: llc.Assign, dep_graph: DepGraph, j: llc.For) -> None:
+def _remove_back_edge(A_name: str, dep_graph: DepGraph, j: llc.For) -> None:
     """Remove back edge to Phi node in loop j"""
-    dep_graph[A_def] = [
-        A_use
-        for A_use in dep_graph[A_def]
-        if not (
-            # Check if same-level back edge
-            isinstance(A_use.assignment, llc.Phi)
-            and A_use.enclosing_loop == j
-        )
-    ]
+    for A_use in j.body:
+        if isinstance(A_use, llc.Phi) and A_use.lhs.name_without_ssa_rename() == A_name:
+            assert dep_graph.enclosing_loops[A_use][-1] == j
+            A_defs: list[PhiOrAssign] = list(
+                dep_graph.def_use_graph.predecessors(A_use)
+            )
+            for A_def in A_defs:
+                assert A_def.lhs.name_without_ssa_rename() == A_name
+                if dep_graph.is_back_edge(A_def, A_use):
+                    dep_graph.def_use_graph.remove_edge(A_def, A_use)
 
 
 def _prune_edges_from_loop(i: list[llc.For], j: llc.For, dep_graph: DepGraph) -> None:
     for A_def in _arrays_written_in_loop(j):
+        A_def_name = A_def.lhs.name_without_ssa_rename()
         dep = False
-        for A_use in _arrays_read_in_loop([j], A_def.lhs.name_without_ssa_rename()):
+        for A_use in _arrays_read_in_loop([j], A_def_name):
             k = _get_k(j, A_use)
             assert isinstance(A_def.rhs, llc.Update)
             if _check_dep(A_def.rhs, A_use.subscript, i, j, k):
                 dep = True
         if not dep:
-            _remove_back_edge(A_def, dep_graph, j)
+            _remove_back_edge(A_def_name, dep_graph, j)
 
 
 def _prune_edges_from_statement(

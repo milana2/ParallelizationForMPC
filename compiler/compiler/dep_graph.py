@@ -1,5 +1,6 @@
-from typing import NewType, Optional, Union
-from dataclasses import dataclass
+from typing import Iterator, Union
+
+import networkx  # type: ignore
 
 from .util import assert_never
 from . import loop_linear_code as llc
@@ -8,21 +9,80 @@ from . import loop_linear_code as llc
 PhiOrAssign = Union[llc.Phi, llc.Assign]
 
 
-@dataclass
-class DepGraphUse:
-    """
-    Target node of edges of dependency graph
+class DepGraph:
+    def_use_graph: networkx.DiGraph
+    enclosing_loops: dict[PhiOrAssign, list[llc.For]]
 
-    * `assignment` - assignment where the variable is used
-    * `enclosing_loop` - the innermost loop containing `assignment`,
-      or `None` if the assignment is at the top level and not inside any loops
-    """
+    def __init__(self, function: llc.Function) -> None:
+        # Store all assignments and their enclosing loops.
+        all_assignments: list[tuple[PhiOrAssign, list[llc.For]]] = []
 
-    assignment: PhiOrAssign
-    enclosing_loop: Optional[llc.For]
+        # TODO: Handle parameters
 
+        def add_assignments(
+            statements: list[llc.Statement], enclosing_loops: list[llc.For]
+        ):
+            for statement in statements:
+                if isinstance(statement, llc.Phi) or isinstance(statement, llc.Assign):
+                    all_assignments.append((statement, enclosing_loops))
+                elif isinstance(statement, llc.For):
+                    loop = statement
+                    add_assignments(loop.body, enclosing_loops + [loop])
+                else:
+                    assert_never(statement)
 
-DepGraph = NewType("DepGraph", dict[PhiOrAssign, list[DepGraphUse]])
+        add_assignments(function.body, [])
+
+        var_to_assignment: dict[llc.Var, PhiOrAssign] = dict()
+
+        for assignment, _ in all_assignments:
+            lhs = assignment.lhs
+
+            # This should be true if the SSA renaming is correct
+            assert lhs not in var_to_assignment
+
+            var_to_assignment[lhs] = assignment
+
+        self.def_use_graph = networkx.DiGraph()
+        for assignment, _ in all_assignments:
+            self.def_use_graph.add_node(assignment)
+
+        for assignment, _ in all_assignments:
+            if isinstance(assignment, llc.Phi):
+                lhss = assignment.rhs
+            elif isinstance(assignment, llc.Assign):
+                lhss = _vars_in_rhs(assignment.rhs)
+            else:
+                assert_never(assignment)
+
+            for lhs in lhss:
+                try:
+                    var_def = var_to_assignment[lhs]
+                except KeyError:
+                    pass
+                else:
+                    self.def_use_graph.add_edge(var_def, assignment)
+
+        self.enclosing_loops = dict()
+        for assignment, enclosing_loops in all_assignments:
+            self.enclosing_loops[assignment] = enclosing_loops
+
+        # TODO: Handle return value
+
+    def edges(self) -> Iterator[tuple[PhiOrAssign, PhiOrAssign]]:
+        return self.def_use_graph.edges()
+
+    def is_back_edge(
+        self, def_statement: PhiOrAssign, use_statement: PhiOrAssign
+    ) -> bool:
+        return (
+            self.def_use_graph.has_edge(def_statement, use_statement)
+            and isinstance(use_statement, llc.Phi)
+            and self.enclosing_loops[use_statement]
+            == self.enclosing_loops[def_statement][
+                : len(self.enclosing_loops[use_statement])
+            ]
+        )
 
 
 def _vars_in_rhs(rhs: llc.AssignRHS) -> list[llc.Var]:
@@ -48,63 +108,3 @@ def _vars_in_rhs(rhs: llc.AssignRHS) -> list[llc.Var]:
         return [rhs.array] + _vars_in_rhs(rhs.value)
     else:
         assert_never(rhs)
-
-
-def compute_dep_graph(function: llc.Function) -> DepGraph:
-    # Store all possible uses in def-use pairs.
-    # This contains all assignments and their enclosing loops.
-    possible_uses: list[DepGraphUse] = []
-
-    # TODO: Handle parameters
-
-    def add_assignments(
-        statements: list[llc.Statement], enclosing_loop: Optional[llc.For]
-    ):
-        for statement in statements:
-            if isinstance(statement, llc.Phi) or isinstance(statement, llc.Assign):
-                possible_uses.append(
-                    DepGraphUse(assignment=statement, enclosing_loop=enclosing_loop)
-                )
-            elif isinstance(statement, llc.For):
-                add_assignments(statement.body, statement)
-            else:
-                assert_never(statement)
-
-    add_assignments(function.body, None)
-
-    var_to_assignment: dict[llc.Var, PhiOrAssign] = dict()
-
-    for use in possible_uses:
-        assignment = use.assignment
-        lhs = assignment.lhs
-
-        # This should be true if the SSA renaming is correct
-        assert lhs not in var_to_assignment
-
-        var_to_assignment[lhs] = assignment
-
-    result = DepGraph(dict())
-
-    for use in possible_uses:
-        result[use.assignment] = []
-
-    for use in possible_uses:
-        assignment = use.assignment
-        if isinstance(assignment, llc.Phi):
-            lhss = assignment.rhs
-        elif isinstance(assignment, llc.Assign):
-            lhss = _vars_in_rhs(assignment.rhs)
-        else:
-            assert_never(assignment)
-
-        for lhs in lhss:
-            try:
-                var_def = var_to_assignment[lhs]
-            except KeyError:
-                pass
-            else:
-                result[var_def].append(use)
-
-    # TODO: Handle return value
-
-    return result
