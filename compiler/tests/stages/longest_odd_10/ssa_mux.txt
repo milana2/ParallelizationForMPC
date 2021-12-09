@@ -1,0 +1,63 @@
+Function(Seq, N, Syms):
+Entry block: 0
+Exit block: 3
+Block 0:
+    current_length!1 = 0
+    max_length!1 = 0
+    s2!1 = False
+    jump
+Block 1:
+    current_length!2 = Φ(current_length!1, current_length!6)
+    max_length!2 = Φ(max_length!1, max_length!4)
+    s2!2 = Φ(s2!1, s2!3)
+    !1!1 = Φ(!1!0, !1!2)
+    s1!1 = Φ(s1!0, s1!2)
+    !2!1 = Φ(!2!0, !2!3)
+    !3!1 = Φ(!3!0, !3!2)
+    !4!1 = Φ(!4!0, !4!2)
+    !5!1 = Φ(!5!0, !5!2)
+    !6!1 = Φ(!6!0, !6!2)
+    !7!1 = Φ(!7!0, !7!2)
+    for i in range(0, N!0)
+Block 2:
+    !1!2 = (Seq!0[i] == Syms!0[1])
+    s1!2 = (s2!2 and !1!2)
+    conditional jump s1!2
+Block 3:
+    return max_length!2
+Block 4:
+    current_length!3 = (current_length!2 + 1)
+    jump
+Block 5:
+    !2!2 = not s2!2
+    conditional jump !2!2
+Block 6:
+    (merge from conditional jump s1!2)
+    current_length!6 = MUX(s1!2, current_length!3, current_length!5)
+    !2!3 = MUX(s1!2, !2!1, !2!2)
+    !3!2 = (current_length!6 % 2)
+    !4!2 = (current_length!6 % 2)
+    !5!2 = (!4!2 == 1)
+    !6!2 = (current_length!6 > max_length!2)
+    !7!2 = (!5!2 and !6!2)
+    conditional jump !7!2
+Block 7:
+    current_length!4 = 0
+    jump
+Block 8:
+    jump
+Block 9:
+    (merge from conditional jump !2!2)
+    current_length!5 = MUX(!2!2, current_length!4, current_length!2)
+    jump
+Block 10:
+    max_length!3 = current_length!6
+    jump
+Block 11:
+    jump
+Block 12:
+    (merge from conditional jump !7!2)
+    max_length!4 = MUX(!7!2, max_length!3, max_length!2)
+    s2!3 = (Seq!0[i] == Syms!0[0])
+    jump
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 5, F) (2, 4, T) (4, 6, *) (5, 8, F) (5, 7, T) (6, 11, F) (6, 10, T) (7, 9, *) (8, 9, *) (9, 6, *) (10, 12, *) (11, 12, *) (12, 1, *)

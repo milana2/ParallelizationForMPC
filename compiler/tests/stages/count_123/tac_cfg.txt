@@ -1,0 +1,31 @@
+Function(Seq, N, Syms):
+Entry block: 0
+Exit block: 3
+Block 0:
+    s1 = False
+    s2 = False
+    s3 = False
+    c = 0
+    jump
+Block 1:
+    for i in range(0, N)
+Block 2:
+    !1 = (Seq[i] == Syms[3])
+    !2 = (s2 or s1)
+    !3 = (!1 and !2)
+    conditional jump !3
+Block 3:
+    return c
+Block 4:
+    c = (c + 1)
+    jump
+Block 5:
+    jump
+Block 6:
+    (merge from conditional jump !3)
+    !4 = (Seq[i] == Syms[2])
+    !5 = (s1 or s2)
+    s2 = (!4 and !5)
+    s1 = (Seq[i] == Syms[1])
+    jump
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 5, F) (2, 4, T) (4, 6, *) (5, 6, *) (6, 1, *)

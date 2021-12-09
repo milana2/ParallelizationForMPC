@@ -1,0 +1,1 @@
+../../../../benchmarks/minimal_points.py
