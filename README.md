@@ -262,6 +262,312 @@ def foo(x, y):
 ![](chapterfour_figure_12_dep_graph.png)
 ### Removal of infeasible edges
 ![](chapterfour_figure_12_remove_infeasible_edges.png)
+## `convex_hull`
+### Input
+```python
+def convex_hull(X_coords: list[int], Y_coords: list[int], N):
+    hull_X: list[int] = []
+    hull_Y: list[int] = []
+
+    for i in range(0, N):
+        is_hull = True
+        p1_X = X_coords[i]
+        p1_Y = Y_coords[i]
+
+        if p1_X <= 0 and p1_Y >= 0:
+            for j in range(0, N):
+                p2_X = X_coords[j]
+                p2_Y = Y_coords[j]
+
+                if not (p1_X <= p2_X or p1_Y >= p2_Y):
+                    is_hull = False
+
+        if is_hull:
+            hull_X = hull_X + [p1_X]
+            hull_Y = hull_Y + [p1_Y]
+
+    return (hull_X, hull_Y)
+
+```
+### Restricted AST
+```python
+def foo(X_coords, Y_coords, N):
+    hull_X = []
+    hull_Y = []
+    for i in range(0, N):
+        is_hull = True
+        p1_X = X_coords[i]
+        p1_Y = Y_coords[i]
+        if ((p1_X <= 0) and (p1_Y >= 0)):
+            for j in range(0, N):
+                p2_X = X_coords[j]
+                p2_Y = Y_coords[j]
+                if not ((p1_X <= p2_X) or (p1_Y >= p2_Y)):
+                    is_hull = False
+        if is_hull:
+            hull_X = (hull_X + [p1_X])
+            hull_Y = (hull_Y + [p1_Y])
+    return (hull_X, hull_Y)
+```
+### Three-address code CFG
+![](convex_hull_tac_cfg.png)
+### SSA
+![](convex_hull_ssa.png)
+### SSA ϕ→MUX
+![](convex_hull_ssa_mux.png)
+### Dead code elimination
+![](convex_hull_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(X_coords, Y_coords, N):
+    hull_X!1 = []
+    hull_Y!1 = []
+    for i in range(0, N!0):
+        hull_X!2 = Φ(hull_X!1, hull_X!4)
+        hull_Y!2 = Φ(hull_Y!1, hull_Y!4)
+        is_hull!2 = True
+        p1_X!2 = X_coords!0[i]
+        p1_Y!2 = Y_coords!0[i]
+        !1!2 = (p1_X!2 <= 0)
+        !2!2 = (p1_Y!2 >= 0)
+        !3!2 = (!1!2 and !2!2)
+        for j in range(0, N!0):
+            is_hull!3 = Φ(is_hull!2, is_hull!5)
+            p2_X!3 = X_coords!0[j]
+            p2_Y!3 = Y_coords!0[j]
+            !6!3 = (p1_X!2 <= p2_X!3)
+            !7!3 = (p1_Y!2 >= p2_Y!3)
+            !8!3 = (!6!3 or !7!3)
+            !9!3 = not !8!3
+            is_hull!4 = False
+            is_hull!5 = MUX(!9!3, is_hull!4, is_hull!3)
+        is_hull!6 = MUX(!3!2, is_hull!2, is_hull!3)
+        !10!2 = [p1_X!2]
+        hull_X!3 = (hull_X!2 + !10!2)
+        !11!2 = [p1_Y!2]
+        hull_Y!3 = (hull_Y!2 + !11!2)
+        hull_X!4 = MUX(is_hull!6, hull_X!3, hull_X!2)
+        hull_Y!4 = MUX(is_hull!6, hull_Y!3, hull_Y!2)
+    !12!1 = (hull_X!2, hull_Y!2)
+    return !12!1
+```
+### Dependency graph
+![](convex_hull_dep_graph.png)
+### Removal of infeasible edges
+![](convex_hull_remove_infeasible_edges.png)
+## `count_102`
+### Input
+```python
+def count_102(Seq: list[int], N, Syms: list[int]):
+    """
+    Computes the number of instances of regex a(b*)c in a provided sequence.
+    Syms is a list of form [a, b, c].
+    """
+    s0 = False
+    c = 0
+
+    for i in range(0, N):
+        if s0 and (Seq[i] == Syms[2]):
+            c = c + 1
+
+        s0 = (Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0]))
+
+    return c
+
+
+seq = [1, 0, 2, 1, 0, 0, 2, 1, 2, 2]
+num_102s = count_102(seq, len(seq), [1, 0, 2])
+print(num_102s)
+
+```
+### Restricted AST
+```python
+def foo(Seq, N, Syms):
+    s0 = False
+    c = 0
+    for i in range(0, N):
+        if (s0 and (Seq[i] == Syms[2])):
+            c = (c + 1)
+        s0 = ((Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0])))
+    return c
+```
+### Three-address code CFG
+![](count_102_tac_cfg.png)
+### SSA
+![](count_102_ssa.png)
+### SSA ϕ→MUX
+![](count_102_ssa_mux.png)
+### Dead code elimination
+![](count_102_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(Seq, N, Syms):
+    s0!1 = False
+    c!1 = 0
+    for i in range(0, N!0):
+        s0!2 = Φ(s0!1, s0!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2 = (Seq!0[i] == Syms!0[2])
+        !2!2 = (s0!2 and !1!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!2!2, c!3, c!2)
+        !3!2 = (Seq!0[i] == Syms!0[1])
+        !5!2 = (Seq!0[i] == Syms!0[0])
+        !6!2 = (s0!2 and !5!2)
+        s0!3 = (!3!2 or !6!2)
+    return c!2
+```
+### Dependency graph
+![](count_102_dep_graph.png)
+### Removal of infeasible edges
+![](count_102_remove_infeasible_edges.png)
+## `count_10s`
+### Input
+```python
+def count_10s(Seq: list[int], N, Syms: list[int]):
+    """
+    Computes the number of instances of regex a(b+) in a provided sequence.
+    Syms is a list of form [a, b].
+    """
+    s0 = False
+    s1 = False
+    scount = 0
+
+    for i in range(0, N):
+        if s1 and (Seq[i] != Syms[0]):
+            scount = scount + 1
+
+        s1 = (Seq[i] == Syms[0]) and (s0 or s1)
+        s0 = Seq[i] == Syms[1]
+
+    return scount
+
+
+seq = [1, 0, 0, 1, 1, 0, 2]
+num_10s = count_10s(seq, len(seq), [0, 1])
+print(num_10s)
+
+```
+### Restricted AST
+```python
+def foo(Seq, N, Syms):
+    s0 = False
+    s1 = False
+    scount = 0
+    for i in range(0, N):
+        if (s1 and (Seq[i] != Syms[0])):
+            scount = (scount + 1)
+        s1 = ((Seq[i] == Syms[0]) and (s0 or s1))
+        s0 = (Seq[i] == Syms[1])
+    return scount
+```
+### Three-address code CFG
+![](count_10s_tac_cfg.png)
+### SSA
+![](count_10s_ssa.png)
+### SSA ϕ→MUX
+![](count_10s_ssa_mux.png)
+### Dead code elimination
+![](count_10s_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(Seq, N, Syms):
+    s0!1 = False
+    s1!1 = False
+    scount!1 = 0
+    for i in range(0, N!0):
+        s0!2 = Φ(s0!1, s0!3)
+        s1!2 = Φ(s1!1, s1!3)
+        scount!2 = Φ(scount!1, scount!4)
+        !1!2 = (Seq!0[i] != Syms!0[0])
+        !2!2 = (s1!2 and !1!2)
+        scount!3 = (scount!2 + 1)
+        scount!4 = MUX(!2!2, scount!3, scount!2)
+        !3!2 = (Seq!0[i] == Syms!0[0])
+        !4!2 = (s0!2 or s1!2)
+        s1!3 = (!3!2 and !4!2)
+        s0!3 = (Seq!0[i] == Syms!0[1])
+    return scount!2
+```
+### Dependency graph
+![](count_10s_dep_graph.png)
+### Removal of infeasible edges
+![](count_10s_remove_infeasible_edges.png)
+## `count_123`
+### Input
+```python
+def count_123(Seq: list[int], N, Syms: list[int]):
+    """
+    Computes the number of instances of regex a*b*c* in a provided sequence.
+    Syms is a list of form [a, b, c].
+    """
+
+    s1 = False
+    s2 = False
+    s3 = False
+    c = 0
+
+    for i in range(0, N):
+        if Seq[i] == Syms[3] and (s2 or s1):
+            c = c + 1
+        s2 = (Seq[i] == Syms[2]) and (s1 or s2)
+        s1 = Seq[i] == Syms[1]
+
+    return c
+
+
+seq = [1, 2, 3, 1, 3, 3, 4]
+num_123s = count_123(seq, len(seq), [1, 2, 3])
+print(num_123s)
+
+```
+### Restricted AST
+```python
+def foo(Seq, N, Syms):
+    s1 = False
+    s2 = False
+    s3 = False
+    c = 0
+    for i in range(0, N):
+        if ((Seq[i] == Syms[3]) and (s2 or s1)):
+            c = (c + 1)
+        s2 = ((Seq[i] == Syms[2]) and (s1 or s2))
+        s1 = (Seq[i] == Syms[1])
+    return c
+```
+### Three-address code CFG
+![](count_123_tac_cfg.png)
+### SSA
+![](count_123_ssa.png)
+### SSA ϕ→MUX
+![](count_123_ssa_mux.png)
+### Dead code elimination
+![](count_123_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(Seq, N, Syms):
+    s1!1 = False
+    s2!1 = False
+    c!1 = 0
+    for i in range(0, N!0):
+        s1!2 = Φ(s1!1, s1!3)
+        s2!2 = Φ(s2!1, s2!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2 = (Seq!0[i] == Syms!0[3])
+        !2!2 = (s2!2 or s1!2)
+        !3!2 = (!1!2 and !2!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!3!2, c!3, c!2)
+        !4!2 = (Seq!0[i] == Syms!0[2])
+        !5!2 = (s1!2 or s2!2)
+        s2!3 = (!4!2 and !5!2)
+        s1!3 = (Seq!0[i] == Syms!0[1])
+    return c!2
+```
+### Dependency graph
+![](count_123_dep_graph.png)
+### Removal of infeasible edges
+![](count_123_remove_infeasible_edges.png)
 ## `histogram`
 ### Input
 ```python
@@ -444,6 +750,541 @@ def foo(A, B, N):
 ![](inner_product_dep_graph.png)
 ### Removal of infeasible edges
 ![](inner_product_remove_infeasible_edges.png)
+## `longest_102`
+### Input
+```python
+def longest_102(Seq: list[int], N, Syms: list[int]):
+    """
+    Computes the length of the largest instance of regex a(b*)c in a provided sequence.
+    Syms is a list of form [a, b, c].
+    """
+    s0 = False
+
+    max_len = 0
+    length = 0
+
+    for i in range(0, N):
+        s1 = s0 and (Seq[i] == Syms[2])
+        s0 = (Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0]))
+
+        if s1 or s0:
+            length = length + 1
+        else:
+            length = 0
+
+        if s1 and max_len < length:
+            max_len = length
+
+    return max_len
+
+
+seq = [1, 0, 2, 1, 0, 0, 2, 1, 2, 2]
+longest_102_len = longest_102(seq, len(seq), [1, 0, 2])
+print(longest_102_len)
+
+```
+### Restricted AST
+```python
+def foo(Seq, N, Syms):
+    s0 = False
+    max_len = 0
+    length = 0
+    for i in range(0, N):
+        s1 = (s0 and (Seq[i] == Syms[2]))
+        s0 = ((Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0])))
+        if (s1 or s0):
+            length = (length + 1)
+        else:
+            length = 0
+        if (s1 and (max_len < length)):
+            max_len = length
+    return max_len
+```
+### Three-address code CFG
+![](longest_102_tac_cfg.png)
+### SSA
+![](longest_102_ssa.png)
+### SSA ϕ→MUX
+![](longest_102_ssa_mux.png)
+### Dead code elimination
+![](longest_102_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(Seq, N, Syms):
+    s0!1 = False
+    max_len!1 = 0
+    length!1 = 0
+    for i in range(0, N!0):
+        s0!2 = Φ(s0!1, s0!3)
+        max_len!2 = Φ(max_len!1, max_len!4)
+        length!2 = Φ(length!1, length!5)
+        !1!2 = (Seq!0[i] == Syms!0[2])
+        s1!2 = (s0!2 and !1!2)
+        !2!2 = (Seq!0[i] == Syms!0[1])
+        !4!2 = (Seq!0[i] == Syms!0[0])
+        !5!2 = (s0!2 and !4!2)
+        s0!3 = (!2!2 or !5!2)
+        !6!2 = (s1!2 or s0!3)
+        length!4 = 0
+        length!3 = (length!2 + 1)
+        length!5 = MUX(!6!2, length!3, length!4)
+        !7!2 = (max_len!2 < length!5)
+        !8!2 = (s1!2 and !7!2)
+        max_len!3 = length!5
+        max_len!4 = MUX(!8!2, max_len!3, max_len!2)
+    return max_len!2
+```
+### Dependency graph
+![](longest_102_dep_graph.png)
+### Removal of infeasible edges
+![](longest_102_remove_infeasible_edges.png)
+## `longest_1s`
+### Input
+```python
+def longest_1s(Seq: list[int], N, Sym: int):
+    """
+    Computes length of the longest sequence of form (a*).
+    Sym is the integer a.
+    """
+
+    max_length = 0
+    length = 0
+
+    for i in range(1, N):
+        if Seq[i] == Sym:
+            length = length + 1
+        else:
+            length = 0
+
+        if length > max_length:
+            max_length = length
+
+    return max_length
+
+
+seq = [0, 0, 1, 1, 1, 1, 0, 1, 0]
+longest_1s_len = longest_1s(seq, len(seq), 1)
+print(longest_1s_len)
+
+```
+### Restricted AST
+```python
+def foo(Seq, N, Sym):
+    max_length = 0
+    length = 0
+    for i in range(1, N):
+        if (Seq[i] == Sym):
+            length = (length + 1)
+        else:
+            length = 0
+        if (length > max_length):
+            max_length = length
+    return max_length
+```
+### Three-address code CFG
+![](longest_1s_tac_cfg.png)
+### SSA
+![](longest_1s_ssa.png)
+### SSA ϕ→MUX
+![](longest_1s_ssa_mux.png)
+### Dead code elimination
+![](longest_1s_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(Seq, N, Sym):
+    max_length!1 = 0
+    length!1 = 0
+    for i in range(1, N!0):
+        max_length!2 = Φ(max_length!1, max_length!4)
+        length!2 = Φ(length!1, length!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        length!4 = 0
+        length!3 = (length!2 + 1)
+        length!5 = MUX(!1!2, length!3, length!4)
+        !2!2 = (length!5 > max_length!2)
+        max_length!3 = length!5
+        max_length!4 = MUX(!2!2, max_length!3, max_length!2)
+    return max_length!2
+```
+### Dependency graph
+![](longest_1s_dep_graph.png)
+### Removal of infeasible edges
+![](longest_1s_remove_infeasible_edges.png)
+## `longest_even_0`
+### Input
+```python
+def longest_even_0(Seq: list[int], N, Sym: int):
+    """
+    Computes the length of the longest regex of form (a*) which has an even length
+    Sym is the symbol a
+    """
+
+    current_length = 0
+    max_length = 0
+
+    for i in range(1, N):
+        if Seq[i] == Sym:
+            current_length = current_length + 1
+        else:
+            current_length = 0
+
+        tmp_max_len = max_length
+        if current_length > max_length:
+            tmp_max_len = current_length
+
+        if tmp_max_len % 2 == 0:
+            max_length = tmp_max_len
+
+    return max_length
+
+```
+### Restricted AST
+```python
+def foo(Seq, N, Sym):
+    current_length = 0
+    max_length = 0
+    for i in range(1, N):
+        if (Seq[i] == Sym):
+            current_length = (current_length + 1)
+        else:
+            current_length = 0
+        tmp_max_len = max_length
+        if (current_length > max_length):
+            tmp_max_len = current_length
+        if ((tmp_max_len % 2) == 0):
+            max_length = tmp_max_len
+    return max_length
+```
+### Three-address code CFG
+![](longest_even_0_tac_cfg.png)
+### SSA
+![](longest_even_0_ssa.png)
+### SSA ϕ→MUX
+![](longest_even_0_ssa_mux.png)
+### Dead code elimination
+![](longest_even_0_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(Seq, N, Sym):
+    current_length!1 = 0
+    max_length!1 = 0
+    for i in range(1, N!0):
+        current_length!2 = Φ(current_length!1, current_length!5)
+        max_length!2 = Φ(max_length!1, max_length!4)
+        !1!2 = (Seq!0[i] == Sym!0)
+        current_length!4 = 0
+        current_length!3 = (current_length!2 + 1)
+        current_length!5 = MUX(!1!2, current_length!3, current_length!4)
+        tmp_max_len!2 = max_length!2
+        !2!2 = (current_length!5 > max_length!2)
+        tmp_max_len!3 = current_length!5
+        tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
+        !3!2 = (tmp_max_len!4 % 2)
+        !4!2 = (!3!2 == 0)
+        max_length!3 = tmp_max_len!4
+        max_length!4 = MUX(!4!2, max_length!3, max_length!2)
+    return max_length!2
+```
+### Dependency graph
+![](longest_even_0_dep_graph.png)
+### Removal of infeasible edges
+![](longest_even_0_remove_infeasible_edges.png)
+## `longest_odd_10`
+### Input
+```python
+def longest_odd_10(Seq: list[int], N, Syms: list[int]):
+    """
+    Computes the length of the longest regex of form (ab)* which has an odd length
+    Syms is the list [a, b]
+    """
+
+    current_length = 0
+    max_length = 0
+
+    s2 = False
+
+    for i in range(0, N):
+        s1 = s2 and (Seq[i] == Syms[1])
+
+        if s1:
+            current_length = current_length + 1
+        elif not s2:
+            current_length = 0
+
+        if (current_length % 2 == 1) and (current_length > max_length):
+            max_length = current_length
+
+        s2 = Seq[i] == Syms[0]
+
+    return max_length
+
+```
+### Restricted AST
+```python
+def foo(Seq, N, Syms):
+    current_length = 0
+    max_length = 0
+    s2 = False
+    for i in range(0, N):
+        s1 = (s2 and (Seq[i] == Syms[1]))
+        if s1:
+            current_length = (current_length + 1)
+        else:
+            if not s2:
+                current_length = 0
+        if (((current_length % 2) == 1) and (current_length > max_length)):
+            max_length = current_length
+        s2 = (Seq[i] == Syms[0])
+    return max_length
+```
+### Three-address code CFG
+![](longest_odd_10_tac_cfg.png)
+### SSA
+![](longest_odd_10_ssa.png)
+### SSA ϕ→MUX
+![](longest_odd_10_ssa_mux.png)
+### Dead code elimination
+![](longest_odd_10_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(Seq, N, Syms):
+    current_length!1 = 0
+    max_length!1 = 0
+    s2!1 = False
+    for i in range(0, N!0):
+        current_length!2 = Φ(current_length!1, current_length!6)
+        max_length!2 = Φ(max_length!1, max_length!4)
+        s2!2 = Φ(s2!1, s2!3)
+        !1!2 = (Seq!0[i] == Syms!0[1])
+        s1!2 = (s2!2 and !1!2)
+        !2!2 = not s2!2
+        current_length!4 = 0
+        current_length!5 = MUX(!2!2, current_length!4, current_length!2)
+        current_length!3 = (current_length!2 + 1)
+        current_length!6 = MUX(s1!2, current_length!3, current_length!5)
+        !4!2 = (current_length!6 % 2)
+        !5!2 = (!4!2 == 1)
+        !6!2 = (current_length!6 > max_length!2)
+        !7!2 = (!5!2 and !6!2)
+        max_length!3 = current_length!6
+        max_length!4 = MUX(!7!2, max_length!3, max_length!2)
+        s2!3 = (Seq!0[i] == Syms!0[0])
+    return max_length!2
+```
+### Dependency graph
+![](longest_odd_10_dep_graph.png)
+### Removal of infeasible edges
+![](longest_odd_10_remove_infeasible_edges.png)
+## `max_dist_between_syms`
+### Input
+```python
+def max_dist_between_syms(Seq: list[int], N, Sym: int):
+    max_dist = 0
+    current_dist = 0
+    for i in range(0, N):
+        if not (Seq[i] == Sym):
+            current_dist = current_dist + 1
+        else:
+            current_dist = 0
+
+        if current_dist > max_dist:
+            max_dist = current_dist
+    return max_dist
+
+
+seq = [1, 2, 1, 1, 2, 3, 4, 1]
+max_dist = max_dist_between_syms(seq, len(seq), 1)
+print(max_dist)
+
+```
+### Restricted AST
+```python
+def foo(Seq, N, Sym):
+    max_dist = 0
+    current_dist = 0
+    for i in range(0, N):
+        if not (Seq[i] == Sym):
+            current_dist = (current_dist + 1)
+        else:
+            current_dist = 0
+        if (current_dist > max_dist):
+            max_dist = current_dist
+    return max_dist
+```
+### Three-address code CFG
+![](max_dist_between_syms_tac_cfg.png)
+### SSA
+![](max_dist_between_syms_ssa.png)
+### SSA ϕ→MUX
+![](max_dist_between_syms_ssa_mux.png)
+### Dead code elimination
+![](max_dist_between_syms_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(Seq, N, Sym):
+    max_dist!1 = 0
+    current_dist!1 = 0
+    for i in range(0, N!0):
+        max_dist!2 = Φ(max_dist!1, max_dist!4)
+        current_dist!2 = Φ(current_dist!1, current_dist!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        !2!2 = not !1!2
+        current_dist!4 = 0
+        current_dist!3 = (current_dist!2 + 1)
+        current_dist!5 = MUX(!2!2, current_dist!3, current_dist!4)
+        !3!2 = (current_dist!5 > max_dist!2)
+        max_dist!3 = current_dist!5
+        max_dist!4 = MUX(!3!2, max_dist!3, max_dist!2)
+    return max_dist!2
+```
+### Dependency graph
+![](max_dist_between_syms_dep_graph.png)
+### Removal of infeasible edges
+![](max_dist_between_syms_remove_infeasible_edges.png)
+## `max_sum_between_syms`
+### Input
+```python
+def max_sum_between_syms(Seq: list[int], N, Sym: int):
+    max_sum = 0
+    current_sum = 0
+    for i in range(0, N):
+        if not (Seq[i] == Sym):
+            current_sum = current_sum + Seq[i]
+        else:
+            current_sum = 0
+
+        if current_sum > max_sum:
+            max_sum = current_sum
+    return max_sum
+
+
+seq = [1, 2, 1, 1, 2, 3, 4, 1]
+max_sum = max_sum_between_syms(seq, len(seq), 1)
+print(max_sum)
+
+```
+### Restricted AST
+```python
+def foo(Seq, N, Sym):
+    max_sum = 0
+    current_sum = 0
+    for i in range(0, N):
+        if not (Seq[i] == Sym):
+            current_sum = (current_sum + Seq[i])
+        else:
+            current_sum = 0
+        if (current_sum > max_sum):
+            max_sum = current_sum
+    return max_sum
+```
+### Three-address code CFG
+![](max_sum_between_syms_tac_cfg.png)
+### SSA
+![](max_sum_between_syms_ssa.png)
+### SSA ϕ→MUX
+![](max_sum_between_syms_ssa_mux.png)
+### Dead code elimination
+![](max_sum_between_syms_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(Seq, N, Sym):
+    max_sum!1 = 0
+    current_sum!1 = 0
+    for i in range(0, N!0):
+        max_sum!2 = Φ(max_sum!1, max_sum!4)
+        current_sum!2 = Φ(current_sum!1, current_sum!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        !2!2 = not !1!2
+        current_sum!4 = 0
+        current_sum!3 = (current_sum!2 + Seq!0[i])
+        current_sum!5 = MUX(!2!2, current_sum!3, current_sum!4)
+        !3!2 = (current_sum!5 > max_sum!2)
+        max_sum!3 = current_sum!5
+        max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
+    return max_sum!2
+```
+### Dependency graph
+![](max_sum_between_syms_dep_graph.png)
+### Removal of infeasible edges
+![](max_sum_between_syms_remove_infeasible_edges.png)
+## `minimal_points`
+### Input
+```python
+def minimal_points(X_coords: list[int], Y_coords: list[int], N):
+    min_X: list[int] = []
+    min_Y: list[int] = []
+
+    for i in range(0, N):
+        bx = False
+        for j in range(0, N):
+            bx = bx or (X_coords[j] < X_coords[i] and Y_coords[j] < Y_coords[i])
+        if not bx:
+            min_X = min_X + [X_coords[i]]
+            min_Y = min_Y + [Y_coords[i]]
+
+    return (min_X, min_Y)
+
+
+X_coords = [1, 2, 3]
+Y_coords = [4, 5, 6]
+min_x, min_y = minimal_points(X_coords, Y_coords, len(X_coords))
+print(min_x)
+print(min_y)
+
+```
+### Restricted AST
+```python
+def foo(X_coords, Y_coords, N):
+    min_X = []
+    min_Y = []
+    for i in range(0, N):
+        bx = False
+        for j in range(0, N):
+            bx = (bx or ((X_coords[j] < X_coords[i]) and (Y_coords[j] < Y_coords[i])))
+        if not bx:
+            min_X = (min_X + [X_coords[i]])
+            min_Y = (min_Y + [Y_coords[i]])
+    return (min_X, min_Y)
+```
+### Three-address code CFG
+![](minimal_points_tac_cfg.png)
+### SSA
+![](minimal_points_ssa.png)
+### SSA ϕ→MUX
+![](minimal_points_ssa_mux.png)
+### Dead code elimination
+![](minimal_points_dead_code_elim.png)
+### Linear code with loops
+```python
+def foo(X_coords, Y_coords, N):
+    min_X!1 = []
+    min_Y!1 = []
+    for i in range(0, N!0):
+        min_X!2 = Φ(min_X!1, min_X!4)
+        min_Y!2 = Φ(min_Y!1, min_Y!4)
+        bx!2 = False
+        for j in range(0, N!0):
+            bx!3 = Φ(bx!2, bx!4)
+            !3!3 = (X_coords!0[j] < X_coords!0[i])
+            !4!3 = (Y_coords!0[j] < Y_coords!0[i])
+            !5!3 = (!3!3 and !4!3)
+            bx!4 = (bx!3 or !5!3)
+        !6!2 = not bx!3
+        !8!2 = X_coords!0[i]
+        !9!2 = [!8!2]
+        min_X!3 = (min_X!2 + !9!2)
+        !11!2 = Y_coords!0[i]
+        !12!2 = [!11!2]
+        min_Y!3 = (min_Y!2 + !12!2)
+        min_X!4 = MUX(!6!2, min_X!3, min_X!2)
+        min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)
+    !13!1 = (min_X!2, min_Y!2)
+    return !13!1
+```
+### Dependency graph
+![](minimal_points_dep_graph.png)
+### Removal of infeasible edges
+![](minimal_points_remove_infeasible_edges.png)
 ## `psi`
 ### Input
 ```python
