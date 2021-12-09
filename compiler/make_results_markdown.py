@@ -67,18 +67,7 @@ def dep_graph_to_image(
     for var_def, var_use in dep_graph.edges():
         def_index = statement_indices[var_def]
         use_index = statement_indices[var_use]
-        def_indent, _ = all_statements[def_index]
-        use_indent, _ = all_statements[use_index]
-        is_same_level_back_edge = def_indent == use_indent and isinstance(
-            var_use, llc.Phi
-        )
-        is_inner_to_outer_back_edge = (
-            def_indent > use_indent
-            and isinstance(var_def, llc.Phi)
-            and isinstance(var_use, llc.Phi)
-        )
-        is_back_edge = is_same_level_back_edge or is_inner_to_outer_back_edge
-        style = "dashed" if is_back_edge else "solid"
+        style = "dashed" if dep_graph.is_back_edge(var_def, var_use) else "solid"
         dot.add_edge(pydot.Edge(src=def_index, dst=use_index, style=style))
 
     dot.write(path, format="png")
