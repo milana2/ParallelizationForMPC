@@ -117,6 +117,7 @@ BLOCK = TypeVar("BLOCK")
 
 @dataclass
 class CFGFunction(Generic[BLOCK]):
+    name: str
     parameters: list[Var]
     body: networkx.DiGraph
     entry_block: BLOCK
@@ -138,7 +139,7 @@ class CFGFunction(Generic[BLOCK]):
             ]
         )
         return (
-            f"Function({parameters}):\n"
+            f"Function {self.name}({parameters}):\n"
             + f"Entry block: {block_indices[self.entry_block]}\n"
             + f"Exit block: {block_indices[self.exit_block]}\n"
             + blocks

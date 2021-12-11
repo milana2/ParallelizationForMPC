@@ -66,6 +66,7 @@ def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
         )
 
     return ssa.Function(
+        name=tac_cfg_function.name,
         parameters=tac_cfg_function.parameters,
         body=cfg,
         entry_block=mapping[tac_cfg_function.entry_block],

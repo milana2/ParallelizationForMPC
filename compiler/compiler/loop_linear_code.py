@@ -46,6 +46,7 @@ class For:
 
 @dataclass
 class Function:
+    name: str
     parameters: list[Var]
     body: list[Statement]
     return_value: Var
@@ -54,7 +55,7 @@ class Function:
         parameters = ", ".join([str(parameter) for parameter in self.parameters])
         body = "\n".join([str(statement) for statement in self.body]) + "\n"
         return (
-            f"def foo({parameters}):\n"
+            f"def {self.name}({parameters}):\n"
             + indent(body, "    ")
             + f"    return {self.return_value}"
         )

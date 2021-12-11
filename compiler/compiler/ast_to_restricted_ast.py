@@ -396,6 +396,7 @@ class _FunctionConverter(_StrictNodeVisitor):
             self.raise_syntax_error(node, "Function has empty body")
         return restricted_ast.Function(
             # TODO: Exclude other kinds of arguments
+            name=node.name,
             parameters=[restricted_ast.Var(name=arg.arg) for arg in node.args.args],
             body=_convert_statements(self.source_code_info, node.body[:-1]),
             return_value=_ReturnValueGetter(self.source_code_info).visit(node.body[-1]),

@@ -56,6 +56,7 @@ def ssa_to_loop_linear_code(ssa_function: ssa.Function) -> loop_linear_code.Func
     assert isinstance(ssa_function.exit_block.terminator, ssa.Return)
 
     return loop_linear_code.Function(
+        name=ssa_function.name,
         parameters=ssa_function.parameters,
         body=search(ssa_function.entry_block),
         return_value=ssa_function.exit_block.terminator.value,
