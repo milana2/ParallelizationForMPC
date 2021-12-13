@@ -1,9 +1,14 @@
 from enum import Enum
-from typing import Generic, TypeVar, Union
+from typing import Generic, TypeVar, Union, Optional
 from dataclasses import dataclass
 from textwrap import indent
 
 import networkx  # type: ignore
+
+
+class VarType(str, Enum):
+    PLAINTEXT_INT = "plaintext"
+    SHARED_INT = "shared"
 
 
 @dataclass(frozen=True)
@@ -11,9 +16,13 @@ class Var:
     """A variable named `name`"""
 
     name: str
+    var_type: Optional[VarType] = None
 
     def __str__(self) -> str:
-        return self.name
+        str_rep = self.name
+        if self.var_type is not None:
+            str_rep += f": {self.var_type}"
+        return str_rep
 
     def name_without_ssa_rename(self) -> str:
         return self.name.strip("!")[0]

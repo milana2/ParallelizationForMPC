@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Optional, final, NoReturn
 
 from . import restricted_ast
+from .ast_shared import VarType
 
 
 @dataclass
@@ -397,7 +398,15 @@ class _FunctionConverter(_StrictNodeVisitor):
         return restricted_ast.Function(
             # TODO: Exclude other kinds of arguments
             name=node.name,
-            parameters=[restricted_ast.Var(name=arg.arg) for arg in node.args.args],
+            parameters=[
+                restricted_ast.Var(
+                    name=arg.arg,
+                    var_type=VarType.PLAINTEXT_INT
+                    if arg.annotation is None
+                    else VarType.SHARED_INT,
+                )
+                for arg in node.args.args
+            ],
             body=_convert_statements(self.source_code_info, node.body[:-1]),
             return_value=_ReturnValueGetter(self.source_code_info).visit(node.body[-1]),
         )
