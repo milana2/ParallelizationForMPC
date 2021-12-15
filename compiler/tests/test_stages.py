@@ -41,7 +41,12 @@ class StagesTestCase(unittest.TestCase):
             self.assertEqual(str(loop_linear), stages["loop_linear.txt"])
 
             dep_graph = compiler.DepGraph(loop_linear)
+            self.assertEqual(str(dep_graph), stages["dep_graph.txt"])
+
             compiler.vectorize.remove_infeasible_edges(loop_linear, dep_graph)
+            self.assertEqual(
+                str(dep_graph), stages["dep_graph_remove_infeasible_edges.txt"]
+            )
 
 
 def regenerate_stages():
@@ -74,3 +79,13 @@ def regenerate_stages():
         loop_linear = compiler.ssa_to_loop_linear_code(ssa)
         with open(os.path.join(test_case_dir, "loop_linear.txt"), "w") as f:
             f.write(f"{loop_linear}\n")
+
+        dep_graph = compiler.DepGraph(loop_linear)
+        with open(os.path.join(test_case_dir, "dep_graph.txt"), "w") as f:
+            f.write(f"{dep_graph}\n")
+
+        compiler.vectorize.remove_infeasible_edges(loop_linear, dep_graph)
+        with open(
+            os.path.join(test_case_dir, "dep_graph_remove_infeasible_edges.txt"), "w"
+        ) as f:
+            f.write(f"{dep_graph}\n")

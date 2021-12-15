@@ -60,3 +60,13 @@ def main():
     print("Linear code with loops:")
     print(linear)
     print()
+
+    dep_graph = DepGraph(linear)
+    print("Dependence graph:")
+    print(dep_graph)
+    print()
+
+    vectorize.remove_infeasible_edges(linear, dep_graph)
+    print("Dependence graph after removal of infeasible edges:")
+    print(dep_graph)
+    print()

@@ -84,6 +84,19 @@ class DepGraph:
             ]
         )
 
+    def __str__(self) -> str:
+        nodes = "\n".join([f"    {node}" for node in self.def_use_graph.nodes])
+        edges = [(f"    {u}  →  {v}", u, v) for u, v in self.def_use_graph.edges]
+        forward_edges = "\n".join(
+            [s for s, u, v in edges if not self.is_back_edge(u, v)]
+        )
+        back_edges = "\n".join([s for s, u, v in edges if self.is_back_edge(u, v)])
+        return (
+            f"Nodes:\n{nodes}\n"
+            + f"Forward edges:\n{forward_edges}\n"
+            + f"Back edges:\n{back_edges}"
+        ).strip()
+
 
 def _vars_in_rhs(rhs: llc.AssignRHS) -> list[llc.Var]:
     if isinstance(rhs, llc.Var):

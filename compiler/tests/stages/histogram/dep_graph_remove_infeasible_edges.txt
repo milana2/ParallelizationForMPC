@@ -1,0 +1,26 @@
+Nodes:
+    result!1 = []
+    result!2 = Φ(result!1, result!3)
+    !1!2 = [0]
+    result!3 = (result!2 + !1!2)
+    result!4 = Φ(result!2, result!5)
+    result!5 = Φ(result!4, result!7)
+    !2!3 = (A[j] == i)
+    !3!3 = (result!5[i] + B[j])
+    result!6 = Update(result!5, i, !3!3)
+    result!7 = MUX(!2!3, result!6, result!5)
+Forward edges:
+    result!1 = []  →  result!2 = Φ(result!1, result!3)
+    result!2 = Φ(result!1, result!3)  →  result!3 = (result!2 + !1!2)
+    result!2 = Φ(result!1, result!3)  →  result!4 = Φ(result!2, result!5)
+    !1!2 = [0]  →  result!3 = (result!2 + !1!2)
+    result!4 = Φ(result!2, result!5)  →  result!5 = Φ(result!4, result!7)
+    result!5 = Φ(result!4, result!7)  →  !3!3 = (result!5[i] + B[j])
+    result!5 = Φ(result!4, result!7)  →  result!6 = Update(result!5, i, !3!3)
+    result!5 = Φ(result!4, result!7)  →  result!7 = MUX(!2!3, result!6, result!5)
+    !2!3 = (A[j] == i)  →  result!7 = MUX(!2!3, result!6, result!5)
+    !3!3 = (result!5[i] + B[j])  →  result!6 = Update(result!5, i, !3!3)
+    result!6 = Update(result!5, i, !3!3)  →  result!7 = MUX(!2!3, result!6, result!5)
+Back edges:
+    result!3 = (result!2 + !1!2)  →  result!2 = Φ(result!1, result!3)
+    result!7 = MUX(!2!3, result!6, result!5)  →  result!5 = Φ(result!4, result!7)

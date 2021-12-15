@@ -1,0 +1,38 @@
+Nodes:
+    min_sum!1 = 10000
+    min_index!1 = - 1
+    min_sum!2 = Φ(min_sum!1, min_sum!4)
+    min_index!2 = Φ(min_index!1, min_index!4)
+    sum!2 = 0
+    sum!3 = Φ(sum!2, sum!4)
+    d!3 = (S[((i * D) + j)] - C[j])
+    p!3 = (d!3 * d!3)
+    sum!4 = (sum!3 + p!3)
+    !1!2 = (sum!3 < min_sum!2)
+    min_sum!3 = sum!3
+    min_index!3 = i
+    min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
+    min_index!4 = MUX(!1!2, min_index!3, min_index!2)
+    !2!1 = (min_sum!2, min_index!2)
+Forward edges:
+    min_sum!1 = 10000  →  min_sum!2 = Φ(min_sum!1, min_sum!4)
+    min_index!1 = - 1  →  min_index!2 = Φ(min_index!1, min_index!4)
+    min_sum!2 = Φ(min_sum!1, min_sum!4)  →  !1!2 = (sum!3 < min_sum!2)
+    min_sum!2 = Φ(min_sum!1, min_sum!4)  →  min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
+    min_sum!2 = Φ(min_sum!1, min_sum!4)  →  !2!1 = (min_sum!2, min_index!2)
+    min_index!2 = Φ(min_index!1, min_index!4)  →  min_index!4 = MUX(!1!2, min_index!3, min_index!2)
+    min_index!2 = Φ(min_index!1, min_index!4)  →  !2!1 = (min_sum!2, min_index!2)
+    sum!2 = 0  →  sum!3 = Φ(sum!2, sum!4)
+    sum!3 = Φ(sum!2, sum!4)  →  sum!4 = (sum!3 + p!3)
+    sum!3 = Φ(sum!2, sum!4)  →  !1!2 = (sum!3 < min_sum!2)
+    sum!3 = Φ(sum!2, sum!4)  →  min_sum!3 = sum!3
+    d!3 = (S[((i * D) + j)] - C[j])  →  p!3 = (d!3 * d!3)
+    p!3 = (d!3 * d!3)  →  sum!4 = (sum!3 + p!3)
+    !1!2 = (sum!3 < min_sum!2)  →  min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
+    !1!2 = (sum!3 < min_sum!2)  →  min_index!4 = MUX(!1!2, min_index!3, min_index!2)
+    min_sum!3 = sum!3  →  min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
+    min_index!3 = i  →  min_index!4 = MUX(!1!2, min_index!3, min_index!2)
+Back edges:
+    sum!4 = (sum!3 + p!3)  →  sum!3 = Φ(sum!2, sum!4)
+    min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)  →  min_sum!2 = Φ(min_sum!1, min_sum!4)
+    min_index!4 = MUX(!1!2, min_index!3, min_index!2)  →  min_index!2 = Φ(min_index!1, min_index!4)
