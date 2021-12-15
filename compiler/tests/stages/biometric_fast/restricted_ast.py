@@ -1,4 +1,4 @@
-def foo(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
+def biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: shared, two_C: shared, S: shared, S_sqr_sum: shared):
     differences = ([0] * D)
     for i in range(0, N):
         a_sqr_plus_b_sqr = (S_sqr_sum[i] + C_sqr_sum)

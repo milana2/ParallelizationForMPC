@@ -1,4 +1,4 @@
-Function(A, B, N, num_bins):
+Function histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
 Entry block: 0
 Exit block: 6
 Block 0:
@@ -6,7 +6,7 @@ Block 0:
     jump
 Block 1:
     result!2 = Φ(result!1, result!3)
-    for i in range(0, num_bins!0)
+    for i in range(0, num_bins)
 Block 2:
     !1!2 = [0]
     result!3 = (result!2 + !1!2)
@@ -15,21 +15,21 @@ Block 3:
     jump
 Block 4:
     result!4 = Φ(result!2, result!5)
-    for i in range(0, num_bins!0)
+    for i in range(0, num_bins)
 Block 5:
     jump
 Block 6:
     return result!4
 Block 7:
     result!5 = Φ(result!4, result!7)
-    for j in range(0, N!0)
+    for j in range(0, N)
 Block 8:
-    !2!3 = (A!0[j] == i)
+    !2!3 = (A[j] == i)
     conditional jump !2!3
 Block 9:
     jump
 Block 10:
-    !3!3 = (result!5[i] + B!0[j])
+    !3!3 = (result!5[i] + B[j])
     result!6 = Update(result!5, i, !3!3)
     jump
 Block 11:

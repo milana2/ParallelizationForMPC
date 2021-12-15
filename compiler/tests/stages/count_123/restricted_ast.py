@@ -1,4 +1,4 @@
-def foo(Seq, N, Syms):
+def count_123(Seq: shared, N: plaintext, Syms: shared):
     s1 = False
     s2 = False
     s3 = False

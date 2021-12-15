@@ -1,4 +1,4 @@
-Function(A, B, N, num_bins):
+Function histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
 Entry block: 0
 Exit block: 6
 Block 0:

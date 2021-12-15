@@ -1,4 +1,4 @@
-def foo(X_coords, Y_coords, N):
+def convex_hull(X_coords: shared, Y_coords: shared, N: plaintext):
     hull_X = []
     hull_Y = []
     for i in range(0, N):

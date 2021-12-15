@@ -1,4 +1,4 @@
-def foo(Seq, N, Syms):
+def count_10s(Seq: shared, N: plaintext, Syms: shared):
     s0 = False
     s1 = False
     scount = 0

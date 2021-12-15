@@ -1,4 +1,4 @@
-def foo(Seq, N, Sym):
+def longest_even_0(Seq: shared, N: plaintext, Sym: shared):
     current_length = 0
     max_length = 0
     for i in range(1, N):

@@ -1,17 +1,17 @@
-Function(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
+Function biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: shared, two_C: shared, S: shared, S_sqr_sum: shared):
 Entry block: 0
 Exit block: 3
 Block 0:
     !1!1 = [0]
-    differences!1 = (!1!1 * D!0)
+    differences!1 = (!1!1 * D)
     jump
 Block 1:
     differences!2 = Φ(differences!1, differences!3)
     min_diff!1 = Φ(min_diff!0, min_diff!3)
     min_index!1 = Φ(min_index!0, min_index!3)
-    for i in range(0, N!0)
+    for i in range(0, N)
 Block 2:
-    a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i] + C_sqr_sum!0)
+    a_sqr_plus_b_sqr!2 = (S_sqr_sum[i] + C_sqr_sum)
     two_a_b!2 = 0
     jump
 Block 3:
@@ -19,9 +19,9 @@ Block 3:
     return !3!1
 Block 4:
     two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
-    for j in range(0, D!0)
+    for j in range(0, D)
 Block 5:
-    tmp!3 = (S!0[((i * D!0) + j)] * two_C!0[j])
+    tmp!3 = (S[((i * D) + j)] * two_C[j])
     two_a_b!4 = (two_a_b!3 + tmp!3)
     jump
 Block 6:
@@ -33,7 +33,7 @@ Block 6:
 Block 7:
     min_diff!3 = Φ(min_diff!2, min_diff!5)
     min_index!3 = Φ(min_index!2, min_index!5)
-    for k in range(0, N!0)
+    for k in range(0, N)
 Block 8:
     !2!3 = (differences!3[k] < min_diff!3)
     conditional jump !2!3

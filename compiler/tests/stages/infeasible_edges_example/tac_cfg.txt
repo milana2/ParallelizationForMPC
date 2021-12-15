@@ -1,4 +1,4 @@
-Function(A, B, C, D, N):
+Function foo(A: plaintext, B: plaintext, C: plaintext, D: plaintext, N: plaintext):
 Entry block: 0
 Exit block: 3
 Block 0:

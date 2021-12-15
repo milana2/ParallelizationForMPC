@@ -1,4 +1,4 @@
-def foo(Seq, N, Syms):
+def longest_102(Seq: shared, N: plaintext, Syms: shared):
     s0 = False
     max_len = 0
     length = 0

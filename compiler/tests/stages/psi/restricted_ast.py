@@ -1,4 +1,4 @@
-def foo(A, SA, B, SB):
+def psi(A: shared, SA: plaintext, B: shared, SB: plaintext):
     dummy = 0
     result = []
     for i in range(0, SA):

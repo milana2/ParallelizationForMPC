@@ -1,4 +1,4 @@
-def foo(Seq, N, Syms):
+def count_102(Seq: shared, N: plaintext, Syms: shared):
     s0 = False
     c = 0
     for i in range(0, N):

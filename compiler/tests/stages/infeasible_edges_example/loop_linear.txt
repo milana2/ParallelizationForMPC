@@ -1,5 +1,5 @@
-def foo(A, B, C, D, N):
-    for i in range(0, N!0):
+def foo(A: plaintext, B: plaintext, C: plaintext, D: plaintext, N: plaintext):
+    for i in range(0, N):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)
         C!1 = Φ(C!0, C!2)

@@ -1,4 +1,4 @@
-def foo(X_coords, Y_coords, N):
+def minimal_points(X_coords: shared, Y_coords: shared, N: plaintext):
     min_X = []
     min_Y = []
     for i in range(0, N):

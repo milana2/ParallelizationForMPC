@@ -1,4 +1,4 @@
-def foo(C, D, S, N):
+def biometric(C: shared, D: plaintext, S: shared, N: plaintext):
     min_sum = 10000
     min_index = - 1
     for i in range(0, N):

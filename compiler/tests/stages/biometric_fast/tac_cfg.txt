@@ -1,4 +1,4 @@
-Function(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum):
+Function biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: shared, two_C: shared, S: shared, S_sqr_sum: shared):
 Entry block: 0
 Exit block: 3
 Block 0:

@@ -1,4 +1,4 @@
-def foo(Seq, N, Sym):
+def max_dist_between_syms(Seq: shared, N: plaintext, Sym: shared):
     max_dist = 0
     current_dist = 0
     for i in range(0, N):

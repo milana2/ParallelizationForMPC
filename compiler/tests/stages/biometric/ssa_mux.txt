@@ -1,4 +1,4 @@
-Function(C, D, S, N):
+Function biometric(C: shared, D: plaintext, S: shared, N: plaintext):
 Entry block: 0
 Exit block: 3
 Block 0:
@@ -12,7 +12,7 @@ Block 1:
     d!1 = Φ(d!0, d!2)
     p!1 = Φ(p!0, p!2)
     !1!1 = Φ(!1!0, !1!2)
-    for i in range(0, N!0)
+    for i in range(0, N)
 Block 2:
     sum!2 = 0
     jump
@@ -23,9 +23,9 @@ Block 4:
     sum!3 = Φ(sum!2, sum!4)
     d!2 = Φ(d!1, d!3)
     p!2 = Φ(p!1, p!3)
-    for j in range(0, D!0)
+    for j in range(0, D)
 Block 5:
-    d!3 = (S!0[((i * D!0) + j)] - C!0[j])
+    d!3 = (S[((i * D) + j)] - C[j])
     p!3 = (d!3 * d!3)
     sum!4 = (sum!3 + p!3)
     jump

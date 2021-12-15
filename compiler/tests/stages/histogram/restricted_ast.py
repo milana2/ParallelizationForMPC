@@ -1,4 +1,4 @@
-def foo(A, B, N, num_bins):
+def histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
     result = []
     for i in range(0, num_bins):
         result = (result + [0])

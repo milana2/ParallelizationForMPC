@@ -1,4 +1,4 @@
-def foo(Seq, N, Sym):
+def longest_1s(Seq: shared, N: plaintext, Sym: shared):
     max_length = 0
     length = 0
     for i in range(1, N):

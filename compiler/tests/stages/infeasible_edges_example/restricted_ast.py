@@ -1,4 +1,4 @@
-def foo(A, B, C, D, N):
+def foo(A: plaintext, B: plaintext, C: plaintext, D: plaintext, N: plaintext):
     for i in range(0, N):
         A[i] = (B[i] + 10)
         B[i] = (A[i] * D[(i - 1)])

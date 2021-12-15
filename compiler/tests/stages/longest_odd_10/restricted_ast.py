@@ -1,4 +1,4 @@
-def foo(Seq, N, Syms):
+def longest_odd_10(Seq: shared, N: plaintext, Syms: shared):
     current_length = 0
     max_length = 0
     s2 = False
