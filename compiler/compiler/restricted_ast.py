@@ -138,7 +138,7 @@ class Function:
     A function definition of the form
 
     ```python
-    def foo(parameters):
+    def name(parameters):
         body
         return return_value
     ```
