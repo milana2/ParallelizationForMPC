@@ -330,7 +330,7 @@ We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We
 
 A pseudo $\phi$-node $X_1 = \phi(X_0,X_2)$ in a loop header is evaluated during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to $X_0$, otherwise, it evaluates to $X_2$. 
 
-\ana{We need to double check that the following captures all cases of def-use edges.}
+%\ana{We need to double check that the following captures all cases of def-use edges.}
 The dependence graph has the following def-use edges:
 
 \begin{itemize}
@@ -338,7 +338,9 @@ The dependence graph has the following def-use edges:
 \item outer-to-inner forward $X\rightarrow Y$ where $X$ is in an outer loop nest, $i_1,i_2,...i_j$, and $Y$ is in an inner one, $i_1,i_2,...i_j,...,i_k$. A $\phi$-node can be a source or a target of an outer-to-inner forward edge. 
 \item inner-to-outer forward $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i_1,i_2,...i_k,i_{k+1}$, and $Y$ is in the enclosing loop nest $i_1,i_2,...i_k$. E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer forward edge. Note that the source is \emph{always} a $\phi$-node in the immediately enclosing loop. The interpretation of this edge is that the use node $Y$ uses the definition made in the last iteration of the inner loop. 
 \item same-level back-edge $X\rightarrow Y$. $Y$ is a phi-node in the header of the loop and $X$ is a definition of the variable in the loop body. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge. 
-\item inner-to-outer back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in a loop nest immediately nested into $Y$'s loop nest. 
+\item inner-to-outer back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in a loop nested into $Y$'s loop (not necessarily immediately). 
+ 
+\item mixed forward edge $X\rightarrow Y$. $X$ is a $phi$-node in some loop $i_1,i_2,...i_k,i_{k+1}$ and $Y$ is a node in a loop nested into $i_1,i_2,...i_k$. We transform mixed forward edges as follows. Let $\x_j$ be the variable defined at the phi-node $X$. We add a variable and assignment $\x'_j = \x_j$ immediately after the $i_1,i_2,...i_k$ loop. Then we replace the use of $\x_j$ at $Y$ with $\x'_j$. This transforms a mixed forward edge into an "inner-to-outer" forward edge followed by an outer-to-inner forward edge. Thus Basic Vectorization handles one of "same-level", "inner-to-outer", or "outer-to-inner" def-use edges.
  \end{itemize}
 
 We also define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. \ana{Cycle(n) is probably a better name.} The closure of $n$ is defined as follows:
@@ -351,7 +353,7 @@ We also define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it co
 
 \section{Vectorization}
 
-\ana{Add back-edges into Phase 1. A back-edge from a non-phi-node in loop $i$ to a phi-node in loop $i$'s header is a same-level edge. The only difference with the handling of normal same-level forward def-use is that the operand index will become $i-1$. A back edge from a phi-node in loop $j$ to a phi-node in loop $i$, where $j$ is immediately nested in $i$ is an inner-to-outer edge and will require dropping dimension. We can show these are the only kinds of back-edges that may occur.}
+\ana{Add back-edges into Phase 1. A back-edge from a non-phi-node in loop $i$ to a phi-node in loop $i$'s header is a same-level edge. The only difference with the handling of normal same-level forward def-use is that the operand index will become $i-1$. A back edge from a phi-node in loop $j$ to a phi-node in loop $i$, where $j$ is nested in $i$ is an inner-to-outer edge and will require dropping dimension. We can show these are the only kinds of back-edges that may occur.}
 
 %\subsection{Algorithm (Still work in progress.)}
 
@@ -359,7 +361,7 @@ We also define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it co
 
 \begin{algorithmic} 
 
-\STATE \COMMENT {Phase 1: Raise dimension of scalar variables to corresponding loop nest. We may assume linear traversal of the MPC-source. \ana{Double check!}}
+\STATE \COMMENT {Phase 1: Raise dimension of scalar variables to corresponding loop nest. We may assume linear traversal of the MPC-source.}
 
 \FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i_1,...,i_k$}
 \FOR {each $Y_i$}
@@ -425,7 +427,7 @@ Below is the MPC-source resulting from Benjamin's analysis. It gives rise to a c
 
 \end{algorithmic}
 
-\subsubsection{Phase 1 of Vectorization algorithm:}
+\subsubsection{Phase 1 of Basic Vectorization:}
 
 The transformation preserves the dependence edges. It raises the dimensions of scalars and optimistically vectorizes all operations. The next phase discovers loop-carried dependences and removes affected vectorization. 
 
@@ -622,8 +624,6 @@ index or a pair of indices, e.g., $\texttt{A}_j[i] = \emph{MUX}(c, \texttt{A}_k[
 \ENDFOR
 \end{algorithmic}
 
-
-\ana{Conjecture: Basic Vectorization still works with minor extensions and correctness argument still hods. }
 
 \section{Divide-and-Conquer}
 
