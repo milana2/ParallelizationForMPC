@@ -328,9 +328,14 @@ in parallel still cost 2.
 
 We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. We write $i_1,i_2,...i_k$ to denote the loop nest: $i_1$ is the outermost loop, $i_2$, is immediately nested in $i_1$, and so on until $i_k$. As an example, a statement nested in $i_1,i_2,...i_k$ can access array $A[f(i_1,i_2,...i_k)]$. We write $A[i_1,i_2,...i_k]$ interchangeably. 
 
+\subsection{Pseudo $\phi$-nodes}
+
 A pseudo $\phi$-node $X_1 = \phi(X_0,X_2)$ in a loop header is evaluated during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to $X_0$, otherwise, it evaluates to $X_2$. 
 
 %\ana{We need to double check that the following captures all cases of def-use edges.}
+
+\subsection{Def-use Edges}
+
 The dependence graph has the following def-use edges:
 
 \begin{itemize}
@@ -343,13 +348,24 @@ The dependence graph has the following def-use edges:
 \item mixed forward edge $X\rightarrow Y$. $X$ is a $phi$-node in some loop $i_1,i_2,...i_k,i_{k+1}$ and $Y$ is a node in a loop nested into $i_1,i_2,...i_k$. We transform mixed forward edges as follows. Let $\x_j$ be the variable defined at the phi-node $X$. We add a variable and assignment $\x'_j = \x_j$ immediately after the $i_1,i_2,...i_k$ loop. Then we replace the use of $\x_j$ at $Y$ with $\x'_j$. This transforms a mixed forward edge into an "inner-to-outer" forward edge followed by an outer-to-inner forward edge. Thus Basic Vectorization handles one of "same-level", "inner-to-outer", or "outer-to-inner" def-use edges.
  \end{itemize}
 
-We also define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. \ana{Cycle(n) is probably a better name.} The closure of $n$ is defined as follows:
+\subsection{Helper Functions}
+
+We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. \ana{Cycle(n) is probably a better name.} The closure of $n$ is defined as follows:
 \begin{itemize}
 \item $n$ is in $\mathit{closure}(n)$
 \item $X$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $X$, and $X \rightarrow n$ is a same-level back-edge. 
 \item $Y$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $Y$ and there is a same-level path from $Y$ to some $X$ in $\mathit{closure}(n)$.
 \end{itemize}
 
+We define the $\mathit{raise\_dim}$ (raise dimensions) and $\mathit{drop\_dim}$ (drop dimension) functions. Raise dimension "lifts" a lower-dimension array (\ana{The right term here is tensor, I am pretty sure!}) into a higher dimension one. This is necessary when a lower-dimensional array is used in a higher dimensional loop and, essentially, is just copying of values. For example, Biometric contains the statement $d = \mathit{SUB}(S[i, j], C[j])$, in the $j$-loop which is nested into the $i$-loop. Here $C$ is a one-dimensional array, however, to vectorize across both loops it is necessary to turn it into a two-dimensional array: $C[i,j]$ becomes $[C[0],C[1],...C[J],C[0],C[1],...C[J], ... C[0],C[1],...C[J]]$, which turns the row into a matrix of $I$ identical rows. (We use capital letters to denote the upper bounds of loops, e.g., $J$ is the upper bound of the $j$-loop and $I$ is the upper bound of the $i$-loop.)
+
+$\mathit{raise\_dim}(A[i_1,...,i_k],i_{k+1})$ is defined as follows. It results in a new {k+1}-dimensional array $A'$ where for every $0\le i_{k+1} < I_{k+1}$, $A'[i_1,...,i_k,i_{k+1}] = A[i_1,...,i_k]$. We add the new dimension at the end arbitrarily, it can be added at any position, e.g., before $i_1$, etc. Adding $n$ dimensions is trivially extended as a composition of $n$ $\mathit{raise\_dim}$ that each adds a single dimension. 
+
+As expected, drop dimension turns a higher-dimensional array into a lower-dimensional one. The key use case is an inner-to-outer def-use edge. The code may define a variable, e.g., $\x$ in an inner loop, say $j$, then use this variable in an enclosing loop, say $i$. Our algorithm may vectorize the computation of $\x$ in the $j$-loop thus producing a vector $\x[j]$ where $\x[1]$ is the value of \x after the 1st iteration and so on. Drop dimension states that the outer loop will use the value of the variable at the last iteration.
+
+$\mathit{drop\_dim}(A[i_1,...,i_k,i_{k+1}])$ produces a k-dimensional array $A'$ where $A'[i_1,...,i_k] = A'[i_1,...,i_k,I_{k+1}-1]$. In our analysis, dimensions are always dropped at the end, and again, one can define dropping $n$ dimensions as a composition of $n$ $\mathit{drop\_dim}$.
+
+\ana{This section is still informal. Needs work to make more precise.}
 
 \section{Vectorization}
 
@@ -416,7 +432,7 @@ Below is the MPC-source resulting from Benjamin's analysis. It gives rise to a c
 
 \STATE \COMMENT {Begin of inner loop $j$.}
 \STATE {$\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$}
-\STATE {$\texttt{d} = \mathit{SUM}(\texttt{S}[i,j], \texttt{C}[j])$}
+\STATE {$\texttt{d} = \mathit{SUB}(\texttt{S}[i,j], \texttt{C}[j])$}
 \STATE {$\texttt{p} = \mathit{MUL}(\texttt{d},\texttt{d})$}
 \STATE {$\texttt{sum}_1 = \texttt{ADD}(\texttt{sum}_0,\texttt{p})$}
 \STATE \COMMENT {End of inner loop $j$.}
@@ -440,7 +456,7 @@ The transformation preserves the dependence edges. It raises the dimensions of s
 \STATE \COMMENT {Begin of inner loop $j$.}
 \STATE {$\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j-1], [0,0,...])$}
 \STATE {$\texttt{C}'[i,j] = \mathit{raise\_dim}(\texttt{C}[j],i)$}
-\STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUM}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
+\STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUB}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 \STATE {$\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{MUL}(\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 \STATE {$\texttt{sum}_1[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{ADD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 \STATE \COMMENT {End of inner loop $j$.}
@@ -471,7 +487,7 @@ Starting at the inner phi-node $\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j], 
 
 
 \STATE {$\texttt{C}'[i,j] = \mathit{raise\_dim}(\texttt{C}[j],i)$}
-\STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUM}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
+\STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUB}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 \STATE {$\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{MUL}(\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 
 \STATE \COMMENT {Begin of inner loop $j$. Loop is now much "shorter"!}
@@ -513,7 +529,7 @@ $\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel
 
 \STATE 
 \STATE {$\texttt{C}'[i,j] = \mathit{raise\_dim}(\texttt{C}[j],i)$}
-\STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUM\_SIMD}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
+\STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUB\_SIMD}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 \STATE {$\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{MUL\_SIMD}(\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$} \\
 \STATE {} 
 \STATE {$\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j-1], [0,0,...])$}
@@ -600,6 +616,10 @@ loop-carried dependence on $\texttt{A}$; otherwise there is not and we can remov
 
 Consider the earlier example. There is a single loop, $i$. Clearly, there is no pair $\underline{i}$ and $\underline{i}'$, where $\underline{i} < \underline{i}'$ that make $\underline{i} = \underline{i}'$ (due to the def-use pairs of \texttt{A} 6-8 and 6-10).
 Therefore, we remove the back edge from 6 to 1. Analogously, we remove the back edges from 8 to 2 and 10 to 3. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 12 to 4 remains (def-use pairs for \texttt{D}). As a result of removing these spurious edges, Basic Vectorization will find that statement 6 is vectorizable. Statements 8, 10 and 12 will correctly appear in the FOR loop. 
+
+\subsubsection{Array rebase}
+
+\ana{TODO, add here.}
 
 \subsubsection{Array MUX refinement}
 
