@@ -10,6 +10,7 @@ from .ssa_phi_to_mux import replace_phi_with_mux
 from .dead_code_elim import dead_code_elim
 from .ssa_to_loop_linear_code import ssa_to_loop_linear_code
 from .dep_graph import DepGraph
+from .type_analysis import loop_linear_add_types
 from . import loop_linear_code
 from . import vectorize
 
@@ -69,4 +70,9 @@ def main():
     vectorize.remove_infeasible_edges(linear, dep_graph)
     print("Dependence graph after removal of infeasible edges:")
     print(dep_graph)
+    print()
+
+    typed_ssa = loop_linear_add_types(linear, dep_graph)
+    print("Typed linear code with loops:")
+    print(typed_ssa)
     print()

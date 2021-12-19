@@ -322,8 +322,9 @@ class _StatementConverter(_StrictNodeVisitor):
         (bound_low, bound_high) = _RangeBoundsGetter(self.source_code_info).visit(
             node.iter
         )
+        counter = _NameGetter(self.source_code_info).visit(node.target)
         return restricted_ast.For(
-            counter=_NameGetter(self.source_code_info).visit(node.target),
+            counter=restricted_ast.Var(name=counter.name, var_type=VarType.PLAINTEXT),
             bound_low=bound_low,
             bound_high=bound_high,
             body=_convert_statements(self.source_code_info, node.body),
@@ -401,9 +402,9 @@ class _FunctionConverter(_StrictNodeVisitor):
             parameters=[
                 restricted_ast.Var(
                     name=arg.arg,
-                    var_type=VarType.PLAINTEXT_INT
+                    var_type=VarType.PLAINTEXT
                     if arg.annotation is None
-                    else VarType.SHARED_INT,
+                    else VarType.SHARED,
                 )
                 for arg in node.args.args
             ],

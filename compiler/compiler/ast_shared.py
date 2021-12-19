@@ -7,8 +7,8 @@ import networkx  # type: ignore
 
 
 class VarType(str, Enum):
-    PLAINTEXT_INT = "plaintext"
-    SHARED_INT = "shared"
+    PLAINTEXT = "plaintext"
+    SHARED = "shared"
 
 
 @dataclass(frozen=True)

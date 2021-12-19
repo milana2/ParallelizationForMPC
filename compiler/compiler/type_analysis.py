@@ -1,0 +1,140 @@
+from copy import copy
+import sys
+from typing import Optional
+
+import networkx  # type: ignore
+
+from . import loop_linear_code
+from .dep_graph import DepGraph
+from .ast_shared import Var, ConstantInt, Subscript, BinOp, UnaryOp, VarType
+from .tac_cfg import AssignRHS, List, Tuple, Mux, Update
+
+
+def _type_assign_rhs(rhs: AssignRHS, type_env: dict[str, VarType]) -> Optional[VarType]:
+    """
+    Determines the type of an expression in a given type environment.  If an expression
+    cannot be typed, this function returns None.
+    """
+
+    if isinstance(rhs, Var):
+        return type_env.get(rhs.name)
+    elif isinstance(rhs, ConstantInt):
+        return VarType.PLAINTEXT
+    elif isinstance(rhs, Subscript):
+        # TODO: do we want to check that the index is plaintext here?  Probably not since
+        #   it's possible that we haven't typed all of the variables yet, but that check
+        #   needs to go somewhere
+        return type_env.get(rhs.array.name)
+    elif isinstance(rhs, BinOp):
+        if (
+            _type_assign_rhs(rhs.left, type_env) == VarType.PLAINTEXT
+            and _type_assign_rhs(rhs.right, type_env) == VarType.PLAINTEXT
+        ):
+            return VarType.PLAINTEXT
+        elif (
+            _type_assign_rhs(rhs.left, type_env) == VarType.SHARED
+            or _type_assign_rhs(rhs.right, type_env) == VarType.SHARED
+        ):
+            return VarType.SHARED
+        else:
+            return None
+    elif isinstance(rhs, UnaryOp):
+        return _type_assign_rhs(rhs.operand, type_env)
+    elif isinstance(rhs, List) or isinstance(rhs, Tuple):
+        if all(
+            _type_assign_rhs(item, type_env) == VarType.PLAINTEXT for item in rhs.items
+        ):
+            return VarType.PLAINTEXT
+        elif any(
+            _type_assign_rhs(item, type_env) == VarType.SHARED for item in rhs.items
+        ):
+            return VarType.SHARED
+        else:
+            return None
+    elif isinstance(rhs, Mux):
+        return VarType.SHARED
+    elif isinstance(rhs, Update):
+        # TODO: what is the return value of Update()?
+        # TODO: do Update statements need to update the type of the array?
+        pass
+
+    raise AssertionError(f"Unexpected type {type(rhs)} passed to _type_assign_rhs")
+
+
+def _add_loop_counter_types(
+    type_env: dict[str, VarType], stmts: list[loop_linear_code.Statement]
+) -> None:
+    """
+    Adds the types of the loop counters to the type environment.
+    """
+    for stmt in stmts:
+        if isinstance(stmt, loop_linear_code.For):
+            type_env[stmt.counter.name] = VarType.PLAINTEXT
+            _add_loop_counter_types(type_env, stmt.body)
+
+
+def loop_linear_add_types(
+    func: loop_linear_code.Function, dep_graph: DepGraph
+) -> loop_linear_code.Function:
+    """
+    Perform taint analysis to detect which variables are plaintext and which are shared.
+    """
+
+    var_types: dict[str, VarType] = {var.name: var.var_type for var in func.parameters}
+    _add_loop_counter_types(var_types, func.body)
+
+    worklist = list(dep_graph.def_use_graph.nodes)
+
+    while len(worklist) > 0:
+        stmt = worklist.pop()
+        if isinstance(stmt, loop_linear_code.Assign):
+            if stmt.lhs.var_type is not None:
+                # This assignment has been reached before, don't extend the worklist
+                continue
+
+            if stmt.lhs.name in var_types:
+                print(
+                    f"[WARNING] Variable {stmt.lhs.name} is assigned multiple times in SSA",
+                    file=sys.stderr,
+                )
+
+            var_type = _type_assign_rhs(stmt.rhs, var_types)
+            if var_type is None:
+                # This variable cannot be typed yet
+                continue
+
+            stmt.lhs = Var(stmt.lhs.name, var_type)
+            assert stmt.lhs.var_type is not None
+            var_types[stmt.lhs.name] = stmt.lhs.var_type
+
+        elif isinstance(stmt, loop_linear_code.Phi):
+            if stmt.lhs.var_type is not None:
+                # This assignment has been reached before, don't extend the worklist
+                continue
+
+            if stmt.lhs.name in var_types:
+                print(
+                    f"[WARNING] Variable {stmt.lhs.name} is assigned multiple times in SSA",
+                    file=sys.stderr,
+                )
+
+            if all(var_types.get(var.name) == VarType.PLAINTEXT for var in stmt.rhs):
+                stmt.lhs = Var(stmt.lhs.name, VarType.PLAINTEXT)
+            elif any(var_types.get(var.name) == VarType.SHARED for var in stmt.rhs):
+                stmt.lhs = Var(stmt.lhs.name, VarType.SHARED)
+            else:
+                # This variable cannot be typed yet
+                continue
+
+            assert stmt.lhs.var_type is not None
+            var_types[stmt.lhs.name] = stmt.lhs.var_type
+        else:
+            raise AssertionError(
+                f"Unexpected node {type(stmt)} added to type inference worklist"
+            )
+
+        # If we get to this point, the lhs has been reassigned so we must add dependencies
+        # to the worklist
+        worklist.extend([edge[1] for edge in dep_graph.def_use_graph.edges(stmt)])
+
+    return func
