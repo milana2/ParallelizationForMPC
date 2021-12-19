@@ -11,8 +11,8 @@ def biometric(C: list[int], D, S: list[int], N):
   for i in range(N):
     sum = 0
     for j in range(D):
-      d: int = S[i*D+j]-C[j] 
-      p: int = d*d      
+      d = S[i*D+j]-C[j] 
+      p = d*d      
       sum = sum + p
     if sum < min_sum:
       min_sum = sum
