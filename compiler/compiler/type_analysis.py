@@ -1,4 +1,3 @@
-from copy import copy
 import sys
 from typing import Optional
 
@@ -6,11 +5,21 @@ import networkx  # type: ignore
 
 from . import loop_linear_code
 from .dep_graph import DepGraph
-from .ast_shared import Var, ConstantInt, Subscript, BinOp, UnaryOp, VarType
+from .ast_shared import (
+    Var,
+    ConstantInt,
+    Subscript,
+    BinOp,
+    UnaryOp,
+    VarType,
+    SubscriptIndex,
+)
 from .tac_cfg import AssignRHS, List, Tuple, Mux, Update
 
 
-def _type_assign_rhs(rhs: AssignRHS, type_env: dict[str, VarType]) -> Optional[VarType]:
+def _type_assign_rhs(
+    rhs: AssignRHS | SubscriptIndex, type_env: dict[str, VarType]
+) -> Optional[VarType]:
     """
     Determines the type of an expression in a given type environment.  If an expression
     cannot be typed, this function returns None.
@@ -21,9 +30,10 @@ def _type_assign_rhs(rhs: AssignRHS, type_env: dict[str, VarType]) -> Optional[V
     elif isinstance(rhs, ConstantInt):
         return VarType.PLAINTEXT
     elif isinstance(rhs, Subscript):
-        # TODO: do we want to check that the index is plaintext here?  Probably not since
-        #   it's possible that we haven't typed all of the variables yet, but that check
-        #   needs to go somewhere
+        if _type_assign_rhs(rhs.index, type_env) != VarType.PLAINTEXT:
+            # TODO: switch this to a syntax error with the location of the offending
+            # code in the original source code
+            raise TypeError(f"Array subscript index {rhs.index} is not plaintext")
         return type_env.get(rhs.array.name)
     elif isinstance(rhs, BinOp):
         if (
@@ -71,6 +81,23 @@ def _add_loop_counter_types(
         if isinstance(stmt, loop_linear_code.For):
             type_env[stmt.counter.name] = VarType.PLAINTEXT
             _add_loop_counter_types(type_env, stmt.body)
+
+
+def validate_type_requirements(
+    stmts: list[loop_linear_code.Statement], type_env: dict[str, VarType]
+) -> None:
+    """
+    Validates that all of MPC's type requirements are met.  Specifically, this function
+    checks that all loop counters and array subscript indices are plaintext.
+    """
+    for stmt in stmts:
+        if isinstance(stmt, loop_linear_code.For):
+            if type_env[stmt.counter.name] != VarType.PLAINTEXT:
+                raise TypeError(f"Loop counter {stmt.counter.name} is not plaintext")
+            validate_type_requirements(stmt.body, type_env)
+        elif isinstance(stmt, loop_linear_code.Assign):
+            # The type assignment function checks for type errors internally
+            _type_assign_rhs(stmt.rhs, type_env)
 
 
 def loop_linear_add_types(
@@ -136,5 +163,7 @@ def loop_linear_add_types(
         # If we get to this point, the lhs has been reassigned so we must add dependencies
         # to the worklist
         worklist.extend([edge[1] for edge in dep_graph.def_use_graph.edges(stmt)])
+
+    validate_type_requirements(func.body, var_types)
 
     return func
