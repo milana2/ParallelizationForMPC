@@ -148,6 +148,10 @@ def main():
         md += "### Removal of infeasible edges\n"
         md += f"![]({filename})\n"
 
+        compiler.loop_linear_add_types(loop_linear_code, dep_graph)
+        md += "### Typed linear code with loops\n"
+        md += f"```python\n{loop_linear_code}\n```\n"
+
     md_path = os.path.join(args.path, "README.md")
     with open(md_path, "w") as f:
         f.write(md)
