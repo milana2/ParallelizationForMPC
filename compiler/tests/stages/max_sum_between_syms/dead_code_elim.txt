@@ -8,15 +8,15 @@ Block 0:
 Block 1:
     max_sum!2 = Φ(max_sum!1, max_sum!4)
     current_sum!2 = Φ(current_sum!1, current_sum!5)
-    for i in range(0, N)
+    for i: plaintext in range(0, N!0)
 Block 2:
-    !1!2 = (Seq[i] == Sym)
+    !1!2 = (Seq!0[i] == Sym!0)
     !2!2 = not !1!2
     conditional jump !2!2
 Block 3:
     return max_sum!2
 Block 4:
-    current_sum!3 = (current_sum!2 + Seq[i])
+    current_sum!3 = (current_sum!2 + Seq!0[i])
     jump
 Block 5:
     current_sum!4 = 0

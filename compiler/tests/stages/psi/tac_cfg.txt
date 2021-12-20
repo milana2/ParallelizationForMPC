@@ -6,14 +6,14 @@ Block 0:
     result = []
     jump
 Block 1:
-    for i in range(0, SA)
+    for i: plaintext in range(0, SA)
 Block 2:
     flag = False
     jump
 Block 3:
     return result
 Block 4:
-    for j in range(0, SB)
+    for j: plaintext in range(0, SB)
 Block 5:
     !1 = (A[i] == B[j])
     conditional jump !1

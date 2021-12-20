@@ -5,7 +5,7 @@ Block 0:
     sum = 0
     jump
 Block 1:
-    for i in range(0, N)
+    for i: plaintext in range(0, N)
 Block 2:
     temp = (A[i] * B[i])
     sum = (sum + temp)

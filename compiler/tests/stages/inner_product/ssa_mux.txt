@@ -7,9 +7,9 @@ Block 0:
 Block 1:
     sum!2 = Φ(sum!1, sum!3)
     temp!1 = Φ(temp!0, temp!2)
-    for i in range(0, N)
+    for i: plaintext in range(0, N!0)
 Block 2:
-    temp!2 = (A[i] * B[i])
+    temp!2 = (A!0[i] * B!0[i])
     sum!3 = (sum!2 + temp!2)
     jump
 Block 3:

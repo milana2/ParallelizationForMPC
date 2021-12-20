@@ -1,0 +1,24 @@
+def minimal_points(X_coords: shared, Y_coords: shared, N: plaintext):
+    min_X!1: plaintext = []
+    min_Y!1: plaintext = []
+    for i: plaintext in range(0, N!0):
+        min_X!2: shared = Φ(min_X!1, min_X!4)
+        min_Y!2: shared = Φ(min_Y!1, min_Y!4)
+        bx!2: plaintext = False
+        for j: plaintext in range(0, N!0):
+            bx!3 = Φ(bx!2, bx!4)
+            !3!3 = (X_coords!0[j] < X_coords!0[i])
+            !4!3 = (Y_coords!0[j] < Y_coords!0[i])
+            !5!3 = (!3!3 and !4!3)
+            bx!4 = (bx!3 or !5!3)
+        !6!2 = not bx!3
+        !8!2 = X_coords!0[i]
+        !9!2 = [!8!2]
+        min_X!3: shared = (min_X!2 + !9!2)
+        !11!2 = Y_coords!0[i]
+        !12!2 = [!11!2]
+        min_Y!3: shared = (min_Y!2 + !12!2)
+        min_X!4: shared = MUX(!6!2, min_X!3, min_X!2)
+        min_Y!4: shared = MUX(!6!2, min_Y!3, min_Y!2)
+    !13!1: shared = (min_X!2, min_Y!2)
+    return !13!1

@@ -5,15 +5,15 @@ Nodes:
     min_Y!2 = Φ(min_Y!1, min_Y!4)
     bx!2 = False
     bx!3 = Φ(bx!2, bx!4)
-    !3!3 = (X_coords[j] < X_coords[i])
-    !4!3 = (Y_coords[j] < Y_coords[i])
+    !3!3 = (X_coords!0[j] < X_coords!0[i])
+    !4!3 = (Y_coords!0[j] < Y_coords!0[i])
     !5!3 = (!3!3 and !4!3)
     bx!4 = (bx!3 or !5!3)
     !6!2 = not bx!3
-    !8!2 = X_coords[i]
+    !8!2 = X_coords!0[i]
     !9!2 = [!8!2]
     min_X!3 = (min_X!2 + !9!2)
-    !11!2 = Y_coords[i]
+    !11!2 = Y_coords!0[i]
     !12!2 = [!11!2]
     min_Y!3 = (min_Y!2 + !12!2)
     min_X!4 = MUX(!6!2, min_X!3, min_X!2)
@@ -31,15 +31,15 @@ Forward edges:
     bx!2 = False  →  bx!3 = Φ(bx!2, bx!4)
     bx!3 = Φ(bx!2, bx!4)  →  bx!4 = (bx!3 or !5!3)
     bx!3 = Φ(bx!2, bx!4)  →  !6!2 = not bx!3
-    !3!3 = (X_coords[j] < X_coords[i])  →  !5!3 = (!3!3 and !4!3)
-    !4!3 = (Y_coords[j] < Y_coords[i])  →  !5!3 = (!3!3 and !4!3)
+    !3!3 = (X_coords!0[j] < X_coords!0[i])  →  !5!3 = (!3!3 and !4!3)
+    !4!3 = (Y_coords!0[j] < Y_coords!0[i])  →  !5!3 = (!3!3 and !4!3)
     !5!3 = (!3!3 and !4!3)  →  bx!4 = (bx!3 or !5!3)
     !6!2 = not bx!3  →  min_X!4 = MUX(!6!2, min_X!3, min_X!2)
     !6!2 = not bx!3  →  min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)
-    !8!2 = X_coords[i]  →  !9!2 = [!8!2]
+    !8!2 = X_coords!0[i]  →  !9!2 = [!8!2]
     !9!2 = [!8!2]  →  min_X!3 = (min_X!2 + !9!2)
     min_X!3 = (min_X!2 + !9!2)  →  min_X!4 = MUX(!6!2, min_X!3, min_X!2)
-    !11!2 = Y_coords[i]  →  !12!2 = [!11!2]
+    !11!2 = Y_coords!0[i]  →  !12!2 = [!11!2]
     !12!2 = [!11!2]  →  min_Y!3 = (min_Y!2 + !12!2)
     min_Y!3 = (min_Y!2 + !12!2)  →  min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)
 Back edges:

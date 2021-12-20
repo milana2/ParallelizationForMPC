@@ -8,7 +8,7 @@ Block 0:
 Block 1:
     min_sum!2 = Φ(min_sum!1, min_sum!4)
     min_index!2 = Φ(min_index!1, min_index!4)
-    for i in range(0, N)
+    for i: plaintext in range(0, N!0)
 Block 2:
     sum!2 = 0
     jump
@@ -17,9 +17,9 @@ Block 3:
     return !2!1
 Block 4:
     sum!3 = Φ(sum!2, sum!4)
-    for j in range(0, D)
+    for j: plaintext in range(0, D!0)
 Block 5:
-    d!3 = (S[((i * D) + j)] - C[j])
+    d!3 = (S!0[((i * D!0) + j)] - C!0[j])
     p!3 = (d!3 * d!3)
     sum!4 = (sum!3 + p!3)
     jump

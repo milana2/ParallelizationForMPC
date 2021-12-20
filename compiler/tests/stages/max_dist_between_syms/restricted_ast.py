@@ -1,7 +1,7 @@
 def max_dist_between_syms(Seq: shared, N: plaintext, Sym: shared):
     max_dist = 0
     current_dist = 0
-    for i in range(0, N):
+    for i: plaintext in range(0, N):
         if not (Seq[i] == Sym):
             current_dist = (current_dist + 1)
         else:

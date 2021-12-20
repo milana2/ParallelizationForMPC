@@ -6,7 +6,7 @@ Block 0:
     min_Y = []
     jump
 Block 1:
-    for i in range(0, N)
+    for i: plaintext in range(0, N)
 Block 2:
     bx = False
     jump
@@ -14,7 +14,7 @@ Block 3:
     !13 = (min_X, min_Y)
     return !13
 Block 4:
-    for j in range(0, N)
+    for j: plaintext in range(0, N)
 Block 5:
     !1 = (X_coords[j] < X_coords[i])
     !2 = (Y_coords[j] < Y_coords[i])

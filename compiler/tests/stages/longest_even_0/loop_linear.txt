@@ -1,10 +1,10 @@
 def longest_even_0(Seq: shared, N: plaintext, Sym: shared):
     current_length!1 = 0
     max_length!1 = 0
-    for i in range(1, N):
+    for i: plaintext in range(1, N!0):
         current_length!2 = Φ(current_length!1, current_length!5)
         max_length!2 = Φ(max_length!1, max_length!4)
-        !1!2 = (Seq[i] == Sym)
+        !1!2 = (Seq!0[i] == Sym!0)
         current_length!4 = 0
         current_length!3 = (current_length!2 + 1)
         current_length!5 = MUX(!1!2, current_length!3, current_length!4)

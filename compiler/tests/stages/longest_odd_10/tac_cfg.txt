@@ -7,7 +7,7 @@ Block 0:
     s2 = False
     jump
 Block 1:
-    for i in range(0, N)
+    for i: plaintext in range(0, N)
 Block 2:
     !1 = (Seq[i] == Syms[1])
     s1 = (s2 and !1)

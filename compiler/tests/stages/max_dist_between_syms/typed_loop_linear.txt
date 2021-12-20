@@ -1,0 +1,15 @@
+def max_dist_between_syms(Seq: shared, N: plaintext, Sym: shared):
+    max_dist!1: plaintext = 0
+    current_dist!1: plaintext = 0
+    for i: plaintext in range(0, N!0):
+        max_dist!2: shared = Φ(max_dist!1, max_dist!4)
+        current_dist!2: shared = Φ(current_dist!1, current_dist!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        !2!2 = not !1!2
+        current_dist!4: plaintext = 0
+        current_dist!3: shared = (current_dist!2 + 1)
+        current_dist!5: shared = MUX(!2!2, current_dist!3, current_dist!4)
+        !3!2: shared = (current_dist!5 > max_dist!2)
+        max_dist!3: shared = current_dist!5
+        max_dist!4: shared = MUX(!3!2, max_dist!3, max_dist!2)
+    return max_dist!2

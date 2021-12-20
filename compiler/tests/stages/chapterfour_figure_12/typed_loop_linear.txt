@@ -1,0 +1,9 @@
+def foo(x: plaintext, y: plaintext):
+    z!1: plaintext = 0
+    !1!1 = (x!0 > 0)
+    !2!1 = (y!0 > 0)
+    z!3: plaintext = - 1
+    z!2: plaintext = 1
+    z!4: shared = MUX(!2!1, z!2, z!3)
+    z!5: shared = MUX(!1!1, z!1, z!4)
+    return z!5

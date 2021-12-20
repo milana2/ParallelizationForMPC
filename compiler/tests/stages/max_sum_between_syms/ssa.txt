@@ -11,15 +11,15 @@ Block 1:
     !1!1 = Φ(!1!0, !1!2)
     !2!1 = Φ(!2!0, !2!2)
     !3!1 = Φ(!3!0, !3!2)
-    for i in range(0, N)
+    for i: plaintext in range(0, N!0)
 Block 2:
-    !1!2 = (Seq[i] == Sym)
+    !1!2 = (Seq!0[i] == Sym!0)
     !2!2 = not !1!2
     conditional jump !2!2
 Block 3:
     return max_sum!2
 Block 4:
-    current_sum!3 = (current_sum!2 + Seq[i])
+    current_sum!3 = (current_sum!2 + Seq!0[i])
     jump
 Block 5:
     current_sum!4 = 0

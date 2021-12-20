@@ -5,7 +5,7 @@ Block 0:
     result = []
     jump
 Block 1:
-    for i in range(0, num_bins)
+    for i: plaintext in range(0, num_bins)
 Block 2:
     !1 = [0]
     result = (result + !1)
@@ -13,13 +13,13 @@ Block 2:
 Block 3:
     jump
 Block 4:
-    for i in range(0, num_bins)
+    for i: plaintext in range(0, num_bins)
 Block 5:
     jump
 Block 6:
     return result
 Block 7:
-    for j in range(0, N)
+    for j: plaintext in range(0, N)
 Block 8:
     !2 = (A[j] == i)
     conditional jump !2

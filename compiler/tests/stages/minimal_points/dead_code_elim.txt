@@ -8,7 +8,7 @@ Block 0:
 Block 1:
     min_X!2 = Φ(min_X!1, min_X!4)
     min_Y!2 = Φ(min_Y!1, min_Y!4)
-    for i in range(0, N)
+    for i: plaintext in range(0, N!0)
 Block 2:
     bx!2 = False
     jump
@@ -17,10 +17,10 @@ Block 3:
     return !13!1
 Block 4:
     bx!3 = Φ(bx!2, bx!4)
-    for j in range(0, N)
+    for j: plaintext in range(0, N!0)
 Block 5:
-    !3!3 = (X_coords[j] < X_coords[i])
-    !4!3 = (Y_coords[j] < Y_coords[i])
+    !3!3 = (X_coords!0[j] < X_coords!0[i])
+    !4!3 = (Y_coords!0[j] < Y_coords!0[i])
     !5!3 = (!3!3 and !4!3)
     bx!4 = (bx!3 or !5!3)
     jump
@@ -28,10 +28,10 @@ Block 6:
     !6!2 = not bx!3
     conditional jump !6!2
 Block 7:
-    !8!2 = X_coords[i]
+    !8!2 = X_coords!0[i]
     !9!2 = [!8!2]
     min_X!3 = (min_X!2 + !9!2)
-    !11!2 = Y_coords[i]
+    !11!2 = Y_coords!0[i]
     !12!2 = [!11!2]
     min_Y!3 = (min_Y!2 + !12!2)
     jump

@@ -6,7 +6,7 @@ Block 0:
     min_index = - 1
     jump
 Block 1:
-    for i in range(0, N)
+    for i: plaintext in range(0, N)
 Block 2:
     sum = 0
     jump
@@ -14,7 +14,7 @@ Block 3:
     !2 = (min_sum, min_index)
     return !2
 Block 4:
-    for j in range(0, D)
+    for j: plaintext in range(0, D)
 Block 5:
     d = (S[((i * D) + j)] - C[j])
     p = (d * d)

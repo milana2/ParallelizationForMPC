@@ -7,7 +7,7 @@ Block 0:
     scount = 0
     jump
 Block 1:
-    for i in range(0, N)
+    for i: plaintext in range(0, N)
 Block 2:
     !1 = (Seq[i] != Syms[0])
     !2 = (s1 and !1)

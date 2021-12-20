@@ -5,7 +5,7 @@ Nodes:
     min_index!2 = Φ(min_index!1, min_index!4)
     sum!2 = 0
     sum!3 = Φ(sum!2, sum!4)
-    d!3 = (S[((i * D) + j)] - C[j])
+    d!3 = (S!0[((i * D!0) + j)] - C!0[j])
     p!3 = (d!3 * d!3)
     sum!4 = (sum!3 + p!3)
     !1!2 = (sum!3 < min_sum!2)
@@ -26,7 +26,7 @@ Forward edges:
     sum!3 = Φ(sum!2, sum!4)  →  sum!4 = (sum!3 + p!3)
     sum!3 = Φ(sum!2, sum!4)  →  !1!2 = (sum!3 < min_sum!2)
     sum!3 = Φ(sum!2, sum!4)  →  min_sum!3 = sum!3
-    d!3 = (S[((i * D) + j)] - C[j])  →  p!3 = (d!3 * d!3)
+    d!3 = (S!0[((i * D!0) + j)] - C!0[j])  →  p!3 = (d!3 * d!3)
     p!3 = (d!3 * d!3)  →  sum!4 = (sum!3 + p!3)
     !1!2 = (sum!3 < min_sum!2)  →  min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
     !1!2 = (sum!3 < min_sum!2)  →  min_index!4 = MUX(!1!2, min_index!3, min_index!2)

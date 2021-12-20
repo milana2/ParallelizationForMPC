@@ -3,10 +3,10 @@ Entry block: 0
 Exit block: 3
 Block 0:
     z!1 = 0
-    !1!1 = (x > 0)
+    !1!1 = (x!0 > 0)
     conditional jump !1!1
 Block 1:
-    !2!1 = (y > 0)
+    !2!1 = (y!0 > 0)
     conditional jump !2!1
 Block 2:
     jump

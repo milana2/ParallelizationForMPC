@@ -12,7 +12,7 @@ Block 1:
     C!1 = Φ(C!0, C!2)
     !4!1 = Φ(!4!0, !4!2)
     D!1 = Φ(D!0, D!2)
-    for i in range(0, N)
+    for i: plaintext in range(0, N!0)
 Block 2:
     !1!2 = (B!1[i] + 10)
     A!2 = Update(A!1, i, !1!2)
