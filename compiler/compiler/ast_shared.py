@@ -27,6 +27,12 @@ class Var:
     def name_without_ssa_rename(self) -> str:
         return self.name.strip("!")[0]
 
+    def __hash__(self) -> int:
+        return hash(self.name)
+
+    def __eq__(self, o) -> bool:
+        return self.name == o.name
+
 
 @dataclass(frozen=True)
 class ConstantInt:
