@@ -30,7 +30,7 @@ def _type_assign_rhs(
     elif isinstance(rhs, ConstantInt):
         return VarType.PLAINTEXT
     elif isinstance(rhs, Subscript):
-        if _type_assign_rhs(rhs.index, type_env) != VarType.PLAINTEXT:
+        if _type_assign_rhs(rhs.index, type_env) == VarType.SHARED:
             # TODO: switch this to a syntax error with the location of the offending
             # code in the original source code
             raise TypeError(f"Array subscript index {rhs.index} is not plaintext")
@@ -66,7 +66,7 @@ def _type_assign_rhs(
     elif isinstance(rhs, Update):
         # TODO: what is the return value of Update()?
         # TODO: do Update statements need to update the type of the array?
-        pass
+        return None
 
     raise AssertionError(f"Unexpected type {type(rhs)} passed to _type_assign_rhs")
 

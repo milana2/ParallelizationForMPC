@@ -72,7 +72,7 @@ def main():
     print(dep_graph)
     print()
 
-    typed_ssa = loop_linear_add_types(linear, dep_graph)
+    loop_linear_add_types(linear, dep_graph)
     print("Typed linear code with loops:")
-    print(typed_ssa)
+    print(linear)
     print()
