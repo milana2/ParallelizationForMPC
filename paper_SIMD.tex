@@ -612,37 +612,48 @@ references the \emph{same} array element as a use $ ... = \texttt{A}_n[f'(i,j,k)
 we may have a loop-carried dependence for $\texttt{A}$ due to this def-use pair. (In contrast, Cytron's algorithm inserts a loop-carried dependency every time there is an array update.)
 The algorithm above examines all def-use pairs in loop $j$, including defs and uses in nested loops, searching for values $\underline{i}, \underline{j}, \underline{j}', \underline{k}, \underline{k}'$ that satisfy 
 $f(\underline{i},\underline{j},\underline{k}) = f'(\underline{i},\underline{j}',\underline{k}')$. If such values exist for some def-use pair, then there is a potential 
-loop-carried dependence on $\texttt{A}$; otherwise there is not and we can remove the spurious backward edge thus ``freeing up'' statements for vectorization. \ana{Double check this!!!}
+loop-carried dependence on $\texttt{A}$; otherwise there is not and we can remove the spurious backward edge thus ``freeing up'' statements for vectorization. %\ana{Double check this!!!}
 
 Consider the earlier example. There is a single loop, $i$. Clearly, there is no pair $\underline{i}$ and $\underline{i}'$, where $\underline{i} < \underline{i}'$ that make $\underline{i} = \underline{i}'$ (due to the def-use pairs of \texttt{A} 6-8 and 6-10).
 Therefore, we remove the back edge from 6 to 1. Analogously, we remove the back edges from 8 to 2 and 10 to 3. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 12 to 4 remains (def-use pairs for \texttt{D}). As a result of removing these spurious edges, Basic Vectorization will find that statement 6 is vectorizable. Statements 8, 10 and 12 will correctly appear in the FOR loop. 
 
-\subsubsection{Array rebase}
-
-\ana{TODO, add here.}
+\ana{TODO: We may remove phi-nodes that end up without incoming back-edges. This can free some cycles that we'd waste on bookkeeping arrays.} 
 
 \subsubsection{Array MUX refinement}
 
-Next, the algorithm refines array MUX statement. 
+\ana{TODO: I think we should implement this.}
+
+Next, the algorithm refines array MUX statements. 
 MPC-source after Cytron's SSA may result in statements $\texttt{A}_j = \emph{MUX}(..., \texttt{A}_k, \texttt{A}_l)$, which imply that any index 
 of A can be written at this point and therefore there is a loop-carried dependency. In some cases the MUX can be refined to just a single 
-index or a pair of indices, e.g., $\texttt{A}_j[i] = \emph{MUX}(c, \texttt{A}_k[i], \texttt{A}_l[i])$. \ana{Clarify why this helps. Still work in progress.}
+index or a pair of indices, e.g., $\texttt{A}_j[i] = \emph{MUX}(c, \texttt{A}_k[i], \texttt{A}_l[i])$. 
+
+%\ana{Clarify why this helps. Still work in progress.}
+This is to reduce the dimensionality of simd-ified computation. Technically, $\texttt{A}_j = \emph{MUX}(..., \texttt{A}_k, \texttt{A}_l)$ is 
+a simdified operation that can be carried out in parallel "in one round". However, if \texttt{A} is a multi-dimensional array, this would lead 
+to substantial increase in the size of the arrays (vectors) we send to SIMD operations. Refining to an update to a specific index would reduce 
+the size of those vectors. Note that this is a heuristic that handle a common case, but not all cases of array updates.
+
 
 \begin{algorithmic}
 \FOR {each $\mathit{stmt}$: $\texttt{A}_j = \emph{MUX}(c, \texttt{A}_k, \texttt{A}_l)$ in the MPC-source seq.}
 \STATE $i_1 = \mathit{find\_update}(A_k)$ \COMMENT { Is null when $A_k = \phi(...)$ }
 \STATE $i_2 = \mathit{find\_update}(A_l)$ \COMMENT { Is null when $A_l = \phi(...)$ }
-\IF {$i_1 \cong i_2$} \STATE \COMMENT{ Also $i_1 \cong i_2$ when one is null. WLG assume $i_2$ is null } 
+\IF {$i_1 == i_2$ or $i_1$ is null or $i_2$ is null} \STATE \COMMENT{ With our restrictions on writes we must have $i_1 = i_2$. } 
 \STATE replace $\mathit{stmt}$ with \\
 \STATE $\texttt{A}_j = \texttt{A}_k$; $\texttt{A}_j[i_1] = \emph{MUX}(c, \texttt{A}_k[i_1], \texttt{A}_l[i_1])$
 %\ELSIF {$i_1 \ncong i_2$}  
 %\STATE replace $\mathit{stmt}$ with \\
 %\STATE $\texttt{A}_j = \texttt{A}_k$; $\texttt{A}_j[i_1] = \emph{MUX}(c, \texttt{A}_k[i_1], \texttt{A}_l[i_1])$
-\ELSE \STATE \COMMENT{ Also, not $\cong$ when one is $\texttt{A}_j = \emph{MUX}(..., \texttt{A}_k, \texttt{A}_l)$}
+\ELSE \STATE
 \STATE $\mathit{stmt}$ stays as is
 \ENDIF
 \ENDFOR
 \end{algorithmic}
+
+\subsubsection{Extending Basic Vectorization with Array Writes}
+
+\ana{TODO, add the weekend notes here. The big things are 1) Restricting array writes to "canonical writes" and 2) change of index, e.g., if accessing A[i] in loop j, have to change to accessing A[i,j].}
 
 
 \section{Divide-and-Conquer}
