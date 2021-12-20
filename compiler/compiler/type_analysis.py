@@ -1,5 +1,5 @@
 import sys
-from typing import Optional, Union
+from typing import Optional, Union, cast
 
 import networkx  # type: ignore
 
@@ -109,7 +109,7 @@ def loop_linear_add_types(
 
     var_types: dict[str, VarType] = {
         # TODO: fix the below hack once parameter ssa renaming is properly implemented
-        f"{var.name}!0": var.var_type
+        f"{var.name}!0": cast(VarType, var.var_type)
         for var in func.parameters
     }
     _add_loop_counter_types(var_types, func.body)
