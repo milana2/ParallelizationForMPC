@@ -1,5 +1,5 @@
 import sys
-from typing import Optional
+from typing import Optional, Union
 
 import networkx  # type: ignore
 
@@ -18,7 +18,7 @@ from .tac_cfg import AssignRHS, List, Tuple, Mux, Update
 
 
 def _type_assign_rhs(
-    rhs: AssignRHS | SubscriptIndex, type_env: dict[str, VarType]
+    rhs: Union[AssignRHS, SubscriptIndex], type_env: dict[str, VarType]
 ) -> Optional[VarType]:
     """
     Determines the type of an expression in a given type environment.  If an expression
