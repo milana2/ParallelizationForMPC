@@ -242,7 +242,7 @@ def biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: sh
     !1!1: plaintext = [0]
     differences!1: plaintext = (!1!1 * D!0)
     for i: plaintext in range(0, N!0):
-        differences!2 = Φ(differences!1, differences!3)
+        differences!2: shared = Φ(differences!1, differences!3)
         min_diff!1: shared = Φ(min_diff!0, min_diff!3)
         min_index!1: shared = Φ(min_index!0, min_index!3)
         a_sqr_plus_b_sqr!2: shared = (S_sqr_sum!0[i] + C_sqr_sum!0)
@@ -252,14 +252,14 @@ def biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: sh
             tmp!3: shared = (S!0[((i * D!0) + j)] * two_C!0[j])
             two_a_b!4: shared = (two_a_b!3 + tmp!3)
         this_diff!2: shared = (a_sqr_plus_b_sqr!2 - two_a_b!3)
-        differences!3 = Update(differences!2, i, this_diff!2)
-        min_diff!2 = differences!3[0]
+        differences!3: shared = Update(differences!2, i, this_diff!2)
+        min_diff!2: shared = differences!3[0]
         min_index!2: plaintext = 0
         for k: plaintext in range(0, N!0):
             min_diff!3: shared = Φ(min_diff!2, min_diff!5)
             min_index!3: shared = Φ(min_index!2, min_index!5)
             !2!3: shared = (differences!3[k] < min_diff!3)
-            min_diff!4 = differences!3[k]
+            min_diff!4: shared = differences!3[k]
             min_index!4: plaintext = k
             min_diff!5: shared = MUX(!2!3, min_diff!4, min_diff!3)
             min_index!5: shared = MUX(!2!3, min_index!4, min_index!3)
@@ -819,7 +819,7 @@ def histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
             result!5: shared = Φ(result!4, result!7)
             !2!3: shared = (A!0[j] == i)
             !3!3: shared = (result!5[i] + B!0[j])
-            result!6 = Update(result!5, i, !3!3)
+            result!6: shared = Update(result!5, i, !3!3)
             result!7: shared = MUX(!2!3, result!6, result!5)
     return result!4
 ```
