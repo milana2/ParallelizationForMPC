@@ -64,9 +64,18 @@ def _type_assign_rhs(
     elif isinstance(rhs, Mux):
         return VarType.SHARED
     elif isinstance(rhs, Update):
-        # TODO: what is the return value of Update()?
-        # TODO: do Update statements need to update the type of the array?
-        return None
+        if (
+            _type_assign_rhs(rhs.value, type_env) == VarType.SHARED
+            or type_env.get(rhs.array.name) == VarType.SHARED
+        ):
+            return VarType.SHARED
+        elif (
+            _type_assign_rhs(rhs.value, type_env) == VarType.PLAINTEXT
+            and type_env.get(rhs.array.name) == VarType.PLAINTEXT
+        ):
+            return VarType.PLAINTEXT
+        else:
+            return None
 
     raise AssertionError(f"Unexpected type {type(rhs)} passed to _type_assign_rhs")
 
