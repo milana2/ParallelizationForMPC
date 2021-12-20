@@ -3,16 +3,16 @@ def longest_102(Seq: shared, N: plaintext, Syms: shared):
     max_len!1: plaintext = 0
     length!1: plaintext = 0
     for i: plaintext in range(0, N!0):
-        s0!2 = Φ(s0!1, s0!3)
+        s0!2: shared = Φ(s0!1, s0!3)
         max_len!2: shared = Φ(max_len!1, max_len!4)
         length!2: shared = Φ(length!1, length!5)
-        !1!2 = (Seq!0[i] == Syms!0[2])
-        s1!2 = (s0!2 and !1!2)
-        !2!2 = (Seq!0[i] == Syms!0[1])
-        !4!2 = (Seq!0[i] == Syms!0[0])
-        !5!2 = (s0!2 and !4!2)
-        s0!3 = (!2!2 or !5!2)
-        !6!2 = (s1!2 or s0!3)
+        !1!2: shared = (Seq!0[i] == Syms!0[2])
+        s1!2: shared = (s0!2 and !1!2)
+        !2!2: shared = (Seq!0[i] == Syms!0[1])
+        !4!2: shared = (Seq!0[i] == Syms!0[0])
+        !5!2: shared = (s0!2 and !4!2)
+        s0!3: shared = (!2!2 or !5!2)
+        !6!2: shared = (s1!2 or s0!3)
         length!4: plaintext = 0
         length!3: shared = (length!2 + 1)
         length!5: shared = MUX(!6!2, length!3, length!4)

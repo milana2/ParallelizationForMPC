@@ -1,7 +1,7 @@
 def ip(A: shared, B: shared, N: plaintext):
     sum!1: plaintext = 0
     for i: plaintext in range(0, N!0):
-        sum!2 = Φ(sum!1, sum!3)
-        temp!2 = (A!0[i] * B!0[i])
-        sum!3 = (sum!2 + temp!2)
+        sum!2: shared = Φ(sum!1, sum!3)
+        temp!2: shared = (A!0[i] * B!0[i])
+        sum!3: shared = (sum!2 + temp!2)
     return sum!2

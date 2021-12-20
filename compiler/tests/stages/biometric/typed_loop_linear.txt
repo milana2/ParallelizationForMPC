@@ -6,12 +6,12 @@ def biometric(C: shared, D: plaintext, S: shared, N: plaintext):
         min_index!2: shared = Φ(min_index!1, min_index!4)
         sum!2: plaintext = 0
         for j: plaintext in range(0, D!0):
-            sum!3 = Φ(sum!2, sum!4)
-            d!3 = (S!0[((i * D!0) + j)] - C!0[j])
-            p!3 = (d!3 * d!3)
-            sum!4 = (sum!3 + p!3)
+            sum!3: shared = Φ(sum!2, sum!4)
+            d!3: shared = (S!0[((i * D!0) + j)] - C!0[j])
+            p!3: shared = (d!3 * d!3)
+            sum!4: shared = (sum!3 + p!3)
         !1!2: shared = (sum!3 < min_sum!2)
-        min_sum!3 = sum!3
+        min_sum!3: shared = sum!3
         min_index!3: plaintext = i
         min_sum!4: shared = MUX(!1!2, min_sum!3, min_sum!2)
         min_index!4: shared = MUX(!1!2, min_index!3, min_index!2)

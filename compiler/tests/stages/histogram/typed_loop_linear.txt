@@ -8,7 +8,7 @@ def histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
         result!4: shared = Φ(result!2, result!5)
         for j: plaintext in range(0, N!0):
             result!5: shared = Φ(result!4, result!7)
-            !2!3 = (A!0[j] == i)
+            !2!3: shared = (A!0[j] == i)
             !3!3: shared = (result!5[i] + B!0[j])
             result!6 = Update(result!5, i, !3!3)
             result!7: shared = MUX(!2!3, result!6, result!5)
