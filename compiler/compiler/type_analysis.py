@@ -107,7 +107,11 @@ def loop_linear_add_types(
     Perform taint analysis to detect which variables are plaintext and which are shared.
     """
 
-    var_types: dict[str, VarType] = {var.name: var.var_type for var in func.parameters}
+    var_types: dict[str, VarType] = {
+        # TODO: fix the below hack once parameter ssa renaming is properly implemented
+        f"{var.name}!0": var.var_type
+        for var in func.parameters
+    }
     _add_loop_counter_types(var_types, func.body)
 
     worklist = list(dep_graph.def_use_graph.nodes)
