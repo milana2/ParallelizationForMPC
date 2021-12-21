@@ -159,6 +159,15 @@ def main():
         md += "### Removal of infeasible edges\n"
         md += f"![]({filename})\n"
 
+        loop_linear_code = compiler.vectorize.remove_targetless_phi(
+            loop_linear_code, dep_graph
+        )
+        filename = f"{test_case_dir.name}_remove_targetless_phi.png"
+        path = os.path.join(args.path, filename)
+        dep_graph_to_image(dep_graph, loop_linear_code, path)
+        md += "### Removal of phi nodes without targets\n"
+        md += f"![]({filename})\n"
+
         (loop_linear_code, dep_graph) = compiler.vectorize.refine_array_mux(
             loop_linear_code, dep_graph
         )

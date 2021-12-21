@@ -1,0 +1,18 @@
+def count_123(Seq: shared, N: plaintext, Syms: shared):
+    s1!1 = False
+    s2!1 = False
+    c!1 = 0
+    for i: plaintext in range(0, N!0):
+        s1!2 = Φ(s1!1, s1!3)
+        s2!2 = Φ(s2!1, s2!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2 = (Seq!0[i] == Syms!0[3])
+        !2!2 = (s2!2 or s1!2)
+        !3!2 = (!1!2 and !2!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!3!2, c!3, c!2)
+        !4!2 = (Seq!0[i] == Syms!0[2])
+        !5!2 = (s1!2 or s2!2)
+        s2!3 = (!4!2 and !5!2)
+        s1!3 = (Seq!0[i] == Syms!0[1])
+    return c!2

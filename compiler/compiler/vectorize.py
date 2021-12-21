@@ -238,6 +238,37 @@ def remove_infeasible_edges(function: llc.Function, dep_graph: DepGraph) -> None
         _prune_edges_from_statement([], statement, dep_graph)
 
 
+def _remove_targetless_phi_from_statements(
+    statements: list[llc.Statement], dep_graph: DepGraph
+) -> list[llc.Statement]:
+    return [
+        (
+            llc.For(
+                counter=statement.counter,
+                bound_low=statement.bound_low,
+                bound_high=statement.bound_high,
+                body=_remove_targetless_phi_from_statements(statement.body, dep_graph),
+            )
+            if isinstance(statement, llc.For)
+            else statement
+        )
+        for statement in statements
+        if not (
+            isinstance(statement, llc.Phi)
+            and dep_graph.def_use_graph.in_degree(statement) == 0
+        )
+    ]
+
+
+def remove_targetless_phi(function: llc.Function, dep_graph: DepGraph) -> llc.Function:
+    return llc.Function(
+        name=function.name,
+        parameters=function.parameters,
+        body=_remove_targetless_phi_from_statements(function.body, dep_graph),
+        return_value=function.return_value,
+    )
+
+
 def _find_update(
     A: llc.Var, A_use: llc.Assign, dep_graph: DepGraph
 ) -> Optional[llc.SubscriptIndex]:
