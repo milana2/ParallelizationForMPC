@@ -326,7 +326,7 @@ in parallel still cost 2.
 \section{\bf Preliminaries}
 \label{sec:preliminaries}
 
-We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. We write $i_1,i_2,...i_k$ to denote the loop nest: $i_1$ is the outermost loop, $i_2$, is immediately nested in $i_1$, and so on until $i_k$. As an example, a statement nested in $i_1,i_2,...i_k$ can access array $A[f(i_1,i_2,...i_k)]$. We write $A[i_1,i_2,...i_k]$ interchangeably. 
+We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. We write $i_1,i_2,...i_k$ to denote the loop nest: $i_1$ is the outermost loop, $i_2$, is immediately nested in $i_1$, and so on until $i_k$. As an example, a statement nested in $i_1,i_2,...i_k$ can access array $A[f(i_1,i_2,...i_k)]$. We write $A[i_1,i_2,...i_k]$ interchangeably. \ana{Need to state this more precisely.}
 
 \subsection{Pseudo $\phi$-nodes}
 
@@ -394,17 +394,17 @@ $\mathit{drop\_dim}(A[i_1,...,i_k,i_{k+1}])$ produces a k-dimensional array $A'$
 \COMMENT {Phase 2: Recreating FOR loops for cycles; vectorizable statements hoisted up.}
 
 \FOR {each dimension $d$ from highest to 0}
-\FOR {each $\phi$-node $n$ in loop $i_1,...,i_k$}
+\FOR {each $\phi$-node $n$ in loop $i_1,...,i_d$} 
 \STATE {compute $\mathit{closure}(n)$}
 \WHILE {there are closure $cl_1$ and $cl_2$ that intersect}
 \STATE {merge $cl_1$ and $cl_2$}
 \ENDWHILE 
 \FOR {each closure $cl$ (after merge)}
-\STATE {create FOR $i_k = 0; ...$ loop}  
+\STATE {create FOR $i_d = 0; ...$ loop}  
 \STATE {add $\phi$-nodes in $cl$ to header block} 
 \STATE {add statements in $cl$ to loop body in some order of dependences} 
 \STATE \COMMENT {Dimension is not vectorizable: }
-\STATE {change $\stackrel{\rightarrow}{i_k}$ to $i_k$ in all statements in loop}
+\STATE {change $\stackrel{\rightarrow}{i_d}$ to $i_d$ in all statements in loop}
 \STATE {treat FOR loop as monolith node: change def-use edges accordingly. Some edges become same-level.}
 \ENDFOR
 \ENDFOR
@@ -551,7 +551,7 @@ $\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel
 
 \subsection{Correctness Argument}
 
-\subsection{Extensions of Basic Vectorization}
+\subsection{Towards Extension of Basic Vectorization}
 
 \subsubsection{Removal of Infeasible Edges}
 
@@ -630,9 +630,10 @@ index or a pair of indices, e.g., $\texttt{A}_j[i] = \emph{MUX}(c, \texttt{A}_k[
 
 %\ana{Clarify why this helps. Still work in progress.}
 This is to reduce the dimensionality of simd-ified computation. Technically, $\texttt{A}_j = \emph{MUX}(..., \texttt{A}_k, \texttt{A}_l)$ is 
-a simdified operation that can be carried out in parallel "in one round". However, if \texttt{A} is a multi-dimensional array, this would lead 
-to substantial increase in the size of the arrays (vectors) we send to SIMD operations. Refining to an update to a specific index would reduce 
-the size of those vectors. Note that this is a heuristic that handle a common case, but not all cases of array updates.
+a simdified operation that can be carried out in parallel "in one round". However, particularly when \texttt{A} is a multi-dimensional array, there is
+substantial increase in the size of the arrays (vectors) we send to SIMD operations. Refining to an update to a specific index would reduce 
+the size of those vectors. Note that this is a heuristic that handles a common case, but not all cases of array updates. 
+\ana{It may actually be handling \_all\_ cases, with the restriction to canonical updates.}
 
 
 \begin{algorithmic}
@@ -651,9 +652,129 @@ the size of those vectors. Note that this is a heuristic that handle a common ca
 \ENDFOR
 \end{algorithmic}
 
-\subsubsection{Extending Basic Vectorization with Array Writes}
+\subsection{Extension of Basic Vectorization with Array Writes}
 
-\ana{TODO, add the weekend notes here. The big things are 1) Restricting array writes to "canonical writes" and 2) change of index, e.g., if accessing A[i] in loop j, have to change to accessing A[i,j].}
+\subsubsection{Restricting Array Writes}
+
+For now, we restrict array updates to \emph{canonical updates}. Assume (for simplicity) a two-dimensional array $\texttt{A}[I,J]$. A canonical update is the following:
+\begin{algorithmic}
+\STATE for i in range(I):
+\STATE \hspace{0.25cm} for j in range(J):
+\STATE \hspace{0.55cm} ... 
+\STATE \hspace{0.55cm} A[i,j] = ... 
+\STATE \hspace{0.55cm} ... 
+\end{algorithmic}
+
+The update $\texttt{A}[i,j]$ can be nested into an inner loop and there may be multiple updates. However, updates such as $\texttt{A}[i-1,j] = ...$ or $\texttt{A}[i-1,j-1] = ...$, etc., are not allowed. This simplifies reasoning about correctness in this early stage of the compiler; we will look to relax this restriction in future work. Reads through an arbitrary formula, such as $\texttt{A}[i-1]$ for example, are allowed, however, we assume the programmer ensures that the formula is within the bounds of the array.
+
+\subsubsection{Changes to Basic Vectorization}
+
+One change to Basic vectorization is the expansion of dimension if the array write or read occurs in a nested loop. That is, if there is an update to $\texttt{A}[i,j]$ that occurs in loop nest $i,j,k$, $\texttt{A}[i,j]$ will be rewritten into $\texttt{A}[i,j,k]$. Similarly, a read $\texttt{A}[f(i,j)]$ will be rewritten into $\texttt{A}[f(i,j),k]$. \ana{This notion of $f(i,j)$ needs a precise definition. For now I'm hoping the hand waving works.}. This can be a preprocessing step or it may be incorporated into the Basic Vectorization algorithm. Basic Vectorization will not expand array accesses at array writes the way it does with scalars now, as they are already expanded. 
+
+\ana{TODO: Another change. What about the A = phi(A1,A2), and A = A1. We have to expand on what happens with those.}
+
+\ana{TODO: Third change. "Mixed" outer -> edge with arrays!}
+
+\subsubsection{Examples with Array Writes}
+
+\paragraph{Example 1} 
+
+After removal of infeasible edges, the Aiken's array write example will be (roughly) as follows:
+
+\begin{algorithmic}
+\STATE for i in range(N):
+\STATE 1. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$ 
+\STATE 2. $\texttt{A}$[i] = $\texttt{B}$[i] + 10
+\STATE 3. $\texttt{B}$[i] = $\texttt{A}$[i] * $\texttt{D}_0$[i-1]
+\STATE 4. $\texttt{C}$[i] = $\texttt{A}$[i] * $\texttt{D}_0$[i-1]
+\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$ 
+\STATE 6. $\texttt{D}_1$[i] = $\texttt{B}$[i] * $\texttt{C}$[i]
+\end{algorithmic}
+
+There are no nested loops, thus, array accesses remain as is. 
+
+After Phase 1 of Basic vectorization we have the following code:
+\begin{algorithmic}
+\STATE for i in range(N):
+\STATE 1. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$ 
+\STATE 2. $\texttt{A}[\stackrel{\rightarrow}{i}] = \texttt{B}[\stackrel{\rightarrow}i] + [10,...]$
+\STATE 3. $\texttt{B}[\stackrel{\rightarrow}i] = \texttt{A}[\stackrel{\rightarrow}i] * \texttt{D}_0[\stackrel{\rightarrow}{i-1}]$
+\STATE 4. $\texttt{C}[\stackrel{\rightarrow}i] = \texttt{A}[\stackrel{\rightarrow}i] * \texttt{D}_0[\stackrel{\rightarrow}{i-1}]$
+\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$ 
+\STATE 6. $\texttt{D}_1[\stackrel{\rightarrow}i] = \texttt{B}[\stackrel{\rightarrow}i] * \texttt{C}[\stackrel{\rightarrow}i]$
+\end{algorithmic}
+
+In Phase 2 we get rid of the arrows on statements 3, 4, and 6 as they are not vectorizable and in Phase 3 we add SIMD appropriately:
+
+\begin{algorithmic}
+\STATE 1. $\texttt{A}[\stackrel{\rightarrow}{i}] = \mathit{ADD\_SIMD}(\texttt{B}[\stackrel{\rightarrow}i],[10,...])$ \COMMENT{Fully vectorized size N.} 
+\STATE FOR i=0; i<N; i++; \COMMENT{ MOTION loop }
+\STATE 2. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$ 
+\STATE 3. $\texttt{B}[i] = \mathit{MUL}(\texttt{A}[i], \texttt{D}_0[{i-1}])$
+\STATE 4. $\texttt{C}[i] = \mathit{MUL}(\texttt{A}[i], \texttt{D}_0[{i-1}])$
+\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$
+\STATE 6. $\texttt{D}_1[i] = \mathit{MUL}(\texttt{B}[i], \texttt{C}[i])$
+\end{algorithmic}
+
+
+\paragraph{Example 2}
+
+Consider MPC-source of Histrogram after removal of infeasible edges and MUX refinement (copied from Repo with some modifications):
+
+\begin{algorithmic}
+
+\STATE res!1 = []
+\STATE for i: plaintext in range(0, num\_bins):
+\STATE \hspace{0.25cm} res!2 = $\phi$(res!1, res!3)
+\STATE  \hspace{0.25cm} ... 
+\STATE res!4 = res!2 \COMMENT{Added due to the "mixed" def-use edge.} 
+\STATE for i: plaintext in range(0, num\_bins):
+%\STATE \hspace{0.25cm}        result!4 = $\phi$(result!2, result!5)
+\STATE \hspace{0.25cm}        for j: plaintext in range(0, N):
+\STATE \hspace{0.5cm}            res!5 = $\phi$(res!4, res!7)
+\STATE \hspace{0.5cm}            !2!3 = (A[j] == i)
+\STATE \hspace{0.5cm}            !3!3 = (res!5[i] + B[j])
+\STATE \hspace{0.5cm}            res!6 = res!5
+\STATE \hspace{0.5cm}            res!6[i] = !3!3
+\STATE \hspace{0.5cm}            res!7[i] = MUX(!2!3, res!6[i], res!5[i])
+
+\end{algorithmic}
+
+After Phase 1 of Basic Vectorization:
+
+\begin{algorithmic}
+\STATE res!1 = []
+\STATE for i: plaintext in range(0, num\_bins):
+\STATE \hspace{0.25cm} res!2 = $\phi$(res!1, res!3)
+\STATE  \hspace{0.25cm} ... 
+\STATE res!4 = res!2 \COMMENT{Added due to the "mixed" def-use edge.} 
+\STATE A[$i,j$] = $\mathit{raise\_dim}$(A[$j$],$i$) \COMMENT{Copying row A num\_bin times. Reusing name.} 
+\STATE B[$i,j$] = $\mathit{raise\_dim}$(B[$i$],$j$) \COMMENT{Copying column B N times. Reusing name.} 
+\STATE res!4[$i,j$] = $\mathit{raise\_dim}$(res!4[$i$],$j$) \COMMENT{Reusing name.} 
+\STATE for i: plaintext in range(0, num\_bins):
+%\STATE \hspace{0.25cm}        result!4 = $\phi$(result!2, result!5)
+\STATE \hspace{0.25cm}        for j: plaintext in range(0, N):
+\STATE \hspace{0.5cm}            res!5 = $\phi$(res!4, res!7) \COMMENT{Do nothing. res!4 has been raised to proper dimension.}
+\STATE \hspace{0.5cm}            !2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = EQ(A[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], [[0,0...], [1,1...],...[num\_bins-1,num\_bins-1...])
+\STATE \hspace{0.5cm}            !3!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = ADD(res!5[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$],B[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$])
+\STATE \hspace{0.5cm}            res!6 = res!5 \COMMENT{Do nothing, just copy.}
+\STATE \hspace{0.5cm}            res!6[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = !3!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$]
+\STATE \hspace{0.5cm}            res!7[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = MUX(!2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], res!6[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], res!5[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$])
+\end{algorithmic}
+
+After Phase 2 and Phase 3. The EQ operation is vectorizable across both dimensions, and the rest of the computation is vectorizable across the $i$-dimension.
+
+\begin{algorithmic}
+\STATE ...
+\STATE !2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = EQ(A[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], [[0,0...], [1,1...],...[num\_bins-1,num\_bins-1...])
+%\STATE \hspace{0.25cm}        result!4 = $\phi$(result!2, result!5)
+\STATE FOR j=0; j<N; j++ \COMMENT{MOTION loop}
+\STATE \hspace{0.25cm}            res!5 = $\phi$(res!4, res!7) \COMMENT{Do nothing, just copy.}
+\STATE \hspace{0.25cm}            !3!3[$\stackrel{\rightarrow}i,j$] = $\mathit{ADD\_SIMD}$(res!5[$\stackrel{\rightarrow}i,j$],B[$\stackrel{\rightarrow}i,j$])
+\STATE \hspace{0.25cm}            res!6 = res!5 \COMMENT{Do nothing, just copy.}
+\STATE \hspace{0.25cm}            res!6[$\stackrel{\rightarrow}i,j$] = !3!3[$\stackrel{\rightarrow}i,j$]
+\STATE \hspace{0.25cm}            res!7[$\stackrel{\rightarrow}i,j$] = MUX(!2!3[$\stackrel{\rightarrow}i,j$], res!6[$\stackrel{\rightarrow}i,j$], res!5[$\stackrel{\rightarrow}i,j$])
+\end{algorithmic}
 
 
 \section{Divide-and-Conquer}
