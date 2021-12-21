@@ -755,25 +755,25 @@ After Phase 1 of Basic Vectorization:
 %\STATE \hspace{0.25cm}        result!4 = $\phi$(result!2, result!5)
 \STATE \hspace{0.25cm}        for j: plaintext in range(0, N):
 \STATE \hspace{0.5cm}            res!5 = $\phi$(res!4, res!7) \COMMENT{Do nothing. res!4 has been raised to proper dimension.}
-\STATE \hspace{0.5cm}            !2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = EQ(A[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], [[0,0...], [1,1...],...[num\_bins-1,num\_bins-1...])
-\STATE \hspace{0.5cm}            !3!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = ADD(res!5[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$],B[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$])
+\STATE \hspace{0.5cm}            !2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = $\mathit{EQ}$(A[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], [[0,0...], [1,1...],...[num\_bins-1,num\_bins-1...])
+\STATE \hspace{0.5cm}            !3!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = $\mathit{ADD}$(res!5[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$],B[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$])
 \STATE \hspace{0.5cm}            res!6 = res!5 \COMMENT{Do nothing, just copy.}
 \STATE \hspace{0.5cm}            res!6[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = !3!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$]
-\STATE \hspace{0.5cm}            res!7[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = MUX(!2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], res!6[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], res!5[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$])
+\STATE \hspace{0.5cm}            res!7[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = $\mathit{MUX}$(!2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], res!6[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], res!5[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$])
 \end{algorithmic}
 
 After Phase 2 and Phase 3. The EQ operation is vectorizable across both dimensions, and the rest of the computation is vectorizable across the $i$-dimension.
 
 \begin{algorithmic}
 \STATE ...
-\STATE !2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = EQ(A[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], [[0,0...], [1,1...],...[num\_bins-1,num\_bins-1...])
+\STATE !2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = $\mathit{EQ\_SIMD}$(A[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], [[0,0...], [1,1...],...[num\_bins-1,num\_bins-1...])
 %\STATE \hspace{0.25cm}        result!4 = $\phi$(result!2, result!5)
 \STATE FOR j=0; j<N; j++ \COMMENT{MOTION loop}
 \STATE \hspace{0.25cm}            res!5 = $\phi$(res!4, res!7) \COMMENT{Do nothing, just copy.}
 \STATE \hspace{0.25cm}            !3!3[$\stackrel{\rightarrow}i,j$] = $\mathit{ADD\_SIMD}$(res!5[$\stackrel{\rightarrow}i,j$],B[$\stackrel{\rightarrow}i,j$])
 \STATE \hspace{0.25cm}            res!6 = res!5 \COMMENT{Do nothing, just copy.}
 \STATE \hspace{0.25cm}            res!6[$\stackrel{\rightarrow}i,j$] = !3!3[$\stackrel{\rightarrow}i,j$]
-\STATE \hspace{0.25cm}            res!7[$\stackrel{\rightarrow}i,j$] = MUX(!2!3[$\stackrel{\rightarrow}i,j$], res!6[$\stackrel{\rightarrow}i,j$], res!5[$\stackrel{\rightarrow}i,j$])
+\STATE \hspace{0.25cm}            res!7[$\stackrel{\rightarrow}i,j$] = $\mathit{MUX\_SIMD}$(!2!3[$\stackrel{\rightarrow}i,j$], res!6[$\stackrel{\rightarrow}i,j$], res!5[$\stackrel{\rightarrow}i,j$])
 \end{algorithmic}
 
 
