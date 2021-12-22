@@ -248,7 +248,7 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 ### Typed linear code with loops
 ```python
 def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
-    differences!1 = []
+    differences!1: plaintext[list[int]] = []
     for i: plaintext[int] in range(0, D!0):
         differences!2 = Φ(differences!1, differences!3)
         !1!2: plaintext[list[int]] = [0]
@@ -435,8 +435,8 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 ### Typed linear code with loops
 ```python
 def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
-    hull_X!1 = []
-    hull_Y!1 = []
+    hull_X!1: plaintext[list[int]] = []
+    hull_Y!1: plaintext[list[int]] = []
     for i: plaintext[int] in range(0, N!0):
         hull_X!2: shared[list[int]] = Φ(hull_X!1, hull_X!4)
         hull_Y!2: shared[list[int]] = Φ(hull_Y!1, hull_Y!4)
@@ -821,7 +821,7 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 ### Typed linear code with loops
 ```python
 def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
-    result!1 = []
+    result!1: plaintext[list[int]] = []
     for i: plaintext[int] in range(0, num_bins!0):
         result!2 = Φ(result!1, result!3)
         !1!2: plaintext[list[int]] = [0]
@@ -1632,8 +1632,8 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 ### Typed linear code with loops
 ```python
 def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
-    min_X!1 = []
-    min_Y!1 = []
+    min_X!1: plaintext[list[int]] = []
+    min_Y!1: plaintext[list[int]] = []
     for i: plaintext[int] in range(0, N!0):
         min_X!2: shared[list[int]] = Φ(min_X!1, min_X!4)
         min_Y!2: shared[list[int]] = Φ(min_Y!1, min_Y!4)
@@ -1739,7 +1739,7 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 ```python
 def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
     dummy!1: plaintext[int] = 0
-    result!1 = []
+    result!1: plaintext[list[int]] = []
     for i: plaintext[int] in range(0, SA!0):
         result!2: shared[list[int]] = Φ(result!1, result!3)
         flag!2: plaintext[int] = False
