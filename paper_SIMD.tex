@@ -642,7 +642,7 @@ the size of those vectors. Note that this is a heuristic that handles a common c
 \STATE $i_2 = \mathit{find\_update}(A_l)$ \COMMENT { Is null when $A_l = \phi(...)$ }
 \IF {$i_1 == i_2$ or $i_1$ is null or $i_2$ is null} \STATE \COMMENT{ With our restrictions on writes we must have $i_1 = i_2$. } 
 \STATE replace $\mathit{stmt}$ with \\
-\STATE $\texttt{A}_j = \texttt{A}_k$; $\texttt{A}_j[i_1] = \emph{MUX}(c, \texttt{A}_k[i_1], \texttt{A}_l[i_1])$
+\STATE $\texttt{A}_j = \texttt{A}_{j-1}$; $\texttt{A}_j[i_1] = \emph{MUX}(c, \texttt{A}_k[i_1], \texttt{A}_l[i_1])$
 %\ELSIF {$i_1 \ncong i_2$}  
 %\STATE replace $\mathit{stmt}$ with \\
 %\STATE $\texttt{A}_j = \texttt{A}_k$; $\texttt{A}_j[i_1] = \emph{MUX}(c, \texttt{A}_k[i_1], \texttt{A}_l[i_1])$
@@ -665,15 +665,27 @@ For now, we restrict array updates to \emph{canonical updates}. Assume (for simp
 \STATE \hspace{0.55cm} ... 
 \end{algorithmic}
 
-The update $\texttt{A}[i,j]$ can be nested into an inner loop and there may be multiple updates. However, updates such as $\texttt{A}[i-1,j] = ...$ or $\texttt{A}[i-1,j-1] = ...$, etc., are not allowed. This simplifies reasoning about correctness in this early stage of the compiler; we will look to relax this restriction in future work. Reads through an arbitrary formula, such as $\texttt{A}[i-1]$ for example, are allowed, however, we assume the programmer ensures that the formula is within the bounds of the array.
+The update $\texttt{A}[i,j]$ can be nested into an inner loop and there may be multiple updates, i.e., writes to $\texttt{A}[i,j]$. However, update such as $\texttt{A}[i-1,j] = ...$ or $\texttt{A}[i-1,j-1] = ...$, etc., is not allowed. Additionally, while there could be several different loops that perform canonical updates, they must be of the same dimensionality, i.e., an update of higher or lower dimension, e.g., $A[i,j,k] = ...$ is not allowed. We assign the \emph{canonical dimensionality} to each array in the obvious way. This restriction simplifies reasoning in this early stage of the compiler; we will look to relax the restriction in future work. 
+
+Reads through an arbitrary formula, such as $\texttt{A}[i-1]$ for example, are allowed, however, we assume the programmer ensures that the formula is within the bounds of the array.
 
 \subsubsection{Changes to Basic Vectorization}
 
-One change to Basic vectorization is the expansion of dimension if the array write or read occurs in a nested loop. That is, if there is an update to $\texttt{A}[i,j]$ that occurs in loop nest $i,j,k$, $\texttt{A}[i,j]$ will be rewritten into $\texttt{A}[i,j,k]$. Similarly, a read $\texttt{A}[f(i,j)]$ will be rewritten into $\texttt{A}[f(i,j),k]$. \ana{This notion of $f(i,j)$ needs a precise definition. For now I'm hoping the hand waving works.}. This can be a preprocessing step or it may be incorporated into the Basic Vectorization algorithm. Basic Vectorization will not expand array accesses at array writes the way it does with scalars now, as they are already expanded. 
+One change to Basic vectorization is the expansion of dimension if the array write or read occurs in a nested loop. That is, if there is an update $\texttt{A}[i,j] = ...$ that occurs in loop nest $i,j,k$, $\texttt{A}[i,j]$ will be rewritten into $\texttt{A}[i,j,k]$. Similarly, a read $\texttt{A}[f(i,j)]$ will be rewritten into $\texttt{A}[f(i,j),k]$. \ana{TODO: This notion of $f(i,j)$ needs a precise definition. For now I'm hoping the hand waving works.} This can be a preprocessing step or it can be incorporated into the Basic Vectorization algorithm.  
 
-\ana{TODO: Another change. What about the A = phi(A1,A2), and A = A1. We have to expand on what happens with those.}
+The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and $Y$ uses an array variable (e.g., the definition can be a propagation $A_2 = A_1$ or a pseudo $\phi$-node $A_2 = \phi(A_0,A_1)$). These edges are not handled in the same way as in Basic Vectorization, specifically, we do not expand dimension as we do for scalars in Basic Vectorization according to the loop nest. A key invariant is that the dimension of an array $A$ cannot drop below $A$'s canonical dimensionality. Below we enumerate the cases of def-use edges.
 
-\ana{TODO: Third change. "Mixed" outer -> edge with arrays!}
+\begin{enumerate}
+
+\item same-level $X \rightarrow Y$. We do nothing, just propagate the array, which happens to be of the right dimension. \ana{There might be some opportunities to do copy propagation optimization and save some cycles, but let's leave this for later.}
+
+\item inner-to-outer $X \rightarrow Y$. Let $A$ be the array defined at $X$. If the dimensionality $A$ is greater than its canonical dimensionality, then add \emph{drop\_dim(...)} at $Y$, as in Basic Vectorization. Otherwise, do nothing. 
+
+\item outer-to-inner $X \rightarrow Y$. Add \emph{raise\_dim(...)} (at $X$) as in Basic Vectorization. 
+
+\item "mixed" $X \rightarrow Y$. We assume that the mixed edge is transformed into an inner-to-outer followed by outer-to-inner edge before we perform vectorization, just as with Basic vectorization.
+
+\end{enumerate}
 
 \subsubsection{Examples with Array Writes}
 
@@ -707,7 +719,7 @@ After Phase 1 of Basic vectorization we have the following code:
 In Phase 2 we get rid of the arrows on statements 3, 4, and 6 as they are not vectorizable and in Phase 3 we add SIMD appropriately:
 
 \begin{algorithmic}
-\STATE 1. $\texttt{A}[\stackrel{\rightarrow}{i}] = \mathit{ADD\_SIMD}(\texttt{B}[\stackrel{\rightarrow}i],[10,...])$ \COMMENT{Fully vectorized size N.} 
+\STATE 1. $\texttt{A}[\stackrel{\rightarrow}{i}] = \mathit{ADD\_SIMD}(\texttt{B}[\stackrel{\rightarrow}i],[10,...])$ \COMMENT{Fully vectorized, size N.} 
 \STATE FOR i=0; i<N; i++; \COMMENT{ MOTION loop }
 \STATE 2. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$ 
 \STATE 3. $\texttt{B}[i] = \mathit{MUL}(\texttt{A}[i], \texttt{D}_0[{i-1}])$
@@ -719,7 +731,7 @@ In Phase 2 we get rid of the arrows on statements 3, 4, and 6 as they are not ve
 
 \paragraph{Example 2}
 
-Consider MPC-source of Histrogram after removal of infeasible edges and MUX refinement (copied from Repo with some modifications):
+Consider MPC-source of Histogram after removal of infeasible edges and MUX refinement:
 
 \begin{algorithmic}
 
@@ -735,7 +747,8 @@ Consider MPC-source of Histrogram after removal of infeasible edges and MUX refi
 \STATE \hspace{0.5cm}            !2!3 = (A[j] == i)
 \STATE \hspace{0.5cm}            !3!3 = (res!5[i] + B[j])
 \STATE \hspace{0.5cm}            res!6 = res!5
-\STATE \hspace{0.5cm}            res!6[i] = !3!3
+\STATE \hspace{0.5cm}            res!6[i] = !3!3 
+\STATE \hspace{0.5cm}            res!7 = res!6 
 \STATE \hspace{0.5cm}            res!7[i] = MUX(!2!3, res!6[i], res!5[i])
 
 \end{algorithmic}
@@ -747,7 +760,7 @@ After Phase 1 of Basic Vectorization:
 \STATE for i: plaintext in range(0, num\_bins):
 \STATE \hspace{0.25cm} res!2 = $\phi$(res!1, res!3)
 \STATE  \hspace{0.25cm} ... 
-\STATE res!4 = res!2 \COMMENT{Added due to the "mixed" def-use edge.} 
+\STATE res!4 = res!2 \COMMENT{Added due to the "mixed" def-use edge. Because the canonical dimensionality of res is 1, we DO NOT drop dimension of res!2.} 
 \STATE A[$i,j$] = $\mathit{raise\_dim}$(A[$j$],$i$) \COMMENT{Copying row A num\_bin times. Reusing name.} 
 \STATE B[$i,j$] = $\mathit{raise\_dim}$(B[$i$],$j$) \COMMENT{Copying column B N times. Reusing name.} 
 \STATE res!4[$i,j$] = $\mathit{raise\_dim}$(res!4[$i$],$j$) \COMMENT{Reusing name.} 
@@ -755,10 +768,11 @@ After Phase 1 of Basic Vectorization:
 %\STATE \hspace{0.25cm}        result!4 = $\phi$(result!2, result!5)
 \STATE \hspace{0.25cm}        for j: plaintext in range(0, N):
 \STATE \hspace{0.5cm}            res!5 = $\phi$(res!4, res!7) \COMMENT{Do nothing. res!4 has been raised to proper dimension.}
-\STATE \hspace{0.5cm}            !2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = $\mathit{EQ}$(A[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], [[0,0...], [1,1...],...[num\_bins-1,num\_bins-1...])
+\STATE \hspace{0.5cm}            !2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = $\mathit{EQ}$(A[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], [[0,0...], [1,1...],...[num\_bins-1,num\_bins-1...]])
 \STATE \hspace{0.5cm}            !3!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = $\mathit{ADD}$(res!5[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$],B[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$])
 \STATE \hspace{0.5cm}            res!6 = res!5 \COMMENT{Do nothing, just copy.}
 \STATE \hspace{0.5cm}            res!6[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = !3!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$]
+\STATE \hspace{0.5cm}            res!7 = res!6
 \STATE \hspace{0.5cm}            res!7[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = $\mathit{MUX}$(!2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], res!6[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], res!5[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$])
 \end{algorithmic}
 
@@ -766,13 +780,14 @@ After Phase 2 and Phase 3. The EQ operation is vectorizable across both dimensio
 
 \begin{algorithmic}
 \STATE ...
-\STATE !2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = $\mathit{EQ\_SIMD}$(A[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], [[0,0...], [1,1...],...[num\_bins-1,num\_bins-1...])
+\STATE !2!3[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$] = $\mathit{EQ\_SIMD}$(A[$\stackrel{\rightarrow}i,\stackrel{\rightarrow}j$], [[0,0...], [1,1...],...[num\_bins-1,num\_bins-1...]])
 %\STATE \hspace{0.25cm}        result!4 = $\phi$(result!2, result!5)
-\STATE FOR j=0; j<N; j++ \COMMENT{MOTION loop}
+\STATE FOR j=0; j<N; j++; \COMMENT{MOTION loop}
 \STATE \hspace{0.25cm}            res!5 = $\phi$(res!4, res!7) \COMMENT{Do nothing, just copy.}
 \STATE \hspace{0.25cm}            !3!3[$\stackrel{\rightarrow}i,j$] = $\mathit{ADD\_SIMD}$(res!5[$\stackrel{\rightarrow}i,j$],B[$\stackrel{\rightarrow}i,j$])
 \STATE \hspace{0.25cm}            res!6 = res!5 \COMMENT{Do nothing, just copy.}
 \STATE \hspace{0.25cm}            res!6[$\stackrel{\rightarrow}i,j$] = !3!3[$\stackrel{\rightarrow}i,j$]
+\STATE \hspace{0.25cm}            res!7 = res!6
 \STATE \hspace{0.25cm}            res!7[$\stackrel{\rightarrow}i,j$] = $\mathit{MUX\_SIMD}$(!2!3[$\stackrel{\rightarrow}i,j$], res!6[$\stackrel{\rightarrow}i,j$], res!5[$\stackrel{\rightarrow}i,j$])
 \end{algorithmic}
 
