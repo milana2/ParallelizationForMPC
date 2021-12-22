@@ -31,12 +31,12 @@ print(biometric(C,4,S,4))
 ```
 ### Restricted AST
 ```python
-def biometric(C: shared, D: plaintext, S: shared, N: plaintext):
+def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
     min_sum = 10000
     min_index = - 1
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         sum = 0
-        for j: plaintext in range(0, D):
+        for j: plaintext[int] in range(0, D):
             d = (S[((i * D) + j)] - C[j])
             p = (d * d)
             sum = (sum + p)
@@ -55,14 +55,14 @@ def biometric(C: shared, D: plaintext, S: shared, N: plaintext):
 ![](biometric_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def biometric(C: shared, D: plaintext, S: shared, N: plaintext):
+def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
     min_sum!1 = 10000
     min_index!1 = - 1
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         min_sum!2 = Φ(min_sum!1, min_sum!4)
         min_index!2 = Φ(min_index!1, min_index!4)
         sum!2 = 0
-        for j: plaintext in range(0, D!0):
+        for j: plaintext[int] in range(0, D!0):
             sum!3 = Φ(sum!2, sum!4)
             d!3 = (S!0[((i * D!0) + j)] - C!0[j])
             p!3 = (d!3 * d!3)
@@ -81,24 +81,24 @@ def biometric(C: shared, D: plaintext, S: shared, N: plaintext):
 ![](biometric_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def biometric(C: shared, D: plaintext, S: shared, N: plaintext):
-    min_sum!1: plaintext = 10000
-    min_index!1: plaintext = - 1
-    for i: plaintext in range(0, N!0):
-        min_sum!2: shared = Φ(min_sum!1, min_sum!4)
-        min_index!2: shared = Φ(min_index!1, min_index!4)
-        sum!2: plaintext = 0
-        for j: plaintext in range(0, D!0):
-            sum!3: shared = Φ(sum!2, sum!4)
-            d!3: shared = (S!0[((i * D!0) + j)] - C!0[j])
-            p!3: shared = (d!3 * d!3)
-            sum!4: shared = (sum!3 + p!3)
-        !1!2: shared = (sum!3 < min_sum!2)
-        min_sum!3: shared = sum!3
-        min_index!3: plaintext = i
-        min_sum!4: shared = MUX(!1!2, min_sum!3, min_sum!2)
-        min_index!4: shared = MUX(!1!2, min_index!3, min_index!2)
-    !2!1: shared = (min_sum!2, min_index!2)
+def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
+    min_sum!1: plaintext[int] = 10000
+    min_index!1: plaintext[int] = - 1
+    for i: plaintext[int] in range(0, N!0):
+        min_sum!2: shared[int] = Φ(min_sum!1, min_sum!4)
+        min_index!2: shared[int] = Φ(min_index!1, min_index!4)
+        sum!2: plaintext[int] = 0
+        for j: plaintext[int] in range(0, D!0):
+            sum!3: shared[int] = Φ(sum!2, sum!4)
+            d!3: shared[int] = (S!0[((i * D!0) + j)] - C!0[j])
+            p!3: shared[int] = (d!3 * d!3)
+            sum!4: shared[int] = (sum!3 + p!3)
+        !1!2: shared[int] = (sum!3 < min_sum!2)
+        min_sum!3: shared[int] = sum!3
+        min_index!3: plaintext[int] = i
+        min_sum!4: shared[int] = MUX(!1!2, min_sum!3, min_sum!2)
+        min_index!4: shared[int] = MUX(!1!2, min_index!3, min_index!2)
+    !2!1: shared[list[int]] = (min_sum!2, min_index!2)
     return !2!1
 ```
 ## `biometric_fast`
@@ -106,7 +106,7 @@ def biometric(C: shared, D: plaintext, S: shared, N: plaintext):
 ```python
 import typing
 
-def biometric_matching_fast(D, N, C:list[int], C_sqr_sum:int, two_C:list[int], S: List[int], S_sqr_sum: list[int]):
+def biometric_matching_fast(D, N, C:list[int], C_sqr_sum:int, two_C:list[int], S: list[int], S_sqr_sum: list[int]):
   """
   Computes biometric matching
 
@@ -117,20 +117,23 @@ def biometric_matching_fast(D, N, C:list[int], C_sqr_sum:int, two_C:list[int], S
   :param list[int] C: query feature vector, we need to find closest match to this vector in the DB, comes from client (Alice)
   :param int C_sqr_sum: sum of squares of elements of `C` e.g. if `C={1, 2, 3, 4}`, then `C_sqr_sum is: 1*1 + 2*2 + 3*3 + 4*4 = 30`
    client passes it pre-processed to to save gates in circuit
-  :param list[int] two_C: same as `C` except that each element is multipled by 2, e.g. if `C={1, 2, 3, 4}`, then 
+  :param list[int] two_C: same as `C` except that each element is multipled by 2, e.g. if `C={1, 2, 3, 4}`, then
    `two_C = {2, 4, 6, 8}`. client passes it preprocessed to save gates
   :param list[int] S: the database of features, it has N * D elements i.e. N features and each feature vector has D elements,
    this comes from server (Bob)
   :param list[int] S_sqr_sum: has N elements, each element is sum of squares of corresponding feature elements e.g. say
    S={{1, 2, 3, 4}, {5, 6, 7, 8}}, then S_sqr_sum={1*1 + 2*2 + 3*3 + 4*4, 5*5 + 6*6 + 7*7 + 8*8} = {30, 174}
-  
-  """ 
 
-  differences: list[int] = [0] * D
+  """
+
+  differences: list[int] = []
+  for i in range(D):
+    differences[i] = differences + [0]
+
   for i in range(N):
     a_sqr_plus_b_sqr: int = S_sqr_sum[i] + C_sqr_sum
     two_a_b: int = 0
-    
+
     for j in range(D):
       tmp: int = S[i*D+j] * two_C[j]
       two_a_b = two_a_b + tmp
@@ -176,19 +179,21 @@ test_biometric_matching_fast(4, 4, C, S)
 ```
 ### Restricted AST
 ```python
-def biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: shared, two_C: shared, S: shared, S_sqr_sum: shared):
-    differences = ([0] * D)
-    for i: plaintext in range(0, N):
+def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
+    differences = []
+    for i: plaintext[int] in range(0, D):
+        differences[i] = (differences + [0])
+    for i: plaintext[int] in range(0, N):
         a_sqr_plus_b_sqr = (S_sqr_sum[i] + C_sqr_sum)
         two_a_b = 0
-        for j: plaintext in range(0, D):
+        for j: plaintext[int] in range(0, D):
             tmp = (S[((i * D) + j)] * two_C[j])
             two_a_b = (two_a_b + tmp)
         this_diff = (a_sqr_plus_b_sqr - two_a_b)
         differences[i] = this_diff
         min_diff = differences[0]
         min_index = 0
-        for k: plaintext in range(0, N):
+        for k: plaintext[int] in range(0, N):
             if (differences[k] < min_diff):
                 min_diff = differences[k]
                 min_index = k
@@ -204,33 +209,37 @@ def biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: sh
 ![](biometric_fast_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: shared, two_C: shared, S: shared, S_sqr_sum: shared):
-    !1!1 = [0]
-    differences!1 = (!1!1 * D!0)
-    for i: plaintext in range(0, N!0):
+def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
+    differences!1 = []
+    for i: plaintext[int] in range(0, D!0):
         differences!2 = Φ(differences!1, differences!3)
+        !1!2 = [0]
+        !2!2 = (differences!2 + !1!2)
+        differences!3 = Update(differences!2, i, !2!2)
+    for i: plaintext[int] in range(0, N!0):
+        differences!4 = Φ(differences!2, differences!5)
         min_diff!1 = Φ(min_diff!0, min_diff!3)
         min_index!1 = Φ(min_index!0, min_index!3)
         a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i] + C_sqr_sum!0)
         two_a_b!2 = 0
-        for j: plaintext in range(0, D!0):
+        for j: plaintext[int] in range(0, D!0):
             two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
             tmp!3 = (S!0[((i * D!0) + j)] * two_C!0[j])
             two_a_b!4 = (two_a_b!3 + tmp!3)
         this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
-        differences!3 = Update(differences!2, i, this_diff!2)
-        min_diff!2 = differences!3[0]
+        differences!5 = Update(differences!4, i, this_diff!2)
+        min_diff!2 = differences!5[0]
         min_index!2 = 0
-        for k: plaintext in range(0, N!0):
+        for k: plaintext[int] in range(0, N!0):
             min_diff!3 = Φ(min_diff!2, min_diff!5)
             min_index!3 = Φ(min_index!2, min_index!5)
-            !2!3 = (differences!3[k] < min_diff!3)
-            min_diff!4 = differences!3[k]
+            !3!3 = (differences!5[k] < min_diff!3)
+            min_diff!4 = differences!5[k]
             min_index!4 = k
-            min_diff!5 = MUX(!2!3, min_diff!4, min_diff!3)
-            min_index!5 = MUX(!2!3, min_index!4, min_index!3)
-    !3!1 = (min_diff!1, min_index!1)
-    return !3!1
+            min_diff!5 = MUX(!3!3, min_diff!4, min_diff!3)
+            min_index!5 = MUX(!3!3, min_index!4, min_index!3)
+    !4!1 = (min_diff!1, min_index!1)
+    return !4!1
 ```
 ### Dependency graph
 ![](biometric_fast_dep_graph.png)
@@ -238,33 +247,37 @@ def biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: sh
 ![](biometric_fast_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: shared, two_C: shared, S: shared, S_sqr_sum: shared):
-    !1!1: plaintext = [0]
-    differences!1: plaintext = (!1!1 * D!0)
-    for i: plaintext in range(0, N!0):
-        differences!2: shared = Φ(differences!1, differences!3)
-        min_diff!1: shared = Φ(min_diff!0, min_diff!3)
-        min_index!1: shared = Φ(min_index!0, min_index!3)
-        a_sqr_plus_b_sqr!2: shared = (S_sqr_sum!0[i] + C_sqr_sum!0)
-        two_a_b!2: plaintext = 0
-        for j: plaintext in range(0, D!0):
-            two_a_b!3: shared = Φ(two_a_b!2, two_a_b!4)
-            tmp!3: shared = (S!0[((i * D!0) + j)] * two_C!0[j])
-            two_a_b!4: shared = (two_a_b!3 + tmp!3)
-        this_diff!2: shared = (a_sqr_plus_b_sqr!2 - two_a_b!3)
-        differences!3: shared = Update(differences!2, i, this_diff!2)
-        min_diff!2: shared = differences!3[0]
-        min_index!2: plaintext = 0
-        for k: plaintext in range(0, N!0):
-            min_diff!3: shared = Φ(min_diff!2, min_diff!5)
-            min_index!3: shared = Φ(min_index!2, min_index!5)
-            !2!3: shared = (differences!3[k] < min_diff!3)
-            min_diff!4: shared = differences!3[k]
-            min_index!4: plaintext = k
-            min_diff!5: shared = MUX(!2!3, min_diff!4, min_diff!3)
-            min_index!5: shared = MUX(!2!3, min_index!4, min_index!3)
-    !3!1: shared = (min_diff!1, min_index!1)
-    return !3!1
+def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
+    differences!1 = []
+    for i: plaintext[int] in range(0, D!0):
+        differences!2 = Φ(differences!1, differences!3)
+        !1!2: plaintext[list[int]] = [0]
+        !2!2 = (differences!2 + !1!2)
+        differences!3 = Update(differences!2, i, !2!2)
+    for i: plaintext[int] in range(0, N!0):
+        differences!4: shared[list[int]] = Φ(differences!2, differences!5)
+        min_diff!1: shared[int] = Φ(min_diff!0, min_diff!3)
+        min_index!1: shared[int] = Φ(min_index!0, min_index!3)
+        a_sqr_plus_b_sqr!2: shared[int] = (S_sqr_sum!0[i] + C_sqr_sum!0)
+        two_a_b!2: plaintext[int] = 0
+        for j: plaintext[int] in range(0, D!0):
+            two_a_b!3: shared[int] = Φ(two_a_b!2, two_a_b!4)
+            tmp!3: shared[int] = (S!0[((i * D!0) + j)] * two_C!0[j])
+            two_a_b!4: shared[int] = (two_a_b!3 + tmp!3)
+        this_diff!2: shared[int] = (a_sqr_plus_b_sqr!2 - two_a_b!3)
+        differences!5: shared[list[int]] = Update(differences!4, i, this_diff!2)
+        min_diff!2: shared[int] = differences!5[0]
+        min_index!2: plaintext[int] = 0
+        for k: plaintext[int] in range(0, N!0):
+            min_diff!3: shared[int] = Φ(min_diff!2, min_diff!5)
+            min_index!3: shared[int] = Φ(min_index!2, min_index!5)
+            !3!3: shared[int] = (differences!5[k] < min_diff!3)
+            min_diff!4: shared[int] = differences!5[k]
+            min_index!4: plaintext[int] = k
+            min_diff!5: shared[int] = MUX(!3!3, min_diff!4, min_diff!3)
+            min_index!5: shared[int] = MUX(!3!3, min_index!4, min_index!3)
+    !4!1: shared[list[int]] = (min_diff!1, min_index!1)
+    return !4!1
 ```
 ## `chapterfour_figure_12`
 ### Input
@@ -281,7 +294,7 @@ def foo(x, y):
 ```
 ### Restricted AST
 ```python
-def foo(x: plaintext, y: plaintext):
+def foo(x: plaintext[int], y: plaintext[int]):
     z = 0
     if (x > 0):
         if (y > 0):
@@ -300,7 +313,7 @@ def foo(x: plaintext, y: plaintext):
 ![](chapterfour_figure_12_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def foo(x: plaintext, y: plaintext):
+def foo(x: plaintext[int], y: plaintext[int]):
     z!1 = 0
     !1!1 = (x!0 > 0)
     !2!1 = (y!0 > 0)
@@ -316,14 +329,14 @@ def foo(x: plaintext, y: plaintext):
 ![](chapterfour_figure_12_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def foo(x: plaintext, y: plaintext):
-    z!1: plaintext = 0
-    !1!1: plaintext = (x!0 > 0)
-    !2!1: plaintext = (y!0 > 0)
-    z!3: plaintext = - 1
-    z!2: plaintext = 1
-    z!4: shared = MUX(!2!1, z!2, z!3)
-    z!5: shared = MUX(!1!1, z!1, z!4)
+def foo(x: plaintext[int], y: plaintext[int]):
+    z!1: plaintext[int] = 0
+    !1!1: plaintext[int] = (x!0 > 0)
+    !2!1: plaintext[int] = (y!0 > 0)
+    z!3: plaintext[int] = - 1
+    z!2: plaintext[int] = 1
+    z!4: shared[int] = MUX(!2!1, z!2, z!3)
+    z!5: shared[int] = MUX(!1!1, z!1, z!4)
     return z!5
 ```
 ## `convex_hull`
@@ -355,15 +368,15 @@ def convex_hull(X_coords: list[int], Y_coords: list[int], N):
 ```
 ### Restricted AST
 ```python
-def convex_hull(X_coords: shared, Y_coords: shared, N: plaintext):
+def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
     hull_X = []
     hull_Y = []
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         is_hull = True
         p1_X = X_coords[i]
         p1_Y = Y_coords[i]
         if ((p1_X <= 0) and (p1_Y >= 0)):
-            for j: plaintext in range(0, N):
+            for j: plaintext[int] in range(0, N):
                 p2_X = X_coords[j]
                 p2_Y = Y_coords[j]
                 if not ((p1_X <= p2_X) or (p1_Y >= p2_Y)):
@@ -383,10 +396,10 @@ def convex_hull(X_coords: shared, Y_coords: shared, N: plaintext):
 ![](convex_hull_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def convex_hull(X_coords: shared, Y_coords: shared, N: plaintext):
+def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
     hull_X!1 = []
     hull_Y!1 = []
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         hull_X!2 = Φ(hull_X!1, hull_X!4)
         hull_Y!2 = Φ(hull_Y!1, hull_Y!4)
         is_hull!2 = True
@@ -395,7 +408,7 @@ def convex_hull(X_coords: shared, Y_coords: shared, N: plaintext):
         !1!2 = (p1_X!2 <= 0)
         !2!2 = (p1_Y!2 >= 0)
         !3!2 = (!1!2 and !2!2)
-        for j: plaintext in range(0, N!0):
+        for j: plaintext[int] in range(0, N!0):
             is_hull!3 = Φ(is_hull!2, is_hull!5)
             p2_X!3 = X_coords!0[j]
             p2_Y!3 = Y_coords!0[j]
@@ -421,36 +434,36 @@ def convex_hull(X_coords: shared, Y_coords: shared, N: plaintext):
 ![](convex_hull_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def convex_hull(X_coords: shared, Y_coords: shared, N: plaintext):
-    hull_X!1: plaintext = []
-    hull_Y!1: plaintext = []
-    for i: plaintext in range(0, N!0):
-        hull_X!2: shared = Φ(hull_X!1, hull_X!4)
-        hull_Y!2: shared = Φ(hull_Y!1, hull_Y!4)
-        is_hull!2: plaintext = True
-        p1_X!2: shared = X_coords!0[i]
-        p1_Y!2: shared = Y_coords!0[i]
-        !1!2: shared = (p1_X!2 <= 0)
-        !2!2: shared = (p1_Y!2 >= 0)
-        !3!2: shared = (!1!2 and !2!2)
-        for j: plaintext in range(0, N!0):
-            is_hull!3: shared = Φ(is_hull!2, is_hull!5)
-            p2_X!3: shared = X_coords!0[j]
-            p2_Y!3: shared = Y_coords!0[j]
-            !6!3: shared = (p1_X!2 <= p2_X!3)
-            !7!3: shared = (p1_Y!2 >= p2_Y!3)
-            !8!3: shared = (!6!3 or !7!3)
-            !9!3: shared = not !8!3
-            is_hull!4: plaintext = False
-            is_hull!5: shared = MUX(!9!3, is_hull!4, is_hull!3)
-        is_hull!6: shared = MUX(!3!2, is_hull!2, is_hull!3)
-        !10!2: shared = [p1_X!2]
-        hull_X!3: shared = (hull_X!2 + !10!2)
-        !11!2: shared = [p1_Y!2]
-        hull_Y!3: shared = (hull_Y!2 + !11!2)
-        hull_X!4: shared = MUX(is_hull!6, hull_X!3, hull_X!2)
-        hull_Y!4: shared = MUX(is_hull!6, hull_Y!3, hull_Y!2)
-    !12!1: shared = (hull_X!2, hull_Y!2)
+def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
+    hull_X!1 = []
+    hull_Y!1 = []
+    for i: plaintext[int] in range(0, N!0):
+        hull_X!2: shared[list[int]] = Φ(hull_X!1, hull_X!4)
+        hull_Y!2: shared[list[int]] = Φ(hull_Y!1, hull_Y!4)
+        is_hull!2: plaintext[int] = True
+        p1_X!2: shared[int] = X_coords!0[i]
+        p1_Y!2: shared[int] = Y_coords!0[i]
+        !1!2: shared[int] = (p1_X!2 <= 0)
+        !2!2: shared[int] = (p1_Y!2 >= 0)
+        !3!2: shared[int] = (!1!2 and !2!2)
+        for j: plaintext[int] in range(0, N!0):
+            is_hull!3: shared[int] = Φ(is_hull!2, is_hull!5)
+            p2_X!3: shared[int] = X_coords!0[j]
+            p2_Y!3: shared[int] = Y_coords!0[j]
+            !6!3: shared[int] = (p1_X!2 <= p2_X!3)
+            !7!3: shared[int] = (p1_Y!2 >= p2_Y!3)
+            !8!3: shared[int] = (!6!3 or !7!3)
+            !9!3: shared[int] = not !8!3
+            is_hull!4: plaintext[int] = False
+            is_hull!5: shared[int] = MUX(!9!3, is_hull!4, is_hull!3)
+        is_hull!6: shared[int] = MUX(!3!2, is_hull!2, is_hull!3)
+        !10!2: shared[list[int]] = [p1_X!2]
+        hull_X!3: shared[list[int]] = (hull_X!2 + !10!2)
+        !11!2: shared[list[int]] = [p1_Y!2]
+        hull_Y!3: shared[list[int]] = (hull_Y!2 + !11!2)
+        hull_X!4: shared[list[int]] = MUX(is_hull!6, hull_X!3, hull_X!2)
+        hull_Y!4: shared[list[int]] = MUX(is_hull!6, hull_Y!3, hull_Y!2)
+    !12!1: shared[list[list[int]]] = (hull_X!2, hull_Y!2)
     return !12!1
 ```
 ## `count_102`
@@ -480,10 +493,10 @@ print(num_102s)
 ```
 ### Restricted AST
 ```python
-def count_102(Seq: shared, N: plaintext, Syms: shared):
+def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s0 = False
     c = 0
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         if (s0 and (Seq[i] == Syms[2])):
             c = (c + 1)
         s0 = ((Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0])))
@@ -499,10 +512,10 @@ def count_102(Seq: shared, N: plaintext, Syms: shared):
 ![](count_102_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def count_102(Seq: shared, N: plaintext, Syms: shared):
+def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s0!1 = False
     c!1 = 0
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         s0!2 = Φ(s0!1, s0!3)
         c!2 = Φ(c!1, c!4)
         !1!2 = (Seq!0[i] == Syms!0[2])
@@ -521,20 +534,20 @@ def count_102(Seq: shared, N: plaintext, Syms: shared):
 ![](count_102_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def count_102(Seq: shared, N: plaintext, Syms: shared):
-    s0!1: plaintext = False
-    c!1: plaintext = 0
-    for i: plaintext in range(0, N!0):
-        s0!2: shared = Φ(s0!1, s0!3)
-        c!2: shared = Φ(c!1, c!4)
-        !1!2: shared = (Seq!0[i] == Syms!0[2])
-        !2!2: shared = (s0!2 and !1!2)
-        c!3: shared = (c!2 + 1)
-        c!4: shared = MUX(!2!2, c!3, c!2)
-        !3!2: shared = (Seq!0[i] == Syms!0[1])
-        !5!2: shared = (Seq!0[i] == Syms!0[0])
-        !6!2: shared = (s0!2 and !5!2)
-        s0!3: shared = (!3!2 or !6!2)
+def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+    s0!1: plaintext[int] = False
+    c!1: plaintext[int] = 0
+    for i: plaintext[int] in range(0, N!0):
+        s0!2: shared[int] = Φ(s0!1, s0!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2: shared[int] = (Seq!0[i] == Syms!0[2])
+        !2!2: shared[int] = (s0!2 and !1!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!2!2, c!3, c!2)
+        !3!2: shared[int] = (Seq!0[i] == Syms!0[1])
+        !5!2: shared[int] = (Seq!0[i] == Syms!0[0])
+        !6!2: shared[int] = (s0!2 and !5!2)
+        s0!3: shared[int] = (!3!2 or !6!2)
     return c!2
 ```
 ## `count_10s`
@@ -566,11 +579,11 @@ print(num_10s)
 ```
 ### Restricted AST
 ```python
-def count_10s(Seq: shared, N: plaintext, Syms: shared):
+def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s0 = False
     s1 = False
     scount = 0
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         if (s1 and (Seq[i] != Syms[0])):
             scount = (scount + 1)
         s1 = ((Seq[i] == Syms[0]) and (s0 or s1))
@@ -587,11 +600,11 @@ def count_10s(Seq: shared, N: plaintext, Syms: shared):
 ![](count_10s_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def count_10s(Seq: shared, N: plaintext, Syms: shared):
+def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s0!1 = False
     s1!1 = False
     scount!1 = 0
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         s0!2 = Φ(s0!1, s0!3)
         s1!2 = Φ(s1!1, s1!3)
         scount!2 = Φ(scount!1, scount!4)
@@ -611,22 +624,22 @@ def count_10s(Seq: shared, N: plaintext, Syms: shared):
 ![](count_10s_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def count_10s(Seq: shared, N: plaintext, Syms: shared):
-    s0!1: plaintext = False
-    s1!1: plaintext = False
-    scount!1: plaintext = 0
-    for i: plaintext in range(0, N!0):
-        s0!2: shared = Φ(s0!1, s0!3)
-        s1!2: shared = Φ(s1!1, s1!3)
-        scount!2: shared = Φ(scount!1, scount!4)
-        !1!2: shared = (Seq!0[i] != Syms!0[0])
-        !2!2: shared = (s1!2 and !1!2)
-        scount!3: shared = (scount!2 + 1)
-        scount!4: shared = MUX(!2!2, scount!3, scount!2)
-        !3!2: shared = (Seq!0[i] == Syms!0[0])
-        !4!2: shared = (s0!2 or s1!2)
-        s1!3: shared = (!3!2 and !4!2)
-        s0!3: shared = (Seq!0[i] == Syms!0[1])
+def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+    s0!1: plaintext[int] = False
+    s1!1: plaintext[int] = False
+    scount!1: plaintext[int] = 0
+    for i: plaintext[int] in range(0, N!0):
+        s0!2: shared[int] = Φ(s0!1, s0!3)
+        s1!2: shared[int] = Φ(s1!1, s1!3)
+        scount!2 = Φ(scount!1, scount!4)
+        !1!2: shared[int] = (Seq!0[i] != Syms!0[0])
+        !2!2: shared[int] = (s1!2 and !1!2)
+        scount!3 = (scount!2 + 1)
+        scount!4 = MUX(!2!2, scount!3, scount!2)
+        !3!2: shared[int] = (Seq!0[i] == Syms!0[0])
+        !4!2: shared[int] = (s0!2 or s1!2)
+        s1!3: shared[int] = (!3!2 and !4!2)
+        s0!3: shared[int] = (Seq!0[i] == Syms!0[1])
     return scount!2
 ```
 ## `count_123`
@@ -659,12 +672,12 @@ print(num_123s)
 ```
 ### Restricted AST
 ```python
-def count_123(Seq: shared, N: plaintext, Syms: shared):
+def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s1 = False
     s2 = False
     s3 = False
     c = 0
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         if ((Seq[i] == Syms[3]) and (s2 or s1)):
             c = (c + 1)
         s2 = ((Seq[i] == Syms[2]) and (s1 or s2))
@@ -681,11 +694,11 @@ def count_123(Seq: shared, N: plaintext, Syms: shared):
 ![](count_123_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def count_123(Seq: shared, N: plaintext, Syms: shared):
+def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s1!1 = False
     s2!1 = False
     c!1 = 0
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         s1!2 = Φ(s1!1, s1!3)
         s2!2 = Φ(s2!1, s2!3)
         c!2 = Φ(c!1, c!4)
@@ -706,23 +719,23 @@ def count_123(Seq: shared, N: plaintext, Syms: shared):
 ![](count_123_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def count_123(Seq: shared, N: plaintext, Syms: shared):
-    s1!1: plaintext = False
-    s2!1: plaintext = False
-    c!1: plaintext = 0
-    for i: plaintext in range(0, N!0):
-        s1!2: shared = Φ(s1!1, s1!3)
-        s2!2: shared = Φ(s2!1, s2!3)
-        c!2: shared = Φ(c!1, c!4)
-        !1!2: shared = (Seq!0[i] == Syms!0[3])
-        !2!2: shared = (s2!2 or s1!2)
-        !3!2: shared = (!1!2 and !2!2)
-        c!3: shared = (c!2 + 1)
-        c!4: shared = MUX(!3!2, c!3, c!2)
-        !4!2: shared = (Seq!0[i] == Syms!0[2])
-        !5!2: shared = (s1!2 or s2!2)
-        s2!3: shared = (!4!2 and !5!2)
-        s1!3: shared = (Seq!0[i] == Syms!0[1])
+def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+    s1!1: plaintext[int] = False
+    s2!1: plaintext[int] = False
+    c!1: plaintext[int] = 0
+    for i: plaintext[int] in range(0, N!0):
+        s1!2: shared[int] = Φ(s1!1, s1!3)
+        s2!2: shared[int] = Φ(s2!1, s2!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2: shared[int] = (Seq!0[i] == Syms!0[3])
+        !2!2: shared[int] = (s2!2 or s1!2)
+        !3!2: shared[int] = (!1!2 and !2!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!3!2, c!3, c!2)
+        !4!2: shared[int] = (Seq!0[i] == Syms!0[2])
+        !5!2: shared[int] = (s1!2 or s2!2)
+        s2!3: shared[int] = (!4!2 and !5!2)
+        s1!3: shared[int] = (Seq!0[i] == Syms!0[1])
     return c!2
 ```
 ## `histogram`
@@ -765,12 +778,12 @@ print(result)
 ```
 ### Restricted AST
 ```python
-def histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
+def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
     result = []
-    for i: plaintext in range(0, num_bins):
+    for i: plaintext[int] in range(0, num_bins):
         result = (result + [0])
-    for i: plaintext in range(0, num_bins):
-        for j: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, num_bins):
+        for j: plaintext[int] in range(0, N):
             if (A[j] == i):
                 result[i] = (result[i] + B[j])
     return result
@@ -785,15 +798,15 @@ def histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
 ![](histogram_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
+def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
     result!1 = []
-    for i: plaintext in range(0, num_bins!0):
+    for i: plaintext[int] in range(0, num_bins!0):
         result!2 = Φ(result!1, result!3)
         !1!2 = [0]
         result!3 = (result!2 + !1!2)
-    for i: plaintext in range(0, num_bins!0):
+    for i: plaintext[int] in range(0, num_bins!0):
         result!4 = Φ(result!2, result!5)
-        for j: plaintext in range(0, N!0):
+        for j: plaintext[int] in range(0, N!0):
             result!5 = Φ(result!4, result!7)
             !2!3 = (A!0[j] == i)
             !3!3 = (result!5[i] + B!0[j])
@@ -807,20 +820,20 @@ def histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
 ![](histogram_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
-    result!1: plaintext = []
-    for i: plaintext in range(0, num_bins!0):
+def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
+    result!1 = []
+    for i: plaintext[int] in range(0, num_bins!0):
         result!2 = Φ(result!1, result!3)
-        !1!2: plaintext = [0]
+        !1!2: plaintext[list[int]] = [0]
         result!3 = (result!2 + !1!2)
-    for i: plaintext in range(0, num_bins!0):
-        result!4: shared = Φ(result!2, result!5)
-        for j: plaintext in range(0, N!0):
-            result!5: shared = Φ(result!4, result!7)
-            !2!3: shared = (A!0[j] == i)
-            !3!3: shared = (result!5[i] + B!0[j])
-            result!6: shared = Update(result!5, i, !3!3)
-            result!7: shared = MUX(!2!3, result!6, result!5)
+    for i: plaintext[int] in range(0, num_bins!0):
+        result!4: shared[list[int]] = Φ(result!2, result!5)
+        for j: plaintext[int] in range(0, N!0):
+            result!5: shared[list[int]] = Φ(result!4, result!7)
+            !2!3: shared[int] = (A!0[j] == i)
+            !3!3: shared[int] = (result!5[i] + B!0[j])
+            result!6: shared[list[int]] = Update(result!5, i, !3!3)
+            result!7: shared[list[int]] = MUX(!2!3, result!6, result!5)
     return result!4
 ```
 ## `infeasible_edges_example`
@@ -837,8 +850,8 @@ def foo(A, B, C, D, N):
 ```
 ### Restricted AST
 ```python
-def foo(A: plaintext, B: plaintext, C: plaintext, D: plaintext, N: plaintext):
-    for i: plaintext in range(0, N):
+def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[int], N: plaintext[int]):
+    for i: plaintext[int] in range(0, N):
         A[i] = (B[i] + 10)
         B[i] = (A[i] * D[(i - 1)])
         C[i] = (A[i] * D[(i - 1)])
@@ -855,8 +868,8 @@ def foo(A: plaintext, B: plaintext, C: plaintext, D: plaintext, N: plaintext):
 ![](infeasible_edges_example_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def foo(A: plaintext, B: plaintext, C: plaintext, D: plaintext, N: plaintext):
-    for i: plaintext in range(0, N!0):
+def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[int], N: plaintext[int]):
+    for i: plaintext[int] in range(0, N!0):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)
         C!1 = Φ(C!0, C!2)
@@ -878,8 +891,8 @@ def foo(A: plaintext, B: plaintext, C: plaintext, D: plaintext, N: plaintext):
 ![](infeasible_edges_example_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def foo(A: plaintext, B: plaintext, C: plaintext, D: plaintext, N: plaintext):
-    for i: plaintext in range(0, N!0):
+def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[int], N: plaintext[int]):
+    for i: plaintext[int] in range(0, N!0):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)
         C!1 = Φ(C!0, C!2)
@@ -915,9 +928,9 @@ print(sum)
 ```
 ### Restricted AST
 ```python
-def ip(A: shared, B: shared, N: plaintext):
+def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
     sum = 0
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         temp = (A[i] * B[i])
         sum = (sum + temp)
     return sum
@@ -932,9 +945,9 @@ def ip(A: shared, B: shared, N: plaintext):
 ![](inner_product_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def ip(A: shared, B: shared, N: plaintext):
+def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
     sum!1 = 0
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         sum!2 = Φ(sum!1, sum!3)
         temp!2 = (A!0[i] * B!0[i])
         sum!3 = (sum!2 + temp!2)
@@ -946,12 +959,12 @@ def ip(A: shared, B: shared, N: plaintext):
 ![](inner_product_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def ip(A: shared, B: shared, N: plaintext):
-    sum!1: plaintext = 0
-    for i: plaintext in range(0, N!0):
-        sum!2: shared = Φ(sum!1, sum!3)
-        temp!2: shared = (A!0[i] * B!0[i])
-        sum!3: shared = (sum!2 + temp!2)
+def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
+    sum!1: plaintext[int] = 0
+    for i: plaintext[int] in range(0, N!0):
+        sum!2: shared[int] = Φ(sum!1, sum!3)
+        temp!2: shared[int] = (A!0[i] * B!0[i])
+        sum!3: shared[int] = (sum!2 + temp!2)
     return sum!2
 ```
 ## `longest_102`
@@ -989,11 +1002,11 @@ print(longest_102_len)
 ```
 ### Restricted AST
 ```python
-def longest_102(Seq: shared, N: plaintext, Syms: shared):
+def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s0 = False
     max_len = 0
     length = 0
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         s1 = (s0 and (Seq[i] == Syms[2]))
         s0 = ((Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0])))
         if (s1 or s0):
@@ -1014,11 +1027,11 @@ def longest_102(Seq: shared, N: plaintext, Syms: shared):
 ![](longest_102_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_102(Seq: shared, N: plaintext, Syms: shared):
+def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s0!1 = False
     max_len!1 = 0
     length!1 = 0
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         s0!2 = Φ(s0!1, s0!3)
         max_len!2 = Φ(max_len!1, max_len!4)
         length!2 = Φ(length!1, length!5)
@@ -1044,28 +1057,28 @@ def longest_102(Seq: shared, N: plaintext, Syms: shared):
 ![](longest_102_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def longest_102(Seq: shared, N: plaintext, Syms: shared):
-    s0!1: plaintext = False
-    max_len!1: plaintext = 0
-    length!1: plaintext = 0
-    for i: plaintext in range(0, N!0):
-        s0!2: shared = Φ(s0!1, s0!3)
-        max_len!2: shared = Φ(max_len!1, max_len!4)
-        length!2: shared = Φ(length!1, length!5)
-        !1!2: shared = (Seq!0[i] == Syms!0[2])
-        s1!2: shared = (s0!2 and !1!2)
-        !2!2: shared = (Seq!0[i] == Syms!0[1])
-        !4!2: shared = (Seq!0[i] == Syms!0[0])
-        !5!2: shared = (s0!2 and !4!2)
-        s0!3: shared = (!2!2 or !5!2)
-        !6!2: shared = (s1!2 or s0!3)
-        length!4: plaintext = 0
-        length!3: shared = (length!2 + 1)
-        length!5: shared = MUX(!6!2, length!3, length!4)
-        !7!2: shared = (max_len!2 < length!5)
-        !8!2: shared = (s1!2 and !7!2)
-        max_len!3: shared = length!5
-        max_len!4: shared = MUX(!8!2, max_len!3, max_len!2)
+def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+    s0!1: plaintext[int] = False
+    max_len!1: plaintext[int] = 0
+    length!1: plaintext[int] = 0
+    for i: plaintext[int] in range(0, N!0):
+        s0!2: shared[int] = Φ(s0!1, s0!3)
+        max_len!2: shared[int] = Φ(max_len!1, max_len!4)
+        length!2: shared[int] = Φ(length!1, length!5)
+        !1!2: shared[int] = (Seq!0[i] == Syms!0[2])
+        s1!2: shared[int] = (s0!2 and !1!2)
+        !2!2: shared[int] = (Seq!0[i] == Syms!0[1])
+        !4!2: shared[int] = (Seq!0[i] == Syms!0[0])
+        !5!2: shared[int] = (s0!2 and !4!2)
+        s0!3: shared[int] = (!2!2 or !5!2)
+        !6!2: shared[int] = (s1!2 or s0!3)
+        length!4: plaintext[int] = 0
+        length!3: shared[int] = (length!2 + 1)
+        length!5: shared[int] = MUX(!6!2, length!3, length!4)
+        !7!2: shared[int] = (max_len!2 < length!5)
+        !8!2: shared[int] = (s1!2 and !7!2)
+        max_len!3: shared[int] = length!5
+        max_len!4: shared[int] = MUX(!8!2, max_len!3, max_len!2)
     return max_len!2
 ```
 ## `longest_1s`
@@ -1099,10 +1112,10 @@ print(longest_1s_len)
 ```
 ### Restricted AST
 ```python
-def longest_1s(Seq: shared, N: plaintext, Sym: shared):
+def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
     max_length = 0
     length = 0
-    for i: plaintext in range(1, N):
+    for i: plaintext[int] in range(1, N):
         if (Seq[i] == Sym):
             length = (length + 1)
         else:
@@ -1121,10 +1134,10 @@ def longest_1s(Seq: shared, N: plaintext, Sym: shared):
 ![](longest_1s_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_1s(Seq: shared, N: plaintext, Sym: shared):
+def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
     max_length!1 = 0
     length!1 = 0
-    for i: plaintext in range(1, N!0):
+    for i: plaintext[int] in range(1, N!0):
         max_length!2 = Φ(max_length!1, max_length!4)
         length!2 = Φ(length!1, length!5)
         !1!2 = (Seq!0[i] == Sym!0)
@@ -1142,19 +1155,19 @@ def longest_1s(Seq: shared, N: plaintext, Sym: shared):
 ![](longest_1s_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def longest_1s(Seq: shared, N: plaintext, Sym: shared):
-    max_length!1: plaintext = 0
-    length!1: plaintext = 0
-    for i: plaintext in range(1, N!0):
-        max_length!2: shared = Φ(max_length!1, max_length!4)
-        length!2: shared = Φ(length!1, length!5)
-        !1!2: shared = (Seq!0[i] == Sym!0)
-        length!4: plaintext = 0
-        length!3: shared = (length!2 + 1)
-        length!5: shared = MUX(!1!2, length!3, length!4)
-        !2!2: shared = (length!5 > max_length!2)
-        max_length!3: shared = length!5
-        max_length!4: shared = MUX(!2!2, max_length!3, max_length!2)
+def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+    max_length!1: plaintext[int] = 0
+    length!1: plaintext[int] = 0
+    for i: plaintext[int] in range(1, N!0):
+        max_length!2: shared[int] = Φ(max_length!1, max_length!4)
+        length!2: shared[int] = Φ(length!1, length!5)
+        !1!2: shared[int] = (Seq!0[i] == Sym!0)
+        length!4: plaintext[int] = 0
+        length!3: shared[int] = (length!2 + 1)
+        length!5: shared[int] = MUX(!1!2, length!3, length!4)
+        !2!2: shared[int] = (length!5 > max_length!2)
+        max_length!3: shared[int] = length!5
+        max_length!4: shared[int] = MUX(!2!2, max_length!3, max_length!2)
     return max_length!2
 ```
 ## `longest_even_0`
@@ -1187,10 +1200,10 @@ def longest_even_0(Seq: list[int], N, Sym: int):
 ```
 ### Restricted AST
 ```python
-def longest_even_0(Seq: shared, N: plaintext, Sym: shared):
+def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
     current_length = 0
     max_length = 0
-    for i: plaintext in range(1, N):
+    for i: plaintext[int] in range(1, N):
         if (Seq[i] == Sym):
             current_length = (current_length + 1)
         else:
@@ -1212,10 +1225,10 @@ def longest_even_0(Seq: shared, N: plaintext, Sym: shared):
 ![](longest_even_0_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_even_0(Seq: shared, N: plaintext, Sym: shared):
+def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
     current_length!1 = 0
     max_length!1 = 0
-    for i: plaintext in range(1, N!0):
+    for i: plaintext[int] in range(1, N!0):
         current_length!2 = Φ(current_length!1, current_length!5)
         max_length!2 = Φ(max_length!1, max_length!4)
         !1!2 = (Seq!0[i] == Sym!0)
@@ -1238,24 +1251,24 @@ def longest_even_0(Seq: shared, N: plaintext, Sym: shared):
 ![](longest_even_0_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def longest_even_0(Seq: shared, N: plaintext, Sym: shared):
-    current_length!1: plaintext = 0
-    max_length!1: plaintext = 0
-    for i: plaintext in range(1, N!0):
-        current_length!2: shared = Φ(current_length!1, current_length!5)
-        max_length!2: shared = Φ(max_length!1, max_length!4)
-        !1!2: shared = (Seq!0[i] == Sym!0)
-        current_length!4: plaintext = 0
-        current_length!3: shared = (current_length!2 + 1)
-        current_length!5: shared = MUX(!1!2, current_length!3, current_length!4)
-        tmp_max_len!2: shared = max_length!2
-        !2!2: shared = (current_length!5 > max_length!2)
-        tmp_max_len!3: shared = current_length!5
-        tmp_max_len!4: shared = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
-        !3!2: shared = (tmp_max_len!4 % 2)
-        !4!2: shared = (!3!2 == 0)
-        max_length!3: shared = tmp_max_len!4
-        max_length!4: shared = MUX(!4!2, max_length!3, max_length!2)
+def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+    current_length!1: plaintext[int] = 0
+    max_length!1: plaintext[int] = 0
+    for i: plaintext[int] in range(1, N!0):
+        current_length!2: shared[int] = Φ(current_length!1, current_length!5)
+        max_length!2: shared[int] = Φ(max_length!1, max_length!4)
+        !1!2: shared[int] = (Seq!0[i] == Sym!0)
+        current_length!4: plaintext[int] = 0
+        current_length!3: shared[int] = (current_length!2 + 1)
+        current_length!5: shared[int] = MUX(!1!2, current_length!3, current_length!4)
+        tmp_max_len!2: shared[int] = max_length!2
+        !2!2: shared[int] = (current_length!5 > max_length!2)
+        tmp_max_len!3: shared[int] = current_length!5
+        tmp_max_len!4: shared[int] = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
+        !3!2: shared[int] = (tmp_max_len!4 % 2)
+        !4!2: shared[int] = (!3!2 == 0)
+        max_length!3: shared[int] = tmp_max_len!4
+        max_length!4: shared[int] = MUX(!4!2, max_length!3, max_length!2)
     return max_length!2
 ```
 ## `longest_odd_10`
@@ -1290,11 +1303,11 @@ def longest_odd_10(Seq: list[int], N, Syms: list[int]):
 ```
 ### Restricted AST
 ```python
-def longest_odd_10(Seq: shared, N: plaintext, Syms: shared):
+def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     current_length = 0
     max_length = 0
     s2 = False
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         s1 = (s2 and (Seq[i] == Syms[1]))
         if s1:
             current_length = (current_length + 1)
@@ -1316,11 +1329,11 @@ def longest_odd_10(Seq: shared, N: plaintext, Syms: shared):
 ![](longest_odd_10_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_odd_10(Seq: shared, N: plaintext, Syms: shared):
+def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     current_length!1 = 0
     max_length!1 = 0
     s2!1 = False
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         current_length!2 = Φ(current_length!1, current_length!6)
         max_length!2 = Φ(max_length!1, max_length!4)
         s2!2 = Φ(s2!1, s2!3)
@@ -1346,28 +1359,28 @@ def longest_odd_10(Seq: shared, N: plaintext, Syms: shared):
 ![](longest_odd_10_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def longest_odd_10(Seq: shared, N: plaintext, Syms: shared):
-    current_length!1: plaintext = 0
-    max_length!1: plaintext = 0
-    s2!1: plaintext = False
-    for i: plaintext in range(0, N!0):
-        current_length!2: shared = Φ(current_length!1, current_length!6)
-        max_length!2: shared = Φ(max_length!1, max_length!4)
-        s2!2: shared = Φ(s2!1, s2!3)
-        !1!2: shared = (Seq!0[i] == Syms!0[1])
-        s1!2: shared = (s2!2 and !1!2)
-        !2!2: shared = not s2!2
-        current_length!4: plaintext = 0
-        current_length!5: shared = MUX(!2!2, current_length!4, current_length!2)
-        current_length!3: shared = (current_length!2 + 1)
-        current_length!6: shared = MUX(s1!2, current_length!3, current_length!5)
-        !4!2: shared = (current_length!6 % 2)
-        !5!2: shared = (!4!2 == 1)
-        !6!2: shared = (current_length!6 > max_length!2)
-        !7!2: shared = (!5!2 and !6!2)
-        max_length!3: shared = current_length!6
-        max_length!4: shared = MUX(!7!2, max_length!3, max_length!2)
-        s2!3: shared = (Seq!0[i] == Syms!0[0])
+def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+    current_length!1: plaintext[int] = 0
+    max_length!1: plaintext[int] = 0
+    s2!1: plaintext[int] = False
+    for i: plaintext[int] in range(0, N!0):
+        current_length!2: shared[int] = Φ(current_length!1, current_length!6)
+        max_length!2: shared[int] = Φ(max_length!1, max_length!4)
+        s2!2: shared[int] = Φ(s2!1, s2!3)
+        !1!2: shared[int] = (Seq!0[i] == Syms!0[1])
+        s1!2: shared[int] = (s2!2 and !1!2)
+        !2!2: shared[int] = not s2!2
+        current_length!4: plaintext[int] = 0
+        current_length!5: shared[int] = MUX(!2!2, current_length!4, current_length!2)
+        current_length!3: shared[int] = (current_length!2 + 1)
+        current_length!6: shared[int] = MUX(s1!2, current_length!3, current_length!5)
+        !4!2: shared[int] = (current_length!6 % 2)
+        !5!2: shared[int] = (!4!2 == 1)
+        !6!2: shared[int] = (current_length!6 > max_length!2)
+        !7!2: shared[int] = (!5!2 and !6!2)
+        max_length!3: shared[int] = current_length!6
+        max_length!4: shared[int] = MUX(!7!2, max_length!3, max_length!2)
+        s2!3: shared[int] = (Seq!0[i] == Syms!0[0])
     return max_length!2
 ```
 ## `max_dist_between_syms`
@@ -1394,10 +1407,10 @@ print(max_dist)
 ```
 ### Restricted AST
 ```python
-def max_dist_between_syms(Seq: shared, N: plaintext, Sym: shared):
+def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
     max_dist = 0
     current_dist = 0
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         if not (Seq[i] == Sym):
             current_dist = (current_dist + 1)
         else:
@@ -1416,10 +1429,10 @@ def max_dist_between_syms(Seq: shared, N: plaintext, Sym: shared):
 ![](max_dist_between_syms_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def max_dist_between_syms(Seq: shared, N: plaintext, Sym: shared):
+def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
     max_dist!1 = 0
     current_dist!1 = 0
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         max_dist!2 = Φ(max_dist!1, max_dist!4)
         current_dist!2 = Φ(current_dist!1, current_dist!5)
         !1!2 = (Seq!0[i] == Sym!0)
@@ -1438,20 +1451,20 @@ def max_dist_between_syms(Seq: shared, N: plaintext, Sym: shared):
 ![](max_dist_between_syms_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def max_dist_between_syms(Seq: shared, N: plaintext, Sym: shared):
-    max_dist!1: plaintext = 0
-    current_dist!1: plaintext = 0
-    for i: plaintext in range(0, N!0):
-        max_dist!2: shared = Φ(max_dist!1, max_dist!4)
-        current_dist!2: shared = Φ(current_dist!1, current_dist!5)
-        !1!2: shared = (Seq!0[i] == Sym!0)
-        !2!2: shared = not !1!2
-        current_dist!4: plaintext = 0
-        current_dist!3: shared = (current_dist!2 + 1)
-        current_dist!5: shared = MUX(!2!2, current_dist!3, current_dist!4)
-        !3!2: shared = (current_dist!5 > max_dist!2)
-        max_dist!3: shared = current_dist!5
-        max_dist!4: shared = MUX(!3!2, max_dist!3, max_dist!2)
+def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+    max_dist!1: plaintext[int] = 0
+    current_dist!1: plaintext[int] = 0
+    for i: plaintext[int] in range(0, N!0):
+        max_dist!2: shared[int] = Φ(max_dist!1, max_dist!4)
+        current_dist!2: shared[int] = Φ(current_dist!1, current_dist!5)
+        !1!2: shared[int] = (Seq!0[i] == Sym!0)
+        !2!2: shared[int] = not !1!2
+        current_dist!4: plaintext[int] = 0
+        current_dist!3: shared[int] = (current_dist!2 + 1)
+        current_dist!5: shared[int] = MUX(!2!2, current_dist!3, current_dist!4)
+        !3!2: shared[int] = (current_dist!5 > max_dist!2)
+        max_dist!3: shared[int] = current_dist!5
+        max_dist!4: shared[int] = MUX(!3!2, max_dist!3, max_dist!2)
     return max_dist!2
 ```
 ## `max_sum_between_syms`
@@ -1478,10 +1491,10 @@ print(max_sum)
 ```
 ### Restricted AST
 ```python
-def max_sum_between_syms(Seq: shared, N: plaintext, Sym: shared):
+def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
     max_sum = 0
     current_sum = 0
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         if not (Seq[i] == Sym):
             current_sum = (current_sum + Seq[i])
         else:
@@ -1500,10 +1513,10 @@ def max_sum_between_syms(Seq: shared, N: plaintext, Sym: shared):
 ![](max_sum_between_syms_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def max_sum_between_syms(Seq: shared, N: plaintext, Sym: shared):
+def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
     max_sum!1 = 0
     current_sum!1 = 0
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         max_sum!2 = Φ(max_sum!1, max_sum!4)
         current_sum!2 = Φ(current_sum!1, current_sum!5)
         !1!2 = (Seq!0[i] == Sym!0)
@@ -1522,20 +1535,20 @@ def max_sum_between_syms(Seq: shared, N: plaintext, Sym: shared):
 ![](max_sum_between_syms_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def max_sum_between_syms(Seq: shared, N: plaintext, Sym: shared):
-    max_sum!1: plaintext = 0
-    current_sum!1: plaintext = 0
-    for i: plaintext in range(0, N!0):
-        max_sum!2: shared = Φ(max_sum!1, max_sum!4)
-        current_sum!2: shared = Φ(current_sum!1, current_sum!5)
-        !1!2: shared = (Seq!0[i] == Sym!0)
-        !2!2: shared = not !1!2
-        current_sum!4: plaintext = 0
-        current_sum!3: shared = (current_sum!2 + Seq!0[i])
-        current_sum!5: shared = MUX(!2!2, current_sum!3, current_sum!4)
-        !3!2: shared = (current_sum!5 > max_sum!2)
-        max_sum!3: shared = current_sum!5
-        max_sum!4: shared = MUX(!3!2, max_sum!3, max_sum!2)
+def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+    max_sum!1: plaintext[int] = 0
+    current_sum!1: plaintext[int] = 0
+    for i: plaintext[int] in range(0, N!0):
+        max_sum!2: shared[int] = Φ(max_sum!1, max_sum!4)
+        current_sum!2: shared[int] = Φ(current_sum!1, current_sum!5)
+        !1!2: shared[int] = (Seq!0[i] == Sym!0)
+        !2!2: shared[int] = not !1!2
+        current_sum!4: plaintext[int] = 0
+        current_sum!3: shared[int] = (current_sum!2 + Seq!0[i])
+        current_sum!5: shared[int] = MUX(!2!2, current_sum!3, current_sum!4)
+        !3!2: shared[int] = (current_sum!5 > max_sum!2)
+        max_sum!3: shared[int] = current_sum!5
+        max_sum!4: shared[int] = MUX(!3!2, max_sum!3, max_sum!2)
     return max_sum!2
 ```
 ## `minimal_points`
@@ -1565,12 +1578,12 @@ print(min_y)
 ```
 ### Restricted AST
 ```python
-def minimal_points(X_coords: shared, Y_coords: shared, N: plaintext):
+def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
     min_X = []
     min_Y = []
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         bx = False
-        for j: plaintext in range(0, N):
+        for j: plaintext[int] in range(0, N):
             bx = (bx or ((X_coords[j] < X_coords[i]) and (Y_coords[j] < Y_coords[i])))
         if not bx:
             min_X = (min_X + [X_coords[i]])
@@ -1587,14 +1600,14 @@ def minimal_points(X_coords: shared, Y_coords: shared, N: plaintext):
 ![](minimal_points_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def minimal_points(X_coords: shared, Y_coords: shared, N: plaintext):
+def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
     min_X!1 = []
     min_Y!1 = []
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         min_X!2 = Φ(min_X!1, min_X!4)
         min_Y!2 = Φ(min_Y!1, min_Y!4)
         bx!2 = False
-        for j: plaintext in range(0, N!0):
+        for j: plaintext[int] in range(0, N!0):
             bx!3 = Φ(bx!2, bx!4)
             !3!3 = (X_coords!0[j] < X_coords!0[i])
             !4!3 = (Y_coords!0[j] < Y_coords!0[i])
@@ -1618,29 +1631,29 @@ def minimal_points(X_coords: shared, Y_coords: shared, N: plaintext):
 ![](minimal_points_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def minimal_points(X_coords: shared, Y_coords: shared, N: plaintext):
-    min_X!1: plaintext = []
-    min_Y!1: plaintext = []
-    for i: plaintext in range(0, N!0):
-        min_X!2: shared = Φ(min_X!1, min_X!4)
-        min_Y!2: shared = Φ(min_Y!1, min_Y!4)
-        bx!2: plaintext = False
-        for j: plaintext in range(0, N!0):
-            bx!3: shared = Φ(bx!2, bx!4)
-            !3!3: shared = (X_coords!0[j] < X_coords!0[i])
-            !4!3: shared = (Y_coords!0[j] < Y_coords!0[i])
-            !5!3: shared = (!3!3 and !4!3)
-            bx!4: shared = (bx!3 or !5!3)
-        !6!2: shared = not bx!3
-        !8!2: shared = X_coords!0[i]
-        !9!2: shared = [!8!2]
-        min_X!3: shared = (min_X!2 + !9!2)
-        !11!2: shared = Y_coords!0[i]
-        !12!2: shared = [!11!2]
-        min_Y!3: shared = (min_Y!2 + !12!2)
-        min_X!4: shared = MUX(!6!2, min_X!3, min_X!2)
-        min_Y!4: shared = MUX(!6!2, min_Y!3, min_Y!2)
-    !13!1: shared = (min_X!2, min_Y!2)
+def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
+    min_X!1 = []
+    min_Y!1 = []
+    for i: plaintext[int] in range(0, N!0):
+        min_X!2: shared[list[int]] = Φ(min_X!1, min_X!4)
+        min_Y!2: shared[list[int]] = Φ(min_Y!1, min_Y!4)
+        bx!2: plaintext[int] = False
+        for j: plaintext[int] in range(0, N!0):
+            bx!3: shared[int] = Φ(bx!2, bx!4)
+            !3!3: shared[int] = (X_coords!0[j] < X_coords!0[i])
+            !4!3: shared[int] = (Y_coords!0[j] < Y_coords!0[i])
+            !5!3: shared[int] = (!3!3 and !4!3)
+            bx!4: shared[int] = (bx!3 or !5!3)
+        !6!2: shared[int] = not bx!3
+        !8!2: shared[int] = X_coords!0[i]
+        !9!2: shared[list[int]] = [!8!2]
+        min_X!3: shared[list[int]] = (min_X!2 + !9!2)
+        !11!2: shared[int] = Y_coords!0[i]
+        !12!2: shared[list[int]] = [!11!2]
+        min_Y!3: shared[list[int]] = (min_Y!2 + !12!2)
+        min_X!4: shared[list[int]] = MUX(!6!2, min_X!3, min_X!2)
+        min_Y!4: shared[list[int]] = MUX(!6!2, min_Y!3, min_Y!2)
+    !13!1: shared[list[list[int]]] = (min_X!2, min_Y!2)
     return !13!1
 ```
 ## `psi`
@@ -1676,12 +1689,12 @@ print(intersect)
 ```
 ### Restricted AST
 ```python
-def psi(A: shared, SA: plaintext, B: shared, SB: plaintext):
+def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
     dummy = 0
     result = []
-    for i: plaintext in range(0, SA):
+    for i: plaintext[int] in range(0, SA):
         flag = False
-        for j: plaintext in range(0, SB):
+        for j: plaintext[int] in range(0, SB):
             if (A[i] == B[j]):
                 flag = True
         val = dummy
@@ -1700,13 +1713,13 @@ def psi(A: shared, SA: plaintext, B: shared, SB: plaintext):
 ![](psi_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def psi(A: shared, SA: plaintext, B: shared, SB: plaintext):
+def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
     dummy!1 = 0
     result!1 = []
-    for i: plaintext in range(0, SA!0):
+    for i: plaintext[int] in range(0, SA!0):
         result!2 = Φ(result!1, result!3)
         flag!2 = False
-        for j: plaintext in range(0, SB!0):
+        for j: plaintext[int] in range(0, SB!0):
             flag!3 = Φ(flag!2, flag!5)
             !1!3 = (A!0[i] == B!0[j])
             flag!4 = True
@@ -1724,21 +1737,21 @@ def psi(A: shared, SA: plaintext, B: shared, SB: plaintext):
 ![](psi_remove_infeasible_edges.png)
 ### Typed linear code with loops
 ```python
-def psi(A: shared, SA: plaintext, B: shared, SB: plaintext):
-    dummy!1: plaintext = 0
-    result!1: plaintext = []
-    for i: plaintext in range(0, SA!0):
-        result!2: shared = Φ(result!1, result!3)
-        flag!2: plaintext = False
-        for j: plaintext in range(0, SB!0):
-            flag!3: shared = Φ(flag!2, flag!5)
-            !1!3: shared = (A!0[i] == B!0[j])
-            flag!4: plaintext = True
-            flag!5: shared = MUX(!1!3, flag!4, flag!3)
-        val!2: plaintext = dummy!1
-        val!3: shared = A!0[i]
-        val!4: shared = MUX(flag!3, val!3, val!2)
-        !2!2: shared = [val!4]
-        result!3: shared = (result!2 + !2!2)
+def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
+    dummy!1: plaintext[int] = 0
+    result!1 = []
+    for i: plaintext[int] in range(0, SA!0):
+        result!2: shared[list[int]] = Φ(result!1, result!3)
+        flag!2: plaintext[int] = False
+        for j: plaintext[int] in range(0, SB!0):
+            flag!3: shared[int] = Φ(flag!2, flag!5)
+            !1!3: shared[int] = (A!0[i] == B!0[j])
+            flag!4: plaintext[int] = True
+            flag!5: shared[int] = MUX(!1!3, flag!4, flag!3)
+        val!2: plaintext[int] = dummy!1
+        val!3: shared[int] = A!0[i]
+        val!4: shared[int] = MUX(flag!3, val!3, val!2)
+        !2!2: shared[list[int]] = [val!4]
+        result!3: shared[list[int]] = (result!2 + !2!2)
     return result!2
 ```
