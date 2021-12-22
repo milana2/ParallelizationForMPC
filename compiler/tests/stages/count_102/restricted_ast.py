@@ -1,7 +1,7 @@
-def count_102(Seq: shared, N: plaintext, Syms: shared):
+def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s0 = False
     c = 0
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         if (s0 and (Seq[i] == Syms[2])):
             c = (c + 1)
         s0 = ((Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0])))

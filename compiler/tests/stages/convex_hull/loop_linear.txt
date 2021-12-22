@@ -1,7 +1,7 @@
-def convex_hull(X_coords: shared, Y_coords: shared, N: plaintext):
+def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
     hull_X!1 = []
     hull_Y!1 = []
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         hull_X!2 = Φ(hull_X!1, hull_X!4)
         hull_Y!2 = Φ(hull_Y!1, hull_Y!4)
         is_hull!2 = True
@@ -10,7 +10,7 @@ def convex_hull(X_coords: shared, Y_coords: shared, N: plaintext):
         !1!2 = (p1_X!2 <= 0)
         !2!2 = (p1_Y!2 >= 0)
         !3!2 = (!1!2 and !2!2)
-        for j: plaintext in range(0, N!0):
+        for j: plaintext[int] in range(0, N!0):
             is_hull!3 = Φ(is_hull!2, is_hull!5)
             p2_X!3 = X_coords!0[j]
             p2_Y!3 = Y_coords!0[j]

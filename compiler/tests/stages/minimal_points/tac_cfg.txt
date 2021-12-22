@@ -1,4 +1,4 @@
-Function minimal_points(X_coords: shared, Y_coords: shared, N: plaintext):
+Function minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
 Entry block: 0
 Exit block: 3
 Block 0:
@@ -6,7 +6,7 @@ Block 0:
     min_Y = []
     jump
 Block 1:
-    for i: plaintext in range(0, N)
+    for i: plaintext[int] in range(0, N)
 Block 2:
     bx = False
     jump
@@ -14,7 +14,7 @@ Block 3:
     !13 = (min_X, min_Y)
     return !13
 Block 4:
-    for j: plaintext in range(0, N)
+    for j: plaintext[int] in range(0, N)
 Block 5:
     !1 = (X_coords[j] < X_coords[i])
     !2 = (Y_coords[j] < Y_coords[i])

@@ -1,8 +1,8 @@
-def longest_102(Seq: shared, N: plaintext, Syms: shared):
+def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s0!1 = False
     max_len!1 = 0
     length!1 = 0
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         s0!2 = Φ(s0!1, s0!3)
         max_len!2 = Φ(max_len!1, max_len!4)
         length!2 = Φ(length!1, length!5)

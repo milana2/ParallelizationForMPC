@@ -1,7 +1,7 @@
-def max_sum_between_syms(Seq: shared, N: plaintext, Sym: shared):
+def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
     max_sum = 0
     current_sum = 0
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         if not (Seq[i] == Sym):
             current_sum = (current_sum + Seq[i])
         else:

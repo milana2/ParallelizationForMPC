@@ -1,8 +1,8 @@
-def longest_102(Seq: shared, N: plaintext, Syms: shared):
+def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s0 = False
     max_len = 0
     length = 0
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         s1 = (s0 and (Seq[i] == Syms[2]))
         s0 = ((Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0])))
         if (s1 or s0):

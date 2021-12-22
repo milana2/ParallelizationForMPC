@@ -1,8 +1,8 @@
-def count_123(Seq: shared, N: plaintext, Syms: shared):
+def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     s1!1 = False
     s2!1 = False
     c!1 = 0
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         s1!2 = Φ(s1!1, s1!3)
         s2!2 = Φ(s2!1, s2!3)
         c!2 = Φ(c!1, c!4)

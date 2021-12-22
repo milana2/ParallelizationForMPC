@@ -1,15 +1,15 @@
-def count_102(Seq: shared, N: plaintext, Syms: shared):
-    s0!1: plaintext = False
-    c!1: plaintext = 0
-    for i: plaintext in range(0, N!0):
-        s0!2: shared = Φ(s0!1, s0!3)
-        c!2: shared = Φ(c!1, c!4)
-        !1!2: shared = (Seq!0[i] == Syms!0[2])
-        !2!2: shared = (s0!2 and !1!2)
-        c!3: shared = (c!2 + 1)
-        c!4: shared = MUX(!2!2, c!3, c!2)
-        !3!2: shared = (Seq!0[i] == Syms!0[1])
-        !5!2: shared = (Seq!0[i] == Syms!0[0])
-        !6!2: shared = (s0!2 and !5!2)
-        s0!3: shared = (!3!2 or !6!2)
+def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+    s0!1: plaintext[int] = False
+    c!1: plaintext[int] = 0
+    for i: plaintext[int] in range(0, N!0):
+        s0!2: shared[int] = Φ(s0!1, s0!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2: shared[int] = (Seq!0[i] == Syms!0[2])
+        !2!2: shared[int] = (s0!2 and !1!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!2!2, c!3, c!2)
+        !3!2: shared[int] = (Seq!0[i] == Syms!0[1])
+        !5!2: shared[int] = (Seq!0[i] == Syms!0[0])
+        !6!2: shared[int] = (s0!2 and !5!2)
+        s0!3: shared[int] = (!3!2 or !6!2)
     return c!2

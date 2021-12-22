@@ -1,6 +1,6 @@
 import typing
 
-def biometric_matching_fast(D, N, C:list[int], C_sqr_sum:int, two_C:list[int], S: List[int], S_sqr_sum: list[int]):
+def biometric_matching_fast(D, N, C:list[int], C_sqr_sum:int, two_C:list[int], S: list[int], S_sqr_sum: list[int]):
   """
   Computes biometric matching
 
@@ -11,20 +11,23 @@ def biometric_matching_fast(D, N, C:list[int], C_sqr_sum:int, two_C:list[int], S
   :param list[int] C: query feature vector, we need to find closest match to this vector in the DB, comes from client (Alice)
   :param int C_sqr_sum: sum of squares of elements of `C` e.g. if `C={1, 2, 3, 4}`, then `C_sqr_sum is: 1*1 + 2*2 + 3*3 + 4*4 = 30`
    client passes it pre-processed to to save gates in circuit
-  :param list[int] two_C: same as `C` except that each element is multipled by 2, e.g. if `C={1, 2, 3, 4}`, then 
+  :param list[int] two_C: same as `C` except that each element is multipled by 2, e.g. if `C={1, 2, 3, 4}`, then
    `two_C = {2, 4, 6, 8}`. client passes it preprocessed to save gates
   :param list[int] S: the database of features, it has N * D elements i.e. N features and each feature vector has D elements,
    this comes from server (Bob)
   :param list[int] S_sqr_sum: has N elements, each element is sum of squares of corresponding feature elements e.g. say
    S={{1, 2, 3, 4}, {5, 6, 7, 8}}, then S_sqr_sum={1*1 + 2*2 + 3*3 + 4*4, 5*5 + 6*6 + 7*7 + 8*8} = {30, 174}
-  
-  """ 
 
-  differences: list[int] = [0] * D
+  """
+
+  differences: list[int] = []
+  for i in range(D):
+    differences[i] = differences + [0]
+
   for i in range(N):
     a_sqr_plus_b_sqr: int = S_sqr_sum[i] + C_sqr_sum
     two_a_b: int = 0
-    
+
     for j in range(D):
       tmp: int = S[i*D+j] * two_C[j]
       two_a_b = two_a_b + tmp

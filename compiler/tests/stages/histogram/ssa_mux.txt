@@ -1,4 +1,4 @@
-Function histogram(A: shared, B: shared, N: plaintext, num_bins: plaintext):
+Function histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
 Entry block: 0
 Exit block: 6
 Block 0:
@@ -7,7 +7,7 @@ Block 0:
 Block 1:
     result!2 = Φ(result!1, result!3)
     !1!1 = Φ(!1!0, !1!2)
-    for i: plaintext in range(0, num_bins!0)
+    for i: plaintext[int] in range(0, num_bins!0)
 Block 2:
     !1!2 = [0]
     result!3 = (result!2 + !1!2)
@@ -18,7 +18,7 @@ Block 4:
     result!4 = Φ(result!2, result!5)
     !2!1 = Φ(!2!0, !2!2)
     !3!1 = Φ(!3!0, !3!2)
-    for i: plaintext in range(0, num_bins!0)
+    for i: plaintext[int] in range(0, num_bins!0)
 Block 5:
     jump
 Block 6:
@@ -27,7 +27,7 @@ Block 7:
     result!5 = Φ(result!4, result!7)
     !2!2 = Φ(!2!1, !2!3)
     !3!2 = Φ(!3!1, !3!4)
-    for j: plaintext in range(0, N!0)
+    for j: plaintext[int] in range(0, N!0)
 Block 8:
     !2!3 = (A!0[j] == i)
     conditional jump !2!3

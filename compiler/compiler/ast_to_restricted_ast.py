@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Optional, final, NoReturn
 
 from . import restricted_ast
-from .ast_shared import VarType
+from .ast_shared import VarType, VarVisibility
 
 
 @dataclass
@@ -324,7 +324,9 @@ class _StatementConverter(_StrictNodeVisitor):
         )
         counter = _NameGetter(self.source_code_info).visit(node.target)
         return restricted_ast.For(
-            counter=restricted_ast.Var(name=counter.name, var_type=VarType.PLAINTEXT),
+            counter=restricted_ast.Var(
+                name=counter.name, var_type=VarType(VarVisibility.PLAINTEXT, 0)
+            ),
             bound_low=bound_low,
             bound_high=bound_high,
             body=_convert_statements(self.source_code_info, node.body),
@@ -389,6 +391,32 @@ class _ReturnValueGetter(_StrictNodeVisitor):
         return _ExpressionConverter(self.source_code_info).visit(node.value)
 
 
+class _TypeConverter(_StrictNodeVisitor):
+    def error_message(self) -> str:
+        return "Expected a type"
+
+    def visit_Name(self, node: ast.Name) -> VarType:
+        if node.id != "int":
+            self.raise_syntax_error(node, "Only `int` is supported")
+
+        return VarType(VarVisibility.SHARED, 0)
+
+    def visit_Subscript(self, node: ast.Subscript) -> VarType:
+        if node.value.id != "list":
+            self.raise_syntax_error(
+                node, "Only `list` is supported as a collection of types"
+            )
+
+        if node.slice.id != "int":
+            self.raise_syntax_error(
+                node, "Only one-dimensional `list`s are currently supported"
+            )
+
+        subtype = _TypeConverter(self.source_code_info).visit(node.slice)
+
+        return VarType(VarVisibility.SHARED, subtype.dims + 1)
+
+
 class _FunctionConverter(_StrictNodeVisitor):
     def visit_FunctionDef(self, node: ast.FunctionDef) -> restricted_ast.Function:
         # TODO: Check parameter and return types
@@ -396,15 +424,16 @@ class _FunctionConverter(_StrictNodeVisitor):
             self.raise_syntax_error(node, "Decorators unsupported")
         if len(node.body) == 0:
             self.raise_syntax_error(node, "Function has empty body")
+
         return restricted_ast.Function(
             # TODO: Exclude other kinds of arguments
             name=node.name,
             parameters=[
                 restricted_ast.Var(
                     name=arg.arg,
-                    var_type=VarType.PLAINTEXT
+                    var_type=VarType(VarVisibility.PLAINTEXT, 0)
                     if arg.annotation is None
-                    else VarType.SHARED,
+                    else _TypeConverter(self.source_code_info).visit(arg.annotation),
                 )
                 for arg in node.args.args
             ],

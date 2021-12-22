@@ -1,11 +1,11 @@
-Function ip(A: shared, B: shared, N: plaintext):
+Function ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
 Entry block: 0
 Exit block: 3
 Block 0:
     sum = 0
     jump
 Block 1:
-    for i: plaintext in range(0, N)
+    for i: plaintext[int] in range(0, N)
 Block 2:
     temp = (A[i] * B[i])
     sum = (sum + temp)

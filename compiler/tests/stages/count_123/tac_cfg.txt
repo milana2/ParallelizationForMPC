@@ -1,4 +1,4 @@
-Function count_123(Seq: shared, N: plaintext, Syms: shared):
+Function count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
 Entry block: 0
 Exit block: 3
 Block 0:
@@ -8,7 +8,7 @@ Block 0:
     c = 0
     jump
 Block 1:
-    for i: plaintext in range(0, N)
+    for i: plaintext[int] in range(0, N)
 Block 2:
     !1 = (Seq[i] == Syms[3])
     !2 = (s2 or s1)

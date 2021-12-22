@@ -1,9 +1,9 @@
-def psi(A: shared, SA: plaintext, B: shared, SB: plaintext):
+def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
     dummy = 0
     result = []
-    for i: plaintext in range(0, SA):
+    for i: plaintext[int] in range(0, SA):
         flag = False
-        for j: plaintext in range(0, SB):
+        for j: plaintext[int] in range(0, SB):
             if (A[i] == B[j]):
                 flag = True
         val = dummy

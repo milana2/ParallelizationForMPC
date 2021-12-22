@@ -1,23 +1,23 @@
-def longest_odd_10(Seq: shared, N: plaintext, Syms: shared):
-    current_length!1: plaintext = 0
-    max_length!1: plaintext = 0
-    s2!1: plaintext = False
-    for i: plaintext in range(0, N!0):
-        current_length!2: shared = Φ(current_length!1, current_length!6)
-        max_length!2: shared = Φ(max_length!1, max_length!4)
-        s2!2: shared = Φ(s2!1, s2!3)
-        !1!2: shared = (Seq!0[i] == Syms!0[1])
-        s1!2: shared = (s2!2 and !1!2)
-        !2!2: shared = not s2!2
-        current_length!4: plaintext = 0
-        current_length!5: shared = MUX(!2!2, current_length!4, current_length!2)
-        current_length!3: shared = (current_length!2 + 1)
-        current_length!6: shared = MUX(s1!2, current_length!3, current_length!5)
-        !4!2: shared = (current_length!6 % 2)
-        !5!2: shared = (!4!2 == 1)
-        !6!2: shared = (current_length!6 > max_length!2)
-        !7!2: shared = (!5!2 and !6!2)
-        max_length!3: shared = current_length!6
-        max_length!4: shared = MUX(!7!2, max_length!3, max_length!2)
-        s2!3: shared = (Seq!0[i] == Syms!0[0])
+def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+    current_length!1: plaintext[int] = 0
+    max_length!1: plaintext[int] = 0
+    s2!1: plaintext[int] = False
+    for i: plaintext[int] in range(0, N!0):
+        current_length!2: shared[int] = Φ(current_length!1, current_length!6)
+        max_length!2: shared[int] = Φ(max_length!1, max_length!4)
+        s2!2: shared[int] = Φ(s2!1, s2!3)
+        !1!2: shared[int] = (Seq!0[i] == Syms!0[1])
+        s1!2: shared[int] = (s2!2 and !1!2)
+        !2!2: shared[int] = not s2!2
+        current_length!4: plaintext[int] = 0
+        current_length!5: shared[int] = MUX(!2!2, current_length!4, current_length!2)
+        current_length!3: shared[int] = (current_length!2 + 1)
+        current_length!6: shared[int] = MUX(s1!2, current_length!3, current_length!5)
+        !4!2: shared[int] = (current_length!6 % 2)
+        !5!2: shared[int] = (!4!2 == 1)
+        !6!2: shared[int] = (current_length!6 > max_length!2)
+        !7!2: shared[int] = (!5!2 and !6!2)
+        max_length!3: shared[int] = current_length!6
+        max_length!4: shared[int] = MUX(!7!2, max_length!3, max_length!2)
+        s2!3: shared[int] = (Seq!0[i] == Syms!0[0])
     return max_length!2

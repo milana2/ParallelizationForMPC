@@ -1,8 +1,8 @@
-def longest_odd_10(Seq: shared, N: plaintext, Syms: shared):
+def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     current_length = 0
     max_length = 0
     s2 = False
-    for i: plaintext in range(0, N):
+    for i: plaintext[int] in range(0, N):
         s1 = (s2 and (Seq[i] == Syms[1]))
         if s1:
             current_length = (current_length + 1)

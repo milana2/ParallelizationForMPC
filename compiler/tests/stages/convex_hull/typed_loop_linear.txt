@@ -1,31 +1,31 @@
-def convex_hull(X_coords: shared, Y_coords: shared, N: plaintext):
-    hull_X!1: plaintext = []
-    hull_Y!1: plaintext = []
-    for i: plaintext in range(0, N!0):
-        hull_X!2: shared = Φ(hull_X!1, hull_X!4)
-        hull_Y!2: shared = Φ(hull_Y!1, hull_Y!4)
-        is_hull!2: plaintext = True
-        p1_X!2: shared = X_coords!0[i]
-        p1_Y!2: shared = Y_coords!0[i]
-        !1!2: shared = (p1_X!2 <= 0)
-        !2!2: shared = (p1_Y!2 >= 0)
-        !3!2: shared = (!1!2 and !2!2)
-        for j: plaintext in range(0, N!0):
-            is_hull!3: shared = Φ(is_hull!2, is_hull!5)
-            p2_X!3: shared = X_coords!0[j]
-            p2_Y!3: shared = Y_coords!0[j]
-            !6!3: shared = (p1_X!2 <= p2_X!3)
-            !7!3: shared = (p1_Y!2 >= p2_Y!3)
-            !8!3: shared = (!6!3 or !7!3)
-            !9!3: shared = not !8!3
-            is_hull!4: plaintext = False
-            is_hull!5: shared = MUX(!9!3, is_hull!4, is_hull!3)
-        is_hull!6: shared = MUX(!3!2, is_hull!2, is_hull!3)
-        !10!2: shared = [p1_X!2]
-        hull_X!3: shared = (hull_X!2 + !10!2)
-        !11!2: shared = [p1_Y!2]
-        hull_Y!3: shared = (hull_Y!2 + !11!2)
-        hull_X!4: shared = MUX(is_hull!6, hull_X!3, hull_X!2)
-        hull_Y!4: shared = MUX(is_hull!6, hull_Y!3, hull_Y!2)
-    !12!1: shared = (hull_X!2, hull_Y!2)
+def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
+    hull_X!1 = []
+    hull_Y!1 = []
+    for i: plaintext[int] in range(0, N!0):
+        hull_X!2: shared[list[int]] = Φ(hull_X!1, hull_X!4)
+        hull_Y!2: shared[list[int]] = Φ(hull_Y!1, hull_Y!4)
+        is_hull!2: plaintext[int] = True
+        p1_X!2: shared[int] = X_coords!0[i]
+        p1_Y!2: shared[int] = Y_coords!0[i]
+        !1!2: shared[int] = (p1_X!2 <= 0)
+        !2!2: shared[int] = (p1_Y!2 >= 0)
+        !3!2: shared[int] = (!1!2 and !2!2)
+        for j: plaintext[int] in range(0, N!0):
+            is_hull!3: shared[int] = Φ(is_hull!2, is_hull!5)
+            p2_X!3: shared[int] = X_coords!0[j]
+            p2_Y!3: shared[int] = Y_coords!0[j]
+            !6!3: shared[int] = (p1_X!2 <= p2_X!3)
+            !7!3: shared[int] = (p1_Y!2 >= p2_Y!3)
+            !8!3: shared[int] = (!6!3 or !7!3)
+            !9!3: shared[int] = not !8!3
+            is_hull!4: plaintext[int] = False
+            is_hull!5: shared[int] = MUX(!9!3, is_hull!4, is_hull!3)
+        is_hull!6: shared[int] = MUX(!3!2, is_hull!2, is_hull!3)
+        !10!2: shared[list[int]] = [p1_X!2]
+        hull_X!3: shared[list[int]] = (hull_X!2 + !10!2)
+        !11!2: shared[list[int]] = [p1_Y!2]
+        hull_Y!3: shared[list[int]] = (hull_Y!2 + !11!2)
+        hull_X!4: shared[list[int]] = MUX(is_hull!6, hull_X!3, hull_X!2)
+        hull_Y!4: shared[list[int]] = MUX(is_hull!6, hull_Y!3, hull_Y!2)
+    !12!1: shared[list[list[int]]] = (hull_X!2, hull_Y!2)
     return !12!1

@@ -6,9 +6,40 @@ from textwrap import indent
 import networkx  # type: ignore
 
 
-class VarType(str, Enum):
+class VarVisibility(Enum):
     PLAINTEXT = "plaintext"
     SHARED = "shared"
+
+
+@dataclass(frozen=True)
+class VarType:
+    visibility: VarVisibility
+    dims: int
+
+    def drop_dim(self) -> "VarType":
+        return VarType(self.visibility, self.dims - 1)
+
+    def add_dim(self) -> "VarType":
+        return VarType(self.visibility, self.dims + 1)
+
+    def is_plaintext(self) -> bool:
+        return self.visibility == VarVisibility.PLAINTEXT
+
+    def is_shared(self) -> bool:
+        return self.visibility == VarVisibility.SHARED
+
+    def __str__(self) -> str:
+        str_rep = f"{self.visibility.value}["
+        for _ in range(self.dims):
+            str_rep += "list["
+        str_rep += "int"
+        for _ in range(self.dims):
+            str_rep += "]"
+        str_rep += "]"
+        return str_rep
+
+
+PLAINTEXT_INT = VarType(VarVisibility.PLAINTEXT, 0)
 
 
 @dataclass(frozen=True)

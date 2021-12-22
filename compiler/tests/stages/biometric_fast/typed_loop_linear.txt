@@ -1,27 +1,31 @@
-def biometric_matching_fast(D: plaintext, N: plaintext, C: shared, C_sqr_sum: shared, two_C: shared, S: shared, S_sqr_sum: shared):
-    !1!1: plaintext = [0]
-    differences!1: plaintext = (!1!1 * D!0)
-    for i: plaintext in range(0, N!0):
-        differences!2: shared = Φ(differences!1, differences!3)
-        min_diff!1: shared = Φ(min_diff!0, min_diff!3)
-        min_index!1: shared = Φ(min_index!0, min_index!3)
-        a_sqr_plus_b_sqr!2: shared = (S_sqr_sum!0[i] + C_sqr_sum!0)
-        two_a_b!2: plaintext = 0
-        for j: plaintext in range(0, D!0):
-            two_a_b!3: shared = Φ(two_a_b!2, two_a_b!4)
-            tmp!3: shared = (S!0[((i * D!0) + j)] * two_C!0[j])
-            two_a_b!4: shared = (two_a_b!3 + tmp!3)
-        this_diff!2: shared = (a_sqr_plus_b_sqr!2 - two_a_b!3)
-        differences!3: shared = Update(differences!2, i, this_diff!2)
-        min_diff!2: shared = differences!3[0]
-        min_index!2: plaintext = 0
-        for k: plaintext in range(0, N!0):
-            min_diff!3: shared = Φ(min_diff!2, min_diff!5)
-            min_index!3: shared = Φ(min_index!2, min_index!5)
-            !2!3: shared = (differences!3[k] < min_diff!3)
-            min_diff!4: shared = differences!3[k]
-            min_index!4: plaintext = k
-            min_diff!5: shared = MUX(!2!3, min_diff!4, min_diff!3)
-            min_index!5: shared = MUX(!2!3, min_index!4, min_index!3)
-    !3!1: shared = (min_diff!1, min_index!1)
-    return !3!1
+def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
+    differences!1 = []
+    for i: plaintext[int] in range(0, D!0):
+        differences!2 = Φ(differences!1, differences!3)
+        !1!2: plaintext[list[int]] = [0]
+        !2!2 = (differences!2 + !1!2)
+        differences!3 = Update(differences!2, i, !2!2)
+    for i: plaintext[int] in range(0, N!0):
+        differences!4: shared[list[int]] = Φ(differences!2, differences!5)
+        min_diff!1: shared[int] = Φ(min_diff!0, min_diff!3)
+        min_index!1: shared[int] = Φ(min_index!0, min_index!3)
+        a_sqr_plus_b_sqr!2: shared[int] = (S_sqr_sum!0[i] + C_sqr_sum!0)
+        two_a_b!2: plaintext[int] = 0
+        for j: plaintext[int] in range(0, D!0):
+            two_a_b!3: shared[int] = Φ(two_a_b!2, two_a_b!4)
+            tmp!3: shared[int] = (S!0[((i * D!0) + j)] * two_C!0[j])
+            two_a_b!4: shared[int] = (two_a_b!3 + tmp!3)
+        this_diff!2: shared[int] = (a_sqr_plus_b_sqr!2 - two_a_b!3)
+        differences!5: shared[list[int]] = Update(differences!4, i, this_diff!2)
+        min_diff!2: shared[int] = differences!5[0]
+        min_index!2: plaintext[int] = 0
+        for k: plaintext[int] in range(0, N!0):
+            min_diff!3: shared[int] = Φ(min_diff!2, min_diff!5)
+            min_index!3: shared[int] = Φ(min_index!2, min_index!5)
+            !3!3: shared[int] = (differences!5[k] < min_diff!3)
+            min_diff!4: shared[int] = differences!5[k]
+            min_index!4: plaintext[int] = k
+            min_diff!5: shared[int] = MUX(!3!3, min_diff!4, min_diff!3)
+            min_index!5: shared[int] = MUX(!3!3, min_index!4, min_index!3)
+    !4!1: shared[list[int]] = (min_diff!1, min_index!1)
+    return !4!1

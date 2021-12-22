@@ -1,11 +1,11 @@
-def biometric(C: shared, D: plaintext, S: shared, N: plaintext):
+def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
     min_sum!1 = 10000
     min_index!1 = - 1
-    for i: plaintext in range(0, N!0):
+    for i: plaintext[int] in range(0, N!0):
         min_sum!2 = Φ(min_sum!1, min_sum!4)
         min_index!2 = Φ(min_index!1, min_index!4)
         sum!2 = 0
-        for j: plaintext in range(0, D!0):
+        for j: plaintext[int] in range(0, D!0):
             sum!3 = Φ(sum!2, sum!4)
             d!3 = (S!0[((i * D!0) + j)] - C!0[j])
             p!3 = (d!3 * d!3)
