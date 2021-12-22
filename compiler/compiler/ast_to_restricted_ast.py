@@ -402,9 +402,17 @@ class _TypeConverter(_StrictNodeVisitor):
         return VarType(VarVisibility.SHARED, 0)
 
     def visit_Subscript(self, node: ast.Subscript) -> VarType:
+        if not isinstance(node.value, ast.Name):
+            self.raise_syntax_error(node, "Generic types must be named")
+
         if node.value.id != "list":
             self.raise_syntax_error(
                 node, "Only `list` is supported as a collection of types"
+            )
+
+        if not isinstance(node.slice, ast.Name):
+            self.raise_syntax_error(
+                node, "Generic types must be indexed by a single type"
             )
 
         if node.slice.id != "int":
