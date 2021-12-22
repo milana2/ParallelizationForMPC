@@ -1,6 +1,6 @@
 def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
-    min_X!1 = []
-    min_Y!1 = []
+    min_X!1: plaintext[list[int]] = []
+    min_Y!1: plaintext[list[int]] = []
     for i: plaintext[int] in range(0, N!0):
         min_X!2: shared[list[int]] = Φ(min_X!1, min_X!4)
         min_Y!2: shared[list[int]] = Φ(min_Y!1, min_Y!4)

@@ -1,5 +1,5 @@
 def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
-    result!1 = []
+    result!1: plaintext[list[int]] = []
     for i: plaintext[int] in range(0, num_bins!0):
         result!2 = Φ(result!1, result!3)
         !1!2: plaintext[list[int]] = [0]

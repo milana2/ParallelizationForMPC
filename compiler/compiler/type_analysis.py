@@ -71,6 +71,12 @@ def _type_assign_expr(
         return _type_assign_expr(expr.operand, type_env)
 
     elif isinstance(expr, (List, Tuple)):
+        if len(expr.items) == 0:
+            # Edge case for initialization of empty lists/tuples
+            # We assume that all arrays in the source-code are 1-dimensional
+            # TODO: remove this condition if multi-dimensional arrays are supported
+            return VarType(VarVisibility.PLAINTEXT, 1)
+
         elem_types = [_type_assign_expr(elem, type_env) for elem in expr.items]
         elem_dims = [
             elem_type.dims for elem_type in elem_types if elem_type is not None
@@ -85,6 +91,7 @@ def _type_assign_expr(
             elem_type is not None and elem_type.is_plaintext()
             for elem_type in elem_types
         ):
+            assert elem_types[0] is not None  # needed for mypy
             return elem_types[0].add_dim()
         else:
             for elem_type in elem_types:

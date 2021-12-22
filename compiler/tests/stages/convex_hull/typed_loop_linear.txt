@@ -1,6 +1,6 @@
 def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
-    hull_X!1 = []
-    hull_Y!1 = []
+    hull_X!1: plaintext[list[int]] = []
+    hull_Y!1: plaintext[list[int]] = []
     for i: plaintext[int] in range(0, N!0):
         hull_X!2: shared[list[int]] = Φ(hull_X!1, hull_X!4)
         hull_Y!2: shared[list[int]] = Φ(hull_Y!1, hull_Y!4)

@@ -1,6 +1,6 @@
 def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
     dummy!1: plaintext[int] = 0
-    result!1 = []
+    result!1: plaintext[list[int]] = []
     for i: plaintext[int] in range(0, SA!0):
         result!2: shared[list[int]] = Φ(result!1, result!3)
         flag!2: plaintext[int] = False
