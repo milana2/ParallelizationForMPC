@@ -309,12 +309,12 @@
 For this treatment we make the following simplifying assumptions:
 
 \begin{enumerate}
-\item All statements in the program execute using the same protocol (sharing). That is, there is no share conversion.
-\item All MPC instructions have the same unit cost, 1 unit.
-\item There is unlimited bandwidth---i.e., a single MPC-instruction costs as much as $N$ amortized instructions, namely 1 unit.
+\item All statements in the program execute using the same protocol (sharing). That is, there is no share conversion. \ishaq{We should say somewhere (in a footnote?) that we know this is not ideal, otherwise reviewers will complain.}
+\item All MPC instructions have the same unit cost, 1 unit. \ishaq{Don't we need to distinguish between local (cheap) vs. interactive (expensive) instructions? I don't see how we could assume this.}
+\item There is unlimited bandwidth---i.e., a single MPC-instruction costs as much as $N$ amortized instructions, namely 1 unit.\ishaq{This is fair for theoretical model, although in some real life applications this is not true, e.g. L2 norm of large vectors.}
 \item MPC instructions scheduled in parallel benefit from amortization \emph{only if} they are the same instruction. Given our previous assumption, 
 2 MUL instructions scheduled in parallel benefit from amortization and cost 1, however a MUL and a MUX instructions scheduled 
-in parallel still cost 2. 
+in parallel still cost 2. \ishaq{This is not true, can we still assume it?} 
 \end{enumerate}
 
 
