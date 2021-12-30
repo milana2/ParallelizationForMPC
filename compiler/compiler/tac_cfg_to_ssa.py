@@ -113,7 +113,8 @@ def rename_variables(result: ssa.Function) -> None:
     S: dict[ssa.Var, list[int]] = dict()
     C: dict[ssa.Var, int] = dict()
 
-    for V in itertools.chain(result.parameters, blocks_setting_vars.keys()):
+    param_vars = [param.var for param in result.parameters]
+    for V in itertools.chain(param_vars, blocks_setting_vars.keys()):
         C[V] = 1
         S[V] = [0]
 

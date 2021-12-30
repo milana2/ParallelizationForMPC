@@ -2,7 +2,7 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
     s0!1 = False
     s1!1 = False
     scount!1 = 0
-    for i: plaintext[int] in range(0, N!0):
+    for i in range(0, N!0):
         s0!2 = Φ(s0!1, s0!3)
         s1!2 = Φ(s1!1, s1!3)
         scount!2 = Φ(scount!1, scount!4)

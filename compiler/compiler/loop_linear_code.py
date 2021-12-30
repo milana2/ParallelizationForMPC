@@ -20,7 +20,7 @@ from .ssa import (
     Mux,
     Update,
 )
-from .ast_shared import BinOpKind, UnaryOpKind
+from .ast_shared import BinOpKind, Parameter, UnaryOpKind
 
 
 Statement = Union[Phi, Assign, "For"]
@@ -47,7 +47,7 @@ class For:
 @dataclass
 class Function:
     name: str
-    parameters: list[Var]
+    parameters: list[Parameter]
     body: list[Statement]
     return_value: Var
 

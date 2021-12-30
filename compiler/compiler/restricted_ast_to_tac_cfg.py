@@ -90,7 +90,7 @@ class _CFGBuilder:
         self._add_conditional_jump_edges(after_block, body_block)
 
     def build_function(
-        self, name: str, parameters: list[tac_cfg.Var], return_var: tac_cfg.Var
+        self, name: str, parameters: list[tac_cfg.Parameter], return_var: tac_cfg.Var
     ) -> tac_cfg.Function:
         assert self._current_block.terminator is None
         self._current_block.terminator = tac_cfg.Return(value=return_var)

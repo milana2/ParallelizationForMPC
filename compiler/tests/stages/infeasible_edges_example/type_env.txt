@@ -1,0 +1,6 @@
+A!0: plaintext[int]
+B!0: plaintext[int]
+C!0: plaintext[int]
+D!0: plaintext[int]
+N!0: plaintext[int]
+i: plaintext[int]

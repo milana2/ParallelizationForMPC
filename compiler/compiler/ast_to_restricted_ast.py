@@ -324,9 +324,7 @@ class _StatementConverter(_StrictNodeVisitor):
         )
         counter = _NameGetter(self.source_code_info).visit(node.target)
         return restricted_ast.For(
-            counter=restricted_ast.Var(
-                name=counter.name, var_type=VarType(VarVisibility.PLAINTEXT, 0)
-            ),
+            counter=restricted_ast.Var(name=counter.name),
             bound_low=bound_low,
             bound_high=bound_high,
             body=_convert_statements(self.source_code_info, node.body),
@@ -437,8 +435,8 @@ class _FunctionConverter(_StrictNodeVisitor):
             # TODO: Exclude other kinds of arguments
             name=node.name,
             parameters=[
-                restricted_ast.Var(
-                    name=arg.arg,
+                restricted_ast.Parameter(
+                    var=restricted_ast.Var(arg.arg),
                     var_type=VarType(VarVisibility.PLAINTEXT, 0)
                     if arg.annotation is None
                     else _TypeConverter(self.source_code_info).visit(arg.annotation),

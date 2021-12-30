@@ -48,8 +48,8 @@ class StagesTestCase(unittest.TestCase):
                 str(dep_graph), stages["dep_graph_remove_infeasible_edges.txt"]
             )
 
-            compiler.loop_linear_add_types(loop_linear, dep_graph)
-            self.assertEqual(str(loop_linear), stages["typed_loop_linear.txt"])
+            type_env = compiler.type_check(loop_linear, dep_graph)
+            self.assertEqual(str(type_env), stages["type_env.txt"])
 
 
 def regenerate_stages():
@@ -93,6 +93,6 @@ def regenerate_stages():
         ) as f:
             f.write(f"{dep_graph}\n")
 
-        compiler.loop_linear_add_types(loop_linear, dep_graph)
-        with open(os.path.join(test_case_dir, "typed_loop_linear.txt"), "w") as f:
-            f.write(f"{loop_linear}\n")
+        type_env = compiler.type_check(loop_linear, dep_graph)
+        with open(os.path.join(test_case_dir, "type_env.txt"), "w") as f:
+            f.write(f"{type_env}\n")

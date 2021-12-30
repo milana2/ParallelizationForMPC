@@ -47,22 +47,23 @@ class Var:
     """A variable named `name`"""
 
     name: str
-    var_type: Optional[VarType] = None
 
     def __str__(self) -> str:
-        str_rep = self.name
-        if self.var_type is not None:
-            str_rep += f": {self.var_type}"
-        return str_rep
+        return self.name
 
     def name_without_ssa_rename(self) -> str:
         return self.name.strip("!")[0]
 
-    def __hash__(self) -> int:
-        return hash(self.name)
 
-    def __eq__(self, o) -> bool:
-        return self.name == o.name
+@dataclass
+class Parameter:
+    """A function parameter of the form `var: var_type`"""
+
+    var: Var
+    var_type: VarType
+
+    def __str__(self) -> str:
+        return f"{self.var}: {self.var_type}"
 
 
 @dataclass(frozen=True)
@@ -164,7 +165,7 @@ BLOCK = TypeVar("BLOCK")
 @dataclass
 class CFGFunction(Generic[BLOCK]):
     name: str
-    parameters: list[Var]
+    parameters: list[Parameter]
     body: networkx.DiGraph
     entry_block: BLOCK
     exit_block: BLOCK

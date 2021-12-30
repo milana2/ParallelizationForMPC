@@ -1,8 +1,6 @@
 import sys
 from typing import Optional, Union, cast
 
-import networkx  # type: ignore
-
 from . import loop_linear_code
 from .dep_graph import DepGraph
 from .ast_shared import (
@@ -20,8 +18,13 @@ from .ast_shared import (
 from .tac_cfg import AssignRHS, List, Tuple, Mux, Update
 
 
+class TypeEnv(dict[Var, VarType]):
+    def __str__(self) -> str:
+        return "\n".join([f"{var}: {var_type}" for var, var_type in self.items()])
+
+
 def _type_assign_expr(
-    expr: Union[AssignRHS, SubscriptIndex], type_env: dict[str, VarType]
+    expr: Union[AssignRHS, SubscriptIndex], type_env: TypeEnv
 ) -> Optional[VarType]:
     """
     Determines the type of an expression in a given type environment.  If an expression
@@ -32,7 +35,7 @@ def _type_assign_expr(
     # code in the original source code
 
     if isinstance(expr, Var):
-        return type_env.get(expr.name)
+        return type_env.get(expr)
 
     elif isinstance(expr, ConstantInt):
         return PLAINTEXT_INT
@@ -42,7 +45,7 @@ def _type_assign_expr(
             raise TypeError(
                 f"Array subscript index {expr.index} is not a plaintext int"
             )
-        arr_type = type_env.get(expr.array.name)
+        arr_type = type_env.get(expr.array)
         if arr_type is not None:
             return arr_type.drop_dim()
         else:
@@ -142,7 +145,7 @@ def _type_assign_expr(
 
     elif isinstance(expr, Update):
         val_type = _type_assign_expr(expr.value, type_env)
-        arr_type = type_env.get(expr.array.name)
+        arr_type = type_env.get(expr.array)
 
         if val_type is not None and arr_type is not None:
             if val_type.dims != arr_type.dims - 1:
@@ -165,19 +168,19 @@ def _type_assign_expr(
 
 
 def _add_loop_counter_types(
-    type_env: dict[str, VarType], stmts: list[loop_linear_code.Statement]
+    type_env: TypeEnv, stmts: list[loop_linear_code.Statement]
 ) -> None:
     """
     Adds the types of the loop counters to the type environment.
     """
     for stmt in stmts:
         if isinstance(stmt, loop_linear_code.For):
-            type_env[stmt.counter.name] = PLAINTEXT_INT
+            type_env[stmt.counter] = PLAINTEXT_INT
             _add_loop_counter_types(type_env, stmt.body)
 
 
 def validate_type_requirements(
-    stmts: list[loop_linear_code.Statement], type_env: dict[str, VarType]
+    stmts: list[loop_linear_code.Statement], type_env: TypeEnv
 ) -> None:
     """
     Validates that all of MPC's type requirements are met and that all assignments/expressions
@@ -189,7 +192,7 @@ def validate_type_requirements(
 
     for stmt in stmts:
         if isinstance(stmt, loop_linear_code.For):
-            if type_env[stmt.counter.name] != PLAINTEXT_INT:
+            if type_env[stmt.counter] != PLAINTEXT_INT:
                 raise TypeError(f"Loop counter {stmt.counter.name} is not plaintext")
             validate_type_requirements(stmt.body, type_env)
         elif isinstance(stmt, loop_linear_code.Assign):
@@ -215,62 +218,61 @@ def validate_type_requirements(
                     f"Elements of Phi node {stmt} do not all have the same dimensions"
                 )
 
-            if stmt.lhs.var_type is None:
+            if stmt.lhs not in type_env:
                 # TODO: as above, this case can be triggered by a def-use cycle of plaintext values
                 # raise TypeError(f"Cannot determine type of {stmt.lhs}")
                 pass
 
 
-def loop_linear_add_types(
-    func: loop_linear_code.Function, dep_graph: DepGraph
-) -> loop_linear_code.Function:
+def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
     """
     Perform taint analysis to detect which variables are plaintext and which are shared.
     """
 
-    var_types: dict[str, VarType] = {
-        # TODO: fix the below hack once parameter ssa renaming is properly implemented
-        f"{var.name}!0": cast(VarType, var.var_type)
-        for var in func.parameters
-    }
-    _add_loop_counter_types(var_types, func.body)
+    type_env = TypeEnv(
+        {
+            # TODO: fix the below hack once parameter ssa renaming is properly implemented
+            Var(f"{param.var.name}!0"): cast(VarType, param.var_type)
+            for param in func.parameters
+        }
+    )
+    _add_loop_counter_types(type_env, func.body)
 
     worklist = list(dep_graph.def_use_graph.nodes)
 
     while len(worklist) > 0:
         stmt = worklist.pop()
         if isinstance(stmt, loop_linear_code.Assign):
-            if stmt.lhs.var_type is not None:
+            if stmt.lhs in type_env:
                 # This assignment has been reached before, don't extend the worklist
                 continue
 
-            if stmt.lhs.name in var_types:
+            if stmt.lhs.name in type_env:
                 print(
                     f"[WARNING] Variable {stmt.lhs.name} is assigned multiple times in SSA",
                     file=sys.stderr,
                 )
 
-            var_type = _type_assign_expr(stmt.rhs, var_types)
+            var_type = _type_assign_expr(stmt.rhs, type_env)
             if var_type is None:
                 # This variable cannot be typed yet
                 continue
 
-            stmt.lhs = Var(stmt.lhs.name, var_type)
-            assert stmt.lhs.var_type is not None
-            var_types[stmt.lhs.name] = stmt.lhs.var_type
+            assert stmt.lhs not in type_env
+            type_env[stmt.lhs] = var_type
 
         elif isinstance(stmt, loop_linear_code.Phi):
-            if stmt.lhs.var_type is not None:
+            if stmt.lhs not in type_env:
                 # This assignment has been reached before, don't extend the worklist
                 continue
 
-            if stmt.lhs.name in var_types:
+            if stmt.lhs.name in type_env:
                 print(
                     f"[WARNING] Variable {stmt.lhs.name} is assigned multiple times in SSA",
                     file=sys.stderr,
                 )
 
-            elem_types = [_type_assign_expr(elem, var_types) for elem in stmt.rhs]
+            elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs]
             elem_dims = [
                 elem_type.dims for elem_type in elem_types if elem_type is not None
             ]
@@ -287,22 +289,17 @@ def loop_linear_add_types(
                 elem_type is not None and elem_type.is_plaintext()
                 for elem_type in elem_types
             ):
-                stmt.lhs = Var(
-                    stmt.lhs.name, VarType(VarVisibility.PLAINTEXT, elem_dims[0])
-                )
+                var_type = VarType(VarVisibility.PLAINTEXT, elem_dims[0])
             elif any(
                 elem_type is not None and elem_type.is_shared()
                 for elem_type in elem_types
             ):
-                stmt.lhs = Var(
-                    stmt.lhs.name, VarType(VarVisibility.SHARED, elem_dims[0])
-                )
+                var_type = VarType(VarVisibility.SHARED, elem_dims[0])
             else:
                 # This variable cannot be typed yet
                 continue
 
-            assert stmt.lhs.var_type is not None
-            var_types[stmt.lhs.name] = stmt.lhs.var_type
+            type_env[stmt.lhs] = var_type
         else:
             raise AssertionError(
                 f"Unexpected node {type(stmt)} added to type inference worklist"
@@ -312,6 +309,6 @@ def loop_linear_add_types(
         # to the worklist
         worklist.extend([edge[1] for edge in dep_graph.def_use_graph.edges(stmt)])
 
-    validate_type_requirements(func.body, var_types)
+    validate_type_requirements(func.body, type_env)
 
-    return func
+    return type_env

@@ -8,6 +8,7 @@ from textwrap import indent
 
 from .ast_shared import (
     Var,
+    Parameter,
     LoopBound,
     ConstantInt,
     BinOp as _BinOp,
@@ -43,7 +44,7 @@ class For:
     def __str__(self) -> str:
         body = "\n".join([str(statement) for statement in self.body])
         return (
-            f"for {self.counter} in range({self.bound_low}, {self.bound_high}):\n"
+            f"for {self.counter}: plaintext[int] in range({self.bound_low}, {self.bound_high}):\n"
             + indent(body, "    ")
         )
 
@@ -145,7 +146,7 @@ class Function:
     """
 
     name: str
-    parameters: list[Var]
+    parameters: list[Parameter]
     body: list[Statement]
     return_value: Expression
 

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from .ast_shared import (
     Var,
+    Parameter,
     BinOpKind,
     UnaryOpKind,
     ConstantInt,
@@ -112,7 +113,7 @@ class For:
         return id(self)
 
     def __str__(self) -> str:
-        return f"for {self.counter} in range({self.bound_low}, {self.bound_high})"
+        return f"for {self.counter}: plaintext[int] in range({self.bound_low}, {self.bound_high})"
 
 
 @dataclass(eq=False)
