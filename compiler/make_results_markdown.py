@@ -9,6 +9,7 @@ import pydot
 
 import compiler
 import compiler.loop_linear_code as llc
+from compiler.type_analysis import TypeEnv
 from compiler.util import assert_never
 from tests import STAGES_DIR
 
@@ -71,6 +72,16 @@ def dep_graph_to_image(
         dot.add_edge(pydot.Edge(src=def_index, dst=use_index, style=style))
 
     dot.write(path, format="png")
+
+
+def type_env_to_table(type_env: TypeEnv) -> str:
+    return (
+        "| Variable | Type |\n"
+        + "| - | - |\n"
+        + "\n".join(
+            [f"| `{var}` | `{var_type}` |" for var, var_type in type_env.items()]
+        )
+    )
 
 
 def main():
@@ -150,7 +161,7 @@ def main():
 
         type_env = compiler.type_check(loop_linear_code, dep_graph)
         md += "### Type environment\n"
-        md += f"```python\n{type_env}\n```\n"
+        md += f"{type_env_to_table(type_env)}\n"
 
     md_path = os.path.join(args.path, "README.md")
     with open(md_path, "w") as f:
