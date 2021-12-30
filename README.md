@@ -80,22 +80,22 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 ### Removal of infeasible edges
 ![](biometric_remove_infeasible_edges.png)
 ### Type environment
-```python
-C!0: shared[list[int]]
-D!0: plaintext[int]
-S!0: shared[list[int]]
-N!0: plaintext[int]
-i: plaintext[int]
-j: plaintext[int]
-min_index!3: plaintext[int]
-min_index!4: shared[int]
-d!3: shared[int]
-p!3: shared[int]
-sum!4: shared[int]
-sum!2: plaintext[int]
-min_index!1: plaintext[int]
-min_sum!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `C!0` | `shared[list[int]]` |
+| `D!0` | `plaintext[int]` |
+| `S!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `i` | `plaintext[int]` |
+| `j` | `plaintext[int]` |
+| `min_index!3` | `plaintext[int]` |
+| `min_index!4` | `shared[int]` |
+| `d!3` | `shared[int]` |
+| `p!3` | `shared[int]` |
+| `sum!4` | `shared[int]` |
+| `sum!2` | `plaintext[int]` |
+| `min_index!1` | `plaintext[int]` |
+| `min_sum!1` | `plaintext[int]` |
 ## `biometric_fast`
 ### Input
 ```python
@@ -241,33 +241,33 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 ### Removal of infeasible edges
 ![](biometric_fast_remove_infeasible_edges.png)
 ### Type environment
-```python
-D!0: plaintext[int]
-N!0: plaintext[int]
-C!0: shared[list[int]]
-C_sqr_sum!0: shared[int]
-two_C!0: shared[list[int]]
-S!0: shared[list[int]]
-S_sqr_sum!0: shared[list[int]]
-i: plaintext[int]
-j: plaintext[int]
-k: plaintext[int]
-min_index!4: plaintext[int]
-min_index!5: shared[int]
-min_index!2: plaintext[int]
-tmp!3: shared[int]
-two_a_b!4: shared[int]
-two_a_b!2: plaintext[int]
-a_sqr_plus_b_sqr!2: shared[int]
-this_diff!2: shared[int]
-differences!5: shared[list[int]]
-min_diff!4: shared[int]
-min_diff!5: shared[int]
-!3!3: shared[int]
-min_diff!2: shared[int]
-!1!2: plaintext[list[int]]
-differences!1: plaintext[list[int]]
-```
+| Variable | Type |
+| - | - |
+| `D!0` | `plaintext[int]` |
+| `N!0` | `plaintext[int]` |
+| `C!0` | `shared[list[int]]` |
+| `C_sqr_sum!0` | `shared[int]` |
+| `two_C!0` | `shared[list[int]]` |
+| `S!0` | `shared[list[int]]` |
+| `S_sqr_sum!0` | `shared[list[int]]` |
+| `i` | `plaintext[int]` |
+| `j` | `plaintext[int]` |
+| `k` | `plaintext[int]` |
+| `min_index!4` | `plaintext[int]` |
+| `min_index!5` | `shared[int]` |
+| `min_index!2` | `plaintext[int]` |
+| `tmp!3` | `shared[int]` |
+| `two_a_b!4` | `shared[int]` |
+| `two_a_b!2` | `plaintext[int]` |
+| `a_sqr_plus_b_sqr!2` | `shared[int]` |
+| `this_diff!2` | `shared[int]` |
+| `differences!5` | `shared[list[int]]` |
+| `min_diff!4` | `shared[int]` |
+| `min_diff!5` | `shared[int]` |
+| `!3!3` | `shared[int]` |
+| `min_diff!2` | `shared[int]` |
+| `!1!2` | `plaintext[list[int]]` |
+| `differences!1` | `plaintext[list[int]]` |
 ## `chapterfour_figure_12`
 ### Input
 ```python
@@ -317,17 +317,17 @@ def foo(x: plaintext[int], y: plaintext[int]):
 ### Removal of infeasible edges
 ![](chapterfour_figure_12_remove_infeasible_edges.png)
 ### Type environment
-```python
-x!0: plaintext[int]
-y!0: plaintext[int]
-z!2: plaintext[int]
-z!4: shared[int]
-z!5: shared[int]
-z!3: plaintext[int]
-!2!1: plaintext[int]
-!1!1: plaintext[int]
-z!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `x!0` | `plaintext[int]` |
+| `y!0` | `plaintext[int]` |
+| `z!2` | `plaintext[int]` |
+| `z!4` | `shared[int]` |
+| `z!5` | `shared[int]` |
+| `z!3` | `plaintext[int]` |
+| `!2!1` | `plaintext[int]` |
+| `!1!1` | `plaintext[int]` |
+| `z!1` | `plaintext[int]` |
 ## `convex_hull`
 ### Input
 ```python
@@ -422,36 +422,36 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 ### Removal of infeasible edges
 ![](convex_hull_remove_infeasible_edges.png)
 ### Type environment
-```python
-X_coords!0: shared[list[int]]
-Y_coords!0: shared[list[int]]
-N!0: plaintext[int]
-i: plaintext[int]
-j: plaintext[int]
-is_hull!4: plaintext[int]
-is_hull!5: shared[int]
-p2_Y!3: shared[int]
-!7!3: shared[int]
-!8!3: shared[int]
-!9!3: shared[int]
-p2_X!3: shared[int]
-!6!3: shared[int]
-p1_Y!2: shared[int]
-!11!2: shared[list[int]]
-hull_Y!3: shared[list[int]]
-hull_Y!4: shared[list[int]]
-!2!2: shared[int]
-!3!2: shared[int]
-p1_X!2: shared[int]
-!10!2: shared[list[int]]
-hull_X!3: shared[list[int]]
-hull_X!4: shared[list[int]]
-!1!2: shared[int]
-is_hull!2: plaintext[int]
-is_hull!6: shared[int]
-hull_Y!1: plaintext[list[int]]
-hull_X!1: plaintext[list[int]]
-```
+| Variable | Type |
+| - | - |
+| `X_coords!0` | `shared[list[int]]` |
+| `Y_coords!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `i` | `plaintext[int]` |
+| `j` | `plaintext[int]` |
+| `is_hull!4` | `plaintext[int]` |
+| `is_hull!5` | `shared[int]` |
+| `p2_Y!3` | `shared[int]` |
+| `!7!3` | `shared[int]` |
+| `!8!3` | `shared[int]` |
+| `!9!3` | `shared[int]` |
+| `p2_X!3` | `shared[int]` |
+| `!6!3` | `shared[int]` |
+| `p1_Y!2` | `shared[int]` |
+| `!11!2` | `shared[list[int]]` |
+| `hull_Y!3` | `shared[list[int]]` |
+| `hull_Y!4` | `shared[list[int]]` |
+| `!2!2` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `p1_X!2` | `shared[int]` |
+| `!10!2` | `shared[list[int]]` |
+| `hull_X!3` | `shared[list[int]]` |
+| `hull_X!4` | `shared[list[int]]` |
+| `!1!2` | `shared[int]` |
+| `is_hull!2` | `plaintext[int]` |
+| `is_hull!6` | `shared[int]` |
+| `hull_Y!1` | `plaintext[list[int]]` |
+| `hull_X!1` | `plaintext[list[int]]` |
 ## `count_102`
 ### Input
 ```python
@@ -519,20 +519,20 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ### Removal of infeasible edges
 ![](count_102_remove_infeasible_edges.png)
 ### Type environment
-```python
-Seq!0: shared[list[int]]
-N!0: plaintext[int]
-Syms!0: shared[list[int]]
-i: plaintext[int]
-!5!2: shared[int]
-!6!2: shared[int]
-s0!3: shared[int]
-!3!2: shared[int]
-!1!2: shared[int]
-!2!2: shared[int]
-c!1: plaintext[int]
-s0!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Syms!0` | `shared[list[int]]` |
+| `i` | `plaintext[int]` |
+| `!5!2` | `shared[int]` |
+| `!6!2` | `shared[int]` |
+| `s0!3` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `c!1` | `plaintext[int]` |
+| `s0!1` | `plaintext[int]` |
 ## `count_10s`
 ### Input
 ```python
@@ -606,20 +606,20 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ### Removal of infeasible edges
 ![](count_10s_remove_infeasible_edges.png)
 ### Type environment
-```python
-Seq!0: shared[list[int]]
-N!0: plaintext[int]
-Syms!0: shared[list[int]]
-i: plaintext[int]
-s0!3: shared[int]
-!3!2: shared[int]
-s1!3: shared[int]
-!1!2: shared[int]
-!2!2: shared[int]
-scount!1: plaintext[int]
-s1!1: plaintext[int]
-s0!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Syms!0` | `shared[list[int]]` |
+| `i` | `plaintext[int]` |
+| `s0!3` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `s1!3` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `scount!1` | `plaintext[int]` |
+| `s1!1` | `plaintext[int]` |
+| `s0!1` | `plaintext[int]` |
 ## `count_123`
 ### Input
 ```python
@@ -696,20 +696,20 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ### Removal of infeasible edges
 ![](count_123_remove_infeasible_edges.png)
 ### Type environment
-```python
-Seq!0: shared[list[int]]
-N!0: plaintext[int]
-Syms!0: shared[list[int]]
-i: plaintext[int]
-s1!3: shared[int]
-!4!2: shared[int]
-s2!3: shared[int]
-!1!2: shared[int]
-!3!2: shared[int]
-c!1: plaintext[int]
-s2!1: plaintext[int]
-s1!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Syms!0` | `shared[list[int]]` |
+| `i` | `plaintext[int]` |
+| `s1!3` | `shared[int]` |
+| `!4!2` | `shared[int]` |
+| `s2!3` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `c!1` | `plaintext[int]` |
+| `s2!1` | `plaintext[int]` |
+| `s1!1` | `plaintext[int]` |
 ## `histogram`
 ### Input
 ```python
@@ -791,20 +791,20 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 ### Removal of infeasible edges
 ![](histogram_remove_infeasible_edges.png)
 ### Type environment
-```python
-A!0: shared[list[int]]
-B!0: shared[list[int]]
-N!0: plaintext[int]
-num_bins!0: plaintext[int]
-i: plaintext[int]
-j: plaintext[int]
-!3!3: shared[int]
-result!6: shared[list[int]]
-result!7: shared[list[int]]
-!2!3: shared[int]
-!1!2: plaintext[list[int]]
-result!1: plaintext[list[int]]
-```
+| Variable | Type |
+| - | - |
+| `A!0` | `shared[list[int]]` |
+| `B!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `num_bins!0` | `plaintext[int]` |
+| `i` | `plaintext[int]` |
+| `j` | `plaintext[int]` |
+| `!3!3` | `shared[int]` |
+| `result!6` | `shared[list[int]]` |
+| `result!7` | `shared[list[int]]` |
+| `!2!3` | `shared[int]` |
+| `!1!2` | `plaintext[list[int]]` |
+| `result!1` | `plaintext[list[int]]` |
 ## `infeasible_edges_example`
 ### Input
 ```python
@@ -859,14 +859,14 @@ def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[in
 ### Removal of infeasible edges
 ![](infeasible_edges_example_remove_infeasible_edges.png)
 ### Type environment
-```python
-A!0: plaintext[int]
-B!0: plaintext[int]
-C!0: plaintext[int]
-D!0: plaintext[int]
-N!0: plaintext[int]
-i: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `A!0` | `plaintext[int]` |
+| `B!0` | `plaintext[int]` |
+| `C!0` | `plaintext[int]` |
+| `D!0` | `plaintext[int]` |
+| `N!0` | `plaintext[int]` |
+| `i` | `plaintext[int]` |
 ## `inner_product`
 ### Input
 ```python
@@ -917,15 +917,15 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
 ### Removal of infeasible edges
 ![](inner_product_remove_infeasible_edges.png)
 ### Type environment
-```python
-A!0: shared[list[int]]
-B!0: shared[list[int]]
-N!0: plaintext[int]
-i: plaintext[int]
-temp!2: shared[int]
-sum!3: shared[int]
-sum!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `A!0` | `shared[list[int]]` |
+| `B!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `i` | `plaintext[int]` |
+| `temp!2` | `shared[int]` |
+| `sum!3` | `shared[int]` |
+| `sum!1` | `plaintext[int]` |
 ## `longest_102`
 ### Input
 ```python
@@ -1015,28 +1015,28 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 ### Removal of infeasible edges
 ![](longest_102_remove_infeasible_edges.png)
 ### Type environment
-```python
-Seq!0: shared[list[int]]
-N!0: plaintext[int]
-Syms!0: shared[list[int]]
-i: plaintext[int]
-length!4: plaintext[int]
-length!5: shared[int]
-max_len!3: shared[int]
-max_len!4: shared[int]
-!7!2: shared[int]
-!8!2: shared[int]
-!4!2: shared[int]
-!5!2: shared[int]
-s0!3: shared[int]
-!6!2: shared[int]
-!2!2: shared[int]
-!1!2: shared[int]
-s1!2: shared[int]
-length!1: plaintext[int]
-max_len!1: plaintext[int]
-s0!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Syms!0` | `shared[list[int]]` |
+| `i` | `plaintext[int]` |
+| `length!4` | `plaintext[int]` |
+| `length!5` | `shared[int]` |
+| `max_len!3` | `shared[int]` |
+| `max_len!4` | `shared[int]` |
+| `!7!2` | `shared[int]` |
+| `!8!2` | `shared[int]` |
+| `!4!2` | `shared[int]` |
+| `!5!2` | `shared[int]` |
+| `s0!3` | `shared[int]` |
+| `!6!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `s1!2` | `shared[int]` |
+| `length!1` | `plaintext[int]` |
+| `max_len!1` | `plaintext[int]` |
+| `s0!1` | `plaintext[int]` |
 ## `longest_1s`
 ### Input
 ```python
@@ -1110,20 +1110,20 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 ### Removal of infeasible edges
 ![](longest_1s_remove_infeasible_edges.png)
 ### Type environment
-```python
-Seq!0: shared[list[int]]
-N!0: plaintext[int]
-Sym!0: shared[int]
-i: plaintext[int]
-length!4: plaintext[int]
-length!5: shared[int]
-max_length!3: shared[int]
-max_length!4: shared[int]
-!2!2: shared[int]
-!1!2: shared[int]
-length!1: plaintext[int]
-max_length!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Sym!0` | `shared[int]` |
+| `i` | `plaintext[int]` |
+| `length!4` | `plaintext[int]` |
+| `length!5` | `shared[int]` |
+| `max_length!3` | `shared[int]` |
+| `max_length!4` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `length!1` | `plaintext[int]` |
+| `max_length!1` | `plaintext[int]` |
 ## `longest_even_0`
 ### Input
 ```python
@@ -1204,24 +1204,24 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 ### Removal of infeasible edges
 ![](longest_even_0_remove_infeasible_edges.png)
 ### Type environment
-```python
-Seq!0: shared[list[int]]
-N!0: plaintext[int]
-Sym!0: shared[int]
-i: plaintext[int]
-current_length!4: plaintext[int]
-current_length!5: shared[int]
-tmp_max_len!3: shared[int]
-tmp_max_len!4: shared[int]
-max_length!3: shared[int]
-max_length!4: shared[int]
-!3!2: shared[int]
-!4!2: shared[int]
-!2!2: shared[int]
-!1!2: shared[int]
-max_length!1: plaintext[int]
-current_length!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Sym!0` | `shared[int]` |
+| `i` | `plaintext[int]` |
+| `current_length!4` | `plaintext[int]` |
+| `current_length!5` | `shared[int]` |
+| `tmp_max_len!3` | `shared[int]` |
+| `tmp_max_len!4` | `shared[int]` |
+| `max_length!3` | `shared[int]` |
+| `max_length!4` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `!4!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `max_length!1` | `plaintext[int]` |
+| `current_length!1` | `plaintext[int]` |
 ## `longest_odd_10`
 ### Input
 ```python
@@ -1309,27 +1309,27 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 ### Removal of infeasible edges
 ![](longest_odd_10_remove_infeasible_edges.png)
 ### Type environment
-```python
-Seq!0: shared[list[int]]
-N!0: plaintext[int]
-Syms!0: shared[list[int]]
-i: plaintext[int]
-s2!3: shared[int]
-current_length!4: plaintext[int]
-current_length!5: shared[int]
-current_length!6: shared[int]
-max_length!3: shared[int]
-max_length!4: shared[int]
-!6!2: shared[int]
-!7!2: shared[int]
-!4!2: shared[int]
-!5!2: shared[int]
-!1!2: shared[int]
-s1!2: shared[int]
-s2!1: plaintext[int]
-max_length!1: plaintext[int]
-current_length!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Syms!0` | `shared[list[int]]` |
+| `i` | `plaintext[int]` |
+| `s2!3` | `shared[int]` |
+| `current_length!4` | `plaintext[int]` |
+| `current_length!5` | `shared[int]` |
+| `current_length!6` | `shared[int]` |
+| `max_length!3` | `shared[int]` |
+| `max_length!4` | `shared[int]` |
+| `!6!2` | `shared[int]` |
+| `!7!2` | `shared[int]` |
+| `!4!2` | `shared[int]` |
+| `!5!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `s1!2` | `shared[int]` |
+| `s2!1` | `plaintext[int]` |
+| `max_length!1` | `plaintext[int]` |
+| `current_length!1` | `plaintext[int]` |
 ## `max_dist_between_syms`
 ### Input
 ```python
@@ -1397,21 +1397,21 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 ### Removal of infeasible edges
 ![](max_dist_between_syms_remove_infeasible_edges.png)
 ### Type environment
-```python
-Seq!0: shared[list[int]]
-N!0: plaintext[int]
-Sym!0: shared[int]
-i: plaintext[int]
-current_dist!4: plaintext[int]
-current_dist!5: shared[int]
-max_dist!3: shared[int]
-max_dist!4: shared[int]
-!3!2: shared[int]
-!1!2: shared[int]
-!2!2: shared[int]
-current_dist!1: plaintext[int]
-max_dist!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Sym!0` | `shared[int]` |
+| `i` | `plaintext[int]` |
+| `current_dist!4` | `plaintext[int]` |
+| `current_dist!5` | `shared[int]` |
+| `max_dist!3` | `shared[int]` |
+| `max_dist!4` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `current_dist!1` | `plaintext[int]` |
+| `max_dist!1` | `plaintext[int]` |
 ## `max_sum_between_syms`
 ### Input
 ```python
@@ -1479,22 +1479,22 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 ### Removal of infeasible edges
 ![](max_sum_between_syms_remove_infeasible_edges.png)
 ### Type environment
-```python
-Seq!0: shared[list[int]]
-N!0: plaintext[int]
-Sym!0: shared[int]
-i: plaintext[int]
-current_sum!3: shared[int]
-current_sum!5: shared[int]
-max_sum!3: shared[int]
-max_sum!4: shared[int]
-!3!2: shared[int]
-current_sum!4: plaintext[int]
-!1!2: shared[int]
-!2!2: shared[int]
-current_sum!1: plaintext[int]
-max_sum!1: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Sym!0` | `shared[int]` |
+| `i` | `plaintext[int]` |
+| `current_sum!3` | `shared[int]` |
+| `current_sum!5` | `shared[int]` |
+| `max_sum!3` | `shared[int]` |
+| `max_sum!4` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `current_sum!4` | `plaintext[int]` |
+| `!1!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `current_sum!1` | `plaintext[int]` |
+| `max_sum!1` | `plaintext[int]` |
 ## `minimal_points`
 ### Input
 ```python
@@ -1574,28 +1574,28 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 ### Removal of infeasible edges
 ![](minimal_points_remove_infeasible_edges.png)
 ### Type environment
-```python
-X_coords!0: shared[list[int]]
-Y_coords!0: shared[list[int]]
-N!0: plaintext[int]
-i: plaintext[int]
-j: plaintext[int]
-!11!2: shared[int]
-!12!2: shared[list[int]]
-min_Y!3: shared[list[int]]
-min_Y!4: shared[list[int]]
-!8!2: shared[int]
-!9!2: shared[list[int]]
-min_X!3: shared[list[int]]
-min_X!4: shared[list[int]]
-!4!3: shared[int]
-!5!3: shared[int]
-bx!4: shared[int]
-!3!3: shared[int]
-bx!2: plaintext[int]
-min_Y!1: plaintext[list[int]]
-min_X!1: plaintext[list[int]]
-```
+| Variable | Type |
+| - | - |
+| `X_coords!0` | `shared[list[int]]` |
+| `Y_coords!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `i` | `plaintext[int]` |
+| `j` | `plaintext[int]` |
+| `!11!2` | `shared[int]` |
+| `!12!2` | `shared[list[int]]` |
+| `min_Y!3` | `shared[list[int]]` |
+| `min_Y!4` | `shared[list[int]]` |
+| `!8!2` | `shared[int]` |
+| `!9!2` | `shared[list[int]]` |
+| `min_X!3` | `shared[list[int]]` |
+| `min_X!4` | `shared[list[int]]` |
+| `!4!3` | `shared[int]` |
+| `!5!3` | `shared[int]` |
+| `bx!4` | `shared[int]` |
+| `!3!3` | `shared[int]` |
+| `bx!2` | `plaintext[int]` |
+| `min_Y!1` | `plaintext[list[int]]` |
+| `min_X!1` | `plaintext[list[int]]` |
 ## `psi`
 ### Input
 ```python
@@ -1676,22 +1676,22 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 ### Removal of infeasible edges
 ![](psi_remove_infeasible_edges.png)
 ### Type environment
-```python
-A!0: shared[list[int]]
-SA!0: plaintext[int]
-B!0: shared[list[int]]
-SB!0: plaintext[int]
-i: plaintext[int]
-j: plaintext[int]
-val!3: shared[int]
-val!4: shared[int]
-!2!2: shared[list[int]]
-result!3: shared[list[int]]
-flag!4: plaintext[int]
-flag!5: shared[int]
-!1!3: shared[int]
-flag!2: plaintext[int]
-result!1: plaintext[list[int]]
-dummy!1: plaintext[int]
-val!2: plaintext[int]
-```
+| Variable | Type |
+| - | - |
+| `A!0` | `shared[list[int]]` |
+| `SA!0` | `plaintext[int]` |
+| `B!0` | `shared[list[int]]` |
+| `SB!0` | `plaintext[int]` |
+| `i` | `plaintext[int]` |
+| `j` | `plaintext[int]` |
+| `val!3` | `shared[int]` |
+| `val!4` | `shared[int]` |
+| `!2!2` | `shared[list[int]]` |
+| `result!3` | `shared[list[int]]` |
+| `flag!4` | `plaintext[int]` |
+| `flag!5` | `shared[int]` |
+| `!1!3` | `shared[int]` |
+| `flag!2` | `plaintext[int]` |
+| `result!1` | `plaintext[list[int]]` |
+| `dummy!1` | `plaintext[int]` |
+| `val!2` | `plaintext[int]` |
