@@ -555,7 +555,7 @@ $\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel
 
 \subsubsection{Removal of Infeasible Edges}
 
-Array writes limit vectorization as they introduce sometimes infeasible loop-carried dependencies. Consider the following example: \ana{Have to add citation to Aiken's paper}
+Array writes limit vectorization as they sometimes introduce infeasible loop-carried dependencies. Consider the following example: \ana{Have to add citation to Aiken's paper}
 
 \begin{algorithmic}
 \STATE for i in range(N):
@@ -573,14 +573,10 @@ In Cytron's SSA this code (roughly) translates into
 \STATE 2. $\texttt{B}_0$ = $\phi(\texttt{B},\texttt{B}_1)$ 
 \STATE 3. $\texttt{C}_0$ = $\phi(\texttt{C},\texttt{C}_1)$ 
 \STATE 4. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$ 
-\STATE 5. $\texttt{A}_1$ = $\texttt{A}_0$ 
-\STATE 6. $\texttt{A}_1$[i] = $\texttt{B}_0$[i] + 10;
-\STATE 7. $\texttt{B}_1$ = $\texttt{B}_0$ 
-\STATE 8. $\texttt{B}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
-\STATE 9. $\texttt{C}_1$ = $\texttt{C}_0$ 
-\STATE 10. $\texttt{C}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
-\STATE 11. $\texttt{D}_1$ = $\texttt{D}_0$ 
-\STATE 12. $\texttt{D}_1$[i] = $\texttt{B}_1$[i] * $\texttt{C}_1$[i];
+\STATE 5. $\texttt{A}_1$ = $\texttt{A}_0$; $\texttt{A}_1$[i] = $\texttt{B}_0$[i] + 10; \COMMENT{equiv. to Update}
+\STATE 6. $\texttt{B}_1$ = $\texttt{B}_0$; $\texttt{B}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
+\STATE 7. $\texttt{C}_1$ = $\texttt{C}_0$; $\texttt{C}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
+\STATE 8. $\texttt{D}_1$ = $\texttt{D}_0$; $\texttt{D}_1$[i] = $\texttt{B}_1$[i] * $\texttt{C}_1$[i];
 \end{algorithmic}
 
 There is a cycle around $\texttt{B}_0$ = $\phi(\texttt{B},\texttt{B}_1)$ that includes statement $\texttt{A}_1$[i] = $\texttt{B}_0$[i] + 10;
@@ -617,7 +613,33 @@ loop-carried dependence on $\texttt{A}$; otherwise there is not and we can remov
 Consider the earlier example. There is a single loop, $i$. Clearly, there is no pair $\underline{i}$ and $\underline{i}'$, where $\underline{i} < \underline{i}'$ that make $\underline{i} = \underline{i}'$ (due to the def-use pairs of \texttt{A} 6-8 and 6-10).
 Therefore, we remove the back edge from 6 to 1. Analogously, we remove the back edges from 8 to 2 and 10 to 3. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 12 to 4 remains (def-use pairs for \texttt{D}). As a result of removing these spurious edges, Basic Vectorization will find that statement 6 is vectorizable. Statements 8, 10 and 12 will correctly appear in the FOR loop. 
 
-\ana{TODO: We may remove phi-nodes that end up without incoming back-edges. This can free some cycles that we'd waste on bookkeeping arrays.} 
+\ana{TODO: We need to remove phi-nodes that end up without incoming back-edges.} 
+
+The final step is to remove array phi-nodes that are left without incoming back edges after removal of infeasible edges.
+Clearly, such a phi-node is redundant when there are no loop-carried dependences that are due to writes to the corresponding array.
+In our running example, the phi-nodes for \texttt{A}, \texttt{B}, and \texttt{C}, are all redundant. 
+
+Removing redundant phi-nodes is as follows. 
+Denote a redundant phi-node by $\texttt{A}_1 = \phi(\texttt{A}_0,\texttt{A}_k)$. $\texttt{A}_0$ is the array at the beginning of the loop
+and $\texttt{A}_k$ is the array at the end of an iteration (including the last iteration). For each outer-to-inner or same-level def-use edge 
+that originates at the node, replace $\texttt{A}_1$ at the use node by $\texttt{A}_0$. This is correct, i.e., it is guaranteed that the use 
+references $\texttt{A}_0$; had the use been referencing an array modified in an earlier iteration, the back-edge to the phi-node would
+not have been removed and the phi-node would not have been classified as redundant. 
+For each inner-to-outer def-use edge, replace $\texttt{A}_1$ by $\texttt{A}_k$. In this case, the use references the array
+that results from the computation in the loop. 
+
+Our running example is transformed as follows. Removing the phi-nodes for \texttt{A}, \texttt{B}, and \texttt{C} transforms the 
+replaces the references to $\texttt{A}_0$, $\texttt{B}_0$, and $\texttt{C}_0$, with references to $\texttt{A}$, $\texttt{B}$, and $\texttt{C}$
+respectively, i.e., the arrays before the loop.
+
+\begin{algorithmic}
+\STATE for i in range(N):
+\STATE 1. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$ 
+\STATE 2. $\texttt{A}_1$ = $\texttt{A}$; $\texttt{A}_1$[i] = $\texttt{B}$[i] + 10;
+\STATE 3. $\texttt{B}_1$ = $\texttt{B}$; $\texttt{B}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
+\STATE 4. $\texttt{C}_1$ = $\texttt{C}$; $\texttt{C}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
+\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$; $\texttt{D}_1$[i] = $\texttt{B}_1$[i] * $\texttt{C}_1$[i];
+\end{algorithmic}
 
 \subsubsection{Array MUX refinement}
 
@@ -633,7 +655,7 @@ This is to reduce the dimensionality of simd-ified computation. Technically, $\t
 a simdified operation that can be carried out in parallel "in one round". However, particularly when \texttt{A} is a multi-dimensional array, there is
 substantial increase in the size of the arrays (vectors) we send to SIMD operations. Refining to an update to a specific index would reduce 
 the size of those vectors. Note that this is a heuristic that handles a common case, but not all cases of array updates. 
-\ana{It may actually be handling \_all\_ cases, with the restriction to canonical updates.}
+\ana{TODO: Simplify this algorithm, taking into account the restriction to canonical updates. It should be handling \_all\_ cases.}
 
 
 \begin{algorithmic}
@@ -646,7 +668,7 @@ the size of those vectors. Note that this is a heuristic that handles a common c
 %\ELSIF {$i_1 \ncong i_2$}  
 %\STATE replace $\mathit{stmt}$ with \\
 %\STATE $\texttt{A}_j = \texttt{A}_k$; $\texttt{A}_j[i_1] = \emph{MUX}(c, \texttt{A}_k[i_1], \texttt{A}_l[i_1])$
-\ELSE \STATE
+\ELSE 
 \STATE $\mathit{stmt}$ stays as is
 \ENDIF
 \ENDFOR
@@ -679,7 +701,7 @@ The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and 
 
 \item same-level $X \rightarrow Y$. We do nothing, just propagate the array, which happens to be of the right dimension. \ana{There might be some opportunities to do copy propagation optimization and save some cycles, but let's leave this for later.}
 
-\item inner-to-outer $X \rightarrow Y$. Let $A$ be the array defined at $X$. If the dimensionality $A$ is greater than its canonical dimensionality, then add \emph{drop\_dim(...)} at $Y$, as in Basic Vectorization. Otherwise, do nothing. 
+\item inner-to-outer $X \rightarrow Y$. Let $A$ be the array defined at $X$. If the dimensionality of $A$ is greater than its canonical dimensionality, then add \emph{drop\_dim(...)} at $Y$, as in Basic Vectorization. Otherwise, do nothing. 
 
 \item outer-to-inner $X \rightarrow Y$. Add \emph{raise\_dim(...)} (at $X$) as in Basic Vectorization. 
 
@@ -691,16 +713,15 @@ The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and 
 
 \paragraph{Example 1} 
 
-After removal of infeasible edges, the Aiken's array write example will be (roughly) as follows:
+Recall that after removal of infeasible edges and redundant phi-nodes, the Aiken's array write example will be (roughly) as follows:
 
 \begin{algorithmic}
 \STATE for i in range(N):
 \STATE 1. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$ 
-\STATE 2. $\texttt{A}$[i] = $\texttt{B}$[i] + 10
-\STATE 3. $\texttt{B}$[i] = $\texttt{A}$[i] * $\texttt{D}_0$[i-1]
-\STATE 4. $\texttt{C}$[i] = $\texttt{A}$[i] * $\texttt{D}_0$[i-1]
-\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$ 
-\STATE 6. $\texttt{D}_1$[i] = $\texttt{B}$[i] * $\texttt{C}$[i]
+\STATE 2. $\texttt{A}_1$ = $\texttt{A}$; $\texttt{A}_1$[i] = $\texttt{B}$[i] + 10;
+\STATE 3. $\texttt{B}_1$ = $\texttt{B}$; $\texttt{B}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
+\STATE 4. $\texttt{C}_1$ = $\texttt{C}$; $\texttt{C}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
+\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$; $\texttt{D}_1$[i] = $\texttt{B}_1$[i] * $\texttt{C}_1$[i];
 \end{algorithmic}
 
 There are no nested loops, thus, array accesses remain as is. 
@@ -709,29 +730,27 @@ After Phase 1 of Basic vectorization we have the following code:
 \begin{algorithmic}
 \STATE for i in range(N):
 \STATE 1. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$ 
-\STATE 2. $\texttt{A}[\stackrel{\rightarrow}{i}] = \texttt{B}[\stackrel{\rightarrow}i] + [10,...]$
-\STATE 3. $\texttt{B}[\stackrel{\rightarrow}i] = \texttt{A}[\stackrel{\rightarrow}i] * \texttt{D}_0[\stackrel{\rightarrow}{i-1}]$
-\STATE 4. $\texttt{C}[\stackrel{\rightarrow}i] = \texttt{A}[\stackrel{\rightarrow}i] * \texttt{D}_0[\stackrel{\rightarrow}{i-1}]$
-\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$ 
-\STATE 6. $\texttt{D}_1[\stackrel{\rightarrow}i] = \texttt{B}[\stackrel{\rightarrow}i] * \texttt{C}[\stackrel{\rightarrow}i]$
+\STATE 2. $\texttt{A}_1$ = $\texttt{A}$; $\texttt{A}_1[\stackrel{\rightarrow}{i}] = \texttt{B}[\stackrel{\rightarrow}i] + [10,...]$
+\STATE 3. $\texttt{B}_1$ = $\texttt{B}$; $\texttt{B}_1[\stackrel{\rightarrow}i] = \texttt{A}_1[\stackrel{\rightarrow}i] * \texttt{D}_0[\stackrel{\rightarrow}{i-1}]$
+\STATE 4. $\texttt{C}_1$ = $\texttt{C}$; $\texttt{C}_1[\stackrel{\rightarrow}i] = \texttt{A}_1[\stackrel{\rightarrow}i] * \texttt{D}_0[\stackrel{\rightarrow}{i-1}]$
+\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$; $\texttt{D}_1[\stackrel{\rightarrow}i] = \texttt{B}_1[\stackrel{\rightarrow}i] * \texttt{C}_1[\stackrel{\rightarrow}i]$
 \end{algorithmic}
 
-In Phase 2 we get rid of the arrows on statements 3, 4, and 6 as they are not vectorizable and in Phase 3 we add SIMD appropriately:
+In Phase 2 we get rid of the arrows on statements 3, 4, and 5 as they are not vectorizable and in Phase 3 we add SIMD appropriately:
 
 \begin{algorithmic}
-\STATE 1. $\texttt{A}[\stackrel{\rightarrow}{i}] = \mathit{ADD\_SIMD}(\texttt{B}[\stackrel{\rightarrow}i],[10,...])$ \COMMENT{Fully vectorized, size N.} 
+\STATE 1. $\texttt{A}_1$ = $\texttt{A}$; $\texttt{A}_1[\stackrel{\rightarrow}{i}] = \mathit{ADD\_SIMD}(\texttt{B}[\stackrel{\rightarrow}i],[10,...])$ \COMMENT{Fully vectorized, size N.} 
 \STATE FOR i=0; i<N; i++; \COMMENT{ MOTION loop }
 \STATE 2. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$ 
-\STATE 3. $\texttt{B}[i] = \mathit{MUL}(\texttt{A}[i], \texttt{D}_0[{i-1}])$
-\STATE 4. $\texttt{C}[i] = \mathit{MUL}(\texttt{A}[i], \texttt{D}_0[{i-1}])$
-\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$
-\STATE 6. $\texttt{D}_1[i] = \mathit{MUL}(\texttt{B}[i], \texttt{C}[i])$
+\STATE 3. $\texttt{B}_1$ = $\texttt{B}$; $\texttt{B}_1[i] = \mathit{MUL}(\texttt{A}_1[i], \texttt{D}_0[{i-1}])$
+\STATE 4. $\texttt{C}_1$ = $\texttt{C}$; $\texttt{C}_1[i] = \mathit{MUL}(\texttt{A}_1[i], \texttt{D}_0[{i-1}])$
+\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$; $\texttt{D}_1[i] = \mathit{MUL}(\texttt{B}_1[i], \texttt{C}_1[i])$
 \end{algorithmic}
 
 
 \paragraph{Example 2}
 
-Consider MPC-source of Histogram after removal of infeasible edges and MUX refinement:
+Consider MPC-source of Histogram after removal of infeasible edges and redundant phi-nodes, and MUX refinement:
 
 \begin{algorithmic}
 
@@ -746,10 +765,8 @@ Consider MPC-source of Histogram after removal of infeasible edges and MUX refin
 \STATE \hspace{0.5cm}            res!5 = $\phi$(res!4, res!7)
 \STATE \hspace{0.5cm}            !2!3 = (A[j] == i)
 \STATE \hspace{0.5cm}            !3!3 = (res!5[i] + B[j])
-\STATE \hspace{0.5cm}            res!6 = res!5
-\STATE \hspace{0.5cm}            res!6[i] = !3!3 
-\STATE \hspace{0.5cm}            res!7 = res!6 
-\STATE \hspace{0.5cm}            res!7[i] = MUX(!2!3, res!6[i], res!5[i])
+\STATE \hspace{0.5cm}            res!6 = res!5; res!6[i] = !3!3 
+\STATE \hspace{0.5cm}            res!7 = res!6; res!7[i] = MUX(!2!3, res!6[i], res!5[i])
 
 \end{algorithmic}
 
