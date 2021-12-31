@@ -427,11 +427,11 @@ Below is the MPC-source resulting from Benjamin's analysis. It gives rise to a c
 \begin{algorithmic}
 
 \STATE \COMMENT {Begin of outer loop $i$.}
-\STATE {$\texttt{index}_0 = \phi(\texttt{index}_1, -1)$} 
-\STATE {$\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$}
+\STATE {$\texttt{index}_0 = \phi(-1, \texttt{index}_1)$} 
+\STATE {$\texttt{min}_0 = \phi(10000,\texttt{min}_1)$}
 
 \STATE \COMMENT {Begin of inner loop $j$.}
-\STATE {$\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$}
+\STATE {$\texttt{sum}_0 = \phi(0, \texttt{sum}_1)$}
 \STATE {$\texttt{d} = \mathit{SUB}(\texttt{S}[i,j], \texttt{C}[j])$}
 \STATE {$\texttt{p} = \mathit{MUL}(\texttt{d},\texttt{d})$}
 \STATE {$\texttt{sum}_1 = \texttt{ADD}(\texttt{sum}_0,\texttt{p})$}
@@ -450,11 +450,11 @@ The transformation preserves the dependence edges. It raises the dimensions of s
 \begin{algorithmic}
 
 \STATE \COMMENT {Begin of outer loop $i$.}
-\STATE {$\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$} 
-\STATE {$\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$}
+\STATE {$\texttt{index}_0[i] = \phi(-1,\texttt{index}_1[i-1])$} 
+\STATE {$\texttt{min}_0[i] = \phi(10000, \texttt{min}_1[i-1])$}
 
 \STATE \COMMENT {Begin of inner loop $j$.}
-\STATE {$\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j-1], [0,0,...])$}
+\STATE {$\texttt{sum}_0[i,j] = \phi([0,0,...], \texttt{sum}_1[i,j-1])$}
 \STATE {$\texttt{C}'[i,j] = \mathit{raise\_dim}(\texttt{C}[j],i)$}
 \STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUB}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 \STATE {$\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{MUL}(\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
@@ -474,15 +474,15 @@ The transformation preserves the dependence edges. It raises the dimensions of s
 
 This phase analyzes statements from the innermost loop to the outermost. The key point is to discover loop-carried dependencies and re-introduce loops whenever dependencies make this necessary. 
 
-Starting at the inner phi-node $\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j], [0,0,...])$, the algorithm first computes its closure. The closure amounts to the phi-node itself and $\texttt{sum}_1[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{ADD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$, accounting for the loop-carried dependency of the computation of \texttt{sum}. The algorithm replaces this closure with a FOR loop on $j$ removing vectoriaztion on $j$. Note that the SUB and MUL computations remain outside of the loop as they do not depend on phi-nodes that are part of cycles. The algorithm adds same-level edges, one from $\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = ...$ to the monolithic FOR-loop node, and one from the FOR-loop node to $\texttt{c}[\stackrel{\rightarrow}{i}] = ...$.
+Starting at the inner phi-node $\texttt{sum}_0[i,j] = \phi([0,0,...],\texttt{sum}_1[i,j-1])$, the algorithm first computes its closure. The closure amounts to the phi-node itself and $\texttt{sum}_1[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{ADD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$, accounting for the loop-carried dependency of the computation of \texttt{sum}. The algorithm replaces this closure with a FOR loop on $j$ removing vectoriaztion on $j$. Note that the SUB and MUL computations remain outside of the loop as they do not depend on phi-nodes that are part of cycles. The algorithm adds same-level edges, one from $\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = ...$ to the monolithic FOR-loop node, and one from the FOR-loop node to $\texttt{c}[\stackrel{\rightarrow}{i}] = ...$.
 
 \ishaq{For our radar: Such dependencies will not involve phi nodes only. e.g. $a[i] = a[i] + a[i-1]$}
 
 \begin{algorithmic}
 
 \STATE \COMMENT {Begin of outer loop $i$.}
-\STATE {$\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$} 
-\STATE {$\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$}
+\STATE {$\texttt{index}_0[i] = \phi(-1, \texttt{index}_1[i-1])$} 
+\STATE {$\texttt{min}_0[i] = \phi(10000, \texttt{min}_1[i-1])$}
 
 
 
@@ -491,8 +491,8 @@ Starting at the inner phi-node $\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j], 
 \STATE {$\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{MUL}(\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 
 \STATE \COMMENT {Begin of inner loop $j$. Loop is now much "shorter"!}
-\STATE {$\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j], [0,0,...])$}
-\STATE {FOR j=0; j<=D; j++} \COMMENT{ Will turn into a MOTION loop.}
+\STATE {$\texttt{sum}_0[i,j] = \phi([0,0,...], \texttt{sum}_1[i,j-1])$}
+\STATE {FOR j=0; j<D; j++} \COMMENT{ Will turn into a MOTION loop.}
 \STATE \hspace{0.25cm}{$\texttt{sum}_1[\stackrel{\rightarrow}{i},{j}] = \mathit{ADD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},{j}],\texttt{p}[\stackrel{\rightarrow}{i},{j}])$}
 \STATE \COMMENT {End of inner loop $j$.}
 
@@ -504,11 +504,11 @@ Starting at the inner phi-node $\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j], 
 
 \end{algorithmic}
 
-Next, analysis moves to outer dimension $i$. There are two phi-nodes, $\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$ and $\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$.
+Next, analysis moves to outer dimension $i$. There are two phi-nodes, $\texttt{min}_0[i] = \phi(10000,\texttt{min}_1[i-1])$ and $\texttt{index}_0[i] = \phi(-1,\texttt{index}_1[i-1])$.
 The closure of the first is 
 \[
 \begin{array}{l}
-\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000) \\
+\texttt{min}_0[i] = \phi(10000,\texttt{min}_1[i-1]) \\
 \texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_0[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}]), \\
 \texttt{min}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}],\texttt{sum}'_0[\stackrel{\rightarrow}{i}])
 \end{array}
@@ -516,7 +516,7 @@ The closure of the first is
 and the closure of the second one is
 \[
 \begin{array}{l}
-\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1), \\ 
+\texttt{index}_0[i] = \phi(-1,\texttt{index}_1[i-1]), \\ 
 %\texttt{c}[\stackrel{\rightarrow}{i}] = \mathit{CMP}(\texttt{sum}'_1[\stackrel{\rightarrow}{i}],\texttt{min}_0[\stackrel{\rightarrow}{i}]), \\
 \texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel{\rightarrow}{i}],\texttt{index}_0[\stackrel{\rightarrow}{i}],[0,1,...N]) 
 \end{array}
@@ -532,19 +532,19 @@ $\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel
 \STATE {$\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{SUB\_SIMD}(\texttt{S}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}], \texttt{C}'[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$}
 \STATE {$\texttt{p}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}] = \mathit{MUL\_SIMD}(\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}],\texttt{d}[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j}])$} \\
 \STATE {} 
-\STATE {$\texttt{sum}_0[i,j] = \phi(\texttt{sum}_1[i,j-1], [0,0,...])$}
-\STATE {FOR j=0; j<=D; j++} \COMMENT{ Turns into a MOTION loop, was $j$-loop.}
+\STATE {$\texttt{sum}_0[i,j] = \phi([0,0,...],\texttt{sum}_1[i,j-1])$}
+\STATE {FOR j=0; j<D; j++} \COMMENT{ Turns into a MOTION loop, was $j$-loop.}
 \STATE \hspace{0.25cm}{$\texttt{sum}_1[\stackrel{\rightarrow}{i},{j}] = \mathit{ADD\_SIMD}(\texttt{sum}_0[\stackrel{\rightarrow}{i},{j}],\texttt{p}[\stackrel{\rightarrow}{i},{j}])$}
 \STATE {} 
 \STATE {$\texttt{sum}'_0[i] = \mathit{drop\_dim}(\texttt{sum}_0[i,j],j)$}
 \STATE {} 
-\STATE {$\texttt{min}_0[i] = \phi(\texttt{min}_1[i-1], 10000)$}
-\STATE {FOR i=0; i<=N; i++} \COMMENT{ Turns into a MOTION loop, was $i$-loop.}
+\STATE {$\texttt{min}_0[i] = \phi(10000,\texttt{min}_1[i-1])$}
+\STATE {FOR i=0; i<N; i++} \COMMENT{ Turns into a MOTION loop, was $i$-loop.}
 \STATE \hspace{0.25cm}{$\texttt{c}[{i}] = \mathit{CMP}(\texttt{sum}'_0[{i}],\texttt{min}_0[{i}])$}
 \STATE \hspace{0.25cm}{$\texttt{min}_1[{i}] = \mathit{MUX}(\texttt{c}[{i}],\texttt{min}_0[{i}],\texttt{sum}'_1[{i}])$}
 \STATE {}
-\STATE {$\texttt{index}_0[i] = \phi(\texttt{index}_1[i-1], -1)$} 
-\STATE {FOR i=0; i<=N; i++} \COMMENT{ Turns into a MOTION loop, was $i$-loop.}
+\STATE {$\texttt{index}_0[i] = \phi(-1,\texttt{index}_1[i-1])$} 
+\STATE {FOR i=0; i<N; i++} \COMMENT{ Turns into a MOTION loop, was $i$-loop.}
 \STATE \hspace{0.25cm}{$\texttt{index}_1[{i}] = \mathit{MUX}(\texttt{c}[{i}],\texttt{index}_0[{i}],i)$}
 
 \end{algorithmic}
