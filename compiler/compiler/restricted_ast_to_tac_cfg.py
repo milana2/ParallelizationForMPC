@@ -24,7 +24,7 @@ class _CFGBuilder:
 
     def generate_variable(self) -> tac_cfg.Var:
         self._tmp_name_counter += 1
-        return tac_cfg.Var(name=f"!{self._tmp_name_counter}")
+        return tac_cfg.Var(self._tmp_name_counter)
 
     def make_empty_block(self) -> tac_cfg.Block:
         block = tac_cfg.Block(assignments=[], terminator=None, merge_condition=None)

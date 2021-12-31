@@ -3,6 +3,7 @@ from .dep_graph import DepGraph, PhiOrAssign
 from .util import assert_never
 
 from dataclasses import dataclass
+from typing import Union
 
 import z3  # type: ignore
 
@@ -31,11 +32,13 @@ def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
     return result
 
 
-def _arrays_read_in_rhs(rhs: llc.AssignRHS, array_name: str) -> list[llc.Subscript]:
+def _arrays_read_in_rhs(
+    rhs: llc.AssignRHS, array_name: Union[str, int]
+) -> list[llc.Subscript]:
     if isinstance(rhs, llc.Var) or isinstance(rhs, llc.ConstantInt):
         return []
     elif isinstance(rhs, llc.Subscript):
-        if rhs.array.name_without_ssa_rename() == array_name:
+        if rhs.array.name == array_name:
             return [rhs]
         else:
             return []
@@ -64,7 +67,7 @@ def _arrays_read_in_rhs(rhs: llc.AssignRHS, array_name: str) -> list[llc.Subscri
 
 
 def _arrays_read_in_loop(
-    parent_loops: list[llc.For], array_name: str
+    parent_loops: list[llc.For], array_name: Union[str, int]
 ) -> list[ArrayRead]:
     result: list[ArrayRead] = []
     for statement in parent_loops[-1].body:
@@ -184,23 +187,23 @@ def _get_k(j: llc.For, A_use: ArrayRead) -> list[llc.For]:
     return k[1:]
 
 
-def _remove_back_edge(A_name: str, dep_graph: DepGraph, j: llc.For) -> None:
+def _remove_back_edge(A_name: Union[str, int], dep_graph: DepGraph, j: llc.For) -> None:
     """Remove back edge to Phi node in loop j"""
     for A_use in j.body:
-        if isinstance(A_use, llc.Phi) and A_use.lhs.name_without_ssa_rename() == A_name:
+        if isinstance(A_use, llc.Phi) and A_use.lhs.name == A_name:
             assert dep_graph.enclosing_loops[A_use][-1] == j
             A_defs: list[PhiOrAssign] = list(
                 dep_graph.def_use_graph.predecessors(A_use)
             )
             for A_def in A_defs:
-                assert A_def.lhs.name_without_ssa_rename() == A_name
+                assert A_def.lhs.name == A_name
                 if dep_graph.is_back_edge(A_def, A_use):
                     dep_graph.def_use_graph.remove_edge(A_def, A_use)
 
 
 def _prune_edges_from_loop(i: list[llc.For], j: llc.For, dep_graph: DepGraph) -> None:
     for A_def in _arrays_written_in_loop(j):
-        A_def_name = A_def.lhs.name_without_ssa_rename()
+        A_def_name = A_def.lhs.name
         dep = False
         for A_use in _arrays_read_in_loop([j], A_def_name):
             k = _get_k(j, A_use)

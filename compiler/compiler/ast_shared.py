@@ -46,13 +46,16 @@ PLAINTEXT_INT = VarType(VarVisibility.PLAINTEXT, 0)
 class Var:
     """A variable named `name`"""
 
-    name: str
+    # This is a string for user-provided variables,
+    # and an integer for temporary variables the compiler automatically generates
+    name: Union[str, int]
+
+    rename_subscript: Optional[int] = None
 
     def __str__(self) -> str:
-        return self.name
-
-    def name_without_ssa_rename(self) -> str:
-        return self.name.strip("!")[0]
+        name = self.name if isinstance(self.name, str) else f"!{self.name}"
+        subscript = "" if self.rename_subscript is None else f"!{self.rename_subscript}"
+        return name + subscript
 
 
 @dataclass

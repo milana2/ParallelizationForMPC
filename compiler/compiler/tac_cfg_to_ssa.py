@@ -125,7 +125,7 @@ def rename_variables(result: ssa.Function) -> None:
             except KeyError:
                 return V
 
-        return ssa.Var(f"{V.name}!{i}")
+        return ssa.Var(V.name, i)
 
     def rename_subscript_index(index: ssa.SubscriptIndex) -> ssa.SubscriptIndex:
         if isinstance(index, ssa.Var):
