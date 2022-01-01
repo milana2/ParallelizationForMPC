@@ -1,9 +1,0 @@
-def foo(x: plaintext[int], y: plaintext[int]):
-    z!1: plaintext[int] = 0
-    !1!1: plaintext[int] = (x!0 > 0)
-    !2!1: plaintext[int] = (y!0 > 0)
-    z!3: plaintext[int] = - 1
-    z!2: plaintext[int] = 1
-    z!4: shared[int] = MUX(!2!1, z!2, z!3)
-    z!5: shared[int] = MUX(!1!1, z!1, z!4)
-    return z!5
