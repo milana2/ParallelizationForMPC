@@ -56,24 +56,24 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 ### Linear code with loops
 ```python
 def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
-    min_sum₁ = 10000
-    min_index₁ = - 1
-    for i in range(0, N₀):
-        min_sum₂ = Φ(min_sum₁, min_sum₄)
-        min_index₂ = Φ(min_index₁, min_index₄)
-        sum₂ = 0
-        for j in range(0, D₀):
-            sum₃ = Φ(sum₂, sum₄)
-            d₃ = (S₀[((i * D₀) + j)] - C₀[j])
-            p₃ = (d₃ * d₃)
-            sum₄ = (sum₃ + p₃)
-        !1₂ = (sum₃ < min_sum₂)
-        min_sum₃ = sum₃
-        min_index₃ = i
-        min_sum₄ = MUX(!1₂, min_sum₃, min_sum₂)
-        min_index₄ = MUX(!1₂, min_index₃, min_index₂)
-    !2₁ = (min_sum₂, min_index₂)
-    return !2₁
+    min_sum!1 = 10000
+    min_index!1 = - 1
+    for i in range(0, N!0):
+        min_sum!2 = Φ(min_sum!1, min_sum!4)
+        min_index!2 = Φ(min_index!1, min_index!4)
+        sum!2 = 0
+        for j in range(0, D!0):
+            sum!3 = Φ(sum!2, sum!4)
+            d!3 = (S!0[((i * D!0) + j)] - C!0[j])
+            p!3 = (d!3 * d!3)
+            sum!4 = (sum!3 + p!3)
+        !1!2 = (sum!3 < min_sum!2)
+        min_sum!3 = sum!3
+        min_index!3 = i
+        min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
+        min_index!4 = MUX(!1!2, min_index!3, min_index!2)
+    !2!1 = (min_sum!2, min_index!2)
+    return !2!1
 ```
 ### Dependency graph
 ![](biometric_dep_graph.png)
@@ -82,44 +82,44 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 ### Array MUX refinement
 ```python
 def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
-    min_sum₁ = 10000
-    min_index₁ = - 1
-    for i in range(0, N₀):
-        min_sum₂ = Φ(min_sum₁, min_sum₄)
-        min_index₂ = Φ(min_index₁, min_index₄)
-        sum₂ = 0
-        for j in range(0, D₀):
-            sum₃ = Φ(sum₂, sum₄)
-            d₃ = (S₀[((i * D₀) + j)] - C₀[j])
-            p₃ = (d₃ * d₃)
-            sum₄ = (sum₃ + p₃)
-        !1₂ = (sum₃ < min_sum₂)
-        min_sum₃ = sum₃
-        min_index₃ = i
-        min_sum₄ = MUX(!1₂, min_sum₃, min_sum₂)
-        min_index₄ = MUX(!1₂, min_index₃, min_index₂)
-    !2₁ = (min_sum₂, min_index₂)
-    return !2₁
+    min_sum!1 = 10000
+    min_index!1 = - 1
+    for i in range(0, N!0):
+        min_sum!2 = Φ(min_sum!1, min_sum!4)
+        min_index!2 = Φ(min_index!1, min_index!4)
+        sum!2 = 0
+        for j in range(0, D!0):
+            sum!3 = Φ(sum!2, sum!4)
+            d!3 = (S!0[((i * D!0) + j)] - C!0[j])
+            p!3 = (d!3 * d!3)
+            sum!4 = (sum!3 + p!3)
+        !1!2 = (sum!3 < min_sum!2)
+        min_sum!3 = sum!3
+        min_index!3 = i
+        min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
+        min_index!4 = MUX(!1!2, min_index!3, min_index!2)
+    !2!1 = (min_sum!2, min_index!2)
+    return !2!1
 ```
 ### Array MUX refinement (dependence graph)
 ![](biometric_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `C₀` | `shared[list[int]]` |
-| `D₀` | `plaintext[int]` |
-| `S₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
+| `C!0` | `shared[list[int]]` |
+| `D!0` | `plaintext[int]` |
+| `S!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
-| `min_index₃` | `plaintext[int]` |
-| `min_index₄` | `shared[int]` |
-| `d₃` | `shared[int]` |
-| `p₃` | `shared[int]` |
-| `sum₄` | `shared[int]` |
-| `sum₂` | `plaintext[int]` |
-| `min_index₁` | `plaintext[int]` |
-| `min_sum₁` | `plaintext[int]` |
+| `min_index!3` | `plaintext[int]` |
+| `min_index!4` | `shared[int]` |
+| `d!3` | `shared[int]` |
+| `p!3` | `shared[int]` |
+| `sum!4` | `shared[int]` |
+| `sum!2` | `plaintext[int]` |
+| `min_index!1` | `plaintext[int]` |
+| `min_sum!1` | `plaintext[int]` |
 ## `biometric_fast`
 ### Input
 ```python
@@ -229,36 +229,36 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 ### Linear code with loops
 ```python
 def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
-    differences₁ = []
-    for i in range(0, D₀):
-        differences₂ = Φ(differences₁, differences₃)
-        !1₂ = [0]
-        !2₂ = (differences₂ + !1₂)
-        differences₃ = Update(differences₂, i, !2₂)
-    for i in range(0, N₀):
-        differences₄ = Φ(differences₂, differences₅)
-        min_diff₁ = Φ(min_diff₀, min_diff₃)
-        min_index₁ = Φ(min_index₀, min_index₃)
-        a_sqr_plus_b_sqr₂ = (S_sqr_sum₀[i] + C_sqr_sum₀)
-        two_a_b₂ = 0
-        for j in range(0, D₀):
-            two_a_b₃ = Φ(two_a_b₂, two_a_b₄)
-            tmp₃ = (S₀[((i * D₀) + j)] * two_C₀[j])
-            two_a_b₄ = (two_a_b₃ + tmp₃)
-        this_diff₂ = (a_sqr_plus_b_sqr₂ - two_a_b₃)
-        differences₅ = Update(differences₄, i, this_diff₂)
-        min_diff₂ = differences₅[0]
-        min_index₂ = 0
-        for k in range(0, N₀):
-            min_diff₃ = Φ(min_diff₂, min_diff₅)
-            min_index₃ = Φ(min_index₂, min_index₅)
-            !3₃ = (differences₅[k] < min_diff₃)
-            min_diff₄ = differences₅[k]
-            min_index₄ = k
-            min_diff₅ = MUX(!3₃, min_diff₄, min_diff₃)
-            min_index₅ = MUX(!3₃, min_index₄, min_index₃)
-    !4₁ = (min_diff₁, min_index₁)
-    return !4₁
+    differences!1 = []
+    for i in range(0, D!0):
+        differences!2 = Φ(differences!1, differences!3)
+        !1!2 = [0]
+        !2!2 = (differences!2 + !1!2)
+        differences!3 = Update(differences!2, i, !2!2)
+    for i in range(0, N!0):
+        differences!4 = Φ(differences!2, differences!5)
+        min_diff!1 = Φ(min_diff!0, min_diff!3)
+        min_index!1 = Φ(min_index!0, min_index!3)
+        a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i] + C_sqr_sum!0)
+        two_a_b!2 = 0
+        for j in range(0, D!0):
+            two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
+            tmp!3 = (S!0[((i * D!0) + j)] * two_C!0[j])
+            two_a_b!4 = (two_a_b!3 + tmp!3)
+        this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
+        differences!5 = Update(differences!4, i, this_diff!2)
+        min_diff!2 = differences!5[0]
+        min_index!2 = 0
+        for k in range(0, N!0):
+            min_diff!3 = Φ(min_diff!2, min_diff!5)
+            min_index!3 = Φ(min_index!2, min_index!5)
+            !3!3 = (differences!5[k] < min_diff!3)
+            min_diff!4 = differences!5[k]
+            min_index!4 = k
+            min_diff!5 = MUX(!3!3, min_diff!4, min_diff!3)
+            min_index!5 = MUX(!3!3, min_index!4, min_index!3)
+    !4!1 = (min_diff!1, min_index!1)
+    return !4!1
 ```
 ### Dependency graph
 ![](biometric_fast_dep_graph.png)
@@ -267,67 +267,67 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 ### Array MUX refinement
 ```python
 def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
-    differences₁ = []
-    for i in range(0, D₀):
-        differences₂ = Φ(differences₁, differences₃)
-        !1₂ = [0]
-        !2₂ = (differences₂ + !1₂)
-        differences₃ = Update(differences₂, i, !2₂)
-    for i in range(0, N₀):
-        differences₄ = Φ(differences₂, differences₅)
-        min_diff₁ = Φ(min_diff₀, min_diff₃)
-        min_index₁ = Φ(min_index₀, min_index₃)
-        a_sqr_plus_b_sqr₂ = (S_sqr_sum₀[i] + C_sqr_sum₀)
-        two_a_b₂ = 0
-        for j in range(0, D₀):
-            two_a_b₃ = Φ(two_a_b₂, two_a_b₄)
-            tmp₃ = (S₀[((i * D₀) + j)] * two_C₀[j])
-            two_a_b₄ = (two_a_b₃ + tmp₃)
-        this_diff₂ = (a_sqr_plus_b_sqr₂ - two_a_b₃)
-        differences₅ = Update(differences₄, i, this_diff₂)
-        min_diff₂ = differences₅[0]
-        min_index₂ = 0
-        for k in range(0, N₀):
-            min_diff₃ = Φ(min_diff₂, min_diff₅)
-            min_index₃ = Φ(min_index₂, min_index₅)
-            !3₃ = (differences₅[k] < min_diff₃)
-            min_diff₄ = differences₅[k]
-            min_index₄ = k
-            min_diff₅ = MUX(!3₃, min_diff₄, min_diff₃)
-            min_index₅ = MUX(!3₃, min_index₄, min_index₃)
-    !4₁ = (min_diff₁, min_index₁)
-    return !4₁
+    differences!1 = []
+    for i in range(0, D!0):
+        differences!2 = Φ(differences!1, differences!3)
+        !1!2 = [0]
+        !2!2 = (differences!2 + !1!2)
+        differences!3 = Update(differences!2, i, !2!2)
+    for i in range(0, N!0):
+        differences!4 = Φ(differences!2, differences!5)
+        min_diff!1 = Φ(min_diff!0, min_diff!3)
+        min_index!1 = Φ(min_index!0, min_index!3)
+        a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i] + C_sqr_sum!0)
+        two_a_b!2 = 0
+        for j in range(0, D!0):
+            two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
+            tmp!3 = (S!0[((i * D!0) + j)] * two_C!0[j])
+            two_a_b!4 = (two_a_b!3 + tmp!3)
+        this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
+        differences!5 = Update(differences!4, i, this_diff!2)
+        min_diff!2 = differences!5[0]
+        min_index!2 = 0
+        for k in range(0, N!0):
+            min_diff!3 = Φ(min_diff!2, min_diff!5)
+            min_index!3 = Φ(min_index!2, min_index!5)
+            !3!3 = (differences!5[k] < min_diff!3)
+            min_diff!4 = differences!5[k]
+            min_index!4 = k
+            min_diff!5 = MUX(!3!3, min_diff!4, min_diff!3)
+            min_index!5 = MUX(!3!3, min_index!4, min_index!3)
+    !4!1 = (min_diff!1, min_index!1)
+    return !4!1
 ```
 ### Array MUX refinement (dependence graph)
 ![](biometric_fast_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `D₀` | `plaintext[int]` |
-| `N₀` | `plaintext[int]` |
-| `C₀` | `shared[list[int]]` |
-| `C_sqr_sum₀` | `shared[int]` |
-| `two_C₀` | `shared[list[int]]` |
-| `S₀` | `shared[list[int]]` |
-| `S_sqr_sum₀` | `shared[list[int]]` |
+| `D!0` | `plaintext[int]` |
+| `N!0` | `plaintext[int]` |
+| `C!0` | `shared[list[int]]` |
+| `C_sqr_sum!0` | `shared[int]` |
+| `two_C!0` | `shared[list[int]]` |
+| `S!0` | `shared[list[int]]` |
+| `S_sqr_sum!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
 | `k` | `plaintext[int]` |
-| `min_index₄` | `plaintext[int]` |
-| `min_index₅` | `shared[int]` |
-| `min_index₂` | `plaintext[int]` |
-| `tmp₃` | `shared[int]` |
-| `two_a_b₄` | `shared[int]` |
-| `two_a_b₂` | `plaintext[int]` |
-| `a_sqr_plus_b_sqr₂` | `shared[int]` |
-| `this_diff₂` | `shared[int]` |
-| `differences₅` | `shared[list[int]]` |
-| `min_diff₄` | `shared[int]` |
-| `min_diff₅` | `shared[int]` |
-| `!3₃` | `shared[int]` |
-| `min_diff₂` | `shared[int]` |
-| `!1₂` | `plaintext[list[int]]` |
-| `differences₁` | `plaintext[list[int]]` |
+| `min_index!4` | `plaintext[int]` |
+| `min_index!5` | `shared[int]` |
+| `min_index!2` | `plaintext[int]` |
+| `tmp!3` | `shared[int]` |
+| `two_a_b!4` | `shared[int]` |
+| `two_a_b!2` | `plaintext[int]` |
+| `a_sqr_plus_b_sqr!2` | `shared[int]` |
+| `this_diff!2` | `shared[int]` |
+| `differences!5` | `shared[list[int]]` |
+| `min_diff!4` | `shared[int]` |
+| `min_diff!5` | `shared[int]` |
+| `!3!3` | `shared[int]` |
+| `min_diff!2` | `shared[int]` |
+| `!1!2` | `plaintext[list[int]]` |
+| `differences!1` | `plaintext[list[int]]` |
 ## `chapterfour_figure_12`
 ### Input
 ```python
@@ -363,14 +363,14 @@ def foo(x: plaintext[int], y: plaintext[int]):
 ### Linear code with loops
 ```python
 def foo(x: plaintext[int], y: plaintext[int]):
-    z₁ = 0
-    !1₁ = (x₀ > 0)
-    !2₁ = (y₀ > 0)
-    z₃ = - 1
-    z₂ = 1
-    z₄ = MUX(!2₁, z₂, z₃)
-    z₅ = MUX(!1₁, z₁, z₄)
-    return z₅
+    z!1 = 0
+    !1!1 = (x!0 > 0)
+    !2!1 = (y!0 > 0)
+    z!3 = - 1
+    z!2 = 1
+    z!4 = MUX(!2!1, z!2, z!3)
+    z!5 = MUX(!1!1, z!1, z!4)
+    return z!5
 ```
 ### Dependency graph
 ![](chapterfour_figure_12_dep_graph.png)
@@ -379,29 +379,29 @@ def foo(x: plaintext[int], y: plaintext[int]):
 ### Array MUX refinement
 ```python
 def foo(x: plaintext[int], y: plaintext[int]):
-    z₁ = 0
-    !1₁ = (x₀ > 0)
-    !2₁ = (y₀ > 0)
-    z₃ = - 1
-    z₂ = 1
-    z₄ = MUX(!2₁, z₂, z₃)
-    z₅ = MUX(!1₁, z₁, z₄)
-    return z₅
+    z!1 = 0
+    !1!1 = (x!0 > 0)
+    !2!1 = (y!0 > 0)
+    z!3 = - 1
+    z!2 = 1
+    z!4 = MUX(!2!1, z!2, z!3)
+    z!5 = MUX(!1!1, z!1, z!4)
+    return z!5
 ```
 ### Array MUX refinement (dependence graph)
 ![](chapterfour_figure_12_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `x₀` | `plaintext[int]` |
-| `y₀` | `plaintext[int]` |
-| `z₂` | `plaintext[int]` |
-| `z₄` | `shared[int]` |
-| `z₅` | `shared[int]` |
-| `z₃` | `plaintext[int]` |
-| `!2₁` | `plaintext[int]` |
-| `!1₁` | `plaintext[int]` |
-| `z₁` | `plaintext[int]` |
+| `x!0` | `plaintext[int]` |
+| `y!0` | `plaintext[int]` |
+| `z!2` | `plaintext[int]` |
+| `z!4` | `shared[int]` |
+| `z!5` | `shared[int]` |
+| `z!3` | `plaintext[int]` |
+| `!2!1` | `plaintext[int]` |
+| `!1!1` | `plaintext[int]` |
+| `z!1` | `plaintext[int]` |
 ## `convex_hull`
 ### Input
 ```python
@@ -460,36 +460,36 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 ### Linear code with loops
 ```python
 def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
-    hull_X₁ = []
-    hull_Y₁ = []
-    for i in range(0, N₀):
-        hull_X₂ = Φ(hull_X₁, hull_X₄)
-        hull_Y₂ = Φ(hull_Y₁, hull_Y₄)
-        is_hull₂ = True
-        p1_X₂ = X_coords₀[i]
-        p1_Y₂ = Y_coords₀[i]
-        !1₂ = (p1_X₂ <= 0)
-        !2₂ = (p1_Y₂ >= 0)
-        !3₂ = (!1₂ and !2₂)
-        for j in range(0, N₀):
-            is_hull₃ = Φ(is_hull₂, is_hull₅)
-            p2_X₃ = X_coords₀[j]
-            p2_Y₃ = Y_coords₀[j]
-            !6₃ = (p1_X₂ <= p2_X₃)
-            !7₃ = (p1_Y₂ >= p2_Y₃)
-            !8₃ = (!6₃ or !7₃)
-            !9₃ = not !8₃
-            is_hull₄ = False
-            is_hull₅ = MUX(!9₃, is_hull₄, is_hull₃)
-        is_hull₆ = MUX(!3₂, is_hull₂, is_hull₃)
-        !10₂ = [p1_X₂]
-        hull_X₃ = (hull_X₂ + !10₂)
-        !11₂ = [p1_Y₂]
-        hull_Y₃ = (hull_Y₂ + !11₂)
-        hull_X₄ = MUX(is_hull₆, hull_X₃, hull_X₂)
-        hull_Y₄ = MUX(is_hull₆, hull_Y₃, hull_Y₂)
-    !12₁ = (hull_X₂, hull_Y₂)
-    return !12₁
+    hull_X!1 = []
+    hull_Y!1 = []
+    for i in range(0, N!0):
+        hull_X!2 = Φ(hull_X!1, hull_X!4)
+        hull_Y!2 = Φ(hull_Y!1, hull_Y!4)
+        is_hull!2 = True
+        p1_X!2 = X_coords!0[i]
+        p1_Y!2 = Y_coords!0[i]
+        !1!2 = (p1_X!2 <= 0)
+        !2!2 = (p1_Y!2 >= 0)
+        !3!2 = (!1!2 and !2!2)
+        for j in range(0, N!0):
+            is_hull!3 = Φ(is_hull!2, is_hull!5)
+            p2_X!3 = X_coords!0[j]
+            p2_Y!3 = Y_coords!0[j]
+            !6!3 = (p1_X!2 <= p2_X!3)
+            !7!3 = (p1_Y!2 >= p2_Y!3)
+            !8!3 = (!6!3 or !7!3)
+            !9!3 = not !8!3
+            is_hull!4 = False
+            is_hull!5 = MUX(!9!3, is_hull!4, is_hull!3)
+        is_hull!6 = MUX(!3!2, is_hull!2, is_hull!3)
+        !10!2 = [p1_X!2]
+        hull_X!3 = (hull_X!2 + !10!2)
+        !11!2 = [p1_Y!2]
+        hull_Y!3 = (hull_Y!2 + !11!2)
+        hull_X!4 = MUX(is_hull!6, hull_X!3, hull_X!2)
+        hull_Y!4 = MUX(is_hull!6, hull_Y!3, hull_Y!2)
+    !12!1 = (hull_X!2, hull_Y!2)
+    return !12!1
 ```
 ### Dependency graph
 ![](convex_hull_dep_graph.png)
@@ -498,70 +498,70 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 ### Array MUX refinement
 ```python
 def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
-    hull_X₁ = []
-    hull_Y₁ = []
-    for i in range(0, N₀):
-        hull_X₂ = Φ(hull_X₁, hull_X₄)
-        hull_Y₂ = Φ(hull_Y₁, hull_Y₄)
-        is_hull₂ = True
-        p1_X₂ = X_coords₀[i]
-        p1_Y₂ = Y_coords₀[i]
-        !1₂ = (p1_X₂ <= 0)
-        !2₂ = (p1_Y₂ >= 0)
-        !3₂ = (!1₂ and !2₂)
-        for j in range(0, N₀):
-            is_hull₃ = Φ(is_hull₂, is_hull₅)
-            p2_X₃ = X_coords₀[j]
-            p2_Y₃ = Y_coords₀[j]
-            !6₃ = (p1_X₂ <= p2_X₃)
-            !7₃ = (p1_Y₂ >= p2_Y₃)
-            !8₃ = (!6₃ or !7₃)
-            !9₃ = not !8₃
-            is_hull₄ = False
-            is_hull₅ = MUX(!9₃, is_hull₄, is_hull₃)
-        is_hull₆ = MUX(!3₂, is_hull₂, is_hull₃)
-        !10₂ = [p1_X₂]
-        hull_X₃ = (hull_X₂ + !10₂)
-        !11₂ = [p1_Y₂]
-        hull_Y₃ = (hull_Y₂ + !11₂)
-        hull_X₄ = MUX(is_hull₆, hull_X₃, hull_X₂)
-        hull_Y₄ = MUX(is_hull₆, hull_Y₃, hull_Y₂)
-    !12₁ = (hull_X₂, hull_Y₂)
-    return !12₁
+    hull_X!1 = []
+    hull_Y!1 = []
+    for i in range(0, N!0):
+        hull_X!2 = Φ(hull_X!1, hull_X!4)
+        hull_Y!2 = Φ(hull_Y!1, hull_Y!4)
+        is_hull!2 = True
+        p1_X!2 = X_coords!0[i]
+        p1_Y!2 = Y_coords!0[i]
+        !1!2 = (p1_X!2 <= 0)
+        !2!2 = (p1_Y!2 >= 0)
+        !3!2 = (!1!2 and !2!2)
+        for j in range(0, N!0):
+            is_hull!3 = Φ(is_hull!2, is_hull!5)
+            p2_X!3 = X_coords!0[j]
+            p2_Y!3 = Y_coords!0[j]
+            !6!3 = (p1_X!2 <= p2_X!3)
+            !7!3 = (p1_Y!2 >= p2_Y!3)
+            !8!3 = (!6!3 or !7!3)
+            !9!3 = not !8!3
+            is_hull!4 = False
+            is_hull!5 = MUX(!9!3, is_hull!4, is_hull!3)
+        is_hull!6 = MUX(!3!2, is_hull!2, is_hull!3)
+        !10!2 = [p1_X!2]
+        hull_X!3 = (hull_X!2 + !10!2)
+        !11!2 = [p1_Y!2]
+        hull_Y!3 = (hull_Y!2 + !11!2)
+        hull_X!4 = MUX(is_hull!6, hull_X!3, hull_X!2)
+        hull_Y!4 = MUX(is_hull!6, hull_Y!3, hull_Y!2)
+    !12!1 = (hull_X!2, hull_Y!2)
+    return !12!1
 ```
 ### Array MUX refinement (dependence graph)
 ![](convex_hull_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `X_coords₀` | `shared[list[int]]` |
-| `Y_coords₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
+| `X_coords!0` | `shared[list[int]]` |
+| `Y_coords!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
-| `is_hull₄` | `plaintext[int]` |
-| `is_hull₅` | `shared[int]` |
-| `p2_Y₃` | `shared[int]` |
-| `!7₃` | `shared[int]` |
-| `!8₃` | `shared[int]` |
-| `!9₃` | `shared[int]` |
-| `p2_X₃` | `shared[int]` |
-| `!6₃` | `shared[int]` |
-| `p1_Y₂` | `shared[int]` |
-| `!11₂` | `shared[list[int]]` |
-| `hull_Y₃` | `shared[list[int]]` |
-| `hull_Y₄` | `shared[list[int]]` |
-| `!2₂` | `shared[int]` |
-| `!3₂` | `shared[int]` |
-| `p1_X₂` | `shared[int]` |
-| `!10₂` | `shared[list[int]]` |
-| `hull_X₃` | `shared[list[int]]` |
-| `hull_X₄` | `shared[list[int]]` |
-| `!1₂` | `shared[int]` |
-| `is_hull₂` | `plaintext[int]` |
-| `is_hull₆` | `shared[int]` |
-| `hull_Y₁` | `plaintext[list[int]]` |
-| `hull_X₁` | `plaintext[list[int]]` |
+| `is_hull!4` | `plaintext[int]` |
+| `is_hull!5` | `shared[int]` |
+| `p2_Y!3` | `shared[int]` |
+| `!7!3` | `shared[int]` |
+| `!8!3` | `shared[int]` |
+| `!9!3` | `shared[int]` |
+| `p2_X!3` | `shared[int]` |
+| `!6!3` | `shared[int]` |
+| `p1_Y!2` | `shared[int]` |
+| `!11!2` | `shared[list[int]]` |
+| `hull_Y!3` | `shared[list[int]]` |
+| `hull_Y!4` | `shared[list[int]]` |
+| `!2!2` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `p1_X!2` | `shared[int]` |
+| `!10!2` | `shared[list[int]]` |
+| `hull_X!3` | `shared[list[int]]` |
+| `hull_X!4` | `shared[list[int]]` |
+| `!1!2` | `shared[int]` |
+| `is_hull!2` | `plaintext[int]` |
+| `is_hull!6` | `shared[int]` |
+| `hull_Y!1` | `plaintext[list[int]]` |
+| `hull_X!1` | `plaintext[list[int]]` |
 ## `count_102`
 ### Input
 ```python
@@ -609,20 +609,20 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ### Linear code with loops
 ```python
 def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    s0₁ = False
-    c₁ = 0
-    for i in range(0, N₀):
-        s0₂ = Φ(s0₁, s0₃)
-        c₂ = Φ(c₁, c₄)
-        !1₂ = (Seq₀[i] == Syms₀[2])
-        !2₂ = (s0₂ and !1₂)
-        c₃ = (c₂ + 1)
-        c₄ = MUX(!2₂, c₃, c₂)
-        !3₂ = (Seq₀[i] == Syms₀[1])
-        !5₂ = (Seq₀[i] == Syms₀[0])
-        !6₂ = (s0₂ and !5₂)
-        s0₃ = (!3₂ or !6₂)
-    return c₂
+    s0!1 = False
+    c!1 = 0
+    for i in range(0, N!0):
+        s0!2 = Φ(s0!1, s0!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2 = (Seq!0[i] == Syms!0[2])
+        !2!2 = (s0!2 and !1!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!2!2, c!3, c!2)
+        !3!2 = (Seq!0[i] == Syms!0[1])
+        !5!2 = (Seq!0[i] == Syms!0[0])
+        !6!2 = (s0!2 and !5!2)
+        s0!3 = (!3!2 or !6!2)
+    return c!2
 ```
 ### Dependency graph
 ![](count_102_dep_graph.png)
@@ -631,38 +631,38 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ### Array MUX refinement
 ```python
 def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    s0₁ = False
-    c₁ = 0
-    for i in range(0, N₀):
-        s0₂ = Φ(s0₁, s0₃)
-        c₂ = Φ(c₁, c₄)
-        !1₂ = (Seq₀[i] == Syms₀[2])
-        !2₂ = (s0₂ and !1₂)
-        c₃ = (c₂ + 1)
-        c₄ = MUX(!2₂, c₃, c₂)
-        !3₂ = (Seq₀[i] == Syms₀[1])
-        !5₂ = (Seq₀[i] == Syms₀[0])
-        !6₂ = (s0₂ and !5₂)
-        s0₃ = (!3₂ or !6₂)
-    return c₂
+    s0!1 = False
+    c!1 = 0
+    for i in range(0, N!0):
+        s0!2 = Φ(s0!1, s0!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2 = (Seq!0[i] == Syms!0[2])
+        !2!2 = (s0!2 and !1!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!2!2, c!3, c!2)
+        !3!2 = (Seq!0[i] == Syms!0[1])
+        !5!2 = (Seq!0[i] == Syms!0[0])
+        !6!2 = (s0!2 and !5!2)
+        s0!3 = (!3!2 or !6!2)
+    return c!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](count_102_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `Seq₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
-| `Syms₀` | `shared[list[int]]` |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `!5₂` | `shared[int]` |
-| `!6₂` | `shared[int]` |
-| `s0₃` | `shared[int]` |
-| `!3₂` | `shared[int]` |
-| `!1₂` | `shared[int]` |
-| `!2₂` | `shared[int]` |
-| `c₁` | `plaintext[int]` |
-| `s0₁` | `plaintext[int]` |
+| `!5!2` | `shared[int]` |
+| `!6!2` | `shared[int]` |
+| `s0!3` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `c!1` | `plaintext[int]` |
+| `s0!1` | `plaintext[int]` |
 ## `count_10s`
 ### Input
 ```python
@@ -714,22 +714,22 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ### Linear code with loops
 ```python
 def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    s0₁ = False
-    s1₁ = False
-    scount₁ = 0
-    for i in range(0, N₀):
-        s0₂ = Φ(s0₁, s0₃)
-        s1₂ = Φ(s1₁, s1₃)
-        scount₂ = Φ(scount₁, scount₄)
-        !1₂ = (Seq₀[i] != Syms₀[0])
-        !2₂ = (s1₂ and !1₂)
-        scount₃ = (scount₂ + 1)
-        scount₄ = MUX(!2₂, scount₃, scount₂)
-        !3₂ = (Seq₀[i] == Syms₀[0])
-        !4₂ = (s0₂ or s1₂)
-        s1₃ = (!3₂ and !4₂)
-        s0₃ = (Seq₀[i] == Syms₀[1])
-    return scount₂
+    s0!1 = False
+    s1!1 = False
+    scount!1 = 0
+    for i in range(0, N!0):
+        s0!2 = Φ(s0!1, s0!3)
+        s1!2 = Φ(s1!1, s1!3)
+        scount!2 = Φ(scount!1, scount!4)
+        !1!2 = (Seq!0[i] != Syms!0[0])
+        !2!2 = (s1!2 and !1!2)
+        scount!3 = (scount!2 + 1)
+        scount!4 = MUX(!2!2, scount!3, scount!2)
+        !3!2 = (Seq!0[i] == Syms!0[0])
+        !4!2 = (s0!2 or s1!2)
+        s1!3 = (!3!2 and !4!2)
+        s0!3 = (Seq!0[i] == Syms!0[1])
+    return scount!2
 ```
 ### Dependency graph
 ![](count_10s_dep_graph.png)
@@ -738,40 +738,40 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ### Array MUX refinement
 ```python
 def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    s0₁ = False
-    s1₁ = False
-    scount₁ = 0
-    for i in range(0, N₀):
-        s0₂ = Φ(s0₁, s0₃)
-        s1₂ = Φ(s1₁, s1₃)
-        scount₂ = Φ(scount₁, scount₄)
-        !1₂ = (Seq₀[i] != Syms₀[0])
-        !2₂ = (s1₂ and !1₂)
-        scount₃ = (scount₂ + 1)
-        scount₄ = MUX(!2₂, scount₃, scount₂)
-        !3₂ = (Seq₀[i] == Syms₀[0])
-        !4₂ = (s0₂ or s1₂)
-        s1₃ = (!3₂ and !4₂)
-        s0₃ = (Seq₀[i] == Syms₀[1])
-    return scount₂
+    s0!1 = False
+    s1!1 = False
+    scount!1 = 0
+    for i in range(0, N!0):
+        s0!2 = Φ(s0!1, s0!3)
+        s1!2 = Φ(s1!1, s1!3)
+        scount!2 = Φ(scount!1, scount!4)
+        !1!2 = (Seq!0[i] != Syms!0[0])
+        !2!2 = (s1!2 and !1!2)
+        scount!3 = (scount!2 + 1)
+        scount!4 = MUX(!2!2, scount!3, scount!2)
+        !3!2 = (Seq!0[i] == Syms!0[0])
+        !4!2 = (s0!2 or s1!2)
+        s1!3 = (!3!2 and !4!2)
+        s0!3 = (Seq!0[i] == Syms!0[1])
+    return scount!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](count_10s_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `Seq₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
-| `Syms₀` | `shared[list[int]]` |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `s0₃` | `shared[int]` |
-| `!3₂` | `shared[int]` |
-| `s1₃` | `shared[int]` |
-| `!1₂` | `shared[int]` |
-| `!2₂` | `shared[int]` |
-| `scount₁` | `plaintext[int]` |
-| `s1₁` | `plaintext[int]` |
-| `s0₁` | `plaintext[int]` |
+| `s0!3` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `s1!3` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `scount!1` | `plaintext[int]` |
+| `s1!1` | `plaintext[int]` |
+| `s0!1` | `plaintext[int]` |
 ## `count_123`
 ### Input
 ```python
@@ -825,23 +825,23 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ### Linear code with loops
 ```python
 def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    s1₁ = False
-    s2₁ = False
-    c₁ = 0
-    for i in range(0, N₀):
-        s1₂ = Φ(s1₁, s1₃)
-        s2₂ = Φ(s2₁, s2₃)
-        c₂ = Φ(c₁, c₄)
-        !1₂ = (Seq₀[i] == Syms₀[3])
-        !2₂ = (s2₂ or s1₂)
-        !3₂ = (!1₂ and !2₂)
-        c₃ = (c₂ + 1)
-        c₄ = MUX(!3₂, c₃, c₂)
-        !4₂ = (Seq₀[i] == Syms₀[2])
-        !5₂ = (s1₂ or s2₂)
-        s2₃ = (!4₂ and !5₂)
-        s1₃ = (Seq₀[i] == Syms₀[1])
-    return c₂
+    s1!1 = False
+    s2!1 = False
+    c!1 = 0
+    for i in range(0, N!0):
+        s1!2 = Φ(s1!1, s1!3)
+        s2!2 = Φ(s2!1, s2!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2 = (Seq!0[i] == Syms!0[3])
+        !2!2 = (s2!2 or s1!2)
+        !3!2 = (!1!2 and !2!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!3!2, c!3, c!2)
+        !4!2 = (Seq!0[i] == Syms!0[2])
+        !5!2 = (s1!2 or s2!2)
+        s2!3 = (!4!2 and !5!2)
+        s1!3 = (Seq!0[i] == Syms!0[1])
+    return c!2
 ```
 ### Dependency graph
 ![](count_123_dep_graph.png)
@@ -850,41 +850,41 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ### Array MUX refinement
 ```python
 def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    s1₁ = False
-    s2₁ = False
-    c₁ = 0
-    for i in range(0, N₀):
-        s1₂ = Φ(s1₁, s1₃)
-        s2₂ = Φ(s2₁, s2₃)
-        c₂ = Φ(c₁, c₄)
-        !1₂ = (Seq₀[i] == Syms₀[3])
-        !2₂ = (s2₂ or s1₂)
-        !3₂ = (!1₂ and !2₂)
-        c₃ = (c₂ + 1)
-        c₄ = MUX(!3₂, c₃, c₂)
-        !4₂ = (Seq₀[i] == Syms₀[2])
-        !5₂ = (s1₂ or s2₂)
-        s2₃ = (!4₂ and !5₂)
-        s1₃ = (Seq₀[i] == Syms₀[1])
-    return c₂
+    s1!1 = False
+    s2!1 = False
+    c!1 = 0
+    for i in range(0, N!0):
+        s1!2 = Φ(s1!1, s1!3)
+        s2!2 = Φ(s2!1, s2!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2 = (Seq!0[i] == Syms!0[3])
+        !2!2 = (s2!2 or s1!2)
+        !3!2 = (!1!2 and !2!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!3!2, c!3, c!2)
+        !4!2 = (Seq!0[i] == Syms!0[2])
+        !5!2 = (s1!2 or s2!2)
+        s2!3 = (!4!2 and !5!2)
+        s1!3 = (Seq!0[i] == Syms!0[1])
+    return c!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](count_123_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `Seq₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
-| `Syms₀` | `shared[list[int]]` |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `s1₃` | `shared[int]` |
-| `!4₂` | `shared[int]` |
-| `s2₃` | `shared[int]` |
-| `!1₂` | `shared[int]` |
-| `!3₂` | `shared[int]` |
-| `c₁` | `plaintext[int]` |
-| `s2₁` | `plaintext[int]` |
-| `s1₁` | `plaintext[int]` |
+| `s1!3` | `shared[int]` |
+| `!4!2` | `shared[int]` |
+| `s2!3` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `c!1` | `plaintext[int]` |
+| `s2!1` | `plaintext[int]` |
+| `s1!1` | `plaintext[int]` |
 ## `histogram`
 ### Input
 ```python
@@ -946,20 +946,20 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 ### Linear code with loops
 ```python
 def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
-    result₁ = []
-    for i in range(0, num_bins₀):
-        result₂ = Φ(result₁, result₃)
-        !1₂ = [0]
-        result₃ = (result₂ + !1₂)
-    for i in range(0, num_bins₀):
-        result₄ = Φ(result₂, result₅)
-        for j in range(0, N₀):
-            result₅ = Φ(result₄, result₇)
-            !2₃ = (A₀[j] == i)
-            !3₃ = (result₅[i] + B₀[j])
-            result₆ = Update(result₅, i, !3₃)
-            result₇ = MUX(!2₃, result₆, result₅)
-    return result₄
+    result!1 = []
+    for i in range(0, num_bins!0):
+        result!2 = Φ(result!1, result!3)
+        !1!2 = [0]
+        result!3 = (result!2 + !1!2)
+    for i in range(0, num_bins!0):
+        result!4 = Φ(result!2, result!5)
+        for j in range(0, N!0):
+            result!5 = Φ(result!4, result!7)
+            !2!3 = (A!0[j] == i)
+            !3!3 = (result!5[i] + B!0[j])
+            result!6 = Update(result!5, i, !3!3)
+            result!7 = MUX(!2!3, result!6, result!5)
+    return result!4
 ```
 ### Dependency graph
 ![](histogram_dep_graph.png)
@@ -968,38 +968,38 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 ### Array MUX refinement
 ```python
 def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
-    result₁ = []
-    for i in range(0, num_bins₀):
-        result₂ = Φ(result₁, result₃)
-        !1₂ = [0]
-        result₃ = (result₂ + !1₂)
-    for i in range(0, num_bins₀):
-        result₄ = Φ(result₂, result₅)
-        for j in range(0, N₀):
-            result₅ = Φ(result₄, result₇)
-            !2₃ = (A₀[j] == i)
-            !3₃ = (result₅[i] + B₀[j])
-            result₆ = Update(result₅, i, !3₃)
-            result₇ = MUX(!2₃, result₆, result₅)
-    return result₄
+    result!1 = []
+    for i in range(0, num_bins!0):
+        result!2 = Φ(result!1, result!3)
+        !1!2 = [0]
+        result!3 = (result!2 + !1!2)
+    for i in range(0, num_bins!0):
+        result!4 = Φ(result!2, result!5)
+        for j in range(0, N!0):
+            result!5 = Φ(result!4, result!7)
+            !2!3 = (A!0[j] == i)
+            !3!3 = (result!5[i] + B!0[j])
+            result!6 = Update(result!5, i, !3!3)
+            result!7 = MUX(!2!3, result!6, result!5)
+    return result!4
 ```
 ### Array MUX refinement (dependence graph)
 ![](histogram_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `A₀` | `shared[list[int]]` |
-| `B₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
-| `num_bins₀` | `plaintext[int]` |
+| `A!0` | `shared[list[int]]` |
+| `B!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `num_bins!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
-| `!3₃` | `shared[int]` |
-| `result₆` | `shared[list[int]]` |
-| `result₇` | `shared[list[int]]` |
-| `!2₃` | `shared[int]` |
-| `!1₂` | `plaintext[list[int]]` |
-| `result₁` | `plaintext[list[int]]` |
+| `!3!3` | `shared[int]` |
+| `result!6` | `shared[list[int]]` |
+| `result!7` | `shared[list[int]]` |
+| `!2!3` | `shared[int]` |
+| `!1!2` | `plaintext[list[int]]` |
+| `result!1` | `plaintext[list[int]]` |
 ## `infeasible_edges_example`
 ### Input
 ```python
@@ -1033,21 +1033,21 @@ def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[in
 ### Linear code with loops
 ```python
 def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[int], N: plaintext[int]):
-    for i in range(0, N₀):
-        A₁ = Φ(A₀, A₂)
-        B₁ = Φ(B₀, B₂)
-        C₁ = Φ(C₀, C₂)
-        D₁ = Φ(D₀, D₂)
-        !1₂ = (B₁[i] + 10)
-        A₂ = Update(A₁, i, !1₂)
-        !2₂ = (A₂[i] * D₁[(i - 1)])
-        B₂ = Update(B₁, i, !2₂)
-        !3₂ = (A₂[i] * D₁[(i - 1)])
-        C₂ = Update(C₁, i, !3₂)
-        !4₂ = (B₂[i] * C₂[i])
-        D₂ = Update(D₁, i, !4₂)
-    !5₁ = (A₁, B₁, C₁, D₁)
-    return !5₁
+    for i in range(0, N!0):
+        A!1 = Φ(A!0, A!2)
+        B!1 = Φ(B!0, B!2)
+        C!1 = Φ(C!0, C!2)
+        D!1 = Φ(D!0, D!2)
+        !1!2 = (B!1[i] + 10)
+        A!2 = Update(A!1, i, !1!2)
+        !2!2 = (A!2[i] * D!1[(i - 1)])
+        B!2 = Update(B!1, i, !2!2)
+        !3!2 = (A!2[i] * D!1[(i - 1)])
+        C!2 = Update(C!1, i, !3!2)
+        !4!2 = (B!2[i] * C!2[i])
+        D!2 = Update(D!1, i, !4!2)
+    !5!1 = (A!1, B!1, C!1, D!1)
+    return !5!1
 ```
 ### Dependency graph
 ![](infeasible_edges_example_dep_graph.png)
@@ -1056,32 +1056,32 @@ def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[in
 ### Array MUX refinement
 ```python
 def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[int], N: plaintext[int]):
-    for i in range(0, N₀):
-        A₁ = Φ(A₀, A₂)
-        B₁ = Φ(B₀, B₂)
-        C₁ = Φ(C₀, C₂)
-        D₁ = Φ(D₀, D₂)
-        !1₂ = (B₁[i] + 10)
-        A₂ = Update(A₁, i, !1₂)
-        !2₂ = (A₂[i] * D₁[(i - 1)])
-        B₂ = Update(B₁, i, !2₂)
-        !3₂ = (A₂[i] * D₁[(i - 1)])
-        C₂ = Update(C₁, i, !3₂)
-        !4₂ = (B₂[i] * C₂[i])
-        D₂ = Update(D₁, i, !4₂)
-    !5₁ = (A₁, B₁, C₁, D₁)
-    return !5₁
+    for i in range(0, N!0):
+        A!1 = Φ(A!0, A!2)
+        B!1 = Φ(B!0, B!2)
+        C!1 = Φ(C!0, C!2)
+        D!1 = Φ(D!0, D!2)
+        !1!2 = (B!1[i] + 10)
+        A!2 = Update(A!1, i, !1!2)
+        !2!2 = (A!2[i] * D!1[(i - 1)])
+        B!2 = Update(B!1, i, !2!2)
+        !3!2 = (A!2[i] * D!1[(i - 1)])
+        C!2 = Update(C!1, i, !3!2)
+        !4!2 = (B!2[i] * C!2[i])
+        D!2 = Update(D!1, i, !4!2)
+    !5!1 = (A!1, B!1, C!1, D!1)
+    return !5!1
 ```
 ### Array MUX refinement (dependence graph)
 ![](infeasible_edges_example_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `A₀` | `plaintext[int]` |
-| `B₀` | `plaintext[int]` |
-| `C₀` | `plaintext[int]` |
-| `D₀` | `plaintext[int]` |
-| `N₀` | `plaintext[int]` |
+| `A!0` | `plaintext[int]` |
+| `B!0` | `plaintext[int]` |
+| `C!0` | `plaintext[int]` |
+| `D!0` | `plaintext[int]` |
+| `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 ## `inner_product`
 ### Input
@@ -1121,12 +1121,12 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
 ### Linear code with loops
 ```python
 def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
-    sum₁ = 0
-    for i in range(0, N₀):
-        sum₂ = Φ(sum₁, sum₃)
-        temp₂ = (A₀[i] * B₀[i])
-        sum₃ = (sum₂ + temp₂)
-    return sum₂
+    sum!1 = 0
+    for i in range(0, N!0):
+        sum!2 = Φ(sum!1, sum!3)
+        temp!2 = (A!0[i] * B!0[i])
+        sum!3 = (sum!2 + temp!2)
+    return sum!2
 ```
 ### Dependency graph
 ![](inner_product_dep_graph.png)
@@ -1135,25 +1135,25 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
 ### Array MUX refinement
 ```python
 def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
-    sum₁ = 0
-    for i in range(0, N₀):
-        sum₂ = Φ(sum₁, sum₃)
-        temp₂ = (A₀[i] * B₀[i])
-        sum₃ = (sum₂ + temp₂)
-    return sum₂
+    sum!1 = 0
+    for i in range(0, N!0):
+        sum!2 = Φ(sum!1, sum!3)
+        temp!2 = (A!0[i] * B!0[i])
+        sum!3 = (sum!2 + temp!2)
+    return sum!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](inner_product_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `A₀` | `shared[list[int]]` |
-| `B₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
+| `A!0` | `shared[list[int]]` |
+| `B!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
-| `temp₂` | `shared[int]` |
-| `sum₃` | `shared[int]` |
-| `sum₁` | `plaintext[int]` |
+| `temp!2` | `shared[int]` |
+| `sum!3` | `shared[int]` |
+| `sum!1` | `plaintext[int]` |
 ## `longest_102`
 ### Input
 ```python
@@ -1215,28 +1215,28 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 ### Linear code with loops
 ```python
 def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    s0₁ = False
-    max_len₁ = 0
-    length₁ = 0
-    for i in range(0, N₀):
-        s0₂ = Φ(s0₁, s0₃)
-        max_len₂ = Φ(max_len₁, max_len₄)
-        length₂ = Φ(length₁, length₅)
-        !1₂ = (Seq₀[i] == Syms₀[2])
-        s1₂ = (s0₂ and !1₂)
-        !2₂ = (Seq₀[i] == Syms₀[1])
-        !4₂ = (Seq₀[i] == Syms₀[0])
-        !5₂ = (s0₂ and !4₂)
-        s0₃ = (!2₂ or !5₂)
-        !6₂ = (s1₂ or s0₃)
-        length₄ = 0
-        length₃ = (length₂ + 1)
-        length₅ = MUX(!6₂, length₃, length₄)
-        !7₂ = (max_len₂ < length₅)
-        !8₂ = (s1₂ and !7₂)
-        max_len₃ = length₅
-        max_len₄ = MUX(!8₂, max_len₃, max_len₂)
-    return max_len₂
+    s0!1 = False
+    max_len!1 = 0
+    length!1 = 0
+    for i in range(0, N!0):
+        s0!2 = Φ(s0!1, s0!3)
+        max_len!2 = Φ(max_len!1, max_len!4)
+        length!2 = Φ(length!1, length!5)
+        !1!2 = (Seq!0[i] == Syms!0[2])
+        s1!2 = (s0!2 and !1!2)
+        !2!2 = (Seq!0[i] == Syms!0[1])
+        !4!2 = (Seq!0[i] == Syms!0[0])
+        !5!2 = (s0!2 and !4!2)
+        s0!3 = (!2!2 or !5!2)
+        !6!2 = (s1!2 or s0!3)
+        length!4 = 0
+        length!3 = (length!2 + 1)
+        length!5 = MUX(!6!2, length!3, length!4)
+        !7!2 = (max_len!2 < length!5)
+        !8!2 = (s1!2 and !7!2)
+        max_len!3 = length!5
+        max_len!4 = MUX(!8!2, max_len!3, max_len!2)
+    return max_len!2
 ```
 ### Dependency graph
 ![](longest_102_dep_graph.png)
@@ -1245,54 +1245,54 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 ### Array MUX refinement
 ```python
 def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    s0₁ = False
-    max_len₁ = 0
-    length₁ = 0
-    for i in range(0, N₀):
-        s0₂ = Φ(s0₁, s0₃)
-        max_len₂ = Φ(max_len₁, max_len₄)
-        length₂ = Φ(length₁, length₅)
-        !1₂ = (Seq₀[i] == Syms₀[2])
-        s1₂ = (s0₂ and !1₂)
-        !2₂ = (Seq₀[i] == Syms₀[1])
-        !4₂ = (Seq₀[i] == Syms₀[0])
-        !5₂ = (s0₂ and !4₂)
-        s0₃ = (!2₂ or !5₂)
-        !6₂ = (s1₂ or s0₃)
-        length₄ = 0
-        length₃ = (length₂ + 1)
-        length₅ = MUX(!6₂, length₃, length₄)
-        !7₂ = (max_len₂ < length₅)
-        !8₂ = (s1₂ and !7₂)
-        max_len₃ = length₅
-        max_len₄ = MUX(!8₂, max_len₃, max_len₂)
-    return max_len₂
+    s0!1 = False
+    max_len!1 = 0
+    length!1 = 0
+    for i in range(0, N!0):
+        s0!2 = Φ(s0!1, s0!3)
+        max_len!2 = Φ(max_len!1, max_len!4)
+        length!2 = Φ(length!1, length!5)
+        !1!2 = (Seq!0[i] == Syms!0[2])
+        s1!2 = (s0!2 and !1!2)
+        !2!2 = (Seq!0[i] == Syms!0[1])
+        !4!2 = (Seq!0[i] == Syms!0[0])
+        !5!2 = (s0!2 and !4!2)
+        s0!3 = (!2!2 or !5!2)
+        !6!2 = (s1!2 or s0!3)
+        length!4 = 0
+        length!3 = (length!2 + 1)
+        length!5 = MUX(!6!2, length!3, length!4)
+        !7!2 = (max_len!2 < length!5)
+        !8!2 = (s1!2 and !7!2)
+        max_len!3 = length!5
+        max_len!4 = MUX(!8!2, max_len!3, max_len!2)
+    return max_len!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](longest_102_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `Seq₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
-| `Syms₀` | `shared[list[int]]` |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `length₄` | `plaintext[int]` |
-| `length₅` | `shared[int]` |
-| `max_len₃` | `shared[int]` |
-| `max_len₄` | `shared[int]` |
-| `!7₂` | `shared[int]` |
-| `!8₂` | `shared[int]` |
-| `!4₂` | `shared[int]` |
-| `!5₂` | `shared[int]` |
-| `s0₃` | `shared[int]` |
-| `!6₂` | `shared[int]` |
-| `!2₂` | `shared[int]` |
-| `!1₂` | `shared[int]` |
-| `s1₂` | `shared[int]` |
-| `length₁` | `plaintext[int]` |
-| `max_len₁` | `plaintext[int]` |
-| `s0₁` | `plaintext[int]` |
+| `length!4` | `plaintext[int]` |
+| `length!5` | `shared[int]` |
+| `max_len!3` | `shared[int]` |
+| `max_len!4` | `shared[int]` |
+| `!7!2` | `shared[int]` |
+| `!8!2` | `shared[int]` |
+| `!4!2` | `shared[int]` |
+| `!5!2` | `shared[int]` |
+| `s0!3` | `shared[int]` |
+| `!6!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `s1!2` | `shared[int]` |
+| `length!1` | `plaintext[int]` |
+| `max_len!1` | `plaintext[int]` |
+| `s0!1` | `plaintext[int]` |
 ## `longest_1s`
 ### Input
 ```python
@@ -1347,19 +1347,19 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 ### Linear code with loops
 ```python
 def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
-    max_length₁ = 0
-    length₁ = 0
-    for i in range(1, N₀):
-        max_length₂ = Φ(max_length₁, max_length₄)
-        length₂ = Φ(length₁, length₅)
-        !1₂ = (Seq₀[i] == Sym₀)
-        length₄ = 0
-        length₃ = (length₂ + 1)
-        length₅ = MUX(!1₂, length₃, length₄)
-        !2₂ = (length₅ > max_length₂)
-        max_length₃ = length₅
-        max_length₄ = MUX(!2₂, max_length₃, max_length₂)
-    return max_length₂
+    max_length!1 = 0
+    length!1 = 0
+    for i in range(1, N!0):
+        max_length!2 = Φ(max_length!1, max_length!4)
+        length!2 = Φ(length!1, length!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        length!4 = 0
+        length!3 = (length!2 + 1)
+        length!5 = MUX(!1!2, length!3, length!4)
+        !2!2 = (length!5 > max_length!2)
+        max_length!3 = length!5
+        max_length!4 = MUX(!2!2, max_length!3, max_length!2)
+    return max_length!2
 ```
 ### Dependency graph
 ![](longest_1s_dep_graph.png)
@@ -1368,37 +1368,37 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 ### Array MUX refinement
 ```python
 def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
-    max_length₁ = 0
-    length₁ = 0
-    for i in range(1, N₀):
-        max_length₂ = Φ(max_length₁, max_length₄)
-        length₂ = Φ(length₁, length₅)
-        !1₂ = (Seq₀[i] == Sym₀)
-        length₄ = 0
-        length₃ = (length₂ + 1)
-        length₅ = MUX(!1₂, length₃, length₄)
-        !2₂ = (length₅ > max_length₂)
-        max_length₃ = length₅
-        max_length₄ = MUX(!2₂, max_length₃, max_length₂)
-    return max_length₂
+    max_length!1 = 0
+    length!1 = 0
+    for i in range(1, N!0):
+        max_length!2 = Φ(max_length!1, max_length!4)
+        length!2 = Φ(length!1, length!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        length!4 = 0
+        length!3 = (length!2 + 1)
+        length!5 = MUX(!1!2, length!3, length!4)
+        !2!2 = (length!5 > max_length!2)
+        max_length!3 = length!5
+        max_length!4 = MUX(!2!2, max_length!3, max_length!2)
+    return max_length!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](longest_1s_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `Seq₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
-| `Sym₀` | `shared[int]` |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Sym!0` | `shared[int]` |
 | `i` | `plaintext[int]` |
-| `length₄` | `plaintext[int]` |
-| `length₅` | `shared[int]` |
-| `max_length₃` | `shared[int]` |
-| `max_length₄` | `shared[int]` |
-| `!2₂` | `shared[int]` |
-| `!1₂` | `shared[int]` |
-| `length₁` | `plaintext[int]` |
-| `max_length₁` | `plaintext[int]` |
+| `length!4` | `plaintext[int]` |
+| `length!5` | `shared[int]` |
+| `max_length!3` | `shared[int]` |
+| `max_length!4` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `length!1` | `plaintext[int]` |
+| `max_length!1` | `plaintext[int]` |
 ## `longest_even_0`
 ### Input
 ```python
@@ -1455,24 +1455,24 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 ### Linear code with loops
 ```python
 def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
-    current_length₁ = 0
-    max_length₁ = 0
-    for i in range(1, N₀):
-        current_length₂ = Φ(current_length₁, current_length₅)
-        max_length₂ = Φ(max_length₁, max_length₄)
-        !1₂ = (Seq₀[i] == Sym₀)
-        current_length₄ = 0
-        current_length₃ = (current_length₂ + 1)
-        current_length₅ = MUX(!1₂, current_length₃, current_length₄)
-        tmp_max_len₂ = max_length₂
-        !2₂ = (current_length₅ > max_length₂)
-        tmp_max_len₃ = current_length₅
-        tmp_max_len₄ = MUX(!2₂, tmp_max_len₃, tmp_max_len₂)
-        !3₂ = (tmp_max_len₄ % 2)
-        !4₂ = (!3₂ == 0)
-        max_length₃ = tmp_max_len₄
-        max_length₄ = MUX(!4₂, max_length₃, max_length₂)
-    return max_length₂
+    current_length!1 = 0
+    max_length!1 = 0
+    for i in range(1, N!0):
+        current_length!2 = Φ(current_length!1, current_length!5)
+        max_length!2 = Φ(max_length!1, max_length!4)
+        !1!2 = (Seq!0[i] == Sym!0)
+        current_length!4 = 0
+        current_length!3 = (current_length!2 + 1)
+        current_length!5 = MUX(!1!2, current_length!3, current_length!4)
+        tmp_max_len!2 = max_length!2
+        !2!2 = (current_length!5 > max_length!2)
+        tmp_max_len!3 = current_length!5
+        tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
+        !3!2 = (tmp_max_len!4 % 2)
+        !4!2 = (!3!2 == 0)
+        max_length!3 = tmp_max_len!4
+        max_length!4 = MUX(!4!2, max_length!3, max_length!2)
+    return max_length!2
 ```
 ### Dependency graph
 ![](longest_even_0_dep_graph.png)
@@ -1481,46 +1481,46 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 ### Array MUX refinement
 ```python
 def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
-    current_length₁ = 0
-    max_length₁ = 0
-    for i in range(1, N₀):
-        current_length₂ = Φ(current_length₁, current_length₅)
-        max_length₂ = Φ(max_length₁, max_length₄)
-        !1₂ = (Seq₀[i] == Sym₀)
-        current_length₄ = 0
-        current_length₃ = (current_length₂ + 1)
-        current_length₅ = MUX(!1₂, current_length₃, current_length₄)
-        tmp_max_len₂ = max_length₂
-        !2₂ = (current_length₅ > max_length₂)
-        tmp_max_len₃ = current_length₅
-        tmp_max_len₄ = MUX(!2₂, tmp_max_len₃, tmp_max_len₂)
-        !3₂ = (tmp_max_len₄ % 2)
-        !4₂ = (!3₂ == 0)
-        max_length₃ = tmp_max_len₄
-        max_length₄ = MUX(!4₂, max_length₃, max_length₂)
-    return max_length₂
+    current_length!1 = 0
+    max_length!1 = 0
+    for i in range(1, N!0):
+        current_length!2 = Φ(current_length!1, current_length!5)
+        max_length!2 = Φ(max_length!1, max_length!4)
+        !1!2 = (Seq!0[i] == Sym!0)
+        current_length!4 = 0
+        current_length!3 = (current_length!2 + 1)
+        current_length!5 = MUX(!1!2, current_length!3, current_length!4)
+        tmp_max_len!2 = max_length!2
+        !2!2 = (current_length!5 > max_length!2)
+        tmp_max_len!3 = current_length!5
+        tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
+        !3!2 = (tmp_max_len!4 % 2)
+        !4!2 = (!3!2 == 0)
+        max_length!3 = tmp_max_len!4
+        max_length!4 = MUX(!4!2, max_length!3, max_length!2)
+    return max_length!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](longest_even_0_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `Seq₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
-| `Sym₀` | `shared[int]` |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Sym!0` | `shared[int]` |
 | `i` | `plaintext[int]` |
-| `current_length₄` | `plaintext[int]` |
-| `current_length₅` | `shared[int]` |
-| `tmp_max_len₃` | `shared[int]` |
-| `tmp_max_len₄` | `shared[int]` |
-| `max_length₃` | `shared[int]` |
-| `max_length₄` | `shared[int]` |
-| `!3₂` | `shared[int]` |
-| `!4₂` | `shared[int]` |
-| `!2₂` | `shared[int]` |
-| `!1₂` | `shared[int]` |
-| `max_length₁` | `plaintext[int]` |
-| `current_length₁` | `plaintext[int]` |
+| `current_length!4` | `plaintext[int]` |
+| `current_length!5` | `shared[int]` |
+| `tmp_max_len!3` | `shared[int]` |
+| `tmp_max_len!4` | `shared[int]` |
+| `max_length!3` | `shared[int]` |
+| `max_length!4` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `!4!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `max_length!1` | `plaintext[int]` |
+| `current_length!1` | `plaintext[int]` |
 ## `longest_odd_10`
 ### Input
 ```python
@@ -1580,28 +1580,28 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 ### Linear code with loops
 ```python
 def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    current_length₁ = 0
-    max_length₁ = 0
-    s2₁ = False
-    for i in range(0, N₀):
-        current_length₂ = Φ(current_length₁, current_length₆)
-        max_length₂ = Φ(max_length₁, max_length₄)
-        s2₂ = Φ(s2₁, s2₃)
-        !1₂ = (Seq₀[i] == Syms₀[1])
-        s1₂ = (s2₂ and !1₂)
-        !2₂ = not s2₂
-        current_length₄ = 0
-        current_length₅ = MUX(!2₂, current_length₄, current_length₂)
-        current_length₃ = (current_length₂ + 1)
-        current_length₆ = MUX(s1₂, current_length₃, current_length₅)
-        !4₂ = (current_length₆ % 2)
-        !5₂ = (!4₂ == 1)
-        !6₂ = (current_length₆ > max_length₂)
-        !7₂ = (!5₂ and !6₂)
-        max_length₃ = current_length₆
-        max_length₄ = MUX(!7₂, max_length₃, max_length₂)
-        s2₃ = (Seq₀[i] == Syms₀[0])
-    return max_length₂
+    current_length!1 = 0
+    max_length!1 = 0
+    s2!1 = False
+    for i in range(0, N!0):
+        current_length!2 = Φ(current_length!1, current_length!6)
+        max_length!2 = Φ(max_length!1, max_length!4)
+        s2!2 = Φ(s2!1, s2!3)
+        !1!2 = (Seq!0[i] == Syms!0[1])
+        s1!2 = (s2!2 and !1!2)
+        !2!2 = not s2!2
+        current_length!4 = 0
+        current_length!5 = MUX(!2!2, current_length!4, current_length!2)
+        current_length!3 = (current_length!2 + 1)
+        current_length!6 = MUX(s1!2, current_length!3, current_length!5)
+        !4!2 = (current_length!6 % 2)
+        !5!2 = (!4!2 == 1)
+        !6!2 = (current_length!6 > max_length!2)
+        !7!2 = (!5!2 and !6!2)
+        max_length!3 = current_length!6
+        max_length!4 = MUX(!7!2, max_length!3, max_length!2)
+        s2!3 = (Seq!0[i] == Syms!0[0])
+    return max_length!2
 ```
 ### Dependency graph
 ![](longest_odd_10_dep_graph.png)
@@ -1610,53 +1610,53 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 ### Array MUX refinement
 ```python
 def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    current_length₁ = 0
-    max_length₁ = 0
-    s2₁ = False
-    for i in range(0, N₀):
-        current_length₂ = Φ(current_length₁, current_length₆)
-        max_length₂ = Φ(max_length₁, max_length₄)
-        s2₂ = Φ(s2₁, s2₃)
-        !1₂ = (Seq₀[i] == Syms₀[1])
-        s1₂ = (s2₂ and !1₂)
-        !2₂ = not s2₂
-        current_length₄ = 0
-        current_length₅ = MUX(!2₂, current_length₄, current_length₂)
-        current_length₃ = (current_length₂ + 1)
-        current_length₆ = MUX(s1₂, current_length₃, current_length₅)
-        !4₂ = (current_length₆ % 2)
-        !5₂ = (!4₂ == 1)
-        !6₂ = (current_length₆ > max_length₂)
-        !7₂ = (!5₂ and !6₂)
-        max_length₃ = current_length₆
-        max_length₄ = MUX(!7₂, max_length₃, max_length₂)
-        s2₃ = (Seq₀[i] == Syms₀[0])
-    return max_length₂
+    current_length!1 = 0
+    max_length!1 = 0
+    s2!1 = False
+    for i in range(0, N!0):
+        current_length!2 = Φ(current_length!1, current_length!6)
+        max_length!2 = Φ(max_length!1, max_length!4)
+        s2!2 = Φ(s2!1, s2!3)
+        !1!2 = (Seq!0[i] == Syms!0[1])
+        s1!2 = (s2!2 and !1!2)
+        !2!2 = not s2!2
+        current_length!4 = 0
+        current_length!5 = MUX(!2!2, current_length!4, current_length!2)
+        current_length!3 = (current_length!2 + 1)
+        current_length!6 = MUX(s1!2, current_length!3, current_length!5)
+        !4!2 = (current_length!6 % 2)
+        !5!2 = (!4!2 == 1)
+        !6!2 = (current_length!6 > max_length!2)
+        !7!2 = (!5!2 and !6!2)
+        max_length!3 = current_length!6
+        max_length!4 = MUX(!7!2, max_length!3, max_length!2)
+        s2!3 = (Seq!0[i] == Syms!0[0])
+    return max_length!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](longest_odd_10_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `Seq₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
-| `Syms₀` | `shared[list[int]]` |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `s2₃` | `shared[int]` |
-| `current_length₄` | `plaintext[int]` |
-| `current_length₅` | `shared[int]` |
-| `current_length₆` | `shared[int]` |
-| `max_length₃` | `shared[int]` |
-| `max_length₄` | `shared[int]` |
-| `!6₂` | `shared[int]` |
-| `!7₂` | `shared[int]` |
-| `!4₂` | `shared[int]` |
-| `!5₂` | `shared[int]` |
-| `!1₂` | `shared[int]` |
-| `s1₂` | `shared[int]` |
-| `s2₁` | `plaintext[int]` |
-| `max_length₁` | `plaintext[int]` |
-| `current_length₁` | `plaintext[int]` |
+| `s2!3` | `shared[int]` |
+| `current_length!4` | `plaintext[int]` |
+| `current_length!5` | `shared[int]` |
+| `current_length!6` | `shared[int]` |
+| `max_length!3` | `shared[int]` |
+| `max_length!4` | `shared[int]` |
+| `!6!2` | `shared[int]` |
+| `!7!2` | `shared[int]` |
+| `!4!2` | `shared[int]` |
+| `!5!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `s1!2` | `shared[int]` |
+| `s2!1` | `plaintext[int]` |
+| `max_length!1` | `plaintext[int]` |
+| `current_length!1` | `plaintext[int]` |
 ## `max_dist_between_syms`
 ### Input
 ```python
@@ -1704,20 +1704,20 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 ### Linear code with loops
 ```python
 def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
-    max_dist₁ = 0
-    current_dist₁ = 0
-    for i in range(0, N₀):
-        max_dist₂ = Φ(max_dist₁, max_dist₄)
-        current_dist₂ = Φ(current_dist₁, current_dist₅)
-        !1₂ = (Seq₀[i] == Sym₀)
-        !2₂ = not !1₂
-        current_dist₄ = 0
-        current_dist₃ = (current_dist₂ + 1)
-        current_dist₅ = MUX(!2₂, current_dist₃, current_dist₄)
-        !3₂ = (current_dist₅ > max_dist₂)
-        max_dist₃ = current_dist₅
-        max_dist₄ = MUX(!3₂, max_dist₃, max_dist₂)
-    return max_dist₂
+    max_dist!1 = 0
+    current_dist!1 = 0
+    for i in range(0, N!0):
+        max_dist!2 = Φ(max_dist!1, max_dist!4)
+        current_dist!2 = Φ(current_dist!1, current_dist!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        !2!2 = not !1!2
+        current_dist!4 = 0
+        current_dist!3 = (current_dist!2 + 1)
+        current_dist!5 = MUX(!2!2, current_dist!3, current_dist!4)
+        !3!2 = (current_dist!5 > max_dist!2)
+        max_dist!3 = current_dist!5
+        max_dist!4 = MUX(!3!2, max_dist!3, max_dist!2)
+    return max_dist!2
 ```
 ### Dependency graph
 ![](max_dist_between_syms_dep_graph.png)
@@ -1726,39 +1726,39 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 ### Array MUX refinement
 ```python
 def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
-    max_dist₁ = 0
-    current_dist₁ = 0
-    for i in range(0, N₀):
-        max_dist₂ = Φ(max_dist₁, max_dist₄)
-        current_dist₂ = Φ(current_dist₁, current_dist₅)
-        !1₂ = (Seq₀[i] == Sym₀)
-        !2₂ = not !1₂
-        current_dist₄ = 0
-        current_dist₃ = (current_dist₂ + 1)
-        current_dist₅ = MUX(!2₂, current_dist₃, current_dist₄)
-        !3₂ = (current_dist₅ > max_dist₂)
-        max_dist₃ = current_dist₅
-        max_dist₄ = MUX(!3₂, max_dist₃, max_dist₂)
-    return max_dist₂
+    max_dist!1 = 0
+    current_dist!1 = 0
+    for i in range(0, N!0):
+        max_dist!2 = Φ(max_dist!1, max_dist!4)
+        current_dist!2 = Φ(current_dist!1, current_dist!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        !2!2 = not !1!2
+        current_dist!4 = 0
+        current_dist!3 = (current_dist!2 + 1)
+        current_dist!5 = MUX(!2!2, current_dist!3, current_dist!4)
+        !3!2 = (current_dist!5 > max_dist!2)
+        max_dist!3 = current_dist!5
+        max_dist!4 = MUX(!3!2, max_dist!3, max_dist!2)
+    return max_dist!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](max_dist_between_syms_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `Seq₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
-| `Sym₀` | `shared[int]` |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Sym!0` | `shared[int]` |
 | `i` | `plaintext[int]` |
-| `current_dist₄` | `plaintext[int]` |
-| `current_dist₅` | `shared[int]` |
-| `max_dist₃` | `shared[int]` |
-| `max_dist₄` | `shared[int]` |
-| `!3₂` | `shared[int]` |
-| `!1₂` | `shared[int]` |
-| `!2₂` | `shared[int]` |
-| `current_dist₁` | `plaintext[int]` |
-| `max_dist₁` | `plaintext[int]` |
+| `current_dist!4` | `plaintext[int]` |
+| `current_dist!5` | `shared[int]` |
+| `max_dist!3` | `shared[int]` |
+| `max_dist!4` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `current_dist!1` | `plaintext[int]` |
+| `max_dist!1` | `plaintext[int]` |
 ## `max_sum_between_syms`
 ### Input
 ```python
@@ -1806,20 +1806,20 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 ### Linear code with loops
 ```python
 def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
-    max_sum₁ = 0
-    current_sum₁ = 0
-    for i in range(0, N₀):
-        max_sum₂ = Φ(max_sum₁, max_sum₄)
-        current_sum₂ = Φ(current_sum₁, current_sum₅)
-        !1₂ = (Seq₀[i] == Sym₀)
-        !2₂ = not !1₂
-        current_sum₄ = 0
-        current_sum₃ = (current_sum₂ + Seq₀[i])
-        current_sum₅ = MUX(!2₂, current_sum₃, current_sum₄)
-        !3₂ = (current_sum₅ > max_sum₂)
-        max_sum₃ = current_sum₅
-        max_sum₄ = MUX(!3₂, max_sum₃, max_sum₂)
-    return max_sum₂
+    max_sum!1 = 0
+    current_sum!1 = 0
+    for i in range(0, N!0):
+        max_sum!2 = Φ(max_sum!1, max_sum!4)
+        current_sum!2 = Φ(current_sum!1, current_sum!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        !2!2 = not !1!2
+        current_sum!4 = 0
+        current_sum!3 = (current_sum!2 + Seq!0[i])
+        current_sum!5 = MUX(!2!2, current_sum!3, current_sum!4)
+        !3!2 = (current_sum!5 > max_sum!2)
+        max_sum!3 = current_sum!5
+        max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
+    return max_sum!2
 ```
 ### Dependency graph
 ![](max_sum_between_syms_dep_graph.png)
@@ -1828,40 +1828,40 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 ### Array MUX refinement
 ```python
 def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
-    max_sum₁ = 0
-    current_sum₁ = 0
-    for i in range(0, N₀):
-        max_sum₂ = Φ(max_sum₁, max_sum₄)
-        current_sum₂ = Φ(current_sum₁, current_sum₅)
-        !1₂ = (Seq₀[i] == Sym₀)
-        !2₂ = not !1₂
-        current_sum₄ = 0
-        current_sum₃ = (current_sum₂ + Seq₀[i])
-        current_sum₅ = MUX(!2₂, current_sum₃, current_sum₄)
-        !3₂ = (current_sum₅ > max_sum₂)
-        max_sum₃ = current_sum₅
-        max_sum₄ = MUX(!3₂, max_sum₃, max_sum₂)
-    return max_sum₂
+    max_sum!1 = 0
+    current_sum!1 = 0
+    for i in range(0, N!0):
+        max_sum!2 = Φ(max_sum!1, max_sum!4)
+        current_sum!2 = Φ(current_sum!1, current_sum!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        !2!2 = not !1!2
+        current_sum!4 = 0
+        current_sum!3 = (current_sum!2 + Seq!0[i])
+        current_sum!5 = MUX(!2!2, current_sum!3, current_sum!4)
+        !3!2 = (current_sum!5 > max_sum!2)
+        max_sum!3 = current_sum!5
+        max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
+    return max_sum!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](max_sum_between_syms_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `Seq₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
-| `Sym₀` | `shared[int]` |
+| `Seq!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
+| `Sym!0` | `shared[int]` |
 | `i` | `plaintext[int]` |
-| `current_sum₃` | `shared[int]` |
-| `current_sum₅` | `shared[int]` |
-| `max_sum₃` | `shared[int]` |
-| `max_sum₄` | `shared[int]` |
-| `!3₂` | `shared[int]` |
-| `current_sum₄` | `plaintext[int]` |
-| `!1₂` | `shared[int]` |
-| `!2₂` | `shared[int]` |
-| `current_sum₁` | `plaintext[int]` |
-| `max_sum₁` | `plaintext[int]` |
+| `current_sum!3` | `shared[int]` |
+| `current_sum!5` | `shared[int]` |
+| `max_sum!3` | `shared[int]` |
+| `max_sum!4` | `shared[int]` |
+| `!3!2` | `shared[int]` |
+| `current_sum!4` | `plaintext[int]` |
+| `!1!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `current_sum!1` | `plaintext[int]` |
+| `max_sum!1` | `plaintext[int]` |
 ## `minimal_points`
 ### Input
 ```python
@@ -1912,29 +1912,29 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 ### Linear code with loops
 ```python
 def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
-    min_X₁ = []
-    min_Y₁ = []
-    for i in range(0, N₀):
-        min_X₂ = Φ(min_X₁, min_X₄)
-        min_Y₂ = Φ(min_Y₁, min_Y₄)
-        bx₂ = False
-        for j in range(0, N₀):
-            bx₃ = Φ(bx₂, bx₄)
-            !3₃ = (X_coords₀[j] < X_coords₀[i])
-            !4₃ = (Y_coords₀[j] < Y_coords₀[i])
-            !5₃ = (!3₃ and !4₃)
-            bx₄ = (bx₃ or !5₃)
-        !6₂ = not bx₃
-        !8₂ = X_coords₀[i]
-        !9₂ = [!8₂]
-        min_X₃ = (min_X₂ + !9₂)
-        !11₂ = Y_coords₀[i]
-        !12₂ = [!11₂]
-        min_Y₃ = (min_Y₂ + !12₂)
-        min_X₄ = MUX(!6₂, min_X₃, min_X₂)
-        min_Y₄ = MUX(!6₂, min_Y₃, min_Y₂)
-    !13₁ = (min_X₂, min_Y₂)
-    return !13₁
+    min_X!1 = []
+    min_Y!1 = []
+    for i in range(0, N!0):
+        min_X!2 = Φ(min_X!1, min_X!4)
+        min_Y!2 = Φ(min_Y!1, min_Y!4)
+        bx!2 = False
+        for j in range(0, N!0):
+            bx!3 = Φ(bx!2, bx!4)
+            !3!3 = (X_coords!0[j] < X_coords!0[i])
+            !4!3 = (Y_coords!0[j] < Y_coords!0[i])
+            !5!3 = (!3!3 and !4!3)
+            bx!4 = (bx!3 or !5!3)
+        !6!2 = not bx!3
+        !8!2 = X_coords!0[i]
+        !9!2 = [!8!2]
+        min_X!3 = (min_X!2 + !9!2)
+        !11!2 = Y_coords!0[i]
+        !12!2 = [!11!2]
+        min_Y!3 = (min_Y!2 + !12!2)
+        min_X!4 = MUX(!6!2, min_X!3, min_X!2)
+        min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)
+    !13!1 = (min_X!2, min_Y!2)
+    return !13!1
 ```
 ### Dependency graph
 ![](minimal_points_dep_graph.png)
@@ -1943,55 +1943,55 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 ### Array MUX refinement
 ```python
 def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
-    min_X₁ = []
-    min_Y₁ = []
-    for i in range(0, N₀):
-        min_X₂ = Φ(min_X₁, min_X₄)
-        min_Y₂ = Φ(min_Y₁, min_Y₄)
-        bx₂ = False
-        for j in range(0, N₀):
-            bx₃ = Φ(bx₂, bx₄)
-            !3₃ = (X_coords₀[j] < X_coords₀[i])
-            !4₃ = (Y_coords₀[j] < Y_coords₀[i])
-            !5₃ = (!3₃ and !4₃)
-            bx₄ = (bx₃ or !5₃)
-        !6₂ = not bx₃
-        !8₂ = X_coords₀[i]
-        !9₂ = [!8₂]
-        min_X₃ = (min_X₂ + !9₂)
-        !11₂ = Y_coords₀[i]
-        !12₂ = [!11₂]
-        min_Y₃ = (min_Y₂ + !12₂)
-        min_X₄ = MUX(!6₂, min_X₃, min_X₂)
-        min_Y₄ = MUX(!6₂, min_Y₃, min_Y₂)
-    !13₁ = (min_X₂, min_Y₂)
-    return !13₁
+    min_X!1 = []
+    min_Y!1 = []
+    for i in range(0, N!0):
+        min_X!2 = Φ(min_X!1, min_X!4)
+        min_Y!2 = Φ(min_Y!1, min_Y!4)
+        bx!2 = False
+        for j in range(0, N!0):
+            bx!3 = Φ(bx!2, bx!4)
+            !3!3 = (X_coords!0[j] < X_coords!0[i])
+            !4!3 = (Y_coords!0[j] < Y_coords!0[i])
+            !5!3 = (!3!3 and !4!3)
+            bx!4 = (bx!3 or !5!3)
+        !6!2 = not bx!3
+        !8!2 = X_coords!0[i]
+        !9!2 = [!8!2]
+        min_X!3 = (min_X!2 + !9!2)
+        !11!2 = Y_coords!0[i]
+        !12!2 = [!11!2]
+        min_Y!3 = (min_Y!2 + !12!2)
+        min_X!4 = MUX(!6!2, min_X!3, min_X!2)
+        min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)
+    !13!1 = (min_X!2, min_Y!2)
+    return !13!1
 ```
 ### Array MUX refinement (dependence graph)
 ![](minimal_points_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `X_coords₀` | `shared[list[int]]` |
-| `Y_coords₀` | `shared[list[int]]` |
-| `N₀` | `plaintext[int]` |
+| `X_coords!0` | `shared[list[int]]` |
+| `Y_coords!0` | `shared[list[int]]` |
+| `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
-| `!11₂` | `shared[int]` |
-| `!12₂` | `shared[list[int]]` |
-| `min_Y₃` | `shared[list[int]]` |
-| `min_Y₄` | `shared[list[int]]` |
-| `!8₂` | `shared[int]` |
-| `!9₂` | `shared[list[int]]` |
-| `min_X₃` | `shared[list[int]]` |
-| `min_X₄` | `shared[list[int]]` |
-| `!4₃` | `shared[int]` |
-| `!5₃` | `shared[int]` |
-| `bx₄` | `shared[int]` |
-| `!3₃` | `shared[int]` |
-| `bx₂` | `plaintext[int]` |
-| `min_Y₁` | `plaintext[list[int]]` |
-| `min_X₁` | `plaintext[list[int]]` |
+| `!11!2` | `shared[int]` |
+| `!12!2` | `shared[list[int]]` |
+| `min_Y!3` | `shared[list[int]]` |
+| `min_Y!4` | `shared[list[int]]` |
+| `!8!2` | `shared[int]` |
+| `!9!2` | `shared[list[int]]` |
+| `min_X!3` | `shared[list[int]]` |
+| `min_X!4` | `shared[list[int]]` |
+| `!4!3` | `shared[int]` |
+| `!5!3` | `shared[int]` |
+| `bx!4` | `shared[int]` |
+| `!3!3` | `shared[int]` |
+| `bx!2` | `plaintext[int]` |
+| `min_Y!1` | `plaintext[list[int]]` |
+| `min_X!1` | `plaintext[list[int]]` |
 ## `psi`
 ### Input
 ```python
@@ -2050,22 +2050,22 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 ### Linear code with loops
 ```python
 def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
-    dummy₁ = 0
-    result₁ = []
-    for i in range(0, SA₀):
-        result₂ = Φ(result₁, result₃)
-        flag₂ = False
-        for j in range(0, SB₀):
-            flag₃ = Φ(flag₂, flag₅)
-            !1₃ = (A₀[i] == B₀[j])
-            flag₄ = True
-            flag₅ = MUX(!1₃, flag₄, flag₃)
-        val₂ = dummy₁
-        val₃ = A₀[i]
-        val₄ = MUX(flag₃, val₃, val₂)
-        !2₂ = [val₄]
-        result₃ = (result₂ + !2₂)
-    return result₂
+    dummy!1 = 0
+    result!1 = []
+    for i in range(0, SA!0):
+        result!2 = Φ(result!1, result!3)
+        flag!2 = False
+        for j in range(0, SB!0):
+            flag!3 = Φ(flag!2, flag!5)
+            !1!3 = (A!0[i] == B!0[j])
+            flag!4 = True
+            flag!5 = MUX(!1!3, flag!4, flag!3)
+        val!2 = dummy!1
+        val!3 = A!0[i]
+        val!4 = MUX(flag!3, val!3, val!2)
+        !2!2 = [val!4]
+        result!3 = (result!2 + !2!2)
+    return result!2
 ```
 ### Dependency graph
 ![](psi_dep_graph.png)
@@ -2074,42 +2074,42 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 ### Array MUX refinement
 ```python
 def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
-    dummy₁ = 0
-    result₁ = []
-    for i in range(0, SA₀):
-        result₂ = Φ(result₁, result₃)
-        flag₂ = False
-        for j in range(0, SB₀):
-            flag₃ = Φ(flag₂, flag₅)
-            !1₃ = (A₀[i] == B₀[j])
-            flag₄ = True
-            flag₅ = MUX(!1₃, flag₄, flag₃)
-        val₂ = dummy₁
-        val₃ = A₀[i]
-        val₄ = MUX(flag₃, val₃, val₂)
-        !2₂ = [val₄]
-        result₃ = (result₂ + !2₂)
-    return result₂
+    dummy!1 = 0
+    result!1 = []
+    for i in range(0, SA!0):
+        result!2 = Φ(result!1, result!3)
+        flag!2 = False
+        for j in range(0, SB!0):
+            flag!3 = Φ(flag!2, flag!5)
+            !1!3 = (A!0[i] == B!0[j])
+            flag!4 = True
+            flag!5 = MUX(!1!3, flag!4, flag!3)
+        val!2 = dummy!1
+        val!3 = A!0[i]
+        val!4 = MUX(flag!3, val!3, val!2)
+        !2!2 = [val!4]
+        result!3 = (result!2 + !2!2)
+    return result!2
 ```
 ### Array MUX refinement (dependence graph)
 ![](psi_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
-| `A₀` | `shared[list[int]]` |
-| `SA₀` | `plaintext[int]` |
-| `B₀` | `shared[list[int]]` |
-| `SB₀` | `plaintext[int]` |
+| `A!0` | `shared[list[int]]` |
+| `SA!0` | `plaintext[int]` |
+| `B!0` | `shared[list[int]]` |
+| `SB!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
-| `val₃` | `shared[int]` |
-| `val₄` | `shared[int]` |
-| `!2₂` | `shared[list[int]]` |
-| `result₃` | `shared[list[int]]` |
-| `flag₄` | `plaintext[int]` |
-| `flag₅` | `shared[int]` |
-| `!1₃` | `shared[int]` |
-| `flag₂` | `plaintext[int]` |
-| `result₁` | `plaintext[list[int]]` |
-| `dummy₁` | `plaintext[int]` |
-| `val₂` | `plaintext[int]` |
+| `val!3` | `shared[int]` |
+| `val!4` | `shared[int]` |
+| `!2!2` | `shared[list[int]]` |
+| `result!3` | `shared[list[int]]` |
+| `flag!4` | `plaintext[int]` |
+| `flag!5` | `shared[int]` |
+| `!1!3` | `shared[int]` |
+| `flag!2` | `plaintext[int]` |
+| `result!1` | `plaintext[list[int]]` |
+| `dummy!1` | `plaintext[int]` |
+| `val!2` | `plaintext[int]` |
