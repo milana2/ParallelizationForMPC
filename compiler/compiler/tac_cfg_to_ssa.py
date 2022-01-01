@@ -247,7 +247,7 @@ def rename_variables(result: ssa.Function) -> None:
             else:
                 assert_never(A)
 
-            if isinstance(A, ssa.Phi) or isinstance(A, ssa.Assign):
+            if isinstance(A, (ssa.Phi, ssa.Assign)):
                 V = A.lhs
                 i = C[V]
                 old_lhs[A] = A.lhs

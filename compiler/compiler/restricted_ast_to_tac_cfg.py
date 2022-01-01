@@ -121,9 +121,7 @@ def _build_expression_as_atom(
     expression: restricted_ast.Expression, builder: _CFGBuilder
 ) -> tac_cfg.Atom:
     assign_rhs = _build_expression_as_rhs(expression, builder)
-    if isinstance(assign_rhs, tac_cfg.Var) or isinstance(
-        assign_rhs, tac_cfg.ConstantInt
-    ):
+    if isinstance(assign_rhs, (tac_cfg.Var, tac_cfg.ConstantInt)):
         return assign_rhs
     else:
         var = builder.generate_variable()

@@ -45,7 +45,7 @@ def _accessed_vars_assign_rhs(rhs: ssa.AssignRHS) -> list[ssa.Var]:
         )
     elif isinstance(rhs, ssa.UnaryOp):
         return _accessed_vars_assign_rhs(rhs.operand)
-    elif isinstance(rhs, ssa.List) or isinstance(rhs, ssa.Tuple):
+    elif isinstance(rhs, (ssa.List, ssa.Tuple)):
         return [var for item in rhs.items for var in _accessed_vars_assign_rhs(item)]
     elif isinstance(rhs, ssa.Mux):
         return (
@@ -99,7 +99,7 @@ def _compute_statements_setting_vars(
             assignments.append(block.terminator)
 
         for assignment in assignments:
-            if isinstance(assignment, ssa.Phi) or isinstance(assignment, ssa.Assign):
+            if isinstance(assignment, (ssa.Phi, ssa.Assign)):
                 var = assignment.lhs
             elif isinstance(assignment, ssa.For):
                 var = assignment.counter

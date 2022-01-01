@@ -23,7 +23,7 @@ class DepGraph:
             statements: list[llc.Statement], enclosing_loops: list[llc.For]
         ):
             for statement in statements:
-                if isinstance(statement, llc.Phi) or isinstance(statement, llc.Assign):
+                if isinstance(statement, (llc.Phi, llc.Assign)):
                     all_assignments.append((statement, enclosing_loops))
                 elif isinstance(statement, llc.For):
                     loop = statement
@@ -109,7 +109,7 @@ def _vars_in_rhs(rhs: llc.AssignRHS) -> list[llc.Var]:
         return _vars_in_rhs(rhs.left) + _vars_in_rhs(rhs.right)
     elif isinstance(rhs, llc.UnaryOp):
         return _vars_in_rhs(rhs.operand)
-    elif isinstance(rhs, llc.List) or isinstance(rhs, llc.Tuple):
+    elif isinstance(rhs, (llc.List, llc.Tuple)):
         return [lhs for rhs_item in rhs.items for lhs in _vars_in_rhs(rhs_item)]
     elif isinstance(rhs, llc.Mux):
         return [

@@ -36,7 +36,7 @@ def dep_graph_to_image(
 
         for statement in statements:
             result.append((indent, statement))
-            if isinstance(statement, llc.Phi) or isinstance(statement, llc.Assign):
+            if isinstance(statement, (llc.Phi, llc.Assign)):
                 pass
             elif isinstance(statement, llc.For):
                 result += search(statement.body, indent + 1)
@@ -49,7 +49,7 @@ def dep_graph_to_image(
 
     main_label = ""
     for i, (indent, statement) in enumerate(all_statements):
-        if isinstance(statement, llc.Phi) or isinstance(statement, llc.Assign):
+        if isinstance(statement, (llc.Phi, llc.Assign)):
             s = str(statement)
         elif isinstance(statement, llc.For):
             s = statement.heading_str()

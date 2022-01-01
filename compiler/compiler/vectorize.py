@@ -41,7 +41,7 @@ def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
 def _arrays_read_in_rhs(
     rhs: llc.AssignRHS, array_name: Union[str, int]
 ) -> list[llc.Subscript]:
-    if isinstance(rhs, llc.Var) or isinstance(rhs, llc.ConstantInt):
+    if isinstance(rhs, (llc.Var, llc.ConstantInt)):
         return []
     elif isinstance(rhs, llc.Subscript):
         if rhs.array.name == array_name:
@@ -54,7 +54,7 @@ def _arrays_read_in_rhs(
         return left + right
     elif isinstance(rhs, llc.UnaryOp):
         return _arrays_read_in_rhs(rhs.operand, array_name)
-    elif isinstance(rhs, llc.List) or isinstance(rhs, llc.Tuple):
+    elif isinstance(rhs, (llc.List, llc.Tuple)):
         return [
             subscript
             for item in rhs.items
