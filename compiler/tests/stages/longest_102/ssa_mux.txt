@@ -2,55 +2,55 @@ Function longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[lis
 Entry block: 0
 Exit block: 3
 Block 0:
-    s0!1 = False
-    max_len!1 = 0
-    length!1 = 0
+    s0₁ = False
+    max_len₁ = 0
+    length₁ = 0
     jump
 Block 1:
-    s0!2 = Φ(s0!1, s0!3)
-    max_len!2 = Φ(max_len!1, max_len!4)
-    length!2 = Φ(length!1, length!5)
-    !1!1 = Φ(!1!0, !1!2)
-    s1!1 = Φ(s1!0, s1!2)
-    !2!1 = Φ(!2!0, !2!2)
-    !3!1 = Φ(!3!0, !3!2)
-    !4!1 = Φ(!4!0, !4!2)
-    !5!1 = Φ(!5!0, !5!2)
-    !6!1 = Φ(!6!0, !6!2)
-    !7!1 = Φ(!7!0, !7!2)
-    !8!1 = Φ(!8!0, !8!2)
-    for i: plaintext[int] in range(0, N!0)
+    s0₂ = Φ(s0₁, s0₃)
+    max_len₂ = Φ(max_len₁, max_len₄)
+    length₂ = Φ(length₁, length₅)
+    !1₁ = Φ(!1₀, !1₂)
+    s1₁ = Φ(s1₀, s1₂)
+    !2₁ = Φ(!2₀, !2₂)
+    !3₁ = Φ(!3₀, !3₂)
+    !4₁ = Φ(!4₀, !4₂)
+    !5₁ = Φ(!5₀, !5₂)
+    !6₁ = Φ(!6₀, !6₂)
+    !7₁ = Φ(!7₀, !7₂)
+    !8₁ = Φ(!8₀, !8₂)
+    for i: plaintext[int] in range(0, N₀)
 Block 2:
-    !1!2 = (Seq!0[i] == Syms!0[2])
-    s1!2 = (s0!2 and !1!2)
-    !2!2 = (Seq!0[i] == Syms!0[1])
-    !3!2 = (Seq!0[i] == Syms!0[0])
-    !4!2 = (Seq!0[i] == Syms!0[0])
-    !5!2 = (s0!2 and !4!2)
-    s0!3 = (!2!2 or !5!2)
-    !6!2 = (s1!2 or s0!3)
-    conditional jump !6!2
+    !1₂ = (Seq₀[i] == Syms₀[2])
+    s1₂ = (s0₂ and !1₂)
+    !2₂ = (Seq₀[i] == Syms₀[1])
+    !3₂ = (Seq₀[i] == Syms₀[0])
+    !4₂ = (Seq₀[i] == Syms₀[0])
+    !5₂ = (s0₂ and !4₂)
+    s0₃ = (!2₂ or !5₂)
+    !6₂ = (s1₂ or s0₃)
+    conditional jump !6₂
 Block 3:
-    return max_len!2
+    return max_len₂
 Block 4:
-    length!3 = (length!2 + 1)
+    length₃ = (length₂ + 1)
     jump
 Block 5:
-    length!4 = 0
+    length₄ = 0
     jump
 Block 6:
-    (merge from conditional jump !6!2)
-    length!5 = MUX(!6!2, length!3, length!4)
-    !7!2 = (max_len!2 < length!5)
-    !8!2 = (s1!2 and !7!2)
-    conditional jump !8!2
+    (merge from conditional jump !6₂)
+    length₅ = MUX(!6₂, length₃, length₄)
+    !7₂ = (max_len₂ < length₅)
+    !8₂ = (s1₂ and !7₂)
+    conditional jump !8₂
 Block 7:
-    max_len!3 = length!5
+    max_len₃ = length₅
     jump
 Block 8:
     jump
 Block 9:
-    (merge from conditional jump !8!2)
-    max_len!4 = MUX(!8!2, max_len!3, max_len!2)
+    (merge from conditional jump !8₂)
+    max_len₄ = MUX(!8₂, max_len₃, max_len₂)
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 5, F) (2, 4, T) (4, 6, *) (5, 6, *) (6, 8, F) (6, 7, T) (7, 9, *) (8, 9, *) (9, 1, *)

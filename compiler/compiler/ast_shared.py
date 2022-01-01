@@ -54,7 +54,16 @@ class Var:
 
     def __str__(self) -> str:
         name = self.name if isinstance(self.name, str) else f"!{self.name}"
-        subscript = "" if self.rename_subscript is None else f"!{self.rename_subscript}"
+
+        # Convert subscript int to subscripted Unicode string
+        subscript = (
+            ""
+            if self.rename_subscript is None
+            else "".join(
+                [chr(0x2080 + int(digit)) for digit in str(self.rename_subscript)]
+            )
+        )
+
         return name + subscript
 
 

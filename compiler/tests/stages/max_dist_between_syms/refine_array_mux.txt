@@ -1,15 +1,15 @@
 def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
-    max_dist!1 = 0
-    current_dist!1 = 0
-    for i in range(0, N!0):
-        max_dist!2 = Φ(max_dist!1, max_dist!4)
-        current_dist!2 = Φ(current_dist!1, current_dist!5)
-        !1!2 = (Seq!0[i] == Sym!0)
-        !2!2 = not !1!2
-        current_dist!4 = 0
-        current_dist!3 = (current_dist!2 + 1)
-        current_dist!5 = MUX(!2!2, current_dist!3, current_dist!4)
-        !3!2 = (current_dist!5 > max_dist!2)
-        max_dist!3 = current_dist!5
-        max_dist!4 = MUX(!3!2, max_dist!3, max_dist!2)
-    return max_dist!2
+    max_dist₁ = 0
+    current_dist₁ = 0
+    for i in range(0, N₀):
+        max_dist₂ = Φ(max_dist₁, max_dist₄)
+        current_dist₂ = Φ(current_dist₁, current_dist₅)
+        !1₂ = (Seq₀[i] == Sym₀)
+        !2₂ = not !1₂
+        current_dist₄ = 0
+        current_dist₃ = (current_dist₂ + 1)
+        current_dist₅ = MUX(!2₂, current_dist₃, current_dist₄)
+        !3₂ = (current_dist₅ > max_dist₂)
+        max_dist₃ = current_dist₅
+        max_dist₄ = MUX(!3₂, max_dist₃, max_dist₂)
+    return max_dist₂

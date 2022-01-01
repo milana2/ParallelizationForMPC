@@ -1,48 +1,48 @@
 Nodes:
-    min_X!1 = []
-    min_Y!1 = []
-    min_X!2 = Φ(min_X!1, min_X!4)
-    min_Y!2 = Φ(min_Y!1, min_Y!4)
-    bx!2 = False
-    bx!3 = Φ(bx!2, bx!4)
-    !3!3 = (X_coords!0[j] < X_coords!0[i])
-    !4!3 = (Y_coords!0[j] < Y_coords!0[i])
-    !5!3 = (!3!3 and !4!3)
-    bx!4 = (bx!3 or !5!3)
-    !6!2 = not bx!3
-    !8!2 = X_coords!0[i]
-    !9!2 = [!8!2]
-    min_X!3 = (min_X!2 + !9!2)
-    !11!2 = Y_coords!0[i]
-    !12!2 = [!11!2]
-    min_Y!3 = (min_Y!2 + !12!2)
-    min_X!4 = MUX(!6!2, min_X!3, min_X!2)
-    min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)
-    !13!1 = (min_X!2, min_Y!2)
+    min_X₁ = []
+    min_Y₁ = []
+    min_X₂ = Φ(min_X₁, min_X₄)
+    min_Y₂ = Φ(min_Y₁, min_Y₄)
+    bx₂ = False
+    bx₃ = Φ(bx₂, bx₄)
+    !3₃ = (X_coords₀[j] < X_coords₀[i])
+    !4₃ = (Y_coords₀[j] < Y_coords₀[i])
+    !5₃ = (!3₃ and !4₃)
+    bx₄ = (bx₃ or !5₃)
+    !6₂ = not bx₃
+    !8₂ = X_coords₀[i]
+    !9₂ = [!8₂]
+    min_X₃ = (min_X₂ + !9₂)
+    !11₂ = Y_coords₀[i]
+    !12₂ = [!11₂]
+    min_Y₃ = (min_Y₂ + !12₂)
+    min_X₄ = MUX(!6₂, min_X₃, min_X₂)
+    min_Y₄ = MUX(!6₂, min_Y₃, min_Y₂)
+    !13₁ = (min_X₂, min_Y₂)
 Forward edges:
-    min_X!1 = []  →  min_X!2 = Φ(min_X!1, min_X!4)
-    min_Y!1 = []  →  min_Y!2 = Φ(min_Y!1, min_Y!4)
-    min_X!2 = Φ(min_X!1, min_X!4)  →  min_X!3 = (min_X!2 + !9!2)
-    min_X!2 = Φ(min_X!1, min_X!4)  →  min_X!4 = MUX(!6!2, min_X!3, min_X!2)
-    min_X!2 = Φ(min_X!1, min_X!4)  →  !13!1 = (min_X!2, min_Y!2)
-    min_Y!2 = Φ(min_Y!1, min_Y!4)  →  min_Y!3 = (min_Y!2 + !12!2)
-    min_Y!2 = Φ(min_Y!1, min_Y!4)  →  min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)
-    min_Y!2 = Φ(min_Y!1, min_Y!4)  →  !13!1 = (min_X!2, min_Y!2)
-    bx!2 = False  →  bx!3 = Φ(bx!2, bx!4)
-    bx!3 = Φ(bx!2, bx!4)  →  bx!4 = (bx!3 or !5!3)
-    bx!3 = Φ(bx!2, bx!4)  →  !6!2 = not bx!3
-    !3!3 = (X_coords!0[j] < X_coords!0[i])  →  !5!3 = (!3!3 and !4!3)
-    !4!3 = (Y_coords!0[j] < Y_coords!0[i])  →  !5!3 = (!3!3 and !4!3)
-    !5!3 = (!3!3 and !4!3)  →  bx!4 = (bx!3 or !5!3)
-    !6!2 = not bx!3  →  min_X!4 = MUX(!6!2, min_X!3, min_X!2)
-    !6!2 = not bx!3  →  min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)
-    !8!2 = X_coords!0[i]  →  !9!2 = [!8!2]
-    !9!2 = [!8!2]  →  min_X!3 = (min_X!2 + !9!2)
-    min_X!3 = (min_X!2 + !9!2)  →  min_X!4 = MUX(!6!2, min_X!3, min_X!2)
-    !11!2 = Y_coords!0[i]  →  !12!2 = [!11!2]
-    !12!2 = [!11!2]  →  min_Y!3 = (min_Y!2 + !12!2)
-    min_Y!3 = (min_Y!2 + !12!2)  →  min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)
+    min_X₁ = []  →  min_X₂ = Φ(min_X₁, min_X₄)
+    min_Y₁ = []  →  min_Y₂ = Φ(min_Y₁, min_Y₄)
+    min_X₂ = Φ(min_X₁, min_X₄)  →  min_X₃ = (min_X₂ + !9₂)
+    min_X₂ = Φ(min_X₁, min_X₄)  →  min_X₄ = MUX(!6₂, min_X₃, min_X₂)
+    min_X₂ = Φ(min_X₁, min_X₄)  →  !13₁ = (min_X₂, min_Y₂)
+    min_Y₂ = Φ(min_Y₁, min_Y₄)  →  min_Y₃ = (min_Y₂ + !12₂)
+    min_Y₂ = Φ(min_Y₁, min_Y₄)  →  min_Y₄ = MUX(!6₂, min_Y₃, min_Y₂)
+    min_Y₂ = Φ(min_Y₁, min_Y₄)  →  !13₁ = (min_X₂, min_Y₂)
+    bx₂ = False  →  bx₃ = Φ(bx₂, bx₄)
+    bx₃ = Φ(bx₂, bx₄)  →  bx₄ = (bx₃ or !5₃)
+    bx₃ = Φ(bx₂, bx₄)  →  !6₂ = not bx₃
+    !3₃ = (X_coords₀[j] < X_coords₀[i])  →  !5₃ = (!3₃ and !4₃)
+    !4₃ = (Y_coords₀[j] < Y_coords₀[i])  →  !5₃ = (!3₃ and !4₃)
+    !5₃ = (!3₃ and !4₃)  →  bx₄ = (bx₃ or !5₃)
+    !6₂ = not bx₃  →  min_X₄ = MUX(!6₂, min_X₃, min_X₂)
+    !6₂ = not bx₃  →  min_Y₄ = MUX(!6₂, min_Y₃, min_Y₂)
+    !8₂ = X_coords₀[i]  →  !9₂ = [!8₂]
+    !9₂ = [!8₂]  →  min_X₃ = (min_X₂ + !9₂)
+    min_X₃ = (min_X₂ + !9₂)  →  min_X₄ = MUX(!6₂, min_X₃, min_X₂)
+    !11₂ = Y_coords₀[i]  →  !12₂ = [!11₂]
+    !12₂ = [!11₂]  →  min_Y₃ = (min_Y₂ + !12₂)
+    min_Y₃ = (min_Y₂ + !12₂)  →  min_Y₄ = MUX(!6₂, min_Y₃, min_Y₂)
 Back edges:
-    bx!4 = (bx!3 or !5!3)  →  bx!3 = Φ(bx!2, bx!4)
-    min_X!4 = MUX(!6!2, min_X!3, min_X!2)  →  min_X!2 = Φ(min_X!1, min_X!4)
-    min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)  →  min_Y!2 = Φ(min_Y!1, min_Y!4)
+    bx₄ = (bx₃ or !5₃)  →  bx₃ = Φ(bx₂, bx₄)
+    min_X₄ = MUX(!6₂, min_X₃, min_X₂)  →  min_X₂ = Φ(min_X₁, min_X₄)
+    min_Y₄ = MUX(!6₂, min_Y₃, min_Y₂)  →  min_Y₂ = Φ(min_Y₁, min_Y₄)

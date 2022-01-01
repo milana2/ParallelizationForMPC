@@ -2,44 +2,44 @@ Function minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]]
 Entry block: 0
 Exit block: 3
 Block 0:
-    min_X!1 = []
-    min_Y!1 = []
+    min_X₁ = []
+    min_Y₁ = []
     jump
 Block 1:
-    min_X!2 = Φ(min_X!1, min_X!4)
-    min_Y!2 = Φ(min_Y!1, min_Y!4)
-    for i: plaintext[int] in range(0, N!0)
+    min_X₂ = Φ(min_X₁, min_X₄)
+    min_Y₂ = Φ(min_Y₁, min_Y₄)
+    for i: plaintext[int] in range(0, N₀)
 Block 2:
-    bx!2 = False
+    bx₂ = False
     jump
 Block 3:
-    !13!1 = (min_X!2, min_Y!2)
-    return !13!1
+    !13₁ = (min_X₂, min_Y₂)
+    return !13₁
 Block 4:
-    bx!3 = Φ(bx!2, bx!4)
-    for j: plaintext[int] in range(0, N!0)
+    bx₃ = Φ(bx₂, bx₄)
+    for j: plaintext[int] in range(0, N₀)
 Block 5:
-    !3!3 = (X_coords!0[j] < X_coords!0[i])
-    !4!3 = (Y_coords!0[j] < Y_coords!0[i])
-    !5!3 = (!3!3 and !4!3)
-    bx!4 = (bx!3 or !5!3)
+    !3₃ = (X_coords₀[j] < X_coords₀[i])
+    !4₃ = (Y_coords₀[j] < Y_coords₀[i])
+    !5₃ = (!3₃ and !4₃)
+    bx₄ = (bx₃ or !5₃)
     jump
 Block 6:
-    !6!2 = not bx!3
-    conditional jump !6!2
+    !6₂ = not bx₃
+    conditional jump !6₂
 Block 7:
-    !8!2 = X_coords!0[i]
-    !9!2 = [!8!2]
-    min_X!3 = (min_X!2 + !9!2)
-    !11!2 = Y_coords!0[i]
-    !12!2 = [!11!2]
-    min_Y!3 = (min_Y!2 + !12!2)
+    !8₂ = X_coords₀[i]
+    !9₂ = [!8₂]
+    min_X₃ = (min_X₂ + !9₂)
+    !11₂ = Y_coords₀[i]
+    !12₂ = [!11₂]
+    min_Y₃ = (min_Y₂ + !12₂)
     jump
 Block 8:
     jump
 Block 9:
-    (merge from conditional jump !6!2)
-    min_X!4 = MUX(!6!2, min_X!3, min_X!2)
-    min_Y!4 = MUX(!6!2, min_Y!3, min_Y!2)
+    (merge from conditional jump !6₂)
+    min_X₄ = MUX(!6₂, min_X₃, min_X₂)
+    min_Y₄ = MUX(!6₂, min_Y₃, min_Y₂)
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 4, *) (6, 8, F) (6, 7, T) (7, 9, *) (8, 9, *) (9, 1, *)

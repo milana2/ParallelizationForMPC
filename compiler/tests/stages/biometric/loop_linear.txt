@@ -1,19 +1,19 @@
 def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
-    min_sum!1 = 10000
-    min_index!1 = - 1
-    for i in range(0, N!0):
-        min_sum!2 = Φ(min_sum!1, min_sum!4)
-        min_index!2 = Φ(min_index!1, min_index!4)
-        sum!2 = 0
-        for j in range(0, D!0):
-            sum!3 = Φ(sum!2, sum!4)
-            d!3 = (S!0[((i * D!0) + j)] - C!0[j])
-            p!3 = (d!3 * d!3)
-            sum!4 = (sum!3 + p!3)
-        !1!2 = (sum!3 < min_sum!2)
-        min_sum!3 = sum!3
-        min_index!3 = i
-        min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
-        min_index!4 = MUX(!1!2, min_index!3, min_index!2)
-    !2!1 = (min_sum!2, min_index!2)
-    return !2!1
+    min_sum₁ = 10000
+    min_index₁ = - 1
+    for i in range(0, N₀):
+        min_sum₂ = Φ(min_sum₁, min_sum₄)
+        min_index₂ = Φ(min_index₁, min_index₄)
+        sum₂ = 0
+        for j in range(0, D₀):
+            sum₃ = Φ(sum₂, sum₄)
+            d₃ = (S₀[((i * D₀) + j)] - C₀[j])
+            p₃ = (d₃ * d₃)
+            sum₄ = (sum₃ + p₃)
+        !1₂ = (sum₃ < min_sum₂)
+        min_sum₃ = sum₃
+        min_index₃ = i
+        min_sum₄ = MUX(!1₂, min_sum₃, min_sum₂)
+        min_index₄ = MUX(!1₂, min_index₃, min_index₂)
+    !2₁ = (min_sum₂, min_index₂)
+    return !2₁

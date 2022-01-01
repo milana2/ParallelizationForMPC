@@ -1,40 +1,40 @@
 Nodes:
-    current_length!1 = 0
-    max_length!1 = 0
-    current_length!2 = Φ(current_length!1, current_length!5)
-    max_length!2 = Φ(max_length!1, max_length!4)
-    !1!2 = (Seq!0[i] == Sym!0)
-    current_length!4 = 0
-    current_length!3 = (current_length!2 + 1)
-    current_length!5 = MUX(!1!2, current_length!3, current_length!4)
-    tmp_max_len!2 = max_length!2
-    !2!2 = (current_length!5 > max_length!2)
-    tmp_max_len!3 = current_length!5
-    tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
-    !3!2 = (tmp_max_len!4 % 2)
-    !4!2 = (!3!2 == 0)
-    max_length!3 = tmp_max_len!4
-    max_length!4 = MUX(!4!2, max_length!3, max_length!2)
+    current_length₁ = 0
+    max_length₁ = 0
+    current_length₂ = Φ(current_length₁, current_length₅)
+    max_length₂ = Φ(max_length₁, max_length₄)
+    !1₂ = (Seq₀[i] == Sym₀)
+    current_length₄ = 0
+    current_length₃ = (current_length₂ + 1)
+    current_length₅ = MUX(!1₂, current_length₃, current_length₄)
+    tmp_max_len₂ = max_length₂
+    !2₂ = (current_length₅ > max_length₂)
+    tmp_max_len₃ = current_length₅
+    tmp_max_len₄ = MUX(!2₂, tmp_max_len₃, tmp_max_len₂)
+    !3₂ = (tmp_max_len₄ % 2)
+    !4₂ = (!3₂ == 0)
+    max_length₃ = tmp_max_len₄
+    max_length₄ = MUX(!4₂, max_length₃, max_length₂)
 Forward edges:
-    current_length!1 = 0  →  current_length!2 = Φ(current_length!1, current_length!5)
-    max_length!1 = 0  →  max_length!2 = Φ(max_length!1, max_length!4)
-    current_length!2 = Φ(current_length!1, current_length!5)  →  current_length!3 = (current_length!2 + 1)
-    max_length!2 = Φ(max_length!1, max_length!4)  →  tmp_max_len!2 = max_length!2
-    max_length!2 = Φ(max_length!1, max_length!4)  →  !2!2 = (current_length!5 > max_length!2)
-    max_length!2 = Φ(max_length!1, max_length!4)  →  max_length!4 = MUX(!4!2, max_length!3, max_length!2)
-    !1!2 = (Seq!0[i] == Sym!0)  →  current_length!5 = MUX(!1!2, current_length!3, current_length!4)
-    current_length!4 = 0  →  current_length!5 = MUX(!1!2, current_length!3, current_length!4)
-    current_length!3 = (current_length!2 + 1)  →  current_length!5 = MUX(!1!2, current_length!3, current_length!4)
-    current_length!5 = MUX(!1!2, current_length!3, current_length!4)  →  !2!2 = (current_length!5 > max_length!2)
-    current_length!5 = MUX(!1!2, current_length!3, current_length!4)  →  tmp_max_len!3 = current_length!5
-    tmp_max_len!2 = max_length!2  →  tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
-    !2!2 = (current_length!5 > max_length!2)  →  tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
-    tmp_max_len!3 = current_length!5  →  tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
-    tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)  →  !3!2 = (tmp_max_len!4 % 2)
-    tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)  →  max_length!3 = tmp_max_len!4
-    !3!2 = (tmp_max_len!4 % 2)  →  !4!2 = (!3!2 == 0)
-    !4!2 = (!3!2 == 0)  →  max_length!4 = MUX(!4!2, max_length!3, max_length!2)
-    max_length!3 = tmp_max_len!4  →  max_length!4 = MUX(!4!2, max_length!3, max_length!2)
+    current_length₁ = 0  →  current_length₂ = Φ(current_length₁, current_length₅)
+    max_length₁ = 0  →  max_length₂ = Φ(max_length₁, max_length₄)
+    current_length₂ = Φ(current_length₁, current_length₅)  →  current_length₃ = (current_length₂ + 1)
+    max_length₂ = Φ(max_length₁, max_length₄)  →  tmp_max_len₂ = max_length₂
+    max_length₂ = Φ(max_length₁, max_length₄)  →  !2₂ = (current_length₅ > max_length₂)
+    max_length₂ = Φ(max_length₁, max_length₄)  →  max_length₄ = MUX(!4₂, max_length₃, max_length₂)
+    !1₂ = (Seq₀[i] == Sym₀)  →  current_length₅ = MUX(!1₂, current_length₃, current_length₄)
+    current_length₄ = 0  →  current_length₅ = MUX(!1₂, current_length₃, current_length₄)
+    current_length₃ = (current_length₂ + 1)  →  current_length₅ = MUX(!1₂, current_length₃, current_length₄)
+    current_length₅ = MUX(!1₂, current_length₃, current_length₄)  →  !2₂ = (current_length₅ > max_length₂)
+    current_length₅ = MUX(!1₂, current_length₃, current_length₄)  →  tmp_max_len₃ = current_length₅
+    tmp_max_len₂ = max_length₂  →  tmp_max_len₄ = MUX(!2₂, tmp_max_len₃, tmp_max_len₂)
+    !2₂ = (current_length₅ > max_length₂)  →  tmp_max_len₄ = MUX(!2₂, tmp_max_len₃, tmp_max_len₂)
+    tmp_max_len₃ = current_length₅  →  tmp_max_len₄ = MUX(!2₂, tmp_max_len₃, tmp_max_len₂)
+    tmp_max_len₄ = MUX(!2₂, tmp_max_len₃, tmp_max_len₂)  →  !3₂ = (tmp_max_len₄ % 2)
+    tmp_max_len₄ = MUX(!2₂, tmp_max_len₃, tmp_max_len₂)  →  max_length₃ = tmp_max_len₄
+    !3₂ = (tmp_max_len₄ % 2)  →  !4₂ = (!3₂ == 0)
+    !4₂ = (!3₂ == 0)  →  max_length₄ = MUX(!4₂, max_length₃, max_length₂)
+    max_length₃ = tmp_max_len₄  →  max_length₄ = MUX(!4₂, max_length₃, max_length₂)
 Back edges:
-    current_length!5 = MUX(!1!2, current_length!3, current_length!4)  →  current_length!2 = Φ(current_length!1, current_length!5)
-    max_length!4 = MUX(!4!2, max_length!3, max_length!2)  →  max_length!2 = Φ(max_length!1, max_length!4)
+    current_length₅ = MUX(!1₂, current_length₃, current_length₄)  →  current_length₂ = Φ(current_length₁, current_length₅)
+    max_length₄ = MUX(!4₂, max_length₃, max_length₂)  →  max_length₂ = Φ(max_length₁, max_length₄)

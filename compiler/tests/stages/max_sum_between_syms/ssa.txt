@@ -2,40 +2,40 @@ Function max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: sh
 Entry block: 0
 Exit block: 3
 Block 0:
-    max_sum!1 = 0
-    current_sum!1 = 0
+    max_sum₁ = 0
+    current_sum₁ = 0
     jump
 Block 1:
-    max_sum!2 = Φ(max_sum!1, max_sum!4)
-    current_sum!2 = Φ(current_sum!1, current_sum!5)
-    !1!1 = Φ(!1!0, !1!2)
-    !2!1 = Φ(!2!0, !2!2)
-    !3!1 = Φ(!3!0, !3!2)
-    for i: plaintext[int] in range(0, N!0)
+    max_sum₂ = Φ(max_sum₁, max_sum₄)
+    current_sum₂ = Φ(current_sum₁, current_sum₅)
+    !1₁ = Φ(!1₀, !1₂)
+    !2₁ = Φ(!2₀, !2₂)
+    !3₁ = Φ(!3₀, !3₂)
+    for i: plaintext[int] in range(0, N₀)
 Block 2:
-    !1!2 = (Seq!0[i] == Sym!0)
-    !2!2 = not !1!2
-    conditional jump !2!2
+    !1₂ = (Seq₀[i] == Sym₀)
+    !2₂ = not !1₂
+    conditional jump !2₂
 Block 3:
-    return max_sum!2
+    return max_sum₂
 Block 4:
-    current_sum!3 = (current_sum!2 + Seq!0[i])
+    current_sum₃ = (current_sum₂ + Seq₀[i])
     jump
 Block 5:
-    current_sum!4 = 0
+    current_sum₄ = 0
     jump
 Block 6:
-    current_sum!5 = Φ(current_sum!3, current_sum!4)
-    (merge from conditional jump !2!2)
-    !3!2 = (current_sum!5 > max_sum!2)
-    conditional jump !3!2
+    current_sum₅ = Φ(current_sum₃, current_sum₄)
+    (merge from conditional jump !2₂)
+    !3₂ = (current_sum₅ > max_sum₂)
+    conditional jump !3₂
 Block 7:
-    max_sum!3 = current_sum!5
+    max_sum₃ = current_sum₅
     jump
 Block 8:
     jump
 Block 9:
-    max_sum!4 = Φ(max_sum!3, max_sum!2)
-    (merge from conditional jump !3!2)
+    max_sum₄ = Φ(max_sum₃, max_sum₂)
+    (merge from conditional jump !3₂)
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 5, F) (2, 4, T) (4, 6, *) (5, 6, *) (6, 8, F) (6, 7, T) (7, 9, *) (8, 9, *) (9, 1, *)

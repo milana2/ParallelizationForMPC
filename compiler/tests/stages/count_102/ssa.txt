@@ -2,37 +2,37 @@ Function count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 Entry block: 0
 Exit block: 3
 Block 0:
-    s0!1 = False
-    c!1 = 0
+    s0₁ = False
+    c₁ = 0
     jump
 Block 1:
-    s0!2 = Φ(s0!1, s0!3)
-    c!2 = Φ(c!1, c!4)
-    !1!1 = Φ(!1!0, !1!2)
-    !2!1 = Φ(!2!0, !2!2)
-    !3!1 = Φ(!3!0, !3!2)
-    !4!1 = Φ(!4!0, !4!2)
-    !5!1 = Φ(!5!0, !5!2)
-    !6!1 = Φ(!6!0, !6!2)
-    for i: plaintext[int] in range(0, N!0)
+    s0₂ = Φ(s0₁, s0₃)
+    c₂ = Φ(c₁, c₄)
+    !1₁ = Φ(!1₀, !1₂)
+    !2₁ = Φ(!2₀, !2₂)
+    !3₁ = Φ(!3₀, !3₂)
+    !4₁ = Φ(!4₀, !4₂)
+    !5₁ = Φ(!5₀, !5₂)
+    !6₁ = Φ(!6₀, !6₂)
+    for i: plaintext[int] in range(0, N₀)
 Block 2:
-    !1!2 = (Seq!0[i] == Syms!0[2])
-    !2!2 = (s0!2 and !1!2)
-    conditional jump !2!2
+    !1₂ = (Seq₀[i] == Syms₀[2])
+    !2₂ = (s0₂ and !1₂)
+    conditional jump !2₂
 Block 3:
-    return c!2
+    return c₂
 Block 4:
-    c!3 = (c!2 + 1)
+    c₃ = (c₂ + 1)
     jump
 Block 5:
     jump
 Block 6:
-    c!4 = Φ(c!3, c!2)
-    (merge from conditional jump !2!2)
-    !3!2 = (Seq!0[i] == Syms!0[1])
-    !4!2 = (Seq!0[i] == Syms!0[0])
-    !5!2 = (Seq!0[i] == Syms!0[0])
-    !6!2 = (s0!2 and !5!2)
-    s0!3 = (!3!2 or !6!2)
+    c₄ = Φ(c₃, c₂)
+    (merge from conditional jump !2₂)
+    !3₂ = (Seq₀[i] == Syms₀[1])
+    !4₂ = (Seq₀[i] == Syms₀[0])
+    !5₂ = (Seq₀[i] == Syms₀[0])
+    !6₂ = (s0₂ and !5₂)
+    s0₃ = (!3₂ or !6₂)
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 5, F) (2, 4, T) (4, 6, *) (5, 6, *) (6, 1, *)

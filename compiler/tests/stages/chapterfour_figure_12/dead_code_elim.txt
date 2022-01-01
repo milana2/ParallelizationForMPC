@@ -2,26 +2,26 @@ Function foo(x: plaintext[int], y: plaintext[int]):
 Entry block: 0
 Exit block: 3
 Block 0:
-    z!1 = 0
-    !1!1 = (x!0 > 0)
-    conditional jump !1!1
+    z₁ = 0
+    !1₁ = (x₀ > 0)
+    conditional jump !1₁
 Block 1:
-    !2!1 = (y!0 > 0)
-    conditional jump !2!1
+    !2₁ = (y₀ > 0)
+    conditional jump !2₁
 Block 2:
     jump
 Block 3:
-    (merge from conditional jump !1!1)
-    z!5 = MUX(!1!1, z!1, z!4)
-    return z!5
+    (merge from conditional jump !1₁)
+    z₅ = MUX(!1₁, z₁, z₄)
+    return z₅
 Block 4:
-    z!2 = 1
+    z₂ = 1
     jump
 Block 5:
-    z!3 = - 1
+    z₃ = - 1
     jump
 Block 6:
-    (merge from conditional jump !2!1)
-    z!4 = MUX(!2!1, z!2, z!3)
+    (merge from conditional jump !2₁)
+    z₄ = MUX(!2₁, z₂, z₃)
     jump
 Edges: (0, 2, F) (0, 1, T) (1, 5, F) (1, 4, T) (2, 3, *) (4, 6, *) (5, 6, *) (6, 3, *)

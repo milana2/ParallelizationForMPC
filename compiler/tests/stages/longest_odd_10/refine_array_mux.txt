@@ -1,23 +1,23 @@
 def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    current_length!1 = 0
-    max_length!1 = 0
-    s2!1 = False
-    for i in range(0, N!0):
-        current_length!2 = Φ(current_length!1, current_length!6)
-        max_length!2 = Φ(max_length!1, max_length!4)
-        s2!2 = Φ(s2!1, s2!3)
-        !1!2 = (Seq!0[i] == Syms!0[1])
-        s1!2 = (s2!2 and !1!2)
-        !2!2 = not s2!2
-        current_length!4 = 0
-        current_length!5 = MUX(!2!2, current_length!4, current_length!2)
-        current_length!3 = (current_length!2 + 1)
-        current_length!6 = MUX(s1!2, current_length!3, current_length!5)
-        !4!2 = (current_length!6 % 2)
-        !5!2 = (!4!2 == 1)
-        !6!2 = (current_length!6 > max_length!2)
-        !7!2 = (!5!2 and !6!2)
-        max_length!3 = current_length!6
-        max_length!4 = MUX(!7!2, max_length!3, max_length!2)
-        s2!3 = (Seq!0[i] == Syms!0[0])
-    return max_length!2
+    current_length₁ = 0
+    max_length₁ = 0
+    s2₁ = False
+    for i in range(0, N₀):
+        current_length₂ = Φ(current_length₁, current_length₆)
+        max_length₂ = Φ(max_length₁, max_length₄)
+        s2₂ = Φ(s2₁, s2₃)
+        !1₂ = (Seq₀[i] == Syms₀[1])
+        s1₂ = (s2₂ and !1₂)
+        !2₂ = not s2₂
+        current_length₄ = 0
+        current_length₅ = MUX(!2₂, current_length₄, current_length₂)
+        current_length₃ = (current_length₂ + 1)
+        current_length₆ = MUX(s1₂, current_length₃, current_length₅)
+        !4₂ = (current_length₆ % 2)
+        !5₂ = (!4₂ == 1)
+        !6₂ = (current_length₆ > max_length₂)
+        !7₂ = (!5₂ and !6₂)
+        max_length₃ = current_length₆
+        max_length₄ = MUX(!7₂, max_length₃, max_length₂)
+        s2₃ = (Seq₀[i] == Syms₀[0])
+    return max_length₂

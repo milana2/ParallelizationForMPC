@@ -2,49 +2,49 @@ Function psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB:
 Entry block: 0
 Exit block: 3
 Block 0:
-    dummy!1 = 0
-    result!1 = []
+    dummy₁ = 0
+    result₁ = []
     jump
 Block 1:
-    result!2 = Φ(result!1, result!3)
-    flag!1 = Φ(flag!0, flag!3)
-    !1!1 = Φ(!1!0, !1!2)
-    val!1 = Φ(val!0, val!4)
-    !2!1 = Φ(!2!0, !2!2)
-    for i: plaintext[int] in range(0, SA!0)
+    result₂ = Φ(result₁, result₃)
+    flag₁ = Φ(flag₀, flag₃)
+    !1₁ = Φ(!1₀, !1₂)
+    val₁ = Φ(val₀, val₄)
+    !2₁ = Φ(!2₀, !2₂)
+    for i: plaintext[int] in range(0, SA₀)
 Block 2:
-    flag!2 = False
+    flag₂ = False
     jump
 Block 3:
-    return result!2
+    return result₂
 Block 4:
-    flag!3 = Φ(flag!2, flag!5)
-    !1!2 = Φ(!1!1, !1!3)
-    for j: plaintext[int] in range(0, SB!0)
+    flag₃ = Φ(flag₂, flag₅)
+    !1₂ = Φ(!1₁, !1₃)
+    for j: plaintext[int] in range(0, SB₀)
 Block 5:
-    !1!3 = (A!0[i] == B!0[j])
-    conditional jump !1!3
+    !1₃ = (A₀[i] == B₀[j])
+    conditional jump !1₃
 Block 6:
-    val!2 = dummy!1
-    conditional jump flag!3
+    val₂ = dummy₁
+    conditional jump flag₃
 Block 7:
-    flag!4 = True
+    flag₄ = True
     jump
 Block 8:
     jump
 Block 9:
-    (merge from conditional jump !1!3)
-    flag!5 = MUX(!1!3, flag!4, flag!3)
+    (merge from conditional jump !1₃)
+    flag₅ = MUX(!1₃, flag₄, flag₃)
     jump
 Block 10:
-    val!3 = A!0[i]
+    val₃ = A₀[i]
     jump
 Block 11:
     jump
 Block 12:
-    (merge from conditional jump flag!3)
-    val!4 = MUX(flag!3, val!3, val!2)
-    !2!2 = [val!4]
-    result!3 = (result!2 + !2!2)
+    (merge from conditional jump flag₃)
+    val₄ = MUX(flag₃, val₃, val₂)
+    !2₂ = [val₄]
+    result₃ = (result₂ + !2₂)
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 8, F) (5, 7, T) (6, 11, F) (6, 10, T) (7, 9, *) (8, 9, *) (9, 4, *) (10, 12, *) (11, 12, *) (12, 1, *)

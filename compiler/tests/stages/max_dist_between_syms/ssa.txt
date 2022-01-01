@@ -2,40 +2,40 @@ Function max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: s
 Entry block: 0
 Exit block: 3
 Block 0:
-    max_dist!1 = 0
-    current_dist!1 = 0
+    max_dist₁ = 0
+    current_dist₁ = 0
     jump
 Block 1:
-    max_dist!2 = Φ(max_dist!1, max_dist!4)
-    current_dist!2 = Φ(current_dist!1, current_dist!5)
-    !1!1 = Φ(!1!0, !1!2)
-    !2!1 = Φ(!2!0, !2!2)
-    !3!1 = Φ(!3!0, !3!2)
-    for i: plaintext[int] in range(0, N!0)
+    max_dist₂ = Φ(max_dist₁, max_dist₄)
+    current_dist₂ = Φ(current_dist₁, current_dist₅)
+    !1₁ = Φ(!1₀, !1₂)
+    !2₁ = Φ(!2₀, !2₂)
+    !3₁ = Φ(!3₀, !3₂)
+    for i: plaintext[int] in range(0, N₀)
 Block 2:
-    !1!2 = (Seq!0[i] == Sym!0)
-    !2!2 = not !1!2
-    conditional jump !2!2
+    !1₂ = (Seq₀[i] == Sym₀)
+    !2₂ = not !1₂
+    conditional jump !2₂
 Block 3:
-    return max_dist!2
+    return max_dist₂
 Block 4:
-    current_dist!3 = (current_dist!2 + 1)
+    current_dist₃ = (current_dist₂ + 1)
     jump
 Block 5:
-    current_dist!4 = 0
+    current_dist₄ = 0
     jump
 Block 6:
-    current_dist!5 = Φ(current_dist!3, current_dist!4)
-    (merge from conditional jump !2!2)
-    !3!2 = (current_dist!5 > max_dist!2)
-    conditional jump !3!2
+    current_dist₅ = Φ(current_dist₃, current_dist₄)
+    (merge from conditional jump !2₂)
+    !3₂ = (current_dist₅ > max_dist₂)
+    conditional jump !3₂
 Block 7:
-    max_dist!3 = current_dist!5
+    max_dist₃ = current_dist₅
     jump
 Block 8:
     jump
 Block 9:
-    max_dist!4 = Φ(max_dist!3, max_dist!2)
-    (merge from conditional jump !3!2)
+    max_dist₄ = Φ(max_dist₃, max_dist₂)
+    (merge from conditional jump !3₂)
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 5, F) (2, 4, T) (4, 6, *) (5, 6, *) (6, 8, F) (6, 7, T) (7, 9, *) (8, 9, *) (9, 1, *)
