@@ -1,15 +1,15 @@
 def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
-    s0₁ = False
-    c₁ = 0
-    for i in range(0, N₀):
-        s0₂ = Φ(s0₁, s0₃)
-        c₂ = Φ(c₁, c₄)
-        !1₂ = (Seq₀[i] == Syms₀[2])
-        !2₂ = (s0₂ and !1₂)
-        c₃ = (c₂ + 1)
-        c₄ = MUX(!2₂, c₃, c₂)
-        !3₂ = (Seq₀[i] == Syms₀[1])
-        !5₂ = (Seq₀[i] == Syms₀[0])
-        !6₂ = (s0₂ and !5₂)
-        s0₃ = (!3₂ or !6₂)
-    return c₂
+    s0!1 = False
+    c!1 = 0
+    for i in range(0, N!0):
+        s0!2 = Φ(s0!1, s0!3)
+        c!2 = Φ(c!1, c!4)
+        !1!2 = (Seq!0[i] == Syms!0[2])
+        !2!2 = (s0!2 and !1!2)
+        c!3 = (c!2 + 1)
+        c!4 = MUX(!2!2, c!3, c!2)
+        !3!2 = (Seq!0[i] == Syms!0[1])
+        !5!2 = (Seq!0[i] == Syms!0[0])
+        !6!2 = (s0!2 and !5!2)
+        s0!3 = (!3!2 or !6!2)
+    return c!2

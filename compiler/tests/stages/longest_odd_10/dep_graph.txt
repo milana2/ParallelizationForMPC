@@ -1,49 +1,49 @@
 Nodes:
-    current_length₁ = 0
-    max_length₁ = 0
-    s2₁ = False
-    current_length₂ = Φ(current_length₁, current_length₆)
-    max_length₂ = Φ(max_length₁, max_length₄)
-    s2₂ = Φ(s2₁, s2₃)
-    !1₂ = (Seq₀[i] == Syms₀[1])
-    s1₂ = (s2₂ and !1₂)
-    !2₂ = not s2₂
-    current_length₄ = 0
-    current_length₅ = MUX(!2₂, current_length₄, current_length₂)
-    current_length₃ = (current_length₂ + 1)
-    current_length₆ = MUX(s1₂, current_length₃, current_length₅)
-    !4₂ = (current_length₆ % 2)
-    !5₂ = (!4₂ == 1)
-    !6₂ = (current_length₆ > max_length₂)
-    !7₂ = (!5₂ and !6₂)
-    max_length₃ = current_length₆
-    max_length₄ = MUX(!7₂, max_length₃, max_length₂)
-    s2₃ = (Seq₀[i] == Syms₀[0])
+    current_length!1 = 0
+    max_length!1 = 0
+    s2!1 = False
+    current_length!2 = Φ(current_length!1, current_length!6)
+    max_length!2 = Φ(max_length!1, max_length!4)
+    s2!2 = Φ(s2!1, s2!3)
+    !1!2 = (Seq!0[i] == Syms!0[1])
+    s1!2 = (s2!2 and !1!2)
+    !2!2 = not s2!2
+    current_length!4 = 0
+    current_length!5 = MUX(!2!2, current_length!4, current_length!2)
+    current_length!3 = (current_length!2 + 1)
+    current_length!6 = MUX(s1!2, current_length!3, current_length!5)
+    !4!2 = (current_length!6 % 2)
+    !5!2 = (!4!2 == 1)
+    !6!2 = (current_length!6 > max_length!2)
+    !7!2 = (!5!2 and !6!2)
+    max_length!3 = current_length!6
+    max_length!4 = MUX(!7!2, max_length!3, max_length!2)
+    s2!3 = (Seq!0[i] == Syms!0[0])
 Forward edges:
-    current_length₁ = 0  →  current_length₂ = Φ(current_length₁, current_length₆)
-    max_length₁ = 0  →  max_length₂ = Φ(max_length₁, max_length₄)
-    s2₁ = False  →  s2₂ = Φ(s2₁, s2₃)
-    current_length₂ = Φ(current_length₁, current_length₆)  →  current_length₅ = MUX(!2₂, current_length₄, current_length₂)
-    current_length₂ = Φ(current_length₁, current_length₆)  →  current_length₃ = (current_length₂ + 1)
-    max_length₂ = Φ(max_length₁, max_length₄)  →  !6₂ = (current_length₆ > max_length₂)
-    max_length₂ = Φ(max_length₁, max_length₄)  →  max_length₄ = MUX(!7₂, max_length₃, max_length₂)
-    s2₂ = Φ(s2₁, s2₃)  →  s1₂ = (s2₂ and !1₂)
-    s2₂ = Φ(s2₁, s2₃)  →  !2₂ = not s2₂
-    !1₂ = (Seq₀[i] == Syms₀[1])  →  s1₂ = (s2₂ and !1₂)
-    s1₂ = (s2₂ and !1₂)  →  current_length₆ = MUX(s1₂, current_length₃, current_length₅)
-    !2₂ = not s2₂  →  current_length₅ = MUX(!2₂, current_length₄, current_length₂)
-    current_length₄ = 0  →  current_length₅ = MUX(!2₂, current_length₄, current_length₂)
-    current_length₅ = MUX(!2₂, current_length₄, current_length₂)  →  current_length₆ = MUX(s1₂, current_length₃, current_length₅)
-    current_length₃ = (current_length₂ + 1)  →  current_length₆ = MUX(s1₂, current_length₃, current_length₅)
-    current_length₆ = MUX(s1₂, current_length₃, current_length₅)  →  !4₂ = (current_length₆ % 2)
-    current_length₆ = MUX(s1₂, current_length₃, current_length₅)  →  !6₂ = (current_length₆ > max_length₂)
-    current_length₆ = MUX(s1₂, current_length₃, current_length₅)  →  max_length₃ = current_length₆
-    !4₂ = (current_length₆ % 2)  →  !5₂ = (!4₂ == 1)
-    !5₂ = (!4₂ == 1)  →  !7₂ = (!5₂ and !6₂)
-    !6₂ = (current_length₆ > max_length₂)  →  !7₂ = (!5₂ and !6₂)
-    !7₂ = (!5₂ and !6₂)  →  max_length₄ = MUX(!7₂, max_length₃, max_length₂)
-    max_length₃ = current_length₆  →  max_length₄ = MUX(!7₂, max_length₃, max_length₂)
+    current_length!1 = 0  →  current_length!2 = Φ(current_length!1, current_length!6)
+    max_length!1 = 0  →  max_length!2 = Φ(max_length!1, max_length!4)
+    s2!1 = False  →  s2!2 = Φ(s2!1, s2!3)
+    current_length!2 = Φ(current_length!1, current_length!6)  →  current_length!5 = MUX(!2!2, current_length!4, current_length!2)
+    current_length!2 = Φ(current_length!1, current_length!6)  →  current_length!3 = (current_length!2 + 1)
+    max_length!2 = Φ(max_length!1, max_length!4)  →  !6!2 = (current_length!6 > max_length!2)
+    max_length!2 = Φ(max_length!1, max_length!4)  →  max_length!4 = MUX(!7!2, max_length!3, max_length!2)
+    s2!2 = Φ(s2!1, s2!3)  →  s1!2 = (s2!2 and !1!2)
+    s2!2 = Φ(s2!1, s2!3)  →  !2!2 = not s2!2
+    !1!2 = (Seq!0[i] == Syms!0[1])  →  s1!2 = (s2!2 and !1!2)
+    s1!2 = (s2!2 and !1!2)  →  current_length!6 = MUX(s1!2, current_length!3, current_length!5)
+    !2!2 = not s2!2  →  current_length!5 = MUX(!2!2, current_length!4, current_length!2)
+    current_length!4 = 0  →  current_length!5 = MUX(!2!2, current_length!4, current_length!2)
+    current_length!5 = MUX(!2!2, current_length!4, current_length!2)  →  current_length!6 = MUX(s1!2, current_length!3, current_length!5)
+    current_length!3 = (current_length!2 + 1)  →  current_length!6 = MUX(s1!2, current_length!3, current_length!5)
+    current_length!6 = MUX(s1!2, current_length!3, current_length!5)  →  !4!2 = (current_length!6 % 2)
+    current_length!6 = MUX(s1!2, current_length!3, current_length!5)  →  !6!2 = (current_length!6 > max_length!2)
+    current_length!6 = MUX(s1!2, current_length!3, current_length!5)  →  max_length!3 = current_length!6
+    !4!2 = (current_length!6 % 2)  →  !5!2 = (!4!2 == 1)
+    !5!2 = (!4!2 == 1)  →  !7!2 = (!5!2 and !6!2)
+    !6!2 = (current_length!6 > max_length!2)  →  !7!2 = (!5!2 and !6!2)
+    !7!2 = (!5!2 and !6!2)  →  max_length!4 = MUX(!7!2, max_length!3, max_length!2)
+    max_length!3 = current_length!6  →  max_length!4 = MUX(!7!2, max_length!3, max_length!2)
 Back edges:
-    current_length₆ = MUX(s1₂, current_length₃, current_length₅)  →  current_length₂ = Φ(current_length₁, current_length₆)
-    max_length₄ = MUX(!7₂, max_length₃, max_length₂)  →  max_length₂ = Φ(max_length₁, max_length₄)
-    s2₃ = (Seq₀[i] == Syms₀[0])  →  s2₂ = Φ(s2₁, s2₃)
+    current_length!6 = MUX(s1!2, current_length!3, current_length!5)  →  current_length!2 = Φ(current_length!1, current_length!6)
+    max_length!4 = MUX(!7!2, max_length!3, max_length!2)  →  max_length!2 = Φ(max_length!1, max_length!4)
+    s2!3 = (Seq!0[i] == Syms!0[0])  →  s2!2 = Φ(s2!1, s2!3)

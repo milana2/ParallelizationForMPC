@@ -1,14 +1,14 @@
 def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
-    max_length₁ = 0
-    length₁ = 0
-    for i in range(1, N₀):
-        max_length₂ = Φ(max_length₁, max_length₄)
-        length₂ = Φ(length₁, length₅)
-        !1₂ = (Seq₀[i] == Sym₀)
-        length₄ = 0
-        length₃ = (length₂ + 1)
-        length₅ = MUX(!1₂, length₃, length₄)
-        !2₂ = (length₅ > max_length₂)
-        max_length₃ = length₅
-        max_length₄ = MUX(!2₂, max_length₃, max_length₂)
-    return max_length₂
+    max_length!1 = 0
+    length!1 = 0
+    for i in range(1, N!0):
+        max_length!2 = Φ(max_length!1, max_length!4)
+        length!2 = Φ(length!1, length!5)
+        !1!2 = (Seq!0[i] == Sym!0)
+        length!4 = 0
+        length!3 = (length!2 + 1)
+        length!5 = MUX(!1!2, length!3, length!4)
+        !2!2 = (length!5 > max_length!2)
+        max_length!3 = length!5
+        max_length!4 = MUX(!2!2, max_length!3, max_length!2)
+    return max_length!2

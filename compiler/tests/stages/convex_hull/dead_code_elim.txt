@@ -2,65 +2,65 @@ Function convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N
 Entry block: 0
 Exit block: 3
 Block 0:
-    hull_X₁ = []
-    hull_Y₁ = []
+    hull_X!1 = []
+    hull_Y!1 = []
     jump
 Block 1:
-    hull_X₂ = Φ(hull_X₁, hull_X₄)
-    hull_Y₂ = Φ(hull_Y₁, hull_Y₄)
-    for i: plaintext[int] in range(0, N₀)
+    hull_X!2 = Φ(hull_X!1, hull_X!4)
+    hull_Y!2 = Φ(hull_Y!1, hull_Y!4)
+    for i: plaintext[int] in range(0, N!0)
 Block 2:
-    is_hull₂ = True
-    p1_X₂ = X_coords₀[i]
-    p1_Y₂ = Y_coords₀[i]
-    !1₂ = (p1_X₂ <= 0)
-    !2₂ = (p1_Y₂ >= 0)
-    !3₂ = (!1₂ and !2₂)
-    conditional jump !3₂
+    is_hull!2 = True
+    p1_X!2 = X_coords!0[i]
+    p1_Y!2 = Y_coords!0[i]
+    !1!2 = (p1_X!2 <= 0)
+    !2!2 = (p1_Y!2 >= 0)
+    !3!2 = (!1!2 and !2!2)
+    conditional jump !3!2
 Block 3:
-    !12₁ = (hull_X₂, hull_Y₂)
-    return !12₁
+    !12!1 = (hull_X!2, hull_Y!2)
+    return !12!1
 Block 4:
     jump
 Block 5:
     jump
 Block 6:
-    (merge from conditional jump !3₂)
-    is_hull₆ = MUX(!3₂, is_hull₂, is_hull₃)
-    conditional jump is_hull₆
+    (merge from conditional jump !3!2)
+    is_hull!6 = MUX(!3!2, is_hull!2, is_hull!3)
+    conditional jump is_hull!6
 Block 7:
-    is_hull₃ = Φ(is_hull₂, is_hull₅)
-    for j: plaintext[int] in range(0, N₀)
+    is_hull!3 = Φ(is_hull!2, is_hull!5)
+    for j: plaintext[int] in range(0, N!0)
 Block 8:
-    p2_X₃ = X_coords₀[j]
-    p2_Y₃ = Y_coords₀[j]
-    !6₃ = (p1_X₂ <= p2_X₃)
-    !7₃ = (p1_Y₂ >= p2_Y₃)
-    !8₃ = (!6₃ or !7₃)
-    !9₃ = not !8₃
-    conditional jump !9₃
+    p2_X!3 = X_coords!0[j]
+    p2_Y!3 = Y_coords!0[j]
+    !6!3 = (p1_X!2 <= p2_X!3)
+    !7!3 = (p1_Y!2 >= p2_Y!3)
+    !8!3 = (!6!3 or !7!3)
+    !9!3 = not !8!3
+    conditional jump !9!3
 Block 9:
     jump
 Block 10:
-    is_hull₄ = False
+    is_hull!4 = False
     jump
 Block 11:
     jump
 Block 12:
-    (merge from conditional jump !9₃)
-    is_hull₅ = MUX(!9₃, is_hull₄, is_hull₃)
+    (merge from conditional jump !9!3)
+    is_hull!5 = MUX(!9!3, is_hull!4, is_hull!3)
     jump
 Block 13:
-    !10₂ = [p1_X₂]
-    hull_X₃ = (hull_X₂ + !10₂)
-    !11₂ = [p1_Y₂]
-    hull_Y₃ = (hull_Y₂ + !11₂)
+    !10!2 = [p1_X!2]
+    hull_X!3 = (hull_X!2 + !10!2)
+    !11!2 = [p1_Y!2]
+    hull_Y!3 = (hull_Y!2 + !11!2)
     jump
 Block 14:
     jump
 Block 15:
-    (merge from conditional jump is_hull₆)
-    hull_X₄ = MUX(is_hull₆, hull_X₃, hull_X₂)
-    hull_Y₄ = MUX(is_hull₆, hull_Y₃, hull_Y₂)
+    (merge from conditional jump is_hull!6)
+    hull_X!4 = MUX(is_hull!6, hull_X!3, hull_X!2)
+    hull_Y!4 = MUX(is_hull!6, hull_Y!3, hull_Y!2)
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 5, F) (2, 4, T) (4, 7, *) (5, 6, *) (6, 14, F) (6, 13, T) (7, 9, F) (7, 8, T) (8, 11, F) (8, 10, T) (9, 6, *) (10, 12, *) (11, 12, *) (12, 7, *) (13, 15, *) (14, 15, *) (15, 1, *)

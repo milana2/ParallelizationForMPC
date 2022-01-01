@@ -2,53 +2,53 @@ Function longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[i
 Entry block: 0
 Exit block: 3
 Block 0:
-    current_length₁ = 0
-    max_length₁ = 0
+    current_length!1 = 0
+    max_length!1 = 0
     jump
 Block 1:
-    current_length₂ = Φ(current_length₁, current_length₅)
-    max_length₂ = Φ(max_length₁, max_length₄)
-    !1₁ = Φ(!1₀, !1₂)
-    tmp_max_len₁ = Φ(tmp_max_len₀, tmp_max_len₄)
-    !2₁ = Φ(!2₀, !2₂)
-    !3₁ = Φ(!3₀, !3₂)
-    !4₁ = Φ(!4₀, !4₂)
-    for i: plaintext[int] in range(1, N₀)
+    current_length!2 = Φ(current_length!1, current_length!5)
+    max_length!2 = Φ(max_length!1, max_length!4)
+    !1!1 = Φ(!1!0, !1!2)
+    tmp_max_len!1 = Φ(tmp_max_len!0, tmp_max_len!4)
+    !2!1 = Φ(!2!0, !2!2)
+    !3!1 = Φ(!3!0, !3!2)
+    !4!1 = Φ(!4!0, !4!2)
+    for i: plaintext[int] in range(1, N!0)
 Block 2:
-    !1₂ = (Seq₀[i] == Sym₀)
-    conditional jump !1₂
+    !1!2 = (Seq!0[i] == Sym!0)
+    conditional jump !1!2
 Block 3:
-    return max_length₂
+    return max_length!2
 Block 4:
-    current_length₃ = (current_length₂ + 1)
+    current_length!3 = (current_length!2 + 1)
     jump
 Block 5:
-    current_length₄ = 0
+    current_length!4 = 0
     jump
 Block 6:
-    (merge from conditional jump !1₂)
-    current_length₅ = MUX(!1₂, current_length₃, current_length₄)
-    tmp_max_len₂ = max_length₂
-    !2₂ = (current_length₅ > max_length₂)
-    conditional jump !2₂
+    (merge from conditional jump !1!2)
+    current_length!5 = MUX(!1!2, current_length!3, current_length!4)
+    tmp_max_len!2 = max_length!2
+    !2!2 = (current_length!5 > max_length!2)
+    conditional jump !2!2
 Block 7:
-    tmp_max_len₃ = current_length₅
+    tmp_max_len!3 = current_length!5
     jump
 Block 8:
     jump
 Block 9:
-    (merge from conditional jump !2₂)
-    tmp_max_len₄ = MUX(!2₂, tmp_max_len₃, tmp_max_len₂)
-    !3₂ = (tmp_max_len₄ % 2)
-    !4₂ = (!3₂ == 0)
-    conditional jump !4₂
+    (merge from conditional jump !2!2)
+    tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
+    !3!2 = (tmp_max_len!4 % 2)
+    !4!2 = (!3!2 == 0)
+    conditional jump !4!2
 Block 10:
-    max_length₃ = tmp_max_len₄
+    max_length!3 = tmp_max_len!4
     jump
 Block 11:
     jump
 Block 12:
-    (merge from conditional jump !4₂)
-    max_length₄ = MUX(!4₂, max_length₃, max_length₂)
+    (merge from conditional jump !4!2)
+    max_length!4 = MUX(!4!2, max_length!3, max_length!2)
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 5, F) (2, 4, T) (4, 6, *) (5, 6, *) (6, 8, F) (6, 7, T) (7, 9, *) (8, 9, *) (9, 11, F) (9, 10, T) (10, 12, *) (11, 12, *) (12, 1, *)

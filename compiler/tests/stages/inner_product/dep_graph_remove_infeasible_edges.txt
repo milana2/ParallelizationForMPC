@@ -1,11 +1,11 @@
 Nodes:
-    sum₁ = 0
-    sum₂ = Φ(sum₁, sum₃)
-    temp₂ = (A₀[i] * B₀[i])
-    sum₃ = (sum₂ + temp₂)
+    sum!1 = 0
+    sum!2 = Φ(sum!1, sum!3)
+    temp!2 = (A!0[i] * B!0[i])
+    sum!3 = (sum!2 + temp!2)
 Forward edges:
-    sum₁ = 0  →  sum₂ = Φ(sum₁, sum₃)
-    sum₂ = Φ(sum₁, sum₃)  →  sum₃ = (sum₂ + temp₂)
-    temp₂ = (A₀[i] * B₀[i])  →  sum₃ = (sum₂ + temp₂)
+    sum!1 = 0  →  sum!2 = Φ(sum!1, sum!3)
+    sum!2 = Φ(sum!1, sum!3)  →  sum!3 = (sum!2 + temp!2)
+    temp!2 = (A!0[i] * B!0[i])  →  sum!3 = (sum!2 + temp!2)
 Back edges:
-    sum₃ = (sum₂ + temp₂)  →  sum₂ = Φ(sum₁, sum₃)
+    sum!3 = (sum!2 + temp!2)  →  sum!2 = Φ(sum!1, sum!3)

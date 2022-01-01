@@ -1,7 +1,7 @@
 def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
-    sum₁ = 0
-    for i in range(0, N₀):
-        sum₂ = Φ(sum₁, sum₃)
-        temp₂ = (A₀[i] * B₀[i])
-        sum₃ = (sum₂ + temp₂)
-    return sum₂
+    sum!1 = 0
+    for i in range(0, N!0):
+        sum!2 = Φ(sum!1, sum!3)
+        temp!2 = (A!0[i] * B!0[i])
+        sum!3 = (sum!2 + temp!2)
+    return sum!2

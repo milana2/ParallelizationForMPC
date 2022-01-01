@@ -1,30 +1,30 @@
 Nodes:
-    dummy₁ = 0
-    result₁ = []
-    result₂ = Φ(result₁, result₃)
-    flag₂ = False
-    flag₃ = Φ(flag₂, flag₅)
-    !1₃ = (A₀[i] == B₀[j])
-    flag₄ = True
-    flag₅ = MUX(!1₃, flag₄, flag₃)
-    val₂ = dummy₁
-    val₃ = A₀[i]
-    val₄ = MUX(flag₃, val₃, val₂)
-    !2₂ = [val₄]
-    result₃ = (result₂ + !2₂)
+    dummy!1 = 0
+    result!1 = []
+    result!2 = Φ(result!1, result!3)
+    flag!2 = False
+    flag!3 = Φ(flag!2, flag!5)
+    !1!3 = (A!0[i] == B!0[j])
+    flag!4 = True
+    flag!5 = MUX(!1!3, flag!4, flag!3)
+    val!2 = dummy!1
+    val!3 = A!0[i]
+    val!4 = MUX(flag!3, val!3, val!2)
+    !2!2 = [val!4]
+    result!3 = (result!2 + !2!2)
 Forward edges:
-    dummy₁ = 0  →  val₂ = dummy₁
-    result₁ = []  →  result₂ = Φ(result₁, result₃)
-    result₂ = Φ(result₁, result₃)  →  result₃ = (result₂ + !2₂)
-    flag₂ = False  →  flag₃ = Φ(flag₂, flag₅)
-    flag₃ = Φ(flag₂, flag₅)  →  flag₅ = MUX(!1₃, flag₄, flag₃)
-    flag₃ = Φ(flag₂, flag₅)  →  val₄ = MUX(flag₃, val₃, val₂)
-    !1₃ = (A₀[i] == B₀[j])  →  flag₅ = MUX(!1₃, flag₄, flag₃)
-    flag₄ = True  →  flag₅ = MUX(!1₃, flag₄, flag₃)
-    val₂ = dummy₁  →  val₄ = MUX(flag₃, val₃, val₂)
-    val₃ = A₀[i]  →  val₄ = MUX(flag₃, val₃, val₂)
-    val₄ = MUX(flag₃, val₃, val₂)  →  !2₂ = [val₄]
-    !2₂ = [val₄]  →  result₃ = (result₂ + !2₂)
+    dummy!1 = 0  →  val!2 = dummy!1
+    result!1 = []  →  result!2 = Φ(result!1, result!3)
+    result!2 = Φ(result!1, result!3)  →  result!3 = (result!2 + !2!2)
+    flag!2 = False  →  flag!3 = Φ(flag!2, flag!5)
+    flag!3 = Φ(flag!2, flag!5)  →  flag!5 = MUX(!1!3, flag!4, flag!3)
+    flag!3 = Φ(flag!2, flag!5)  →  val!4 = MUX(flag!3, val!3, val!2)
+    !1!3 = (A!0[i] == B!0[j])  →  flag!5 = MUX(!1!3, flag!4, flag!3)
+    flag!4 = True  →  flag!5 = MUX(!1!3, flag!4, flag!3)
+    val!2 = dummy!1  →  val!4 = MUX(flag!3, val!3, val!2)
+    val!3 = A!0[i]  →  val!4 = MUX(flag!3, val!3, val!2)
+    val!4 = MUX(flag!3, val!3, val!2)  →  !2!2 = [val!4]
+    !2!2 = [val!4]  →  result!3 = (result!2 + !2!2)
 Back edges:
-    flag₅ = MUX(!1₃, flag₄, flag₃)  →  flag₃ = Φ(flag₂, flag₅)
-    result₃ = (result₂ + !2₂)  →  result₂ = Φ(result₁, result₃)
+    flag!5 = MUX(!1!3, flag!4, flag!3)  →  flag!3 = Φ(flag!2, flag!5)
+    result!3 = (result!2 + !2!2)  →  result!2 = Φ(result!1, result!3)
