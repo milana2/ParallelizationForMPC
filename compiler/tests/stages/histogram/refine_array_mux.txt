@@ -1,0 +1,15 @@
+def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
+    result!1 = []
+    for i in range(0, num_bins!0):
+        result!2 = Φ(result!1, result!3)
+        !1!2 = [0]
+        result!3 = (result!2 + !1!2)
+    for i in range(0, num_bins!0):
+        result!4 = Φ(result!2, result!5)
+        for j in range(0, N!0):
+            result!5 = Φ(result!4, result!7)
+            !2!3 = (A!0[j] == i)
+            !3!3 = (result!5[i] + B!0[j])
+            result!6 = Update(result!5, i, !3!3)
+            result!7 = MUX(!2!3, result!6, result!5)
+    return result!4

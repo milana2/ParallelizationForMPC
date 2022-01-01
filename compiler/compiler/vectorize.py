@@ -3,7 +3,7 @@ from .dep_graph import DepGraph, PhiOrAssign
 from .util import assert_never
 
 from dataclasses import dataclass
-from typing import Union
+from typing import Iterable, Union, Optional
 
 import z3  # type: ignore
 
@@ -12,6 +12,12 @@ import z3  # type: ignore
 class ArrayRead:
     subscript: llc.Subscript
     parent_loops: list[llc.For]
+
+
+def _new_temp_var(dep_graph: DepGraph):
+    nodes: Iterable[PhiOrAssign] = dep_graph.def_use_graph.nodes
+    number = max([0 if isinstance(a.lhs.name, str) else a.lhs.name for a in nodes]) + 1
+    return llc.Var(number, 0)
 
 
 def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
@@ -229,3 +235,88 @@ def _prune_edges_from_statement(
 def remove_infeasible_edges(function: llc.Function, dep_graph: DepGraph) -> None:
     for statement in function.body:
         _prune_edges_from_statement([], statement, dep_graph)
+
+
+def _find_update(
+    A: llc.Var, A_use: llc.Assign, dep_graph: DepGraph
+) -> Optional[llc.SubscriptIndex]:
+    A_def: PhiOrAssign
+    [A_def] = [
+        A_def for A_def in dep_graph.def_use_graph.predecessors(A_use) if A_def.lhs == A
+    ]
+    return A_def.rhs.index if isinstance(A_def.rhs, llc.Update) else None
+
+
+def _refine_array_mux_statement(
+    statement: llc.Statement, dep_graph: DepGraph
+) -> list[llc.Statement]:
+    if isinstance(statement, llc.Assign) and isinstance(statement.rhs, llc.Mux):
+        Aj = statement.lhs
+        mux = statement.rhs
+        c = mux.condition
+        Ak = mux.false_value
+        Al = mux.true_value
+        if (
+            isinstance(Aj, llc.Var)
+            and isinstance(Ak, llc.Var)
+            and isinstance(Al, llc.Var)
+        ):
+            i1 = _find_update(Ak, statement, dep_graph)
+            i2 = _find_update(Al, statement, dep_graph)
+            if i1 == i2 and i1 is not None and i2 is not None:
+                name = Aj.name
+                assert Aj.name == Ak.name == Al.name
+                k = Ak.rename_subscript
+                l = Al.rename_subscript
+                assert k is not None
+                assert l is not None
+                Ak_i1 = llc.Subscript(Ak, i1)
+                Al_i1 = llc.Subscript(Al, i1)
+                temp = _new_temp_var(dep_graph)
+                return [
+                    llc.Assign(
+                        lhs=temp,
+                        rhs=llc.Mux(c, Ak_i1, Al_i1),
+                    ),
+                    llc.Assign(
+                        lhs=Aj, rhs=llc.Update(llc.Var(f"{name}!{max(k,l)}"), i1, temp)
+                    ),
+                ]
+            else:
+                return [statement]
+        else:
+            return [statement]
+    elif isinstance(statement, llc.For):
+        return [
+            llc.For(
+                counter=statement.counter,
+                bound_low=statement.bound_low,
+                bound_high=statement.bound_high,
+                body=_refine_array_mux_statements(statement.body, dep_graph),
+            )
+        ]
+    else:
+        return [statement]
+
+
+def _refine_array_mux_statements(
+    stmts: list[llc.Statement], dep_graph: DepGraph
+) -> list[llc.Statement]:
+    return [
+        rstmt
+        for stmt in stmts
+        for rstmt in _refine_array_mux_statement(stmt, dep_graph)
+    ]
+
+
+def refine_array_mux(
+    function: llc.Function, dep_graph: DepGraph
+) -> tuple[llc.Function, DepGraph]:
+    function = llc.Function(
+        name=function.name,
+        parameters=function.parameters,
+        body=_refine_array_mux_statements(function.body, dep_graph),
+        return_value=function.return_value,
+    )
+    dep_graph = DepGraph(function)
+    return (function, dep_graph)

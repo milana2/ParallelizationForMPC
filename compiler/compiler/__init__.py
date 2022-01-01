@@ -72,6 +72,14 @@ def main():
     print(dep_graph)
     print()
 
+    (linear, dep_graph) = vectorize.refine_array_mux(linear, dep_graph)
+    print("Array MUX refinement:")
+    print(linear)
+    print()
+    print("Array MUX refinement (dependence graph):")
+    print(dep_graph)
+    print()
+
     type_env = type_check(linear, dep_graph)
     print("Type environment:")
     print(type_env)

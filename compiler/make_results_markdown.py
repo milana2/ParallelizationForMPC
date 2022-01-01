@@ -159,6 +159,17 @@ def main():
         md += "### Removal of infeasible edges\n"
         md += f"![]({filename})\n"
 
+        (loop_linear_code, dep_graph) = compiler.vectorize.refine_array_mux(
+            loop_linear_code, dep_graph
+        )
+        md += "### Array MUX refinement\n"
+        md += f"```python\n{loop_linear_code}\n```\n"
+        filename = f"{test_case_dir.name}_array_mux_refinement_dep_graph.png"
+        path = os.path.join(args.path, filename)
+        dep_graph_to_image(dep_graph, loop_linear_code, path)
+        md += "### Array MUX refinement (dependence graph)\n"
+        md += f"![]({filename})\n"
+
         type_env = compiler.type_check(loop_linear_code, dep_graph)
         md += "### Type environment\n"
         md += f"{type_env_to_table(type_env)}\n"

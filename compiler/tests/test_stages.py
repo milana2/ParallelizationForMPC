@@ -48,6 +48,12 @@ class StagesTestCase(unittest.TestCase):
                 str(dep_graph), stages["dep_graph_remove_infeasible_edges.txt"]
             )
 
+            (loop_linear, dep_graph) = compiler.vectorize.refine_array_mux(
+                loop_linear, dep_graph
+            )
+            self.assertEqual(str(loop_linear), stages["refine_array_mux.txt"])
+            self.assertEqual(str(dep_graph), stages["refine_array_mux_dep_graph.txt"])
+
             type_env = compiler.type_check(loop_linear, dep_graph)
             self.assertEqual(str(type_env), stages["type_env.txt"])
 
@@ -90,6 +96,16 @@ def regenerate_stages():
         compiler.vectorize.remove_infeasible_edges(loop_linear, dep_graph)
         with open(
             os.path.join(test_case_dir, "dep_graph_remove_infeasible_edges.txt"), "w"
+        ) as f:
+            f.write(f"{dep_graph}\n")
+
+        (loop_linear, dep_graph) = compiler.vectorize.refine_array_mux(
+            loop_linear, dep_graph
+        )
+        with open(os.path.join(test_case_dir, "refine_array_mux.txt"), "w") as f:
+            f.write(f"{loop_linear}\n")
+        with open(
+            os.path.join(test_case_dir, "refine_array_mux_dep_graph.txt"), "w"
         ) as f:
             f.write(f"{dep_graph}\n")
 
