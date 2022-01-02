@@ -548,6 +548,8 @@ $\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel
 \STATE {FOR i=0; i<N; i++} \COMMENT{ Turns into a MOTION loop, was $i$-loop.}
 \STATE \hspace{0.25cm}{$\texttt{index}_1[{i}] = \mathit{MUX}(\texttt{c}[{i}],\texttt{index}_0[{i}],i)$}
 
+\ben{The above code implicitly stores the final values of min\_0 and index\_0 in their last indices, but there is no primitive like drop\_dim to make it clear.  This will have to be added in the SSA code generation (though it might not be necessary to include in the paper?).  It also is pretty wishy-washy about the size and layout of each vector (again more of an implementation issue), but maybe we should have a different syntax for array accesses for read/write (e.g. the ADD\_SIMD steps) vs the array definitions (e.g. the SUB\_SIMD and raise/drop\_dim statements)}
+
 \end{algorithmic}
 
 \subsection{Correctness Argument}
