@@ -120,6 +120,66 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 | `sum!2` | `plaintext[int]` |
 | `min_index!1` | `plaintext[int]` |
 | `min_sum!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void biometric(
+    std::vector<encrypto::motion::SecureUnsignedInteger> C,
+    int D,
+    std::vector<encrypto::motion::SecureUnsignedInteger> S,
+    int N
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_0;
+    int D_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> S_0;
+    int N_0;
+    int i;
+    int j;
+    int min_index_3;
+    encrypto::motion::SecureUnsignedInteger min_index_4;
+    encrypto::motion::SecureUnsignedInteger d_3;
+    encrypto::motion::SecureUnsignedInteger p_3;
+    encrypto::motion::SecureUnsignedInteger sum_4;
+    int sum_2;
+    int min_index_1;
+    int min_sum_1;
+
+    // Function body
+    min_sum_1 = 10000;
+    min_index_1 = (- 1);
+
+    // Initialize phi values
+    min_sum_2 = min_sum_1;
+    min_index_2 = min_index_1;
+    for (i = 0; i < N_0; i++) {
+        sum_2 = 0;
+
+        // Initialize phi values
+        sum_3 = sum_2;
+        for (j = 0; j < D_0; j++) {
+            d_3 = (S_0[((i * D_0) + j)] - C_0[j]);
+            p_3 = (d_3 * d_3);
+            sum_4 = (sum_3 + p_3);
+
+            // Update phi values
+            sum_3 = sum_4;
+        }
+
+        _1_2 = (sum_3 < min_sum_2);
+        min_sum_3 = sum_3;
+        min_index_3 = i;
+        min_sum_4 = _1_2.Mux(min_sum_2, min_sum_3);
+        min_index_4 = _1_2.Mux(min_index_2, min_index_3);
+
+        // Update phi values
+        min_sum_2 = min_sum_4;
+        min_index_2 = min_index_4;
+    }
+
+    _2_1 = {min_sum_2, min_index_2};
+    return _2_1;
+}
+```
 ## `biometric_fast`
 ### Input
 ```python
@@ -328,6 +388,108 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 | `min_diff!2` | `shared[int]` |
 | `!1!2` | `plaintext[list[int]]` |
 | `differences!1` | `plaintext[list[int]]` |
+### Motion code
+```cpp
+void biometric_matching_fast(
+    int D,
+    int N,
+    std::vector<encrypto::motion::SecureUnsignedInteger> C,
+    encrypto::motion::SecureUnsignedInteger C_sqr_sum,
+    std::vector<encrypto::motion::SecureUnsignedInteger> two_C,
+    std::vector<encrypto::motion::SecureUnsignedInteger> S,
+    std::vector<encrypto::motion::SecureUnsignedInteger> S_sqr_sum
+) {
+    // Initial variable declarations
+    int D_0;
+    int N_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_0;
+    encrypto::motion::SecureUnsignedInteger C_sqr_sum_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> two_C_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> S_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> S_sqr_sum_0;
+    int i;
+    int j;
+    int k;
+    int min_index_4;
+    encrypto::motion::SecureUnsignedInteger min_index_5;
+    int min_index_2;
+    encrypto::motion::SecureUnsignedInteger tmp_3;
+    encrypto::motion::SecureUnsignedInteger two_a_b_4;
+    int two_a_b_2;
+    encrypto::motion::SecureUnsignedInteger a_sqr_plus_b_sqr_2;
+    encrypto::motion::SecureUnsignedInteger this_diff_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> differences_5;
+    encrypto::motion::SecureUnsignedInteger min_diff_4;
+    encrypto::motion::SecureUnsignedInteger min_diff_5;
+    encrypto::motion::SecureUnsignedInteger _3_3;
+    encrypto::motion::SecureUnsignedInteger min_diff_2;
+    std::vector<int> _1_2;
+    std::vector<int> differences_1;
+
+    // Function body
+    differences_1 = {};
+
+    // Initialize phi values
+    differences_2 = differences_1;
+    for (i = 0; i < D_0; i++) {
+        _1_2 = {0};
+        _2_2 = (differences_2 + _1_2);
+        differences!2[i] = _2_2; differences_3 = differences_2;
+
+        // Update phi values
+        differences_2 = differences_3;
+    }
+
+
+    // Initialize phi values
+    differences_4 = differences_2;
+    min_diff_1 = min_diff_0;
+    min_index_1 = min_index_0;
+    for (i = 0; i < N_0; i++) {
+        a_sqr_plus_b_sqr_2 = (S_sqr_sum_0[i] + C_sqr_sum_0);
+        two_a_b_2 = 0;
+
+        // Initialize phi values
+        two_a_b_3 = two_a_b_2;
+        for (j = 0; j < D_0; j++) {
+            tmp_3 = (S_0[((i * D_0) + j)] * two_C_0[j]);
+            two_a_b_4 = (two_a_b_3 + tmp_3);
+
+            // Update phi values
+            two_a_b_3 = two_a_b_4;
+        }
+
+        this_diff_2 = (a_sqr_plus_b_sqr_2 - two_a_b_3);
+        differences!4[i] = this_diff_2; differences_5 = differences_4;
+        min_diff_2 = differences_5[0];
+        min_index_2 = 0;
+
+        // Initialize phi values
+        min_diff_3 = min_diff_2;
+        min_index_3 = min_index_2;
+        for (k = 0; k < N_0; k++) {
+            _3_3 = (differences_5[k] < min_diff_3);
+            min_diff_4 = differences_5[k];
+            min_index_4 = k;
+            min_diff_5 = _3_3.Mux(min_diff_3, min_diff_4);
+            min_index_5 = _3_3.Mux(min_index_3, min_index_4);
+
+            // Update phi values
+            min_diff_3 = min_diff_5;
+            min_index_3 = min_index_5;
+        }
+
+
+        // Update phi values
+        differences_4 = differences_5;
+        min_diff_1 = min_diff_3;
+        min_index_1 = min_index_3;
+    }
+
+    _4_1 = {min_diff_1, min_index_1};
+    return _4_1;
+}
+```
 ## `chapterfour_figure_12`
 ### Input
 ```python
@@ -402,6 +564,34 @@ def foo(x: plaintext[int], y: plaintext[int]):
 | `!2!1` | `plaintext[int]` |
 | `!1!1` | `plaintext[int]` |
 | `z!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void foo(
+    int x,
+    int y
+) {
+    // Initial variable declarations
+    int x_0;
+    int y_0;
+    int z_2;
+    encrypto::motion::SecureUnsignedInteger z_4;
+    encrypto::motion::SecureUnsignedInteger z_5;
+    int z_3;
+    int _2_1;
+    int _1_1;
+    int z_1;
+
+    // Function body
+    z_1 = 0;
+    _1_1 = (x_0 > 0);
+    _2_1 = (y_0 > 0);
+    z_3 = (- 1);
+    z_2 = 1;
+    z_4 = _2_1.Mux(z_3, z_2);
+    z_5 = _1_1.Mux(z_4, z_1);
+    return z_5;
+}
+```
 ## `convex_hull`
 ### Input
 ```python
@@ -562,6 +752,91 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 | `is_hull!6` | `shared[int]` |
 | `hull_Y!1` | `plaintext[list[int]]` |
 | `hull_X!1` | `plaintext[list[int]]` |
+### Motion code
+```cpp
+void convex_hull(
+    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords,
+    int N
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0;
+    int N_0;
+    int i;
+    int j;
+    int is_hull_4;
+    encrypto::motion::SecureUnsignedInteger is_hull_5;
+    encrypto::motion::SecureUnsignedInteger p2_Y_3;
+    encrypto::motion::SecureUnsignedInteger _7_3;
+    encrypto::motion::SecureUnsignedInteger _8_3;
+    encrypto::motion::SecureUnsignedInteger _9_3;
+    encrypto::motion::SecureUnsignedInteger p2_X_3;
+    encrypto::motion::SecureUnsignedInteger _6_3;
+    encrypto::motion::SecureUnsignedInteger p1_Y_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _11_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_4;
+    encrypto::motion::SecureUnsignedInteger _2_2;
+    encrypto::motion::SecureUnsignedInteger _3_2;
+    encrypto::motion::SecureUnsignedInteger p1_X_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _10_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_4;
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    int is_hull_2;
+    encrypto::motion::SecureUnsignedInteger is_hull_6;
+    std::vector<int> hull_Y_1;
+    std::vector<int> hull_X_1;
+
+    // Function body
+    hull_X_1 = {};
+    hull_Y_1 = {};
+
+    // Initialize phi values
+    hull_X_2 = hull_X_1;
+    hull_Y_2 = hull_Y_1;
+    for (i = 0; i < N_0; i++) {
+        is_hull_2 = True;
+        p1_X_2 = X_coords_0[i];
+        p1_Y_2 = Y_coords_0[i];
+        _1_2 = (p1_X_2 <= 0);
+        _2_2 = (p1_Y_2 >= 0);
+        _3_2 = (_1_2 and _2_2);
+
+        // Initialize phi values
+        is_hull_3 = is_hull_2;
+        for (j = 0; j < N_0; j++) {
+            p2_X_3 = X_coords_0[j];
+            p2_Y_3 = Y_coords_0[j];
+            _6_3 = (p1_X_2 <= p2_X_3);
+            _7_3 = (p1_Y_2 >= p2_Y_3);
+            _8_3 = (_6_3 or _7_3);
+            _9_3 = (not _8_3);
+            is_hull_4 = False;
+            is_hull_5 = _9_3.Mux(is_hull_3, is_hull_4);
+
+            // Update phi values
+            is_hull_3 = is_hull_5;
+        }
+
+        is_hull_6 = _3_2.Mux(is_hull_3, is_hull_2);
+        _10_2 = {p1_X_2};
+        hull_X_3 = (hull_X_2 + _10_2);
+        _11_2 = {p1_Y_2};
+        hull_Y_3 = (hull_Y_2 + _11_2);
+        hull_X_4 = is_hull_6.Mux(hull_X_2, hull_X_3);
+        hull_Y_4 = is_hull_6.Mux(hull_Y_2, hull_Y_3);
+
+        // Update phi values
+        hull_X_2 = hull_X_4;
+        hull_Y_2 = hull_Y_4;
+    }
+
+    _12_1 = {hull_X_2, hull_Y_2};
+    return _12_1;
+}
+```
 ## `count_102`
 ### Input
 ```python
@@ -663,6 +938,52 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `!2!2` | `shared[int]` |
 | `c!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void count_102(
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
+    int N,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
+    int N_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
+    int i;
+    encrypto::motion::SecureUnsignedInteger _5_2;
+    encrypto::motion::SecureUnsignedInteger _6_2;
+    encrypto::motion::SecureUnsignedInteger s0_3;
+    encrypto::motion::SecureUnsignedInteger _3_2;
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    encrypto::motion::SecureUnsignedInteger _2_2;
+    int c_1;
+    int s0_1;
+
+    // Function body
+    s0_1 = False;
+    c_1 = 0;
+
+    // Initialize phi values
+    s0_2 = s0_1;
+    c_2 = c_1;
+    for (i = 0; i < N_0; i++) {
+        _1_2 = (Seq_0[i] == Syms_0[2]);
+        _2_2 = (s0_2 and _1_2);
+        c_3 = (c_2 + 1);
+        c_4 = _2_2.Mux(c_2, c_3);
+        _3_2 = (Seq_0[i] == Syms_0[1]);
+        _5_2 = (Seq_0[i] == Syms_0[0]);
+        _6_2 = (s0_2 and _5_2);
+        s0_3 = (_3_2 or _6_2);
+
+        // Update phi values
+        s0_2 = s0_3;
+        c_2 = c_4;
+    }
+
+    return c_2;
+}
+```
 ## `count_10s`
 ### Input
 ```python
@@ -772,6 +1093,55 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `scount!1` | `plaintext[int]` |
 | `s1!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void count_10s(
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
+    int N,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
+    int N_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
+    int i;
+    encrypto::motion::SecureUnsignedInteger s0_3;
+    encrypto::motion::SecureUnsignedInteger _3_2;
+    encrypto::motion::SecureUnsignedInteger s1_3;
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    encrypto::motion::SecureUnsignedInteger _2_2;
+    int scount_1;
+    int s1_1;
+    int s0_1;
+
+    // Function body
+    s0_1 = False;
+    s1_1 = False;
+    scount_1 = 0;
+
+    // Initialize phi values
+    s0_2 = s0_1;
+    s1_2 = s1_1;
+    scount_2 = scount_1;
+    for (i = 0; i < N_0; i++) {
+        _1_2 = (Seq_0[i] != Syms_0[0]);
+        _2_2 = (s1_2 and _1_2);
+        scount_3 = (scount_2 + 1);
+        scount_4 = _2_2.Mux(scount_2, scount_3);
+        _3_2 = (Seq_0[i] == Syms_0[0]);
+        _4_2 = (s0_2 or s1_2);
+        s1_3 = (_3_2 and _4_2);
+        s0_3 = (Seq_0[i] == Syms_0[1]);
+
+        // Update phi values
+        s0_2 = s0_3;
+        s1_2 = s1_3;
+        scount_2 = scount_4;
+    }
+
+    return scount_2;
+}
+```
 ## `count_123`
 ### Input
 ```python
@@ -885,6 +1255,56 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `c!1` | `plaintext[int]` |
 | `s2!1` | `plaintext[int]` |
 | `s1!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void count_123(
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
+    int N,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
+    int N_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
+    int i;
+    encrypto::motion::SecureUnsignedInteger s1_3;
+    encrypto::motion::SecureUnsignedInteger _4_2;
+    encrypto::motion::SecureUnsignedInteger s2_3;
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    encrypto::motion::SecureUnsignedInteger _3_2;
+    int c_1;
+    int s2_1;
+    int s1_1;
+
+    // Function body
+    s1_1 = False;
+    s2_1 = False;
+    c_1 = 0;
+
+    // Initialize phi values
+    s1_2 = s1_1;
+    s2_2 = s2_1;
+    c_2 = c_1;
+    for (i = 0; i < N_0; i++) {
+        _1_2 = (Seq_0[i] == Syms_0[3]);
+        _2_2 = (s2_2 or s1_2);
+        _3_2 = (_1_2 and _2_2);
+        c_3 = (c_2 + 1);
+        c_4 = _3_2.Mux(c_2, c_3);
+        _4_2 = (Seq_0[i] == Syms_0[2]);
+        _5_2 = (s1_2 or s2_2);
+        s2_3 = (_4_2 and _5_2);
+        s1_3 = (Seq_0[i] == Syms_0[1]);
+
+        // Update phi values
+        s1_2 = s1_3;
+        s2_2 = s2_3;
+        c_2 = c_4;
+    }
+
+    return c_2;
+}
+```
 ## `histogram`
 ### Input
 ```python
@@ -1000,6 +1420,66 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 | `!2!3` | `shared[int]` |
 | `!1!2` | `plaintext[list[int]]` |
 | `result!1` | `plaintext[list[int]]` |
+### Motion code
+```cpp
+void histogram(
+    std::vector<encrypto::motion::SecureUnsignedInteger> A,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B,
+    int N,
+    int num_bins
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
+    int N_0;
+    int num_bins_0;
+    int i;
+    int j;
+    encrypto::motion::SecureUnsignedInteger _3_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_6;
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_7;
+    encrypto::motion::SecureUnsignedInteger _2_3;
+    std::vector<int> _1_2;
+    std::vector<int> result_1;
+
+    // Function body
+    result_1 = {};
+
+    // Initialize phi values
+    result_2 = result_1;
+    for (i = 0; i < num_bins_0; i++) {
+        _1_2 = {0};
+        result_3 = (result_2 + _1_2);
+
+        // Update phi values
+        result_2 = result_3;
+    }
+
+
+    // Initialize phi values
+    result_4 = result_2;
+    for (i = 0; i < num_bins_0; i++) {
+
+        // Initialize phi values
+        result_5 = result_4;
+        for (j = 0; j < N_0; j++) {
+            _2_3 = (A_0[j] == i);
+            _3_3 = (result_5[i] + B_0[j]);
+            result!5[i] = _3_3; result_6 = result_5;
+            result_7 = _2_3.Mux(result_5, result_6);
+
+            // Update phi values
+            result_5 = result_7;
+        }
+
+
+        // Update phi values
+        result_4 = result_5;
+    }
+
+    return result_4;
+}
+```
 ## `infeasible_edges_example`
 ### Input
 ```python
@@ -1083,6 +1563,51 @@ def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[in
 | `D!0` | `plaintext[int]` |
 | `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
+### Motion code
+```cpp
+void foo(
+    int A,
+    int B,
+    int C,
+    int D,
+    int N
+) {
+    // Initial variable declarations
+    int A_0;
+    int B_0;
+    int C_0;
+    int D_0;
+    int N_0;
+    int i;
+
+    // Function body
+
+    // Initialize phi values
+    A_1 = A_0;
+    B_1 = B_0;
+    C_1 = C_0;
+    D_1 = D_0;
+    for (i = 0; i < N_0; i++) {
+        _1_2 = (B_1[i] + 10);
+        A!1[i] = _1_2; A_2 = A_1;
+        _2_2 = (A_2[i] * D_1[(i - 1)]);
+        B!1[i] = _2_2; B_2 = B_1;
+        _3_2 = (A_2[i] * D_1[(i - 1)]);
+        C!1[i] = _3_2; C_2 = C_1;
+        _4_2 = (B_2[i] * C_2[i]);
+        D!1[i] = _4_2; D_2 = D_1;
+
+        // Update phi values
+        A_1 = A_2;
+        B_1 = B_2;
+        C_1 = C_2;
+        D_1 = D_2;
+    }
+
+    _5_1 = {A_1, B_1, C_1, D_1};
+    return _5_1;
+}
+```
 ## `inner_product`
 ### Input
 ```python
@@ -1154,6 +1679,38 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
 | `temp!2` | `shared[int]` |
 | `sum!3` | `shared[int]` |
 | `sum!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void ip(
+    std::vector<encrypto::motion::SecureUnsignedInteger> A,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B,
+    int N
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
+    int N_0;
+    int i;
+    encrypto::motion::SecureUnsignedInteger temp_2;
+    encrypto::motion::SecureUnsignedInteger sum_3;
+    int sum_1;
+
+    // Function body
+    sum_1 = 0;
+
+    // Initialize phi values
+    sum_2 = sum_1;
+    for (i = 0; i < N_0; i++) {
+        temp_2 = (A_0[i] * B_0[i]);
+        sum_3 = (sum_2 + temp_2);
+
+        // Update phi values
+        sum_2 = sum_3;
+    }
+
+    return sum_2;
+}
+```
 ## `longest_102`
 ### Input
 ```python
@@ -1293,6 +1850,69 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 | `length!1` | `plaintext[int]` |
 | `max_len!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void longest_102(
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
+    int N,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
+    int N_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
+    int i;
+    int length_4;
+    encrypto::motion::SecureUnsignedInteger length_5;
+    encrypto::motion::SecureUnsignedInteger max_len_3;
+    encrypto::motion::SecureUnsignedInteger max_len_4;
+    encrypto::motion::SecureUnsignedInteger _7_2;
+    encrypto::motion::SecureUnsignedInteger _8_2;
+    encrypto::motion::SecureUnsignedInteger _4_2;
+    encrypto::motion::SecureUnsignedInteger _5_2;
+    encrypto::motion::SecureUnsignedInteger s0_3;
+    encrypto::motion::SecureUnsignedInteger _6_2;
+    encrypto::motion::SecureUnsignedInteger _2_2;
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    encrypto::motion::SecureUnsignedInteger s1_2;
+    int length_1;
+    int max_len_1;
+    int s0_1;
+
+    // Function body
+    s0_1 = False;
+    max_len_1 = 0;
+    length_1 = 0;
+
+    // Initialize phi values
+    s0_2 = s0_1;
+    max_len_2 = max_len_1;
+    length_2 = length_1;
+    for (i = 0; i < N_0; i++) {
+        _1_2 = (Seq_0[i] == Syms_0[2]);
+        s1_2 = (s0_2 and _1_2);
+        _2_2 = (Seq_0[i] == Syms_0[1]);
+        _4_2 = (Seq_0[i] == Syms_0[0]);
+        _5_2 = (s0_2 and _4_2);
+        s0_3 = (_2_2 or _5_2);
+        _6_2 = (s1_2 or s0_3);
+        length_4 = 0;
+        length_3 = (length_2 + 1);
+        length_5 = _6_2.Mux(length_4, length_3);
+        _7_2 = (max_len_2 < length_5);
+        _8_2 = (s1_2 and _7_2);
+        max_len_3 = length_5;
+        max_len_4 = _8_2.Mux(max_len_2, max_len_3);
+
+        // Update phi values
+        s0_2 = s0_3;
+        max_len_2 = max_len_4;
+        length_2 = length_5;
+    }
+
+    return max_len_2;
+}
+```
 ## `longest_1s`
 ### Input
 ```python
@@ -1399,6 +2019,51 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 | `!1!2` | `shared[int]` |
 | `length!1` | `plaintext[int]` |
 | `max_length!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void longest_1s(
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
+    int N,
+    encrypto::motion::SecureUnsignedInteger Sym
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
+    int N_0;
+    encrypto::motion::SecureUnsignedInteger Sym_0;
+    int i;
+    int length_4;
+    encrypto::motion::SecureUnsignedInteger length_5;
+    encrypto::motion::SecureUnsignedInteger max_length_3;
+    encrypto::motion::SecureUnsignedInteger max_length_4;
+    encrypto::motion::SecureUnsignedInteger _2_2;
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    int length_1;
+    int max_length_1;
+
+    // Function body
+    max_length_1 = 0;
+    length_1 = 0;
+
+    // Initialize phi values
+    max_length_2 = max_length_1;
+    length_2 = length_1;
+    for (i = 1; i < N_0; i++) {
+        _1_2 = (Seq_0[i] == Sym_0);
+        length_4 = 0;
+        length_3 = (length_2 + 1);
+        length_5 = _1_2.Mux(length_4, length_3);
+        _2_2 = (length_5 > max_length_2);
+        max_length_3 = length_5;
+        max_length_4 = _2_2.Mux(max_length_2, max_length_3);
+
+        // Update phi values
+        max_length_2 = max_length_4;
+        length_2 = length_5;
+    }
+
+    return max_length_2;
+}
+```
 ## `longest_even_0`
 ### Input
 ```python
@@ -1521,6 +2186,60 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 | `!1!2` | `shared[int]` |
 | `max_length!1` | `plaintext[int]` |
 | `current_length!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void longest_even_0(
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
+    int N,
+    encrypto::motion::SecureUnsignedInteger Sym
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
+    int N_0;
+    encrypto::motion::SecureUnsignedInteger Sym_0;
+    int i;
+    int current_length_4;
+    encrypto::motion::SecureUnsignedInteger current_length_5;
+    encrypto::motion::SecureUnsignedInteger tmp_max_len_3;
+    encrypto::motion::SecureUnsignedInteger tmp_max_len_4;
+    encrypto::motion::SecureUnsignedInteger max_length_3;
+    encrypto::motion::SecureUnsignedInteger max_length_4;
+    encrypto::motion::SecureUnsignedInteger _3_2;
+    encrypto::motion::SecureUnsignedInteger _4_2;
+    encrypto::motion::SecureUnsignedInteger _2_2;
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    int max_length_1;
+    int current_length_1;
+
+    // Function body
+    current_length_1 = 0;
+    max_length_1 = 0;
+
+    // Initialize phi values
+    current_length_2 = current_length_1;
+    max_length_2 = max_length_1;
+    for (i = 1; i < N_0; i++) {
+        _1_2 = (Seq_0[i] == Sym_0);
+        current_length_4 = 0;
+        current_length_3 = (current_length_2 + 1);
+        current_length_5 = _1_2.Mux(current_length_4, current_length_3);
+        tmp_max_len_2 = max_length_2;
+        _2_2 = (current_length_5 > max_length_2);
+        tmp_max_len_3 = current_length_5;
+        tmp_max_len_4 = _2_2.Mux(tmp_max_len_2, tmp_max_len_3);
+        _3_2 = (tmp_max_len_4 % 2);
+        _4_2 = (_3_2 == 0);
+        max_length_3 = tmp_max_len_4;
+        max_length_4 = _4_2.Mux(max_length_2, max_length_3);
+
+        // Update phi values
+        current_length_2 = current_length_5;
+        max_length_2 = max_length_4;
+    }
+
+    return max_length_2;
+}
+```
 ## `longest_odd_10`
 ### Input
 ```python
@@ -1657,6 +2376,68 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 | `s2!1` | `plaintext[int]` |
 | `max_length!1` | `plaintext[int]` |
 | `current_length!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void longest_odd_10(
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
+    int N,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
+    int N_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
+    int i;
+    encrypto::motion::SecureUnsignedInteger s2_3;
+    int current_length_4;
+    encrypto::motion::SecureUnsignedInteger current_length_5;
+    encrypto::motion::SecureUnsignedInteger current_length_6;
+    encrypto::motion::SecureUnsignedInteger max_length_3;
+    encrypto::motion::SecureUnsignedInteger max_length_4;
+    encrypto::motion::SecureUnsignedInteger _6_2;
+    encrypto::motion::SecureUnsignedInteger _7_2;
+    encrypto::motion::SecureUnsignedInteger _4_2;
+    encrypto::motion::SecureUnsignedInteger _5_2;
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    encrypto::motion::SecureUnsignedInteger s1_2;
+    int s2_1;
+    int max_length_1;
+    int current_length_1;
+
+    // Function body
+    current_length_1 = 0;
+    max_length_1 = 0;
+    s2_1 = False;
+
+    // Initialize phi values
+    current_length_2 = current_length_1;
+    max_length_2 = max_length_1;
+    s2_2 = s2_1;
+    for (i = 0; i < N_0; i++) {
+        _1_2 = (Seq_0[i] == Syms_0[1]);
+        s1_2 = (s2_2 and _1_2);
+        _2_2 = (not s2_2);
+        current_length_4 = 0;
+        current_length_5 = _2_2.Mux(current_length_2, current_length_4);
+        current_length_3 = (current_length_2 + 1);
+        current_length_6 = s1_2.Mux(current_length_5, current_length_3);
+        _4_2 = (current_length_6 % 2);
+        _5_2 = (_4_2 == 1);
+        _6_2 = (current_length_6 > max_length_2);
+        _7_2 = (_5_2 and _6_2);
+        max_length_3 = current_length_6;
+        max_length_4 = _7_2.Mux(max_length_2, max_length_3);
+        s2_3 = (Seq_0[i] == Syms_0[0]);
+
+        // Update phi values
+        current_length_2 = current_length_6;
+        max_length_2 = max_length_4;
+        s2_2 = s2_3;
+    }
+
+    return max_length_2;
+}
+```
 ## `max_dist_between_syms`
 ### Input
 ```python
@@ -1759,6 +2540,53 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 | `!2!2` | `shared[int]` |
 | `current_dist!1` | `plaintext[int]` |
 | `max_dist!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void max_dist_between_syms(
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
+    int N,
+    encrypto::motion::SecureUnsignedInteger Sym
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
+    int N_0;
+    encrypto::motion::SecureUnsignedInteger Sym_0;
+    int i;
+    int current_dist_4;
+    encrypto::motion::SecureUnsignedInteger current_dist_5;
+    encrypto::motion::SecureUnsignedInteger max_dist_3;
+    encrypto::motion::SecureUnsignedInteger max_dist_4;
+    encrypto::motion::SecureUnsignedInteger _3_2;
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    encrypto::motion::SecureUnsignedInteger _2_2;
+    int current_dist_1;
+    int max_dist_1;
+
+    // Function body
+    max_dist_1 = 0;
+    current_dist_1 = 0;
+
+    // Initialize phi values
+    max_dist_2 = max_dist_1;
+    current_dist_2 = current_dist_1;
+    for (i = 0; i < N_0; i++) {
+        _1_2 = (Seq_0[i] == Sym_0);
+        _2_2 = (not _1_2);
+        current_dist_4 = 0;
+        current_dist_3 = (current_dist_2 + 1);
+        current_dist_5 = _2_2.Mux(current_dist_4, current_dist_3);
+        _3_2 = (current_dist_5 > max_dist_2);
+        max_dist_3 = current_dist_5;
+        max_dist_4 = _3_2.Mux(max_dist_2, max_dist_3);
+
+        // Update phi values
+        max_dist_2 = max_dist_4;
+        current_dist_2 = current_dist_5;
+    }
+
+    return max_dist_2;
+}
+```
 ## `max_sum_between_syms`
 ### Input
 ```python
@@ -1862,6 +2690,54 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 | `!2!2` | `shared[int]` |
 | `current_sum!1` | `plaintext[int]` |
 | `max_sum!1` | `plaintext[int]` |
+### Motion code
+```cpp
+void max_sum_between_syms(
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
+    int N,
+    encrypto::motion::SecureUnsignedInteger Sym
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
+    int N_0;
+    encrypto::motion::SecureUnsignedInteger Sym_0;
+    int i;
+    encrypto::motion::SecureUnsignedInteger current_sum_3;
+    encrypto::motion::SecureUnsignedInteger current_sum_5;
+    encrypto::motion::SecureUnsignedInteger max_sum_3;
+    encrypto::motion::SecureUnsignedInteger max_sum_4;
+    encrypto::motion::SecureUnsignedInteger _3_2;
+    int current_sum_4;
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    encrypto::motion::SecureUnsignedInteger _2_2;
+    int current_sum_1;
+    int max_sum_1;
+
+    // Function body
+    max_sum_1 = 0;
+    current_sum_1 = 0;
+
+    // Initialize phi values
+    max_sum_2 = max_sum_1;
+    current_sum_2 = current_sum_1;
+    for (i = 0; i < N_0; i++) {
+        _1_2 = (Seq_0[i] == Sym_0);
+        _2_2 = (not _1_2);
+        current_sum_4 = 0;
+        current_sum_3 = (current_sum_2 + Seq_0[i]);
+        current_sum_5 = _2_2.Mux(current_sum_4, current_sum_3);
+        _3_2 = (current_sum_5 > max_sum_2);
+        max_sum_3 = current_sum_5;
+        max_sum_4 = _3_2.Mux(max_sum_2, max_sum_3);
+
+        // Update phi values
+        max_sum_2 = max_sum_4;
+        current_sum_2 = current_sum_5;
+    }
+
+    return max_sum_2;
+}
+```
 ## `minimal_points`
 ### Input
 ```python
@@ -1992,6 +2868,76 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 | `bx!2` | `plaintext[int]` |
 | `min_Y!1` | `plaintext[list[int]]` |
 | `min_X!1` | `plaintext[list[int]]` |
+### Motion code
+```cpp
+void minimal_points(
+    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords,
+    int N
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0;
+    int N_0;
+    int i;
+    int j;
+    encrypto::motion::SecureUnsignedInteger _11_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _12_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_4;
+    encrypto::motion::SecureUnsignedInteger _8_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _9_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_X_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_X_4;
+    encrypto::motion::SecureUnsignedInteger _4_3;
+    encrypto::motion::SecureUnsignedInteger _5_3;
+    encrypto::motion::SecureUnsignedInteger bx_4;
+    encrypto::motion::SecureUnsignedInteger _3_3;
+    int bx_2;
+    std::vector<int> min_Y_1;
+    std::vector<int> min_X_1;
+
+    // Function body
+    min_X_1 = {};
+    min_Y_1 = {};
+
+    // Initialize phi values
+    min_X_2 = min_X_1;
+    min_Y_2 = min_Y_1;
+    for (i = 0; i < N_0; i++) {
+        bx_2 = False;
+
+        // Initialize phi values
+        bx_3 = bx_2;
+        for (j = 0; j < N_0; j++) {
+            _3_3 = (X_coords_0[j] < X_coords_0[i]);
+            _4_3 = (Y_coords_0[j] < Y_coords_0[i]);
+            _5_3 = (_3_3 and _4_3);
+            bx_4 = (bx_3 or _5_3);
+
+            // Update phi values
+            bx_3 = bx_4;
+        }
+
+        _6_2 = (not bx_3);
+        _8_2 = X_coords_0[i];
+        _9_2 = {_8_2};
+        min_X_3 = (min_X_2 + _9_2);
+        _11_2 = Y_coords_0[i];
+        _12_2 = {_11_2};
+        min_Y_3 = (min_Y_2 + _12_2);
+        min_X_4 = _6_2.Mux(min_X_2, min_X_3);
+        min_Y_4 = _6_2.Mux(min_Y_2, min_Y_3);
+
+        // Update phi values
+        min_X_2 = min_X_4;
+        min_Y_2 = min_Y_4;
+    }
+
+    _13_1 = {min_X_2, min_Y_2};
+    return _13_1;
+}
+```
 ## `psi`
 ### Input
 ```python
@@ -2113,3 +3059,63 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 | `result!1` | `plaintext[list[int]]` |
 | `dummy!1` | `plaintext[int]` |
 | `val!2` | `plaintext[int]` |
+### Motion code
+```cpp
+void psi(
+    std::vector<encrypto::motion::SecureUnsignedInteger> A,
+    int SA,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B,
+    int SB
+) {
+    // Initial variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
+    int SA_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
+    int SB_0;
+    int i;
+    int j;
+    encrypto::motion::SecureUnsignedInteger val_3;
+    encrypto::motion::SecureUnsignedInteger val_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _2_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_3;
+    int flag_4;
+    encrypto::motion::SecureUnsignedInteger flag_5;
+    encrypto::motion::SecureUnsignedInteger _1_3;
+    int flag_2;
+    std::vector<int> result_1;
+    int dummy_1;
+    int val_2;
+
+    // Function body
+    dummy_1 = 0;
+    result_1 = {};
+
+    // Initialize phi values
+    result_2 = result_1;
+    for (i = 0; i < SA_0; i++) {
+        flag_2 = False;
+
+        // Initialize phi values
+        flag_3 = flag_2;
+        for (j = 0; j < SB_0; j++) {
+            _1_3 = (A_0[i] == B_0[j]);
+            flag_4 = True;
+            flag_5 = _1_3.Mux(flag_3, flag_4);
+
+            // Update phi values
+            flag_3 = flag_5;
+        }
+
+        val_2 = dummy_1;
+        val_3 = A_0[i];
+        val_4 = flag_3.Mux(val_2, val_3);
+        _2_2 = {val_4};
+        result_3 = (result_2 + _2_2);
+
+        // Update phi values
+        result_2 = result_3;
+    }
+
+    return result_2;
+}
+```
