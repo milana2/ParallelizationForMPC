@@ -11,10 +11,17 @@ class VarVisibility(Enum):
     SHARED = "shared"
 
 
+class DataType(Enum):
+    INT = "int"
+    BOOL = "bool"
+
+
 @dataclass(frozen=True)
 class VarType:
     visibility: VarVisibility
     dims: int
+    # TODO: make this non-defaulted
+    data_type: DataType = DataType.INT
 
     def drop_dim(self) -> "VarType":
         return VarType(self.visibility, self.dims - 1)
@@ -28,11 +35,27 @@ class VarType:
     def is_shared(self) -> bool:
         return self.visibility == VarVisibility.SHARED
 
+    def to_cpp(self) -> str:
+        str_rep = ""
+        for _ in range(self.dims):
+            str_rep += "std::vector<"
+        if self.visibility == VarVisibility.PLAINTEXT:
+            str_rep += self.data_type.value
+        elif self.visibility == VarVisibility.SHARED:
+            if self.data_type == DataType.INT:
+                str_rep += "encrypto::motion::SecureUnsignedInteger"
+            elif self.data_type == DataType.BOOL:
+                # TODO: check that this is the correct type
+                str_rep += "encrypto::motion::ShareWrapper"
+        for _ in range(self.dims):
+            str_rep += ">"
+        return str_rep
+
     def __str__(self) -> str:
         str_rep = f"{self.visibility.value}["
         for _ in range(self.dims):
             str_rep += "list["
-        str_rep += "int"
+        str_rep += self.data_type.value
         for _ in range(self.dims):
             str_rep += "]"
         str_rep += "]"
@@ -52,6 +75,10 @@ class Var:
 
     rename_subscript: Optional[int] = None
 
+    def to_cpp(self) -> str:
+        self_str = str(self)
+        return self_str.replace("!", "_")
+
     def __str__(self) -> str:
         name = self.name if isinstance(self.name, str) else f"!{self.name}"
         subscript = "" if self.rename_subscript is None else f"!{self.rename_subscript}"
@@ -65,6 +92,9 @@ class Parameter:
     var: Var
     var_type: VarType
 
+    def to_cpp(self):
+        return self.var_type.to_cpp() + " " + self.var.to_cpp()
+
     def __str__(self) -> str:
         return f"{self.var}: {self.var_type}"
 
@@ -74,6 +104,9 @@ class ConstantInt:
     """A constant integer with value `value`"""
 
     value: int
+
+    def to_cpp(self) -> str:
+        return str(self.value)
 
     def __str__(self) -> str:
         return str(self.value)
@@ -122,6 +155,9 @@ class BinOp(Generic[OPERAND]):
     operator: BinOpKind
     right: OPERAND
 
+    def to_cpp(self) -> str:
+        return f"({self.left.to_cpp()} {self.operator.value} {self.right.to_cpp()})"
+
     def __str__(self) -> str:
         return f"({self.left} {self.operator} {self.right})"
 
@@ -132,6 +168,9 @@ class UnaryOp(Generic[OPERAND]):
 
     operator: UnaryOpKind
     operand: OPERAND
+
+    def to_cpp(self) -> str:
+        return f"({self.operator.value} {self.operand.to_cpp()})"
 
     def __str__(self) -> str:
         return f"{self.operator} {self.operand}"
@@ -154,6 +193,9 @@ class Subscript:
 
     array: Var
     index: SubscriptIndex
+
+    def to_cpp(self) -> str:
+        return f"{self.array.to_cpp()}[{self.index.to_cpp()}]"
 
     def __hash__(self) -> int:
         return id(self)

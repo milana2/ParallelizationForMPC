@@ -12,6 +12,7 @@ from .ssa_to_loop_linear_code import ssa_to_loop_linear_code
 from .dep_graph import DepGraph
 from .type_analysis import type_check
 from . import loop_linear_code
+from . import motion_backend
 from . import vectorize
 
 
@@ -83,4 +84,9 @@ def main():
     type_env = type_check(linear, dep_graph)
     print("Type environment:")
     print(type_env)
+    print()
+
+    motion_code = motion_backend.render_function(linear, type_env)
+    print("Motion code:")
+    print(motion_code)
     print()

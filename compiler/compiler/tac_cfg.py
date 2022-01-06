@@ -36,6 +36,12 @@ class UnaryOp(_UnaryOp[Operand]):
 class List:
     items: list[Atom]
 
+    def to_cpp(self) -> str:
+        # In order to (hopefully) remain more agnostic towards different backend containers,
+        # we render tuples and lists using C++'s braced initializer list syntax.
+        items = ", ".join(item.to_cpp() for item in self.items)
+        return "{" + items + "}"
+
     def __str__(self) -> str:
         items = ", ".join([str(item) for item in self.items])
         return f"[{items}]"
@@ -44,6 +50,12 @@ class List:
 @dataclass
 class Tuple:
     items: list[Atom]
+
+    def to_cpp(self) -> str:
+        # In order to (hopefully) remain more agnostic towards different backend containers,
+        # we render tuples and lists using C++'s braced initializer list syntax.
+        items = ", ".join(item.to_cpp() for item in self.items)
+        return "{" + items + "}"
 
     def __str__(self) -> str:
         items = ", ".join([str(item) for item in self.items])
@@ -57,6 +69,9 @@ class Mux:
     false_value: Operand
     true_value: Operand
 
+    def to_cpp(self) -> str:
+        return f"{self.condition.to_cpp()}.Mux({self.true_value.to_cpp()}, {self.false_value.to_cpp()})"
+
     def __str__(self) -> str:
         return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
 
@@ -66,6 +81,9 @@ class Update:
     array: Var
     index: SubscriptIndex
     value: Atom
+
+    def to_cpp(self) -> str:
+        return f"{self.array}[{self.index.to_cpp()}] = {self.value.to_cpp()}"
 
     def __str__(self) -> str:
         return f"Update({self.array}, {self.index}, {self.value})"
@@ -78,6 +96,18 @@ AssignRHS = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux, Update]
 class Assign:
     lhs: Var
     rhs: AssignRHS
+
+    def to_cpp(self) -> str:
+        if isinstance(self.rhs, Update):
+            return (
+                self.rhs.to_cpp()
+                + "; "
+                + (self.lhs.to_cpp() + " = " + self.rhs.array.to_cpp())
+                + ";"
+            )
+            pass
+        else:
+            return f"{self.lhs.to_cpp()} = {self.rhs.to_cpp()};"
 
     def __hash__(self):
         return id(self)

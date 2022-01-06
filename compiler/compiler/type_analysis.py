@@ -11,7 +11,6 @@ from .ast_shared import (
     UnaryOp,
     VarType,
     SubscriptIndex,
-    VarType,
     VarVisibility,
     PLAINTEXT_INT,
 )

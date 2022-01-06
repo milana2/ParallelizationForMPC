@@ -33,6 +33,38 @@ class For:
     bound_high: LoopBound
     body: list[Statement]
 
+    def to_cpp(self) -> str:
+        # Pseudo-phi nodes are implemented by first initializing the variable before entering the loop,
+        # then updating the variable's value at the end of each loop.
+        phi_initializations = "// Initialize phi values\n" + "\n".join(
+            phi.lhs.to_cpp() + " = " + phi.rhs[0].to_cpp() + ";"
+            for phi in self.body
+            if isinstance(phi, Phi)
+        )
+
+        header = f"for ({self.counter.to_cpp()} = {self.bound_low.to_cpp()}; {self.counter.to_cpp()} < {self.bound_high.to_cpp()}; {self.counter.to_cpp()}++) {{"
+        body = (
+            "\n".join(stmt.to_cpp() for stmt in self.body if not isinstance(stmt, Phi))
+            + "\n"
+        )
+        phi_updates = "// Update phi values\n" + "\n".join(
+            phi.lhs.to_cpp() + " = " + phi.rhs[1].to_cpp() + ";"
+            for phi in self.body
+            if isinstance(phi, Phi)
+        )
+
+        return (
+            "\n"
+            + phi_initializations
+            + "\n"
+            + header
+            + "\n"
+            + indent(body, "    ")
+            + "\n"
+            + indent(phi_updates, "    ")
+            + "\n}\n"
+        )
+
     def __hash__(self):
         return id(self)
 
