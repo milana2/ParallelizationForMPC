@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Generic, TypeVar, Union, Optional
+from typing import Generic, TypeVar, Union, Optional, Protocol
 from dataclasses import dataclass
 from textwrap import indent
 
@@ -144,7 +144,12 @@ class UnaryOpKind(Enum):
         return self.value
 
 
-OPERAND = TypeVar("OPERAND")
+class CppConvertible(Protocol):
+    def to_cpp(self) -> str:
+        ...
+
+
+OPERAND = TypeVar("OPERAND", bound=CppConvertible)
 
 
 @dataclass

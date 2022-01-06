@@ -95,6 +95,10 @@ class List:
 
     items: list[Expression]
 
+    def to_cpp(self) -> str:
+        # This function only exists to shut mypy up
+        raise NotImplementedError("to_cpp() called on restricted ast list")
+
     def __str__(self) -> str:
         items = ", ".join([str(item) for item in self.items])
         return f"[{items}]"
@@ -105,6 +109,10 @@ class Tuple:
     """A tuple expression of the form `(items)` (e.g. `(1, a, b + 2)`)"""
 
     items: list[Expression]
+
+    def to_cpp(self) -> str:
+        # This function only exists to shut mypy up
+        raise NotImplementedError("to_cpp() called on restricted ast tuple")
 
     def __str__(self) -> str:
         items = ", ".join([str(item) for item in self.items])
