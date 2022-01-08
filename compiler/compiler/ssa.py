@@ -38,14 +38,17 @@ from .tac_cfg import Block as _BaseBlock
 @dataclass(eq=False)
 class Phi:
     lhs: Var
-    rhs: list[Var]
+    rhs_false: Var
+    rhs_true: Var
+
+    def rhs_vars(self) -> list[Var]:
+        return [self.rhs_false, self.rhs_true]
 
     def __hash__(self):
         return id(self)
 
     def __str__(self) -> str:
-        rhs = ", ".join([str(v) for v in self.rhs])
-        return f"{self.lhs} = Φ({rhs})"
+        return f"{self.lhs} = Φ({self.rhs_false}, {self.rhs_true})"
 
 
 @dataclass(eq=False)

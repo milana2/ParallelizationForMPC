@@ -37,7 +37,7 @@ class For:
         # Pseudo-phi nodes are implemented by first initializing the variable before entering the loop,
         # then updating the variable's value at the end of each loop.
         phi_initializations = "// Initialize phi values\n" + "\n".join(
-            phi.lhs.to_cpp() + " = " + phi.rhs[0].to_cpp() + ";"
+            phi.lhs.to_cpp() + " = " + phi.rhs_false.to_cpp() + ";"
             for phi in self.body
             if isinstance(phi, Phi)
         )
@@ -48,7 +48,7 @@ class For:
             + "\n"
         )
         phi_updates = "// Update phi values\n" + "\n".join(
-            phi.lhs.to_cpp() + " = " + phi.rhs[1].to_cpp() + ";"
+            phi.lhs.to_cpp() + " = " + phi.rhs_true.to_cpp() + ";"
             for phi in self.body
             if isinstance(phi, Phi)
         )

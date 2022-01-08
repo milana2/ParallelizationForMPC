@@ -202,7 +202,7 @@ def validate_type_requirements(
                 #   primary algorithm doesn't detect this case.
                 pass
         elif isinstance(stmt, loop_linear_code.Phi):
-            elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs]
+            elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
 
             if any(elem_type is None for elem_type in elem_types):
                 # TODO: as above, this case can be triggered by a def-use cycle of plaintext values
@@ -271,7 +271,7 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
                     file=sys.stderr,
                 )
 
-            elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs]
+            elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
             elem_dims = [
                 elem_type.dims for elem_type in elem_types if elem_type is not None
             ]

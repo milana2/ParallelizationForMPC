@@ -99,7 +99,8 @@ def place_phi_functions(result: ssa.Function) -> None:
             for Y in dominance_frontiers[X]:
                 if has_already[Y] < iter_count:
                     num_predecessors = sum(1 for _ in result.body.predecessors(Y))
-                    Y.phi_functions.append(ssa.Phi(lhs=V, rhs=[V] * num_predecessors))
+                    assert num_predecessors == 2
+                    Y.phi_functions.append(ssa.Phi(lhs=V, rhs_false=V, rhs_true=V))
                     has_already[Y] = iter_count
                     if work[Y] < iter_count:
                         work[Y] = iter_count
@@ -264,12 +265,16 @@ def rename_variables(result: ssa.Function) -> None:
                 if predecessor == X
             ][0]
             for F in Y.phi_functions:
-                V = F.rhs[j]
+                phi_branch_true = {0: False, 1: True}[j]
+                V = F.rhs_true if phi_branch_true else F.rhs_false
                 i = S[V][-1]
                 if isinstance(V, ssa.Subscript):
                     pass  # TODO: Support this
                 elif isinstance(V, ssa.Var):
-                    F.rhs[j] = rename_var(V, i)
+                    if phi_branch_true:
+                        F.rhs_true = rename_var(V, i)
+                    else:
+                        F.rhs_false = rename_var(V, i)
                 else:
                     assert_never(V)
 

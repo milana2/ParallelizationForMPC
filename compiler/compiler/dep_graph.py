@@ -49,7 +49,7 @@ class DepGraph:
 
         for assignment, _ in all_assignments:
             if isinstance(assignment, llc.Phi):
-                lhss = assignment.rhs
+                lhss = assignment.rhs_vars()
             elif isinstance(assignment, llc.Assign):
                 lhss = _vars_in_rhs(assignment.rhs)
             else:

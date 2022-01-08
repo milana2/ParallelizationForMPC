@@ -1,3 +1,4 @@
+from compiler.restricted_ast import Assign
 from . import loop_linear_code as llc
 from .dep_graph import DepGraph, PhiOrAssign
 from .util import assert_never
@@ -244,7 +245,11 @@ def _find_update(
     [A_def] = [
         A_def for A_def in dep_graph.def_use_graph.predecessors(A_use) if A_def.lhs == A
     ]
-    return A_def.rhs.index if isinstance(A_def.rhs, llc.Update) else None
+    return (
+        A_def.rhs.index
+        if isinstance(A_def, llc.Assign) and isinstance(A_def.rhs, llc.Update)
+        else None
+    )
 
 
 def _refine_array_mux_statement(

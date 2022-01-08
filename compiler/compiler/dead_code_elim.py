@@ -65,7 +65,7 @@ def _accessed_vars_assign_rhs(rhs: ssa.AssignRHS) -> list[ssa.Var]:
 
 def _accessed_vars(s: _StatementBlock) -> list[ssa.Var]:
     if isinstance(s.statement, ssa.Phi):
-        return s.statement.rhs
+        return s.statement.rhs_vars()
     elif isinstance(s.statement, ssa.Assign):
         return _accessed_vars_assign_rhs(s.statement.rhs)
     elif isinstance(s.statement, ssa.Jump):
