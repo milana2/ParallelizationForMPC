@@ -114,9 +114,16 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 | `j` | `plaintext[int]` |
 | `min_index!3` | `plaintext[int]` |
 | `min_index!4` | `shared[int]` |
+| `min_index!2` | `shared[int]` |
+| `!2!1` | `shared[list[int]]` |
 | `d!3` | `shared[int]` |
 | `p!3` | `shared[int]` |
 | `sum!4` | `shared[int]` |
+| `sum!3` | `shared[int]` |
+| `min_sum!3` | `shared[int]` |
+| `min_sum!4` | `shared[int]` |
+| `min_sum!2` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
 | `sum!2` | `plaintext[int]` |
 | `min_index!1` | `plaintext[int]` |
 | `min_sum!1` | `plaintext[int]` |
@@ -137,9 +144,16 @@ void biometric(
     int j;
     int min_index_3;
     encrypto::motion::SecureUnsignedInteger min_index_4;
+    encrypto::motion::SecureUnsignedInteger min_index_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _2_1;
     encrypto::motion::SecureUnsignedInteger d_3;
     encrypto::motion::SecureUnsignedInteger p_3;
     encrypto::motion::SecureUnsignedInteger sum_4;
+    encrypto::motion::SecureUnsignedInteger sum_3;
+    encrypto::motion::SecureUnsignedInteger min_sum_3;
+    encrypto::motion::SecureUnsignedInteger min_sum_4;
+    encrypto::motion::SecureUnsignedInteger min_sum_2;
+    encrypto::motion::ShareWrapper _1_2;
     int sum_2;
     int min_index_1;
     int min_sum_1;
@@ -375,17 +389,24 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 | `k` | `plaintext[int]` |
 | `min_index!4` | `plaintext[int]` |
 | `min_index!5` | `shared[int]` |
+| `min_index!3` | `shared[int]` |
+| `min_index!1` | `shared[int]` |
+| `!4!1` | `shared[list[int]]` |
 | `min_index!2` | `plaintext[int]` |
 | `tmp!3` | `shared[int]` |
 | `two_a_b!4` | `shared[int]` |
-| `two_a_b!2` | `plaintext[int]` |
-| `a_sqr_plus_b_sqr!2` | `shared[int]` |
+| `two_a_b!3` | `shared[int]` |
 | `this_diff!2` | `shared[int]` |
 | `differences!5` | `shared[list[int]]` |
 | `min_diff!4` | `shared[int]` |
 | `min_diff!5` | `shared[int]` |
-| `!3!3` | `shared[int]` |
+| `min_diff!3` | `shared[int]` |
+| `!3!3` | `shared[bool]` |
+| `min_diff!1` | `shared[int]` |
 | `min_diff!2` | `shared[int]` |
+| `differences!4` | `shared[list[int]]` |
+| `two_a_b!2` | `plaintext[int]` |
+| `a_sqr_plus_b_sqr!2` | `shared[int]` |
 | `!1!2` | `plaintext[list[int]]` |
 | `differences!1` | `plaintext[list[int]]` |
 ### Motion code
@@ -412,17 +433,24 @@ void biometric_matching_fast(
     int k;
     int min_index_4;
     encrypto::motion::SecureUnsignedInteger min_index_5;
+    encrypto::motion::SecureUnsignedInteger min_index_3;
+    encrypto::motion::SecureUnsignedInteger min_index_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _4_1;
     int min_index_2;
     encrypto::motion::SecureUnsignedInteger tmp_3;
     encrypto::motion::SecureUnsignedInteger two_a_b_4;
-    int two_a_b_2;
-    encrypto::motion::SecureUnsignedInteger a_sqr_plus_b_sqr_2;
+    encrypto::motion::SecureUnsignedInteger two_a_b_3;
     encrypto::motion::SecureUnsignedInteger this_diff_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> differences_5;
     encrypto::motion::SecureUnsignedInteger min_diff_4;
     encrypto::motion::SecureUnsignedInteger min_diff_5;
-    encrypto::motion::SecureUnsignedInteger _3_3;
+    encrypto::motion::SecureUnsignedInteger min_diff_3;
+    encrypto::motion::ShareWrapper _3_3;
+    encrypto::motion::SecureUnsignedInteger min_diff_1;
     encrypto::motion::SecureUnsignedInteger min_diff_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> differences_4;
+    int two_a_b_2;
+    encrypto::motion::SecureUnsignedInteger a_sqr_plus_b_sqr_2;
     std::vector<int> _1_2;
     std::vector<int> differences_1;
 
@@ -493,7 +521,7 @@ void biometric_matching_fast(
 ## `chapterfour_figure_12`
 ### Input
 ```python
-def foo(x, y):
+def foo(x: int, y: int):
     z = 0
     if x > 0:
         if y > 0:
@@ -505,7 +533,7 @@ def foo(x, y):
 ```
 ### Restricted AST
 ```python
-def foo(x: plaintext[int], y: plaintext[int]):
+def foo(x: shared[int], y: shared[int]):
     z = 0
     if (x > 0):
         if (y > 0):
@@ -524,7 +552,7 @@ def foo(x: plaintext[int], y: plaintext[int]):
 ![](chapterfour_figure_12_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def foo(x: plaintext[int], y: plaintext[int]):
+def foo(x: shared[int], y: shared[int]):
     z!1 = 0
     !1!1 = (x!0 > 0)
     !2!1 = (y!0 > 0)
@@ -540,7 +568,7 @@ def foo(x: plaintext[int], y: plaintext[int]):
 ![](chapterfour_figure_12_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def foo(x: plaintext[int], y: plaintext[int]):
+def foo(x: shared[int], y: shared[int]):
     z!1 = 0
     !1!1 = (x!0 > 0)
     !2!1 = (y!0 > 0)
@@ -555,30 +583,30 @@ def foo(x: plaintext[int], y: plaintext[int]):
 ### Type environment
 | Variable | Type |
 | - | - |
-| `x!0` | `plaintext[int]` |
-| `y!0` | `plaintext[int]` |
+| `x!0` | `shared[int]` |
+| `y!0` | `shared[int]` |
 | `z!2` | `plaintext[int]` |
 | `z!4` | `shared[int]` |
 | `z!5` | `shared[int]` |
 | `z!3` | `plaintext[int]` |
-| `!2!1` | `plaintext[int]` |
-| `!1!1` | `plaintext[int]` |
+| `!2!1` | `shared[bool]` |
+| `!1!1` | `shared[bool]` |
 | `z!1` | `plaintext[int]` |
 ### Motion code
 ```cpp
 void foo(
-    int x,
-    int y
+    encrypto::motion::SecureUnsignedInteger x,
+    encrypto::motion::SecureUnsignedInteger y
 ) {
     // Initial variable declarations
-    int x_0;
-    int y_0;
+    encrypto::motion::SecureUnsignedInteger x_0;
+    encrypto::motion::SecureUnsignedInteger y_0;
     int z_2;
     encrypto::motion::SecureUnsignedInteger z_4;
     encrypto::motion::SecureUnsignedInteger z_5;
     int z_3;
-    int _2_1;
-    int _1_1;
+    encrypto::motion::ShareWrapper _2_1;
+    encrypto::motion::ShareWrapper _1_1;
     int z_1;
 
     // Function body
@@ -731,25 +759,29 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 | `j` | `plaintext[int]` |
 | `is_hull!4` | `plaintext[int]` |
 | `is_hull!5` | `shared[int]` |
+| `is_hull!3` | `shared[int]` |
+| `is_hull!6` | `shared[int]` |
 | `p2_Y!3` | `shared[int]` |
-| `!7!3` | `shared[int]` |
-| `!8!3` | `shared[int]` |
-| `!9!3` | `shared[int]` |
+| `!7!3` | `shared[bool]` |
+| `!8!3` | `shared[bool]` |
+| `!9!3` | `shared[bool]` |
 | `p2_X!3` | `shared[int]` |
-| `!6!3` | `shared[int]` |
+| `!6!3` | `shared[bool]` |
 | `p1_Y!2` | `shared[int]` |
 | `!11!2` | `shared[list[int]]` |
 | `hull_Y!3` | `shared[list[int]]` |
 | `hull_Y!4` | `shared[list[int]]` |
-| `!2!2` | `shared[int]` |
-| `!3!2` | `shared[int]` |
+| `hull_Y!2` | `shared[list[int]]` |
+| `!12!1` | `shared[list[list[int]]]` |
+| `!2!2` | `shared[bool]` |
+| `!3!2` | `shared[bool]` |
 | `p1_X!2` | `shared[int]` |
 | `!10!2` | `shared[list[int]]` |
 | `hull_X!3` | `shared[list[int]]` |
 | `hull_X!4` | `shared[list[int]]` |
-| `!1!2` | `shared[int]` |
+| `hull_X!2` | `shared[list[int]]` |
+| `!1!2` | `shared[bool]` |
 | `is_hull!2` | `plaintext[int]` |
-| `is_hull!6` | `shared[int]` |
 | `hull_Y!1` | `plaintext[list[int]]` |
 | `hull_X!1` | `plaintext[list[int]]` |
 ### Motion code
@@ -767,25 +799,29 @@ void convex_hull(
     int j;
     int is_hull_4;
     encrypto::motion::SecureUnsignedInteger is_hull_5;
+    encrypto::motion::SecureUnsignedInteger is_hull_3;
+    encrypto::motion::SecureUnsignedInteger is_hull_6;
     encrypto::motion::SecureUnsignedInteger p2_Y_3;
-    encrypto::motion::SecureUnsignedInteger _7_3;
-    encrypto::motion::SecureUnsignedInteger _8_3;
-    encrypto::motion::SecureUnsignedInteger _9_3;
+    encrypto::motion::ShareWrapper _7_3;
+    encrypto::motion::ShareWrapper _8_3;
+    encrypto::motion::ShareWrapper _9_3;
     encrypto::motion::SecureUnsignedInteger p2_X_3;
-    encrypto::motion::SecureUnsignedInteger _6_3;
+    encrypto::motion::ShareWrapper _6_3;
     encrypto::motion::SecureUnsignedInteger p1_Y_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _11_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_3;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_4;
-    encrypto::motion::SecureUnsignedInteger _2_2;
-    encrypto::motion::SecureUnsignedInteger _3_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_2;
+    std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _12_1;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper _3_2;
     encrypto::motion::SecureUnsignedInteger p1_X_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _10_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_3;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_4;
-    encrypto::motion::SecureUnsignedInteger _1_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_2;
+    encrypto::motion::ShareWrapper _1_2;
     int is_hull_2;
-    encrypto::motion::SecureUnsignedInteger is_hull_6;
     std::vector<int> hull_Y_1;
     std::vector<int> hull_X_1;
 
@@ -930,12 +966,13 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `N!0` | `plaintext[int]` |
 | `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `!5!2` | `shared[int]` |
-| `!6!2` | `shared[int]` |
-| `s0!3` | `shared[int]` |
-| `!3!2` | `shared[int]` |
-| `!1!2` | `shared[int]` |
-| `!2!2` | `shared[int]` |
+| `!5!2` | `shared[bool]` |
+| `!6!2` | `shared[bool]` |
+| `s0!3` | `shared[bool]` |
+| `s0!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
+| `!3!2` | `shared[bool]` |
+| `!1!2` | `shared[bool]` |
 | `c!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[int]` |
 ### Motion code
@@ -950,12 +987,13 @@ void count_102(
     int N_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
     int i;
-    encrypto::motion::SecureUnsignedInteger _5_2;
-    encrypto::motion::SecureUnsignedInteger _6_2;
-    encrypto::motion::SecureUnsignedInteger s0_3;
-    encrypto::motion::SecureUnsignedInteger _3_2;
-    encrypto::motion::SecureUnsignedInteger _1_2;
-    encrypto::motion::SecureUnsignedInteger _2_2;
+    encrypto::motion::ShareWrapper _5_2;
+    encrypto::motion::ShareWrapper _6_2;
+    encrypto::motion::ShareWrapper s0_3;
+    encrypto::motion::ShareWrapper s0_2;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::ShareWrapper _1_2;
     int c_1;
     int s0_1;
 
@@ -1085,11 +1123,14 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `N!0` | `plaintext[int]` |
 | `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `s0!3` | `shared[int]` |
-| `!3!2` | `shared[int]` |
-| `s1!3` | `shared[int]` |
-| `!1!2` | `shared[int]` |
-| `!2!2` | `shared[int]` |
+| `s0!3` | `shared[bool]` |
+| `s0!2` | `shared[bool]` |
+| `!4!2` | `shared[bool]` |
+| `s1!3` | `shared[bool]` |
+| `s1!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
+| `!3!2` | `shared[bool]` |
+| `!1!2` | `shared[bool]` |
 | `scount!1` | `plaintext[int]` |
 | `s1!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[int]` |
@@ -1105,11 +1146,14 @@ void count_10s(
     int N_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
     int i;
-    encrypto::motion::SecureUnsignedInteger s0_3;
-    encrypto::motion::SecureUnsignedInteger _3_2;
-    encrypto::motion::SecureUnsignedInteger s1_3;
-    encrypto::motion::SecureUnsignedInteger _1_2;
-    encrypto::motion::SecureUnsignedInteger _2_2;
+    encrypto::motion::ShareWrapper s0_3;
+    encrypto::motion::ShareWrapper s0_2;
+    encrypto::motion::ShareWrapper _4_2;
+    encrypto::motion::ShareWrapper s1_3;
+    encrypto::motion::ShareWrapper s1_2;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::ShareWrapper _1_2;
     int scount_1;
     int s1_1;
     int s0_1;
@@ -1247,11 +1291,15 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `N!0` | `plaintext[int]` |
 | `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `s1!3` | `shared[int]` |
-| `!4!2` | `shared[int]` |
-| `s2!3` | `shared[int]` |
-| `!1!2` | `shared[int]` |
-| `!3!2` | `shared[int]` |
+| `s1!3` | `shared[bool]` |
+| `s1!2` | `shared[bool]` |
+| `!5!2` | `shared[bool]` |
+| `s2!3` | `shared[bool]` |
+| `s2!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
+| `!3!2` | `shared[bool]` |
+| `!4!2` | `shared[bool]` |
+| `!1!2` | `shared[bool]` |
 | `c!1` | `plaintext[int]` |
 | `s2!1` | `plaintext[int]` |
 | `s1!1` | `plaintext[int]` |
@@ -1267,11 +1315,15 @@ void count_123(
     int N_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
     int i;
-    encrypto::motion::SecureUnsignedInteger s1_3;
-    encrypto::motion::SecureUnsignedInteger _4_2;
-    encrypto::motion::SecureUnsignedInteger s2_3;
-    encrypto::motion::SecureUnsignedInteger _1_2;
-    encrypto::motion::SecureUnsignedInteger _3_2;
+    encrypto::motion::ShareWrapper s1_3;
+    encrypto::motion::ShareWrapper s1_2;
+    encrypto::motion::ShareWrapper _5_2;
+    encrypto::motion::ShareWrapper s2_3;
+    encrypto::motion::ShareWrapper s2_2;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::ShareWrapper _4_2;
+    encrypto::motion::ShareWrapper _1_2;
     int c_1;
     int s2_1;
     int s1_1;
@@ -1417,7 +1469,9 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 | `!3!3` | `shared[int]` |
 | `result!6` | `shared[list[int]]` |
 | `result!7` | `shared[list[int]]` |
-| `!2!3` | `shared[int]` |
+| `result!5` | `shared[list[int]]` |
+| `result!4` | `shared[list[int]]` |
+| `!2!3` | `shared[bool]` |
 | `!1!2` | `plaintext[list[int]]` |
 | `result!1` | `plaintext[list[int]]` |
 ### Motion code
@@ -1438,7 +1492,9 @@ void histogram(
     encrypto::motion::SecureUnsignedInteger _3_3;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_6;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_7;
-    encrypto::motion::SecureUnsignedInteger _2_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_5;
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_4;
+    encrypto::motion::ShareWrapper _2_3;
     std::vector<int> _1_2;
     std::vector<int> result_1;
 
@@ -1678,6 +1734,7 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
 | `i` | `plaintext[int]` |
 | `temp!2` | `shared[int]` |
 | `sum!3` | `shared[int]` |
+| `sum!2` | `shared[int]` |
 | `sum!1` | `plaintext[int]` |
 ### Motion code
 ```cpp
@@ -1693,6 +1750,7 @@ void ip(
     int i;
     encrypto::motion::SecureUnsignedInteger temp_2;
     encrypto::motion::SecureUnsignedInteger sum_3;
+    encrypto::motion::SecureUnsignedInteger sum_2;
     int sum_1;
 
     // Function body
@@ -1838,15 +1896,19 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 | `length!5` | `shared[int]` |
 | `max_len!3` | `shared[int]` |
 | `max_len!4` | `shared[int]` |
-| `!7!2` | `shared[int]` |
-| `!8!2` | `shared[int]` |
-| `!4!2` | `shared[int]` |
-| `!5!2` | `shared[int]` |
-| `s0!3` | `shared[int]` |
-| `!6!2` | `shared[int]` |
-| `!2!2` | `shared[int]` |
-| `!1!2` | `shared[int]` |
-| `s1!2` | `shared[int]` |
+| `max_len!2` | `shared[int]` |
+| `!7!2` | `shared[bool]` |
+| `!8!2` | `shared[bool]` |
+| `length!2` | `shared[int]` |
+| `length!3` | `shared[int]` |
+| `!4!2` | `shared[bool]` |
+| `!5!2` | `shared[bool]` |
+| `s0!3` | `shared[bool]` |
+| `!6!2` | `shared[bool]` |
+| `s0!2` | `shared[bool]` |
+| `s1!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
+| `!1!2` | `shared[bool]` |
 | `length!1` | `plaintext[int]` |
 | `max_len!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[int]` |
@@ -1866,15 +1928,19 @@ void longest_102(
     encrypto::motion::SecureUnsignedInteger length_5;
     encrypto::motion::SecureUnsignedInteger max_len_3;
     encrypto::motion::SecureUnsignedInteger max_len_4;
-    encrypto::motion::SecureUnsignedInteger _7_2;
-    encrypto::motion::SecureUnsignedInteger _8_2;
-    encrypto::motion::SecureUnsignedInteger _4_2;
-    encrypto::motion::SecureUnsignedInteger _5_2;
-    encrypto::motion::SecureUnsignedInteger s0_3;
-    encrypto::motion::SecureUnsignedInteger _6_2;
-    encrypto::motion::SecureUnsignedInteger _2_2;
-    encrypto::motion::SecureUnsignedInteger _1_2;
-    encrypto::motion::SecureUnsignedInteger s1_2;
+    encrypto::motion::SecureUnsignedInteger max_len_2;
+    encrypto::motion::ShareWrapper _7_2;
+    encrypto::motion::ShareWrapper _8_2;
+    encrypto::motion::SecureUnsignedInteger length_2;
+    encrypto::motion::SecureUnsignedInteger length_3;
+    encrypto::motion::ShareWrapper _4_2;
+    encrypto::motion::ShareWrapper _5_2;
+    encrypto::motion::ShareWrapper s0_3;
+    encrypto::motion::ShareWrapper _6_2;
+    encrypto::motion::ShareWrapper s0_2;
+    encrypto::motion::ShareWrapper s1_2;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper _1_2;
     int length_1;
     int max_len_1;
     int s0_1;
@@ -2015,8 +2081,11 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 | `length!5` | `shared[int]` |
 | `max_length!3` | `shared[int]` |
 | `max_length!4` | `shared[int]` |
-| `!2!2` | `shared[int]` |
-| `!1!2` | `shared[int]` |
+| `max_length!2` | `shared[int]` |
+| `!2!2` | `shared[bool]` |
+| `length!2` | `shared[int]` |
+| `length!3` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
 | `length!1` | `plaintext[int]` |
 | `max_length!1` | `plaintext[int]` |
 ### Motion code
@@ -2035,8 +2104,11 @@ void longest_1s(
     encrypto::motion::SecureUnsignedInteger length_5;
     encrypto::motion::SecureUnsignedInteger max_length_3;
     encrypto::motion::SecureUnsignedInteger max_length_4;
-    encrypto::motion::SecureUnsignedInteger _2_2;
-    encrypto::motion::SecureUnsignedInteger _1_2;
+    encrypto::motion::SecureUnsignedInteger max_length_2;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::SecureUnsignedInteger length_2;
+    encrypto::motion::SecureUnsignedInteger length_3;
+    encrypto::motion::ShareWrapper _1_2;
     int length_1;
     int max_length_1;
 
@@ -2180,10 +2252,14 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 | `tmp_max_len!4` | `shared[int]` |
 | `max_length!3` | `shared[int]` |
 | `max_length!4` | `shared[int]` |
+| `max_length!2` | `shared[int]` |
+| `!2!2` | `shared[bool]` |
+| `tmp_max_len!2` | `shared[int]` |
 | `!3!2` | `shared[int]` |
-| `!4!2` | `shared[int]` |
-| `!2!2` | `shared[int]` |
-| `!1!2` | `shared[int]` |
+| `!4!2` | `shared[bool]` |
+| `current_length!2` | `shared[int]` |
+| `current_length!3` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
 | `max_length!1` | `plaintext[int]` |
 | `current_length!1` | `plaintext[int]` |
 ### Motion code
@@ -2204,10 +2280,14 @@ void longest_even_0(
     encrypto::motion::SecureUnsignedInteger tmp_max_len_4;
     encrypto::motion::SecureUnsignedInteger max_length_3;
     encrypto::motion::SecureUnsignedInteger max_length_4;
+    encrypto::motion::SecureUnsignedInteger max_length_2;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::SecureUnsignedInteger tmp_max_len_2;
     encrypto::motion::SecureUnsignedInteger _3_2;
-    encrypto::motion::SecureUnsignedInteger _4_2;
-    encrypto::motion::SecureUnsignedInteger _2_2;
-    encrypto::motion::SecureUnsignedInteger _1_2;
+    encrypto::motion::ShareWrapper _4_2;
+    encrypto::motion::SecureUnsignedInteger current_length_2;
+    encrypto::motion::SecureUnsignedInteger current_length_3;
+    encrypto::motion::ShareWrapper _1_2;
     int max_length_1;
     int current_length_1;
 
@@ -2361,18 +2441,23 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 | `N!0` | `plaintext[int]` |
 | `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `s2!3` | `shared[int]` |
+| `s2!3` | `shared[bool]` |
+| `s2!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
+| `s1!2` | `shared[bool]` |
 | `current_length!4` | `plaintext[int]` |
 | `current_length!5` | `shared[int]` |
 | `current_length!6` | `shared[int]` |
 | `max_length!3` | `shared[int]` |
 | `max_length!4` | `shared[int]` |
-| `!6!2` | `shared[int]` |
-| `!7!2` | `shared[int]` |
+| `max_length!2` | `shared[int]` |
+| `!6!2` | `shared[bool]` |
+| `!7!2` | `shared[bool]` |
 | `!4!2` | `shared[int]` |
-| `!5!2` | `shared[int]` |
-| `!1!2` | `shared[int]` |
-| `s1!2` | `shared[int]` |
+| `!5!2` | `shared[bool]` |
+| `current_length!2` | `shared[int]` |
+| `current_length!3` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
 | `s2!1` | `plaintext[int]` |
 | `max_length!1` | `plaintext[int]` |
 | `current_length!1` | `plaintext[int]` |
@@ -2388,18 +2473,23 @@ void longest_odd_10(
     int N_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
     int i;
-    encrypto::motion::SecureUnsignedInteger s2_3;
+    encrypto::motion::ShareWrapper s2_3;
+    encrypto::motion::ShareWrapper s2_2;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper s1_2;
     int current_length_4;
     encrypto::motion::SecureUnsignedInteger current_length_5;
     encrypto::motion::SecureUnsignedInteger current_length_6;
     encrypto::motion::SecureUnsignedInteger max_length_3;
     encrypto::motion::SecureUnsignedInteger max_length_4;
-    encrypto::motion::SecureUnsignedInteger _6_2;
-    encrypto::motion::SecureUnsignedInteger _7_2;
+    encrypto::motion::SecureUnsignedInteger max_length_2;
+    encrypto::motion::ShareWrapper _6_2;
+    encrypto::motion::ShareWrapper _7_2;
     encrypto::motion::SecureUnsignedInteger _4_2;
-    encrypto::motion::SecureUnsignedInteger _5_2;
-    encrypto::motion::SecureUnsignedInteger _1_2;
-    encrypto::motion::SecureUnsignedInteger s1_2;
+    encrypto::motion::ShareWrapper _5_2;
+    encrypto::motion::SecureUnsignedInteger current_length_2;
+    encrypto::motion::SecureUnsignedInteger current_length_3;
+    encrypto::motion::ShareWrapper _1_2;
     int s2_1;
     int max_length_1;
     int current_length_1;
@@ -2535,9 +2625,12 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 | `current_dist!5` | `shared[int]` |
 | `max_dist!3` | `shared[int]` |
 | `max_dist!4` | `shared[int]` |
-| `!3!2` | `shared[int]` |
-| `!1!2` | `shared[int]` |
-| `!2!2` | `shared[int]` |
+| `max_dist!2` | `shared[int]` |
+| `!3!2` | `shared[bool]` |
+| `current_dist!2` | `shared[int]` |
+| `current_dist!3` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
 | `current_dist!1` | `plaintext[int]` |
 | `max_dist!1` | `plaintext[int]` |
 ### Motion code
@@ -2556,9 +2649,12 @@ void max_dist_between_syms(
     encrypto::motion::SecureUnsignedInteger current_dist_5;
     encrypto::motion::SecureUnsignedInteger max_dist_3;
     encrypto::motion::SecureUnsignedInteger max_dist_4;
-    encrypto::motion::SecureUnsignedInteger _3_2;
-    encrypto::motion::SecureUnsignedInteger _1_2;
-    encrypto::motion::SecureUnsignedInteger _2_2;
+    encrypto::motion::SecureUnsignedInteger max_dist_2;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::SecureUnsignedInteger current_dist_2;
+    encrypto::motion::SecureUnsignedInteger current_dist_3;
+    encrypto::motion::ShareWrapper _1_2;
+    encrypto::motion::ShareWrapper _2_2;
     int current_dist_1;
     int max_dist_1;
 
@@ -2684,10 +2780,12 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 | `current_sum!5` | `shared[int]` |
 | `max_sum!3` | `shared[int]` |
 | `max_sum!4` | `shared[int]` |
-| `!3!2` | `shared[int]` |
+| `max_sum!2` | `shared[int]` |
+| `!3!2` | `shared[bool]` |
+| `current_sum!2` | `shared[int]` |
 | `current_sum!4` | `plaintext[int]` |
-| `!1!2` | `shared[int]` |
-| `!2!2` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
 | `current_sum!1` | `plaintext[int]` |
 | `max_sum!1` | `plaintext[int]` |
 ### Motion code
@@ -2706,10 +2804,12 @@ void max_sum_between_syms(
     encrypto::motion::SecureUnsignedInteger current_sum_5;
     encrypto::motion::SecureUnsignedInteger max_sum_3;
     encrypto::motion::SecureUnsignedInteger max_sum_4;
-    encrypto::motion::SecureUnsignedInteger _3_2;
+    encrypto::motion::SecureUnsignedInteger max_sum_2;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::SecureUnsignedInteger current_sum_2;
     int current_sum_4;
-    encrypto::motion::SecureUnsignedInteger _1_2;
-    encrypto::motion::SecureUnsignedInteger _2_2;
+    encrypto::motion::ShareWrapper _1_2;
+    encrypto::motion::ShareWrapper _2_2;
     int current_sum_1;
     int max_sum_1;
 
@@ -2857,14 +2957,19 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 | `!12!2` | `shared[list[int]]` |
 | `min_Y!3` | `shared[list[int]]` |
 | `min_Y!4` | `shared[list[int]]` |
+| `min_Y!2` | `shared[list[int]]` |
+| `!13!1` | `shared[list[list[int]]]` |
 | `!8!2` | `shared[int]` |
 | `!9!2` | `shared[list[int]]` |
 | `min_X!3` | `shared[list[int]]` |
 | `min_X!4` | `shared[list[int]]` |
-| `!4!3` | `shared[int]` |
-| `!5!3` | `shared[int]` |
-| `bx!4` | `shared[int]` |
-| `!3!3` | `shared[int]` |
+| `min_X!2` | `shared[list[int]]` |
+| `!4!3` | `shared[bool]` |
+| `!5!3` | `shared[bool]` |
+| `bx!4` | `shared[bool]` |
+| `bx!3` | `shared[bool]` |
+| `!6!2` | `shared[bool]` |
+| `!3!3` | `shared[bool]` |
 | `bx!2` | `plaintext[int]` |
 | `min_Y!1` | `plaintext[list[int]]` |
 | `min_X!1` | `plaintext[list[int]]` |
@@ -2885,14 +2990,19 @@ void minimal_points(
     std::vector<encrypto::motion::SecureUnsignedInteger> _12_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_3;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_2;
+    std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _13_1;
     encrypto::motion::SecureUnsignedInteger _8_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _9_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_X_3;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_X_4;
-    encrypto::motion::SecureUnsignedInteger _4_3;
-    encrypto::motion::SecureUnsignedInteger _5_3;
-    encrypto::motion::SecureUnsignedInteger bx_4;
-    encrypto::motion::SecureUnsignedInteger _3_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_X_2;
+    encrypto::motion::ShareWrapper _4_3;
+    encrypto::motion::ShareWrapper _5_3;
+    encrypto::motion::ShareWrapper bx_4;
+    encrypto::motion::ShareWrapper bx_3;
+    encrypto::motion::ShareWrapper _6_2;
+    encrypto::motion::ShareWrapper _3_3;
     int bx_2;
     std::vector<int> min_Y_1;
     std::vector<int> min_X_1;
@@ -3052,9 +3162,11 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 | `val!4` | `shared[int]` |
 | `!2!2` | `shared[list[int]]` |
 | `result!3` | `shared[list[int]]` |
+| `result!2` | `shared[list[int]]` |
 | `flag!4` | `plaintext[int]` |
 | `flag!5` | `shared[int]` |
-| `!1!3` | `shared[int]` |
+| `flag!3` | `shared[int]` |
+| `!1!3` | `shared[bool]` |
 | `flag!2` | `plaintext[int]` |
 | `result!1` | `plaintext[list[int]]` |
 | `dummy!1` | `plaintext[int]` |
@@ -3078,9 +3190,11 @@ void psi(
     encrypto::motion::SecureUnsignedInteger val_4;
     std::vector<encrypto::motion::SecureUnsignedInteger> _2_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_2;
     int flag_4;
     encrypto::motion::SecureUnsignedInteger flag_5;
-    encrypto::motion::SecureUnsignedInteger _1_3;
+    encrypto::motion::SecureUnsignedInteger flag_3;
+    encrypto::motion::ShareWrapper _1_3;
     int flag_2;
     std::vector<int> result_1;
     int dummy_1;
