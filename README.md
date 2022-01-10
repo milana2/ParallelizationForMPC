@@ -158,6 +158,12 @@ void biometric(
     int min_index_1;
     int min_sum_1;
 
+    // Parameter assignments
+    C_0 = C;
+    D_0 = D;
+    S_0 = S;
+    N_0 = N;
+
     // Function body
     min_sum_1 = 10000;
     min_index_1 = (- 1);
@@ -454,6 +460,15 @@ void biometric_matching_fast(
     std::vector<int> _1_2;
     std::vector<int> differences_1;
 
+    // Parameter assignments
+    D_0 = D;
+    N_0 = N;
+    C_0 = C;
+    C_sqr_sum_0 = C_sqr_sum;
+    two_C_0 = two_C;
+    S_0 = S;
+    S_sqr_sum_0 = S_sqr_sum;
+
     // Function body
     differences_1 = {};
 
@@ -608,6 +623,10 @@ void foo(
     encrypto::motion::ShareWrapper _2_1;
     encrypto::motion::ShareWrapper _1_1;
     int z_1;
+
+    // Parameter assignments
+    x_0 = x;
+    y_0 = y;
 
     // Function body
     z_1 = 0;
@@ -825,6 +844,11 @@ void convex_hull(
     std::vector<int> hull_Y_1;
     std::vector<int> hull_X_1;
 
+    // Parameter assignments
+    X_coords_0 = X_coords;
+    Y_coords_0 = Y_coords;
+    N_0 = N;
+
     // Function body
     hull_X_1 = {};
     hull_Y_1 = {};
@@ -997,6 +1021,11 @@ void count_102(
     int c_1;
     int s0_1;
 
+    // Parameter assignments
+    Seq_0 = Seq;
+    N_0 = N;
+    Syms_0 = Syms;
+
     // Function body
     s0_1 = False;
     c_1 = 0;
@@ -1157,6 +1186,11 @@ void count_10s(
     int scount_1;
     int s1_1;
     int s0_1;
+
+    // Parameter assignments
+    Seq_0 = Seq;
+    N_0 = N;
+    Syms_0 = Syms;
 
     // Function body
     s0_1 = False;
@@ -1328,6 +1362,11 @@ void count_123(
     int s2_1;
     int s1_1;
 
+    // Parameter assignments
+    Seq_0 = Seq;
+    N_0 = N;
+    Syms_0 = Syms;
+
     // Function body
     s1_1 = False;
     s2_1 = False;
@@ -1498,6 +1537,12 @@ void histogram(
     std::vector<int> _1_2;
     std::vector<int> result_1;
 
+    // Parameter assignments
+    A_0 = A;
+    B_0 = B;
+    N_0 = N;
+    num_bins_0 = num_bins;
+
     // Function body
     result_1 = {};
 
@@ -1636,6 +1681,13 @@ void foo(
     int N_0;
     int i;
 
+    // Parameter assignments
+    A_0 = A;
+    B_0 = B;
+    C_0 = C;
+    D_0 = D;
+    N_0 = N;
+
     // Function body
 
     // Initialize phi values
@@ -1752,6 +1804,11 @@ void ip(
     encrypto::motion::SecureUnsignedInteger sum_3;
     encrypto::motion::SecureUnsignedInteger sum_2;
     int sum_1;
+
+    // Parameter assignments
+    A_0 = A;
+    B_0 = B;
+    N_0 = N;
 
     // Function body
     sum_1 = 0;
@@ -1945,6 +2002,11 @@ void longest_102(
     int max_len_1;
     int s0_1;
 
+    // Parameter assignments
+    Seq_0 = Seq;
+    N_0 = N;
+    Syms_0 = Syms;
+
     // Function body
     s0_1 = False;
     max_len_1 = 0;
@@ -2111,6 +2173,11 @@ void longest_1s(
     encrypto::motion::ShareWrapper _1_2;
     int length_1;
     int max_length_1;
+
+    // Parameter assignments
+    Seq_0 = Seq;
+    N_0 = N;
+    Sym_0 = Sym;
 
     // Function body
     max_length_1 = 0;
@@ -2290,6 +2357,11 @@ void longest_even_0(
     encrypto::motion::ShareWrapper _1_2;
     int max_length_1;
     int current_length_1;
+
+    // Parameter assignments
+    Seq_0 = Seq;
+    N_0 = N;
+    Sym_0 = Sym;
 
     // Function body
     current_length_1 = 0;
@@ -2494,6 +2566,11 @@ void longest_odd_10(
     int max_length_1;
     int current_length_1;
 
+    // Parameter assignments
+    Seq_0 = Seq;
+    N_0 = N;
+    Syms_0 = Syms;
+
     // Function body
     current_length_1 = 0;
     max_length_1 = 0;
@@ -2658,6 +2735,11 @@ void max_dist_between_syms(
     int current_dist_1;
     int max_dist_1;
 
+    // Parameter assignments
+    Seq_0 = Seq;
+    N_0 = N;
+    Sym_0 = Sym;
+
     // Function body
     max_dist_1 = 0;
     current_dist_1 = 0;
@@ -2812,6 +2894,11 @@ void max_sum_between_syms(
     encrypto::motion::ShareWrapper _2_2;
     int current_sum_1;
     int max_sum_1;
+
+    // Parameter assignments
+    Seq_0 = Seq;
+    N_0 = N;
+    Sym_0 = Sym;
 
     // Function body
     max_sum_1 = 0;
@@ -3007,6 +3094,11 @@ void minimal_points(
     std::vector<int> min_Y_1;
     std::vector<int> min_X_1;
 
+    // Parameter assignments
+    X_coords_0 = X_coords;
+    Y_coords_0 = Y_coords;
+    N_0 = N;
+
     // Function body
     min_X_1 = {};
     min_Y_1 = {};
@@ -3199,6 +3291,12 @@ void psi(
     std::vector<int> result_1;
     int dummy_1;
     int val_2;
+
+    // Parameter assignments
+    A_0 = A;
+    SA_0 = SA;
+    B_0 = B;
+    SB_0 = SB;
 
     // Function body
     dummy_1 = 0;
