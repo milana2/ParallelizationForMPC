@@ -1,4 +1,4 @@
-def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def longest_102(Seq: shared[list[unsigned int]], N: plaintext[unsigned int], Syms: shared[list[unsigned int]]):
     s0 = False
     max_len = 0
     length = 0

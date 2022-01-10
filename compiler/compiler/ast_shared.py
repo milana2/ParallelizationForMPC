@@ -12,7 +12,7 @@ class VarVisibility(Enum):
 
 
 class DataType(Enum):
-    INT = "int"
+    INT = "unsigned int"
     BOOL = "bool"
 
 

@@ -6,10 +6,11 @@ from .type_analysis import TypeEnv
 
 
 def render_function(func: Function, type_env: TypeEnv) -> str:
-    return_type = "void"
-    # TODO: uncomment this when typing is fixed - return_type = type_env[func.return_value].to_cpp()
+    return_type = type_env[func.return_value].to_cpp()
     func_header = (
-        f"{return_type} {func.name}(\n"
+        "template <encrypto::motion::MpcProtocol Protocol>\n"
+        + f"{return_type} {func.name}(\n"
+        + indent("encrypto::motion::PartyPointer &party,\n", "    ")
         + indent(",\n".join(param.to_cpp() for param in func.parameters), "    ")
         + "\n) {"
     )

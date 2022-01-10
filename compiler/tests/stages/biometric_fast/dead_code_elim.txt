@@ -1,4 +1,4 @@
-Function biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
+Function biometric_matching_fast(D: plaintext[unsigned int], N: plaintext[unsigned int], C: shared[list[unsigned int]], C_sqr_sum: shared[unsigned int], two_C: shared[list[unsigned int]], S: shared[list[unsigned int]], S_sqr_sum: shared[list[unsigned int]]):
 Entry block: 0
 Exit block: 6
 Block 0:

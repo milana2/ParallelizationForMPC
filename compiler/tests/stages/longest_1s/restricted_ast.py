@@ -1,4 +1,4 @@
-def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def longest_1s(Seq: shared[list[unsigned int]], N: plaintext[unsigned int], Sym: shared[unsigned int]):
     max_length = 0
     length = 0
     for i: plaintext[int] in range(1, N):

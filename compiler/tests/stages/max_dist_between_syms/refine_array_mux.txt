@@ -1,4 +1,4 @@
-def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def max_dist_between_syms(Seq: shared[list[unsigned int]], N: plaintext[unsigned int], Sym: shared[unsigned int]):
     max_dist!1 = 0
     current_dist!1 = 0
     for i in range(0, N!0):
