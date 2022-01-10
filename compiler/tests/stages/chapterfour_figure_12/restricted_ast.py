@@ -1,4 +1,4 @@
-def foo(x: plaintext[int], y: plaintext[int]):
+def foo(x: shared[int], y: shared[int]):
     z = 0
     if (x > 0):
         if (y > 0):

@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Optional, final, NoReturn
 
 from . import restricted_ast
-from .ast_shared import VarType, VarVisibility
+from .ast_shared import VarType, VarVisibility, DataType
 
 
 @dataclass
@@ -397,7 +397,7 @@ class _TypeConverter(_StrictNodeVisitor):
         if node.id != "int":
             self.raise_syntax_error(node, "Only `int` is supported")
 
-        return VarType(VarVisibility.SHARED, 0)
+        return VarType(VarVisibility.SHARED, 0, DataType.INT)
 
     def visit_Subscript(self, node: ast.Subscript) -> VarType:
         if not isinstance(node.value, ast.Name):
@@ -420,7 +420,7 @@ class _TypeConverter(_StrictNodeVisitor):
 
         subtype = _TypeConverter(self.source_code_info).visit(node.slice)
 
-        return VarType(VarVisibility.SHARED, subtype.dims + 1)
+        return VarType(VarVisibility.SHARED, subtype.dims + 1, subtype.datatype)
 
 
 class _FunctionConverter(_StrictNodeVisitor):
@@ -437,7 +437,7 @@ class _FunctionConverter(_StrictNodeVisitor):
             parameters=[
                 restricted_ast.Parameter(
                     var=restricted_ast.Var(arg.arg),
-                    var_type=VarType(VarVisibility.PLAINTEXT, 0)
+                    var_type=VarType(VarVisibility.PLAINTEXT, 0, DataType.INT)
                     if arg.annotation is None
                     else _TypeConverter(self.source_code_info).visit(arg.annotation),
                 )

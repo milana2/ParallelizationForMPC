@@ -20,14 +20,13 @@ class DataType(Enum):
 class VarType:
     visibility: VarVisibility
     dims: int
-    # TODO: make this non-defaulted
-    data_type: DataType = DataType.INT
+    datatype: DataType
 
     def drop_dim(self) -> "VarType":
-        return VarType(self.visibility, self.dims - 1)
+        return VarType(self.visibility, self.dims - 1, self.datatype)
 
     def add_dim(self) -> "VarType":
-        return VarType(self.visibility, self.dims + 1)
+        return VarType(self.visibility, self.dims + 1, self.datatype)
 
     def is_plaintext(self) -> bool:
         return self.visibility == VarVisibility.PLAINTEXT
@@ -40,11 +39,11 @@ class VarType:
         for _ in range(self.dims):
             str_rep += "std::vector<"
         if self.visibility == VarVisibility.PLAINTEXT:
-            str_rep += self.data_type.value
+            str_rep += self.datatype.value
         elif self.visibility == VarVisibility.SHARED:
-            if self.data_type == DataType.INT:
+            if self.datatype == DataType.INT:
                 str_rep += "encrypto::motion::SecureUnsignedInteger"
-            elif self.data_type == DataType.BOOL:
+            elif self.datatype == DataType.BOOL:
                 # TODO: check that this is the correct type
                 str_rep += "encrypto::motion::ShareWrapper"
         for _ in range(self.dims):
@@ -55,14 +54,14 @@ class VarType:
         str_rep = f"{self.visibility.value}["
         for _ in range(self.dims):
             str_rep += "list["
-        str_rep += self.data_type.value
+        str_rep += self.datatype.value
         for _ in range(self.dims):
             str_rep += "]"
         str_rep += "]"
         return str_rep
 
 
-PLAINTEXT_INT = VarType(VarVisibility.PLAINTEXT, 0)
+PLAINTEXT_INT = VarType(VarVisibility.PLAINTEXT, 0, DataType.INT)
 
 
 @dataclass(frozen=True)
@@ -132,6 +131,60 @@ class BinOpKind(Enum):
     AND = "and"
     OR = "or"
 
+    def get_ret_datatype(self) -> DataType:
+        if self in (
+            BinOpKind.ADD,
+            BinOpKind.SUB,
+            BinOpKind.MUL,
+            BinOpKind.DIV,
+            BinOpKind.MOD,
+            BinOpKind.SHL,
+            BinOpKind.SHR,
+        ):
+            return DataType.INT
+
+        elif self in (
+            BinOpKind.LT,
+            BinOpKind.GT,
+            BinOpKind.LT_E,
+            BinOpKind.GT_E,
+            BinOpKind.EQ,
+            BinOpKind.NOT_EQ,
+            BinOpKind.AND,
+            BinOpKind.OR,
+        ):
+            return DataType.BOOL
+
+        else:
+            raise ValueError(f"Unhandled binary operation {self}")
+
+    def get_operand_datatypes(self) -> list[DataType]:
+        if self in (
+            BinOpKind.ADD,
+            BinOpKind.SUB,
+            BinOpKind.MUL,
+            BinOpKind.DIV,
+            BinOpKind.MOD,
+            BinOpKind.SHL,
+            BinOpKind.SHR,
+            BinOpKind.LT,
+            BinOpKind.GT,
+            BinOpKind.LT_E,
+            BinOpKind.GT_E,
+        ):
+            return [DataType.INT]
+
+        elif self in (
+            BinOpKind.EQ,
+            BinOpKind.NOT_EQ,
+            BinOpKind.AND,
+            BinOpKind.OR,
+        ):
+            return [DataType.INT, DataType.BOOL]
+
+        else:
+            raise ValueError(f"Unhandled binary operation {self}")
+
     def __str__(self) -> str:
         return self.value
 
@@ -139,6 +192,26 @@ class BinOpKind(Enum):
 class UnaryOpKind(Enum):
     NEGATE = "-"
     NOT = "not"
+
+    def get_ret_datatype(self) -> DataType:
+        if self == UnaryOpKind.NEGATE:
+            return DataType.INT
+
+        elif self == UnaryOpKind.NOT:
+            return DataType.BOOL
+
+        else:
+            raise ValueError(f"Unhandled unary operation {self}")
+
+    def get_operand_datatypes(self) -> list[DataType]:
+        if self == UnaryOpKind.NEGATE:
+            return [DataType.INT]
+
+        elif self == UnaryOpKind.NOT:
+            return [DataType.BOOL, DataType.INT]
+
+        else:
+            raise ValueError(f"Unhandled unary operation {self}")
 
     def __str__(self) -> str:
         return self.value

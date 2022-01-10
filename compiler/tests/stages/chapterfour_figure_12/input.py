@@ -1,4 +1,4 @@
-def foo(x, y):
+def foo(x: int, y: int):
     z = 0
     if x > 0:
         if y > 0:

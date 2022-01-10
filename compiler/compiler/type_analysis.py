@@ -13,6 +13,7 @@ from .ast_shared import (
     SubscriptIndex,
     VarVisibility,
     PLAINTEXT_INT,
+    DataType,
 )
 from .tac_cfg import AssignRHS, List, Tuple, Mux, Update
 
@@ -54,30 +55,55 @@ def _type_assign_expr(
         lhs_type = _type_assign_expr(expr.left, type_env)
         rhs_type = _type_assign_expr(expr.right, type_env)
 
+        op_datatype = expr.operator.get_ret_datatype()
+
+        # If we have concrete types for each operand, we can validate that they are compatible
+        # and calculate the dimensions of the returned value
+        # TODO: check that the types are valid for the given operator
         if lhs_type is not None and rhs_type is not None:
             if lhs_type.dims != rhs_type.dims:
                 raise TypeError("Cannot add arrays of different dimensions")
 
             if lhs_type.is_plaintext() and rhs_type.is_plaintext():
-                return VarType(VarVisibility.PLAINTEXT, lhs_type.dims)
+                return VarType(VarVisibility.PLAINTEXT, lhs_type.dims, op_datatype)
             else:
-                return VarType(VarVisibility.SHARED, lhs_type.dims)
-        elif lhs_type is not None and lhs_type.is_shared():
-            return lhs_type
+                return VarType(VarVisibility.SHARED, lhs_type.dims, op_datatype)
+
+        returned_type = None
+
+        # If we only know one operand's type, we can assume that the other operand will be compatible
+        # (this gets checked after type assignment is complete).  We can only determine
+        # the visibility of the returned value if the known operand is shared.
+        if lhs_type is not None and lhs_type.is_shared():
+            returned_type = lhs_type
         elif rhs_type is not None and rhs_type.is_shared():
-            return rhs_type
-        else:
+            returned_type = rhs_type
+
+        if returned_type is None:
             return None
+        else:
+            return VarType(returned_type.visibility, returned_type.dims, op_datatype)
 
     elif isinstance(expr, UnaryOp):
-        return _type_assign_expr(expr.operand, type_env)
+        op_datatype = expr.operator.get_ret_datatype()
+        returned_type = _type_assign_expr(expr.operand, type_env)
+
+        if returned_type is None:
+            return None
+        elif returned_type.datatype not in expr.operator.get_operand_datatypes():
+            raise TypeError(
+                f"Operand of unary operator {expr.operator} is not of a valid type: found type '{returned_type}' but expected type in '{expr.operator.get_operand_datatypes()}'"
+            )
+        else:
+            return VarType(returned_type.visibility, returned_type.dims, op_datatype)
 
     elif isinstance(expr, (List, Tuple)):
         if len(expr.items) == 0:
             # Edge case for initialization of empty lists/tuples
             # We assume that all arrays in the source-code are 1-dimensional
             # TODO: remove this condition if multi-dimensional arrays are supported
-            return VarType(VarVisibility.PLAINTEXT, 1)
+            # TODO: is it ok to assume that all hard-coded arrays are of ints?
+            return VarType(VarVisibility.PLAINTEXT, 1, DataType.INT)
 
         elem_types = [_type_assign_expr(elem, type_env) for elem in expr.items]
         elem_dims = [
@@ -124,6 +150,15 @@ def _type_assign_expr(
                 "True and false values of a MUX must have the same dimensions"
             )
 
+        if (
+            true_type is not None
+            and false_type is not None
+            and true_type.datatype != false_type.datatype
+        ):
+            raise TypeError(
+                "True and false values of a MUX must have the same datatypes"
+            )
+
         if cond_type is not None and (
             (true_type is not None and cond_type.dims > true_type.dims)
             or (false_type is not None and cond_type.dims > false_type.dims)
@@ -133,14 +168,14 @@ def _type_assign_expr(
             )
 
         if true_type is not None:
-            ret_dims = true_type.dims
+            ret_type = true_type
         else:
             # the below assertion is not necessary due to the above check, but my
             # typechecker complains when it's missing
             assert false_type is not None
-            ret_dims = false_type.dims
+            ret_type = false_type
 
-        return VarType(VarVisibility.SHARED, ret_dims)
+        return VarType(VarVisibility.SHARED, ret_type.dims, ret_type.datatype)
 
     elif isinstance(expr, Update):
         val_type = _type_assign_expr(expr.value, type_env)
@@ -152,8 +187,13 @@ def _type_assign_expr(
                     "Cannot update array with value of different dimensions than its element type"
                 )
 
+            if val_type.datatype != arr_type.datatype:
+                raise TypeError(
+                    "Cannot update array with value of different datatype than its element type"
+                )
+
             if val_type.is_shared():
-                return VarType(VarVisibility.SHARED, arr_type.dims)
+                return VarType(VarVisibility.SHARED, arr_type.dims, arr_type.datatype)
             else:
                 return arr_type
         elif arr_type is not None and arr_type.is_shared():
@@ -261,7 +301,7 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
             type_env[stmt.lhs] = var_type
 
         elif isinstance(stmt, loop_linear_code.Phi):
-            if stmt.lhs not in type_env:
+            if stmt.lhs in type_env:
                 # This assignment has been reached before, don't extend the worklist
                 continue
 
@@ -275,25 +315,36 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
             elem_dims = [
                 elem_type.dims for elem_type in elem_types if elem_type is not None
             ]
+            elem_datatypes = [
+                elem_type.datatype for elem_type in elem_types if elem_type is not None
+            ]
 
             if len(elem_dims) == 0:
                 # We can't determine the dimensions of the returned value yet
                 continue
-            elif len(set(elem_dims)) > 1:
+            if len(set(elem_dims)) > 1:
                 raise TypeError(
                     "Phi expressions must have the same dimensions for all operands"
+                )
+            if len(set(elem_datatypes)) > 1:
+                raise TypeError(
+                    "Phi expressions must have the same datatypes for all operands"
                 )
 
             if all(
                 elem_type is not None and elem_type.is_plaintext()
                 for elem_type in elem_types
             ):
-                var_type = VarType(VarVisibility.PLAINTEXT, elem_dims[0])
+                var_type = VarType(
+                    VarVisibility.PLAINTEXT, elem_dims[0], elem_datatypes[0]
+                )
             elif any(
                 elem_type is not None and elem_type.is_shared()
                 for elem_type in elem_types
             ):
-                var_type = VarType(VarVisibility.SHARED, elem_dims[0])
+                var_type = VarType(
+                    VarVisibility.SHARED, elem_dims[0], elem_datatypes[0]
+                )
             else:
                 # This variable cannot be typed yet
                 continue
