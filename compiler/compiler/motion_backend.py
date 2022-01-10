@@ -23,6 +23,16 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + "\n"
     )
 
+    # TODO: once parameter renaming is properly implemented, this shouldn't be necessary
+    param_assignments = (
+        "// Parameter assignments\n"
+        + "\n".join(
+            param.var.to_cpp() + "_0 = " + param.var.to_cpp() + ";"
+            for param in func.parameters
+        )
+        + "\n"
+    )
+
     func_body = (
         "// Function body\n"
         + "\n".join(stmt.to_cpp() for stmt in func.body if not isinstance(stmt, Phi))
@@ -33,6 +43,8 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         func_header
         + "\n"
         + indent(var_definitions, "    ")
+        + "\n"
+        + indent(param_assignments, "    ")
         + "\n"
         + indent(func_body, "    ")
         + indent(f"return {func.return_value.to_cpp()};", "    ")
