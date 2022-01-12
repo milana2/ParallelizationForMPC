@@ -616,18 +616,31 @@ loop-carried dependence on $\texttt{A}$; otherwise there is not and we can remov
 Consider the earlier example. There is a single loop, $i$. Clearly, there is no pair $\underline{i}$ and $\underline{i}'$, where $\underline{i} < \underline{i}'$ that make $\underline{i} = \underline{i}'$ (due to the def-use pairs of \texttt{A} 6-8 and 6-10).
 Therefore, we remove the back edge from 6 to 1. Analogously, we remove the back edges from 8 to 2 and 10 to 3. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 12 to 4 remains (def-use pairs for \texttt{D}). As a result of removing these spurious edges, Basic Vectorization will find that statement 6 is vectorizable. Statements 8, 10 and 12 will correctly appear in the FOR loop.
 
-\ana{TODO: We need to remove phi-nodes that end up without incoming back-edges.}
+\ana{Commented out previous writeup. Removal/handling of targetless phi-nodes will go into the Extension to Basic vectorization.} 
 
+\begin{comment}
 The final step is to remove array phi-nodes that are left without incoming back edges after removal of infeasible edges.
-Clearly, such a phi-node is redundant when there are no loop-carried dependences that are due to writes to the corresponding array.
-In our running example, the phi-nodes for \texttt{A}, \texttt{B}, and \texttt{C}, are all redundant.
+Such a phi-node is redundant when there are no loop-carried dependences that are due to writes to the corresponding array.
+In our running example, the phi-nodes for \texttt{A}, \texttt{B}, and \texttt{C}, are redundant.
 
-Removing redundant phi-nodes is as follows.
+Removing redundant phi-nodes proceeds from \emph{innermost to outermost} loops as follows.
 Denote a redundant phi-node by $\texttt{A}_1 = \phi(\texttt{A}_0,\texttt{A}_k)$. $\texttt{A}_0$ is the array at the beginning of the loop
-and $\texttt{A}_k$ is the array at the end of an iteration (including the last iteration). For each outer-to-inner or same-level def-use edge
-that originates at the node, replace $\texttt{A}_1$ at the use node by $\texttt{A}_0$. This is correct, i.e., it is guaranteed that the use
+and $\texttt{A}_k$ is the array at the end of an iteration (including the last iteration). We consider two cases:
+\begin{enumerate}
+\item[Case 1] Inner-to-outer or same-level def-use edge
+\begin{itemize}
+\item If use is an array read $ ... = \texttt{A}_1[f(i)]$, then replace $\texttt{A}_1$ with $\texttt{A}_0$. This is correct, i.e., it is guaranteed that the use
 references $\texttt{A}_0$; had the use been referencing an array modified in an earlier iteration, the back-edge to the phi-node would
 not have been removed and the phi-node would not have been classified as redundant.
+\item If use is an array write (update) $\texttt{A}_2 = \texttt{A}_1; \texttt{A}_2[i] = ... $ equiv. to $\texttt{A}_2 = \mathit{update}(\texttt{A}_1, i, ...)$ then handling becomes more tricky.
+The semantics of this update is that when $i$ is 0, then $\texttt{A}_0$ is being read. But when $i > 0$, then $\texttt{A}_k$ is being read. If we are at this case, this means that the def-use edge is same-level and we are removing a redundant node in the loop enclosing the update. The removal of the original phi-node entails pushing the phi-node at the update:
+$\texttt{A}_2 = \phi(\texttt{A}_0,\texttt{A}_k); \texttt{A}_2[i] = ... $ equiv. to $\texttt{A}_2 = \mathit{update}(\phi(\texttt{A}_0,\texttt{A}_k), i, ...)$.
+\item If use is a phi-node $... = \phi(\texttt{A}_1,...)$, that means we have an outer-to-inner edge. The 
+
+\end{itemize}
+\end{enumerate}
+For each outer-to-inner or same-level def-use edge
+that originates at the node, replace $\texttt{A}_1$ at the use node by $\texttt{A}_0$. 
 For each inner-to-outer def-use edge, replace $\texttt{A}_1$ by $\texttt{A}_k$. In this case, the use references the array
 that results from the computation in the loop.
 
@@ -643,6 +656,7 @@ respectively, i.e., the arrays before the loop.
 \STATE 4. $\texttt{C}_1$ = $\texttt{C}$; $\texttt{C}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
 \STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$; $\texttt{D}_1$[i] = $\texttt{B}_1$[i] * $\texttt{C}_1$[i];
 \end{algorithmic}
+\end{comment}
 
 \subsubsection{Array MUX refinement}
 
@@ -678,6 +692,8 @@ the size of those vectors. Note that this is a heuristic that handles a common c
 \end{algorithmic}
 
 \subsection{Extension of Basic Vectorization with Array Writes}
+
+\ana{TODO: Handling of Targetless phi nodes should be done here, as an extension to Basic Vectorization.}
 
 \subsubsection{Restricting Array Writes}
 
