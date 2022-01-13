@@ -19,6 +19,15 @@ from . import vectorize
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("input", type=argparse.FileType("r"))
+    parser.add_argument(
+        "--out-dir",
+        help="If provided, render a sample application into this directory.",
+    )
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Overwrite existing output directory",
+    )
     return parser.parse_args()
 
 
@@ -90,3 +99,6 @@ def main():
     print("Motion code:")
     print(motion_code)
     print()
+
+    if args.out_dir:
+        motion_backend.render_application(linear, type_env, args)

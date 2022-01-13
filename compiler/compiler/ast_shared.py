@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Generic, TypeVar, Union, Optional, Protocol
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from textwrap import indent
 
 import networkx  # type: ignore
@@ -90,6 +90,12 @@ class Parameter:
 
     var: Var
     var_type: VarType
+    default_values: list[str] = field(
+        default_factory=list
+    )  # generated from example function calls in the input file
+    party_idx: Optional[
+        int
+    ] = None  # stores the party index associated with this parameter, if it is shared
 
     def to_cpp(self):
         return self.var_type.to_cpp() + " " + self.var.to_cpp()

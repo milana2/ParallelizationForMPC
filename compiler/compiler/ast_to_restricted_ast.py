@@ -430,19 +430,26 @@ class _FunctionConverter(_StrictNodeVisitor):
             self.raise_syntax_error(node, "Decorators unsupported")
         if len(node.body) == 0:
             self.raise_syntax_error(node, "Function has empty body")
+        parameters = [
+            restricted_ast.Parameter(
+                var=restricted_ast.Var(arg.arg),
+                var_type=VarType(VarVisibility.PLAINTEXT, 0, DataType.INT)
+                if arg.annotation is None
+                else _TypeConverter(self.source_code_info).visit(arg.annotation),
+            )
+            for arg in node.args.args
+        ]
+
+        party_idx = 0
+        for parameter in parameters:
+            if parameter.var_type.visibility == VarVisibility.SHARED:
+                parameter.party_idx = party_idx
+                party_idx += 1
 
         return restricted_ast.Function(
             # TODO: Exclude other kinds of arguments
             name=node.name,
-            parameters=[
-                restricted_ast.Parameter(
-                    var=restricted_ast.Var(arg.arg),
-                    var_type=VarType(VarVisibility.PLAINTEXT, 0, DataType.INT)
-                    if arg.annotation is None
-                    else _TypeConverter(self.source_code_info).visit(arg.annotation),
-                )
-                for arg in node.args.args
-            ],
+            parameters=parameters,
             body=_convert_statements(self.source_code_info, node.body[:-1]),
             return_value=_ReturnValueGetter(self.source_code_info).visit(node.body[-1]),
         )
