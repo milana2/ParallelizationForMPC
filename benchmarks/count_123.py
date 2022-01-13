@@ -19,5 +19,4 @@ def count_123(Seq: list[int], N, Syms: list[int]):
 
 
 seq = [1, 2, 3, 1, 3, 3, 4]
-num_123s = count_123(seq, len(seq), [1, 2, 3])
-print(num_123s)
+print(count_123(seq, 7, [1, 2, 3]))

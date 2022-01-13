@@ -13,5 +13,4 @@ def max_sum_between_syms(Seq: list[int], N, Sym: int):
 
 
 seq = [1, 2, 1, 1, 2, 3, 4, 1]
-max_sum = max_sum_between_syms(seq, len(seq), 1)
-print(max_sum)
+print(max_sum_between_syms(seq, 8, 1))

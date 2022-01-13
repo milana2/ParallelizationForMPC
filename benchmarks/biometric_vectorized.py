@@ -6,8 +6,8 @@ def biometric_matching_vectorized(D, N, C:list[int], C_sqr_sum:int, two_C:list[i
   because python does not have the SIMD instructions we assume our backend to support.
 
   See docs for `biometric_matching_fast` for a description of parameters
-  
-  """ 
+
+  """
 
   two_a_b: list[int] = [0] * N
 
@@ -15,7 +15,7 @@ def biometric_matching_vectorized(D, N, C:list[int], C_sqr_sum:int, two_C:list[i
     arr: list[int] = MUL(S[i*D], two_C, D) # D-wise SIMD MUL
     half_size = D // 2 # we don't want floating division because SIMD instructions may not support them
     two_a_b_even: list[int] = [0] * half_size
-    two_a_b_odd: list[int] = [0] * half_size 
+    two_a_b_odd: list[int] = [0] * half_size
 
     while(half_size > 0):
       two_a_b_even, two_a_b_odd = SPLIT(arr, 2i, 2i+1) # I don't know what 2i and 2i+1 are, am copying it from slides

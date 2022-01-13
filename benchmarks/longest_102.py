@@ -24,5 +24,4 @@ def longest_102(Seq: list[int], N, Syms: list[int]):
 
 
 seq = [1, 0, 2, 1, 0, 0, 2, 1, 2, 2]
-longest_102_len = longest_102(seq, len(seq), [1, 0, 2])
-print(longest_102_len)
+print(longest_102(seq, 10, [1, 0, 2]))

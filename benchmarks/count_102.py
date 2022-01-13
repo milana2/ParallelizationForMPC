@@ -16,5 +16,4 @@ def count_102(Seq: list[int], N, Syms: list[int]):
 
 
 seq = [1, 0, 2, 1, 0, 0, 2, 1, 2, 2]
-num_102s = count_102(seq, len(seq), [1, 0, 2])
-print(num_102s)
+print(count_102(seq, 10, [1, 0, 2]))

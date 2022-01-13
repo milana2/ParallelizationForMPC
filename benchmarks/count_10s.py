@@ -18,5 +18,4 @@ def count_10s(Seq: list[int], N, Syms: list[int]):
 
 
 seq = [1, 0, 0, 1, 1, 0, 2]
-num_10s = count_10s(seq, len(seq), [0, 1])
-print(num_10s)
+print(count_10s(seq, 7, [0, 1]))

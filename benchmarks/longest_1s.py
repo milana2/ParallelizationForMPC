@@ -20,5 +20,4 @@ def longest_1s(Seq: list[int], N, Sym: int):
 
 
 seq = [0, 0, 1, 1, 1, 1, 0, 1, 0]
-longest_1s_len = longest_1s(seq, len(seq), 1)
-print(longest_1s_len)
+print(longest_1s(seq, 9, 1))

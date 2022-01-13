@@ -15,6 +15,4 @@ def minimal_points(X_coords: list[int], Y_coords: list[int], N):
 
 X_coords = [1, 2, 3]
 Y_coords = [4, 5, 6]
-min_x, min_y = minimal_points(X_coords, Y_coords, len(X_coords))
-print(min_x)
-print(min_y)
+print(minimal_points(X_coords, Y_coords, 3))
