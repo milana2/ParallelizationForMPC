@@ -40,7 +40,7 @@ def main():
         ast_node = ast.parse(text, filename=filename)
         ast_node = ast_to_restricted_ast(node=ast_node, filename=filename, text=text)
     except SyntaxError as err:
-        traceback.print_exception(etype=None, value=err, tb=None)
+        traceback.print_exception(None, value=err, tb=None)
         sys.exit(1)
 
     print("Restricted AST:")

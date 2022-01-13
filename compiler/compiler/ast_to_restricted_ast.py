@@ -5,7 +5,7 @@ and for converting to a data type that reflects that restricted subset.
 
 import ast
 from dataclasses import dataclass
-from typing import Optional, final, NoReturn
+from typing import Optional, final, NoReturn, Union
 
 from . import restricted_ast
 from .ast_shared import VarType, VarVisibility, DataType
@@ -461,13 +461,60 @@ class _ModuleConverter(_StrictNodeVisitor):
 
     def visit_Module(self, node: ast.Module) -> restricted_ast.Function:
         # TODO: Support larger modules
-        return _FunctionConverter(self.source_code_info).visit(
+        main_function = _FunctionConverter(self.source_code_info).visit(
             [
                 statement
                 for statement in node.body
                 if isinstance(statement, ast.FunctionDef)
             ][0]
         )
+
+        def get_root_call(func: ast.Call) -> ast.Call:
+            if func.func.id == main_function.name:
+                return func
+            if len(func.args) != 1 or not isinstance(func.args[0], ast.Call):
+                print(ast.dump(func))
+                self.raise_syntax_error(func, "Expected a single call to a function")
+            return get_root_call(func.args[0])
+
+        def expr_to_constant(expr: ast.Expression) -> Union[int, list[int]]:
+            if isinstance(expr, ast.Num) and isinstance(expr.n, int):
+                return expr.n
+            elif isinstance(expr, (ast.List, ast.Tuple)) and all(
+                isinstance(e, ast.Num) and isinstance(e.n, int) for e in expr.elts
+            ):
+                return [e.n for e in expr.elts]
+            else:
+                self.raise_syntax_error(expr, "Expected a constant")
+
+        var_values = dict()
+        for statement in node.body:
+            if isinstance(statement, ast.Assign):
+                var_values[statement.targets[0].id] = expr_to_constant(statement.value)
+            elif isinstance(statement, ast.Expr) and isinstance(
+                statement.value, ast.Call
+            ):
+                call = get_root_call(statement.value)
+                if len(call.args) != len(main_function.parameters):
+                    self.raise_syntax_error(
+                        call,
+                        f"Incorrect number of arguments to {main_function.name} (expected {len(main_function.parameters)}, got {len(call.args)})",
+                    )
+
+                for i, arg in enumerate(call.args):
+                    if isinstance(arg, ast.Name):
+                        if arg.id not in var_values:
+                            self.raise_syntax_error(
+                                arg,
+                                f"Unknown variable {arg.id} passed to {main_function.name}",
+                            )
+                        value = var_values[arg.id]
+                    else:
+                        value = expr_to_constant(arg)
+
+                    main_function.parameters[i].default_values.append(value)
+
+        return main_function
 
 
 def ast_to_restricted_ast(

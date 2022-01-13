@@ -12,7 +12,7 @@ class VarVisibility(Enum):
 
 
 class DataType(Enum):
-    INT = "unsigned int"
+    INT = "std::uint32_t"
     BOOL = "bool"
 
 
