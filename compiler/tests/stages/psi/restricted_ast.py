@@ -1,4 +1,4 @@
-def psi(A: shared[list[unsigned int]], SA: plaintext[unsigned int], B: shared[list[unsigned int]], SB: plaintext[unsigned int]):
+def psi(A: shared[list[std::uint32_t]], SA: plaintext[std::uint32_t], B: shared[list[std::uint32_t]], SB: plaintext[std::uint32_t]):
     dummy = 0
     result = []
     for i: plaintext[int] in range(0, SA):

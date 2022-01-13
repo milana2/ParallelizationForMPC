@@ -1,4 +1,4 @@
-def foo(A: plaintext[unsigned int], B: plaintext[unsigned int], C: plaintext[unsigned int], D: plaintext[unsigned int], N: plaintext[unsigned int]):
+def foo(A: plaintext[std::uint32_t], B: plaintext[std::uint32_t], C: plaintext[std::uint32_t], D: plaintext[std::uint32_t], N: plaintext[std::uint32_t]):
     for i: plaintext[int] in range(0, N):
         A[i] = (B[i] + 10)
         B[i] = (A[i] * D[(i - 1)])

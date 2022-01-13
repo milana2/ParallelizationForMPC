@@ -1,4 +1,4 @@
-def histogram(A: shared[list[unsigned int]], B: shared[list[unsigned int]], N: plaintext[unsigned int], num_bins: plaintext[unsigned int]):
+def histogram(A: shared[list[std::uint32_t]], B: shared[list[std::uint32_t]], N: plaintext[std::uint32_t], num_bins: plaintext[std::uint32_t]):
     result = []
     for i: plaintext[int] in range(0, num_bins):
         result = (result + [0])

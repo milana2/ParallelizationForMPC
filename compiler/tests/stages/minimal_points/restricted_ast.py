@@ -1,4 +1,4 @@
-def minimal_points(X_coords: shared[list[unsigned int]], Y_coords: shared[list[unsigned int]], N: plaintext[unsigned int]):
+def minimal_points(X_coords: shared[list[std::uint32_t]], Y_coords: shared[list[std::uint32_t]], N: plaintext[std::uint32_t]):
     min_X = []
     min_Y = []
     for i: plaintext[int] in range(0, N):

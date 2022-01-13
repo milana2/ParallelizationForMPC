@@ -1,4 +1,4 @@
-def longest_even_0(Seq: shared[list[unsigned int]], N: plaintext[unsigned int], Sym: shared[unsigned int]):
+def longest_even_0(Seq: shared[list[std::uint32_t]], N: plaintext[std::uint32_t], Sym: shared[std::uint32_t]):
     current_length = 0
     max_length = 0
     for i: plaintext[int] in range(1, N):

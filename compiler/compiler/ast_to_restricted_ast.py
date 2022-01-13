@@ -5,7 +5,7 @@ and for converting to a data type that reflects that restricted subset.
 
 import ast
 from dataclasses import dataclass
-from typing import Optional, final, NoReturn, Union
+from typing import Optional, final, NoReturn, Union, cast
 
 from . import restricted_ast
 from .ast_shared import VarType, VarVisibility, DataType
@@ -470,26 +470,33 @@ class _ModuleConverter(_StrictNodeVisitor):
         )
 
         def get_root_call(func: ast.Call) -> Optional[ast.Call]:
+            assert isinstance(func.func, ast.Name)
             if func.func.id == main_function.name:
                 return func
             if len(func.args) != 1 or not isinstance(func.args[0], ast.Call):
                 return None
             return get_root_call(func.args[0])
 
-        def expr_to_constant(expr: ast.Expression) -> Union[int, list[int]]:
+        def expr_to_constant(expr: ast.expr) -> Union[int, list[int]]:
             if isinstance(expr, ast.Num) and isinstance(expr.n, int):
                 return expr.n
             elif isinstance(expr, (ast.List, ast.Tuple)) and all(
-                isinstance(e, ast.Num) and isinstance(e.n, int) for e in expr.elts
+                isinstance(e, ast.Constant) and isinstance(e.value, int)
+                for e in expr.elts
             ):
-                return [e.n for e in expr.elts]
+                return [cast(ast.Constant, e).value for e in expr.elts]
             else:
-                self.raise_syntax_error(expr, "Expected a constant")
+                self.raise_syntax_error(
+                    expr, "Expected a constant integer or list of integers"
+                )
 
         var_values = dict()
         for statement in node.body:
             if isinstance(statement, ast.Assign):
-                var_values[statement.targets[0].id] = expr_to_constant(statement.value)
+                target = statement.targets[0]
+                if not isinstance(target, ast.Name):
+                    self.raise_syntax_error(target, "Expected a variable")
+                var_values[target.id] = expr_to_constant(statement.value)
             elif isinstance(statement, ast.Expr) and isinstance(
                 statement.value, ast.Call
             ):

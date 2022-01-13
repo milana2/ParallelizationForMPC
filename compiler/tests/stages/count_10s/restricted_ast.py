@@ -1,4 +1,4 @@
-def count_10s(Seq: shared[list[unsigned int]], N: plaintext[unsigned int], Syms: shared[list[unsigned int]]):
+def count_10s(Seq: shared[list[std::uint32_t]], N: plaintext[std::uint32_t], Syms: shared[list[std::uint32_t]]):
     s0 = False
     s1 = False
     scount = 0

@@ -1,4 +1,4 @@
-def biometric(C: shared[list[unsigned int]], D: plaintext[unsigned int], S: shared[list[unsigned int]], N: plaintext[unsigned int]):
+def biometric(C: shared[list[std::uint32_t]], D: plaintext[std::uint32_t], S: shared[list[std::uint32_t]], N: plaintext[std::uint32_t]):
     min_sum = 10000
     min_index = - 1
     for i: plaintext[int] in range(0, N):
