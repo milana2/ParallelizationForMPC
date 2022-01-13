@@ -156,13 +156,11 @@ int main(const int argc, const char *const argv[])
         {%- else %}
             {{param.cpp_type}} {{param.name}};
             {%- if param.dims == 0 %}
-                {{param.name}} = ToMotionInput({{param.party_idx}})(user_options["{{param.name}}"].as<std::uint32_t>());
+                {{param.name}} = party->In<{{protocol}}>(encrypto::motion::ToInput({{param.name}}), {{param.party_idx}});
             {%- else %}
-                std::transform(
-                    user_options["{{param.name}}"].as<std::vector<std::uint32_t>>().begin(),
-                    user_options["{{param.name}}"].as<std::vector<std::uint32_t>>().end(),
-                    std::back_inserter({{param.name}}),
-                    ToMotionInput({{param.party_idx}}));
+                for (const std::uint32_t value : user_options["{{param.name}}"].as<std::vector<std::uint32_t>>()) {
+                    {{param.name}}.push_back(party->In<{{protocol}}>(encrypto::motion::ToInput(value), {{param.party_idx}}));
+                }
             {%-endif%}
         {%- endif %}
     {% endfor %} //clang-format on

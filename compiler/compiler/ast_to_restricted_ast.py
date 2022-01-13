@@ -469,12 +469,11 @@ class _ModuleConverter(_StrictNodeVisitor):
             ][0]
         )
 
-        def get_root_call(func: ast.Call) -> ast.Call:
+        def get_root_call(func: ast.Call) -> Optional[ast.Call]:
             if func.func.id == main_function.name:
                 return func
             if len(func.args) != 1 or not isinstance(func.args[0], ast.Call):
-                print(ast.dump(func))
-                self.raise_syntax_error(func, "Expected a single call to a function")
+                return None
             return get_root_call(func.args[0])
 
         def expr_to_constant(expr: ast.Expression) -> Union[int, list[int]]:
@@ -495,6 +494,9 @@ class _ModuleConverter(_StrictNodeVisitor):
                 statement.value, ast.Call
             ):
                 call = get_root_call(statement.value)
+                if call is None:
+                    continue
+
                 if len(call.args) != len(main_function.parameters):
                     self.raise_syntax_error(
                         call,

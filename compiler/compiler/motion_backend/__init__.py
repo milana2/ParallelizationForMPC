@@ -91,7 +91,7 @@ def render_application(func: Function, type_env: TypeEnv, args: Namespace):
             }
             for param in func.parameters
         ],
-        protocol="encrypto::motion::MpcProtocol::kBooleanGmw",  # TODO: make this user-configurable
+        protocol="encrypto::motion::MpcProtocol::kBmr",  # TODO: make this user-configurable
         num_returns=type_env[func.return_value].dims,
         return_type=type_env[func.return_value].to_cpp(),
         function_name=func.name,

@@ -38,9 +38,9 @@ class For:
         # then updating the variable's value at the end of each loop.
         phi_initializations = "// Initialize phi values\n" + "\n".join(
             phi.lhs.to_cpp()
-            + " = party->SharedIn<Protocol>("
+            + " = party->In<Protocol>(encrypto::motion::ToInput("
             + phi.rhs_false.to_cpp()
-            + ");"
+            + "), 0);"
             for phi in self.body
             if isinstance(phi, Phi)
         )
