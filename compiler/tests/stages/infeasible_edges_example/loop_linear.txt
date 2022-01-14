@@ -1,4 +1,4 @@
-def foo(A: plaintext[std::uint32_t], B: plaintext[std::uint32_t], C: plaintext[std::uint32_t], D: plaintext[std::uint32_t], N: plaintext[std::uint32_t]):
+def foo(A: shared[list[std::uint32_t]], B: shared[list[std::uint32_t]], C: shared[list[std::uint32_t]], D: shared[list[std::uint32_t]], N: plaintext[std::uint32_t]):
     for i in range(0, N!0):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)

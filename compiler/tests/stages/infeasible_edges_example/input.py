@@ -1,4 +1,4 @@
-def foo(A, B, C, D, N):
+def foo(A: list[int], B: list[int], C: list[int], D: list[int], N):
     for i in range(N):
         A[i] = B[i] + 10
         B[i] = A[i] * D[i - 1]
