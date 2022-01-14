@@ -31,7 +31,7 @@ def biometric_matching_fast(
 
     differences: list[int] = []
     for i in range(D):
-        differences[i] = differences + [0]
+        differences = differences + [0]
 
     for i in range(N):
         a_sqr_plus_b_sqr: int = S_sqr_sum[i] + C_sqr_sum
