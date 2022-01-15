@@ -60,6 +60,7 @@ class StagesTestCase(unittest.TestCase):
 
 def regenerate_stages():
     for test_case_dir in os.scandir(STAGES_DIR):
+        print(f"Regenerating {test_case_dir.name}...")
         with open(os.path.join(test_case_dir, "input.py"), "r") as f:
             input_text = f.read()
 

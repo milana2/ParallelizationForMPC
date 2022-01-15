@@ -9,7 +9,7 @@ from .ast_shared import (
     Parameter,
     BinOpKind,
     UnaryOpKind,
-    ConstantInt,
+    Constant,
     LoopBound,
     Subscript,
     SubscriptIndex,
@@ -19,7 +19,7 @@ from .ast_shared import (
 )
 
 
-Atom = Union[Var, ConstantInt]
+Atom = Union[Var, Constant]
 
 Operand = Union[Atom, Subscript]
 

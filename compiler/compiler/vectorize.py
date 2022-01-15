@@ -42,7 +42,7 @@ def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
 def _arrays_read_in_rhs(
     rhs: llc.AssignRHS, array_name: Union[str, int]
 ) -> list[llc.Subscript]:
-    if isinstance(rhs, (llc.Var, llc.ConstantInt)):
+    if isinstance(rhs, (llc.Var, llc.Constant)):
         return []
     elif isinstance(rhs, llc.Subscript):
         if rhs.array.name == array_name:
@@ -141,7 +141,7 @@ def _z3_subscript_index(
 ) -> z3.ArithRef:
     if isinstance(index, llc.Var):
         return vars[index]
-    elif isinstance(index, llc.ConstantInt):
+    elif isinstance(index, llc.Constant):
         return z3.IntVal(index.value)
     elif isinstance(index, llc.SubscriptIndexBinOp):
         return _z3_subscript_index_bin_op(index, vars)

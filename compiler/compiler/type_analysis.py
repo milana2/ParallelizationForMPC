@@ -1,11 +1,12 @@
 import sys
 from typing import Optional, Union, cast
+from collections import defaultdict
 
 from . import loop_linear_code
 from .dep_graph import DepGraph
 from .ast_shared import (
     Var,
-    ConstantInt,
+    Constant,
     Subscript,
     BinOp,
     UnaryOp,
@@ -18,14 +19,14 @@ from .ast_shared import (
 from .tac_cfg import AssignRHS, List, Tuple, Mux, Update
 
 
-class TypeEnv(dict[Var, VarType]):
+class TypeEnv(defaultdict[Var, VarType]):
     def __str__(self) -> str:
         return "\n".join([f"{var}: {var_type}" for var, var_type in self.items()])
 
 
 def _type_assign_expr(
     expr: Union[AssignRHS, SubscriptIndex], type_env: TypeEnv
-) -> Optional[VarType]:
+) -> VarType:
     """
     Determines the type of an expression in a given type environment.  If an expression
     cannot be typed, this function returns None.
@@ -35,67 +36,51 @@ def _type_assign_expr(
     # code in the original source code
 
     if isinstance(expr, Var):
-        return type_env.get(expr)
+        return type_env[expr]
 
-    elif isinstance(expr, ConstantInt):
-        return PLAINTEXT_INT
+    elif isinstance(expr, Constant):
+        return VarType(VarVisibility.PLAINTEXT, 0, expr.datatype)
 
     elif isinstance(expr, Subscript):
-        if _type_assign_expr(expr.index, type_env) != PLAINTEXT_INT:
+        index_type = _type_assign_expr(expr.index, type_env)
+        if not index_type.could_become(PLAINTEXT_INT):
             raise TypeError(
                 f"Array subscript index {expr.index} is not a plaintext int"
             )
-        arr_type = type_env.get(expr.array)
-        if arr_type is not None:
-            return arr_type.drop_dim()
-        else:
-            return None
+
+        return type_env[expr.array].drop_dim()
 
     elif isinstance(expr, BinOp):
         lhs_type = _type_assign_expr(expr.left, type_env)
         rhs_type = _type_assign_expr(expr.right, type_env)
 
-        op_datatype = expr.operator.get_ret_datatype()
+        expr_type = VarType.merge(lhs_type, rhs_type)
 
-        # If we have concrete types for each operand, we can validate that they are compatible
-        # and calculate the dimensions of the returned value
-        # TODO: check that the types are valid for the given operator
-        if lhs_type is not None and rhs_type is not None:
-            if lhs_type.dims != rhs_type.dims:
-                raise TypeError("Cannot add arrays of different dimensions")
+        # Check that the operand types are valid for this operator.  The merge operation
+        # validates that the two operands are compatible, so we just need to check their
+        # merged type
+        valid_operand_types = [*expr.operator.get_operand_datatypes(), None]
+        if expr_type.datatype not in valid_operand_types:
+            raise TypeError(
+                f"Cannot perform {expr.operator} on {lhs_type.datatype} and {rhs_type.datatype}"
+            )
 
-            if lhs_type.is_plaintext() and rhs_type.is_plaintext():
-                return VarType(VarVisibility.PLAINTEXT, lhs_type.dims, op_datatype)
-            else:
-                return VarType(VarVisibility.SHARED, lhs_type.dims, op_datatype)
+        expr_type.datatype = expr.operator.get_ret_datatype()
 
-        returned_type = None
-
-        # If we only know one operand's type, we can assume that the other operand will be compatible
-        # (this gets checked after type assignment is complete).  We can only determine
-        # the visibility of the returned value if the known operand is shared.
-        if lhs_type is not None and lhs_type.is_shared():
-            returned_type = lhs_type
-        elif rhs_type is not None and rhs_type.is_shared():
-            returned_type = rhs_type
-
-        if returned_type is None:
-            return None
-        else:
-            return VarType(returned_type.visibility, returned_type.dims, op_datatype)
+        return expr_type
 
     elif isinstance(expr, UnaryOp):
         op_datatype = expr.operator.get_ret_datatype()
-        returned_type = _type_assign_expr(expr.operand, type_env)
+        expr_type = _type_assign_expr(expr.operand, type_env)
 
-        if returned_type is None:
-            return None
-        elif returned_type.datatype not in expr.operator.get_operand_datatypes():
+        if expr_type.datatype not in [*expr.operator.get_operand_datatypes(), None]:
             raise TypeError(
-                f"Operand of unary operator {expr.operator} is not of a valid type: found type '{returned_type}' but expected type in '{expr.operator.get_operand_datatypes()}'"
+                f"Operand of unary operator {expr.operator} is not of a valid type: found type '{expr_type}' but expected type in '{expr.operator.get_operand_datatypes()}'"
             )
-        else:
-            return VarType(returned_type.visibility, returned_type.dims, op_datatype)
+
+        expr_type.datatype = op_datatype
+
+        return expr_type
 
     elif isinstance(expr, (List, Tuple)):
         if len(expr.items) == 0:
@@ -105,103 +90,56 @@ def _type_assign_expr(
             # TODO: is it ok to assume that all hard-coded arrays are of ints?
             return VarType(VarVisibility.PLAINTEXT, 1, DataType.INT)
 
-        elem_types = [_type_assign_expr(elem, type_env) for elem in expr.items]
-        elem_dims = [
-            elem_type.dims for elem_type in elem_types if elem_type is not None
-        ]
+        elem_type = VarType.merge(
+            *[_type_assign_expr(item, type_env) for item in expr.items],
+            mixed_shared_plaintext_allowed=True,
+            # Tuples can have mixed datatypes (e.g. for multiple return values)
+            mixed_datatypes_allowed=isinstance(expr, Tuple),
+        )
 
-        if len(elem_dims) == 0:
-            return None  # we can't type any of the elements of the container yet
-        elif not all(elem_dims[0] == elem_dim for elem_dim in elem_dims):
-            raise TypeError("All elements of a container must have the same dimensions")
-
-        if all(
-            elem_type is not None and elem_type.is_plaintext()
-            for elem_type in elem_types
-        ):
-            assert elem_types[0] is not None  # needed for mypy
-            return elem_types[0].add_dim()
-        else:
-            for elem_type in elem_types:
-                if elem_type is not None and elem_type.is_shared():
-                    return elem_type.add_dim()
+        return elem_type.add_dim()
 
     elif isinstance(expr, Mux):
         cond_type = _type_assign_expr(expr.condition, type_env)
-        if cond_type is not None and cond_type.is_plaintext():
-            print(
-                f"[WARNING]: MUX condition `{expr.condition}` is plaintext",
-                file=sys.stderr,
+        if cond_type.is_plaintext():
+            raise AssertionError(
+                f"Condition {expr.condition} of Mux expression {expr} is not a shared variable."
             )
 
         true_type = _type_assign_expr(expr.true_value, type_env)
         false_type = _type_assign_expr(expr.false_value, type_env)
 
-        if true_type is None and false_type is None:
-            # We can't determine the dimensions of the returned value yet
-            return None
+        expr_type = VarType.merge(
+            true_type,
+            false_type,
+            mixed_shared_plaintext_allowed=True,
+        )
+        expr_type.visibility = VarVisibility.SHARED
 
+        # Validate the dimensions
         if (
-            true_type is not None
-            and false_type is not None
-            and true_type.dims != false_type.dims
-        ):
-            raise TypeError(
-                "True and false values of a MUX must have the same dimensions"
-            )
-
-        if (
-            true_type is not None
-            and false_type is not None
-            and true_type.datatype != false_type.datatype
-        ):
-            raise TypeError(
-                "True and false values of a MUX must have the same datatypes"
-            )
-
-        if cond_type is not None and (
-            (true_type is not None and cond_type.dims > true_type.dims)
-            or (false_type is not None and cond_type.dims > false_type.dims)
+            cond_type.dims is not None
+            and expr_type.dims is not None
+            and cond_type.dims > expr_type.dims
         ):
             raise TypeError(
                 "The true/false values of a MUX must have the same or fewer dimensions than the condition"
             )
 
-        if true_type is not None:
-            ret_type = true_type
-        else:
-            # the below assertion is not necessary due to the above check, but my
-            # typechecker complains when it's missing
-            assert false_type is not None
-            ret_type = false_type
-
-        return VarType(VarVisibility.SHARED, ret_type.dims, ret_type.datatype)
+        return expr_type
 
     elif isinstance(expr, Update):
         val_type = _type_assign_expr(expr.value, type_env)
-        arr_type = type_env.get(expr.array)
+        arr_type = type_env[expr.array]
+        index_type = _type_assign_expr(expr.index, type_env)
 
-        if val_type is not None and arr_type is not None:
-            if val_type.dims != arr_type.dims - 1:
-                raise TypeError(
-                    "Cannot update array with value of different dimensions than its element type"
-                )
+        if not index_type.could_become(PLAINTEXT_INT):
+            raise TypeError(
+                f"Array subscript index {expr.index} is not a plaintext int"
+            )
 
-            if val_type.datatype != arr_type.datatype:
-                raise TypeError(
-                    "Cannot update array with value of different datatype than its element type"
-                )
-
-            if val_type.is_shared():
-                return VarType(VarVisibility.SHARED, arr_type.dims, arr_type.datatype)
-            else:
-                return arr_type
-        elif arr_type is not None and arr_type.is_shared():
-            return arr_type
-        elif val_type is not None and val_type.is_shared():
-            return val_type.add_dim()
-        else:
-            return None
+        val_arr_type = val_type.add_dim()
+        return VarType.merge(val_arr_type, arr_type)
 
     raise AssertionError(f"Unexpected type {type(expr)} passed to _type_assign_expr")
 
@@ -226,41 +164,31 @@ def validate_type_requirements(
     have consistent dimensions.
     """
     for var_name, var_type in type_env.items():
-        if var_type.dims < 0:
-            raise TypeError(f"Variable {var_name} has negative dimensions")
+        if not var_type.is_complete():
+            raise TypeError(f"Variable {var_name} has incomplete type {var_type}")
 
     for stmt in stmts:
         if isinstance(stmt, loop_linear_code.For):
             if type_env[stmt.counter] != PLAINTEXT_INT:
-                raise TypeError(f"Loop counter {stmt.counter.name} is not plaintext")
+                raise TypeError(
+                    f"Loop counter {stmt.counter.name} is not a plaintext integer"
+                )
             validate_type_requirements(stmt.body, type_env)
         elif isinstance(stmt, loop_linear_code.Assign):
             # The type assignment function checks for type errors internally
-            if _type_assign_expr(stmt.rhs, type_env) is None:
-                # TODO: I think that this case being hit means that the type of the LHS variable
-                #   is plaintext, but due to having a def-use cycle of plaintext values the
-                #   primary algorithm doesn't detect this case.
-                pass
+            if not _type_assign_expr(stmt.rhs, type_env).is_complete():
+                raise TypeError(f"Unable to type expression {stmt.rhs}")
+
+            if type_env[stmt.lhs] != _type_assign_expr(stmt.rhs, type_env):
+                raise TypeError(f"Type mismatch in assignment {stmt.lhs} = {stmt.rhs}")
         elif isinstance(stmt, loop_linear_code.Phi):
             elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
+            phi_type = VarType.merge(*elem_types, mixed_shared_plaintext_allowed=True)
+            if not phi_type.is_complete():
+                raise TypeError(f"Unable to type phi expression {stmt}")
 
-            if any(elem_type is None for elem_type in elem_types):
-                # TODO: as above, this case can be triggered by a def-use cycle of plaintext values
-                # raise TypeError(f"Cannot determine type of one or more elements of Phi node {stmt}")
-                pass
-
-            elem_dims = [
-                elem_type.dims for elem_type in elem_types if elem_type is not None
-            ]
-            if len(set(elem_dims)) > 1:
-                raise TypeError(
-                    f"Elements of Phi node {stmt} do not all have the same dimensions"
-                )
-
-            if stmt.lhs not in type_env:
-                # TODO: as above, this case can be triggered by a def-use cycle of plaintext values
-                # raise TypeError(f"Cannot determine type of {stmt.lhs}")
-                pass
+            if type_env[stmt.lhs] != phi_type:
+                raise TypeError(f"Type mismatch in phi {stmt.lhs} = {stmt.rhs_vars()}")
 
 
 def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
@@ -269,11 +197,12 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
     """
 
     type_env = TypeEnv(
+        VarType,
         {
             # TODO: fix the below hack once parameter ssa renaming is properly implemented
             Var(param.var.name, 0): cast(VarType, param.var_type)
             for param in func.parameters
-        }
+        },
     )
     _add_loop_counter_types(type_env, func.body)
 
@@ -282,74 +211,29 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
     while len(worklist) > 0:
         stmt = worklist.pop()
         if isinstance(stmt, loop_linear_code.Assign):
-            if stmt.lhs in type_env:
-                # This assignment has been reached before, don't extend the worklist
+            try:
+                expr_type = _type_assign_expr(stmt.rhs, type_env)
+            except (TypeError, AssertionError) as e:
+                raise TypeError(f"Unable to type statement {stmt}") from e
+
+            if expr_type == type_env[stmt.lhs]:
+                # No changes to this variable's type, don't extend the worklist
                 continue
-
-            if stmt.lhs.name in type_env:
-                print(
-                    f"[WARNING] Variable {stmt.lhs.name} is assigned multiple times in SSA",
-                    file=sys.stderr,
-                )
-
-            var_type = _type_assign_expr(stmt.rhs, type_env)
-            if var_type is None:
-                # This variable cannot be typed yet
-                continue
-
-            assert stmt.lhs not in type_env
-            type_env[stmt.lhs] = var_type
+            type_env[stmt.lhs] = expr_type
 
         elif isinstance(stmt, loop_linear_code.Phi):
-            if stmt.lhs in type_env:
-                # This assignment has been reached before, don't extend the worklist
-                continue
-
-            if stmt.lhs.name in type_env:
-                print(
-                    f"[WARNING] Variable {stmt.lhs.name} is assigned multiple times in SSA",
-                    file=sys.stderr,
-                )
-
             elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
-            elem_dims = [
-                elem_type.dims for elem_type in elem_types if elem_type is not None
-            ]
-            elem_datatypes = [
-                elem_type.datatype for elem_type in elem_types if elem_type is not None
-            ]
-
-            if len(elem_dims) == 0:
-                # We can't determine the dimensions of the returned value yet
+            try:
+                phi_type = VarType.merge(
+                    *elem_types,
+                    mixed_shared_plaintext_allowed=True,
+                )
+            except (TypeError, AssertionError) as e:
+                raise TypeError(f"Unable to type statement {stmt}") from e
+            if phi_type == type_env[stmt.lhs]:
+                # No changes to this variable's type, don't extend the worklist
                 continue
-            if len(set(elem_dims)) > 1:
-                raise TypeError(
-                    "Phi expressions must have the same dimensions for all operands"
-                )
-            if len(set(elem_datatypes)) > 1:
-                raise TypeError(
-                    "Phi expressions must have the same datatypes for all operands"
-                )
-
-            if all(
-                elem_type is not None and elem_type.is_plaintext()
-                for elem_type in elem_types
-            ):
-                var_type = VarType(
-                    VarVisibility.PLAINTEXT, elem_dims[0], elem_datatypes[0]
-                )
-            elif any(
-                elem_type is not None and elem_type.is_shared()
-                for elem_type in elem_types
-            ):
-                var_type = VarType(
-                    VarVisibility.SHARED, elem_dims[0], elem_datatypes[0]
-                )
-            else:
-                # This variable cannot be typed yet
-                continue
-
-            type_env[stmt.lhs] = var_type
+            type_env[stmt.lhs] = phi_type
         else:
             raise AssertionError(
                 f"Unexpected node {type(stmt)} added to type inference worklist"
@@ -358,6 +242,14 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
         # If we get to this point, the lhs has been reassigned so we must add dependencies
         # to the worklist
         worklist.extend([edge[1] for edge in dep_graph.def_use_graph.edges(stmt)])
+
+    # At this point, all variables should be typed with their datatype and dimensions
+    # Additionally, all shared variables should be marked as such
+    # However, some plaintext variables may not be marked as plaintext if they're part of
+    # a cycle of plaintext values.  The below loop updates those cases.
+    for var_type in type_env.values():
+        if var_type.visibility is None:
+            var_type.visibility = VarVisibility.PLAINTEXT
 
     validate_type_requirements(func.body, type_env)
 

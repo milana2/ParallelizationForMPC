@@ -103,7 +103,7 @@ def _vars_in_rhs(rhs: llc.AssignRHS) -> list[llc.Var]:
         return [rhs]
     elif isinstance(rhs, llc.Subscript):
         return [rhs.array]
-    elif isinstance(rhs, llc.ConstantInt):
+    elif isinstance(rhs, llc.Constant):
         return []
     elif isinstance(rhs, llc.BinOp):
         return _vars_in_rhs(rhs.left) + _vars_in_rhs(rhs.right)

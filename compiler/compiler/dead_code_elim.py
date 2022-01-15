@@ -20,7 +20,7 @@ class _StatementBlock:
 def _accessed_vars_subscript_index(index: ssa.SubscriptIndex) -> list[ssa.Var]:
     if isinstance(index, ssa.Var):
         return [index]
-    elif isinstance(index, ssa.ConstantInt):
+    elif isinstance(index, ssa.Constant):
         return []
     elif isinstance(index, ssa.SubscriptIndexBinOp):
         left = _accessed_vars_subscript_index(index.left)
@@ -35,7 +35,7 @@ def _accessed_vars_subscript_index(index: ssa.SubscriptIndex) -> list[ssa.Var]:
 def _accessed_vars_assign_rhs(rhs: ssa.AssignRHS) -> list[ssa.Var]:
     if isinstance(rhs, ssa.Var):
         return [rhs]
-    elif isinstance(rhs, ssa.ConstantInt):
+    elif isinstance(rhs, ssa.Constant):
         return []
     elif isinstance(rhs, ssa.Subscript):
         return [rhs.array] + _accessed_vars_subscript_index(rhs.index)

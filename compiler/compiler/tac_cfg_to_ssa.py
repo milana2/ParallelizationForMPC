@@ -131,7 +131,7 @@ def rename_variables(result: ssa.Function) -> None:
     def rename_subscript_index(index: ssa.SubscriptIndex) -> ssa.SubscriptIndex:
         if isinstance(index, ssa.Var):
             return rename_var(index)
-        elif isinstance(index, ssa.ConstantInt):
+        elif isinstance(index, ssa.Constant):
             return index
         elif isinstance(index, ssa.SubscriptIndexBinOp):
             return ssa.SubscriptIndexBinOp(
@@ -156,7 +156,7 @@ def rename_variables(result: ssa.Function) -> None:
     def rename_atom(atom: ssa.Atom) -> ssa.Atom:
         if isinstance(atom, ssa.Var):
             return rename_var(atom)
-        elif isinstance(atom, ssa.ConstantInt):
+        elif isinstance(atom, ssa.Constant):
             return atom
         else:
             assert_never(atom)
@@ -164,7 +164,7 @@ def rename_variables(result: ssa.Function) -> None:
     def rename_operand(operand: ssa.Operand) -> ssa.Operand:
         if isinstance(operand, ssa.Var):
             return rename_var(operand)
-        elif isinstance(operand, ssa.ConstantInt):
+        elif isinstance(operand, ssa.Constant):
             return operand
         elif isinstance(operand, ssa.Subscript):
             return rename_subscript(operand)
@@ -174,7 +174,7 @@ def rename_variables(result: ssa.Function) -> None:
     def rename_rhs(rhs: ssa.AssignRHS) -> ssa.AssignRHS:
         if isinstance(rhs, ssa.Var):
             return rename_var(rhs)
-        elif isinstance(rhs, ssa.ConstantInt):
+        elif isinstance(rhs, ssa.Constant):
             return rhs
         elif isinstance(rhs, ssa.Subscript):
             return rename_subscript(rhs)

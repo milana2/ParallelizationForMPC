@@ -6,7 +6,7 @@ import networkx  # type: ignore
 
 from .ast_shared import (
     Var,
-    ConstantInt,
+    Constant,
     CFGFunction as _CFGFunction,
     SubscriptIndex,
     SubscriptIndexBinOp,

@@ -82,7 +82,7 @@ class _LoopBoundConverter(_StrictNodeVisitor):
     def visit_Constant(self, node: ast.Constant) -> restricted_ast.LoopBound:
         if not isinstance(node.value, int):
             self.raise_syntax_error(node)
-        return restricted_ast.ConstantInt(node.value)
+        return restricted_ast.Constant(node.value, DataType.INT)
 
     def visit_Name(self, node: ast.Name) -> restricted_ast.LoopBound:
         return restricted_ast.Var(name=node.id)
@@ -104,7 +104,7 @@ class _RangeBoundsGetter(_StrictNodeVisitor):
             _LoopBoundConverter(self.source_code_info).visit(arg) for arg in node.args
         ]
         if len(bounds) == 1:
-            return (restricted_ast.ConstantInt(0), bounds[0])
+            return (restricted_ast.Constant(0, DataType.INT), bounds[0])
         elif len(bounds) == 2:
             return (bounds[0], bounds[1])
         else:
@@ -121,7 +121,12 @@ class _SubscriptIndexConverter(_StrictNodeVisitor):
         return restricted_ast.Var(name=node.id)
 
     def visit_Constant(self, node: ast.Constant) -> restricted_ast.SubscriptIndex:
-        return restricted_ast.ConstantInt(value=node.value)
+        if type(node.value) == int:
+            return restricted_ast.Constant(value=node.value, datatype=DataType.INT)
+        elif type(node.value) == bool:
+            return restricted_ast.Constant(value=node.value, datatype=DataType.BOOL)
+        else:
+            self.raise_syntax_error(node, "Unsupported constant type")
 
     def visit_BinOp(self, node: ast.BinOp) -> restricted_ast.SubscriptIndex:
         operator = _convert_binary_operator(node.op)
@@ -224,7 +229,12 @@ class _ExpressionConverter(_StrictNodeVisitor):
         return restricted_ast.Var(name=node.id)
 
     def visit_Constant(self, node: ast.Constant) -> restricted_ast.Expression:
-        return restricted_ast.ConstantInt(value=node.value)
+        if type(node.value) == int:
+            return restricted_ast.Constant(value=node.value, datatype=DataType.INT)
+        elif type(node.value) == bool:
+            return restricted_ast.Constant(value=node.value, datatype=DataType.BOOL)
+        else:
+            self.raise_syntax_error(node, "Unsupported constant type")
 
     def visit_Subscript(self, node: ast.Subscript) -> restricted_ast.Expression:
         return _convert_subscript(self.source_code_info, node)

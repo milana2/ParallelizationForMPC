@@ -10,7 +10,7 @@ from .ast_shared import (
     Var,
     Parameter,
     LoopBound,
-    ConstantInt,
+    Constant,
     BinOp as _BinOp,
     UnaryOp as _UnaryOp,
     Subscript,
@@ -86,7 +86,7 @@ class If:
         return f"if {self.condition}:\n" + then_body + else_body
 
 
-Expression = Union[Var, ConstantInt, "List", "Tuple", "Subscript", "BinOp", "UnaryOp"]
+Expression = Union[Var, Constant, "List", "Tuple", "Subscript", "BinOp", "UnaryOp"]
 
 
 @dataclass

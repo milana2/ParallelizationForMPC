@@ -8,7 +8,7 @@ from .ssa import (
     Assign,
     LoopBound,
     AssignRHS,
-    ConstantInt,
+    Constant,
     Subscript,
     SubscriptIndex,
     SubscriptIndexBinOp,
