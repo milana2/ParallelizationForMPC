@@ -1,4 +1,4 @@
-def foo(x: shared[std::uint32_t], y: shared[std::uint32_t]):
+def foo(x: shared[int], y: shared[int]):
     z = 0
     if (x > 0):
         if (y > 0):

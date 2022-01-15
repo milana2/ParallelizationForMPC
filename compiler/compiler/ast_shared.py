@@ -12,8 +12,16 @@ class VarVisibility(Enum):
 
 
 class DataType(Enum):
-    INT = "std::uint32_t"
+    INT = "int"
     BOOL = "bool"
+
+    def to_cpp(self) -> str:
+        if self == DataType.INT:
+            return "std::uint32_t"
+        elif self == DataType.BOOL:
+            return "bool"
+        else:
+            raise Exception("Unknown data type")
 
 
 @dataclass(frozen=True)
@@ -39,7 +47,7 @@ class VarType:
         for _ in range(self.dims):
             str_rep += "std::vector<"
         if self.visibility == VarVisibility.PLAINTEXT:
-            str_rep += self.datatype.value
+            str_rep += self.datatype.to_cpp()
         elif self.visibility == VarVisibility.SHARED:
             if self.datatype == DataType.INT:
                 str_rep += "encrypto::motion::SecureUnsignedInteger"

@@ -1,4 +1,4 @@
-def convex_hull(X_coords: shared[list[std::uint32_t]], Y_coords: shared[list[std::uint32_t]], N: plaintext[std::uint32_t]):
+def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
     hull_X!1 = []
     hull_Y!1 = []
     for i in range(0, N!0):

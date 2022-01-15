@@ -1,4 +1,4 @@
-def ip(A: shared[list[std::uint32_t]], B: shared[list[std::uint32_t]], N: plaintext[std::uint32_t]):
+def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
     sum = 0
     for i: plaintext[int] in range(0, N):
         temp = (A[i] * B[i])

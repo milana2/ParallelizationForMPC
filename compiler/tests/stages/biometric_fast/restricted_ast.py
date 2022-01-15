@@ -1,4 +1,4 @@
-def biometric_matching_fast(D: plaintext[std::uint32_t], N: plaintext[std::uint32_t], C: shared[list[std::uint32_t]], C_sqr_sum: shared[std::uint32_t], two_C: shared[list[std::uint32_t]], S: shared[list[std::uint32_t]], S_sqr_sum: shared[list[std::uint32_t]]):
+def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
     differences = []
     for i: plaintext[int] in range(0, D):
         differences = (differences + [0])

@@ -1,4 +1,4 @@
-Function biometric(C: shared[list[std::uint32_t]], D: plaintext[std::uint32_t], S: shared[list[std::uint32_t]], N: plaintext[std::uint32_t]):
+Function biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
 Entry block: 0
 Exit block: 3
 Block 0:

@@ -1,4 +1,4 @@
-def max_dist_between_syms(Seq: shared[list[std::uint32_t]], N: plaintext[std::uint32_t], Sym: shared[std::uint32_t]):
+def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
     max_dist = 0
     current_dist = 0
     for i: plaintext[int] in range(0, N):

@@ -1,4 +1,4 @@
-def histogram(A: shared[list[std::uint32_t]], B: shared[list[std::uint32_t]], N: plaintext[std::uint32_t], num_bins: plaintext[std::uint32_t]):
+def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
     result!1 = []
     for i in range(0, num_bins!0):
         result!2 = Φ(result!1, result!3)

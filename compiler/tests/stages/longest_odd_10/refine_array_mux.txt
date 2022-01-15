@@ -1,4 +1,4 @@
-def longest_odd_10(Seq: shared[list[std::uint32_t]], N: plaintext[std::uint32_t], Syms: shared[list[std::uint32_t]]):
+def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
     current_length!1 = 0
     max_length!1 = 0
     s2!1 = False
