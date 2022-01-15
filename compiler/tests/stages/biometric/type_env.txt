@@ -1,5 +1,5 @@
 !1!2: shared[bool]
-!2!1: shared[list[int]]
+!2!1: tuple[shared[int], shared[int]]
 C!0: shared[list[int]]
 D!0: plaintext[int]
 N!0: plaintext[int]

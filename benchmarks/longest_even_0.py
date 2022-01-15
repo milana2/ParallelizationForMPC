@@ -1,4 +1,7 @@
-def longest_even_0(Seq: list[int], N, Sym: int):
+from .UTIL import shared
+
+
+def longest_even_0(Seq: shared[list[int]], N: int, Sym: shared[int]) -> shared[int]:
     """
     Computes the length of the longest regex of form (a*) which has an even length
     Sym is the symbol a

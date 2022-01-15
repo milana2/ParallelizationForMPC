@@ -53,6 +53,10 @@ def _type_assign_expr(
                 f"Array subscript index {expr.index} is not a plaintext int"
             )
 
+        arr_type = type_env[expr.array]
+        if arr_type.datatype == DataType.TUPLE:
+            raise TypeError(f"Tuples cannot be indexed into")
+
         return type_env[expr.array].drop_dim()
 
     elif isinstance(expr, BinOp):
@@ -87,7 +91,7 @@ def _type_assign_expr(
 
         return expr_type
 
-    elif isinstance(expr, (List, Tuple)):
+    elif isinstance(expr, List):
         if len(expr.items) == 0:
             # Edge case for initialization of empty lists/tuples
             # We assume that all arrays in the source-code are 1-dimensional
@@ -98,11 +102,18 @@ def _type_assign_expr(
         elem_type = VarType.merge(
             *[_type_assign_expr(item, type_env) for item in expr.items],
             mixed_shared_plaintext_allowed=True,
-            # Tuples can have mixed datatypes (e.g. for multiple return values)
-            mixed_datatypes_allowed=isinstance(expr, Tuple),
         )
 
         return elem_type.add_dim()
+
+    elif isinstance(expr, Tuple):
+        elem_types = [_type_assign_expr(item, type_env) for item in expr.items]
+        return VarType(
+            VarVisibility.PLAINTEXT,  # Tuples are always plaintext
+            1,  # tuples are always 1-dimensional
+            DataType.TUPLE,
+            tuple_types=elem_types,
+        )
 
     elif isinstance(expr, Mux):
         cond_type = _type_assign_expr(expr.condition, type_env)
@@ -138,6 +149,9 @@ def _type_assign_expr(
         arr_type = type_env[expr.array]
         index_type = _type_assign_expr(expr.index, type_env)
 
+        if arr_type.datatype == DataType.TUPLE:
+            raise TypeError(f"Tuples cannot be updated")
+
         if not index_type.could_become(PLAINTEXT_INT):
             raise TypeError(
                 f"Array subscript index {expr.index} is not a plaintext int"
@@ -162,7 +176,10 @@ def _add_loop_counter_types(
 
 
 def validate_type_requirements(
-    stmts: list[loop_linear_code.Statement], type_env: TypeEnv
+    stmts: list[loop_linear_code.Statement],
+    type_env: TypeEnv,
+    return_var: Var,
+    return_type: Optional[VarType],
 ) -> None:
     """
     Validates that all of MPC's type requirements are met and that all assignments/expressions
@@ -172,13 +189,24 @@ def validate_type_requirements(
         if not var_type.is_complete():
             raise TypeError(f"Variable {var_name} has incomplete type {var_type}")
 
+        if var_type.datatype == DataType.TUPLE:
+            if var_type.dims != 1:
+                raise TypeError(
+                    f"Tuple {var_name} has invalid dimensions {var_type.dims}"
+                )
+        else:
+            if len(var_type.tuple_types) > 0:
+                raise TypeError(
+                    f"Variable {var_name} has tuple element types assigned, but it has datatype {var_type.datatype}"
+                )
+
     for stmt in stmts:
         if isinstance(stmt, loop_linear_code.For):
             if type_env[stmt.counter] != PLAINTEXT_INT:
                 raise TypeError(
                     f"Loop counter {stmt.counter.name} is not a plaintext integer"
                 )
-            validate_type_requirements(stmt.body, type_env)
+            validate_type_requirements(stmt.body, type_env, return_var, None)
         elif isinstance(stmt, loop_linear_code.Assign):
             # The type assignment function checks for type errors internally
             if not _type_assign_expr(stmt.rhs, type_env).is_complete():
@@ -194,6 +222,16 @@ def validate_type_requirements(
 
             if type_env[stmt.lhs] != phi_type:
                 raise TypeError(f"Type mismatch in phi {stmt.lhs} = {stmt.rhs_vars()}")
+
+    if return_type is not None and type_env[return_var] != return_type:
+        from pprint import pprint
+
+        pprint(type_env[return_var])
+        pprint(return_type)
+
+        raise TypeError(
+            f"Return type {type_env[return_var]} does not match expected type {return_type}"
+        )
 
 
 def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
@@ -256,6 +294,6 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
         if var_type.visibility is None:
             var_type.visibility = VarVisibility.PLAINTEXT
 
-    validate_type_requirements(func.body, type_env)
+    validate_type_requirements(func.body, type_env, func.return_value, func.return_type)
 
     return type_env

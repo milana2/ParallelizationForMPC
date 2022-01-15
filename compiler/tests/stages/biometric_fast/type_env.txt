@@ -1,6 +1,6 @@
 !1!2: plaintext[list[int]]
 !2!3: shared[bool]
-!3!1: shared[list[int]]
+!3!1: tuple[shared[int], shared[int]]
 C!0: shared[list[int]]
 C_sqr_sum!0: shared[int]
 D!0: plaintext[int]

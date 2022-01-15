@@ -322,6 +322,7 @@ def refine_array_mux(
         parameters=function.parameters,
         body=_refine_array_mux_statements(function.body, dep_graph),
         return_value=function.return_value,
+        return_type=function.return_type,
     )
     dep_graph = DepGraph(function)
     return (function, dep_graph)

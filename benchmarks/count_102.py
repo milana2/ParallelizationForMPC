@@ -1,4 +1,7 @@
-def count_102(Seq: list[int], N, Syms: list[int]):
+from .UTIL import shared
+
+
+def count_102(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:
     """
     Computes the number of instances of regex a(b*)c in a provided sequence.
     Syms is a list of form [a, b, c].

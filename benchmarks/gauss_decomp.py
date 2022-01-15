@@ -1,4 +1,9 @@
-def gauss_decomp(M: list[int], V: list[int], N):
+from .UTIL import shared
+
+
+def gauss_decomp(
+    M: shared[list[int]], V: shared[list[int]], N: int
+) -> shared[list[int]]:
     L: list[int] = []
     for i in range(0, N):
         for j in range(0, N):

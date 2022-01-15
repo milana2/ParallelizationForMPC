@@ -1,7 +1,7 @@
 !1!2: shared[bool]
 !10!2: shared[list[int]]
 !11!2: shared[list[int]]
-!12!1: shared[list[list[int]]]
+!12!1: tuple[shared[list[int]], shared[list[int]]]
 !2!2: shared[bool]
 !3!2: shared[bool]
 !6!3: shared[bool]

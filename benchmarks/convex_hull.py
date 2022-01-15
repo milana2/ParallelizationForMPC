@@ -1,4 +1,9 @@
-def convex_hull(X_coords: list[int], Y_coords: list[int], N):
+from .UTIL import shared
+
+
+def convex_hull(
+    X_coords: shared[list[int]], Y_coords: shared[list[int]], N: int
+) -> tuple[shared[list[int]], shared[list[int]]]:
     hull_X: list[int] = []
     hull_Y: list[int] = []
 

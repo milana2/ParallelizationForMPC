@@ -6,6 +6,7 @@ and for converting to a data type that reflects that restricted subset.
 import ast
 from dataclasses import dataclass
 from typing import Optional, final, NoReturn, Union, cast
+import sys
 
 from . import restricted_ast
 from .ast_shared import VarType, VarVisibility, DataType
@@ -40,6 +41,10 @@ class _StrictNodeVisitor(ast.NodeVisitor):
                 self.source_code_info.text.splitlines()[node.lineno - 1],
             ),
         )
+
+    @final
+    def raise_syntax_warning(self, node: ast.AST, message: str):
+        print("Warning: " + message, file=sys.stderr)
 
     @final
     def generic_visit(self, node: ast.AST):
@@ -400,6 +405,10 @@ class _ReturnValueGetter(_StrictNodeVisitor):
 
 
 class _TypeConverter(_StrictNodeVisitor):
+    def __init__(self, *args, top_level: bool = True, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.top_level = top_level
+
     def error_message(self) -> str:
         return "Expected a type"
 
@@ -407,39 +416,86 @@ class _TypeConverter(_StrictNodeVisitor):
         if node.id != "int":
             self.raise_syntax_error(node, "Only `int` is supported")
 
-        return VarType(VarVisibility.SHARED, 0, DataType.INT)
+        return VarType(VarVisibility.PLAINTEXT, 0, DataType.INT)
 
     def visit_Subscript(self, node: ast.Subscript) -> VarType:
         if not isinstance(node.value, ast.Name):
             self.raise_syntax_error(node, "Generic types must be named")
 
-        if node.value.id != "list":
+        if node.value.id == "shared" and not self.top_level:
+            self.raise_syntax_error(node, "Shared types cannot be nested")
+
+        if node.value.id not in ("list", "tuple", "shared"):
             self.raise_syntax_error(
-                node, "Only `list` is supported as a collection of types"
+                node, "Only `list`, `tuple`, or `shared` are supported as generic types"
             )
 
-        if not isinstance(node.slice, ast.Name):
-            self.raise_syntax_error(
-                node, "Generic types must be indexed by a single type"
+        if node.value.id == "tuple":
+            if not isinstance(node.slice, ast.Tuple):
+                self.raise_syntax_error(
+                    node, "Tuple variables must have at least two types"
+                )
+            datatype = DataType.TUPLE
+            inner_types = [
+                _TypeConverter(
+                    self.source_code_info,
+                    top_level=True,  # set to True to allow shared elements
+                ).visit(child)
+                for child in node.slice.elts
+            ]
+
+            child_dim_set = set(var_type.dims for var_type in inner_types)
+            if len(child_dim_set) != 1:
+                self.raise_syntax_error(
+                    node, "Tuple datatypes must have the same number of dimensions"
+                )
+            num_dims = 1
+
+        else:
+            if isinstance(node.slice, ast.Tuple):
+                self.raise_syntax_error(
+                    node,
+                    f"Only `tuple` can hold multiple types",
+                )
+            subtype = _TypeConverter(self.source_code_info, top_level=False).visit(
+                node.slice
             )
+            inner_types = []
 
-        if node.slice.id != "int":
-            self.raise_syntax_error(
-                node, "Only one-dimensional `list`s are currently supported"
-            )
+            if node.value.id == "shared":
+                num_dims = subtype.dims
+                if len(subtype.tuple_types) > 0:
+                    self.raise_syntax_error(
+                        node,
+                        "Shared variables cannot have tuple types",
+                    )
+            else:
+                num_dims = subtype.dims + 1
+            datatype = subtype.datatype
 
-        subtype = _TypeConverter(self.source_code_info).visit(node.slice)
-
-        return VarType(VarVisibility.SHARED, subtype.dims + 1, subtype.datatype)
+        return VarType(
+            VarVisibility.SHARED
+            if node.value.id == "shared"
+            else VarVisibility.PLAINTEXT,
+            num_dims,
+            datatype=datatype,
+            tuple_types=inner_types,
+        )
 
 
 class _FunctionConverter(_StrictNodeVisitor):
     def visit_FunctionDef(self, node: ast.FunctionDef) -> restricted_ast.Function:
-        # TODO: Check parameter and return types
         if node.decorator_list != []:
             self.raise_syntax_error(node, "Decorators unsupported")
         if len(node.body) == 0:
             self.raise_syntax_error(node, "Function has empty body")
+        for arg in node.args.args:
+            if arg.annotation is None:
+                self.raise_syntax_warning(
+                    node,
+                    f"Argument {arg.arg} has no type annotation, assuming plaintext int",
+                )
+
         parameters = [
             restricted_ast.Parameter(
                 var=restricted_ast.Var(arg.arg),
@@ -449,6 +505,22 @@ class _FunctionConverter(_StrictNodeVisitor):
             )
             for arg in node.args.args
         ]
+
+        if node.returns is not None:
+            return_type = _TypeConverter(self.source_code_info).visit(node.returns)
+            if (
+                return_type.datatype == DataType.TUPLE
+                and all(t.is_plaintext() for t in return_type.tuple_types)
+            ) or (
+                return_type.datatype != DataType.TUPLE and return_type.is_plaintext()
+            ):
+                self.raise_syntax_error(node, "Return type cannot be plaintext")
+        else:
+            self.raise_syntax_warning(
+                node,
+                "Function has no return type annotation, the returned value will not be checked for compatibility",
+            )
+            return_type = None
 
         party_idx = 0
         for parameter in parameters:
@@ -462,6 +534,7 @@ class _FunctionConverter(_StrictNodeVisitor):
             parameters=parameters,
             body=_convert_statements(self.source_code_info, node.body[:-1]),
             return_value=_ReturnValueGetter(self.source_code_info).visit(node.body[-1]),
+            return_type=return_type,
         )
 
 

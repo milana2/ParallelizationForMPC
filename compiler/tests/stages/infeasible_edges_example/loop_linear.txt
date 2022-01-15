@@ -1,4 +1,4 @@
-def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]):
+def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
     for i in range(0, N!0):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)

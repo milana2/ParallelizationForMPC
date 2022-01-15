@@ -13,14 +13,13 @@ class VarVisibility(Enum):
     def __str__(self) -> str:
         return self.value
 
-    __repr__ = __str__
+    # __repr__ = __str__
 
 
 class DataType(Enum):
     INT = "int"
     BOOL = "bool"
-
-    # TODO: allow tuples to hold multiple types
+    TUPLE = "tuple"
 
     def to_cpp(self) -> str:
         if self == DataType.INT:
@@ -33,7 +32,7 @@ class DataType(Enum):
     def __str__(self) -> str:
         return self.value
 
-    __repr__ = __str__
+    # __repr__ = __str__
 
 
 @dataclass
@@ -41,6 +40,17 @@ class VarType:
     visibility: Optional[VarVisibility] = None
     dims: Optional[int] = None
     datatype: Optional[DataType] = None
+    tuple_types: list["VarType"] = field(default_factory=list)
+
+    def __hash__(self) -> int:
+        return hash(
+            (
+                self.visibility,
+                self.datatype,
+                self.dims,
+                tuple(self.tuple_types),
+            )
+        )
 
     def drop_dim(self) -> "VarType":
         if self.dims is None:
@@ -65,6 +75,10 @@ class VarType:
             self.visibility in [supertype.visibility, None]
             and self.datatype in [supertype.datatype, None]
             and self.dims in [supertype.dims, None]
+            and all(
+                t.could_become(subtype)
+                for t, subtype in zip(self.tuple_types, supertype.tuple_types)
+            )
         )
 
     def is_complete(self) -> bool:
@@ -72,6 +86,10 @@ class VarType:
             self.visibility is not None
             and self.datatype is not None
             and self.dims is not None
+            and (
+                self.datatype != DataType.TUPLE
+                or all(t.is_complete() for t in self.tuple_types)
+            )
         )
 
     @staticmethod
@@ -87,11 +105,8 @@ class VarType:
 
         merged_type = VarType()
 
-        elem_visibilities = [t.visibility for t in types]
-        elem_dims = [t.dims for t in types if t.dims is not None]
-        elem_datatypes = [t.datatype for t in types if t.datatype is not None]
-
         # Determine the visibility of the merged type
+        elem_visibilities = [t.visibility for t in types]
         if (
             len(set(filter(lambda x: x is not None, elem_visibilities))) > 1
             and not mixed_shared_plaintext_allowed
@@ -107,6 +122,7 @@ class VarType:
             merged_type.visibility = VarVisibility.PLAINTEXT
 
         # Determine the dimensionality of the merged type
+        elem_dims = [t.dims for t in types if t.dims is not None]
         if len(set(elem_dims)) > 1:
             raise TypeError(
                 "Cannot merge types with different dimensionality:\n{}".format(
@@ -117,6 +133,7 @@ class VarType:
             merged_type.dims = elem_dims[0]
 
         # Determine the datatype of the merged type
+        elem_datatypes = [t.datatype for t in types if t.datatype is not None]
         if len(set(elem_datatypes)) > 1 and not mixed_datatypes_allowed:
             raise TypeError(
                 "Cannot merge types with different datatypes:\n{}".format(
@@ -126,6 +143,27 @@ class VarType:
         if len(elem_datatypes) > 0:
             merged_type.datatype = elem_datatypes[0]
 
+        # Determine the tuple types of the merged type
+        if len(set(len(t.tuple_types) for t in types)) > 1:
+            raise TypeError(
+                "Cannot merge types with different tuple types:\n{}".format(
+                    "\n".join(repr(t) for t in types)
+                )
+            )
+        tuple_len = len(types[0].tuple_types)
+        merged_type.tuple_types = [VarType() for _ in range(tuple_len)]
+
+        elem_tuple_types = [[t.tuple_types[i] for t in types] for i in range(tuple_len)]
+        for i in range(tuple_len):
+            if len(set(elem_tuple_types[i])) > 1:
+                raise TypeError(
+                    "Cannot merge types with different tuple types:\n{}".format(
+                        "\n".join(repr(t) for t in types)
+                    )
+                )
+            if len(elem_tuple_types[i]) > 0:
+                merged_type.tuple_types[i] = elem_tuple_types[i][0]
+
         return merged_type
 
     def to_cpp(self) -> str:
@@ -133,22 +171,28 @@ class VarType:
         assert self.datatype is not None
         assert self.dims is not None
 
-        str_rep = ""
-        for _ in range(self.dims):
-            str_rep += "std::vector<"
-        if self.visibility == VarVisibility.PLAINTEXT:
-            str_rep += self.datatype.to_cpp()
-        elif self.visibility == VarVisibility.SHARED:
-            if self.datatype == DataType.INT:
-                str_rep += "encrypto::motion::SecureUnsignedInteger"
-            elif self.datatype == DataType.BOOL:
-                # TODO: check that this is the correct type
-                str_rep += "encrypto::motion::ShareWrapper"
-        for _ in range(self.dims):
-            str_rep += ">"
-        return str_rep
+        if self.datatype == DataType.TUPLE:
+            return f"std::tuple<{', '.join(t.to_cpp() for t in self.tuple_types)}>"
+        else:
+            str_rep = ""
+            for _ in range(self.dims):
+                str_rep += "std::vector<"
+            if self.visibility == VarVisibility.PLAINTEXT:
+                str_rep += self.datatype.to_cpp()
+            elif self.visibility == VarVisibility.SHARED:
+                if self.datatype == DataType.INT:
+                    str_rep += "encrypto::motion::SecureUnsignedInteger"
+                elif self.datatype == DataType.BOOL:
+                    # TODO: check that this is the correct type
+                    str_rep += "encrypto::motion::ShareWrapper"
+            for _ in range(self.dims):
+                str_rep += ">"
+            return str_rep
 
     def __str__(self) -> str:
+        if self.datatype == DataType.TUPLE:
+            return "tuple[" + ", ".join(str(t) for t in self.tuple_types) + "]"
+
         str_rep = f"{self.visibility}["
         if self.dims is not None:
             for _ in range(self.dims):
@@ -401,6 +445,7 @@ class CFGFunction(Generic[BLOCK]):
     body: networkx.DiGraph
     entry_block: BLOCK
     exit_block: BLOCK
+    return_type: Optional[VarType]
 
     def __str__(self) -> str:
         parameters = ", ".join([str(parameter) for parameter in self.parameters])
@@ -418,7 +463,9 @@ class CFGFunction(Generic[BLOCK]):
             ]
         )
         return (
-            f"Function {self.name}({parameters}):\n"
+            f"Function {self.name}({parameters})"
+            + (f" -> {self.return_type}" if self.return_type is not None else "")
+            + ":\n"
             + f"Entry block: {block_indices[self.entry_block]}\n"
             + f"Exit block: {block_indices[self.exit_block]}\n"
             + blocks

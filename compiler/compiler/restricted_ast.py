@@ -2,12 +2,13 @@
 Data types representing a restricted subset of Python's abstract syntax tree
 """
 
-from typing import Union
+from typing import Union, Optional
 from dataclasses import dataclass
 from textwrap import indent
 
 from .ast_shared import (
     Var,
+    VarType,
     Parameter,
     LoopBound,
     Constant,
@@ -157,12 +158,15 @@ class Function:
     parameters: list[Parameter]
     body: list[Statement]
     return_value: Expression
+    return_type: Optional[VarType]
 
     def __str__(self) -> str:
         parameters = ", ".join([str(parameter) for parameter in self.parameters])
         body = "\n".join([str(statement) for statement in self.body]) + "\n"
         return (
-            f"def {self.name}({parameters}):\n"
+            f"def {self.name}({parameters})"
+            + (f" -> {self.return_type}" if self.return_type is not None else "")
+            + ":\n"
             + indent(body, "    ")
             + f"    return {self.return_value}"
         )

@@ -71,6 +71,7 @@ def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
         body=cfg,
         entry_block=mapping[tac_cfg_function.entry_block],
         exit_block=mapping[tac_cfg_function.exit_block],
+        return_type=tac_cfg_function.return_type,
     )
 
 

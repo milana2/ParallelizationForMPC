@@ -1,4 +1,14 @@
-def cross_join(A: list[int], Len_A, Att_A, B: list[int], Len_B, Att_B):
+from .UTIL import shared
+
+
+def cross_join(
+    A: shared[list[int]],
+    Len_A: int,
+    Att_A: int,
+    B: shared[list[int]],
+    Len_B: int,
+    Att_B: int,
+) -> shared[list[int]]:
     ret: list[int] = []
 
     Att = Att_A + Att_B - 1

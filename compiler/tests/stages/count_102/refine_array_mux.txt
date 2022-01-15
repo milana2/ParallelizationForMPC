@@ -1,4 +1,4 @@
-def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s0!1 = False
     c!1 = 0
     for i in range(0, N!0):

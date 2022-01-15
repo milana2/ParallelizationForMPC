@@ -1,4 +1,4 @@
-import typing
+from .UTIL import shared
 
 # Array A contains a list of integers i in [1,num_bins]
 # Array B is a same-size array, contains number of collected ratings for that bin
@@ -15,7 +15,9 @@ import typing
 # This is very similar to the crosstabs app in MOTION
 # But we were first to suggest this as a benchmark :).
 # requires: len(A) == len(B) = N
-def histogram(A: list[int], B: list[int], N, num_bins):
+def histogram(
+    A: shared[list[int]], B: shared[list[int]], N: int, num_bins: int
+) -> shared[list[int]]:
     result: list[int] = []
     # initialize result to 0
     for i in range(num_bins):

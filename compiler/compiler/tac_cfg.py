@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from .ast_shared import (
     Var,
+    VarType,
     Parameter,
     BinOpKind,
     UnaryOpKind,

@@ -2,7 +2,7 @@
 !2!2: shared[int]
 !3!2: shared[int]
 !4!2: shared[int]
-!5!1: shared[list[list[int]]]
+!5!1: tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]
 A!0: shared[list[int]]
 A!1: shared[list[int]]
 A!2: shared[list[int]]

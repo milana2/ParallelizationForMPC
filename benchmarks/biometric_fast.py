@@ -1,15 +1,15 @@
-import typing
+from .UTIL import shared
 
 
 def biometric_matching_fast(
-    D,
-    N,
-    C: list[int],
-    C_sqr_sum: int,
-    two_C: list[int],
-    S: list[int],
-    S_sqr_sum: list[int],
-):
+    D: int,
+    N: int,
+    C: shared[list[int]],
+    C_sqr_sum: shared[int],
+    two_C: shared[list[int]],
+    S: shared[list[int]],
+    S_sqr_sum: shared[list[int]],
+) -> tuple[shared[int], shared[int]]:
     """
     Computes biometric matching
 

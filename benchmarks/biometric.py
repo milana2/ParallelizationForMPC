@@ -1,11 +1,13 @@
-import typing
+from .UTIL import shared
 
 # Biometric matching
 # D is the number of features we are matching. Usually small, e.g., D=4
 # N is the size of the database S
 # C is the vector of features we are tryign to match.
 # S is the (originally two dimentional) database array: S[0,0],S[0,1],..S[0,D-1],S[1,0]... S[N-1,D-1]
-def biometric(C: list[int], D, S: list[int], N):
+def biometric(
+    C: shared[list[int]], D: int, S: shared[list[int]], N: int
+) -> tuple[shared[int], shared[int]]:
     min_sum: int = 10000
     min_index = -1
     for i in range(N):

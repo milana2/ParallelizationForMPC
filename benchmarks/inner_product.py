@@ -1,7 +1,7 @@
-import typing
+from .UTIL import shared
 
 
-def ip(A: list[int], B: list[int], N):
+def ip(A: shared[list[int]], B: shared[list[int]], N: int) -> shared[int]:
     sum = 0
     for i in range(0, N):
         temp = A[i] * B[i]

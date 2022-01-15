@@ -1,4 +1,4 @@
-def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
+def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     min_X = []
     min_Y = []
     for i: plaintext[int] in range(0, N):

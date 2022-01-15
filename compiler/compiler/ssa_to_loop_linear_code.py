@@ -60,4 +60,5 @@ def ssa_to_loop_linear_code(ssa_function: ssa.Function) -> loop_linear_code.Func
         parameters=ssa_function.parameters,
         body=search(ssa_function.entry_block),
         return_value=ssa_function.exit_block.terminator.value,
+        return_type=ssa_function.return_type,
     )

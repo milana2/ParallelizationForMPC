@@ -1,4 +1,7 @@
-def longest_102(Seq: list[int], N, Syms: list[int]):
+from .UTIL import shared
+
+
+def longest_102(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:
     """
     Computes the length of the largest instance of regex a(b*)c in a provided sequence.
     Syms is a list of form [a, b, c].

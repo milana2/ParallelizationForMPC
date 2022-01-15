@@ -1,4 +1,9 @@
-def longest_odd_10(Seq: list[int], N, Syms: list[int]):
+from .UTIL import shared
+
+
+def longest_odd_10(
+    Seq: shared[list[int]], N: int, Syms: shared[list[int]]
+) -> shared[int]:
     """
     Computes the length of the longest regex of form (ab)* which has an odd length
     Syms is the list [a, b]

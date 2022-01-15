@@ -5,6 +5,7 @@ a three-address code control flow graph
 
 
 import networkx  # type: ignore
+from typing import Optional
 
 from . import restricted_ast
 from . import tac_cfg
@@ -90,7 +91,11 @@ class _CFGBuilder:
         self._add_conditional_jump_edges(after_block, body_block)
 
     def build_function(
-        self, name: str, parameters: list[tac_cfg.Parameter], return_var: tac_cfg.Var
+        self,
+        name: str,
+        parameters: list[tac_cfg.Parameter],
+        return_var: tac_cfg.Var,
+        return_type: Optional[tac_cfg.VarType],
     ) -> tac_cfg.Function:
         assert self._current_block.terminator is None
         self._current_block.terminator = tac_cfg.Return(value=return_var)
@@ -100,6 +105,7 @@ class _CFGBuilder:
             body=self._cfg,
             entry_block=self._entry_block,
             exit_block=self._current_block,
+            return_type=return_type,
         )
 
 
@@ -266,4 +272,6 @@ def restricted_ast_to_tac_cfg(node: restricted_ast.Function) -> tac_cfg.Function
     builder = _CFGBuilder()
     _build_statements(node.body, builder)
     return_var = _build_expression_as_var(node.return_value, builder)
-    return builder.build_function(node.name, node.parameters, return_var)
+    return builder.build_function(
+        node.name, node.parameters, return_var, node.return_type
+    )

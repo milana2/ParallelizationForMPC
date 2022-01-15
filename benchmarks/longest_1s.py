@@ -1,4 +1,7 @@
-def longest_1s(Seq: list[int], N, Sym: int):
+from .UTIL import shared
+
+
+def longest_1s(Seq: shared[list[int]], N: int, Sym: shared[int]) -> shared[int]:
     """
     Computes length of the longest sequence of form (a*).
     Sym is the integer a.

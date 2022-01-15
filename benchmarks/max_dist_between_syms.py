@@ -1,4 +1,9 @@
-def max_dist_between_syms(Seq: list[int], N, Sym: int):
+from .UTIL import shared
+
+
+def max_dist_between_syms(
+    Seq: shared[list[int]], N: int, Sym: shared[int]
+) -> shared[int]:
     max_dist = 0
     current_dist = 0
     for i in range(0, N):
