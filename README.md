@@ -10,23 +10,24 @@ import typing
 # C is the vector of features we are tryign to match.
 # S is the (originally two dimentional) database array: S[0,0],S[0,1],..S[0,D-1],S[1,0]... S[N-1,D-1]
 def biometric(C: list[int], D, S: list[int], N):
-  min_sum: int = 10000
-  min_index = -1
-  for i in range(N):
-    sum = 0
-    for j in range(D):
-      d = S[i*D+j]-C[j] 
-      p = d*d      
-      sum = sum + p
-    if sum < min_sum:
-      min_sum = sum
-      min_index = i
+    min_sum: int = 10000
+    min_index = -1
+    for i in range(N):
+        sum = 0
+        for j in range(D):
+            d = S[i * D + j] - C[j]
+            p = d * d
+            sum = sum + p
+        if sum < min_sum:
+            min_sum = sum
+            min_index = i
 
-  return (min_sum,min_index)
+    return (min_sum, min_index)
 
-C = [1,2,3,4]
-S = [4,5,2,10,2,120,4,10,99,88,77,66,55,44,33,22]
-print(biometric(C,4,S,4))
+
+C = [1, 2, 3, 4]
+S = [4, 5, 2, 10, 2, 120, 4, 10, 99, 88, 77, 66, 55, 44, 33, 22]
+print(biometric(C, 4, S, 4))
 
 ```
 ### Restricted AST
@@ -112,51 +113,53 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 | `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
-| `min_index!3` | `plaintext[int]` |
-| `min_index!4` | `shared[int]` |
+| `min_sum!2` | `shared[int]` |
 | `min_index!2` | `shared[int]` |
 | `!2!1` | `shared[list[int]]` |
-| `d!3` | `shared[int]` |
-| `p!3` | `shared[int]` |
-| `sum!4` | `shared[int]` |
-| `sum!3` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
+| `min_index!3` | `plaintext[int]` |
+| `min_index!4` | `shared[int]` |
+| `min_index!1` | `plaintext[int]` |
 | `min_sum!3` | `shared[int]` |
 | `min_sum!4` | `shared[int]` |
-| `min_sum!2` | `shared[int]` |
-| `!1!2` | `shared[bool]` |
-| `sum!2` | `plaintext[int]` |
-| `min_index!1` | `plaintext[int]` |
 | `min_sum!1` | `plaintext[int]` |
+| `sum!3` | `shared[int]` |
+| `p!3` | `shared[int]` |
+| `sum!4` | `shared[int]` |
+| `sum!2` | `plaintext[int]` |
+| `d!3` | `shared[int]` |
 ### Motion code
 ```cpp
-void biometric(
+template <encrypto::motion::MpcProtocol Protocol>
+std::vector<encrypto::motion::SecureUnsignedInteger> biometric(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> C,
-    int D,
+    std::uint32_t D,
     std::vector<encrypto::motion::SecureUnsignedInteger> S,
-    int N
+    std::uint32_t N
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> C_0;
-    int D_0;
+    std::uint32_t D_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> S_0;
-    int N_0;
-    int i;
-    int j;
-    int min_index_3;
-    encrypto::motion::SecureUnsignedInteger min_index_4;
+    std::uint32_t N_0;
+    std::uint32_t i;
+    std::uint32_t j;
+    encrypto::motion::SecureUnsignedInteger min_sum_2;
     encrypto::motion::SecureUnsignedInteger min_index_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _2_1;
-    encrypto::motion::SecureUnsignedInteger d_3;
-    encrypto::motion::SecureUnsignedInteger p_3;
-    encrypto::motion::SecureUnsignedInteger sum_4;
-    encrypto::motion::SecureUnsignedInteger sum_3;
+    encrypto::motion::ShareWrapper _1_2;
+    std::uint32_t min_index_3;
+    encrypto::motion::SecureUnsignedInteger min_index_4;
+    std::uint32_t min_index_1;
     encrypto::motion::SecureUnsignedInteger min_sum_3;
     encrypto::motion::SecureUnsignedInteger min_sum_4;
-    encrypto::motion::SecureUnsignedInteger min_sum_2;
-    encrypto::motion::ShareWrapper _1_2;
-    int sum_2;
-    int min_index_1;
-    int min_sum_1;
+    std::uint32_t min_sum_1;
+    encrypto::motion::SecureUnsignedInteger sum_3;
+    encrypto::motion::SecureUnsignedInteger p_3;
+    encrypto::motion::SecureUnsignedInteger sum_4;
+    std::uint32_t sum_2;
+    encrypto::motion::SecureUnsignedInteger d_3;
 
     // Parameter assignments
     C_0 = C;
@@ -169,13 +172,13 @@ void biometric(
     min_index_1 = (- 1);
 
     // Initialize phi values
-    min_sum_2 = min_sum_1;
-    min_index_2 = min_index_1;
+    min_sum_2 = party->In<Protocol>(encrypto::motion::ToInput(min_sum_1), 0);
+    min_index_2 = party->In<Protocol>(encrypto::motion::ToInput(min_index_1), 0);
     for (i = 0; i < N_0; i++) {
         sum_2 = 0;
 
         // Initialize phi values
-        sum_3 = sum_2;
+        sum_3 = party->In<Protocol>(encrypto::motion::ToInput(sum_2), 0);
         for (j = 0; j < D_0; j++) {
             d_3 = (S_0[((i * D_0) + j)] - C_0[j]);
             p_3 = (d_3 * d_3);
@@ -205,74 +208,83 @@ void biometric(
 ```python
 import typing
 
-def biometric_matching_fast(D, N, C:list[int], C_sqr_sum:int, two_C:list[int], S: list[int], S_sqr_sum: list[int]):
-  """
-  Computes biometric matching
 
-  This version uses some preprocessed data from parties to provide faster biometric matching
+def biometric_matching_fast(
+    D,
+    N,
+    C: list[int],
+    C_sqr_sum: int,
+    two_C: list[int],
+    S: list[int],
+    S_sqr_sum: list[int],
+):
+    """
+    Computes biometric matching
 
-  :param int D: the cardinality of a feature vector, Usually small, e.g. 4
-  :param int N: number of features in the database e.g. usually 1024, 2048, 4096, etc
-  :param list[int] C: query feature vector, we need to find closest match to this vector in the DB, comes from client (Alice)
-  :param int C_sqr_sum: sum of squares of elements of `C` e.g. if `C={1, 2, 3, 4}`, then `C_sqr_sum is: 1*1 + 2*2 + 3*3 + 4*4 = 30`
-   client passes it pre-processed to to save gates in circuit
-  :param list[int] two_C: same as `C` except that each element is multipled by 2, e.g. if `C={1, 2, 3, 4}`, then
-   `two_C = {2, 4, 6, 8}`. client passes it preprocessed to save gates
-  :param list[int] S: the database of features, it has N * D elements i.e. N features and each feature vector has D elements,
-   this comes from server (Bob)
-  :param list[int] S_sqr_sum: has N elements, each element is sum of squares of corresponding feature elements e.g. say
-   S={{1, 2, 3, 4}, {5, 6, 7, 8}}, then S_sqr_sum={1*1 + 2*2 + 3*3 + 4*4, 5*5 + 6*6 + 7*7 + 8*8} = {30, 174}
+    This version uses some preprocessed data from parties to provide faster biometric matching
 
-  """
+    :param int D: the cardinality of a feature vector, Usually small, e.g. 4
+    :param int N: number of features in the database e.g. usually 1024, 2048, 4096, etc
+    :param list[int] C: query feature vector, we need to find closest match to this vector in the DB, comes from client (Alice)
+    :param int C_sqr_sum: sum of squares of elements of `C` e.g. if `C={1, 2, 3, 4}`, then `C_sqr_sum is: 1*1 + 2*2 + 3*3 + 4*4 = 30`
+     client passes it pre-processed to to save gates in circuit
+    :param list[int] two_C: same as `C` except that each element is multipled by 2, e.g. if `C={1, 2, 3, 4}`, then
+     `two_C = {2, 4, 6, 8}`. client passes it preprocessed to save gates
+    :param list[int] S: the database of features, it has N * D elements i.e. N features and each feature vector has D elements,
+     this comes from server (Bob)
+    :param list[int] S_sqr_sum: has N elements, each element is sum of squares of corresponding feature elements e.g. say
+     S={{1, 2, 3, 4}, {5, 6, 7, 8}}, then S_sqr_sum={1*1 + 2*2 + 3*3 + 4*4, 5*5 + 6*6 + 7*7 + 8*8} = {30, 174}
 
-  differences: list[int] = []
-  for i in range(D):
-    differences[i] = differences + [0]
+    """
 
-  for i in range(N):
-    a_sqr_plus_b_sqr: int = S_sqr_sum[i] + C_sqr_sum
-    two_a_b: int = 0
+    differences: list[int] = []
+    for i in range(D):
+        differences = differences + [0]
 
-    for j in range(D):
-      tmp: int = S[i*D+j] * two_C[j]
-      two_a_b = two_a_b + tmp
-
-    this_diff: int = a_sqr_plus_b_sqr - two_a_b
-    differences[i] = this_diff
-
-
-    min_diff: int = differences[0]
     min_index: int = 0
+    min_diff: int = differences[0]
+    for i in range(N):
+        a_sqr_plus_b_sqr: int = S_sqr_sum[i] + C_sqr_sum
+        two_a_b: int = 0
 
-    for k in range(N):
-      if(differences[k] < min_diff):
-        min_diff = differences[k]
-        min_index = k
+        for j in range(D):
+            tmp: int = S[i * D + j] * two_C[j]
+            two_a_b = two_a_b + tmp
 
-  return (min_diff, min_index)
+        this_diff: int = a_sqr_plus_b_sqr - two_a_b
+        differences[i] = this_diff
 
+        min_diff = differences[0]
+        min_index = 0
+
+        for k in range(N):
+            if differences[k] < min_diff:
+                min_diff = differences[k]
+                min_index = k
+
+    return (min_diff, min_index)
 
 
 def test_biometric_matching_fast(D, N, C, S):
-  """
-  just a convenience method for testing, computes the pre-processing data for the actual call
-  """
-  two_C = [0] * D
-  C_sqr_sum = 0
-  S_sqr_sum = [0] * N
-  for i in range(D):
-    two_C[i] = 2 * C[i]
-    C_sqr_sum = C_sqr_sum + (C[i] * C[i])
+    """
+    just a convenience method for testing, computes the pre-processing data for the actual call
+    """
+    two_C = [0] * D
+    C_sqr_sum = 0
+    S_sqr_sum = [0] * N
+    for i in range(D):
+        two_C[i] = 2 * C[i]
+        C_sqr_sum = C_sqr_sum + (C[i] * C[i])
 
-  for i in range(N):
-    for j in range(D):
-      S_sqr_sum[i] = S_sqr_sum[i] + (S[i*D+j] * S[i*D+j])
+    for i in range(N):
+        for j in range(D):
+            S_sqr_sum[i] = S_sqr_sum[i] + (S[i * D + j] * S[i * D + j])
 
-  print(biometric_matching__fast(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum))
+    print(biometric_matching__fast(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum))
 
 
-C = [1,2,3,4]
-S = [4,5,2,10,2,120,4,10,99,88,77,66,55,44,33,22]
+C = [1, 2, 3, 4]
+S = [4, 5, 2, 10, 2, 120, 4, 10, 99, 88, 77, 66, 55, 44, 33, 22]
 test_biometric_matching_fast(4, 4, C, S)
 
 ```
@@ -281,7 +293,9 @@ test_biometric_matching_fast(4, 4, C, S)
 def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
     differences = []
     for i: plaintext[int] in range(0, D):
-        differences[i] = (differences + [0])
+        differences = (differences + [0])
+    min_index = 0
+    min_diff = differences[0]
     for i: plaintext[int] in range(0, N):
         a_sqr_plus_b_sqr = (S_sqr_sum[i] + C_sqr_sum)
         two_a_b = 0
@@ -313,12 +327,13 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
     for i in range(0, D!0):
         differences!2 = Φ(differences!1, differences!3)
         !1!2 = [0]
-        !2!2 = (differences!2 + !1!2)
-        differences!3 = Update(differences!2, i, !2!2)
+        differences!3 = (differences!2 + !1!2)
+    min_index!1 = 0
+    min_diff!1 = differences!2[0]
     for i in range(0, N!0):
         differences!4 = Φ(differences!2, differences!5)
-        min_diff!1 = Φ(min_diff!0, min_diff!3)
-        min_index!1 = Φ(min_index!0, min_index!3)
+        min_index!2 = Φ(min_index!1, min_index!4)
+        min_diff!2 = Φ(min_diff!1, min_diff!4)
         a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i] + C_sqr_sum!0)
         two_a_b!2 = 0
         for j in range(0, D!0):
@@ -327,18 +342,18 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
             two_a_b!4 = (two_a_b!3 + tmp!3)
         this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
         differences!5 = Update(differences!4, i, this_diff!2)
-        min_diff!2 = differences!5[0]
-        min_index!2 = 0
+        min_diff!3 = differences!5[0]
+        min_index!3 = 0
         for k in range(0, N!0):
-            min_diff!3 = Φ(min_diff!2, min_diff!5)
-            min_index!3 = Φ(min_index!2, min_index!5)
-            !3!3 = (differences!5[k] < min_diff!3)
-            min_diff!4 = differences!5[k]
-            min_index!4 = k
-            min_diff!5 = MUX(!3!3, min_diff!4, min_diff!3)
-            min_index!5 = MUX(!3!3, min_index!4, min_index!3)
-    !4!1 = (min_diff!1, min_index!1)
-    return !4!1
+            min_index!4 = Φ(min_index!3, min_index!6)
+            min_diff!4 = Φ(min_diff!3, min_diff!6)
+            !2!3 = (differences!5[k] < min_diff!4)
+            min_diff!5 = differences!5[k]
+            min_index!5 = k
+            min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+            min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)
+    !3!1 = (min_diff!2, min_index!2)
+    return !3!1
 ```
 ### Dependency graph
 ![](biometric_fast_dep_graph.png)
@@ -351,12 +366,13 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
     for i in range(0, D!0):
         differences!2 = Φ(differences!1, differences!3)
         !1!2 = [0]
-        !2!2 = (differences!2 + !1!2)
-        differences!3 = Update(differences!2, i, !2!2)
+        differences!3 = (differences!2 + !1!2)
+    min_index!1 = 0
+    min_diff!1 = differences!2[0]
     for i in range(0, N!0):
         differences!4 = Φ(differences!2, differences!5)
-        min_diff!1 = Φ(min_diff!0, min_diff!3)
-        min_index!1 = Φ(min_index!0, min_index!3)
+        min_index!2 = Φ(min_index!1, min_index!4)
+        min_diff!2 = Φ(min_diff!1, min_diff!4)
         a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i] + C_sqr_sum!0)
         two_a_b!2 = 0
         for j in range(0, D!0):
@@ -365,18 +381,18 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
             two_a_b!4 = (two_a_b!3 + tmp!3)
         this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
         differences!5 = Update(differences!4, i, this_diff!2)
-        min_diff!2 = differences!5[0]
-        min_index!2 = 0
+        min_diff!3 = differences!5[0]
+        min_index!3 = 0
         for k in range(0, N!0):
-            min_diff!3 = Φ(min_diff!2, min_diff!5)
-            min_index!3 = Φ(min_index!2, min_index!5)
-            !3!3 = (differences!5[k] < min_diff!3)
-            min_diff!4 = differences!5[k]
-            min_index!4 = k
-            min_diff!5 = MUX(!3!3, min_diff!4, min_diff!3)
-            min_index!5 = MUX(!3!3, min_index!4, min_index!3)
-    !4!1 = (min_diff!1, min_index!1)
-    return !4!1
+            min_index!4 = Φ(min_index!3, min_index!6)
+            min_diff!4 = Φ(min_diff!3, min_diff!6)
+            !2!3 = (differences!5[k] < min_diff!4)
+            min_diff!5 = differences!5[k]
+            min_index!5 = k
+            min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+            min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)
+    !3!1 = (min_diff!2, min_index!2)
+    return !3!1
 ```
 ### Array MUX refinement (dependence graph)
 ![](biometric_fast_array_mux_refinement_dep_graph.png)
@@ -393,33 +409,39 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
 | `k` | `plaintext[int]` |
-| `min_index!4` | `plaintext[int]` |
-| `min_index!5` | `shared[int]` |
-| `min_index!3` | `shared[int]` |
-| `min_index!1` | `shared[int]` |
-| `!4!1` | `shared[list[int]]` |
-| `min_index!2` | `plaintext[int]` |
-| `tmp!3` | `shared[int]` |
-| `two_a_b!4` | `shared[int]` |
-| `two_a_b!3` | `shared[int]` |
-| `this_diff!2` | `shared[int]` |
-| `differences!5` | `shared[list[int]]` |
+| `min_diff!2` | `shared[int]` |
+| `min_index!2` | `shared[int]` |
+| `!3!1` | `shared[list[int]]` |
+| `!2!3` | `shared[bool]` |
 | `min_diff!4` | `shared[int]` |
 | `min_diff!5` | `shared[int]` |
+| `min_diff!6` | `shared[int]` |
 | `min_diff!3` | `shared[int]` |
-| `!3!3` | `shared[bool]` |
-| `min_diff!1` | `shared[int]` |
-| `min_diff!2` | `shared[int]` |
+| `differences!5` | `shared[list[int]]` |
+| `min_index!4` | `shared[int]` |
+| `min_index!5` | `plaintext[int]` |
+| `min_index!6` | `shared[int]` |
+| `min_index!3` | `plaintext[int]` |
+| `min_index!1` | `plaintext[int]` |
+| `min_diff!1` | `plaintext[int]` |
+| `this_diff!2` | `shared[int]` |
 | `differences!4` | `shared[list[int]]` |
-| `two_a_b!2` | `plaintext[int]` |
 | `a_sqr_plus_b_sqr!2` | `shared[int]` |
+| `two_a_b!3` | `shared[int]` |
+| `differences!2` | `plaintext[list[int]]` |
+| `tmp!3` | `shared[int]` |
+| `two_a_b!4` | `shared[int]` |
+| `two_a_b!2` | `plaintext[int]` |
 | `!1!2` | `plaintext[list[int]]` |
+| `differences!3` | `plaintext[list[int]]` |
 | `differences!1` | `plaintext[list[int]]` |
 ### Motion code
 ```cpp
-void biometric_matching_fast(
-    int D,
-    int N,
+template <encrypto::motion::MpcProtocol Protocol>
+std::vector<encrypto::motion::SecureUnsignedInteger> biometric_matching_fast(
+    encrypto::motion::PartyPointer &party,
+    std::uint32_t D,
+    std::uint32_t N,
     std::vector<encrypto::motion::SecureUnsignedInteger> C,
     encrypto::motion::SecureUnsignedInteger C_sqr_sum,
     std::vector<encrypto::motion::SecureUnsignedInteger> two_C,
@@ -427,38 +449,42 @@ void biometric_matching_fast(
     std::vector<encrypto::motion::SecureUnsignedInteger> S_sqr_sum
 ) {
     // Initial variable declarations
-    int D_0;
-    int N_0;
+    std::uint32_t D_0;
+    std::uint32_t N_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> C_0;
     encrypto::motion::SecureUnsignedInteger C_sqr_sum_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> two_C_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> S_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> S_sqr_sum_0;
-    int i;
-    int j;
-    int k;
-    int min_index_4;
-    encrypto::motion::SecureUnsignedInteger min_index_5;
-    encrypto::motion::SecureUnsignedInteger min_index_3;
-    encrypto::motion::SecureUnsignedInteger min_index_1;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _4_1;
-    int min_index_2;
-    encrypto::motion::SecureUnsignedInteger tmp_3;
-    encrypto::motion::SecureUnsignedInteger two_a_b_4;
-    encrypto::motion::SecureUnsignedInteger two_a_b_3;
-    encrypto::motion::SecureUnsignedInteger this_diff_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> differences_5;
+    std::uint32_t i;
+    std::uint32_t j;
+    std::uint32_t k;
+    encrypto::motion::SecureUnsignedInteger min_diff_2;
+    encrypto::motion::SecureUnsignedInteger min_index_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _3_1;
+    encrypto::motion::ShareWrapper _2_3;
     encrypto::motion::SecureUnsignedInteger min_diff_4;
     encrypto::motion::SecureUnsignedInteger min_diff_5;
+    encrypto::motion::SecureUnsignedInteger min_diff_6;
     encrypto::motion::SecureUnsignedInteger min_diff_3;
-    encrypto::motion::ShareWrapper _3_3;
-    encrypto::motion::SecureUnsignedInteger min_diff_1;
-    encrypto::motion::SecureUnsignedInteger min_diff_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> differences_5;
+    encrypto::motion::SecureUnsignedInteger min_index_4;
+    std::uint32_t min_index_5;
+    encrypto::motion::SecureUnsignedInteger min_index_6;
+    std::uint32_t min_index_3;
+    std::uint32_t min_index_1;
+    std::uint32_t min_diff_1;
+    encrypto::motion::SecureUnsignedInteger this_diff_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> differences_4;
-    int two_a_b_2;
     encrypto::motion::SecureUnsignedInteger a_sqr_plus_b_sqr_2;
-    std::vector<int> _1_2;
-    std::vector<int> differences_1;
+    encrypto::motion::SecureUnsignedInteger two_a_b_3;
+    std::vector<std::uint32_t> differences_2;
+    encrypto::motion::SecureUnsignedInteger tmp_3;
+    encrypto::motion::SecureUnsignedInteger two_a_b_4;
+    std::uint32_t two_a_b_2;
+    std::vector<std::uint32_t> _1_2;
+    std::vector<std::uint32_t> differences_3;
+    std::vector<std::uint32_t> differences_1;
 
     // Parameter assignments
     D_0 = D;
@@ -473,27 +499,28 @@ void biometric_matching_fast(
     differences_1 = {};
 
     // Initialize phi values
-    differences_2 = differences_1;
+    differences_2 = party->In<Protocol>(encrypto::motion::ToInput(differences_1), 0);
     for (i = 0; i < D_0; i++) {
         _1_2 = {0};
-        _2_2 = (differences_2 + _1_2);
-        differences!2[i] = _2_2; differences_3 = differences_2;
+        differences_3 = (differences_2 + _1_2);
 
         // Update phi values
         differences_2 = differences_3;
     }
 
+    min_index_1 = 0;
+    min_diff_1 = differences_2[0];
 
     // Initialize phi values
-    differences_4 = differences_2;
-    min_diff_1 = min_diff_0;
-    min_index_1 = min_index_0;
+    differences_4 = party->In<Protocol>(encrypto::motion::ToInput(differences_2), 0);
+    min_index_2 = party->In<Protocol>(encrypto::motion::ToInput(min_index_1), 0);
+    min_diff_2 = party->In<Protocol>(encrypto::motion::ToInput(min_diff_1), 0);
     for (i = 0; i < N_0; i++) {
         a_sqr_plus_b_sqr_2 = (S_sqr_sum_0[i] + C_sqr_sum_0);
         two_a_b_2 = 0;
 
         // Initialize phi values
-        two_a_b_3 = two_a_b_2;
+        two_a_b_3 = party->In<Protocol>(encrypto::motion::ToInput(two_a_b_2), 0);
         for (j = 0; j < D_0; j++) {
             tmp_3 = (S_0[((i * D_0) + j)] * two_C_0[j]);
             two_a_b_4 = (two_a_b_3 + tmp_3);
@@ -504,33 +531,33 @@ void biometric_matching_fast(
 
         this_diff_2 = (a_sqr_plus_b_sqr_2 - two_a_b_3);
         differences!4[i] = this_diff_2; differences_5 = differences_4;
-        min_diff_2 = differences_5[0];
-        min_index_2 = 0;
+        min_diff_3 = differences_5[0];
+        min_index_3 = 0;
 
         // Initialize phi values
-        min_diff_3 = min_diff_2;
-        min_index_3 = min_index_2;
+        min_index_4 = party->In<Protocol>(encrypto::motion::ToInput(min_index_3), 0);
+        min_diff_4 = party->In<Protocol>(encrypto::motion::ToInput(min_diff_3), 0);
         for (k = 0; k < N_0; k++) {
-            _3_3 = (differences_5[k] < min_diff_3);
-            min_diff_4 = differences_5[k];
-            min_index_4 = k;
-            min_diff_5 = _3_3.Mux(min_diff_3, min_diff_4);
-            min_index_5 = _3_3.Mux(min_index_3, min_index_4);
+            _2_3 = (differences_5[k] < min_diff_4);
+            min_diff_5 = differences_5[k];
+            min_index_5 = k;
+            min_index_6 = _2_3.Mux(min_index_4, min_index_5);
+            min_diff_6 = _2_3.Mux(min_diff_4, min_diff_5);
 
             // Update phi values
-            min_diff_3 = min_diff_5;
-            min_index_3 = min_index_5;
+            min_index_4 = min_index_6;
+            min_diff_4 = min_diff_6;
         }
 
 
         // Update phi values
         differences_4 = differences_5;
-        min_diff_1 = min_diff_3;
-        min_index_1 = min_index_3;
+        min_index_2 = min_index_4;
+        min_diff_2 = min_diff_4;
     }
 
-    _4_1 = {min_diff_1, min_index_1};
-    return _4_1;
+    _3_1 = {min_diff_2, min_index_2};
+    return _3_1;
 }
 ```
 ## `chapterfour_figure_12`
@@ -600,29 +627,31 @@ def foo(x: shared[int], y: shared[int]):
 | - | - |
 | `x!0` | `shared[int]` |
 | `y!0` | `shared[int]` |
-| `z!2` | `plaintext[int]` |
-| `z!4` | `shared[int]` |
-| `z!5` | `shared[int]` |
-| `z!3` | `plaintext[int]` |
-| `!2!1` | `shared[bool]` |
 | `!1!1` | `shared[bool]` |
+| `z!4` | `shared[int]` |
 | `z!1` | `plaintext[int]` |
+| `z!5` | `shared[int]` |
+| `!2!1` | `shared[bool]` |
+| `z!3` | `plaintext[int]` |
+| `z!2` | `plaintext[int]` |
 ### Motion code
 ```cpp
-void foo(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger foo(
+    encrypto::motion::PartyPointer &party,
     encrypto::motion::SecureUnsignedInteger x,
     encrypto::motion::SecureUnsignedInteger y
 ) {
     // Initial variable declarations
     encrypto::motion::SecureUnsignedInteger x_0;
     encrypto::motion::SecureUnsignedInteger y_0;
-    int z_2;
-    encrypto::motion::SecureUnsignedInteger z_4;
-    encrypto::motion::SecureUnsignedInteger z_5;
-    int z_3;
-    encrypto::motion::ShareWrapper _2_1;
     encrypto::motion::ShareWrapper _1_1;
-    int z_1;
+    encrypto::motion::SecureUnsignedInteger z_4;
+    std::uint32_t z_1;
+    encrypto::motion::SecureUnsignedInteger z_5;
+    encrypto::motion::ShareWrapper _2_1;
+    std::uint32_t z_3;
+    std::uint32_t z_2;
 
     // Parameter assignments
     x_0 = x;
@@ -776,73 +805,75 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 | `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
-| `is_hull!4` | `plaintext[int]` |
-| `is_hull!5` | `shared[int]` |
-| `is_hull!3` | `shared[int]` |
-| `is_hull!6` | `shared[int]` |
-| `p2_Y!3` | `shared[int]` |
-| `!7!3` | `shared[bool]` |
-| `!8!3` | `shared[bool]` |
-| `!9!3` | `shared[bool]` |
-| `p2_X!3` | `shared[int]` |
-| `!6!3` | `shared[bool]` |
-| `p1_Y!2` | `shared[int]` |
-| `!11!2` | `shared[list[int]]` |
-| `hull_Y!3` | `shared[list[int]]` |
-| `hull_Y!4` | `shared[list[int]]` |
+| `hull_X!2` | `shared[list[int]]` |
 | `hull_Y!2` | `shared[list[int]]` |
 | `!12!1` | `shared[list[list[int]]]` |
-| `!2!2` | `shared[bool]` |
-| `!3!2` | `shared[bool]` |
-| `p1_X!2` | `shared[int]` |
-| `!10!2` | `shared[list[int]]` |
+| `is_hull!6` | `shared[bool]` |
+| `hull_Y!3` | `shared[list[int]]` |
+| `hull_Y!4` | `shared[list[int]]` |
+| `hull_Y!1` | `plaintext[list[int]]` |
+| `!11!2` | `shared[list[int]]` |
 | `hull_X!3` | `shared[list[int]]` |
 | `hull_X!4` | `shared[list[int]]` |
-| `hull_X!2` | `shared[list[int]]` |
-| `!1!2` | `shared[bool]` |
-| `is_hull!2` | `plaintext[int]` |
-| `hull_Y!1` | `plaintext[list[int]]` |
 | `hull_X!1` | `plaintext[list[int]]` |
+| `!10!2` | `shared[list[int]]` |
+| `p1_Y!2` | `shared[int]` |
+| `p1_X!2` | `shared[int]` |
+| `!3!2` | `shared[bool]` |
+| `is_hull!3` | `shared[bool]` |
+| `is_hull!2` | `plaintext[bool]` |
+| `!9!3` | `shared[bool]` |
+| `is_hull!4` | `plaintext[bool]` |
+| `is_hull!5` | `shared[bool]` |
+| `!8!3` | `shared[bool]` |
+| `!6!3` | `shared[bool]` |
+| `!7!3` | `shared[bool]` |
+| `p2_Y!3` | `shared[int]` |
+| `p2_X!3` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
 ### Motion code
 ```cpp
-void convex_hull(
+template <encrypto::motion::MpcProtocol Protocol>
+std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> convex_hull(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords,
     std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords,
-    int N
+    std::uint32_t N
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0;
-    int N_0;
-    int i;
-    int j;
-    int is_hull_4;
-    encrypto::motion::SecureUnsignedInteger is_hull_5;
-    encrypto::motion::SecureUnsignedInteger is_hull_3;
-    encrypto::motion::SecureUnsignedInteger is_hull_6;
-    encrypto::motion::SecureUnsignedInteger p2_Y_3;
-    encrypto::motion::ShareWrapper _7_3;
-    encrypto::motion::ShareWrapper _8_3;
-    encrypto::motion::ShareWrapper _9_3;
-    encrypto::motion::SecureUnsignedInteger p2_X_3;
-    encrypto::motion::ShareWrapper _6_3;
-    encrypto::motion::SecureUnsignedInteger p1_Y_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _11_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_3;
-    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_4;
+    std::uint32_t N_0;
+    std::uint32_t i;
+    std::uint32_t j;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_2;
     std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _12_1;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper _3_2;
-    encrypto::motion::SecureUnsignedInteger p1_X_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _10_2;
+    encrypto::motion::ShareWrapper is_hull_6;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_4;
+    std::vector<std::uint32_t> hull_Y_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _11_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_3;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_4;
-    std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_2;
+    std::vector<std::uint32_t> hull_X_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _10_2;
+    encrypto::motion::SecureUnsignedInteger p1_Y_2;
+    encrypto::motion::SecureUnsignedInteger p1_X_2;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::ShareWrapper is_hull_3;
+    bool is_hull_2;
+    encrypto::motion::ShareWrapper _9_3;
+    bool is_hull_4;
+    encrypto::motion::ShareWrapper is_hull_5;
+    encrypto::motion::ShareWrapper _8_3;
+    encrypto::motion::ShareWrapper _6_3;
+    encrypto::motion::ShareWrapper _7_3;
+    encrypto::motion::SecureUnsignedInteger p2_Y_3;
+    encrypto::motion::SecureUnsignedInteger p2_X_3;
     encrypto::motion::ShareWrapper _1_2;
-    int is_hull_2;
-    std::vector<int> hull_Y_1;
-    std::vector<int> hull_X_1;
+    encrypto::motion::ShareWrapper _2_2;
 
     // Parameter assignments
     X_coords_0 = X_coords;
@@ -854,8 +885,8 @@ void convex_hull(
     hull_Y_1 = {};
 
     // Initialize phi values
-    hull_X_2 = hull_X_1;
-    hull_Y_2 = hull_Y_1;
+    hull_X_2 = party->In<Protocol>(encrypto::motion::ToInput(hull_X_1), 0);
+    hull_Y_2 = party->In<Protocol>(encrypto::motion::ToInput(hull_Y_1), 0);
     for (i = 0; i < N_0; i++) {
         is_hull_2 = True;
         p1_X_2 = X_coords_0[i];
@@ -865,7 +896,7 @@ void convex_hull(
         _3_2 = (_1_2 and _2_2);
 
         // Initialize phi values
-        is_hull_3 = is_hull_2;
+        is_hull_3 = party->In<Protocol>(encrypto::motion::ToInput(is_hull_2), 0);
         for (j = 0; j < N_0; j++) {
             p2_X_3 = X_coords_0[j];
             p2_Y_3 = Y_coords_0[j];
@@ -918,8 +949,7 @@ def count_102(Seq: list[int], N, Syms: list[int]):
 
 
 seq = [1, 0, 2, 1, 0, 0, 2, 1, 2, 2]
-num_102s = count_102(seq, len(seq), [1, 0, 2])
-print(num_102s)
+print(count_102(seq, 10, [1, 0, 2]))
 
 ```
 ### Restricted AST
@@ -990,36 +1020,44 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `N!0` | `plaintext[int]` |
 | `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `!5!2` | `shared[bool]` |
+| `!3!2` | `shared[bool]` |
 | `!6!2` | `shared[bool]` |
 | `s0!3` | `shared[bool]` |
+| `s0!1` | `plaintext[bool]` |
 | `s0!2` | `shared[bool]` |
-| `!2!2` | `shared[bool]` |
-| `!3!2` | `shared[bool]` |
+| `!5!2` | `shared[bool]` |
 | `!1!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
+| `c!2` | `shared[int]` |
+| `c!3` | `shared[int]` |
+| `c!4` | `shared[int]` |
 | `c!1` | `plaintext[int]` |
-| `s0!1` | `plaintext[int]` |
 ### Motion code
 ```cpp
-void count_102(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger count_102(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    int N,
+    std::uint32_t N,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
-    int N_0;
+    std::uint32_t N_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
-    int i;
-    encrypto::motion::ShareWrapper _5_2;
+    std::uint32_t i;
+    encrypto::motion::ShareWrapper _3_2;
     encrypto::motion::ShareWrapper _6_2;
     encrypto::motion::ShareWrapper s0_3;
+    bool s0_1;
     encrypto::motion::ShareWrapper s0_2;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::ShareWrapper _5_2;
     encrypto::motion::ShareWrapper _1_2;
-    int c_1;
-    int s0_1;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::SecureUnsignedInteger c_2;
+    encrypto::motion::SecureUnsignedInteger c_3;
+    encrypto::motion::SecureUnsignedInteger c_4;
+    std::uint32_t c_1;
 
     // Parameter assignments
     Seq_0 = Seq;
@@ -1031,8 +1069,8 @@ void count_102(
     c_1 = 0;
 
     // Initialize phi values
-    s0_2 = s0_1;
-    c_2 = c_1;
+    s0_2 = party->In<Protocol>(encrypto::motion::ToInput(s0_1), 0);
+    c_2 = party->In<Protocol>(encrypto::motion::ToInput(c_1), 0);
     for (i = 0; i < N_0; i++) {
         _1_2 = (Seq_0[i] == Syms_0[2]);
         _2_2 = (s0_2 and _1_2);
@@ -1074,8 +1112,7 @@ def count_10s(Seq: list[int], N, Syms: list[int]):
 
 
 seq = [1, 0, 0, 1, 1, 0, 2]
-num_10s = count_10s(seq, len(seq), [0, 1])
-print(num_10s)
+print(count_10s(seq, 7, [0, 1]))
 
 ```
 ### Restricted AST
@@ -1153,39 +1190,47 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
 | `s0!3` | `shared[bool]` |
+| `s0!1` | `plaintext[bool]` |
 | `s0!2` | `shared[bool]` |
-| `!4!2` | `shared[bool]` |
-| `s1!3` | `shared[bool]` |
 | `s1!2` | `shared[bool]` |
-| `!2!2` | `shared[bool]` |
+| `!4!2` | `shared[bool]` |
 | `!3!2` | `shared[bool]` |
+| `s1!3` | `shared[bool]` |
+| `s1!1` | `plaintext[bool]` |
 | `!1!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
+| `scount!2` | `shared[int]` |
+| `scount!3` | `shared[int]` |
+| `scount!4` | `shared[int]` |
 | `scount!1` | `plaintext[int]` |
-| `s1!1` | `plaintext[int]` |
-| `s0!1` | `plaintext[int]` |
 ### Motion code
 ```cpp
-void count_10s(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger count_10s(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    int N,
+    std::uint32_t N,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
-    int N_0;
+    std::uint32_t N_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
-    int i;
+    std::uint32_t i;
     encrypto::motion::ShareWrapper s0_3;
+    bool s0_1;
     encrypto::motion::ShareWrapper s0_2;
-    encrypto::motion::ShareWrapper _4_2;
-    encrypto::motion::ShareWrapper s1_3;
     encrypto::motion::ShareWrapper s1_2;
-    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper _4_2;
     encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::ShareWrapper s1_3;
+    bool s1_1;
     encrypto::motion::ShareWrapper _1_2;
-    int scount_1;
-    int s1_1;
-    int s0_1;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::SecureUnsignedInteger scount_2;
+    encrypto::motion::SecureUnsignedInteger scount_3;
+    encrypto::motion::SecureUnsignedInteger scount_4;
+    std::uint32_t scount_1;
 
     // Parameter assignments
     Seq_0 = Seq;
@@ -1198,9 +1243,9 @@ void count_10s(
     scount_1 = 0;
 
     // Initialize phi values
-    s0_2 = s0_1;
-    s1_2 = s1_1;
-    scount_2 = scount_1;
+    s0_2 = party->In<Protocol>(encrypto::motion::ToInput(s0_1), 0);
+    s1_2 = party->In<Protocol>(encrypto::motion::ToInput(s1_1), 0);
+    scount_2 = party->In<Protocol>(encrypto::motion::ToInput(scount_1), 0);
     for (i = 0; i < N_0; i++) {
         _1_2 = (Seq_0[i] != Syms_0[0]);
         _2_2 = (s1_2 and _1_2);
@@ -1244,8 +1289,7 @@ def count_123(Seq: list[int], N, Syms: list[int]):
 
 
 seq = [1, 2, 3, 1, 3, 3, 4]
-num_123s = count_123(seq, len(seq), [1, 2, 3])
-print(num_123s)
+print(count_123(seq, 7, [1, 2, 3]))
 
 ```
 ### Restricted AST
@@ -1326,41 +1370,49 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
 | `s1!3` | `shared[bool]` |
+| `s1!1` | `plaintext[bool]` |
 | `s1!2` | `shared[bool]` |
-| `!5!2` | `shared[bool]` |
-| `s2!3` | `shared[bool]` |
 | `s2!2` | `shared[bool]` |
-| `!2!2` | `shared[bool]` |
-| `!3!2` | `shared[bool]` |
+| `!5!2` | `shared[bool]` |
 | `!4!2` | `shared[bool]` |
+| `s2!3` | `shared[bool]` |
+| `s2!1` | `plaintext[bool]` |
+| `!2!2` | `shared[bool]` |
 | `!1!2` | `shared[bool]` |
+| `!3!2` | `shared[bool]` |
+| `c!2` | `shared[int]` |
+| `c!3` | `shared[int]` |
+| `c!4` | `shared[int]` |
 | `c!1` | `plaintext[int]` |
-| `s2!1` | `plaintext[int]` |
-| `s1!1` | `plaintext[int]` |
 ### Motion code
 ```cpp
-void count_123(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger count_123(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    int N,
+    std::uint32_t N,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
-    int N_0;
+    std::uint32_t N_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
-    int i;
+    std::uint32_t i;
     encrypto::motion::ShareWrapper s1_3;
+    bool s1_1;
     encrypto::motion::ShareWrapper s1_2;
-    encrypto::motion::ShareWrapper _5_2;
-    encrypto::motion::ShareWrapper s2_3;
     encrypto::motion::ShareWrapper s2_2;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::ShareWrapper _5_2;
     encrypto::motion::ShareWrapper _4_2;
+    encrypto::motion::ShareWrapper s2_3;
+    bool s2_1;
+    encrypto::motion::ShareWrapper _2_2;
     encrypto::motion::ShareWrapper _1_2;
-    int c_1;
-    int s2_1;
-    int s1_1;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::SecureUnsignedInteger c_2;
+    encrypto::motion::SecureUnsignedInteger c_3;
+    encrypto::motion::SecureUnsignedInteger c_4;
+    std::uint32_t c_1;
 
     // Parameter assignments
     Seq_0 = Seq;
@@ -1373,9 +1425,9 @@ void count_123(
     c_1 = 0;
 
     // Initialize phi values
-    s1_2 = s1_1;
-    s2_2 = s2_1;
-    c_2 = c_1;
+    s1_2 = party->In<Protocol>(encrypto::motion::ToInput(s1_1), 0);
+    s2_2 = party->In<Protocol>(encrypto::motion::ToInput(s2_1), 0);
+    c_2 = party->In<Protocol>(encrypto::motion::ToInput(c_1), 0);
     for (i = 0; i < N_0; i++) {
         _1_2 = (Seq_0[i] == Syms_0[3]);
         _2_2 = (s2_2 or s1_2);
@@ -1407,31 +1459,31 @@ import typing
 # A = [0,2,1,0,3,4,2,3]
 # B = [10,1,5,2,15,0,10,1000]
 # We need to sum up num ratings in each bin to compute a histogram
-# 1: 12 0-star ratings                                            
+# 1: 12 0-star ratings
 # 2: 5 1-star
 # 3: 11 2-star
 # 4: 1015 3-star
-# 5: 0 4-star                                                            
+# 5: 0 4-star
 
 # This is very similar to the crosstabs app in MOTION
 # But we were first to suggest this as a benchmark :).
 # requires: len(A) == len(B) = N
 def histogram(A: list[int], B: list[int], N, num_bins):
-  result: list[int] = []
-  # initialize result to 0
-  for i in range(num_bins):
-    result = result + [0]
-  for i in range(num_bins):
-    for j in range(N):
-      if A[j] == i:
-        result[i] = result[i] + B[j]
-  return result
+    result: list[int] = []
+    # initialize result to 0
+    for i in range(num_bins):
+        result = result + [0]
+    for i in range(num_bins):
+        for j in range(N):
+            if A[j] == i:
+                result[i] = result[i] + B[j]
+    return result
 
-A = A = [0,2,1,0,3,4,2,3]
-B = [10,1,5,2,15,0,10,1000]
-N = len(A)
-result = histogram(A,B,N,5)
-print(result)
+
+A = [0, 2, 1, 0, 3, 4, 2, 3]
+B = [10, 1, 5, 2, 15, 0, 10, 1000]
+N = 8  # len(A)
+print(histogram(A, B, N, 5))
 
 ```
 ### Restricted AST
@@ -1505,37 +1557,43 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 | `num_bins!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
-| `!3!3` | `shared[int]` |
+| `!2!3` | `shared[bool]` |
+| `result!5` | `shared[list[int]]` |
 | `result!6` | `shared[list[int]]` |
 | `result!7` | `shared[list[int]]` |
-| `result!5` | `shared[list[int]]` |
 | `result!4` | `shared[list[int]]` |
-| `!2!3` | `shared[bool]` |
+| `!3!3` | `shared[int]` |
+| `result!2` | `plaintext[list[int]]` |
 | `!1!2` | `plaintext[list[int]]` |
+| `result!3` | `plaintext[list[int]]` |
 | `result!1` | `plaintext[list[int]]` |
 ### Motion code
 ```cpp
-void histogram(
+template <encrypto::motion::MpcProtocol Protocol>
+std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A,
     std::vector<encrypto::motion::SecureUnsignedInteger> B,
-    int N,
-    int num_bins
+    std::uint32_t N,
+    std::uint32_t num_bins
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
-    int N_0;
-    int num_bins_0;
-    int i;
-    int j;
-    encrypto::motion::SecureUnsignedInteger _3_3;
+    std::uint32_t N_0;
+    std::uint32_t num_bins_0;
+    std::uint32_t i;
+    std::uint32_t j;
+    encrypto::motion::ShareWrapper _2_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_5;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_6;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_7;
-    std::vector<encrypto::motion::SecureUnsignedInteger> result_5;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_4;
-    encrypto::motion::ShareWrapper _2_3;
-    std::vector<int> _1_2;
-    std::vector<int> result_1;
+    encrypto::motion::SecureUnsignedInteger _3_3;
+    std::vector<std::uint32_t> result_2;
+    std::vector<std::uint32_t> _1_2;
+    std::vector<std::uint32_t> result_3;
+    std::vector<std::uint32_t> result_1;
 
     // Parameter assignments
     A_0 = A;
@@ -1547,7 +1605,7 @@ void histogram(
     result_1 = {};
 
     // Initialize phi values
-    result_2 = result_1;
+    result_2 = party->In<Protocol>(encrypto::motion::ToInput(result_1), 0);
     for (i = 0; i < num_bins_0; i++) {
         _1_2 = {0};
         result_3 = (result_2 + _1_2);
@@ -1558,11 +1616,11 @@ void histogram(
 
 
     // Initialize phi values
-    result_4 = result_2;
+    result_4 = party->In<Protocol>(encrypto::motion::ToInput(result_2), 0);
     for (i = 0; i < num_bins_0; i++) {
 
         // Initialize phi values
-        result_5 = result_4;
+        result_5 = party->In<Protocol>(encrypto::motion::ToInput(result_4), 0);
         for (j = 0; j < N_0; j++) {
             _2_3 = (A_0[j] == i);
             _3_3 = (result_5[i] + B_0[j]);
@@ -1584,7 +1642,7 @@ void histogram(
 ## `infeasible_edges_example`
 ### Input
 ```python
-def foo(A, B, C, D, N):
+def foo(A: list[int], B: list[int], C: list[int], D: list[int], N):
     for i in range(N):
         A[i] = B[i] + 10
         B[i] = A[i] * D[i - 1]
@@ -1595,7 +1653,7 @@ def foo(A, B, C, D, N):
 ```
 ### Restricted AST
 ```python
-def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[int], N: plaintext[int]):
+def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]):
     for i: plaintext[int] in range(0, N):
         A[i] = (B[i] + 10)
         B[i] = (A[i] * D[(i - 1)])
@@ -1613,7 +1671,7 @@ def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[in
 ![](infeasible_edges_example_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[int], N: plaintext[int]):
+def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]):
     for i in range(0, N!0):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)
@@ -1636,7 +1694,7 @@ def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[in
 ![](infeasible_edges_example_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[int], N: plaintext[int]):
+def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]):
     for i in range(0, N!0):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)
@@ -1658,28 +1716,56 @@ def foo(A: plaintext[int], B: plaintext[int], C: plaintext[int], D: plaintext[in
 ### Type environment
 | Variable | Type |
 | - | - |
-| `A!0` | `plaintext[int]` |
-| `B!0` | `plaintext[int]` |
-| `C!0` | `plaintext[int]` |
-| `D!0` | `plaintext[int]` |
+| `A!0` | `shared[list[int]]` |
+| `B!0` | `shared[list[int]]` |
+| `C!0` | `shared[list[int]]` |
+| `D!0` | `shared[list[int]]` |
 | `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
+| `A!1` | `shared[list[int]]` |
+| `B!1` | `shared[list[int]]` |
+| `C!1` | `shared[list[int]]` |
+| `D!1` | `shared[list[int]]` |
+| `!5!1` | `shared[list[list[int]]]` |
+| `!4!2` | `shared[int]` |
+| `D!2` | `shared[list[int]]` |
+| `B!2` | `shared[list[int]]` |
+| `C!2` | `shared[list[int]]` |
+| `A!2` | `shared[list[int]]` |
+| `!3!2` | `shared[int]` |
+| `!2!2` | `shared[int]` |
+| `!1!2` | `shared[int]` |
 ### Motion code
 ```cpp
-void foo(
-    int A,
-    int B,
-    int C,
-    int D,
-    int N
+template <encrypto::motion::MpcProtocol Protocol>
+std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> foo(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> A,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B,
+    std::vector<encrypto::motion::SecureUnsignedInteger> C,
+    std::vector<encrypto::motion::SecureUnsignedInteger> D,
+    std::uint32_t N
 ) {
     // Initial variable declarations
-    int A_0;
-    int B_0;
-    int C_0;
-    int D_0;
-    int N_0;
-    int i;
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> D_0;
+    std::uint32_t N_0;
+    std::uint32_t i;
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> D_1;
+    std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _5_1;
+    encrypto::motion::SecureUnsignedInteger _4_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> D_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_2;
+    encrypto::motion::SecureUnsignedInteger _3_2;
+    encrypto::motion::SecureUnsignedInteger _2_2;
+    encrypto::motion::SecureUnsignedInteger _1_2;
 
     // Parameter assignments
     A_0 = A;
@@ -1691,10 +1777,10 @@ void foo(
     // Function body
 
     // Initialize phi values
-    A_1 = A_0;
-    B_1 = B_0;
-    C_1 = C_0;
-    D_1 = D_0;
+    A_1 = party->In<Protocol>(encrypto::motion::ToInput(A_0), 0);
+    B_1 = party->In<Protocol>(encrypto::motion::ToInput(B_0), 0);
+    C_1 = party->In<Protocol>(encrypto::motion::ToInput(C_0), 0);
+    D_1 = party->In<Protocol>(encrypto::motion::ToInput(D_0), 0);
     for (i = 0; i < N_0; i++) {
         _1_2 = (B_1[i] + 10);
         A!1[i] = _1_2; A_2 = A_1;
@@ -1721,17 +1807,18 @@ void foo(
 ```python
 import typing
 
-def ip(A: list[int], B: list[int], N):
-  sum = 0
-  for i in range(0,N):
-    temp = A[i]*B[i]
-    sum = sum + temp
-  return sum
 
-A = [1,2,3]
-B = [4,5,6]
-sum = ip(A,B,3)
-print(sum)
+def ip(A: list[int], B: list[int], N):
+    sum = 0
+    for i in range(0, N):
+        temp = A[i] * B[i]
+        sum = sum + temp
+    return sum
+
+
+A = [1, 2, 3]
+B = [4, 5, 6]
+print(ip(A, B, 3))
 
 ```
 ### Restricted AST
@@ -1784,26 +1871,28 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
 | `B!0` | `shared[list[int]]` |
 | `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
+| `sum!2` | `shared[int]` |
 | `temp!2` | `shared[int]` |
 | `sum!3` | `shared[int]` |
-| `sum!2` | `shared[int]` |
 | `sum!1` | `plaintext[int]` |
 ### Motion code
 ```cpp
-void ip(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger ip(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A,
     std::vector<encrypto::motion::SecureUnsignedInteger> B,
-    int N
+    std::uint32_t N
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
-    int N_0;
-    int i;
+    std::uint32_t N_0;
+    std::uint32_t i;
+    encrypto::motion::SecureUnsignedInteger sum_2;
     encrypto::motion::SecureUnsignedInteger temp_2;
     encrypto::motion::SecureUnsignedInteger sum_3;
-    encrypto::motion::SecureUnsignedInteger sum_2;
-    int sum_1;
+    std::uint32_t sum_1;
 
     // Parameter assignments
     A_0 = A;
@@ -1814,7 +1903,7 @@ void ip(
     sum_1 = 0;
 
     // Initialize phi values
-    sum_2 = sum_1;
+    sum_2 = party->In<Protocol>(encrypto::motion::ToInput(sum_1), 0);
     for (i = 0; i < N_0; i++) {
         temp_2 = (A_0[i] * B_0[i]);
         sum_3 = (sum_2 + temp_2);
@@ -1855,8 +1944,7 @@ def longest_102(Seq: list[int], N, Syms: list[int]):
 
 
 seq = [1, 0, 2, 1, 0, 0, 2, 1, 2, 2]
-longest_102_len = longest_102(seq, len(seq), [1, 0, 2])
-print(longest_102_len)
+print(longest_102(seq, 10, [1, 0, 2]))
 
 ```
 ### Restricted AST
@@ -1949,58 +2037,60 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 | `N!0` | `plaintext[int]` |
 | `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
-| `length!4` | `plaintext[int]` |
-| `length!5` | `shared[int]` |
+| `!8!2` | `shared[bool]` |
+| `max_len!2` | `shared[int]` |
 | `max_len!3` | `shared[int]` |
 | `max_len!4` | `shared[int]` |
-| `max_len!2` | `shared[int]` |
-| `!7!2` | `shared[bool]` |
-| `!8!2` | `shared[bool]` |
-| `length!2` | `shared[int]` |
-| `length!3` | `shared[int]` |
-| `!4!2` | `shared[bool]` |
-| `!5!2` | `shared[bool]` |
-| `s0!3` | `shared[bool]` |
-| `!6!2` | `shared[bool]` |
-| `s0!2` | `shared[bool]` |
-| `s1!2` | `shared[bool]` |
-| `!2!2` | `shared[bool]` |
-| `!1!2` | `shared[bool]` |
-| `length!1` | `plaintext[int]` |
 | `max_len!1` | `plaintext[int]` |
-| `s0!1` | `plaintext[int]` |
+| `length!5` | `shared[int]` |
+| `!7!2` | `shared[bool]` |
+| `s1!2` | `shared[bool]` |
+| `!6!2` | `shared[bool]` |
+| `length!4` | `plaintext[int]` |
+| `length!3` | `shared[int]` |
+| `length!1` | `plaintext[int]` |
+| `length!2` | `shared[int]` |
+| `s0!3` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
+| `!5!2` | `shared[bool]` |
+| `s0!1` | `plaintext[bool]` |
+| `s0!2` | `shared[bool]` |
+| `!4!2` | `shared[bool]` |
+| `!1!2` | `shared[bool]` |
 ### Motion code
 ```cpp
-void longest_102(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger longest_102(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    int N,
+    std::uint32_t N,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
-    int N_0;
+    std::uint32_t N_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
-    int i;
-    int length_4;
-    encrypto::motion::SecureUnsignedInteger length_5;
+    std::uint32_t i;
+    encrypto::motion::ShareWrapper _8_2;
+    encrypto::motion::SecureUnsignedInteger max_len_2;
     encrypto::motion::SecureUnsignedInteger max_len_3;
     encrypto::motion::SecureUnsignedInteger max_len_4;
-    encrypto::motion::SecureUnsignedInteger max_len_2;
+    std::uint32_t max_len_1;
+    encrypto::motion::SecureUnsignedInteger length_5;
     encrypto::motion::ShareWrapper _7_2;
-    encrypto::motion::ShareWrapper _8_2;
-    encrypto::motion::SecureUnsignedInteger length_2;
-    encrypto::motion::SecureUnsignedInteger length_3;
-    encrypto::motion::ShareWrapper _4_2;
-    encrypto::motion::ShareWrapper _5_2;
-    encrypto::motion::ShareWrapper s0_3;
-    encrypto::motion::ShareWrapper _6_2;
-    encrypto::motion::ShareWrapper s0_2;
     encrypto::motion::ShareWrapper s1_2;
+    encrypto::motion::ShareWrapper _6_2;
+    std::uint32_t length_4;
+    encrypto::motion::SecureUnsignedInteger length_3;
+    std::uint32_t length_1;
+    encrypto::motion::SecureUnsignedInteger length_2;
+    encrypto::motion::ShareWrapper s0_3;
     encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper _5_2;
+    bool s0_1;
+    encrypto::motion::ShareWrapper s0_2;
+    encrypto::motion::ShareWrapper _4_2;
     encrypto::motion::ShareWrapper _1_2;
-    int length_1;
-    int max_len_1;
-    int s0_1;
 
     // Parameter assignments
     Seq_0 = Seq;
@@ -2013,9 +2103,9 @@ void longest_102(
     length_1 = 0;
 
     // Initialize phi values
-    s0_2 = s0_1;
-    max_len_2 = max_len_1;
-    length_2 = length_1;
+    s0_2 = party->In<Protocol>(encrypto::motion::ToInput(s0_1), 0);
+    max_len_2 = party->In<Protocol>(encrypto::motion::ToInput(max_len_1), 0);
+    length_2 = party->In<Protocol>(encrypto::motion::ToInput(length_1), 0);
     for (i = 0; i < N_0; i++) {
         _1_2 = (Seq_0[i] == Syms_0[2]);
         s1_2 = (s0_2 and _1_2);
@@ -2066,8 +2156,7 @@ def longest_1s(Seq: list[int], N, Sym: int):
 
 
 seq = [0, 0, 1, 1, 1, 1, 0, 1, 0]
-longest_1s_len = longest_1s(seq, len(seq), 1)
-print(longest_1s_len)
+print(longest_1s(seq, 9, 1))
 
 ```
 ### Restricted AST
@@ -2139,40 +2228,42 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 | `N!0` | `plaintext[int]` |
 | `Sym!0` | `shared[int]` |
 | `i` | `plaintext[int]` |
-| `length!4` | `plaintext[int]` |
-| `length!5` | `shared[int]` |
+| `!2!2` | `shared[bool]` |
+| `max_length!2` | `shared[int]` |
 | `max_length!3` | `shared[int]` |
 | `max_length!4` | `shared[int]` |
-| `max_length!2` | `shared[int]` |
-| `!2!2` | `shared[bool]` |
-| `length!2` | `shared[int]` |
-| `length!3` | `shared[int]` |
-| `!1!2` | `shared[bool]` |
-| `length!1` | `plaintext[int]` |
 | `max_length!1` | `plaintext[int]` |
+| `length!5` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
+| `length!4` | `plaintext[int]` |
+| `length!3` | `shared[int]` |
+| `length!1` | `plaintext[int]` |
+| `length!2` | `shared[int]` |
 ### Motion code
 ```cpp
-void longest_1s(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger longest_1s(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    int N,
+    std::uint32_t N,
     encrypto::motion::SecureUnsignedInteger Sym
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
-    int N_0;
+    std::uint32_t N_0;
     encrypto::motion::SecureUnsignedInteger Sym_0;
-    int i;
-    int length_4;
-    encrypto::motion::SecureUnsignedInteger length_5;
+    std::uint32_t i;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::SecureUnsignedInteger max_length_2;
     encrypto::motion::SecureUnsignedInteger max_length_3;
     encrypto::motion::SecureUnsignedInteger max_length_4;
-    encrypto::motion::SecureUnsignedInteger max_length_2;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::SecureUnsignedInteger length_2;
-    encrypto::motion::SecureUnsignedInteger length_3;
+    std::uint32_t max_length_1;
+    encrypto::motion::SecureUnsignedInteger length_5;
     encrypto::motion::ShareWrapper _1_2;
-    int length_1;
-    int max_length_1;
+    std::uint32_t length_4;
+    encrypto::motion::SecureUnsignedInteger length_3;
+    std::uint32_t length_1;
+    encrypto::motion::SecureUnsignedInteger length_2;
 
     // Parameter assignments
     Seq_0 = Seq;
@@ -2184,8 +2275,8 @@ void longest_1s(
     length_1 = 0;
 
     // Initialize phi values
-    max_length_2 = max_length_1;
-    length_2 = length_1;
+    max_length_2 = party->In<Protocol>(encrypto::motion::ToInput(max_length_1), 0);
+    length_2 = party->In<Protocol>(encrypto::motion::ToInput(length_1), 0);
     for (i = 1; i < N_0; i++) {
         _1_2 = (Seq_0[i] == Sym_0);
         length_4 = 0;
@@ -2313,50 +2404,52 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 | `N!0` | `plaintext[int]` |
 | `Sym!0` | `shared[int]` |
 | `i` | `plaintext[int]` |
-| `current_length!4` | `plaintext[int]` |
-| `current_length!5` | `shared[int]` |
-| `tmp_max_len!3` | `shared[int]` |
-| `tmp_max_len!4` | `shared[int]` |
+| `!4!2` | `shared[bool]` |
+| `max_length!2` | `shared[int]` |
 | `max_length!3` | `shared[int]` |
 | `max_length!4` | `shared[int]` |
-| `max_length!2` | `shared[int]` |
+| `max_length!1` | `plaintext[int]` |
+| `current_length!5` | `shared[int]` |
 | `!2!2` | `shared[bool]` |
 | `tmp_max_len!2` | `shared[int]` |
+| `tmp_max_len!3` | `shared[int]` |
+| `tmp_max_len!4` | `shared[int]` |
 | `!3!2` | `shared[int]` |
-| `!4!2` | `shared[bool]` |
-| `current_length!2` | `shared[int]` |
-| `current_length!3` | `shared[int]` |
 | `!1!2` | `shared[bool]` |
-| `max_length!1` | `plaintext[int]` |
+| `current_length!4` | `plaintext[int]` |
+| `current_length!3` | `shared[int]` |
 | `current_length!1` | `plaintext[int]` |
+| `current_length!2` | `shared[int]` |
 ### Motion code
 ```cpp
-void longest_even_0(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger longest_even_0(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    int N,
+    std::uint32_t N,
     encrypto::motion::SecureUnsignedInteger Sym
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
-    int N_0;
+    std::uint32_t N_0;
     encrypto::motion::SecureUnsignedInteger Sym_0;
-    int i;
-    int current_length_4;
-    encrypto::motion::SecureUnsignedInteger current_length_5;
-    encrypto::motion::SecureUnsignedInteger tmp_max_len_3;
-    encrypto::motion::SecureUnsignedInteger tmp_max_len_4;
+    std::uint32_t i;
+    encrypto::motion::ShareWrapper _4_2;
+    encrypto::motion::SecureUnsignedInteger max_length_2;
     encrypto::motion::SecureUnsignedInteger max_length_3;
     encrypto::motion::SecureUnsignedInteger max_length_4;
-    encrypto::motion::SecureUnsignedInteger max_length_2;
+    std::uint32_t max_length_1;
+    encrypto::motion::SecureUnsignedInteger current_length_5;
     encrypto::motion::ShareWrapper _2_2;
     encrypto::motion::SecureUnsignedInteger tmp_max_len_2;
+    encrypto::motion::SecureUnsignedInteger tmp_max_len_3;
+    encrypto::motion::SecureUnsignedInteger tmp_max_len_4;
     encrypto::motion::SecureUnsignedInteger _3_2;
-    encrypto::motion::ShareWrapper _4_2;
-    encrypto::motion::SecureUnsignedInteger current_length_2;
-    encrypto::motion::SecureUnsignedInteger current_length_3;
     encrypto::motion::ShareWrapper _1_2;
-    int max_length_1;
-    int current_length_1;
+    std::uint32_t current_length_4;
+    encrypto::motion::SecureUnsignedInteger current_length_3;
+    std::uint32_t current_length_1;
+    encrypto::motion::SecureUnsignedInteger current_length_2;
 
     // Parameter assignments
     Seq_0 = Seq;
@@ -2368,8 +2461,8 @@ void longest_even_0(
     max_length_1 = 0;
 
     // Initialize phi values
-    current_length_2 = current_length_1;
-    max_length_2 = max_length_1;
+    current_length_2 = party->In<Protocol>(encrypto::motion::ToInput(current_length_1), 0);
+    max_length_2 = party->In<Protocol>(encrypto::motion::ToInput(max_length_1), 0);
     for (i = 1; i < N_0; i++) {
         _1_2 = (Seq_0[i] == Sym_0);
         current_length_4 = 0;
@@ -2514,57 +2607,59 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 | `Syms!0` | `shared[list[int]]` |
 | `i` | `plaintext[int]` |
 | `s2!3` | `shared[bool]` |
+| `s2!1` | `plaintext[bool]` |
 | `s2!2` | `shared[bool]` |
 | `!2!2` | `shared[bool]` |
-| `s1!2` | `shared[bool]` |
+| `current_length!2` | `shared[int]` |
 | `current_length!4` | `plaintext[int]` |
 | `current_length!5` | `shared[int]` |
+| `s1!2` | `shared[bool]` |
+| `current_length!3` | `shared[int]` |
 | `current_length!6` | `shared[int]` |
 | `max_length!3` | `shared[int]` |
-| `max_length!4` | `shared[int]` |
-| `max_length!2` | `shared[int]` |
-| `!6!2` | `shared[bool]` |
 | `!7!2` | `shared[bool]` |
-| `!4!2` | `shared[int]` |
-| `!5!2` | `shared[bool]` |
-| `current_length!2` | `shared[int]` |
-| `current_length!3` | `shared[int]` |
-| `!1!2` | `shared[bool]` |
-| `s2!1` | `plaintext[int]` |
+| `max_length!2` | `shared[int]` |
+| `max_length!4` | `shared[int]` |
 | `max_length!1` | `plaintext[int]` |
+| `!6!2` | `shared[bool]` |
+| `!5!2` | `shared[bool]` |
+| `!4!2` | `shared[int]` |
 | `current_length!1` | `plaintext[int]` |
+| `!1!2` | `shared[bool]` |
 ### Motion code
 ```cpp
-void longest_odd_10(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger longest_odd_10(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    int N,
+    std::uint32_t N,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
-    int N_0;
+    std::uint32_t N_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
-    int i;
+    std::uint32_t i;
     encrypto::motion::ShareWrapper s2_3;
+    bool s2_1;
     encrypto::motion::ShareWrapper s2_2;
     encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper s1_2;
-    int current_length_4;
+    encrypto::motion::SecureUnsignedInteger current_length_2;
+    std::uint32_t current_length_4;
     encrypto::motion::SecureUnsignedInteger current_length_5;
+    encrypto::motion::ShareWrapper s1_2;
+    encrypto::motion::SecureUnsignedInteger current_length_3;
     encrypto::motion::SecureUnsignedInteger current_length_6;
     encrypto::motion::SecureUnsignedInteger max_length_3;
-    encrypto::motion::SecureUnsignedInteger max_length_4;
-    encrypto::motion::SecureUnsignedInteger max_length_2;
-    encrypto::motion::ShareWrapper _6_2;
     encrypto::motion::ShareWrapper _7_2;
-    encrypto::motion::SecureUnsignedInteger _4_2;
+    encrypto::motion::SecureUnsignedInteger max_length_2;
+    encrypto::motion::SecureUnsignedInteger max_length_4;
+    std::uint32_t max_length_1;
+    encrypto::motion::ShareWrapper _6_2;
     encrypto::motion::ShareWrapper _5_2;
-    encrypto::motion::SecureUnsignedInteger current_length_2;
-    encrypto::motion::SecureUnsignedInteger current_length_3;
+    encrypto::motion::SecureUnsignedInteger _4_2;
+    std::uint32_t current_length_1;
     encrypto::motion::ShareWrapper _1_2;
-    int s2_1;
-    int max_length_1;
-    int current_length_1;
 
     // Parameter assignments
     Seq_0 = Seq;
@@ -2577,9 +2672,9 @@ void longest_odd_10(
     s2_1 = False;
 
     // Initialize phi values
-    current_length_2 = current_length_1;
-    max_length_2 = max_length_1;
-    s2_2 = s2_1;
+    current_length_2 = party->In<Protocol>(encrypto::motion::ToInput(current_length_1), 0);
+    max_length_2 = party->In<Protocol>(encrypto::motion::ToInput(max_length_1), 0);
+    s2_2 = party->In<Protocol>(encrypto::motion::ToInput(s2_1), 0);
     for (i = 0; i < N_0; i++) {
         _1_2 = (Seq_0[i] == Syms_0[1]);
         s1_2 = (s2_2 and _1_2);
@@ -2623,8 +2718,7 @@ def max_dist_between_syms(Seq: list[int], N, Sym: int):
 
 
 seq = [1, 2, 1, 1, 2, 3, 4, 1]
-max_dist = max_dist_between_syms(seq, len(seq), 1)
-print(max_dist)
+print(max_dist_between_syms(seq, 8, 1))
 
 ```
 ### Restricted AST
@@ -2698,42 +2792,44 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 | `N!0` | `plaintext[int]` |
 | `Sym!0` | `shared[int]` |
 | `i` | `plaintext[int]` |
-| `current_dist!4` | `plaintext[int]` |
-| `current_dist!5` | `shared[int]` |
+| `!3!2` | `shared[bool]` |
+| `max_dist!2` | `shared[int]` |
 | `max_dist!3` | `shared[int]` |
 | `max_dist!4` | `shared[int]` |
-| `max_dist!2` | `shared[int]` |
-| `!3!2` | `shared[bool]` |
-| `current_dist!2` | `shared[int]` |
-| `current_dist!3` | `shared[int]` |
-| `!1!2` | `shared[bool]` |
-| `!2!2` | `shared[bool]` |
-| `current_dist!1` | `plaintext[int]` |
 | `max_dist!1` | `plaintext[int]` |
+| `current_dist!5` | `shared[int]` |
+| `!2!2` | `shared[bool]` |
+| `current_dist!4` | `plaintext[int]` |
+| `current_dist!3` | `shared[int]` |
+| `current_dist!1` | `plaintext[int]` |
+| `current_dist!2` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
 ### Motion code
 ```cpp
-void max_dist_between_syms(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    int N,
+    std::uint32_t N,
     encrypto::motion::SecureUnsignedInteger Sym
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
-    int N_0;
+    std::uint32_t N_0;
     encrypto::motion::SecureUnsignedInteger Sym_0;
-    int i;
-    int current_dist_4;
-    encrypto::motion::SecureUnsignedInteger current_dist_5;
+    std::uint32_t i;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::SecureUnsignedInteger max_dist_2;
     encrypto::motion::SecureUnsignedInteger max_dist_3;
     encrypto::motion::SecureUnsignedInteger max_dist_4;
-    encrypto::motion::SecureUnsignedInteger max_dist_2;
-    encrypto::motion::ShareWrapper _3_2;
-    encrypto::motion::SecureUnsignedInteger current_dist_2;
-    encrypto::motion::SecureUnsignedInteger current_dist_3;
-    encrypto::motion::ShareWrapper _1_2;
+    std::uint32_t max_dist_1;
+    encrypto::motion::SecureUnsignedInteger current_dist_5;
     encrypto::motion::ShareWrapper _2_2;
-    int current_dist_1;
-    int max_dist_1;
+    std::uint32_t current_dist_4;
+    encrypto::motion::SecureUnsignedInteger current_dist_3;
+    std::uint32_t current_dist_1;
+    encrypto::motion::SecureUnsignedInteger current_dist_2;
+    encrypto::motion::ShareWrapper _1_2;
 
     // Parameter assignments
     Seq_0 = Seq;
@@ -2745,8 +2841,8 @@ void max_dist_between_syms(
     current_dist_1 = 0;
 
     // Initialize phi values
-    max_dist_2 = max_dist_1;
-    current_dist_2 = current_dist_1;
+    max_dist_2 = party->In<Protocol>(encrypto::motion::ToInput(max_dist_1), 0);
+    current_dist_2 = party->In<Protocol>(encrypto::motion::ToInput(current_dist_1), 0);
     for (i = 0; i < N_0; i++) {
         _1_2 = (Seq_0[i] == Sym_0);
         _2_2 = (not _1_2);
@@ -2783,8 +2879,7 @@ def max_sum_between_syms(Seq: list[int], N, Sym: int):
 
 
 seq = [1, 2, 1, 1, 2, 3, 4, 1]
-max_sum = max_sum_between_syms(seq, len(seq), 1)
-print(max_sum)
+print(max_sum_between_syms(seq, 8, 1))
 
 ```
 ### Restricted AST
@@ -2858,42 +2953,44 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 | `N!0` | `plaintext[int]` |
 | `Sym!0` | `shared[int]` |
 | `i` | `plaintext[int]` |
-| `current_sum!3` | `shared[int]` |
-| `current_sum!5` | `shared[int]` |
+| `!3!2` | `shared[bool]` |
+| `max_sum!2` | `shared[int]` |
 | `max_sum!3` | `shared[int]` |
 | `max_sum!4` | `shared[int]` |
-| `max_sum!2` | `shared[int]` |
-| `!3!2` | `shared[bool]` |
-| `current_sum!2` | `shared[int]` |
-| `current_sum!4` | `plaintext[int]` |
-| `!1!2` | `shared[bool]` |
-| `!2!2` | `shared[bool]` |
-| `current_sum!1` | `plaintext[int]` |
 | `max_sum!1` | `plaintext[int]` |
+| `current_sum!5` | `shared[int]` |
+| `!2!2` | `shared[bool]` |
+| `current_sum!4` | `plaintext[int]` |
+| `current_sum!3` | `shared[int]` |
+| `current_sum!1` | `plaintext[int]` |
+| `current_sum!2` | `shared[int]` |
+| `!1!2` | `shared[bool]` |
 ### Motion code
 ```cpp
-void max_sum_between_syms(
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    int N,
+    std::uint32_t N,
     encrypto::motion::SecureUnsignedInteger Sym
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
-    int N_0;
+    std::uint32_t N_0;
     encrypto::motion::SecureUnsignedInteger Sym_0;
-    int i;
-    encrypto::motion::SecureUnsignedInteger current_sum_3;
-    encrypto::motion::SecureUnsignedInteger current_sum_5;
+    std::uint32_t i;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::SecureUnsignedInteger max_sum_2;
     encrypto::motion::SecureUnsignedInteger max_sum_3;
     encrypto::motion::SecureUnsignedInteger max_sum_4;
-    encrypto::motion::SecureUnsignedInteger max_sum_2;
-    encrypto::motion::ShareWrapper _3_2;
-    encrypto::motion::SecureUnsignedInteger current_sum_2;
-    int current_sum_4;
-    encrypto::motion::ShareWrapper _1_2;
+    std::uint32_t max_sum_1;
+    encrypto::motion::SecureUnsignedInteger current_sum_5;
     encrypto::motion::ShareWrapper _2_2;
-    int current_sum_1;
-    int max_sum_1;
+    std::uint32_t current_sum_4;
+    encrypto::motion::SecureUnsignedInteger current_sum_3;
+    std::uint32_t current_sum_1;
+    encrypto::motion::SecureUnsignedInteger current_sum_2;
+    encrypto::motion::ShareWrapper _1_2;
 
     // Parameter assignments
     Seq_0 = Seq;
@@ -2905,8 +3002,8 @@ void max_sum_between_syms(
     current_sum_1 = 0;
 
     // Initialize phi values
-    max_sum_2 = max_sum_1;
-    current_sum_2 = current_sum_1;
+    max_sum_2 = party->In<Protocol>(encrypto::motion::ToInput(max_sum_1), 0);
+    current_sum_2 = party->In<Protocol>(encrypto::motion::ToInput(current_sum_1), 0);
     for (i = 0; i < N_0; i++) {
         _1_2 = (Seq_0[i] == Sym_0);
         _2_2 = (not _1_2);
@@ -2945,9 +3042,7 @@ def minimal_points(X_coords: list[int], Y_coords: list[int], N):
 
 X_coords = [1, 2, 3]
 Y_coords = [4, 5, 6]
-min_x, min_y = minimal_points(X_coords, Y_coords, len(X_coords))
-print(min_x)
-print(min_y)
+print(minimal_points(X_coords, Y_coords, 3))
 
 ```
 ### Restricted AST
@@ -3040,59 +3135,61 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 | `N!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
-| `!11!2` | `shared[int]` |
-| `!12!2` | `shared[list[int]]` |
-| `min_Y!3` | `shared[list[int]]` |
-| `min_Y!4` | `shared[list[int]]` |
+| `min_X!2` | `shared[list[int]]` |
 | `min_Y!2` | `shared[list[int]]` |
 | `!13!1` | `shared[list[list[int]]]` |
-| `!8!2` | `shared[int]` |
-| `!9!2` | `shared[list[int]]` |
+| `!6!2` | `shared[bool]` |
+| `min_Y!3` | `shared[list[int]]` |
+| `min_Y!4` | `shared[list[int]]` |
+| `min_Y!1` | `plaintext[list[int]]` |
+| `!12!2` | `shared[list[int]]` |
 | `min_X!3` | `shared[list[int]]` |
 | `min_X!4` | `shared[list[int]]` |
-| `min_X!2` | `shared[list[int]]` |
-| `!4!3` | `shared[bool]` |
+| `min_X!1` | `plaintext[list[int]]` |
+| `!9!2` | `shared[list[int]]` |
+| `!11!2` | `shared[int]` |
+| `!8!2` | `shared[int]` |
+| `bx!3` | `shared[bool]` |
 | `!5!3` | `shared[bool]` |
 | `bx!4` | `shared[bool]` |
-| `bx!3` | `shared[bool]` |
-| `!6!2` | `shared[bool]` |
+| `bx!2` | `plaintext[bool]` |
 | `!3!3` | `shared[bool]` |
-| `bx!2` | `plaintext[int]` |
-| `min_Y!1` | `plaintext[list[int]]` |
-| `min_X!1` | `plaintext[list[int]]` |
+| `!4!3` | `shared[bool]` |
 ### Motion code
 ```cpp
-void minimal_points(
+template <encrypto::motion::MpcProtocol Protocol>
+std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> minimal_points(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords,
     std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords,
-    int N
+    std::uint32_t N
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0;
-    int N_0;
-    int i;
-    int j;
-    encrypto::motion::SecureUnsignedInteger _11_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _12_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_3;
-    std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_4;
+    std::uint32_t N_0;
+    std::uint32_t i;
+    std::uint32_t j;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_X_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_2;
     std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _13_1;
-    encrypto::motion::SecureUnsignedInteger _8_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _9_2;
+    encrypto::motion::ShareWrapper _6_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_4;
+    std::vector<std::uint32_t> min_Y_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _12_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_X_3;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_X_4;
-    std::vector<encrypto::motion::SecureUnsignedInteger> min_X_2;
-    encrypto::motion::ShareWrapper _4_3;
+    std::vector<std::uint32_t> min_X_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _9_2;
+    encrypto::motion::SecureUnsignedInteger _11_2;
+    encrypto::motion::SecureUnsignedInteger _8_2;
+    encrypto::motion::ShareWrapper bx_3;
     encrypto::motion::ShareWrapper _5_3;
     encrypto::motion::ShareWrapper bx_4;
-    encrypto::motion::ShareWrapper bx_3;
-    encrypto::motion::ShareWrapper _6_2;
+    bool bx_2;
     encrypto::motion::ShareWrapper _3_3;
-    int bx_2;
-    std::vector<int> min_Y_1;
-    std::vector<int> min_X_1;
+    encrypto::motion::ShareWrapper _4_3;
 
     // Parameter assignments
     X_coords_0 = X_coords;
@@ -3104,13 +3201,13 @@ void minimal_points(
     min_Y_1 = {};
 
     // Initialize phi values
-    min_X_2 = min_X_1;
-    min_Y_2 = min_Y_1;
+    min_X_2 = party->In<Protocol>(encrypto::motion::ToInput(min_X_1), 0);
+    min_Y_2 = party->In<Protocol>(encrypto::motion::ToInput(min_Y_1), 0);
     for (i = 0; i < N_0; i++) {
         bx_2 = False;
 
         // Initialize phi values
-        bx_3 = bx_2;
+        bx_3 = party->In<Protocol>(encrypto::motion::ToInput(bx_2), 0);
         for (j = 0; j < N_0; j++) {
             _3_3 = (X_coords_0[j] < X_coords_0[i]);
             _4_3 = (Y_coords_0[j] < Y_coords_0[i]);
@@ -3145,30 +3242,29 @@ void minimal_points(
 ```python
 import typing
 
-# returns a list[int] which is the intersection 
+# returns a list[int] which is the intersection
 # of privite sets of integers A and B
 # requires: no repetition of elements in either A or B
 # requires: len(A) = SA, len(B) = SB
 def psi(A: list[int], SA, B: list[int], SB) -> list[int]:
-  dummy : int = 0
-  result: list[int] = []
-  for i in range(0,SA):
-    flag : Bool = False
-    for j in range(0,SB):
-      if A[i] == B[j]:
-        flag = True
-    val : int = dummy
-    if flag:
-      val : int = A[i]
-    #overloaded +. This is append actually.
-    result = result + [val]
-  return result
+    dummy: int = 0
+    result: list[int] = []
+    for i in range(0, SA):
+        flag: Bool = False
+        for j in range(0, SB):
+            if A[i] == B[j]:
+                flag = True
+        val: int = dummy
+        if flag:
+            val: int = A[i]
+        # overloaded +. This is append actually.
+        result = result + [val]
+    return result
 
-A = [4,2,3,1,10]
-B = [2,10,3,4,5,6,7]
-intersect = psi(A,5,B,7)
-print(intersect)
 
+A = [4, 2, 3, 1, 10]
+B = [2, 10, 3, 4, 5, 6, 7]
+print(psi(A, 5, B, 7))
 
 ```
 ### Restricted AST
@@ -3250,47 +3346,49 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 | `SB!0` | `plaintext[int]` |
 | `i` | `plaintext[int]` |
 | `j` | `plaintext[int]` |
-| `val!3` | `shared[int]` |
-| `val!4` | `shared[int]` |
+| `result!2` | `shared[list[int]]` |
 | `!2!2` | `shared[list[int]]` |
 | `result!3` | `shared[list[int]]` |
-| `result!2` | `shared[list[int]]` |
-| `flag!4` | `plaintext[int]` |
-| `flag!5` | `shared[int]` |
-| `flag!3` | `shared[int]` |
-| `!1!3` | `shared[bool]` |
-| `flag!2` | `plaintext[int]` |
 | `result!1` | `plaintext[list[int]]` |
-| `dummy!1` | `plaintext[int]` |
+| `val!4` | `shared[int]` |
+| `flag!3` | `shared[bool]` |
 | `val!2` | `plaintext[int]` |
+| `val!3` | `shared[int]` |
+| `dummy!1` | `plaintext[int]` |
+| `!1!3` | `shared[bool]` |
+| `flag!4` | `plaintext[bool]` |
+| `flag!5` | `shared[bool]` |
+| `flag!2` | `plaintext[bool]` |
 ### Motion code
 ```cpp
-void psi(
+template <encrypto::motion::MpcProtocol Protocol>
+std::vector<encrypto::motion::SecureUnsignedInteger> psi(
+    encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A,
-    int SA,
+    std::uint32_t SA,
     std::vector<encrypto::motion::SecureUnsignedInteger> B,
-    int SB
+    std::uint32_t SB
 ) {
     // Initial variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
-    int SA_0;
+    std::uint32_t SA_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
-    int SB_0;
-    int i;
-    int j;
-    encrypto::motion::SecureUnsignedInteger val_3;
-    encrypto::motion::SecureUnsignedInteger val_4;
+    std::uint32_t SB_0;
+    std::uint32_t i;
+    std::uint32_t j;
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _2_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_3;
-    std::vector<encrypto::motion::SecureUnsignedInteger> result_2;
-    int flag_4;
-    encrypto::motion::SecureUnsignedInteger flag_5;
-    encrypto::motion::SecureUnsignedInteger flag_3;
+    std::vector<std::uint32_t> result_1;
+    encrypto::motion::SecureUnsignedInteger val_4;
+    encrypto::motion::ShareWrapper flag_3;
+    std::uint32_t val_2;
+    encrypto::motion::SecureUnsignedInteger val_3;
+    std::uint32_t dummy_1;
     encrypto::motion::ShareWrapper _1_3;
-    int flag_2;
-    std::vector<int> result_1;
-    int dummy_1;
-    int val_2;
+    bool flag_4;
+    encrypto::motion::ShareWrapper flag_5;
+    bool flag_2;
 
     // Parameter assignments
     A_0 = A;
@@ -3303,12 +3401,12 @@ void psi(
     result_1 = {};
 
     // Initialize phi values
-    result_2 = result_1;
+    result_2 = party->In<Protocol>(encrypto::motion::ToInput(result_1), 0);
     for (i = 0; i < SA_0; i++) {
         flag_2 = False;
 
         // Initialize phi values
-        flag_3 = flag_2;
+        flag_3 = party->In<Protocol>(encrypto::motion::ToInput(flag_2), 0);
         for (j = 0; j < SB_0; j++) {
             _1_3 = (A_0[i] == B_0[j]);
             flag_4 = True;
