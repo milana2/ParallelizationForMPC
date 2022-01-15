@@ -2,14 +2,16 @@
 ## `biometric`
 ### Input
 ```python
-import typing
+from .UTIL import shared
 
 # Biometric matching
 # D is the number of features we are matching. Usually small, e.g., D=4
 # N is the size of the database S
 # C is the vector of features we are tryign to match.
 # S is the (originally two dimentional) database array: S[0,0],S[0,1],..S[0,D-1],S[1,0]... S[N-1,D-1]
-def biometric(C: list[int], D, S: list[int], N):
+def biometric(
+    C: shared[list[int]], D: int, S: shared[list[int]], N: int
+) -> tuple[shared[int], shared[int]]:
     min_sum: int = 10000
     min_index = -1
     for i in range(N):
@@ -32,7 +34,7 @@ print(biometric(C, 4, S, 4))
 ```
 ### Restricted AST
 ```python
-def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
+def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum = 10000
     min_index = - 1
     for i: plaintext[int] in range(0, N):
@@ -56,7 +58,7 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 ![](biometric_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
+def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
     min_index!1 = - 1
     for i in range(0, N!0):
@@ -82,7 +84,7 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 ![](biometric_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]):
+def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
     min_index!1 = - 1
     for i in range(0, N!0):
@@ -115,7 +117,7 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 | `j` | `plaintext[int]` |
 | `min_sum!2` | `shared[int]` |
 | `min_index!2` | `shared[int]` |
-| `!2!1` | `shared[list[int]]` |
+| `!2!1` | `tuple[shared[int], shared[int]]` |
 | `!1!2` | `shared[bool]` |
 | `min_index!3` | `plaintext[int]` |
 | `min_index!4` | `shared[int]` |
@@ -131,7 +133,7 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-std::vector<encrypto::motion::SecureUnsignedInteger> biometric(
+std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> C,
     std::uint32_t D,
@@ -147,7 +149,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> biometric(
     std::uint32_t j;
     encrypto::motion::SecureUnsignedInteger min_sum_2;
     encrypto::motion::SecureUnsignedInteger min_index_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _2_1;
+    std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> _2_1;
     encrypto::motion::ShareWrapper _1_2;
     std::uint32_t min_index_3;
     encrypto::motion::SecureUnsignedInteger min_index_4;
@@ -206,18 +208,18 @@ std::vector<encrypto::motion::SecureUnsignedInteger> biometric(
 ## `biometric_fast`
 ### Input
 ```python
-import typing
+from .UTIL import shared
 
 
 def biometric_matching_fast(
-    D,
-    N,
-    C: list[int],
-    C_sqr_sum: int,
-    two_C: list[int],
-    S: list[int],
-    S_sqr_sum: list[int],
-):
+    D: int,
+    N: int,
+    C: shared[list[int]],
+    C_sqr_sum: shared[int],
+    two_C: shared[list[int]],
+    S: shared[list[int]],
+    S_sqr_sum: shared[list[int]],
+) -> tuple[shared[int], shared[int]]:
     """
     Computes biometric matching
 
@@ -290,7 +292,7 @@ test_biometric_matching_fast(4, 4, C, S)
 ```
 ### Restricted AST
 ```python
-def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
+def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]) -> tuple[shared[int], shared[int]]:
     differences = []
     for i: plaintext[int] in range(0, D):
         differences = (differences + [0])
@@ -322,7 +324,7 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 ![](biometric_fast_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
+def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]) -> tuple[shared[int], shared[int]]:
     differences!1 = []
     for i in range(0, D!0):
         differences!2 = Φ(differences!1, differences!3)
@@ -361,7 +363,7 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 ![](biometric_fast_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]):
+def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]) -> tuple[shared[int], shared[int]]:
     differences!1 = []
     for i in range(0, D!0):
         differences!2 = Φ(differences!1, differences!3)
@@ -411,7 +413,7 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 | `k` | `plaintext[int]` |
 | `min_diff!2` | `shared[int]` |
 | `min_index!2` | `shared[int]` |
-| `!3!1` | `shared[list[int]]` |
+| `!3!1` | `tuple[shared[int], shared[int]]` |
 | `!2!3` | `shared[bool]` |
 | `min_diff!4` | `shared[int]` |
 | `min_diff!5` | `shared[int]` |
@@ -438,7 +440,7 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-std::vector<encrypto::motion::SecureUnsignedInteger> biometric_matching_fast(
+std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric_matching_fast(
     encrypto::motion::PartyPointer &party,
     std::uint32_t D,
     std::uint32_t N,
@@ -461,7 +463,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> biometric_matching_fast(
     std::uint32_t k;
     encrypto::motion::SecureUnsignedInteger min_diff_2;
     encrypto::motion::SecureUnsignedInteger min_index_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _3_1;
+    std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> _3_1;
     encrypto::motion::ShareWrapper _2_3;
     encrypto::motion::SecureUnsignedInteger min_diff_4;
     encrypto::motion::SecureUnsignedInteger min_diff_5;
@@ -563,7 +565,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> biometric_matching_fast(
 ## `chapterfour_figure_12`
 ### Input
 ```python
-def foo(x: int, y: int):
+def foo(x: shared[int], y: shared[int]) -> shared[int]:
     z = 0
     if x > 0:
         if y > 0:
@@ -575,7 +577,7 @@ def foo(x: int, y: int):
 ```
 ### Restricted AST
 ```python
-def foo(x: shared[int], y: shared[int]):
+def foo(x: shared[int], y: shared[int]) -> shared[int]:
     z = 0
     if (x > 0):
         if (y > 0):
@@ -594,7 +596,7 @@ def foo(x: shared[int], y: shared[int]):
 ![](chapterfour_figure_12_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def foo(x: shared[int], y: shared[int]):
+def foo(x: shared[int], y: shared[int]) -> shared[int]:
     z!1 = 0
     !1!1 = (x!0 > 0)
     !2!1 = (y!0 > 0)
@@ -610,7 +612,7 @@ def foo(x: shared[int], y: shared[int]):
 ![](chapterfour_figure_12_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def foo(x: shared[int], y: shared[int]):
+def foo(x: shared[int], y: shared[int]) -> shared[int]:
     z!1 = 0
     !1!1 = (x!0 > 0)
     !2!1 = (y!0 > 0)
@@ -671,7 +673,12 @@ encrypto::motion::SecureUnsignedInteger foo(
 ## `convex_hull`
 ### Input
 ```python
-def convex_hull(X_coords: list[int], Y_coords: list[int], N):
+from .UTIL import shared
+
+
+def convex_hull(
+    X_coords: shared[list[int]], Y_coords: shared[list[int]], N: int
+) -> tuple[shared[list[int]], shared[list[int]]]:
     hull_X: list[int] = []
     hull_Y: list[int] = []
 
@@ -697,7 +704,7 @@ def convex_hull(X_coords: list[int], Y_coords: list[int], N):
 ```
 ### Restricted AST
 ```python
-def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
+def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     hull_X = []
     hull_Y = []
     for i: plaintext[int] in range(0, N):
@@ -725,7 +732,7 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 ![](convex_hull_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
+def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     hull_X!1 = []
     hull_Y!1 = []
     for i in range(0, N!0):
@@ -763,7 +770,7 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 ![](convex_hull_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
+def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     hull_X!1 = []
     hull_Y!1 = []
     for i in range(0, N!0):
@@ -807,7 +814,7 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 | `j` | `plaintext[int]` |
 | `hull_X!2` | `shared[list[int]]` |
 | `hull_Y!2` | `shared[list[int]]` |
-| `!12!1` | `shared[list[list[int]]]` |
+| `!12!1` | `tuple[shared[list[int]], shared[list[int]]]` |
 | `is_hull!6` | `shared[bool]` |
 | `hull_Y!3` | `shared[list[int]]` |
 | `hull_Y!4` | `shared[list[int]]` |
@@ -835,7 +842,7 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> convex_hull(
+std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> convex_hull(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords,
     std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords,
@@ -849,7 +856,7 @@ std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> convex_hull(
     std::uint32_t j;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_2;
-    std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _12_1;
+    std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> _12_1;
     encrypto::motion::ShareWrapper is_hull_6;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_3;
     std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_4;
@@ -931,7 +938,10 @@ std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> convex_hull(
 ## `count_102`
 ### Input
 ```python
-def count_102(Seq: list[int], N, Syms: list[int]):
+from .UTIL import shared
+
+
+def count_102(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:
     """
     Computes the number of instances of regex a(b*)c in a provided sequence.
     Syms is a list of form [a, b, c].
@@ -954,7 +964,7 @@ print(count_102(seq, 10, [1, 0, 2]))
 ```
 ### Restricted AST
 ```python
-def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s0 = False
     c = 0
     for i: plaintext[int] in range(0, N):
@@ -973,7 +983,7 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_102_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s0!1 = False
     c!1 = 0
     for i in range(0, N!0):
@@ -995,7 +1005,7 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_102_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s0!1 = False
     c!1 = 0
     for i in range(0, N!0):
@@ -1092,7 +1102,10 @@ encrypto::motion::SecureUnsignedInteger count_102(
 ## `count_10s`
 ### Input
 ```python
-def count_10s(Seq: list[int], N, Syms: list[int]):
+from .UTIL import shared
+
+
+def count_10s(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:
     """
     Computes the number of instances of regex a(b+) in a provided sequence.
     Syms is a list of form [a, b].
@@ -1117,7 +1130,7 @@ print(count_10s(seq, 7, [0, 1]))
 ```
 ### Restricted AST
 ```python
-def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s0 = False
     s1 = False
     scount = 0
@@ -1138,7 +1151,7 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_10s_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s0!1 = False
     s1!1 = False
     scount!1 = 0
@@ -1162,7 +1175,7 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_10s_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s0!1 = False
     s1!1 = False
     scount!1 = 0
@@ -1268,7 +1281,10 @@ encrypto::motion::SecureUnsignedInteger count_10s(
 ## `count_123`
 ### Input
 ```python
-def count_123(Seq: list[int], N, Syms: list[int]):
+from .UTIL import shared
+
+
+def count_123(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:
     """
     Computes the number of instances of regex a*b*c* in a provided sequence.
     Syms is a list of form [a, b, c].
@@ -1294,7 +1310,7 @@ print(count_123(seq, 7, [1, 2, 3]))
 ```
 ### Restricted AST
 ```python
-def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s1 = False
     s2 = False
     s3 = False
@@ -1316,7 +1332,7 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_123_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s1!1 = False
     s2!1 = False
     c!1 = 0
@@ -1341,7 +1357,7 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_123_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s1!1 = False
     s2!1 = False
     c!1 = 0
@@ -1451,7 +1467,7 @@ encrypto::motion::SecureUnsignedInteger count_123(
 ## `histogram`
 ### Input
 ```python
-import typing
+from .UTIL import shared
 
 # Array A contains a list of integers i in [1,num_bins]
 # Array B is a same-size array, contains number of collected ratings for that bin
@@ -1468,7 +1484,9 @@ import typing
 # This is very similar to the crosstabs app in MOTION
 # But we were first to suggest this as a benchmark :).
 # requires: len(A) == len(B) = N
-def histogram(A: list[int], B: list[int], N, num_bins):
+def histogram(
+    A: shared[list[int]], B: shared[list[int]], N: int, num_bins: int
+) -> shared[list[int]]:
     result: list[int] = []
     # initialize result to 0
     for i in range(num_bins):
@@ -1488,7 +1506,7 @@ print(histogram(A, B, N, 5))
 ```
 ### Restricted AST
 ```python
-def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
+def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]) -> shared[list[int]]:
     result = []
     for i: plaintext[int] in range(0, num_bins):
         result = (result + [0])
@@ -1508,7 +1526,7 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 ![](histogram_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
+def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]) -> shared[list[int]]:
     result!1 = []
     for i in range(0, num_bins!0):
         result!2 = Φ(result!1, result!3)
@@ -1530,7 +1548,7 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 ![](histogram_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]):
+def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]) -> shared[list[int]]:
     result!1 = []
     for i in range(0, num_bins!0):
         result!2 = Φ(result!1, result!3)
@@ -1642,7 +1660,13 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
 ## `infeasible_edges_example`
 ### Input
 ```python
-def foo(A: list[int], B: list[int], C: list[int], D: list[int], N):
+def foo(
+    A: shared[list[int]],
+    B: shared[list[int]],
+    C: shared[list[int]],
+    D: shared[list[int]],
+    N: int,
+) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
     for i in range(N):
         A[i] = B[i] + 10
         B[i] = A[i] * D[i - 1]
@@ -1653,7 +1677,7 @@ def foo(A: list[int], B: list[int], C: list[int], D: list[int], N):
 ```
 ### Restricted AST
 ```python
-def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]):
+def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
     for i: plaintext[int] in range(0, N):
         A[i] = (B[i] + 10)
         B[i] = (A[i] * D[(i - 1)])
@@ -1671,7 +1695,7 @@ def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: sha
 ![](infeasible_edges_example_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]):
+def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
     for i in range(0, N!0):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)
@@ -1694,7 +1718,7 @@ def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: sha
 ![](infeasible_edges_example_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]):
+def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
     for i in range(0, N!0):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)
@@ -1726,7 +1750,7 @@ def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: sha
 | `B!1` | `shared[list[int]]` |
 | `C!1` | `shared[list[int]]` |
 | `D!1` | `shared[list[int]]` |
-| `!5!1` | `shared[list[list[int]]]` |
+| `!5!1` | `tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]` |
 | `!4!2` | `shared[int]` |
 | `D!2` | `shared[list[int]]` |
 | `B!2` | `shared[list[int]]` |
@@ -1738,7 +1762,7 @@ def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: sha
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> foo(
+std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> foo(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A,
     std::vector<encrypto::motion::SecureUnsignedInteger> B,
@@ -1757,7 +1781,7 @@ std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> foo(
     std::vector<encrypto::motion::SecureUnsignedInteger> B_1;
     std::vector<encrypto::motion::SecureUnsignedInteger> C_1;
     std::vector<encrypto::motion::SecureUnsignedInteger> D_1;
-    std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _5_1;
+    std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> _5_1;
     encrypto::motion::SecureUnsignedInteger _4_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> D_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> B_2;
@@ -1805,10 +1829,10 @@ std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> foo(
 ## `inner_product`
 ### Input
 ```python
-import typing
+from .UTIL import shared
 
 
-def ip(A: list[int], B: list[int], N):
+def ip(A: shared[list[int]], B: shared[list[int]], N: int) -> shared[int]:
     sum = 0
     for i in range(0, N):
         temp = A[i] * B[i]
@@ -1823,7 +1847,7 @@ print(ip(A, B, 3))
 ```
 ### Restricted AST
 ```python
-def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
+def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[int]:
     sum = 0
     for i: plaintext[int] in range(0, N):
         temp = (A[i] * B[i])
@@ -1840,7 +1864,7 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
 ![](inner_product_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
+def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[int]:
     sum!1 = 0
     for i in range(0, N!0):
         sum!2 = Φ(sum!1, sum!3)
@@ -1854,7 +1878,7 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
 ![](inner_product_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]):
+def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[int]:
     sum!1 = 0
     for i in range(0, N!0):
         sum!2 = Φ(sum!1, sum!3)
@@ -1918,7 +1942,10 @@ encrypto::motion::SecureUnsignedInteger ip(
 ## `longest_102`
 ### Input
 ```python
-def longest_102(Seq: list[int], N, Syms: list[int]):
+from .UTIL import shared
+
+
+def longest_102(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:
     """
     Computes the length of the largest instance of regex a(b*)c in a provided sequence.
     Syms is a list of form [a, b, c].
@@ -1949,7 +1976,7 @@ print(longest_102(seq, 10, [1, 0, 2]))
 ```
 ### Restricted AST
 ```python
-def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s0 = False
     max_len = 0
     length = 0
@@ -1974,7 +2001,7 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 ![](longest_102_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s0!1 = False
     max_len!1 = 0
     length!1 = 0
@@ -2004,7 +2031,7 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 ![](longest_102_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     s0!1 = False
     max_len!1 = 0
     length!1 = 0
@@ -2134,7 +2161,10 @@ encrypto::motion::SecureUnsignedInteger longest_102(
 ## `longest_1s`
 ### Input
 ```python
-def longest_1s(Seq: list[int], N, Sym: int):
+from .UTIL import shared
+
+
+def longest_1s(Seq: shared[list[int]], N: int, Sym: shared[int]) -> shared[int]:
     """
     Computes length of the longest sequence of form (a*).
     Sym is the integer a.
@@ -2161,7 +2191,7 @@ print(longest_1s(seq, 9, 1))
 ```
 ### Restricted AST
 ```python
-def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_length = 0
     length = 0
     for i: plaintext[int] in range(1, N):
@@ -2183,7 +2213,7 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 ![](longest_1s_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_length!1 = 0
     length!1 = 0
     for i in range(1, N!0):
@@ -2204,7 +2234,7 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 ![](longest_1s_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_length!1 = 0
     length!1 = 0
     for i in range(1, N!0):
@@ -2297,7 +2327,10 @@ encrypto::motion::SecureUnsignedInteger longest_1s(
 ## `longest_even_0`
 ### Input
 ```python
-def longest_even_0(Seq: list[int], N, Sym: int):
+from .UTIL import shared
+
+
+def longest_even_0(Seq: shared[list[int]], N: int, Sym: shared[int]) -> shared[int]:
     """
     Computes the length of the longest regex of form (a*) which has an even length
     Sym is the symbol a
@@ -2324,7 +2357,7 @@ def longest_even_0(Seq: list[int], N, Sym: int):
 ```
 ### Restricted AST
 ```python
-def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     current_length = 0
     max_length = 0
     for i: plaintext[int] in range(1, N):
@@ -2349,7 +2382,7 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 ![](longest_even_0_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     current_length!1 = 0
     max_length!1 = 0
     for i in range(1, N!0):
@@ -2375,7 +2408,7 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
 ![](longest_even_0_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     current_length!1 = 0
     max_length!1 = 0
     for i in range(1, N!0):
@@ -2488,7 +2521,12 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
 ## `longest_odd_10`
 ### Input
 ```python
-def longest_odd_10(Seq: list[int], N, Syms: list[int]):
+from .UTIL import shared
+
+
+def longest_odd_10(
+    Seq: shared[list[int]], N: int, Syms: shared[list[int]]
+) -> shared[int]:
     """
     Computes the length of the longest regex of form (ab)* which has an odd length
     Syms is the list [a, b]
@@ -2517,7 +2555,7 @@ def longest_odd_10(Seq: list[int], N, Syms: list[int]):
 ```
 ### Restricted AST
 ```python
-def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     current_length = 0
     max_length = 0
     s2 = False
@@ -2543,7 +2581,7 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 ![](longest_odd_10_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     current_length!1 = 0
     max_length!1 = 0
     s2!1 = False
@@ -2573,7 +2611,7 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 ![](longest_odd_10_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]):
+def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
     current_length!1 = 0
     max_length!1 = 0
     s2!1 = False
@@ -2703,7 +2741,12 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
 ## `max_dist_between_syms`
 ### Input
 ```python
-def max_dist_between_syms(Seq: list[int], N, Sym: int):
+from .UTIL import shared
+
+
+def max_dist_between_syms(
+    Seq: shared[list[int]], N: int, Sym: shared[int]
+) -> shared[int]:
     max_dist = 0
     current_dist = 0
     for i in range(0, N):
@@ -2723,7 +2766,7 @@ print(max_dist_between_syms(seq, 8, 1))
 ```
 ### Restricted AST
 ```python
-def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_dist = 0
     current_dist = 0
     for i: plaintext[int] in range(0, N):
@@ -2745,7 +2788,7 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 ![](max_dist_between_syms_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_dist!1 = 0
     current_dist!1 = 0
     for i in range(0, N!0):
@@ -2767,7 +2810,7 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 ![](max_dist_between_syms_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_dist!1 = 0
     current_dist!1 = 0
     for i in range(0, N!0):
@@ -2864,7 +2907,12 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
 ## `max_sum_between_syms`
 ### Input
 ```python
-def max_sum_between_syms(Seq: list[int], N, Sym: int):
+from .UTIL import shared
+
+
+def max_sum_between_syms(
+    Seq: shared[list[int]], N: int, Sym: shared[int]
+) -> shared[int]:
     max_sum = 0
     current_sum = 0
     for i in range(0, N):
@@ -2884,7 +2932,7 @@ print(max_sum_between_syms(seq, 8, 1))
 ```
 ### Restricted AST
 ```python
-def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_sum = 0
     current_sum = 0
     for i: plaintext[int] in range(0, N):
@@ -2906,7 +2954,7 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 ![](max_sum_between_syms_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_sum!1 = 0
     current_sum!1 = 0
     for i in range(0, N!0):
@@ -2928,7 +2976,7 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 ![](max_sum_between_syms_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]):
+def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_sum!1 = 0
     current_sum!1 = 0
     for i in range(0, N!0):
@@ -3025,7 +3073,12 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
 ## `minimal_points`
 ### Input
 ```python
-def minimal_points(X_coords: list[int], Y_coords: list[int], N):
+from .UTIL import shared
+
+
+def minimal_points(
+    X_coords: shared[list[int]], Y_coords: shared[list[int]], N: int
+) -> tuple[shared[list[int]], shared[list[int]]]:
     min_X: list[int] = []
     min_Y: list[int] = []
 
@@ -3047,7 +3100,7 @@ print(minimal_points(X_coords, Y_coords, 3))
 ```
 ### Restricted AST
 ```python
-def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
+def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     min_X = []
     min_Y = []
     for i: plaintext[int] in range(0, N):
@@ -3069,7 +3122,7 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 ![](minimal_points_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
+def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     min_X!1 = []
     min_Y!1 = []
     for i in range(0, N!0):
@@ -3100,7 +3153,7 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 ![](minimal_points_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]):
+def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     min_X!1 = []
     min_Y!1 = []
     for i in range(0, N!0):
@@ -3137,7 +3190,7 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 | `j` | `plaintext[int]` |
 | `min_X!2` | `shared[list[int]]` |
 | `min_Y!2` | `shared[list[int]]` |
-| `!13!1` | `shared[list[list[int]]]` |
+| `!13!1` | `tuple[shared[list[int]], shared[list[int]]]` |
 | `!6!2` | `shared[bool]` |
 | `min_Y!3` | `shared[list[int]]` |
 | `min_Y!4` | `shared[list[int]]` |
@@ -3158,7 +3211,7 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> minimal_points(
+std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> minimal_points(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords,
     std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords,
@@ -3172,7 +3225,7 @@ std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> minimal_points
     std::uint32_t j;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_X_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_2;
-    std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _13_1;
+    std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> _13_1;
     encrypto::motion::ShareWrapper _6_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_3;
     std::vector<encrypto::motion::SecureUnsignedInteger> min_Y_4;
@@ -3240,23 +3293,25 @@ std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> minimal_points
 ## `psi`
 ### Input
 ```python
-import typing
+from .UTIL import shared
 
 # returns a list[int] which is the intersection
 # of privite sets of integers A and B
 # requires: no repetition of elements in either A or B
 # requires: len(A) = SA, len(B) = SB
-def psi(A: list[int], SA, B: list[int], SB) -> list[int]:
+def psi(
+    A: shared[list[int]], SA: int, B: shared[list[int]], SB: int
+) -> shared[list[int]]:
     dummy: int = 0
     result: list[int] = []
     for i in range(0, SA):
-        flag: Bool = False
+        flag: bool = False
         for j in range(0, SB):
             if A[i] == B[j]:
                 flag = True
         val: int = dummy
         if flag:
-            val: int = A[i]
+            val = A[i]
         # overloaded +. This is append actually.
         result = result + [val]
     return result
@@ -3269,7 +3324,7 @@ print(psi(A, 5, B, 7))
 ```
 ### Restricted AST
 ```python
-def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
+def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]) -> shared[list[int]]:
     dummy = 0
     result = []
     for i: plaintext[int] in range(0, SA):
@@ -3293,7 +3348,7 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 ![](psi_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
+def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]) -> shared[list[int]]:
     dummy!1 = 0
     result!1 = []
     for i in range(0, SA!0):
@@ -3317,7 +3372,7 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 ![](psi_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]):
+def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]) -> shared[list[int]]:
     dummy!1 = 0
     result!1 = []
     for i in range(0, SA!0):
