@@ -33,6 +33,8 @@ def biometric_matching_fast(
     for i in range(D):
         differences = differences + [0]
 
+    min_index: int = 0
+    min_diff: int = differences[0]
     for i in range(N):
         a_sqr_plus_b_sqr: int = S_sqr_sum[i] + C_sqr_sum
         two_a_b: int = 0
@@ -44,8 +46,8 @@ def biometric_matching_fast(
         this_diff: int = a_sqr_plus_b_sqr - two_a_b
         differences[i] = this_diff
 
-        min_diff: int = differences[0]
-        min_index: int = 0
+        min_diff = differences[0]
+        min_index = 0
 
         for k in range(N):
             if differences[k] < min_diff:
