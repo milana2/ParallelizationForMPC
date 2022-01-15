@@ -11,6 +11,8 @@ Block 2:
     differences = (differences + !1)
     jump
 Block 3:
+    min_index = 0
+    min_diff = differences[0]
     jump
 Block 4:
     for i: plaintext[int] in range(0, N)

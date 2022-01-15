@@ -21,7 +21,12 @@ from .tac_cfg import AssignRHS, List, Tuple, Mux, Update
 
 class TypeEnv(defaultdict[Var, VarType]):
     def __str__(self) -> str:
-        return "\n".join([f"{var}: {var_type}" for var, var_type in self.items()])
+        return "\n".join(
+            [
+                f"{var}: {var_type}"
+                for var, var_type in sorted(self.items(), key=lambda x: str(x[0]))
+            ]
+        )
 
 
 def _type_assign_expr(

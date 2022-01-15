@@ -4,10 +4,12 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
         differences!2 = Φ(differences!1, differences!3)
         !1!2 = [0]
         differences!3 = (differences!2 + !1!2)
+    min_index!1 = 0
+    min_diff!1 = differences!2[0]
     for i in range(0, N!0):
         differences!4 = Φ(differences!2, differences!5)
-        min_diff!1 = Φ(min_diff!0, min_diff!3)
-        min_index!1 = Φ(min_index!0, min_index!3)
+        min_index!2 = Φ(min_index!1, min_index!4)
+        min_diff!2 = Φ(min_diff!1, min_diff!4)
         a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i] + C_sqr_sum!0)
         two_a_b!2 = 0
         for j in range(0, D!0):
@@ -16,15 +18,15 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
             two_a_b!4 = (two_a_b!3 + tmp!3)
         this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
         differences!5 = Update(differences!4, i, this_diff!2)
-        min_diff!2 = differences!5[0]
-        min_index!2 = 0
+        min_diff!3 = differences!5[0]
+        min_index!3 = 0
         for k in range(0, N!0):
-            min_diff!3 = Φ(min_diff!2, min_diff!5)
-            min_index!3 = Φ(min_index!2, min_index!5)
-            !2!3 = (differences!5[k] < min_diff!3)
-            min_diff!4 = differences!5[k]
-            min_index!4 = k
-            min_diff!5 = MUX(!2!3, min_diff!4, min_diff!3)
-            min_index!5 = MUX(!2!3, min_index!4, min_index!3)
-    !3!1 = (min_diff!1, min_index!1)
+            min_index!4 = Φ(min_index!3, min_index!6)
+            min_diff!4 = Φ(min_diff!3, min_diff!6)
+            !2!3 = (differences!5[k] < min_diff!4)
+            min_diff!5 = differences!5[k]
+            min_index!5 = k
+            min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+            min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)
+    !3!1 = (min_diff!2, min_index!2)
     return !3!1
