@@ -1,24 +1,10 @@
-FROM alpine:3.15
+FROM ubuntu:focal
 
-RUN apk add --no-cache \
-    # Build tools \
-    cmake \
-    g++\
-    make \
-    # MOTION dependencies \
-    boost-dev \
-    flatbuffers-dev \
-    fmt-dev \
-    openssl-dev \
-    # Dependencies for our compiler \
-    python3 \
-    py3-jinja2 \
-    py3-networkx \
-    py3-pydot \
-    # All of the below dependencies are for z3 \
-    z3-dev \
-    py3-z3 \
-    py3-setuptools
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install cmake g++-10 make libboost-all-dev libflatbuffers-dev libfmt-dev libssl-dev python3.9 python3-pip
+RUN python3.9 -m pip install z3-solver networkx pydot jinja2
 
 WORKDIR /mpc
 VOLUME /mpc
