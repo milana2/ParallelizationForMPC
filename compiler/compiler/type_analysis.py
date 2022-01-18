@@ -1,6 +1,5 @@
 import sys
 from typing import Optional, Union, cast
-from collections import defaultdict
 
 from . import loop_linear_code
 from .dep_graph import DepGraph
@@ -15,18 +14,9 @@ from .ast_shared import (
     VarVisibility,
     PLAINTEXT_INT,
     DataType,
+    TypeEnv,
 )
 from .tac_cfg import AssignRHS, List, Tuple, Mux, Update
-
-
-class TypeEnv(defaultdict[Var, VarType]):
-    def __str__(self) -> str:
-        return "\n".join(
-            [
-                f"{var}: {var_type}"
-                for var, var_type in sorted(self.items(), key=lambda x: str(x[0]))
-            ]
-        )
 
 
 def _type_assign_expr(

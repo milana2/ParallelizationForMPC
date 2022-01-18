@@ -20,7 +20,7 @@ from .ssa import (
     Mux,
     Update,
 )
-from .ast_shared import VarType, BinOpKind, Parameter, UnaryOpKind
+from .ast_shared import VarType, BinOpKind, Parameter, UnaryOpKind, TypeEnv
 
 
 Statement = Union[Phi, Assign, "For"]
@@ -33,7 +33,7 @@ class For:
     bound_high: LoopBound
     body: list[Statement]
 
-    def to_cpp(self) -> str:
+    def to_cpp(self, type_env: TypeEnv) -> str:
         # Pseudo-phi nodes are implemented by first initializing the variable before entering the loop,
         # then updating the variable's value at the end of each loop.
         phi_initializations = "// Initialize phi values\n" + "\n".join(

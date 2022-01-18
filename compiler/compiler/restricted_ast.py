@@ -20,6 +20,7 @@ from .ast_shared import (
     SubscriptIndexUnaryOp,
     BinOpKind,
     UnaryOpKind,
+    TypeEnv,
 )
 
 
@@ -96,7 +97,7 @@ class List:
 
     items: list[Expression]
 
-    def to_cpp(self) -> str:
+    def to_cpp(self, type_env: TypeEnv) -> str:
         # This function only exists to shut mypy up
         raise NotImplementedError("to_cpp() called on restricted ast list")
 
@@ -111,7 +112,7 @@ class Tuple:
 
     items: list[Expression]
 
-    def to_cpp(self) -> str:
+    def to_cpp(self, type_env: TypeEnv) -> str:
         # This function only exists to shut mypy up
         raise NotImplementedError("to_cpp() called on restricted ast tuple")
 

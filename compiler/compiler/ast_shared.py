@@ -1,3 +1,4 @@
+from collections import defaultdict
 from enum import Enum
 from typing import Generic, TypeVar, Union, Optional, Protocol
 from dataclasses import dataclass, field
@@ -21,7 +22,7 @@ class DataType(Enum):
     BOOL = "bool"
     TUPLE = "tuple"
 
-    def to_cpp(self) -> str:
+    def to_cpp(self, type_env: "TypeEnv") -> str:
         if self == DataType.INT:
             return "std::uint32_t"
         elif self == DataType.BOOL:
@@ -166,7 +167,7 @@ class VarType:
 
         return merged_type
 
-    def to_cpp(self) -> str:
+    def to_cpp(self, type_env: "TypeEnv") -> str:
         assert self.visibility is not None
         assert self.datatype is not None
         assert self.dims is not None
@@ -220,7 +221,7 @@ class Var:
 
     rename_subscript: Optional[int] = None
 
-    def to_cpp(self) -> str:
+    def to_cpp(self, type_env: "TypeEnv") -> str:
         self_str = str(self)
         return self_str.replace("!", "_")
 
@@ -228,6 +229,16 @@ class Var:
         name = self.name if isinstance(self.name, str) else f"!{self.name}"
         subscript = "" if self.rename_subscript is None else f"!{self.rename_subscript}"
         return name + subscript
+
+
+class TypeEnv(defaultdict[Var, VarType]):
+    def __str__(self) -> str:
+        return "\n".join(
+            [
+                f"{var}: {var_type}"
+                for var, var_type in sorted(self.items(), key=lambda x: str(x[0]))
+            ]
+        )
 
 
 @dataclass
@@ -243,7 +254,7 @@ class Parameter:
         int
     ] = None  # stores the party index associated with this parameter, if it is shared
 
-    def to_cpp(self):
+    def to_cpp(self, type_env: TypeEnv):
         return self.var_type.to_cpp() + " " + self.var.to_cpp()
 
     def __str__(self) -> str:
@@ -257,7 +268,7 @@ class Constant:
     value: int
     datatype: DataType
 
-    def to_cpp(self) -> str:
+    def to_cpp(self, type_env: TypeEnv) -> str:
         return str(self.value)
 
     def __str__(self) -> str:
@@ -371,7 +382,7 @@ class UnaryOpKind(Enum):
 
 
 class CppConvertible(Protocol):
-    def to_cpp(self) -> str:
+    def to_cpp(self, type_env: TypeEnv) -> str:
         ...
 
 
@@ -386,8 +397,12 @@ class BinOp(Generic[OPERAND]):
     operator: BinOpKind
     right: OPERAND
 
-    def to_cpp(self) -> str:
-        return f"({self.left.to_cpp()} {self.operator.value} {self.right.to_cpp()})"
+    def to_cpp(self, type_env: TypeEnv) -> str:
+        if self.operator == BinOpKind.LT:
+            return f"({self.right.to_cpp()} > {self.left.to_cpp()})"
+        # TODO: implement other operator specializations
+        else:
+            return f"({self.left.to_cpp()} {self.operator.value} {self.right.to_cpp()})"
 
     def __str__(self) -> str:
         return f"({self.left} {self.operator} {self.right})"
@@ -400,7 +415,7 @@ class UnaryOp(Generic[OPERAND]):
     operator: UnaryOpKind
     operand: OPERAND
 
-    def to_cpp(self) -> str:
+    def to_cpp(self, type_env: TypeEnv) -> str:
         return f"({self.operator.value} {self.operand.to_cpp()})"
 
     def __str__(self) -> str:
@@ -425,7 +440,7 @@ class Subscript:
     array: Var
     index: SubscriptIndex
 
-    def to_cpp(self) -> str:
+    def to_cpp(self, type_env: TypeEnv) -> str:
         return f"{self.array.to_cpp()}[{self.index.to_cpp()}]"
 
     def __hash__(self) -> int:
