@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 cmake_policy(SET CMP0075 NEW)
 project({{ app_name|upper() }} CXX)
+set(CMAKE_BUILD_TYPE Release)
+set(MOTION_BUILD_BOOST_FROM_SOURCES OFF)
 
 add_subdirectory({{ motion_dir }} motion_build)
 
