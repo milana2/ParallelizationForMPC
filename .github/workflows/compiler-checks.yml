@@ -2,9 +2,11 @@ name: Compiler checks
 
 on:
   push:
-    branches: [master]
+    branches-ignore:
+      - gh-pages
   pull_request:
-    branches: [master]
+    branches-ignore:
+      - gh-pages
 
 jobs:
   checks:
@@ -29,3 +31,24 @@ jobs:
       - name: Check with ${{ matrix.check-command }}
         working-directory: compiler
         run: ${{ matrix.check-command }}
+
+  benchmarks:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        working-directory: compiler
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Build example applications
+        working-directory: compiler
+        run: ./run_tests.py --test-example-apps

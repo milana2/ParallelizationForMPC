@@ -2,6 +2,7 @@ import argparse
 import ast
 import sys
 import traceback
+from typing import Optional
 
 from .ast_to_restricted_ast import ast_to_restricted_ast
 from .restricted_ast_to_tac_cfg import restricted_ast_to_tac_cfg
@@ -16,29 +17,15 @@ from . import motion_backend
 from . import vectorize
 
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("input", type=argparse.FileType("r"))
-    parser.add_argument(
-        "--out-dir",
-        help="If provided, render a sample application into this directory.",
-    )
-    parser.add_argument(
-        "--overwrite",
-        action="store_true",
-        help="Overwrite existing output directory",
-    )
-    return parser.parse_args()
-
-
-def main():
-    args = parse_args()
-    filename = args.input.name
-    text = args.input.read()
-
+def compile(
+    filename: str,
+    text: str,
+    out_dir: Optional[str] = None,
+    overwrite_out_dir: bool = False,
+):
     try:
-        ast_node = ast.parse(text, filename=filename)
-        ast_node = ast_to_restricted_ast(node=ast_node, filename=filename, text=text)
+        ast_module = ast.parse(text, filename=filename)
+        ast_node = ast_to_restricted_ast(node=ast_module, filename=filename, text=text)
     except SyntaxError as err:
         traceback.print_exception(None, value=err, tb=None)
         sys.exit(1)
@@ -100,5 +87,7 @@ def main():
     print(motion_code)
     print()
 
-    if args.out_dir:
-        motion_backend.render_application(linear, type_env, args)
+    if out_dir:
+        motion_backend.render_application(
+            linear, type_env, {"out_dir": out_dir, "overwrite": overwrite_out_dir}
+        )

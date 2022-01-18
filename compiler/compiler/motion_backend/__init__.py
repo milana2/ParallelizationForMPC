@@ -2,10 +2,15 @@ import io
 from jinja2 import Environment, FileSystemLoader
 import os
 from textwrap import indent
-from argparse import Namespace
+from typing import TypedDict
 
 from ..loop_linear_code import Function, Statement, Phi
 from ..type_analysis import TypeEnv, VarVisibility
+
+
+class OutputParams(TypedDict):
+    out_dir: str
+    overwrite: bool
 
 
 def _render_prototype(func: Function, type_env: TypeEnv) -> str:
@@ -64,7 +69,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     )
 
 
-def render_application(func: Function, type_env: TypeEnv, args: Namespace):
+def render_application(func: Function, type_env: TypeEnv, params: OutputParams) -> None:
     template_dir = os.path.abspath(os.path.dirname(__file__))
     project_root = os.path.abspath(os.path.join(template_dir, "..", "..", ".."))
 
@@ -107,9 +112,9 @@ def render_application(func: Function, type_env: TypeEnv, args: Namespace):
         cpp_files=["main.cpp"],
     )
 
-    output_dir = os.path.abspath(args.out_dir)
+    output_dir = os.path.abspath(params["out_dir"])
 
-    os.makedirs(output_dir, exist_ok=args.overwrite)
+    os.makedirs(output_dir, exist_ok=params["overwrite"])
 
     with open(os.path.join(output_dir, f"main.cpp"), "w") as main_file:
         main_file.write(rendered_main)

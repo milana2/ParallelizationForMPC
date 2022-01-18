@@ -1,24 +1,26 @@
-import os
-import unittest
 import ast
+import os
+import subprocess
+import unittest
 
 import compiler
 
-from .context import STAGES_DIR
+from . import context as test_context
 
 
 class StagesTestCase(unittest.TestCase):
     maxDiff = None
 
     def test_stages(self):
-        for test_case_dir in os.scandir(STAGES_DIR):
+        for test_case_dir in os.scandir(test_context.STAGES_DIR):
             print(f"Testing {test_case_dir.name}...")
 
             stages = dict()
 
             for stage_file in os.scandir(test_case_dir.path):
-                with open(stage_file.path, "r") as f:
-                    stages[stage_file.name] = f.read().strip()
+                if stage_file.is_file():
+                    with open(stage_file.path, "r") as f:
+                        stages[stage_file.name] = f.read().strip()
 
             node = ast.parse(stages["input.py"])
 
@@ -57,9 +59,30 @@ class StagesTestCase(unittest.TestCase):
             type_env = compiler.type_check(loop_linear, dep_graph)
             self.assertEqual(str(type_env), stages["type_env.txt"])
 
+    def test_example_apps(self):
+        if not test_context.RUN_EXAMPLE_APPS:
+            self.skipTest("Skipping example application compilation")
+
+        for test_case_dir in os.scandir(test_context.STAGES_DIR):
+            with open(os.path.join(test_case_dir.path, "input.py"), "r") as f:
+                input_py = f.read().strip()
+
+            app_path = os.path.join(test_case_dir.path, "motion_app")
+            compiler.compile(f"{test_case_dir.name}.py", input_py, app_path, True)
+
+            subprocess.run(
+                ["cmake", "-S", app_path, "-B", os.path.join(app_path, "build")],
+                check=True,
+            )
+
+            subprocess.run(
+                ["cmake", "--build", os.path.join(app_path, "build")],
+                check=True,
+            )
+
 
 def regenerate_stages():
-    for test_case_dir in os.scandir(STAGES_DIR):
+    for test_case_dir in os.scandir(test_context.STAGES_DIR):
         print(f"Regenerating {test_case_dir.name}...")
         with open(os.path.join(test_case_dir, "input.py"), "r") as f:
             input_text = f.read()
