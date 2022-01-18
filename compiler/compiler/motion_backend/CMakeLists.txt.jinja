@@ -7,12 +7,6 @@ set(MOTION_BUILD_BOOST_FROM_SOURCES OFF)
 add_subdirectory({{ motion_dir }} motion_build)
 
 add_executable({{ app_name }} {{ cpp_files|join(' ') }})
-if (NOT MOTION_BUILD_BOOST_FROM_SOURCES)
-    find_package(Boost
-            REQUIRED
-            COMPONENTS program_options
-    )
-endif()
 
 target_link_libraries({{ app_name }}
     MOTION::motion
