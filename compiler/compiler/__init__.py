@@ -20,6 +20,7 @@ from . import vectorize
 def compile(
     filename: str,
     text: str,
+    quiet: bool = True,
     out_dir: Optional[str] = None,
     overwrite_out_dir: bool = False,
 ):
@@ -30,62 +31,73 @@ def compile(
         traceback.print_exception(None, value=err, tb=None)
         sys.exit(1)
 
-    print("Restricted AST:")
-    print(ast_node)
-    print()
+    if not quiet:
+        print("Restricted AST:")
+        print(ast_node)
+        print()
 
     tac = restricted_ast_to_tac_cfg(ast_node)
-    print("Three-address code control flow graph:")
-    print(tac)
-    print()
+    if not quiet:
+        print("Three-address code control flow graph:")
+        print(tac)
+        print()
 
     ssa = tac_cfg_to_ssa(tac)
-    print("Static single assignment form:")
-    print(ssa)
-    print()
+    if not quiet:
+        print("Static single assignment form:")
+        print(ssa)
+        print()
 
     replace_phi_with_mux(ssa)
-    print("MUX static single assignment form:")
-    print(ssa)
-    print()
+    if not quiet:
+        print("MUX static single assignment form:")
+        print(ssa)
+        print()
 
     dead_code_elim(ssa)
-    print("Dead code elimination:")
-    print(ssa)
-    print()
+    if not quiet:
+        print("Dead code elimination:")
+        print(ssa)
+        print()
 
     linear = ssa_to_loop_linear_code(ssa)
-    print("Linear code with loops:")
-    print(linear)
-    print()
+    if not quiet:
+        print("Linear code with loops:")
+        print(linear)
+        print()
 
     dep_graph = DepGraph(linear)
-    print("Dependence graph:")
-    print(dep_graph)
-    print()
+    if not quiet:
+        print("Dependence graph:")
+        print(dep_graph)
+        print()
 
     vectorize.remove_infeasible_edges(linear, dep_graph)
-    print("Dependence graph after removal of infeasible edges:")
-    print(dep_graph)
-    print()
+    if not quiet:
+        print("Dependence graph after removal of infeasible edges:")
+        print(dep_graph)
+        print()
 
     (linear, dep_graph) = vectorize.refine_array_mux(linear, dep_graph)
-    print("Array MUX refinement:")
-    print(linear)
-    print()
-    print("Array MUX refinement (dependence graph):")
-    print(dep_graph)
-    print()
+    if not quiet:
+        print("Array MUX refinement:")
+        print(linear)
+        print()
+        print("Array MUX refinement (dependence graph):")
+        print(dep_graph)
+        print()
 
     type_env = type_check(linear, dep_graph)
-    print("Type environment:")
-    print(type_env)
-    print()
+    if not quiet:
+        print("Type environment:")
+        print(type_env)
+        print()
 
     motion_code = motion_backend.render_function(linear, type_env)
-    print("Motion code:")
-    print(motion_code)
-    print()
+    if not quiet:
+        print("Motion code:")
+        print(motion_code)
+        print()
 
     if out_dir:
         motion_backend.render_application(

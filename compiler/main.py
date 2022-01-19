@@ -16,11 +16,20 @@ def parse_args():
         action="store_true",
         help="Overwrite existing output directory",
     )
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Overwrite existing output directory",
+    )
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
     compiler.compile(
-        args.input.filename, args.input.read(), args.out_dir, args.overwrite
+        args.input.name,
+        args.input.read(),
+        args.quiet,
+        args.out_dir,
+        args.overwrite,
     )

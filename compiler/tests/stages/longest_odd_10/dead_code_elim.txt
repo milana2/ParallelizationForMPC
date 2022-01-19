@@ -26,7 +26,7 @@ Block 5:
 Block 6:
     (merge from conditional jump s1!2)
     current_length!6 = MUX(s1!2, current_length!3, current_length!5)
-    !4!2 = (current_length!6 % 2)
+    !4!2 = (current_length!6 & 1)
     !5!2 = (!4!2 == 1)
     !6!2 = (current_length!6 > max_length!2)
     !7!2 = (!5!2 and !6!2)

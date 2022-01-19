@@ -12,7 +12,7 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) 
         !2!2 = (current_length!5 > max_length!2)
         tmp_max_len!3 = current_length!5
         tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
-        !3!2 = (tmp_max_len!4 % 2)
+        !3!2 = (tmp_max_len!4 & 1)
         !4!2 = (!3!2 == 0)
         max_length!3 = tmp_max_len!4
         max_length!4 = MUX(!4!2, max_length!3, max_length!2)

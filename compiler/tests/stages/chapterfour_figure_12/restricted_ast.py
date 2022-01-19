@@ -4,5 +4,5 @@ def foo(x: shared[int], y: shared[int]) -> shared[int]:
         if (y > 0):
             z = 1
         else:
-            z = - 1
+            z = 0
     return z

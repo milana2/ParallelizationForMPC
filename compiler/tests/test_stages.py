@@ -63,12 +63,23 @@ class StagesTestCase(unittest.TestCase):
         if not test_context.RUN_EXAMPLE_APPS:
             self.skipTest("Skipping example application compilation")
 
+        SKIPPED_TESTS = [
+            "biometric_fast",
+            "convex_hull",
+            "histogram",
+            "minimal_points",
+            "psi",
+        ]
+
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
+            if test_case_dir.name in SKIPPED_TESTS:
+                continue
+
             with open(os.path.join(test_case_dir.path, "input.py"), "r") as f:
                 input_py = f.read().strip()
 
             app_path = os.path.join(test_case_dir.path, "motion_app")
-            compiler.compile(f"{test_case_dir.name}.py", input_py, app_path, True)
+            compiler.compile(f"{test_case_dir.name}.py", input_py, True, app_path, True)
 
             subprocess.run(
                 ["cmake", "-S", app_path, "-B", os.path.join(app_path, "build")],

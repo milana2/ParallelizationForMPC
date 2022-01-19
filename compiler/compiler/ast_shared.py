@@ -22,11 +22,17 @@ class DataType(Enum):
     BOOL = "bool"
     TUPLE = "tuple"
 
-    def to_cpp(self, type_env: "TypeEnv") -> str:
+    def to_cpp(self, type_env: "TypeEnv", plaintext=True, **kwargs) -> str:
         if self == DataType.INT:
-            return "std::uint32_t"
+            if plaintext:
+                return "std::uint32_t"
+            else:
+                return "encrypto::motion::SecureUnsignedInteger"
         elif self == DataType.BOOL:
-            return "bool"
+            if plaintext:
+                return "bool"
+            else:
+                return "encrypto::motion::ShareWrapper"
         else:
             raise Exception("Unknown data type")
 
@@ -167,25 +173,25 @@ class VarType:
 
         return merged_type
 
-    def to_cpp(self, type_env: "TypeEnv") -> str:
+    def to_cpp(self, type_env: "TypeEnv", **kwargs) -> str:
         assert self.visibility is not None
         assert self.datatype is not None
         assert self.dims is not None
 
         if self.datatype == DataType.TUPLE:
-            return f"std::tuple<{', '.join(t.to_cpp() for t in self.tuple_types)}>"
+            return f"std::tuple<{', '.join(t.to_cpp(type_env, **kwargs) for t in self.tuple_types)}>"
         else:
             str_rep = ""
             for _ in range(self.dims):
                 str_rep += "std::vector<"
-            if self.visibility == VarVisibility.PLAINTEXT:
-                str_rep += self.datatype.to_cpp()
-            elif self.visibility == VarVisibility.SHARED:
-                if self.datatype == DataType.INT:
-                    str_rep += "encrypto::motion::SecureUnsignedInteger"
-                elif self.datatype == DataType.BOOL:
-                    # TODO: check that this is the correct type
-                    str_rep += "encrypto::motion::ShareWrapper"
+            str_rep += self.datatype.to_cpp(
+                type_env,
+                plaintext=kwargs.get(
+                    "plaintext",
+                    self.visibility == VarVisibility.PLAINTEXT,
+                ),
+                **{k: v for k, v in kwargs.items() if k != "plaintext"},
+            )
             for _ in range(self.dims):
                 str_rep += ">"
             return str_rep
@@ -221,9 +227,12 @@ class Var:
 
     rename_subscript: Optional[int] = None
 
-    def to_cpp(self, type_env: "TypeEnv") -> str:
-        self_str = str(self)
-        return self_str.replace("!", "_")
+    def to_cpp(self, type_env: "TypeEnv", plaintext=False, **kwargs) -> str:
+        cpp_str = str(self).replace("!", "_")
+        if plaintext:
+            return f"_MPC_PLAINTEXT_{cpp_str}"
+        else:
+            return cpp_str
 
     def __str__(self) -> str:
         name = self.name if isinstance(self.name, str) else f"!{self.name}"
@@ -254,8 +263,12 @@ class Parameter:
         int
     ] = None  # stores the party index associated with this parameter, if it is shared
 
-    def to_cpp(self, type_env: TypeEnv):
-        return self.var_type.to_cpp() + " " + self.var.to_cpp()
+    def to_cpp(self, type_env: TypeEnv, **kwargs):
+        return (
+            self.var_type.to_cpp(type_env, **kwargs)
+            + " "
+            + self.var.to_cpp(type_env, **kwargs)
+        )
 
     def __str__(self) -> str:
         return f"{self.var}: {self.var_type}"
@@ -265,14 +278,31 @@ class Parameter:
 class Constant:
     """A constant with value `value`"""
 
-    value: int
+    value: Union[int, bool]
     datatype: DataType
 
-    def to_cpp(self, type_env: TypeEnv) -> str:
-        return str(self.value)
+    def to_cpp(self, type_env: TypeEnv, plaintext=False, **kwargs) -> str:
+        if plaintext:
+            if self.datatype == DataType.INT:
+                return f"std::uint32_t({self.value})"
+            elif self.datatype == DataType.BOOL:
+                # This is a hack to get around the way we convert plaintext values to shared
+                # ones.  It shouldn't break anything since booleans are convertable to ints
+                return f"std::uint32_t({str(self.value).lower()})"
+            else:
+                raise NotImplementedError()
+        else:
+            return f"_MPC_CONSTANT_" + str(self.value).lower()
 
     def __str__(self) -> str:
         return str(self.value)
+
+    def __eq__(self, o) -> bool:
+        return (
+            isinstance(o, Constant)
+            and self.value == o.value
+            and self.datatype == o.datatype
+        )
 
 
 LoopBound = Union[Var, Constant]
@@ -283,9 +313,6 @@ class BinOpKind(Enum):
     SUB = "-"
     MUL = "*"
     DIV = "//"
-    MOD = "%"
-    SHL = "<<"
-    SHR = ">>"
     LT = "<"
     GT = ">"
     LT_E = "<="
@@ -294,16 +321,16 @@ class BinOpKind(Enum):
     NOT_EQ = "!="
     AND = "and"
     OR = "or"
+    BIT_AND = "&"
+    BIT_OR = "|"
+    BIT_XOR = "^"
 
-    def get_ret_datatype(self) -> DataType:
+    def get_ret_datatype(self) -> Optional[DataType]:
         if self in (
             BinOpKind.ADD,
             BinOpKind.SUB,
             BinOpKind.MUL,
             BinOpKind.DIV,
-            BinOpKind.MOD,
-            BinOpKind.SHL,
-            BinOpKind.SHR,
         ):
             return DataType.INT
 
@@ -319,6 +346,13 @@ class BinOpKind(Enum):
         ):
             return DataType.BOOL
 
+        elif self in (
+            BinOpKind.BIT_AND,
+            BinOpKind.BIT_XOR,
+            BinOpKind.BIT_OR,
+        ):
+            return None  # return type is the same as the inputs
+
         else:
             raise ValueError(f"Unhandled binary operation {self}")
 
@@ -328,9 +362,6 @@ class BinOpKind(Enum):
             BinOpKind.SUB,
             BinOpKind.MUL,
             BinOpKind.DIV,
-            BinOpKind.MOD,
-            BinOpKind.SHL,
-            BinOpKind.SHR,
             BinOpKind.LT,
             BinOpKind.GT,
             BinOpKind.LT_E,
@@ -343,11 +374,24 @@ class BinOpKind(Enum):
             BinOpKind.NOT_EQ,
             BinOpKind.AND,
             BinOpKind.OR,
+            BinOpKind.BIT_AND,
+            BinOpKind.BIT_OR,
+            BinOpKind.BIT_XOR,
         ):
             return [DataType.INT, DataType.BOOL]
 
         else:
             raise ValueError(f"Unhandled binary operation {self}")
+
+    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
+        if self == BinOpKind.AND:
+            return "&"
+        elif self == BinOpKind.OR:
+            return "|"
+        elif self == BinOpKind.DIV:
+            return "/"
+        else:
+            return str(self)
 
     def __str__(self) -> str:
         return self.value
@@ -382,7 +426,7 @@ class UnaryOpKind(Enum):
 
 
 class CppConvertible(Protocol):
-    def to_cpp(self, type_env: TypeEnv) -> str:
+    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
         ...
 
 
@@ -397,12 +441,41 @@ class BinOp(Generic[OPERAND]):
     operator: BinOpKind
     right: OPERAND
 
-    def to_cpp(self, type_env: TypeEnv) -> str:
+    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
+        # SecureUnsignedIntegers only have operator== and operator> defined on them,
+        # so we have to compose all other comparisons manually
         if self.operator == BinOpKind.LT:
-            return f"({self.right.to_cpp()} > {self.left.to_cpp()})"
-        # TODO: implement other operator specializations
+            return BinOp(self.right, BinOpKind.GT, self.left).to_cpp(type_env, **kwargs)
+        elif self.operator == BinOpKind.NOT_EQ:
+            return UnaryOp(
+                UnaryOpKind.NOT, BinOp(self.left, BinOpKind.EQ, self.right)
+            ).to_cpp(type_env, **kwargs)
+        elif self.operator == BinOpKind.LT_E:
+            return (
+                "("
+                + BinOp(self.left, BinOpKind.LT, self.right).to_cpp(type_env, **kwargs)
+                + " | "
+                + BinOp(self.left, BinOpKind.EQ, self.right).to_cpp(type_env, **kwargs)
+                + ")"
+            )
+        elif self.operator == BinOpKind.GT_E:
+            return (
+                "("
+                + BinOp(self.left, BinOpKind.GT, self.right).to_cpp(type_env, **kwargs)
+                + " | "
+                + BinOp(self.left, BinOpKind.EQ, self.right).to_cpp(type_env, **kwargs)
+                + ")"
+            )
+
+        # ShareWrappers don't have operator> defined, so this must always be performed on SecureUnsignedIntegers
+        elif self.operator == BinOpKind.GT:
+            return f"({self.left.to_cpp(type_env, **kwargs)} {self.operator.to_cpp(type_env, **kwargs)} {self.right.to_cpp(type_env, **kwargs)})"
+
+        elif kwargs.get("plaintext"):
+            return f"({self.left.to_cpp(type_env, **kwargs)} {self.operator.to_cpp(type_env, **kwargs)} {self.right.to_cpp(type_env, **kwargs)})"
+        # TODO: is it ok to convert SecureUnsignedIntegers to ShareWrappers before the operator?
         else:
-            return f"({self.left.to_cpp()} {self.operator.value} {self.right.to_cpp()})"
+            return f"(encrypto::motion::ShareWrapper({self.left.to_cpp(type_env, **kwargs)}.Get()) {self.operator.to_cpp(type_env, **kwargs)} encrypto::motion::ShareWrapper({self.right.to_cpp(type_env, **kwargs)}.Get()))"
 
     def __str__(self) -> str:
         return f"({self.left} {self.operator} {self.right})"
@@ -415,8 +488,13 @@ class UnaryOp(Generic[OPERAND]):
     operator: UnaryOpKind
     operand: OPERAND
 
-    def to_cpp(self, type_env: TypeEnv) -> str:
-        return f"({self.operator.value} {self.operand.to_cpp()})"
+    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
+        if self.operator == UnaryOpKind.NOT:
+            return f"(~{self.operand.to_cpp(type_env, **kwargs)})"
+        else:
+            # TODO: If negating a SecureUnsignedInteger, change this to a binop where we
+            # subtract from _MPC_CONSTANT_0
+            return f"({self.operator.value} {self.operand.to_cpp(type_env, **kwargs)})"
 
     def __str__(self) -> str:
         return f"{self.operator} {self.operand}"
@@ -440,8 +518,9 @@ class Subscript:
     array: Var
     index: SubscriptIndex
 
-    def to_cpp(self, type_env: TypeEnv) -> str:
-        return f"{self.array.to_cpp()}[{self.index.to_cpp()}]"
+    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
+        plaintext_kwargs = {k: v for k, v in kwargs.items() if k != "plaintext"}
+        return f"{self.array.to_cpp(type_env, **kwargs)}[{self.index.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}]"
 
     def __hash__(self) -> int:
         return id(self)

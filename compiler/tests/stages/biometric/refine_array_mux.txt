@@ -1,6 +1,6 @@
 def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
-    min_index!1 = - 1
+    min_index!1 = 0
     for i in range(0, N!0):
         min_sum!2 = Φ(min_sum!1, min_sum!4)
         min_index!2 = Φ(min_index!1, min_index!4)

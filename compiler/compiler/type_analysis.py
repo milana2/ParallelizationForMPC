@@ -64,7 +64,9 @@ def _type_assign_expr(
                 f"Cannot perform {expr.operator} on {lhs_type.datatype} and {rhs_type.datatype}"
             )
 
-        expr_type.datatype = expr.operator.get_ret_datatype()
+        operator_datatype = expr.operator.get_ret_datatype()
+        if operator_datatype is not None:
+            expr_type.datatype = operator_datatype
 
         return expr_type
 

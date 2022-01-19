@@ -34,7 +34,7 @@ Block 8:
 Block 9:
     (merge from conditional jump !2!2)
     tmp_max_len!4 = MUX(!2!2, tmp_max_len!3, tmp_max_len!2)
-    !3!2 = (tmp_max_len!4 % 2)
+    !3!2 = (tmp_max_len!4 & 1)
     !4!2 = (!3!2 == 0)
     conditional jump !4!2
 Block 10:

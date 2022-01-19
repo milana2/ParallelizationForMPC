@@ -9,7 +9,7 @@ def biometric(
     C: shared[list[int]], D: int, S: shared[list[int]], N: int
 ) -> tuple[shared[int], shared[int]]:
     min_sum: int = 10000
-    min_index = -1
+    min_index = 0  # -1 (compiler doesn't support negative constants)
     for i in range(N):
         sum = 0
         for j in range(D):

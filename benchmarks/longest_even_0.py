@@ -20,7 +20,7 @@ def longest_even_0(Seq: shared[list[int]], N: int, Sym: shared[int]) -> shared[i
         if current_length > max_length:
             tmp_max_len = current_length
 
-        if tmp_max_len % 2 == 0:
+        if tmp_max_len & 1 == 0:
             max_length = tmp_max_len
 
     return max_length

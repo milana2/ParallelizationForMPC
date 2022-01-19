@@ -22,8 +22,8 @@ Block 5:
     conditional jump !2
 Block 6:
     (merge from conditional jump s1)
-    !3 = (current_length % 2)
-    !4 = (current_length % 2)
+    !3 = (current_length & 1)
+    !4 = (current_length & 1)
     !5 = (!4 == 1)
     !6 = (current_length > max_length)
     !7 = (!5 and !6)

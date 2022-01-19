@@ -33,25 +33,34 @@ class For:
     bound_high: LoopBound
     body: list[Statement]
 
-    def to_cpp(self, type_env: TypeEnv) -> str:
+    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
         # Pseudo-phi nodes are implemented by first initializing the variable before entering the loop,
         # then updating the variable's value at the end of each loop.
         phi_initializations = "// Initialize phi values\n" + "\n".join(
-            phi.lhs.to_cpp()
-            + " = party->In<Protocol>(encrypto::motion::ToInput("
-            + phi.rhs_false.to_cpp()
-            + "), 0);"
+            phi.lhs.to_cpp(type_env, **kwargs)
+            + " = "
+            + phi.rhs_false.to_cpp(type_env, **kwargs)
+            + ";"
             for phi in self.body
             if isinstance(phi, Phi)
         )
 
-        header = f"for ({self.counter.to_cpp()} = {self.bound_low.to_cpp()}; {self.counter.to_cpp()} < {self.bound_high.to_cpp()}; {self.counter.to_cpp()}++) {{"
+        plaintext_kwargs = {k: v for k, v in kwargs.items() if k != "plaintext"}
+
+        header = f"for ({self.counter.to_cpp(type_env, plaintext=True, **plaintext_kwargs)} = {self.bound_low.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}; {self.counter.to_cpp(type_env, plaintext=True, **plaintext_kwargs)} < {self.bound_high.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}; {self.counter.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}++) {{"
         body = (
-            "\n".join(stmt.to_cpp() for stmt in self.body if not isinstance(stmt, Phi))
+            "\n".join(
+                stmt.to_cpp(type_env, **kwargs)
+                for stmt in self.body
+                if not isinstance(stmt, Phi)
+            )
             + "\n"
         )
         phi_updates = "// Update phi values\n" + "\n".join(
-            phi.lhs.to_cpp() + " = " + phi.rhs_true.to_cpp() + ";"
+            phi.lhs.to_cpp(type_env, **kwargs)
+            + " = "
+            + phi.rhs_true.to_cpp(type_env, **kwargs)
+            + ";"
             for phi in self.body
             if isinstance(phi, Phi)
         )
@@ -61,6 +70,9 @@ class For:
             + phi_initializations
             + "\n"
             + header
+            + "\n"
+            # Initialize loop counter for use in loop
+            + f"    {self.counter.to_cpp(type_env, **kwargs)} = party->In<Protocol>(encrypto::motion::ToInput({self.counter.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}), 0);"
             + "\n"
             + indent(body, "    ")
             + "\n"

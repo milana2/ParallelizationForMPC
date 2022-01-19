@@ -56,6 +56,8 @@ class _NameGetter(_StrictNodeVisitor):
         return "Expected a name"
 
     def visit_Name(self, node: ast.Name) -> restricted_ast.Var:
+        if node.id.startswith("_"):
+            self.raise_syntax_error(node, "Names cannot start with an underscore")
         return restricted_ast.Var(node.id)
 
 
@@ -179,9 +181,9 @@ def _convert_binary_operator(op: ast.operator) -> Optional[restricted_ast.BinOpK
         ast.Sub: restricted_ast.BinOpKind.SUB,
         ast.Mult: restricted_ast.BinOpKind.MUL,
         ast.FloorDiv: restricted_ast.BinOpKind.DIV,
-        ast.Mod: restricted_ast.BinOpKind.MOD,
-        ast.LShift: restricted_ast.BinOpKind.SHL,
-        ast.RShift: restricted_ast.BinOpKind.SHR,
+        ast.BitAnd: restricted_ast.BinOpKind.BIT_AND,
+        ast.BitOr: restricted_ast.BinOpKind.BIT_OR,
+        ast.BitXor: restricted_ast.BinOpKind.BIT_XOR,
     }
     try:
         return TABLE[type(op)]

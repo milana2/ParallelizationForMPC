@@ -143,12 +143,6 @@ int main(const int argc, const char *const argv[])
 
     encrypto::motion::PartyPointer party = CreateParty(user_options);
 
-    auto ToMotionInput = [&](const std::size_t party_id) {
-        return [&](const std::uint32_t value) {
-            return party->In<{{protocol}}>(encrypto::motion::ToInput(value), party_id);
-        };
-    };
-
     // clang-format off
     {%- for param in params %}
         {%- if not param.is_shared %}
@@ -156,7 +150,7 @@ int main(const int argc, const char *const argv[])
         {%- else %}
             {{param.cpp_type}} {{param.name}};
             {%- if param.dims == 0 %}
-                {{param.name}} = party->In<{{protocol}}>(encrypto::motion::ToInput({{param.name}}), {{param.party_idx}});
+                {{param.name}} = party->In<{{protocol}}>(encrypto::motion::ToInput(user_options["{{param.name}}"].as<{{param.plaintext_cpp_type}}>()), {{param.party_idx}});
             {%- else %}
                 for (const std::uint32_t value : user_options["{{param.name}}"].as<std::vector<std::uint32_t>>()) {
                     {{param.name}}.push_back(party->In<{{protocol}}>(encrypto::motion::ToInput(value), {{param.party_idx}}));
@@ -166,36 +160,10 @@ int main(const int argc, const char *const argv[])
     {% endfor %} //clang-format on
 
     // clang-format off
-    {%- if num_returns == 0 %}
-    encrypto::motion::SecureUnsignedInteger output;
-    {%- else %}
-    std::vector<encrypto::motion::SecureUnsignedInteger> output;
-    {%- endif %} // clang-format on
-
-    output = {{function_name}}<{{protocol}}>(party,
-                                             {{params | map(attribute = "name") | join(", ")}});
-
-    // clang-format off
-    {%- if num_returns == 0 %}
-    output = output.Out();
-    {%- else %}
-    for (auto &out : output) {
-        out = out.Out();
-    }
-    {%- endif %} // clang-format on
+    {{function_name}}<{{protocol}}>(party,
+                                    {{params | map(attribute = "name") | join(", ")}});
 
     party->Run();
-
-    std::cout << "Result:" << std::endl;
-
-    // clang-format off
-    {%- if num_returns == 0 %}
-    std::cout << "\tOutput 0: " << output.As<std::uint32_t>() << std::endl;
-    {%- else %}
-    for (std::size_t i=0; i < output.size(); i++) {
-        std::cout << "\tOutput " << i << ": " << output[i].As<std::uint32_t>() << std::endl;
-    }
-    {%- endif %} // clang-format on
 
     party->Finish();
 

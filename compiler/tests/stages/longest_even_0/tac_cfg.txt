@@ -30,7 +30,7 @@ Block 8:
     jump
 Block 9:
     (merge from conditional jump !2)
-    !3 = (tmp_max_len % 2)
+    !3 = (tmp_max_len & 1)
     !4 = (!3 == 0)
     conditional jump !4
 Block 10:

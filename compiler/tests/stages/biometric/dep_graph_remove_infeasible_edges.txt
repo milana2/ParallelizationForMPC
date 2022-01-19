@@ -1,6 +1,6 @@
 Nodes:
     min_sum!1 = 10000
-    min_index!1 = - 1
+    min_index!1 = 0
     min_sum!2 = Φ(min_sum!1, min_sum!4)
     min_index!2 = Φ(min_index!1, min_index!4)
     sum!2 = 0
@@ -16,7 +16,7 @@ Nodes:
     !2!1 = (min_sum!2, min_index!2)
 Forward edges:
     min_sum!1 = 10000  →  min_sum!2 = Φ(min_sum!1, min_sum!4)
-    min_index!1 = - 1  →  min_index!2 = Φ(min_index!1, min_index!4)
+    min_index!1 = 0  →  min_index!2 = Φ(min_index!1, min_index!4)
     min_sum!2 = Φ(min_sum!1, min_sum!4)  →  !1!2 = (sum!3 < min_sum!2)
     min_sum!2 = Φ(min_sum!1, min_sum!4)  →  min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
     min_sum!2 = Φ(min_sum!1, min_sum!4)  →  !2!1 = (min_sum!2, min_index!2)

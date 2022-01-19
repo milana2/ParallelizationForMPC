@@ -2,10 +2,11 @@ import io
 from jinja2 import Environment, FileSystemLoader
 import os
 from textwrap import indent
-from typing import TypedDict
+from typing import TypedDict, Union
 
-from ..loop_linear_code import Function, Statement, Phi
-from ..type_analysis import TypeEnv, VarVisibility
+from ..loop_linear_code import Function, Statement, Phi, Assign, For
+from ..type_analysis import TypeEnv, VarVisibility, Constant
+from .. import tac_cfg
 
 
 class OutputParams(TypedDict):
@@ -14,12 +15,14 @@ class OutputParams(TypedDict):
 
 
 def _render_prototype(func: Function, type_env: TypeEnv) -> str:
-    return_type = type_env[func.return_value].to_cpp()
+    return_type = type_env[func.return_value].to_cpp(type_env)
     return (
         "template <encrypto::motion::MpcProtocol Protocol>\n"
         + f"{return_type} {func.name}(\n"
         + indent("encrypto::motion::PartyPointer &party,\n", "    ")
-        + indent(",\n".join(param.to_cpp() for param in func.parameters), "    ")
+        + indent(
+            ",\n".join(param.to_cpp(type_env) for param in func.parameters), "    "
+        )
         + "\n)"
     )
 
@@ -28,31 +31,126 @@ def _render_call(func: Function, type_env: TypeEnv) -> str:
     return f"{func.name}<Protocol>({', '.join(str(param.var.name) for param in func.parameters)});"
 
 
+def _collect_constants(stmts: list[Statement]) -> list[Constant]:
+    def expr_constants(
+        expr: Union[tac_cfg.AssignRHS, tac_cfg.SubscriptIndex]
+    ) -> list[Constant]:
+        if isinstance(expr, Constant):
+            return [expr]
+        elif isinstance(expr, (tac_cfg.Var, tac_cfg.Subscript)):
+            return []
+        elif isinstance(expr, tac_cfg.BinOp):
+            return [*expr_constants(expr.left), *expr_constants(expr.right)]
+        elif isinstance(expr, tac_cfg.UnaryOp):
+            return expr_constants(expr.operand)
+        elif isinstance(expr, tac_cfg.List):
+            return [const for val in expr.items for const in expr_constants(val)]
+        elif isinstance(expr, tac_cfg.Tuple):
+            # TODO: Figure out the best way to handle constants here
+            return [const for val in expr.items for const in expr_constants(val)]
+        elif isinstance(expr, tac_cfg.Mux):
+            return [
+                val
+                for val in (expr.true_value, expr.false_value)
+                if isinstance(val, Constant)
+            ]
+        elif isinstance(expr, tac_cfg.Update):
+            return [*expr_constants(expr.index), *expr_constants(expr.value)]
+        else:
+            raise AssertionError(f"Unhandled expression type: {type(expr)}")
+
+    def stmt_constants(stmt: Statement) -> list[Constant]:
+        if isinstance(stmt, For):
+            return _collect_constants(stmt.body)
+        elif isinstance(stmt, Phi):
+            return [
+                val
+                for val in (stmt.rhs_true, stmt.rhs_false)
+                if isinstance(val, Constant)
+            ]
+        else:
+            return expr_constants(stmt.rhs)
+
+    return [const for stmt in stmts for const in stmt_constants(stmt)]
+
+
 def render_function(func: Function, type_env: TypeEnv) -> str:
     func_header = f"{_render_prototype(func, type_env)} {{"
 
     var_definitions = (
-        "// Initial variable declarations\n"
+        "// Shared variable declarations\n"
         + "\n".join(
-            var_type.to_cpp() + " " + var_name.to_cpp() + ";"
+            var_type.to_cpp(type_env, plaintext=False)
+            + " "
+            + var_name.to_cpp(type_env)
+            + ";"
             for var_name, var_type in type_env.items()
         )
         + "\n"
     )
 
-    # TODO: once parameter renaming is properly implemented, this shouldn't be necessary
-    param_assignments = (
-        "// Parameter assignments\n"
+    plaintext_var_definitions = (
+        "// Plaintext variable declarations\n"
         + "\n".join(
-            param.var.to_cpp() + "_0 = " + param.var.to_cpp() + ";"
+            f"{var_type.to_cpp(type_env, plaintext=True)} {var.to_cpp(type_env, plaintext=True)};"
+            for var, var_type in type_env.items()
+            if var_type.is_plaintext()
+        )
+        + "\n"
+    )
+
+    plaintext_constants = set(_collect_constants(func.body))
+    constant_initialization = (
+        "// Constant initializations\n"
+        + "\n".join(
+            f"{const.datatype.to_cpp(type_env, plaintext=False)} {const.to_cpp(type_env)} = "
+            + f"party->In<Protocol>(encrypto::motion::ToInput({const.to_cpp(type_env, plaintext=True)}), 0);"
+            for const in plaintext_constants
+        )
+        + "\n"
+    )
+
+    param_assignments = (
+        "// Shared parameter assignments\n"
+        + "\n".join(
+            param.var.to_cpp(type_env) + "_0 = " + param.var.to_cpp(type_env) + ";"
             for param in func.parameters
+            if param.var_type.is_shared()
+        )
+        + "\n"
+    )
+
+    plaintext_param_assignments = (
+        "// Plaintext parameter assignments\n"
+        + "\n\n".join(
+            (
+                # Initialize the shared version
+                param.var.to_cpp(type_env)
+                + "_0 = party->In<Protocol>(encrypto::motion::ToInput("
+                + param.var.to_cpp(
+                    type_env
+                )  # no plaintext=True here so we reference the right variable name
+                + "), 0);"
+            )
+            + "\n"
+            + (
+                # Initialize the plaintext version
+                param.var.to_cpp(type_env, plaintext=True)
+                + "_0 = "
+                + param.var.to_cpp(type_env)
+                + ";"
+            )
+            for param in func.parameters
+            if param.var_type.is_plaintext()
         )
         + "\n"
     )
 
     func_body = (
         "// Function body\n"
-        + "\n".join(stmt.to_cpp() for stmt in func.body if not isinstance(stmt, Phi))
+        + "\n".join(
+            stmt.to_cpp(type_env) for stmt in func.body if not isinstance(stmt, Phi)
+        )
         + "\n"
     )
 
@@ -61,10 +159,17 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + "\n"
         + indent(var_definitions, "    ")
         + "\n"
+        + indent(plaintext_var_definitions, "    ")
+        + "\n"
+        + indent(constant_initialization, "    ")
+        + "\n"
         + indent(param_assignments, "    ")
         + "\n"
+        + indent(plaintext_param_assignments, "    ")
+        + "\n"
         + indent(func_body, "    ")
-        + indent(f"return {func.return_value.to_cpp()};", "    ")
+        + "\n"
+        + indent(f"return {func.return_value.to_cpp(type_env)};", "    ")
         + "\n}"
     )
 
@@ -86,7 +191,8 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
         params=[
             {
                 "name": param.var.name,
-                "cpp_type": param.var_type.to_cpp(),
+                "cpp_type": param.var_type.to_cpp(type_env),
+                "plaintext_cpp_type": param.var_type.to_cpp(type_env, plaintext=True),
                 "is_shared": param.var_type.visibility == VarVisibility.SHARED,
                 "dims": param.var_type.dims,
                 "party_idx": param.party_idx,
@@ -98,7 +204,7 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
         ],
         protocol="encrypto::motion::MpcProtocol::kBmr",  # TODO: make this user-configurable
         num_returns=type_env[func.return_value].dims,
-        return_type=type_env[func.return_value].to_cpp(),
+        return_type=type_env[func.return_value].to_cpp(type_env),
         function_name=func.name,
     )
 

@@ -22,7 +22,7 @@ def longest_odd_10(
         elif not s2:
             current_length = 0
 
-        if (current_length % 2 == 1) and (current_length > max_length):
+        if (current_length & 1 == 1) and (current_length > max_length):
             max_length = current_length
 
         s2 = Seq[i] == Syms[0]
