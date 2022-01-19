@@ -106,12 +106,6 @@ def _z3_subscript_index_bin_op(
         return left * right
     elif op is llc.BinOpKind.DIV:
         return left / right
-    elif op is llc.BinOpKind.MOD:
-        return left % right
-    elif op is llc.BinOpKind.SHL:
-        return left * 2 ** right
-    elif op is llc.BinOpKind.SHR:
-        return left / 2 ** right
     else:
         assert op is not llc.BinOpKind.LT
         assert op is not llc.BinOpKind.GT
@@ -121,6 +115,9 @@ def _z3_subscript_index_bin_op(
         assert op is not llc.BinOpKind.NOT_EQ
         assert op is not llc.BinOpKind.AND
         assert op is not llc.BinOpKind.OR
+        assert op is not llc.BinOpKind.BIT_AND
+        assert op is not llc.BinOpKind.BIT_OR
+        assert op is not llc.BinOpKind.BIT_XOR
         assert_never(op)
 
 
