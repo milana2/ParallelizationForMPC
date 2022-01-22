@@ -11,7 +11,7 @@ import compiler
 import compiler.loop_linear_code as llc
 from compiler.type_analysis import TypeEnv
 from compiler.util import assert_never
-from tests import STAGES_DIR
+from tests.context import STAGES_DIR
 
 
 def cfg_to_image(G: networkx.DiGraph, path: str):
