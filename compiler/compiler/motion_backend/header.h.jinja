@@ -1,9 +1,144 @@
 #pragma once
 
+#include <algorithm>
+#include <cassert>
 #include <vector>
 
 #include "base/party.h"
 #include "secure_type/secure_unsigned_integer.h"
+
+/**
+ * Raises the dimensionality of @p arr by extending it over dimension @p dim_to_raise.
+ * Example: raise_dim({0, 1, 2}, {0}, {3, 2}, 1) will return {0, 0, 1, 1, 2, 2}.
+ * Example: raise_dim({0, 1, 2}, {1}, {2, 3}, 0) will return {0, 1, 2, 0, 1, 2}.
+ *
+ * @param arr           Input array.  This array's elements should be ordered in
+ *                        row-major order according to @p dims_in_arr.
+ * @param dims_in_arr   Ordered sequence of which dimensions are in @p arr. Each
+ *                        number in this array represents an index in @p all_dims
+ *                        corresponding to the relevant dimension.
+ *                        THIS ARRAY MUST BE SORTED IN ASCENDING ORDER.
+ * @param all_dims      Array of sizes of each dimension.  For example, the array
+ *                        {2, 1, 3} means that dimension 0 has size 2, dimension 1
+ *                        has size 1, and dimension 2 has size 3.
+ * @param dim_to_raise  Index of the dimension in @p all_dims to extend @p arr over.
+ *                        This index cannot be in @p dims_in_arr.
+ *
+ * @returns The extended version of @p arr
+ */
+template <typename T>
+std::vector<T> raise_dim(const std::vector<T> &arr, const std::vector<std::size_t> &dims_in_arr,
+                         const std::vector<std::size_t> &all_dims, const std::size_t dim_to_raise)
+{
+    std::size_t raised_size = all_dims[dim_to_raise];
+    for (const auto dim_idx : dims_in_arr) {
+        assert(dim_idx != dim_to_raise);
+        raised_size *= all_dims[dim_idx];
+    }
+
+    std::vector<T> raised(raised_size);
+
+    std::vector<std::size_t> dims_in_raised = dims_in_arr;
+    dims_in_raised.push_back(dim_to_raise);
+    std::sort(dims_in_raised.begin(), dims_in_raised.end());
+
+    const auto RaisedArrIdx = [&](std::size_t idx_in_arr, const std::size_t idx_in_dim) {
+        // First, expand arr_idx into the index for each dimension
+        std::vector<std::size_t> dim_idxs(dims_in_arr.size());
+        for (int dim_idx = dims_in_arr.size() - 1; dim_idx > 0; dim_idx--) {
+            const auto dim_size = all_dims[dims_in_arr[dim_idx]];
+
+            dim_idxs[dim_idx] = idx_in_arr % dim_size;
+            // Drop the most recent dimension from the array index
+            idx_in_arr /= dim_size;
+        }
+
+        // Next, convert the expanded index into the raised equivalent
+        std::size_t raised_idx = 0;
+        std::size_t dim_idx = 0;
+        // We first go over dimensions until the dimension we're raising over
+        for (; dim_idx < dims_in_arr.size() && dims_in_arr[dim_idx] == dims_in_raised[dim_idx];
+             dim_idx++) {
+            // Expand the previous dimension
+            raised_idx *= all_dims[dims_in_arr[dim_idx]];
+            raised_idx += dim_idxs[dim_idx];
+        }
+
+        // At this point, we have reached the dimension which we're adding to the array
+        raised_idx *= all_dims[dim_to_raise];
+        raised_idx += idx_in_dim;
+
+        // Finally, go through the rest of the dimensions
+        for (; dim_idx < dims_in_arr.size(); dim_idx++) {
+            // Expand the previous dimension
+            raised_idx *= all_dims[dims_in_arr[dim_idx]];
+            raised_idx += dim_idxs[dim_idx];
+        }
+
+        return raised_idx;
+    };
+
+    for (std::size_t dim_idx = 0; dim_idx < all_dims[dim_to_raise]; dim_idx++) {
+        for (std::size_t arr_idx = 0; arr_idx < arr.size(); arr_idx++) {
+            raised[RaisedArrIdx(arr_idx, dim_idx)] = arr[arr_idx];
+        }
+    }
+
+    return raised;
+}
+
+/**
+ * Decreases the dimensionality of @p arr by removing all but the last elements
+ *   from dimension @p dim_to_drop;
+ * Example: drop_dim({0, 0, 1, 1, 2, 2}, {0, 1}, {3, 2}, 1) will return {0, 1, 2}.
+ * Example: drop_dim({0, 0, 1, 1, 2, 2}, {0, 1}, {3, 2}, 0) will return {2, 2}.
+ *
+ * @param arr           Input array.  This array's elements should be ordered in
+ *                        row-major order according to @p dims_in_arr.
+ * @param dims_in_arr   Ordered sequence of which dimensions are in @p arr. Each
+ *                        number in this array represents an index in @p all_dims
+ *                        corresponding to the relevant dimension.
+ *                        THIS ARRAY MUST BE SORTED IN ASCENDING ORDER.
+ * @param all_dims      Array of sizes of each dimension.  For example, the array
+ *                        {2, 1, 3} means that dimension 0 has size 2, dimension 1
+ *                        has size 1, and dimension 2 has size 3.
+ * @param dim_to_raise  Index of the dimension in @p all_dims to remove from @p arr.
+ *                        This index must be in @p dims_in_arr.
+ *
+ * @returns The shrunk version of @p arr
+ */
+template <typename T>
+std::vector<T> drop_dim(const std::vector<T> &arr, const std::vector<std::size_t> &dims_in_arr,
+                        const std::vector<std::size_t> &all_dims, const std::size_t dim_to_drop)
+{
+    std::vector<T> dropped(arr.size() / all_dims[dim_to_drop]);
+
+    // Compute the number of elements corresponding to a single slice of this dimension
+    std::size_t slice_size = 1;
+    for (auto dim_idx = dims_in_arr.rbegin(); dim_idx != dims_in_arr.rend(); dim_idx++) {
+        if (*dim_idx == dim_to_drop) {
+            break;
+        }
+        slice_size *= all_dims[*dim_idx];
+    }
+
+    std::size_t skip_size = slice_size * (all_dims[dim_to_drop] - 1);
+
+    std::size_t out_idx = 0;
+    std::size_t arr_idx = skip_size;
+    while (arr_idx < arr.size()) {
+        // Copy the current slice into the output array
+        for (std::size_t i = 0; i < slice_size; i++, out_idx++, arr_idx++) {
+            dropped[out_idx] = arr[arr_idx];
+        }
+
+        // arr_idx is now pointing at the beginning of the dropped dimension's next row,
+        // so move it to the end of that row
+        arr_idx += skip_size;
+    }
+
+    return dropped;
+}
 
 {{circuit_generator}};
 
