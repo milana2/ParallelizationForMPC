@@ -360,11 +360,13 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 
 We define the $\mathit{raise\_dim}$ (raise dimensions) and $\mathit{drop\_dim}$ (drop dimension) functions. Raise dimension "lifts" a lower-dimension array (\ana{The right term here is tensor, I am pretty sure!}) into a higher dimension one. This is necessary when a lower-dimensional array is used in a higher dimensional loop and, essentially, is just copying of values. For example, Biometric contains the statement $d = \mathit{SUB}(S[i, j], C[j])$, in the $j$-loop which is nested into the $i$-loop. Here $C$ is a one-dimensional array, however, to vectorize across both loops it is necessary to turn it into a two-dimensional array: $C[i,j]$ becomes $[C[0],C[1],...C[J],C[0],C[1],...C[J], ... C[0],C[1],...C[J]]$, which turns the row into a matrix of $I$ identical rows. (We use capital letters to denote the upper bounds of loops, e.g., $J$ is the upper bound of the $j$-loop and $I$ is the upper bound of the $i$-loop.)
 
-$\mathit{raise\_dim}(A[i_1,...,i_k],i_{k+1})$ is defined as follows. It results in a new {k+1}-dimensional array $A'$ where for every $0\le i_{k+1} < I_{k+1}$, $A'[i_1,...,i_k,i_{k+1}] = A[i_1,...,i_k]$. We add the new dimension at the end arbitrarily, it can be added at any position, e.g., before $i_1$, etc. Adding $n$ dimensions is trivially extended as a composition of $n$ $\mathit{raise\_dim}$ that each adds a single dimension.
+$\mathit{raise\_dim}(A[i_1,...,i_k],i_j)$ is defined as follows.  It results in a new {k+1}-dimensional array $A'$ where for every $0 \le i_{k} < I_{k+1}$, $A'[i_1, \ldots, i_j, \ldots, i_k] = A[i_1, \ldots, i_k]$. Adding $n$ dimensions is trivially extended as a composition of $n$ $\mathit{raise\_dim}$ that each adds a single dimension.
 
 As expected, drop dimension turns a higher-dimensional array into a lower-dimensional one. The key use case is an inner-to-outer def-use edge. The code may define a variable, e.g., $\x$ in an inner loop, say $j$, then use this variable in an enclosing loop, say $i$. Our algorithm may vectorize the computation of $\x$ in the $j$-loop thus producing a vector $\x[j]$ where $\x[1]$ is the value of \x after the 1st iteration and so on. Drop dimension states that the outer loop will use the value of the variable at the last iteration.
 
-$\mathit{drop\_dim}(A[i_1,...,i_k,i_{k+1}])$ produces a k-dimensional array $A'$ where $A'[i_1,...,i_k] = A'[i_1,...,i_k,I_{k+1}-1]$. In our analysis, dimensions are always dropped at the end, and again, one can define dropping $n$ dimensions as a composition of $n$ $\mathit{drop\_dim}$.
+$\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimensional array $A'$ where $A'[i_1,\ldots,i_k] = A'[i_1,\ldots, I_j-1, \ldots,i_k]$. In our analysis, dimensions are always dropped at the end, and again, one can define dropping $n$ dimensions as a composition of $n$ $\mathit{drop\_dim}$.
+
+\ben{I'm not sure if I wrote up the above paragraphs correctly -- the idea is that we're just copying values to extend over dimension $j$ or only retain its last elements.  The current writeup implies that $1 < j < k$ though, which isn't always true.  Python implementations of $\mathit{raise\_dim}()$ and $\mathit{drop\_dim}()$ can be found here: \url{https://github.com/milana2/ParallelizationForMPC/blob/master/compiler/compiler/motion_backend/reference_implementations.py}}
 
 \ana{This section is still informal. Needs work to make more precise.}
 
@@ -616,7 +618,7 @@ loop-carried dependence on $\texttt{A}$; otherwise there is not and we can remov
 Consider the earlier example. There is a single loop, $i$. Clearly, there is no pair $\underline{i}$ and $\underline{i}'$, where $\underline{i} < \underline{i}'$ that make $\underline{i} = \underline{i}'$ (due to the def-use pairs of \texttt{A} 6-8 and 6-10).
 Therefore, we remove the back edge from 6 to 1. Analogously, we remove the back edges from 8 to 2 and 10 to 3. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 12 to 4 remains (def-use pairs for \texttt{D}). As a result of removing these spurious edges, Basic Vectorization will find that statement 6 is vectorizable. Statements 8, 10 and 12 will correctly appear in the FOR loop.
 
-\ana{Commented out previous writeup. Removal/handling of targetless phi-nodes will go into the Extension to Basic vectorization.} 
+\ana{Commented out previous writeup. Removal/handling of targetless phi-nodes will go into the Extension to Basic vectorization.}
 
 \begin{comment}
 The final step is to remove array phi-nodes that are left without incoming back edges after removal of infeasible edges.
@@ -635,12 +637,12 @@ not have been removed and the phi-node would not have been classified as redunda
 \item If use is an array write (update) $\texttt{A}_2 = \texttt{A}_1; \texttt{A}_2[i] = ... $ equiv. to $\texttt{A}_2 = \mathit{update}(\texttt{A}_1, i, ...)$ then handling becomes more tricky.
 The semantics of this update is that when $i$ is 0, then $\texttt{A}_0$ is being read. But when $i > 0$, then $\texttt{A}_k$ is being read. If we are at this case, this means that the def-use edge is same-level and we are removing a redundant node in the loop enclosing the update. The removal of the original phi-node entails pushing the phi-node at the update:
 $\texttt{A}_2 = \phi(\texttt{A}_0,\texttt{A}_k); \texttt{A}_2[i] = ... $ equiv. to $\texttt{A}_2 = \mathit{update}(\phi(\texttt{A}_0,\texttt{A}_k), i, ...)$.
-\item If use is a phi-node $... = \phi(\texttt{A}_1,...)$, that means we have an outer-to-inner edge. The 
+\item If use is a phi-node $... = \phi(\texttt{A}_1,...)$, that means we have an outer-to-inner edge. The
 
 \end{itemize}
 \end{enumerate}
 For each outer-to-inner or same-level def-use edge
-that originates at the node, replace $\texttt{A}_1$ at the use node by $\texttt{A}_0$. 
+that originates at the node, replace $\texttt{A}_1$ at the use node by $\texttt{A}_0$.
 For each inner-to-outer def-use edge, replace $\texttt{A}_1$ by $\texttt{A}_k$. In this case, the use references the array
 that results from the computation in the loop.
 
