@@ -22,6 +22,10 @@ jobs:
           pip install -r requirements.txt
       - name: Build results markdown
         run: ./compiler/make_results_markdown.py static
+      - name: Build paper
+        run: |
+          yes '' | pdflatex paper_SIMD.tex
+          mv paper_SIMD.pdf static
       - name: Push to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
