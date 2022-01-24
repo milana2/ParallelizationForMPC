@@ -22,6 +22,7 @@ jobs:
             texlive-base \
             texlive-binaries \
             texlive-fonts-recommended \
+            texlive-fonts-extra \
             texlive-latex-base \
             texlive-latex-recommended \
             texlive-latex-extra
@@ -31,7 +32,7 @@ jobs:
         run: ./compiler/make_results_markdown.py static
       - name: Build paper
         run: |
-          yes '' | pdflatex paper_SIMD.tex
+          yes '' | pdflatex paper_SIMD.tex || true
           mv paper_SIMD.pdf static
       - name: Push to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
