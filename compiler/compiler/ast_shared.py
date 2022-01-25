@@ -471,9 +471,21 @@ class BinOp(Generic[OPERAND]):
         elif self.operator == BinOpKind.GT:
             return f"({self.left.to_cpp(type_env, **kwargs)} {self.operator.to_cpp(type_env, **kwargs)} {self.right.to_cpp(type_env, **kwargs)})"
 
-        elif kwargs.get("plaintext"):
+        # If we're using an arithmetic primitive operation or we're operating on plaintext values,
+        # don't cast to a share wrapper
+        # Our type analysis should ensure that the only shared values for these operators are
+        # SecureUnsignedIntegers, and MOTION does not allow us to use ShareWrappers for them
+        elif kwargs.get("plaintext") or self.operator in (
+            BinOpKind.ADD,
+            BinOpKind.SUB,
+            BinOpKind.MUL,
+            BinOpKind.DIV,
+        ):
             return f"({self.left.to_cpp(type_env, **kwargs)} {self.operator.to_cpp(type_env, **kwargs)} {self.right.to_cpp(type_env, **kwargs)})"
-        # TODO: is it ok to convert SecureUnsignedIntegers to ShareWrappers before the operator?
+
+        # Otherwise, convert to sharewrappers since they have more operators defined
+        # TODO: go through the operators for ShareWrapper and make sure they're all valid
+        # for our protocol
         else:
             return f"(encrypto::motion::ShareWrapper({self.left.to_cpp(type_env, **kwargs)}.Get()) {self.operator.to_cpp(type_env, **kwargs)} encrypto::motion::ShareWrapper({self.right.to_cpp(type_env, **kwargs)}.Get()))"
 

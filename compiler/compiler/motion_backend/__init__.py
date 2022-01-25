@@ -17,6 +17,7 @@ class OutputParams(TypedDict):
 def _render_prototype(func: Function, type_env: TypeEnv) -> str:
     return_type = type_env[func.return_value].to_cpp(type_env)
     return (
+        f"template <encrypto::motion::MpcProtocol Protocol>\n"
         f"{return_type} {func.name}(\n"
         + indent("encrypto::motion::PartyPointer &party,\n", "    ")
         + indent(
@@ -105,7 +106,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         "// Constant initializations\n"
         + "\n".join(
             f"{const.datatype.to_cpp(type_env, plaintext=False)} {const.to_cpp(type_env)} = "
-            + f"encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput({const.to_cpp(type_env, plaintext=True)}), *party->GetBackend()).GetOutputAsShare();"
+            + f"party->SharedIn<Protocol>(encrypto::motion::ToInput({const.to_cpp(type_env, plaintext=True)}));"
             for const in plaintext_constants
         )
         + "\n"
@@ -127,11 +128,11 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
             (
                 # Initialize the shared version
                 param.var.to_cpp(type_env)
-                + "_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput("
+                + "_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput("
                 + param.var.to_cpp(
                     type_env
                 )  # no plaintext=True here so we reference the right variable name
-                + "), *party->GetBackend()).GetOutputAsShare();"
+                + "));"
             )
             + "\n"
             + (
@@ -203,7 +204,7 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
             }
             for param in func.parameters
         ],
-        protocol="encrypto::motion::MpcProtocol::kBmr",  # TODO: make this user-configurable
+        protocol="encrypto::motion::MpcProtocol::kBooleanGmw",  # TODO: make this user-configurable
         num_returns=type_env[func.return_value].dims,
         return_type=type_env[func.return_value].to_cpp(type_env),
         function_name=func.name,
