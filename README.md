@@ -133,7 +133,6 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 | `d!3` | `shared[int]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> C,
@@ -176,18 +175,18 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     std::uint32_t _MPC_PLAINTEXT_sum_2;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10000 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(10000)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10000 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(10000)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     C_0 = C;
     S_0 = S;
 
     // Plaintext parameter assignments
-    D_0 = party->In<Protocol>(encrypto::motion::ToInput(D), 0);
+    D_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(D), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_D_0 = D;
 
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -200,14 +199,14 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     min_sum_2 = min_sum_1;
     min_index_2 = min_index_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         sum_2 = _MPC_CONSTANT_0;
         _MPC_PLAINTEXT_sum_2 = std::uint32_t(0);
 
         // Initialize phi values
         sum_3 = sum_2;
         for (_MPC_PLAINTEXT_j = std::uint32_t(0); _MPC_PLAINTEXT_j < _MPC_PLAINTEXT_D_0; _MPC_PLAINTEXT_j++) {
-            j = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), 0);
+            j = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), *party->GetBackend()).GetOutputAsShare();
             d_3 = (encrypto::motion::ShareWrapper(S_0[((_MPC_PLAINTEXT_i * _MPC_PLAINTEXT_D_0) + _MPC_PLAINTEXT_j)].Get()) - encrypto::motion::ShareWrapper(C_0[_MPC_PLAINTEXT_j].Get()));
             p_3 = (encrypto::motion::ShareWrapper(d_3.Get()) * encrypto::motion::ShareWrapper(d_3.Get()));
             sum_4 = (encrypto::motion::ShareWrapper(sum_3.Get()) + encrypto::motion::ShareWrapper(p_3.Get()));
@@ -467,7 +466,6 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 | `differences!1` | `plaintext[list[int]]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric_matching_fast(
     encrypto::motion::PartyPointer &party,
     std::uint32_t D,
@@ -534,7 +532,7 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     std::vector<std::uint32_t> _MPC_PLAINTEXT_differences_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     C_0 = C;
@@ -544,10 +542,10 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     S_sqr_sum_0 = S_sqr_sum;
 
     // Plaintext parameter assignments
-    D_0 = party->In<Protocol>(encrypto::motion::ToInput(D), 0);
+    D_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(D), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_D_0 = D;
 
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -557,7 +555,7 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     // Initialize phi values
     differences_2 = differences_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_D_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = {_MPC_CONSTANT_0};
         _MPC_PLAINTEXT__1_2 = {std::uint32_t(0)};
         differences_3 = (encrypto::motion::ShareWrapper(differences_2.Get()) + encrypto::motion::ShareWrapper(_1_2.Get()));
@@ -577,7 +575,7 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     min_index_2 = min_index_1;
     min_diff_2 = min_diff_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         a_sqr_plus_b_sqr_2 = (encrypto::motion::ShareWrapper(S_sqr_sum_0[_MPC_PLAINTEXT_i].Get()) + encrypto::motion::ShareWrapper(C_sqr_sum_0.Get()));
         two_a_b_2 = _MPC_CONSTANT_0;
         _MPC_PLAINTEXT_two_a_b_2 = std::uint32_t(0);
@@ -585,7 +583,7 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
         // Initialize phi values
         two_a_b_3 = two_a_b_2;
         for (_MPC_PLAINTEXT_j = std::uint32_t(0); _MPC_PLAINTEXT_j < _MPC_PLAINTEXT_D_0; _MPC_PLAINTEXT_j++) {
-            j = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), 0);
+            j = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), *party->GetBackend()).GetOutputAsShare();
             tmp_3 = (encrypto::motion::ShareWrapper(S_0[((_MPC_PLAINTEXT_i * _MPC_PLAINTEXT_D_0) + _MPC_PLAINTEXT_j)].Get()) * encrypto::motion::ShareWrapper(two_C_0[_MPC_PLAINTEXT_j].Get()));
             two_a_b_4 = (encrypto::motion::ShareWrapper(two_a_b_3.Get()) + encrypto::motion::ShareWrapper(tmp_3.Get()));
 
@@ -604,7 +602,7 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
         min_index_4 = min_index_3;
         min_diff_4 = min_diff_3;
         for (_MPC_PLAINTEXT_k = std::uint32_t(0); _MPC_PLAINTEXT_k < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_k++) {
-            k = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_k), 0);
+            k = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_k), *party->GetBackend()).GetOutputAsShare();
             _2_3 = (min_diff_4 > differences_5[_MPC_PLAINTEXT_k]);
             min_diff_5 = differences_5[_MPC_PLAINTEXT_k];
             min_index_5 = k;
@@ -705,7 +703,6 @@ def foo(x: shared[int], y: shared[int]) -> shared[int]:
 | `z!2` | `plaintext[int]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger foo(
     encrypto::motion::PartyPointer &party,
     encrypto::motion::SecureUnsignedInteger x,
@@ -728,8 +725,8 @@ encrypto::motion::SecureUnsignedInteger foo(
     std::uint32_t _MPC_PLAINTEXT_z_2;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(1)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     x_0 = x;
@@ -924,7 +921,6 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 | `!2!2` | `shared[bool]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> convex_hull(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords,
@@ -976,16 +972,16 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     bool _MPC_PLAINTEXT_is_hull_4;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(true)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(true)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(false)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     X_coords_0 = X_coords;
     Y_coords_0 = Y_coords;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -998,7 +994,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     hull_X_2 = hull_X_1;
     hull_Y_2 = hull_Y_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         is_hull_2 = _MPC_CONSTANT_true;
         _MPC_PLAINTEXT_is_hull_2 = std::uint32_t(true);
         p1_X_2 = X_coords_0[_MPC_PLAINTEXT_i];
@@ -1010,7 +1006,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
         // Initialize phi values
         is_hull_3 = is_hull_2;
         for (_MPC_PLAINTEXT_j = std::uint32_t(0); _MPC_PLAINTEXT_j < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_j++) {
-            j = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), 0);
+            j = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), *party->GetBackend()).GetOutputAsShare();
             p2_X_3 = X_coords_0[_MPC_PLAINTEXT_j];
             p2_Y_3 = Y_coords_0[_MPC_PLAINTEXT_j];
             _6_3 = ((p2_X_3 > p1_X_2) | (encrypto::motion::ShareWrapper(p1_X_2.Get()) == encrypto::motion::ShareWrapper(p2_X_3.Get())));
@@ -1152,7 +1148,6 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `c!1` | `plaintext[int]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_102(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
@@ -1184,16 +1179,16 @@ encrypto::motion::SecureUnsignedInteger count_102(
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(1)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(false)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     Seq_0 = Seq;
     Syms_0 = Syms;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -1206,7 +1201,7 @@ encrypto::motion::SecureUnsignedInteger count_102(
     s0_2 = s0_1;
     c_2 = c_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(2)].Get()));
         _2_2 = (encrypto::motion::ShareWrapper(s0_2.Get()) & encrypto::motion::ShareWrapper(_1_2.Get()));
         c_3 = (encrypto::motion::ShareWrapper(c_2.Get()) + encrypto::motion::ShareWrapper(_MPC_CONSTANT_1.Get()));
@@ -1344,7 +1339,6 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `scount!1` | `plaintext[int]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_10s(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
@@ -1379,16 +1373,16 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     std::uint32_t _MPC_PLAINTEXT_scount_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(1)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(false)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     Seq_0 = Seq;
     Syms_0 = Syms;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -1404,7 +1398,7 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     s1_2 = s1_1;
     scount_2 = scount_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = (~(encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(0)].Get())));
         _2_2 = (encrypto::motion::ShareWrapper(s1_2.Get()) & encrypto::motion::ShareWrapper(_1_2.Get()));
         scount_3 = (encrypto::motion::ShareWrapper(scount_2.Get()) + encrypto::motion::ShareWrapper(_MPC_CONSTANT_1.Get()));
@@ -1548,7 +1542,6 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 | `c!1` | `plaintext[int]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_123(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
@@ -1584,16 +1577,16 @@ encrypto::motion::SecureUnsignedInteger count_123(
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(1)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(false)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     Seq_0 = Seq;
     Syms_0 = Syms;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -1609,7 +1602,7 @@ encrypto::motion::SecureUnsignedInteger count_123(
     s2_2 = s2_1;
     c_2 = c_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(3)].Get()));
         _2_2 = (encrypto::motion::ShareWrapper(s2_2.Get()) | encrypto::motion::ShareWrapper(s1_2.Get()));
         _3_2 = (encrypto::motion::ShareWrapper(_1_2.Get()) & encrypto::motion::ShareWrapper(_2_2.Get()));
@@ -1753,7 +1746,6 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 | `result!1` | `plaintext[list[int]]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A,
@@ -1790,17 +1782,17 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     std::vector<std::uint32_t> _MPC_PLAINTEXT_result_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     A_0 = A;
     B_0 = B;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
-    num_bins_0 = party->In<Protocol>(encrypto::motion::ToInput(num_bins), 0);
+    num_bins_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(num_bins), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_num_bins_0 = num_bins;
 
     // Function body
@@ -1810,7 +1802,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     // Initialize phi values
     result_2 = result_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_num_bins_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = {_MPC_CONSTANT_0};
         _MPC_PLAINTEXT__1_2 = {std::uint32_t(0)};
         result_3 = (encrypto::motion::ShareWrapper(result_2.Get()) + encrypto::motion::ShareWrapper(_1_2.Get()));
@@ -1824,12 +1816,12 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     // Initialize phi values
     result_4 = result_2;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_num_bins_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
 
         // Initialize phi values
         result_5 = result_4;
         for (_MPC_PLAINTEXT_j = std::uint32_t(0); _MPC_PLAINTEXT_j < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_j++) {
-            j = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), 0);
+            j = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), *party->GetBackend()).GetOutputAsShare();
             _2_3 = (encrypto::motion::ShareWrapper(A_0[_MPC_PLAINTEXT_j].Get()) == encrypto::motion::ShareWrapper(i.Get()));
             _3_3 = (encrypto::motion::ShareWrapper(result_5[_MPC_PLAINTEXT_i].Get()) + encrypto::motion::ShareWrapper(B_0[_MPC_PLAINTEXT_j].Get()));
             result_6 = result_5;
@@ -1953,7 +1945,6 @@ def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: sha
 | `!1!2` | `shared[int]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> foo(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A,
@@ -1989,7 +1980,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     std::tuple<std::vector<std::uint32_t>, std::vector<std::uint32_t>, std::vector<std::uint32_t>, std::vector<std::uint32_t>> _MPC_PLAINTEXT__5_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(10)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(10)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     A_0 = A;
@@ -1998,7 +1989,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     D_0 = D;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -2009,7 +2000,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     C_1 = C_0;
     D_1 = D_0;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = (encrypto::motion::ShareWrapper(B_1[_MPC_PLAINTEXT_i].Get()) + encrypto::motion::ShareWrapper(_MPC_CONSTANT_10.Get()));
         A_2 = A_1;
         A_1[_MPC_PLAINTEXT_i] = _1_2;
@@ -2110,7 +2101,6 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[
 | `sum!1` | `plaintext[int]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger ip(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A,
@@ -2133,14 +2123,14 @@ encrypto::motion::SecureUnsignedInteger ip(
     std::uint32_t _MPC_PLAINTEXT_sum_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     A_0 = A;
     B_0 = B;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -2150,7 +2140,7 @@ encrypto::motion::SecureUnsignedInteger ip(
     // Initialize phi values
     sum_2 = sum_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         temp_2 = (encrypto::motion::ShareWrapper(A_0[_MPC_PLAINTEXT_i].Get()) * encrypto::motion::ShareWrapper(B_0[_MPC_PLAINTEXT_i].Get()));
         sum_3 = (encrypto::motion::ShareWrapper(sum_2.Get()) + encrypto::motion::ShareWrapper(temp_2.Get()));
 
@@ -2309,7 +2299,6 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 | `!1!2` | `shared[bool]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_102(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
@@ -2351,16 +2340,16 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     bool _MPC_PLAINTEXT_s0_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(1)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(false)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     Seq_0 = Seq;
     Syms_0 = Syms;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -2376,7 +2365,7 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     max_len_2 = max_len_1;
     length_2 = length_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(2)].Get()));
         s1_2 = (encrypto::motion::ShareWrapper(s0_2.Get()) & encrypto::motion::ShareWrapper(_1_2.Get()));
         _2_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(1)].Get()));
@@ -2516,7 +2505,6 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> s
 | `length!2` | `shared[int]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_1s(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
@@ -2548,15 +2536,15 @@ encrypto::motion::SecureUnsignedInteger longest_1s(
     std::uint32_t _MPC_PLAINTEXT_length_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(1)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     Seq_0 = Seq;
     Sym_0 = Sym;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -2569,7 +2557,7 @@ encrypto::motion::SecureUnsignedInteger longest_1s(
     max_length_2 = max_length_1;
     length_2 = length_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(1); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Sym_0.Get()));
         length_4 = _MPC_CONSTANT_0;
         _MPC_PLAINTEXT_length_4 = std::uint32_t(0);
@@ -2719,7 +2707,6 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) 
 | `current_length!2` | `shared[int]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_even_0(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
@@ -2756,15 +2743,15 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
     std::uint32_t _MPC_PLAINTEXT_current_length_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(1)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     Seq_0 = Seq;
     Sym_0 = Sym;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -2777,7 +2764,7 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
     current_length_2 = current_length_1;
     max_length_2 = max_length_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(1); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Sym_0.Get()));
         current_length_4 = _MPC_CONSTANT_0;
         _MPC_PLAINTEXT_current_length_4 = std::uint32_t(0);
@@ -2949,7 +2936,6 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 | `!1!2` | `shared[bool]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_odd_10(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
@@ -2991,16 +2977,16 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     std::uint32_t _MPC_PLAINTEXT_current_length_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(1)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(false)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     Seq_0 = Seq;
     Syms_0 = Syms;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -3016,7 +3002,7 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     max_length_2 = max_length_1;
     s2_2 = s2_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(1)].Get()));
         s1_2 = (encrypto::motion::ShareWrapper(s2_2.Get()) & encrypto::motion::ShareWrapper(_1_2.Get()));
         _2_2 = (~s2_2);
@@ -3154,7 +3140,6 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 | `!1!2` | `shared[bool]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
@@ -3187,15 +3172,15 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     std::uint32_t _MPC_PLAINTEXT_current_dist_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(1)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     Seq_0 = Seq;
     Sym_0 = Sym;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -3208,7 +3193,7 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     max_dist_2 = max_dist_1;
     current_dist_2 = current_dist_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Sym_0.Get()));
         _2_2 = (~_1_2);
         current_dist_4 = _MPC_CONSTANT_0;
@@ -3339,7 +3324,6 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 | `!1!2` | `shared[bool]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
@@ -3372,14 +3356,14 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     std::uint32_t _MPC_PLAINTEXT_current_sum_1;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     Seq_0 = Seq;
     Sym_0 = Sym;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -3392,7 +3376,7 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     max_sum_2 = max_sum_1;
     current_sum_2 = current_sum_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Sym_0.Get()));
         _2_2 = (~_1_2);
         current_sum_4 = _MPC_CONSTANT_0;
@@ -3552,7 +3536,6 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 | `!4!3` | `shared[bool]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> minimal_points(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords,
@@ -3596,14 +3579,14 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     bool _MPC_PLAINTEXT_bx_2;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(false)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     X_coords_0 = X_coords;
     Y_coords_0 = Y_coords;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
+    N_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(N), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_N_0 = N;
 
     // Function body
@@ -3616,14 +3599,14 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     min_X_2 = min_X_1;
     min_Y_2 = min_Y_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         bx_2 = _MPC_CONSTANT_false;
         _MPC_PLAINTEXT_bx_2 = std::uint32_t(false);
 
         // Initialize phi values
         bx_3 = bx_2;
         for (_MPC_PLAINTEXT_j = std::uint32_t(0); _MPC_PLAINTEXT_j < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_j++) {
-            j = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), 0);
+            j = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), *party->GetBackend()).GetOutputAsShare();
             _3_3 = (X_coords_0[_MPC_PLAINTEXT_i] > X_coords_0[_MPC_PLAINTEXT_j]);
             _4_3 = (Y_coords_0[_MPC_PLAINTEXT_i] > Y_coords_0[_MPC_PLAINTEXT_j]);
             _5_3 = (encrypto::motion::ShareWrapper(_3_3.Get()) & encrypto::motion::ShareWrapper(_4_3.Get()));
@@ -3779,7 +3762,6 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 | `flag!2` | `plaintext[bool]` |
 ### Motion code
 ```cpp
-template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A,
@@ -3820,19 +3802,19 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     bool _MPC_PLAINTEXT_flag_2;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(true)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(true)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(0)), *party->GetBackend()).GetOutputAsShare();
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(std::uint32_t(false)), *party->GetBackend()).GetOutputAsShare();
 
     // Shared parameter assignments
     A_0 = A;
     B_0 = B;
 
     // Plaintext parameter assignments
-    SA_0 = party->In<Protocol>(encrypto::motion::ToInput(SA), 0);
+    SA_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(SA), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_SA_0 = SA;
 
-    SB_0 = party->In<Protocol>(encrypto::motion::ToInput(SB), 0);
+    SB_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(SB), *party->GetBackend()).GetOutputAsShare();
     _MPC_PLAINTEXT_SB_0 = SB;
 
     // Function body
@@ -3844,14 +3826,14 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     // Initialize phi values
     result_2 = result_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_SA_0; _MPC_PLAINTEXT_i++) {
-        i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
+        i = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), *party->GetBackend()).GetOutputAsShare();
         flag_2 = _MPC_CONSTANT_false;
         _MPC_PLAINTEXT_flag_2 = std::uint32_t(false);
 
         // Initialize phi values
         flag_3 = flag_2;
         for (_MPC_PLAINTEXT_j = std::uint32_t(0); _MPC_PLAINTEXT_j < _MPC_PLAINTEXT_SB_0; _MPC_PLAINTEXT_j++) {
-            j = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), 0);
+            j = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), *party->GetBackend()).GetOutputAsShare();
             _1_3 = (encrypto::motion::ShareWrapper(A_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(B_0[_MPC_PLAINTEXT_j].Get()));
             flag_4 = _MPC_CONSTANT_true;
             _MPC_PLAINTEXT_flag_4 = std::uint32_t(true);
