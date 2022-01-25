@@ -1,4 +1,3 @@
-from compiler.restricted_ast import Assign
 from . import loop_linear_code as llc
 from .dep_graph import DepGraph, PhiOrAssign
 from .util import assert_never
