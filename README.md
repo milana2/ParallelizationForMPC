@@ -1,4 +1,4 @@
-# [View the current version of the paper here](https://github.com/milana2/ParallelizationForMPC/blob/gh-pages/paper_SIMD.pdf)
+# [View the current version of the paper here](paper_SIMD.pdf)
 # Compiler stages with different benchmarks
 ## `biometric`
 ### Input
