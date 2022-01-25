@@ -176,8 +176,8 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     std::uint32_t _MPC_PLAINTEXT_sum_2;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10000 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(10000)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)));
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10000 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(10000)));
 
     // Shared parameter assignments
     C_0 = C;
@@ -220,8 +220,8 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
         min_sum_3 = sum_3;
         min_index_3 = i;
         _MPC_PLAINTEXT_min_index_3 = _MPC_PLAINTEXT_i;
-        min_sum_4 = _1_2.Mux(min_sum_2.Get(), min_sum_3.Get());
-        min_index_4 = _1_2.Mux(min_index_2.Get(), min_index_3.Get());
+        min_sum_4 = _1_2.Mux(min_sum_3.Get(), min_sum_2.Get());
+        min_index_4 = _1_2.Mux(min_index_3.Get(), min_index_2.Get());
 
         // Update phi values
         min_sum_2 = min_sum_4;
@@ -609,8 +609,8 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
             min_diff_5 = differences_5[_MPC_PLAINTEXT_k];
             min_index_5 = k;
             _MPC_PLAINTEXT_min_index_5 = _MPC_PLAINTEXT_k;
-            min_index_6 = _2_3.Mux(min_index_4.Get(), min_index_5.Get());
-            min_diff_6 = _2_3.Mux(min_diff_4.Get(), min_diff_5.Get());
+            min_index_6 = _2_3.Mux(min_index_5.Get(), min_index_4.Get());
+            min_diff_6 = _2_3.Mux(min_diff_5.Get(), min_diff_4.Get());
 
             // Update phi values
             min_index_4 = min_index_6;
@@ -747,8 +747,8 @@ encrypto::motion::SecureUnsignedInteger foo(
     _MPC_PLAINTEXT_z_3 = std::uint32_t(0);
     z_2 = _MPC_CONSTANT_1;
     _MPC_PLAINTEXT_z_2 = std::uint32_t(1);
-    z_4 = _2_1.Mux(z_3.Get(), z_2.Get());
-    z_5 = _1_1.Mux(z_4.Get(), z_1.Get());
+    z_4 = _2_1.Mux(z_2.Get(), z_3.Get());
+    z_5 = _1_1.Mux(z_1.Get(), z_4.Get());
 
     return z_5;
 }
@@ -976,9 +976,9 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     bool _MPC_PLAINTEXT_is_hull_4;
 
     // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)));
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(true)));
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)));
 
     // Shared parameter assignments
     X_coords_0 = X_coords;
@@ -1019,19 +1019,19 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
             _9_3 = (~_8_3);
             is_hull_4 = _MPC_CONSTANT_false;
             _MPC_PLAINTEXT_is_hull_4 = std::uint32_t(false);
-            is_hull_5 = _9_3.Mux(is_hull_3.Get(), is_hull_4.Get());
+            is_hull_5 = _9_3.Mux(is_hull_4.Get(), is_hull_3.Get());
 
             // Update phi values
             is_hull_3 = is_hull_5;
         }
 
-        is_hull_6 = _3_2.Mux(is_hull_3.Get(), is_hull_2.Get());
+        is_hull_6 = _3_2.Mux(is_hull_2.Get(), is_hull_3.Get());
         _10_2 = {p1_X_2};
         hull_X_3 = (hull_X_2 + _10_2);
         _11_2 = {p1_Y_2};
         hull_Y_3 = (hull_Y_2 + _11_2);
-        hull_X_4 = is_hull_6.Mux(hull_X_2.Get(), hull_X_3.Get());
-        hull_Y_4 = is_hull_6.Mux(hull_Y_2.Get(), hull_Y_3.Get());
+        hull_X_4 = is_hull_6.Mux(hull_X_3.Get(), hull_X_2.Get());
+        hull_Y_4 = is_hull_6.Mux(hull_Y_3.Get(), hull_Y_2.Get());
 
         // Update phi values
         hull_X_2 = hull_X_4;
@@ -1184,8 +1184,8 @@ encrypto::motion::SecureUnsignedInteger count_102(
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)));
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)));
 
     // Shared parameter assignments
@@ -1210,7 +1210,7 @@ encrypto::motion::SecureUnsignedInteger count_102(
         _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(2)].Get()));
         _2_2 = (encrypto::motion::ShareWrapper(s0_2.Get()) & encrypto::motion::ShareWrapper(_1_2.Get()));
         c_3 = (c_2 + _MPC_CONSTANT_1);
-        c_4 = _2_2.Mux(c_2.Get(), c_3.Get());
+        c_4 = _2_2.Mux(c_3.Get(), c_2.Get());
         _3_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(1)].Get()));
         _5_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(0)].Get()));
         _6_2 = (encrypto::motion::ShareWrapper(s0_2.Get()) & encrypto::motion::ShareWrapper(_5_2.Get()));
@@ -1379,8 +1379,8 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     std::uint32_t _MPC_PLAINTEXT_scount_1;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)));
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)));
 
     // Shared parameter assignments
@@ -1408,7 +1408,7 @@ encrypto::motion::SecureUnsignedInteger count_10s(
         _1_2 = (~(encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(0)].Get())));
         _2_2 = (encrypto::motion::ShareWrapper(s1_2.Get()) & encrypto::motion::ShareWrapper(_1_2.Get()));
         scount_3 = (scount_2 + _MPC_CONSTANT_1);
-        scount_4 = _2_2.Mux(scount_2.Get(), scount_3.Get());
+        scount_4 = _2_2.Mux(scount_3.Get(), scount_2.Get());
         _3_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(0)].Get()));
         _4_2 = (encrypto::motion::ShareWrapper(s0_2.Get()) | encrypto::motion::ShareWrapper(s1_2.Get()));
         s1_3 = (encrypto::motion::ShareWrapper(_3_2.Get()) & encrypto::motion::ShareWrapper(_4_2.Get()));
@@ -1584,8 +1584,8 @@ encrypto::motion::SecureUnsignedInteger count_123(
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)));
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)));
 
     // Shared parameter assignments
@@ -1614,7 +1614,7 @@ encrypto::motion::SecureUnsignedInteger count_123(
         _2_2 = (encrypto::motion::ShareWrapper(s2_2.Get()) | encrypto::motion::ShareWrapper(s1_2.Get()));
         _3_2 = (encrypto::motion::ShareWrapper(_1_2.Get()) & encrypto::motion::ShareWrapper(_2_2.Get()));
         c_3 = (c_2 + _MPC_CONSTANT_1);
-        c_4 = _3_2.Mux(c_2.Get(), c_3.Get());
+        c_4 = _3_2.Mux(c_3.Get(), c_2.Get());
         _4_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(2)].Get()));
         _5_2 = (encrypto::motion::ShareWrapper(s1_2.Get()) | encrypto::motion::ShareWrapper(s2_2.Get()));
         s2_3 = (encrypto::motion::ShareWrapper(_4_2.Get()) & encrypto::motion::ShareWrapper(_5_2.Get()));
@@ -1834,7 +1834,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
             _3_3 = (result_5[_MPC_PLAINTEXT_i] + B_0[_MPC_PLAINTEXT_j]);
             result_6 = result_5;
             result_5[_MPC_PLAINTEXT_i] = _3_3;
-            result_7 = _2_3.Mux(result_5.Get(), result_6.Get());
+            result_7 = _2_3.Mux(result_6.Get(), result_5.Get());
 
             // Update phi values
             result_5 = result_7;
@@ -2351,8 +2351,8 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     bool _MPC_PLAINTEXT_s0_1;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)));
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)));
 
     // Shared parameter assignments
@@ -2387,11 +2387,11 @@ encrypto::motion::SecureUnsignedInteger longest_102(
         length_4 = _MPC_CONSTANT_0;
         _MPC_PLAINTEXT_length_4 = std::uint32_t(0);
         length_3 = (length_2 + _MPC_CONSTANT_1);
-        length_5 = _6_2.Mux(length_4.Get(), length_3.Get());
+        length_5 = _6_2.Mux(length_3.Get(), length_4.Get());
         _7_2 = (length_5 > max_len_2);
         _8_2 = (encrypto::motion::ShareWrapper(s1_2.Get()) & encrypto::motion::ShareWrapper(_7_2.Get()));
         max_len_3 = length_5;
-        max_len_4 = _8_2.Mux(max_len_2.Get(), max_len_3.Get());
+        max_len_4 = _8_2.Mux(max_len_3.Get(), max_len_2.Get());
 
         // Update phi values
         s0_2 = s0_3;
@@ -2574,10 +2574,10 @@ encrypto::motion::SecureUnsignedInteger longest_1s(
         length_4 = _MPC_CONSTANT_0;
         _MPC_PLAINTEXT_length_4 = std::uint32_t(0);
         length_3 = (length_2 + _MPC_CONSTANT_1);
-        length_5 = _1_2.Mux(length_4.Get(), length_3.Get());
+        length_5 = _1_2.Mux(length_3.Get(), length_4.Get());
         _2_2 = (length_5 > max_length_2);
         max_length_3 = length_5;
-        max_length_4 = _2_2.Mux(max_length_2.Get(), max_length_3.Get());
+        max_length_4 = _2_2.Mux(max_length_3.Get(), max_length_2.Get());
 
         // Update phi values
         max_length_2 = max_length_4;
@@ -2782,15 +2782,15 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
         current_length_4 = _MPC_CONSTANT_0;
         _MPC_PLAINTEXT_current_length_4 = std::uint32_t(0);
         current_length_3 = (current_length_2 + _MPC_CONSTANT_1);
-        current_length_5 = _1_2.Mux(current_length_4.Get(), current_length_3.Get());
+        current_length_5 = _1_2.Mux(current_length_3.Get(), current_length_4.Get());
         tmp_max_len_2 = max_length_2;
         _2_2 = (current_length_5 > max_length_2);
         tmp_max_len_3 = current_length_5;
-        tmp_max_len_4 = _2_2.Mux(tmp_max_len_2.Get(), tmp_max_len_3.Get());
+        tmp_max_len_4 = _2_2.Mux(tmp_max_len_3.Get(), tmp_max_len_2.Get());
         _3_2 = (encrypto::motion::ShareWrapper(tmp_max_len_4.Get()) & encrypto::motion::ShareWrapper(_MPC_CONSTANT_1.Get()));
         _4_2 = (encrypto::motion::ShareWrapper(_3_2.Get()) == encrypto::motion::ShareWrapper(_MPC_CONSTANT_0.Get()));
         max_length_3 = tmp_max_len_4;
-        max_length_4 = _4_2.Mux(max_length_2.Get(), max_length_3.Get());
+        max_length_4 = _4_2.Mux(max_length_3.Get(), max_length_2.Get());
 
         // Update phi values
         current_length_2 = current_length_5;
@@ -2991,8 +2991,8 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     std::uint32_t _MPC_PLAINTEXT_current_length_1;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)));
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)));
 
     // Shared parameter assignments
@@ -3022,15 +3022,15 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
         _2_2 = (~s2_2);
         current_length_4 = _MPC_CONSTANT_0;
         _MPC_PLAINTEXT_current_length_4 = std::uint32_t(0);
-        current_length_5 = _2_2.Mux(current_length_2.Get(), current_length_4.Get());
+        current_length_5 = _2_2.Mux(current_length_4.Get(), current_length_2.Get());
         current_length_3 = (current_length_2 + _MPC_CONSTANT_1);
-        current_length_6 = s1_2.Mux(current_length_5.Get(), current_length_3.Get());
+        current_length_6 = s1_2.Mux(current_length_3.Get(), current_length_5.Get());
         _4_2 = (encrypto::motion::ShareWrapper(current_length_6.Get()) & encrypto::motion::ShareWrapper(_MPC_CONSTANT_1.Get()));
         _5_2 = (encrypto::motion::ShareWrapper(_4_2.Get()) == encrypto::motion::ShareWrapper(_MPC_CONSTANT_1.Get()));
         _6_2 = (current_length_6 > max_length_2);
         _7_2 = (encrypto::motion::ShareWrapper(_5_2.Get()) & encrypto::motion::ShareWrapper(_6_2.Get()));
         max_length_3 = current_length_6;
-        max_length_4 = _7_2.Mux(max_length_2.Get(), max_length_3.Get());
+        max_length_4 = _7_2.Mux(max_length_3.Get(), max_length_2.Get());
         s2_3 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(0)].Get()));
 
         // Update phi values
@@ -3214,10 +3214,10 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
         current_dist_4 = _MPC_CONSTANT_0;
         _MPC_PLAINTEXT_current_dist_4 = std::uint32_t(0);
         current_dist_3 = (current_dist_2 + _MPC_CONSTANT_1);
-        current_dist_5 = _2_2.Mux(current_dist_4.Get(), current_dist_3.Get());
+        current_dist_5 = _2_2.Mux(current_dist_3.Get(), current_dist_4.Get());
         _3_2 = (current_dist_5 > max_dist_2);
         max_dist_3 = current_dist_5;
-        max_dist_4 = _3_2.Mux(max_dist_2.Get(), max_dist_3.Get());
+        max_dist_4 = _3_2.Mux(max_dist_3.Get(), max_dist_2.Get());
 
         // Update phi values
         max_dist_2 = max_dist_4;
@@ -3398,10 +3398,10 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
         current_sum_4 = _MPC_CONSTANT_0;
         _MPC_PLAINTEXT_current_sum_4 = std::uint32_t(0);
         current_sum_3 = (current_sum_2 + Seq_0[_MPC_PLAINTEXT_i]);
-        current_sum_5 = _2_2.Mux(current_sum_4.Get(), current_sum_3.Get());
+        current_sum_5 = _2_2.Mux(current_sum_3.Get(), current_sum_4.Get());
         _3_2 = (current_sum_5 > max_sum_2);
         max_sum_3 = current_sum_5;
-        max_sum_4 = _3_2.Mux(max_sum_2.Get(), max_sum_3.Get());
+        max_sum_4 = _3_2.Mux(max_sum_3.Get(), max_sum_2.Get());
 
         // Update phi values
         max_sum_2 = max_sum_4;
@@ -3640,8 +3640,8 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
         _11_2 = Y_coords_0[_MPC_PLAINTEXT_i];
         _12_2 = {_11_2};
         min_Y_3 = (min_Y_2 + _12_2);
-        min_X_4 = _6_2.Mux(min_X_2.Get(), min_X_3.Get());
-        min_Y_4 = _6_2.Mux(min_Y_2.Get(), min_Y_3.Get());
+        min_X_4 = _6_2.Mux(min_X_3.Get(), min_X_2.Get());
+        min_Y_4 = _6_2.Mux(min_Y_3.Get(), min_Y_2.Get());
 
         // Update phi values
         min_X_2 = min_X_4;
@@ -3820,8 +3820,8 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     bool _MPC_PLAINTEXT_flag_2;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)));
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)));
     encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->SharedIn<Protocol>(encrypto::motion::ToInput(std::uint32_t(true)));
 
     // Shared parameter assignments
@@ -3855,7 +3855,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
             _1_3 = (encrypto::motion::ShareWrapper(A_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(B_0[_MPC_PLAINTEXT_j].Get()));
             flag_4 = _MPC_CONSTANT_true;
             _MPC_PLAINTEXT_flag_4 = std::uint32_t(true);
-            flag_5 = _1_3.Mux(flag_3.Get(), flag_4.Get());
+            flag_5 = _1_3.Mux(flag_4.Get(), flag_3.Get());
 
             // Update phi values
             flag_3 = flag_5;
@@ -3864,7 +3864,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
         val_2 = dummy_1;
         _MPC_PLAINTEXT_val_2 = _MPC_PLAINTEXT_dummy_1;
         val_3 = A_0[_MPC_PLAINTEXT_i];
-        val_4 = flag_3.Mux(val_2.Get(), val_3.Get());
+        val_4 = flag_3.Mux(val_3.Get(), val_2.Get());
         _2_2 = {val_4};
         result_3 = (result_2 + _2_2);
 
