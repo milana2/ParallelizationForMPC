@@ -96,7 +96,7 @@ def main():
     except FileExistsError:
         pass
 
-    md = "# [View the current version of the paper here (WIP)](https://github.com/milana2/ParallelizationForMPC/blob/gh-pages/paper_SIMD.pdf)\n"
+    md = "# [View the current version of the paper here](https://github.com/milana2/ParallelizationForMPC/blob/gh-pages/paper_SIMD.pdf)\n"
 
     md += "# Compiler stages with different benchmarks\n"
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
