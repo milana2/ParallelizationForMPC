@@ -5,7 +5,7 @@ from textwrap import indent
 from typing import TypedDict, Union
 
 from ..loop_linear_code import Function, Statement, Phi, Assign, For
-from ..type_analysis import TypeEnv, VarVisibility, Constant
+from ..type_analysis import TypeEnv, VarVisibility, Constant, DataType
 from .. import tac_cfg
 
 
@@ -188,6 +188,8 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
     cpp_template = template_env.get_template("circuit_gen.cpp.jinja")
     cmakelists_template = template_env.get_template("CMakeLists.txt.jinja")
 
+    return_type = type_env[func.return_value]
+
     rendered_main = main_template.render(
         header_fname=f"{func.name}.h",
         params=[
@@ -206,7 +208,9 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
         ],
         protocol="encrypto::motion::MpcProtocol::kBooleanGmw",  # TODO: make this user-configurable
         num_returns=type_env[func.return_value].dims,
-        return_type=type_env[func.return_value].to_cpp(type_env),
+        outputs=[return_type.to_cpp(type_env, plaintext=True)]
+        if return_type.datatype != DataType.TUPLE
+        else [t.to_cpp(type_env, plaintext=True) for t in return_type.tuple_types],
         function_name=func.name,
     )
 

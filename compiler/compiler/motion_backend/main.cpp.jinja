@@ -159,7 +159,14 @@ int main(const int argc, const char *const argv[])
         {%- endif %}
     {% endfor %} //clang-format on
 
-    {{function_name}}<{{protocol}}>(party, {{params | map(attribute = "name") | join(", ")}});
+    auto output = {{function_name}}<{{protocol}}>(party, {{params | map(attribute = "name") | join(", ")}});
+    {%- if (outputs|count) == 1 %}
+        auto out0 = output.Out();
+    {%- else %}
+        {%- for idx in range(outputs | count) %}
+            auto out{{idx}} = std::get<{{idx}}>(output).Out();
+        {%- endfor -%}
+    {%- endif -%}
 
     party->Run();
 
@@ -175,6 +182,19 @@ int main(const int argc, const char *const argv[])
     std::cerr << encrypto::motion::PrintStatistics("{{ benchmark_name }}", accumulated_statistics,
                                                    accumulated_communication_statistics)
               << std::endl;
+
+    std::cout
+    {%- if (outputs|count) > 1 -%} << "(" {%- endif -%}
+
+    {%- for idx in range(outputs|count) %}
+        {%- if idx > 0 and (outputs|count) > 1 %}
+            << ", "
+        {%- endif %}
+        << out{{idx}}.As<{{outputs[idx]}}>()
+    {%- endfor %}
+
+    {%- if(outputs|count) > 1 -%} << ")" {%- endif -%}
+    << std::endl;
 
     return 0;
 }
