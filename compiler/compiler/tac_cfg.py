@@ -88,7 +88,7 @@ class Mux:
         true_cpp_str = self.true_value.to_cpp(type_env, **kwargs) + ".Get()"
         false_cpp_str = self.false_value.to_cpp(type_env, **kwargs) + ".Get()"
 
-        return f"{self.condition.to_cpp(type_env, **kwargs)}.Mux({true_cpp_str}, {false_cpp_str})"
+        return f"{self.condition.to_cpp(type_env, **kwargs)}.Mux({false_cpp_str}, {true_cpp_str})"
 
     def __str__(self) -> str:
         return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
