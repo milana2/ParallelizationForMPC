@@ -2,15 +2,18 @@ cmake_minimum_required(VERSION 3.12)
 cmake_policy(SET CMP0075 NEW)
 project({{ app_name|upper() }} CXX)
 set(CMAKE_BUILD_TYPE Release)
-set(MOTION_BUILD_BOOST_FROM_SOURCES OFF)
 
-add_subdirectory({{ motion_dir }} motion_build)
+add_subdirectory({{ motion_dir }} {{ motion_dir }}/build)
 
 add_executable({{ app_name }} {{ cpp_files|join(' ') }})
 
+find_package(Boost COMPONENTS program_options REQUIRED)
+
+target_include_directories({{ app_name }} PUBLIC ${Boost_INCLUDE_DIRS})
 target_link_libraries({{ app_name }}
     MOTION::motion
     Boost::program_options
+    ${Boost_LIBRARIES}
 )
 
 # vim: set ft=cmake :
