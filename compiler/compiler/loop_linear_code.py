@@ -72,7 +72,7 @@ class For:
             + header
             + "\n"
             # Initialize loop counter for use in loop
-            + f"    {self.counter.to_cpp(type_env, **kwargs)} = party->In<Protocol>(encrypto::motion::ToInput({self.counter.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}), 0);"
+            + f"    {self.counter.to_cpp(type_env, **kwargs)} = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput({self.counter.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}), *party->GetBackend()).GetOutputAsShare();"
             + "\n"
             + indent(body, "    ")
             + "\n"

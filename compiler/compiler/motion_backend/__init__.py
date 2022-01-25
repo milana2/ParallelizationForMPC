@@ -17,8 +17,7 @@ class OutputParams(TypedDict):
 def _render_prototype(func: Function, type_env: TypeEnv) -> str:
     return_type = type_env[func.return_value].to_cpp(type_env)
     return (
-        "template <encrypto::motion::MpcProtocol Protocol>\n"
-        + f"{return_type} {func.name}(\n"
+        f"{return_type} {func.name}(\n"
         + indent("encrypto::motion::PartyPointer &party,\n", "    ")
         + indent(
             ",\n".join(param.to_cpp(type_env) for param in func.parameters), "    "
@@ -28,7 +27,9 @@ def _render_prototype(func: Function, type_env: TypeEnv) -> str:
 
 
 def _render_call(func: Function, type_env: TypeEnv) -> str:
-    return f"{func.name}<Protocol>({', '.join(str(param.var.name) for param in func.parameters)});"
+    return (
+        f"{func.name}({', '.join(str(param.var.name) for param in func.parameters)});"
+    )
 
 
 def _collect_constants(stmts: list[Statement]) -> list[Constant]:
@@ -104,7 +105,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         "// Constant initializations\n"
         + "\n".join(
             f"{const.datatype.to_cpp(type_env, plaintext=False)} {const.to_cpp(type_env)} = "
-            + f"party->In<Protocol>(encrypto::motion::ToInput({const.to_cpp(type_env, plaintext=True)}), 0);"
+            + f"encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput({const.to_cpp(type_env, plaintext=True)}), *party->GetBackend()).GetOutputAsShare();"
             for const in plaintext_constants
         )
         + "\n"
@@ -126,11 +127,11 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
             (
                 # Initialize the shared version
                 param.var.to_cpp(type_env)
-                + "_0 = party->In<Protocol>(encrypto::motion::ToInput("
+                + "_0 = encrypto::motion::proto::ConstantBooleanInputGate(encrypto::motion::ToInput("
                 + param.var.to_cpp(
                     type_env
                 )  # no plaintext=True here so we reference the right variable name
-                + "), 0);"
+                + "), *party->GetBackend()).GetOutputAsShare();"
             )
             + "\n"
             + (
