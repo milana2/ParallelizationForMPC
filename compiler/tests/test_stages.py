@@ -69,6 +69,12 @@ class StagesTestCase(unittest.TestCase):
             "histogram",
             "minimal_points",
             "psi",
+            # The tests beyond this point fail to compile since they return a vector
+            # Once our test harness can handle this, they can be re-enabled
+            "cross_join",
+            "cross_join_trivial",
+            "gauss_decomp",
+            "infeasible_edges_example",
         ]
 
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
