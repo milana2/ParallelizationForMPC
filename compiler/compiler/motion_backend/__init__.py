@@ -106,7 +106,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         "// Constant initializations\n"
         + "\n".join(
             f"{const.datatype.to_cpp(type_env, plaintext=False)} {const.to_cpp(type_env)} = "
-            + f"party->In<Protocol>(encrypto::motion::ToInput({const.to_cpp(type_env, plaintext=True)}), 0);"
+            + f"party->In<Protocol>({const.to_cpp(type_env, as_motion_input=True)}, 0);"
             for const in plaintext_constants
         )
         + "\n"

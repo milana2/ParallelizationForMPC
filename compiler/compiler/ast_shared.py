@@ -281,14 +281,21 @@ class Constant:
     value: Union[int, bool]
     datatype: DataType
 
-    def to_cpp(self, type_env: TypeEnv, plaintext=False, **kwargs) -> str:
-        if plaintext:
+    def to_cpp(
+        self, type_env: TypeEnv, plaintext=False, as_motion_input=False, **kwargs
+    ) -> str:
+        if as_motion_input:
+            if self.datatype == DataType.INT:
+                return f"encrypto::motion::ToInput({self.to_cpp(type_env, plaintext=True, as_motion_input=False)})"
+            elif self.datatype == DataType.BOOL:
+                return f"encrypto::motion::BitVector(1, {self.to_cpp(type_env, plaintext=True, as_motion_input=False)})"
+            else:
+                raise NotImplementedError()
+        elif plaintext:
             if self.datatype == DataType.INT:
                 return f"std::uint32_t({self.value})"
             elif self.datatype == DataType.BOOL:
-                # This is a hack to get around the way we convert plaintext values to shared
-                # ones.  It shouldn't break anything since booleans are convertable to ints
-                return f"std::uint32_t({str(self.value).lower()})"
+                return str(self.value).lower()
             else:
                 raise NotImplementedError()
         else:
