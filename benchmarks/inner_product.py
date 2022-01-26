@@ -1,4 +1,4 @@
-from .UTIL import shared
+from UTIL import shared
 
 
 def ip(A: shared[list[int]], B: shared[list[int]], N: int) -> shared[int]:

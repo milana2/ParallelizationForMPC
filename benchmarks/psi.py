@@ -1,4 +1,4 @@
-from .UTIL import shared
+from UTIL import shared
 
 # returns a list[int] which is the intersection
 # of privite sets of integers A and B

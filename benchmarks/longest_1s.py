@@ -1,4 +1,4 @@
-from .UTIL import shared
+from UTIL import shared
 
 
 def longest_1s(Seq: shared[list[int]], N: int, Sym: shared[int]) -> shared[int]:

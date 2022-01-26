@@ -1,4 +1,4 @@
-from .UTIL import shared
+from UTIL import shared
 
 
 def max_dist_between_syms(

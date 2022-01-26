@@ -1,4 +1,4 @@
-from .UTIL import shared
+from UTIL import shared
 
 
 def count_10s(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:

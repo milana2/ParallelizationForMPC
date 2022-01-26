@@ -1,4 +1,4 @@
-from .UTIL import shared
+from UTIL import shared
 
 
 def longest_odd_10(

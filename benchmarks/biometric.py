@@ -1,4 +1,4 @@
-from .UTIL import shared
+from UTIL import shared
 
 # Biometric matching
 # D is the number of features we are matching. Usually small, e.g., D=4

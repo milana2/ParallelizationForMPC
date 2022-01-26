@@ -1,4 +1,4 @@
-from .UTIL import shared
+from UTIL import shared
 
 # Array A contains a list of integers i in [1,num_bins]
 # Array B is a same-size array, contains number of collected ratings for that bin

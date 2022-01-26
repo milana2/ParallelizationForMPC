@@ -1,4 +1,4 @@
-from .UTIL import shared
+from UTIL import shared
 
 
 def cross_join(
