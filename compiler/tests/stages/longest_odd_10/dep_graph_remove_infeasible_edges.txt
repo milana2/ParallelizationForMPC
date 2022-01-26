@@ -1,7 +1,11 @@
 Nodes:
+    parameter Seq!0
+    parameter N!0
+    parameter Syms!0
     current_length!1 = 0
     max_length!1 = 0
     s2!1 = False
+    for i!1 in range(0, N!0):
     current_length!2 = Φ(current_length!1, current_length!6)
     max_length!2 = Φ(max_length!1, max_length!4)
     s2!2 = Φ(s2!1, s2!3)
@@ -20,9 +24,15 @@ Nodes:
     max_length!4 = MUX(!7!2, max_length!3, max_length!2)
     s2!3 = (Seq!0[i!1] == Syms!0[0])
 Forward edges:
+    parameter Seq!0  →  !1!2 = (Seq!0[i!1] == Syms!0[1])
+    parameter Seq!0  →  s2!3 = (Seq!0[i!1] == Syms!0[0])
+    parameter Syms!0  →  !1!2 = (Seq!0[i!1] == Syms!0[1])
+    parameter Syms!0  →  s2!3 = (Seq!0[i!1] == Syms!0[0])
     current_length!1 = 0  →  current_length!2 = Φ(current_length!1, current_length!6)
     max_length!1 = 0  →  max_length!2 = Φ(max_length!1, max_length!4)
     s2!1 = False  →  s2!2 = Φ(s2!1, s2!3)
+    for i!1 in range(0, N!0):  →  !1!2 = (Seq!0[i!1] == Syms!0[1])
+    for i!1 in range(0, N!0):  →  s2!3 = (Seq!0[i!1] == Syms!0[0])
     current_length!2 = Φ(current_length!1, current_length!6)  →  current_length!5 = MUX(!2!2, current_length!4, current_length!2)
     current_length!2 = Φ(current_length!1, current_length!6)  →  current_length!3 = (current_length!2 + 1)
     max_length!2 = Φ(max_length!1, max_length!4)  →  !6!2 = (current_length!6 > max_length!2)

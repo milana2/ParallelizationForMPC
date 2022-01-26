@@ -1,9 +1,15 @@
 Nodes:
+    parameter C!0
+    parameter D!0
+    parameter S!0
+    parameter N!0
     min_sum!1 = 10000
     min_index!1 = 0
+    for i!1 in range(0, N!0):
     min_sum!2 = Φ(min_sum!1, min_sum!4)
     min_index!2 = Φ(min_index!1, min_index!4)
     sum!2 = 0
+    for j!1 in range(0, D!0):
     sum!3 = Φ(sum!2, sum!4)
     d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
     p!3 = (d!3 * d!3)
@@ -15,14 +21,20 @@ Nodes:
     min_index!4 = MUX(!1!2, min_index!3, min_index!2)
     !2!1 = (min_sum!2, min_index!2)
 Forward edges:
+    parameter C!0  →  d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
+    parameter D!0  →  d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
+    parameter S!0  →  d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
     min_sum!1 = 10000  →  min_sum!2 = Φ(min_sum!1, min_sum!4)
     min_index!1 = 0  →  min_index!2 = Φ(min_index!1, min_index!4)
+    for i!1 in range(0, N!0):  →  d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
+    for i!1 in range(0, N!0):  →  min_index!3 = i!1
     min_sum!2 = Φ(min_sum!1, min_sum!4)  →  !1!2 = (sum!3 < min_sum!2)
     min_sum!2 = Φ(min_sum!1, min_sum!4)  →  min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
     min_sum!2 = Φ(min_sum!1, min_sum!4)  →  !2!1 = (min_sum!2, min_index!2)
     min_index!2 = Φ(min_index!1, min_index!4)  →  min_index!4 = MUX(!1!2, min_index!3, min_index!2)
     min_index!2 = Φ(min_index!1, min_index!4)  →  !2!1 = (min_sum!2, min_index!2)
     sum!2 = 0  →  sum!3 = Φ(sum!2, sum!4)
+    for j!1 in range(0, D!0):  →  d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
     sum!3 = Φ(sum!2, sum!4)  →  sum!4 = (sum!3 + p!3)
     sum!3 = Φ(sum!2, sum!4)  →  !1!2 = (sum!3 < min_sum!2)
     sum!3 = Φ(sum!2, sum!4)  →  min_sum!3 = sum!3

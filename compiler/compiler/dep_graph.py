@@ -1,4 +1,6 @@
+from enum import Enum
 from typing import Iterator, Union
+from dataclasses import dataclass
 
 import networkx  # type: ignore
 
@@ -6,42 +8,75 @@ from .util import assert_never
 from . import loop_linear_code as llc
 
 
-PhiOrAssign = Union[llc.Phi, llc.Assign]
+@dataclass(frozen=True)
+class DepParameter:
+    var: llc.Var
+
+    def __str__(self) -> str:
+        return f"parameter {self.var}"
+
+    @property
+    def lhs(self) -> llc.Var:
+        return self.var
+
+
+@dataclass(frozen=True)
+class DepFor:
+    inner: llc.For
+
+    def __str__(self) -> str:
+        return self.inner.heading_str()
+
+    @property
+    def lhs(self) -> llc.Var:
+        return self.inner.counter
+
+
+DepNode = Union[llc.Phi, llc.Assign, llc.ChangeDim, DepParameter, DepFor]
+
+
+class EdgeKind(Enum):
+    SAME_LEVEL = "same-level"
+    OUTER_TO_INNER = "outer-to-inner"
+    INNER_TO_OUTER = "inner-to-outer"
 
 
 class DepGraph:
     def_use_graph: networkx.DiGraph
-    enclosing_loops: dict[PhiOrAssign, list[llc.For]]
+    enclosing_loops: dict[DepNode, list[llc.For]]
+    var_to_assignment: dict[llc.Var, DepNode]
 
     def __init__(self, function: llc.Function) -> None:
         # Store all assignments and their enclosing loops.
-        all_assignments: list[tuple[PhiOrAssign, list[llc.For]]] = []
+        all_assignments: list[tuple[DepNode, list[llc.For]]] = []
 
-        # TODO: Handle parameters
+        for param in function.parameters:
+            all_assignments.append((DepParameter(param.var), []))
 
         def add_assignments(
             statements: list[llc.Statement], enclosing_loops: list[llc.For]
         ):
             for statement in statements:
-                if isinstance(statement, (llc.Phi, llc.Assign)):
+                if isinstance(statement, (llc.Phi, llc.Assign, llc.ChangeDim)):
                     all_assignments.append((statement, enclosing_loops))
                 elif isinstance(statement, llc.For):
                     loop = statement
+                    all_assignments.append((DepFor(loop), enclosing_loops))
                     add_assignments(loop.body, enclosing_loops + [loop])
                 else:
                     assert_never(statement)
 
         add_assignments(function.body, [])
 
-        var_to_assignment: dict[llc.Var, PhiOrAssign] = dict()
+        self.var_to_assignment: dict[llc.Var, DepNode] = dict()
 
         for assignment, _ in all_assignments:
             lhs = assignment.lhs
 
             # This should be true if the SSA renaming is correct
-            assert lhs not in var_to_assignment
+            assert lhs not in self.var_to_assignment
 
-            var_to_assignment[lhs] = assignment
+            self.var_to_assignment[lhs] = assignment
 
         self.def_use_graph = networkx.DiGraph()
         for assignment, _ in all_assignments:
@@ -51,13 +86,17 @@ class DepGraph:
             if isinstance(assignment, llc.Phi):
                 lhss = assignment.rhs_vars()
             elif isinstance(assignment, llc.Assign):
-                lhss = _vars_in_rhs(assignment.rhs)
+                lhss = llc.assign_rhs_accessed_vars(assignment.rhs)
+            elif isinstance(assignment, llc.ChangeDim):
+                lhss = [assignment.input_arr]
+            elif isinstance(assignment, (DepParameter, DepFor)):
+                lhss = []
             else:
                 assert_never(assignment)
 
             for lhs in lhss:
                 try:
-                    var_def = var_to_assignment[lhs]
+                    var_def = self.var_to_assignment[lhs]
                 except KeyError:
                     pass
                 else:
@@ -68,21 +107,6 @@ class DepGraph:
             self.enclosing_loops[assignment] = enclosing_loops
 
         # TODO: Handle return value
-
-    def edges(self) -> Iterator[tuple[PhiOrAssign, PhiOrAssign]]:
-        return self.def_use_graph.edges()
-
-    def is_back_edge(
-        self, def_statement: PhiOrAssign, use_statement: PhiOrAssign
-    ) -> bool:
-        return (
-            self.def_use_graph.has_edge(def_statement, use_statement)
-            and isinstance(use_statement, llc.Phi)
-            and self.enclosing_loops[use_statement]
-            == self.enclosing_loops[def_statement][
-                : len(self.enclosing_loops[use_statement])
-            ]
-        )
 
     def __str__(self) -> str:
         nodes = "\n".join([f"    {node}" for node in self.def_use_graph.nodes])
@@ -97,27 +121,26 @@ class DepGraph:
             + f"Back edges:\n{back_edges}"
         ).strip()
 
+    def edges(self) -> Iterator[tuple[DepNode, DepNode]]:
+        return self.def_use_graph.edges()
 
-def _vars_in_rhs(rhs: llc.AssignRHS) -> list[llc.Var]:
-    if isinstance(rhs, llc.Var):
-        return [rhs]
-    elif isinstance(rhs, llc.Subscript):
-        return [rhs.array]
-    elif isinstance(rhs, llc.Constant):
-        return []
-    elif isinstance(rhs, llc.BinOp):
-        return _vars_in_rhs(rhs.left) + _vars_in_rhs(rhs.right)
-    elif isinstance(rhs, llc.UnaryOp):
-        return _vars_in_rhs(rhs.operand)
-    elif isinstance(rhs, (llc.List, llc.Tuple)):
-        return [lhs for rhs_item in rhs.items for lhs in _vars_in_rhs(rhs_item)]
-    elif isinstance(rhs, llc.Mux):
-        return [
-            v
-            for v in (rhs.condition, rhs.false_value, rhs.true_value)
-            if isinstance(v, llc.Var)
-        ]
-    elif isinstance(rhs, llc.Update):
-        return [rhs.array] + _vars_in_rhs(rhs.value)
-    else:
-        assert_never(rhs)
+    def is_back_edge(self, def_statement: DepNode, use_statement: DepNode) -> bool:
+        return (
+            self.def_use_graph.has_edge(def_statement, use_statement)
+            and isinstance(use_statement, llc.Phi)
+            and self.enclosing_loops[use_statement]
+            == self.enclosing_loops[def_statement][
+                : len(self.enclosing_loops[use_statement])
+            ]
+        )
+
+    def edge_kind(self, def_stmt: DepNode, use_stmt: DepNode) -> EdgeKind:
+        assert self.def_use_graph.has_edge(def_stmt, use_stmt)
+        def_level = len(self.enclosing_loops[def_stmt])
+        use_level = len(self.enclosing_loops[use_stmt])
+        if def_level == use_level:
+            return EdgeKind.SAME_LEVEL
+        elif def_level < use_level:
+            return EdgeKind.OUTER_TO_INNER
+        else:
+            return EdgeKind.INNER_TO_OUTER

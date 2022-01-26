@@ -1,6 +1,10 @@
 Nodes:
+    parameter Seq!0
+    parameter N!0
+    parameter Sym!0
     current_length!1 = 0
     max_length!1 = 0
+    for i!1 in range(1, N!0):
     current_length!2 = Φ(current_length!1, current_length!5)
     max_length!2 = Φ(max_length!1, max_length!4)
     !1!2 = (Seq!0[i!1] == Sym!0)
@@ -16,8 +20,11 @@ Nodes:
     max_length!3 = tmp_max_len!4
     max_length!4 = MUX(!4!2, max_length!3, max_length!2)
 Forward edges:
+    parameter Seq!0  →  !1!2 = (Seq!0[i!1] == Sym!0)
+    parameter Sym!0  →  !1!2 = (Seq!0[i!1] == Sym!0)
     current_length!1 = 0  →  current_length!2 = Φ(current_length!1, current_length!5)
     max_length!1 = 0  →  max_length!2 = Φ(max_length!1, max_length!4)
+    for i!1 in range(1, N!0):  →  !1!2 = (Seq!0[i!1] == Sym!0)
     current_length!2 = Φ(current_length!1, current_length!5)  →  current_length!3 = (current_length!2 + 1)
     max_length!2 = Φ(max_length!1, max_length!4)  →  tmp_max_len!2 = max_length!2
     max_length!2 = Φ(max_length!1, max_length!4)  →  !2!2 = (current_length!5 > max_length!2)

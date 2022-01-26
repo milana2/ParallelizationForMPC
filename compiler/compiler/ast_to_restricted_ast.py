@@ -418,7 +418,7 @@ class _TypeConverter(_StrictNodeVisitor):
         if node.id != "int":
             self.raise_syntax_error(node, "Only `int` is supported")
 
-        return VarType(VarVisibility.PLAINTEXT, 0, DataType.INT)
+        return VarType(VarVisibility.PLAINTEXT, [], DataType.INT)
 
     def visit_Subscript(self, node: ast.Subscript) -> VarType:
         if not isinstance(node.value, ast.Name):
@@ -446,7 +446,7 @@ class _TypeConverter(_StrictNodeVisitor):
                 for child in node.slice.elts
             ]
 
-            child_dim_set = set(var_type.dims for var_type in inner_types)
+            child_dim_set = set(len(var_type.dims) for var_type in inner_types)
             if len(child_dim_set) != 1:
                 self.raise_syntax_error(
                     node, "Tuple datatypes must have the same number of dimensions"
@@ -465,21 +465,21 @@ class _TypeConverter(_StrictNodeVisitor):
             inner_types = []
 
             if node.value.id == "shared":
-                num_dims = subtype.dims
+                num_dims = len(subtype.dims)
                 if len(subtype.tuple_types) > 0:
                     self.raise_syntax_error(
                         node,
                         "Shared variables cannot have tuple types",
                     )
             else:
-                num_dims = subtype.dims + 1
+                num_dims = len(subtype.dims) + 1
             datatype = subtype.datatype
 
         return VarType(
             VarVisibility.SHARED
             if node.value.id == "shared"
             else VarVisibility.PLAINTEXT,
-            num_dims,
+            [True] * num_dims,
             datatype=datatype,
             tuple_types=inner_types,
         )
@@ -501,7 +501,7 @@ class _FunctionConverter(_StrictNodeVisitor):
         parameters = [
             restricted_ast.Parameter(
                 var=restricted_ast.Var(arg.arg),
-                var_type=VarType(VarVisibility.PLAINTEXT, 0, DataType.INT)
+                var_type=VarType(VarVisibility.PLAINTEXT, [], DataType.INT)
                 if arg.annotation is None
                 else _TypeConverter(self.source_code_info).visit(arg.annotation),
             )

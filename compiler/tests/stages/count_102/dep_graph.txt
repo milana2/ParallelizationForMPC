@@ -1,6 +1,10 @@
 Nodes:
+    parameter Seq!0
+    parameter N!0
+    parameter Syms!0
     s0!1 = False
     c!1 = 0
+    for i!1 in range(0, N!0):
     s0!2 = Φ(s0!1, s0!3)
     c!2 = Φ(c!1, c!4)
     !1!2 = (Seq!0[i!1] == Syms!0[2])
@@ -12,8 +16,17 @@ Nodes:
     !6!2 = (s0!2 and !5!2)
     s0!3 = (!3!2 or !6!2)
 Forward edges:
+    parameter Seq!0  →  !1!2 = (Seq!0[i!1] == Syms!0[2])
+    parameter Seq!0  →  !3!2 = (Seq!0[i!1] == Syms!0[1])
+    parameter Seq!0  →  !5!2 = (Seq!0[i!1] == Syms!0[0])
+    parameter Syms!0  →  !1!2 = (Seq!0[i!1] == Syms!0[2])
+    parameter Syms!0  →  !3!2 = (Seq!0[i!1] == Syms!0[1])
+    parameter Syms!0  →  !5!2 = (Seq!0[i!1] == Syms!0[0])
     s0!1 = False  →  s0!2 = Φ(s0!1, s0!3)
     c!1 = 0  →  c!2 = Φ(c!1, c!4)
+    for i!1 in range(0, N!0):  →  !1!2 = (Seq!0[i!1] == Syms!0[2])
+    for i!1 in range(0, N!0):  →  !3!2 = (Seq!0[i!1] == Syms!0[1])
+    for i!1 in range(0, N!0):  →  !5!2 = (Seq!0[i!1] == Syms!0[0])
     s0!2 = Φ(s0!1, s0!3)  →  !2!2 = (s0!2 and !1!2)
     s0!2 = Φ(s0!1, s0!3)  →  !6!2 = (s0!2 and !5!2)
     c!2 = Φ(c!1, c!4)  →  c!3 = (c!2 + 1)

@@ -92,6 +92,12 @@ def compile(
         print(type_env)
         print()
 
+    (linear, dep_graph) = vectorize.basic_vectorization(linear, dep_graph, type_env)
+    if not quiet:
+        print("Basic Vectorization:")
+        print(linear)
+        print()
+
     motion_code = motion_backend.render_function(linear, type_env)
     if not quiet:
         print("Motion code:")

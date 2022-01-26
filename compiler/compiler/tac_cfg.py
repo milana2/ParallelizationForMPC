@@ -19,7 +19,9 @@ from .ast_shared import (
     BinOp as _BinOp,
     UnaryOp as _UnaryOp,
     TypeEnv,
+    subscript_index_accessed_vars,
 )
+from .util import assert_never
 
 
 Atom = Union[Var, Constant]
@@ -109,6 +111,35 @@ class Update:
 
 
 AssignRHS = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux, Update]
+
+
+def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
+    if isinstance(rhs, Var):
+        return [rhs]
+    elif isinstance(rhs, Constant):
+        return []
+    elif isinstance(rhs, Subscript):
+        return [rhs.array] + subscript_index_accessed_vars(rhs.index)
+    elif isinstance(rhs, BinOp):
+        return assign_rhs_accessed_vars(rhs.left) + assign_rhs_accessed_vars(rhs.right)
+    elif isinstance(rhs, UnaryOp):
+        return assign_rhs_accessed_vars(rhs.operand)
+    elif isinstance(rhs, (List, Tuple)):
+        return [var for item in rhs.items for var in assign_rhs_accessed_vars(item)]
+    elif isinstance(rhs, Mux):
+        return (
+            [rhs.condition]
+            + assign_rhs_accessed_vars(rhs.false_value)
+            + assign_rhs_accessed_vars(rhs.true_value)
+        )
+    elif isinstance(rhs, Update):
+        return (
+            [rhs.array]
+            + subscript_index_accessed_vars(rhs.index)
+            + assign_rhs_accessed_vars(rhs.value)
+        )
+    else:
+        assert_never(rhs)
 
 
 @dataclass(eq=False)

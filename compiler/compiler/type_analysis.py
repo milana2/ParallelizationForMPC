@@ -1,8 +1,10 @@
 import sys
 from typing import Optional, Union, cast
 
+from compiler.util import assert_never
+
 from . import loop_linear_code
-from .dep_graph import DepGraph
+from .dep_graph import DepFor, DepGraph, DepNode, DepParameter
 from .ast_shared import (
     Var,
     Constant,
@@ -34,7 +36,7 @@ def _type_assign_expr(
         return type_env[expr]
 
     elif isinstance(expr, Constant):
-        return VarType(VarVisibility.PLAINTEXT, 0, expr.datatype)
+        return VarType(VarVisibility.PLAINTEXT, [], expr.datatype)
 
     elif isinstance(expr, Subscript):
         index_type = _type_assign_expr(expr.index, type_env)
@@ -89,7 +91,7 @@ def _type_assign_expr(
             # We assume that all arrays in the source-code are 1-dimensional
             # TODO: remove this condition if multi-dimensional arrays are supported
             # TODO: is it ok to assume that all hard-coded arrays are of ints?
-            return VarType(VarVisibility.PLAINTEXT, 1, DataType.INT)
+            return VarType(VarVisibility.PLAINTEXT, [True], DataType.INT)
 
         elem_type = VarType.merge(
             *[_type_assign_expr(item, type_env) for item in expr.items],
@@ -102,7 +104,7 @@ def _type_assign_expr(
         elem_types = [_type_assign_expr(item, type_env) for item in expr.items]
         return VarType(
             VarVisibility.PLAINTEXT,  # Tuples are always plaintext
-            1,  # tuples are always 1-dimensional
+            [True],  # tuples are always 1-dimensional
             DataType.TUPLE,
             tuple_types=elem_types,
         )
@@ -182,7 +184,7 @@ def validate_type_requirements(
             raise TypeError(f"Variable {var_name} has incomplete type {var_type}")
 
         if var_type.datatype == DataType.TUPLE:
-            if var_type.dims != 1:
+            if var_type.dims is not None and len(var_type.dims) != 1:
                 raise TypeError(
                     f"Tuple {var_name} has invalid dimensions {var_type.dims}"
                 )
@@ -237,7 +239,7 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
     )
     _add_loop_counter_types(type_env, func.body)
 
-    worklist = list(dep_graph.def_use_graph.nodes)
+    worklist: list[DepNode] = list(dep_graph.def_use_graph.nodes)
 
     while len(worklist) > 0:
         stmt = worklist.pop()
@@ -265,10 +267,14 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
                 # No changes to this variable's type, don't extend the worklist
                 continue
             type_env[stmt.lhs] = phi_type
+        elif isinstance(stmt, (DepParameter, DepFor)):
+            pass
         else:
-            raise AssertionError(
-                f"Unexpected node {type(stmt)} added to type inference worklist"
-            )
+            # Shouldn't happen before Basic Vectorization phase 1,
+            # and type analysis doesn't happen after that.
+            assert not isinstance(stmt, loop_linear_code.ChangeDim)
+
+            assert_never(stmt)
 
         # If we get to this point, the lhs has been reassigned so we must add dependencies
         # to the worklist

@@ -6,6 +6,8 @@ from textwrap import indent
 
 import networkx  # type: ignore
 
+from .util import assert_never
+
 
 class VarVisibility(Enum):
     PLAINTEXT = "plaintext"
@@ -45,7 +47,7 @@ class DataType(Enum):
 @dataclass
 class VarType:
     visibility: Optional[VarVisibility] = None
-    dims: Optional[int] = None
+    dims: Optional[list[bool]] = None
     datatype: Optional[DataType] = None
     tuple_types: list["VarType"] = field(default_factory=list)
 
@@ -63,13 +65,13 @@ class VarType:
         if self.dims is None:
             return VarType(self.visibility, None, self.datatype)
         else:
-            return VarType(self.visibility, self.dims - 1, self.datatype)
+            return VarType(self.visibility, self.dims[:-1], self.datatype)
 
     def add_dim(self) -> "VarType":
         if self.dims is None:
             return VarType(self.visibility, None, self.datatype)
         else:
-            return VarType(self.visibility, self.dims + 1, self.datatype)
+            return VarType(self.visibility, self.dims + [True], self.datatype)
 
     def is_plaintext(self) -> bool:
         return self.visibility == VarVisibility.PLAINTEXT
@@ -129,7 +131,7 @@ class VarType:
             merged_type.visibility = VarVisibility.PLAINTEXT
 
         # Determine the dimensionality of the merged type
-        elem_dims = [t.dims for t in types if t.dims is not None]
+        elem_dims = [len(t.dims) for t in types if t.dims is not None]
         if len(set(elem_dims)) > 1:
             raise TypeError(
                 "Cannot merge types with different dimensionality:\n{}".format(
@@ -137,7 +139,7 @@ class VarType:
                 )
             )
         if len(elem_dims) > 0:
-            merged_type.dims = elem_dims[0]
+            merged_type.dims = [True] * elem_dims[0]
 
         # Determine the datatype of the merged type
         elem_datatypes = [t.datatype for t in types if t.datatype is not None]
@@ -182,7 +184,7 @@ class VarType:
             return f"std::tuple<{', '.join(t.to_cpp(type_env, **kwargs) for t in self.tuple_types)}>"
         else:
             str_rep = ""
-            for _ in range(self.dims):
+            for _ in self.dims:
                 str_rep += "std::vector<"
             str_rep += self.datatype.to_cpp(
                 type_env,
@@ -192,7 +194,7 @@ class VarType:
                 ),
                 **{k: v for k, v in kwargs.items() if k != "plaintext"},
             )
-            for _ in range(self.dims):
+            for _ in self.dims:
                 str_rep += ">"
             return str_rep
 
@@ -202,11 +204,11 @@ class VarType:
 
         str_rep = f"{self.visibility}["
         if self.dims is not None:
-            for _ in range(self.dims):
+            for _ in self.dims:
                 str_rep += "list["
         str_rep += f"{self.datatype}"
         if self.dims is not None:
-            for _ in range(self.dims):
+            for _ in self.dims:
                 str_rep += "]"
         str_rep += "]"
         if self.dims is None:
@@ -214,7 +216,7 @@ class VarType:
         return str_rep
 
 
-PLAINTEXT_INT = VarType(VarVisibility.PLAINTEXT, 0, DataType.INT)
+PLAINTEXT_INT = VarType(VarVisibility.PLAINTEXT, [], DataType.INT)
 
 
 @dataclass(frozen=True)
@@ -536,6 +538,21 @@ class SubscriptIndexUnaryOp(UnaryOp["SubscriptIndex"]):
 
 
 SubscriptIndex = Union[Var, Constant, SubscriptIndexBinOp, SubscriptIndexUnaryOp]
+
+
+def subscript_index_accessed_vars(index: SubscriptIndex) -> list[Var]:
+    if isinstance(index, Var):
+        return [index]
+    elif isinstance(index, Constant):
+        return []
+    elif isinstance(index, SubscriptIndexBinOp):
+        left = subscript_index_accessed_vars(index.left)
+        right = subscript_index_accessed_vars(index.right)
+        return left + right
+    elif isinstance(index, SubscriptIndexUnaryOp):
+        return subscript_index_accessed_vars(index.operand)
+    else:
+        assert_never(index)
 
 
 @dataclass(frozen=True)

@@ -3,6 +3,8 @@ from typing import Union, Optional
 from textwrap import indent
 
 from .ssa import (
+    Atom,
+    Operand,
     Var,
     Phi,
     Assign,
@@ -19,11 +21,26 @@ from .ssa import (
     Tuple,
     Mux,
     Update,
+    assign_rhs_accessed_vars,
 )
 from .ast_shared import VarType, BinOpKind, Parameter, UnaryOpKind, TypeEnv
 
 
-Statement = Union[Phi, Assign, "For"]
+@dataclass(frozen=True)
+class ChangeDim:
+    lhs: Var
+    input_arr: Var
+    drop: bool
+
+    def __str__(self) -> str:
+        drop = "drop" if self.drop else "raise"
+        return f"{self.lhs} = {drop}_dim({self.input_arr})"
+
+    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
+        raise NotImplementedError()
+
+
+Statement = Union[Phi, Assign, "For", ChangeDim]
 
 
 @dataclass(frozen=True)

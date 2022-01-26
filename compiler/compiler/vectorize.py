@@ -1,5 +1,6 @@
+from .ast_shared import TypeEnv
 from . import loop_linear_code as llc
-from .dep_graph import DepGraph, PhiOrAssign
+from .dep_graph import DepGraph, DepNode, EdgeKind
 from .util import assert_never
 
 from dataclasses import dataclass
@@ -14,10 +15,18 @@ class ArrayRead:
     parent_loops: list[llc.For]
 
 
-def _new_temp_var(dep_graph: DepGraph):
-    nodes: Iterable[PhiOrAssign] = dep_graph.def_use_graph.nodes
-    number = max([0 if isinstance(a.lhs.name, str) else a.lhs.name for a in nodes]) + 1
-    return llc.Var(number, 0)
+class TempVarGenerator:
+    _max_temp_var_num: int
+
+    def __init__(self, dep_graph: DepGraph) -> None:
+        nodes: Iterable[DepNode] = dep_graph.def_use_graph.nodes
+        self._max_temp_var_num = max(
+            [0 if isinstance(a.lhs.name, str) else a.lhs.name for a in nodes]
+        )
+
+    def get(self) -> llc.Var:
+        self._max_temp_var_num += 1
+        return llc.Var(self._max_temp_var_num, 0)
 
 
 def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
@@ -34,6 +43,9 @@ def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
         elif isinstance(statement, llc.For):
             result += _arrays_written_in_loop(statement)
         else:
+            assert not isinstance(
+                statement, llc.ChangeDim
+            ), "ChangeDim shouldn't exist before Basic Vectorization"
             assert_never(statement)
     return result
 
@@ -87,6 +99,9 @@ def _arrays_read_in_loop(
         elif isinstance(statement, llc.For):
             result += _arrays_read_in_loop(parent_loops + [statement], array_name)
         else:
+            assert not isinstance(
+                statement, llc.ChangeDim
+            ), "ChangeDim shouldn't exist before Basic Vectorization"
             assert_never(statement)
     return result
 
@@ -195,9 +210,7 @@ def _remove_back_edge(A_name: Union[str, int], dep_graph: DepGraph, j: llc.For) 
     for A_use in j.body:
         if isinstance(A_use, llc.Phi) and A_use.lhs.name == A_name:
             assert dep_graph.enclosing_loops[A_use][-1] == j
-            A_defs: list[PhiOrAssign] = list(
-                dep_graph.def_use_graph.predecessors(A_use)
-            )
+            A_defs: list[DepNode] = list(dep_graph.def_use_graph.predecessors(A_use))
             for A_def in A_defs:
                 assert A_def.lhs.name == A_name
                 if dep_graph.is_back_edge(A_def, A_use):
@@ -237,10 +250,8 @@ def remove_infeasible_edges(function: llc.Function, dep_graph: DepGraph) -> None
 def _find_update(
     A: llc.Var, A_use: llc.Assign, dep_graph: DepGraph
 ) -> Optional[llc.SubscriptIndex]:
-    A_def: PhiOrAssign
-    [A_def] = [
-        A_def for A_def in dep_graph.def_use_graph.predecessors(A_use) if A_def.lhs == A
-    ]
+    A_def: DepNode
+    A_def = dep_graph.var_to_assignment[A]
     return (
         A_def.rhs.index
         if isinstance(A_def, llc.Assign) and isinstance(A_def.rhs, llc.Update)
@@ -249,7 +260,7 @@ def _find_update(
 
 
 def _refine_array_mux_statement(
-    statement: llc.Statement, dep_graph: DepGraph
+    statement: llc.Statement, dep_graph: DepGraph, tmp_var_gen: TempVarGenerator
 ) -> list[llc.Statement]:
     if isinstance(statement, llc.Assign) and isinstance(statement.rhs, llc.Mux):
         Aj = statement.lhs
@@ -273,7 +284,7 @@ def _refine_array_mux_statement(
                 assert l is not None
                 Ak_i1 = llc.Subscript(Ak, i1)
                 Al_i1 = llc.Subscript(Al, i1)
-                temp = _new_temp_var(dep_graph)
+                temp = tmp_var_gen.get()
                 return [
                     llc.Assign(
                         lhs=temp,
@@ -293,7 +304,9 @@ def _refine_array_mux_statement(
                 counter=statement.counter,
                 bound_low=statement.bound_low,
                 bound_high=statement.bound_high,
-                body=_refine_array_mux_statements(statement.body, dep_graph),
+                body=_refine_array_mux_statements(
+                    statement.body, dep_graph, tmp_var_gen
+                ),
             )
         ]
     else:
@@ -301,24 +314,146 @@ def _refine_array_mux_statement(
 
 
 def _refine_array_mux_statements(
-    stmts: list[llc.Statement], dep_graph: DepGraph
+    stmts: list[llc.Statement], dep_graph: DepGraph, tmp_var_gen: TempVarGenerator
 ) -> list[llc.Statement]:
     return [
         rstmt
         for stmt in stmts
-        for rstmt in _refine_array_mux_statement(stmt, dep_graph)
+        for rstmt in _refine_array_mux_statement(stmt, dep_graph, tmp_var_gen)
     ]
 
 
 def refine_array_mux(
     function: llc.Function, dep_graph: DepGraph
 ) -> tuple[llc.Function, DepGraph]:
+    tmp_var_gen = TempVarGenerator(dep_graph)
     function = llc.Function(
         name=function.name,
         parameters=function.parameters,
-        body=_refine_array_mux_statements(function.body, dep_graph),
+        body=_refine_array_mux_statements(function.body, dep_graph, tmp_var_gen),
         return_value=function.return_value,
         return_type=function.return_type,
     )
     dep_graph = DepGraph(function)
     return (function, dep_graph)
+
+
+def _basic_vectorization_phase_1(
+    stmts: list[llc.Statement],
+    dep_graph: DepGraph,
+    type_env: TypeEnv,
+    tmp_var_gen: TempVarGenerator,
+) -> list[llc.Statement]:
+    result: list[llc.Statement] = []
+
+    for stmt in stmts:
+        if isinstance(stmt, (llc.Phi, llc.Assign)):
+
+            def replace_var(var: llc.Var, stmt: DepNode) -> llc.Var:
+                def_var = dep_graph.var_to_assignment[var]
+                edge_kind = dep_graph.edge_kind(def_var, stmt)
+                var_type = type_env[var]
+                if edge_kind is EdgeKind.SAME_LEVEL:
+                    return var
+                elif edge_kind is EdgeKind.OUTER_TO_INNER:
+                    var_prime = tmp_var_gen.get()
+                    result.append(llc.ChangeDim(var_prime, var, drop=False))
+                    type_env[var_prime] = var_type.add_dim()
+                    return var_prime
+                elif edge_kind is EdgeKind.INNER_TO_OUTER:
+                    var_prime = tmp_var_gen.get()
+                    result.append(llc.ChangeDim(var_prime, var, drop=True))
+                    type_env[var_prime] = var_type.drop_dim()
+                    return var_prime
+                else:
+                    assert_never(edge_kind)
+
+            def replace_atom(atom: llc.Atom, stmt: DepNode) -> llc.Atom:
+                if isinstance(atom, llc.Var):
+                    return replace_var(atom, stmt)
+                elif isinstance(atom, llc.Constant):
+                    return atom
+                else:
+                    assert_never(atom)
+
+            def replace_subscript(sub: llc.Subscript, stmt: DepNode) -> llc.Subscript:
+                return llc.Subscript(
+                    array=replace_var(sub.array, stmt),
+                    index=sub.index,
+                )
+
+            def replace_operand(o: llc.Operand, stmt: DepNode) -> llc.Operand:
+                if isinstance(o, (llc.Var, llc.Constant)):
+                    return replace_atom(o, stmt)
+                elif isinstance(o, llc.Subscript):
+                    return replace_subscript(o, stmt)
+                else:
+                    assert_never(o)
+
+            if isinstance(stmt, llc.Phi):
+                stmt.rhs_false = replace_var(stmt.rhs_false, stmt)
+                stmt.rhs_true = replace_var(stmt.rhs_true, stmt)
+            elif isinstance(stmt, llc.Assign):
+                if isinstance(stmt.rhs, llc.Var):
+                    stmt.rhs = replace_var(stmt.rhs, stmt)
+                elif isinstance(stmt.rhs, llc.Constant):
+                    pass
+                elif isinstance(stmt.rhs, llc.Subscript):
+                    stmt.rhs = replace_subscript(stmt.rhs, stmt)
+                elif isinstance(stmt.rhs, llc.BinOp):
+                    stmt.rhs.left = replace_operand(stmt.rhs.left, stmt)
+                    stmt.rhs.right = replace_operand(stmt.rhs.right, stmt)
+                elif isinstance(stmt.rhs, llc.UnaryOp):
+                    stmt.rhs.operand = replace_operand(stmt.rhs.operand, stmt)
+                elif isinstance(stmt.rhs, llc.List):
+                    stmt.rhs = llc.List(
+                        [replace_atom(atom, stmt) for atom in stmt.rhs.items]
+                    )
+                elif isinstance(stmt.rhs, llc.Tuple):
+                    stmt.rhs = llc.Tuple(
+                        [replace_atom(atom, stmt) for atom in stmt.rhs.items]
+                    )
+                elif isinstance(stmt.rhs, llc.Mux):
+                    stmt.rhs.false_value = replace_operand(stmt.rhs.false_value, stmt)
+                    stmt.rhs.true_value = replace_operand(stmt.rhs.true_value, stmt)
+                else:
+                    assert not isinstance(
+                        stmt.rhs, llc.Update
+                    ), "Basic Vectorization does not support array writes for now"
+                    assert_never(stmt.rhs)
+            else:
+                assert_never(stmt)
+
+            result.append(stmt)
+
+        elif isinstance(stmt, llc.For):
+            result.append(
+                llc.For(
+                    counter=stmt.counter,
+                    bound_low=stmt.bound_low,
+                    bound_high=stmt.bound_high,
+                    body=_basic_vectorization_phase_1(
+                        stmt.body, dep_graph, type_env, tmp_var_gen
+                    ),
+                )
+            )
+        else:
+            assert not isinstance(stmt, llc.ChangeDim)
+            assert_never(stmt)
+
+    return result
+
+
+def basic_vectorization(
+    function: llc.Function, dep_graph: DepGraph, type_env: TypeEnv
+) -> tuple[llc.Function, DepGraph]:
+    tmp_var_gen = TempVarGenerator(dep_graph)
+    body = _basic_vectorization_phase_1(function.body, dep_graph, type_env, tmp_var_gen)
+    function = llc.Function(
+        name=function.name,
+        parameters=function.parameters,
+        body=body,
+        return_value=function.return_value,
+        return_type=function.return_type,
+    )
+    return (function, DepGraph(function))

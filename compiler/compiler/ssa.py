@@ -31,6 +31,7 @@ from .tac_cfg import (
     Atom,
     Operand,
     Update,
+    assign_rhs_accessed_vars,
 )
 from .tac_cfg import Block as _BaseBlock
 
