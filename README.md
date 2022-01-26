@@ -3,7 +3,7 @@
 ## `biometric`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 # Biometric matching
 # D is the number of features we are matching. Usually small, e.g., D=4
@@ -236,7 +236,7 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
 ## `biometric_fast`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def biometric_matching_fast(
@@ -632,7 +632,10 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
 ## `chapterfour_figure_12`
 ### Input
 ```python
-def foo(x: shared[int], y: shared[int]) -> shared[int]:
+from UTIL import shared
+
+
+def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
     z = 0
     if x > 0:
         if y > 0:
@@ -644,7 +647,7 @@ def foo(x: shared[int], y: shared[int]) -> shared[int]:
 ```
 ### Restricted AST
 ```python
-def foo(x: shared[int], y: shared[int]) -> shared[int]:
+def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
     z = 0
     if (x > 0):
         if (y > 0):
@@ -663,7 +666,7 @@ def foo(x: shared[int], y: shared[int]) -> shared[int]:
 ![](chapterfour_figure_12_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def foo(x: shared[int], y: shared[int]) -> shared[int]:
+def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
     z!1 = 0
     !1!1 = (x!0 > 0)
     !2!1 = (y!0 > 0)
@@ -679,7 +682,7 @@ def foo(x: shared[int], y: shared[int]) -> shared[int]:
 ![](chapterfour_figure_12_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def foo(x: shared[int], y: shared[int]) -> shared[int]:
+def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
     z!1 = 0
     !1!1 = (x!0 > 0)
     !2!1 = (y!0 > 0)
@@ -706,7 +709,7 @@ def foo(x: shared[int], y: shared[int]) -> shared[int]:
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger foo(
+encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
     encrypto::motion::PartyPointer &party,
     encrypto::motion::SecureUnsignedInteger x,
     encrypto::motion::SecureUnsignedInteger y
@@ -756,7 +759,7 @@ encrypto::motion::SecureUnsignedInteger foo(
 ## `convex_hull`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def convex_hull(
@@ -976,9 +979,9 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     bool _MPC_PLAINTEXT_is_hull_4;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(true)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
     // Shared parameter assignments
     X_coords_0 = X_coords;
@@ -1046,7 +1049,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
 ## `count_102`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def count_102(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:
@@ -1184,9 +1187,9 @@ encrypto::motion::SecureUnsignedInteger count_102(
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
     Seq_0 = Seq;
@@ -1228,7 +1231,7 @@ encrypto::motion::SecureUnsignedInteger count_102(
 ## `count_10s`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def count_10s(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:
@@ -1379,9 +1382,9 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     std::uint32_t _MPC_PLAINTEXT_scount_1;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
     Seq_0 = Seq;
@@ -1427,7 +1430,7 @@ encrypto::motion::SecureUnsignedInteger count_10s(
 ## `count_123`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def count_123(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:
@@ -1584,9 +1587,9 @@ encrypto::motion::SecureUnsignedInteger count_123(
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
     Seq_0 = Seq;
@@ -1633,7 +1636,7 @@ encrypto::motion::SecureUnsignedInteger count_123(
 ## `histogram`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 # Array A contains a list of integers i in [1,num_bins]
 # Array B is a same-size array, contains number of collected ratings for that bin
@@ -2038,7 +2041,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
 ## `inner_product`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def ip(A: shared[list[int]], B: shared[list[int]], N: int) -> shared[int]:
@@ -2165,7 +2168,7 @@ encrypto::motion::SecureUnsignedInteger ip(
 ## `longest_102`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def longest_102(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared[int]:
@@ -2351,9 +2354,9 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     bool _MPC_PLAINTEXT_s0_1;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
     Seq_0 = Seq;
@@ -2406,7 +2409,7 @@ encrypto::motion::SecureUnsignedInteger longest_102(
 ## `longest_1s`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def longest_1s(Seq: shared[list[int]], N: int, Sym: shared[int]) -> shared[int]:
@@ -2591,7 +2594,7 @@ encrypto::motion::SecureUnsignedInteger longest_1s(
 ## `longest_even_0`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def longest_even_0(Seq: shared[list[int]], N: int, Sym: shared[int]) -> shared[int]:
@@ -2804,7 +2807,7 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
 ## `longest_odd_10`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def longest_odd_10(
@@ -2991,9 +2994,9 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     std::uint32_t _MPC_PLAINTEXT_current_length_1;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
     Seq_0 = Seq;
@@ -3046,7 +3049,7 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
 ## `max_dist_between_syms`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def max_dist_between_syms(
@@ -3231,7 +3234,7 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
 ## `max_sum_between_syms`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def max_sum_between_syms(
@@ -3415,7 +3418,7 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
 ## `minimal_points`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 
 def minimal_points(
@@ -3656,7 +3659,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
 ## `psi`
 ### Input
 ```python
-from .UTIL import shared
+from UTIL import shared
 
 # returns a list[int] which is the intersection
 # of privite sets of integers A and B
@@ -3820,9 +3823,9 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     bool _MPC_PLAINTEXT_flag_2;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(true)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
     // Shared parameter assignments
     A_0 = A;
