@@ -81,7 +81,9 @@ class StagesTestCase(unittest.TestCase):
             if test_case_dir.name in SKIPPED_TESTS:
                 continue
 
-            with open(os.path.join(test_case_dir.path, "input.py"), "r") as f:
+            input_fname = os.path.join(test_case_dir.path, "input.py")
+
+            with open(input_fname, "r") as f:
                 input_py = f.read().strip()
 
             app_path = os.path.join(test_case_dir.path, "motion_app")
@@ -96,6 +98,48 @@ class StagesTestCase(unittest.TestCase):
                 ["cmake", "--build", os.path.join(app_path, "build")],
                 check=True,
             )
+
+            # Collect expected output
+            proc = subprocess.run(
+                ["python3.9", input_fname],
+                check=True,
+                stdout=subprocess.PIPE,
+                text=True,
+            )
+            expected_output = proc.stdout
+
+            # Run our program (assume two parties)
+            # We only capture stdout because (hopefully!) both parties generate the same result
+            exe_name = os.path.join(app_path, "build", test_case_dir.name)
+            party0 = subprocess.Popen(
+                [
+                    exe_name,
+                    "--parties",
+                    "0,127.0.0.1,2300",
+                    "1,127.0.0.1,2301",
+                    "--my-id",
+                    "0",
+                ],
+            )
+            party1 = subprocess.Popen(
+                [
+                    exe_name,
+                    "--parties",
+                    "0,127.0.0.1,2300",
+                    "1,127.0.0.1,2301",
+                    "--my-id",
+                    "1",
+                ],
+                stdout=subprocess.PIPE,
+                text=True,
+            )
+
+            party0.wait(30)
+            party1.wait(30)
+
+            received_output = party1.stdout.read()
+
+            self.assertEqual(received_output, expected_output)
 
 
 def regenerate_stages():
