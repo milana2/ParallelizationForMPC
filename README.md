@@ -1188,8 +1188,8 @@ encrypto::motion::SecureUnsignedInteger count_102(
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
     Seq_0 = Seq;
@@ -1383,8 +1383,8 @@ encrypto::motion::SecureUnsignedInteger count_10s(
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
     Seq_0 = Seq;
@@ -1588,8 +1588,8 @@ encrypto::motion::SecureUnsignedInteger count_123(
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
     Seq_0 = Seq;
@@ -2355,8 +2355,8 @@ encrypto::motion::SecureUnsignedInteger longest_102(
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
     Seq_0 = Seq;
@@ -2995,8 +2995,8 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
     Seq_0 = Seq;
