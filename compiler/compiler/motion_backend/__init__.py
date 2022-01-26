@@ -106,7 +106,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         "// Constant initializations\n"
         + "\n".join(
             f"{const.datatype.to_cpp(type_env, plaintext=False)} {const.to_cpp(type_env)} = "
-            + f"party->SharedIn<Protocol>(encrypto::motion::ToInput({const.to_cpp(type_env, plaintext=True)}));"
+            + f"party->In<Protocol>(encrypto::motion::ToInput({const.to_cpp(type_env, plaintext=True)}), 0);"
             for const in plaintext_constants
         )
         + "\n"
@@ -128,11 +128,11 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
             (
                 # Initialize the shared version
                 param.var.to_cpp(type_env)
-                + "_0 = party->SharedIn<Protocol>(encrypto::motion::ToInput("
+                + "_0 = party->In<Protocol>(encrypto::motion::ToInput("
                 + param.var.to_cpp(
                     type_env
                 )  # no plaintext=True here so we reference the right variable name
-                + "));"
+                + "), 0);"
             )
             + "\n"
             + (

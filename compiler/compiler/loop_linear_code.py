@@ -72,7 +72,7 @@ class For:
             + header
             + "\n"
             # Initialize loop counter for use in loop
-            + f"    {self.counter.to_cpp(type_env, **kwargs)} = party->SharedIn<Protocol>(encrypto::motion::ToInput({self.counter.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}));"
+            + f"    {self.counter.to_cpp(type_env, **kwargs)} = party->In<Protocol>(encrypto::motion::ToInput({self.counter.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}), 0);"
             + "\n"
             + indent(body, "    ")
             + "\n"
