@@ -88,7 +88,7 @@ class Mux:
         true_cpp_str = self.true_value.to_cpp(type_env, **kwargs) + ".Get()"
         false_cpp_str = self.false_value.to_cpp(type_env, **kwargs) + ".Get()"
 
-        return f"{self.condition.to_cpp(type_env, **kwargs)}.Mux({false_cpp_str}, {true_cpp_str})"
+        return f"{self.condition.to_cpp(type_env, **kwargs)}.Mux({true_cpp_str}, {false_cpp_str})"
 
     def __str__(self) -> str:
         return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
@@ -222,8 +222,10 @@ class Block:
 
 class BranchKind(Enum):
     UNCONDITIONAL = "*"
-    TRUE = "T"
-    FALSE = "F"
+    TRUE_ENTER = "T_Enter"
+    FALSE_ENTER = "F_Enter"
+    TRUE_EXIT = "T_Exit"
+    FALSE_EXIT = "F_Exit"
 
     def __str__(self) -> str:
         return self.value

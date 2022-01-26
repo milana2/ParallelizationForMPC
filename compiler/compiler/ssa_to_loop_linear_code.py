@@ -24,8 +24,10 @@ def ssa_to_loop_linear_code(ssa_function: ssa.Function) -> loop_linear_code.Func
         successors.sort(
             key=lambda s: {
                 ssa.BranchKind.UNCONDITIONAL: 0,
-                ssa.BranchKind.FALSE: 1,
-                ssa.BranchKind.TRUE: 2,
+                ssa.BranchKind.FALSE_EXIT: 0,
+                ssa.BranchKind.TRUE_EXIT: 0,
+                ssa.BranchKind.FALSE_ENTER: 1,
+                ssa.BranchKind.TRUE_ENTER: 2,
             }[s[0]]
         )
 

@@ -39,9 +39,6 @@ class _CFGBuilder:
         self._current_block = block
         assert self._current_block.terminator is None
 
-    def current_block_done(self) -> bool:
-        return self._current_block.terminator is not None
-
     def add_assignment(self, assignment: tac_cfg.Assign):
         assert self._current_block.terminator is None
         self._current_block.assignments.append(assignment)
@@ -50,24 +47,26 @@ class _CFGBuilder:
         assert self._current_block.terminator is None
         self._current_block.terminator = terminator
 
-    def add_jump(self, target_block: tac_cfg.Block):
+    def add_jump(
+        self, target_block: tac_cfg.Block, label=tac_cfg.BranchKind.UNCONDITIONAL
+    ):
         self._add_terminator(tac_cfg.Jump())
         self._cfg.add_edge(
             u_of_edge=self._current_block,
             v_of_edge=target_block,
-            label=tac_cfg.BranchKind.UNCONDITIONAL,
+            label=label,
         )
 
     def _add_conditional_jump_edges(self, false_block, true_block):
         self._cfg.add_edge(
             u_of_edge=self._current_block,
             v_of_edge=false_block,
-            label=tac_cfg.BranchKind.FALSE,
+            label=tac_cfg.BranchKind.FALSE_ENTER,
         )
         self._cfg.add_edge(
             u_of_edge=self._current_block,
             v_of_edge=true_block,
-            label=tac_cfg.BranchKind.TRUE,
+            label=tac_cfg.BranchKind.TRUE_ENTER,
         )
 
     def add_conditional_jump(
@@ -211,13 +210,11 @@ def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
 
     builder.set_current_block(then_block)
     _build_statements(if_statement.then_body, builder)
-    if not builder.current_block_done():
-        builder.add_jump(after_block)
+    builder.add_jump(after_block, label=tac_cfg.BranchKind.TRUE_EXIT)
 
     builder.set_current_block(else_block)
     _build_statements(if_statement.else_body, builder)
-    if not builder.current_block_done():
-        builder.add_jump(after_block)
+    builder.add_jump(after_block, label=tac_cfg.BranchKind.FALSE_EXIT)
 
     builder.set_current_block(after_block)
     assert isinstance(condition_block.terminator, tac_cfg.ConditionalJump)

@@ -260,14 +260,19 @@ def rename_variables(result: ssa.Function) -> None:
         Y: ssa.Block
         for Y in result.body.successors(X):
             assert len(list(result.body.predecessors(Y))) in (1, 2)
-            j = [
-                i
-                for i, predecessor in enumerate(result.body.predecessors(Y))
-                if predecessor == X
-            ][0]
+            phi_branch_true = (
+                result.body.adj[X][Y]["label"] == tac_cfg.BranchKind.TRUE_EXIT
+            )
             for F in Y.phi_functions:
-                phi_branch_true = {0: False, 1: True}[j]
                 V = F.rhs_true if phi_branch_true else F.rhs_false
+
+                # We should only have phi functions if we're a merge node
+                assert len(list(result.body.predecessors(Y))) == 2
+
+                # We shouldn't've already renamed this branch's value
+                # @Ben Levy can you verify this?
+                assert V.rename_subscript is None
+
                 i = S[V][-1]
                 if isinstance(V, ssa.Subscript):
                     pass  # TODO: Support this
