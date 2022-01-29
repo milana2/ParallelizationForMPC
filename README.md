@@ -59,7 +59,7 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 ![](biometric_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]) -> tuple[shared[int], shared[int]]:
+def biometric(C!0: shared[list[int]], D!0: plaintext[int], S!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
     min_index!1 = 0
     for i in range(0, N!0):
@@ -85,7 +85,7 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 ![](biometric_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: plaintext[int]) -> tuple[shared[int], shared[int]]:
+def biometric(C!0: shared[list[int]], D!0: plaintext[int], S!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
     min_index!1 = 0
     for i in range(0, N!0):
@@ -136,10 +136,10 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> C,
-    std::uint32_t D,
-    std::vector<encrypto::motion::SecureUnsignedInteger> S,
-    std::uint32_t N
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_0,
+    std::uint32_t D_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> S_0,
+    std::uint32_t N_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> C_0;
@@ -176,19 +176,19 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     std::uint32_t _MPC_PLAINTEXT_sum_2;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10000 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(10000)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
     // Shared parameter assignments
-    C_0 = C;
-    S_0 = S;
+    C_0_0 = C_0;
+    S_0_0 = S_0;
 
     // Plaintext parameter assignments
-    D_0 = party->In<Protocol>(encrypto::motion::ToInput(D), 0);
-    _MPC_PLAINTEXT_D_0 = D;
+    D_0_0 = party->In<Protocol>(encrypto::motion::ToInput(D_0), 0);
+    _MPC_PLAINTEXT_D_0_0 = D_0;
 
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     min_sum_1 = _MPC_CONSTANT_10000;
@@ -352,7 +352,7 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 ![](biometric_fast_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]) -> tuple[shared[int], shared[int]]:
+def biometric_matching_fast(D!0: plaintext[int], N!0: plaintext[int], C!0: shared[list[int]], C_sqr_sum!0: shared[int], two_C!0: shared[list[int]], S!0: shared[list[int]], S_sqr_sum!0: shared[list[int]]) -> tuple[shared[int], shared[int]]:
     differences!1 = []
     for i in range(0, D!0):
         differences!2 = Φ(differences!1, differences!3)
@@ -391,7 +391,7 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 ![](biometric_fast_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list[int]], C_sqr_sum: shared[int], two_C: shared[list[int]], S: shared[list[int]], S_sqr_sum: shared[list[int]]) -> tuple[shared[int], shared[int]]:
+def biometric_matching_fast(D!0: plaintext[int], N!0: plaintext[int], C!0: shared[list[int]], C_sqr_sum!0: shared[int], two_C!0: shared[list[int]], S!0: shared[list[int]], S_sqr_sum!0: shared[list[int]]) -> tuple[shared[int], shared[int]]:
     differences!1 = []
     for i in range(0, D!0):
         differences!2 = Φ(differences!1, differences!3)
@@ -470,13 +470,13 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric_matching_fast(
     encrypto::motion::PartyPointer &party,
-    std::uint32_t D,
-    std::uint32_t N,
-    std::vector<encrypto::motion::SecureUnsignedInteger> C,
-    encrypto::motion::SecureUnsignedInteger C_sqr_sum,
-    std::vector<encrypto::motion::SecureUnsignedInteger> two_C,
-    std::vector<encrypto::motion::SecureUnsignedInteger> S,
-    std::vector<encrypto::motion::SecureUnsignedInteger> S_sqr_sum
+    std::uint32_t D_0,
+    std::uint32_t N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_0,
+    encrypto::motion::SecureUnsignedInteger C_sqr_sum_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> two_C_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> S_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> S_sqr_sum_0
 ) {
     // Shared variable declarations
     encrypto::motion::SecureUnsignedInteger D_0;
@@ -537,18 +537,18 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
     // Shared parameter assignments
-    C_0 = C;
-    C_sqr_sum_0 = C_sqr_sum;
-    two_C_0 = two_C;
-    S_0 = S;
-    S_sqr_sum_0 = S_sqr_sum;
+    C_0_0 = C_0;
+    C_sqr_sum_0_0 = C_sqr_sum_0;
+    two_C_0_0 = two_C_0;
+    S_0_0 = S_0;
+    S_sqr_sum_0_0 = S_sqr_sum_0;
 
     // Plaintext parameter assignments
-    D_0 = party->In<Protocol>(encrypto::motion::ToInput(D), 0);
-    _MPC_PLAINTEXT_D_0 = D;
+    D_0_0 = party->In<Protocol>(encrypto::motion::ToInput(D_0), 0);
+    _MPC_PLAINTEXT_D_0_0 = D_0;
 
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     differences_1 = {};
@@ -666,7 +666,7 @@ def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
 ![](chapterfour_figure_12_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
+def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
     z!1 = 0
     !1!1 = (x!0 > 0)
     !2!1 = (y!0 > 0)
@@ -682,7 +682,7 @@ def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
 ![](chapterfour_figure_12_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
+def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
     z!1 = 0
     !1!1 = (x!0 > 0)
     !2!1 = (y!0 > 0)
@@ -711,8 +711,8 @@ def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
     encrypto::motion::PartyPointer &party,
-    encrypto::motion::SecureUnsignedInteger x,
-    encrypto::motion::SecureUnsignedInteger y
+    encrypto::motion::SecureUnsignedInteger x_0,
+    encrypto::motion::SecureUnsignedInteger y_0
 ) {
     // Shared variable declarations
     encrypto::motion::SecureUnsignedInteger x_0;
@@ -735,8 +735,8 @@ encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Shared parameter assignments
-    x_0 = x;
-    y_0 = y;
+    x_0_0 = x_0;
+    y_0_0 = y_0;
 
     // Plaintext parameter assignments
 
@@ -818,7 +818,7 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 ![](convex_hull_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
+def convex_hull(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     hull_X!1 = []
     hull_Y!1 = []
     for i in range(0, N!0):
@@ -856,7 +856,7 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 ![](convex_hull_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
+def convex_hull(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     hull_X!1 = []
     hull_Y!1 = []
     for i in range(0, N!0):
@@ -930,9 +930,9 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> convex_hull(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords,
-    std::uint32_t N
+    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0,
+    std::uint32_t N_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0;
@@ -979,17 +979,17 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     bool _MPC_PLAINTEXT_is_hull_4;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(true)), 0);
 
     // Shared parameter assignments
-    X_coords_0 = X_coords;
-    Y_coords_0 = Y_coords;
+    X_coords_0_0 = X_coords_0;
+    Y_coords_0_0 = Y_coords_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     hull_X_1 = {};
@@ -1003,7 +1003,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
         i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
         is_hull_2 = _MPC_CONSTANT_true;
-        _MPC_PLAINTEXT_is_hull_2 = std::uint32_t(true);
+        _MPC_PLAINTEXT_is_hull_2 = true;
         p1_X_2 = X_coords_0[_MPC_PLAINTEXT_i];
         p1_Y_2 = Y_coords_0[_MPC_PLAINTEXT_i];
         _1_2 = ((_MPC_CONSTANT_0 > p1_X_2) | (encrypto::motion::ShareWrapper(p1_X_2.Get()) == encrypto::motion::ShareWrapper(_MPC_CONSTANT_0.Get())));
@@ -1021,7 +1021,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
             _8_3 = (encrypto::motion::ShareWrapper(_6_3.Get()) | encrypto::motion::ShareWrapper(_7_3.Get()));
             _9_3 = (~_8_3);
             is_hull_4 = _MPC_CONSTANT_false;
-            _MPC_PLAINTEXT_is_hull_4 = std::uint32_t(false);
+            _MPC_PLAINTEXT_is_hull_4 = false;
             is_hull_5 = _9_3.Mux(is_hull_4.Get(), is_hull_3.Get());
 
             // Update phi values
@@ -1094,7 +1094,7 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_102_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def count_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
     s0!1 = False
     c!1 = 0
     for i in range(0, N!0):
@@ -1116,7 +1116,7 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_102_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def count_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
     s0!1 = False
     c!1 = 0
     for i in range(0, N!0):
@@ -1158,9 +1158,9 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_102(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    std::uint32_t N,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Syms
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
@@ -1187,21 +1187,21 @@ encrypto::motion::SecureUnsignedInteger count_102(
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
-    Seq_0 = Seq;
-    Syms_0 = Syms;
+    Seq_0_0 = Seq_0;
+    Syms_0_0 = Syms_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     s0_1 = _MPC_CONSTANT_false;
-    _MPC_PLAINTEXT_s0_1 = std::uint32_t(false);
+    _MPC_PLAINTEXT_s0_1 = false;
     c_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_c_1 = std::uint32_t(0);
 
@@ -1280,7 +1280,7 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_10s_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def count_10s(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
     s0!1 = False
     s1!1 = False
     scount!1 = 0
@@ -1304,7 +1304,7 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_10s_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def count_10s(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
     s0!1 = False
     s1!1 = False
     scount!1 = 0
@@ -1350,9 +1350,9 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_10s(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    std::uint32_t N,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Syms
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
@@ -1382,23 +1382,23 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     std::uint32_t _MPC_PLAINTEXT_scount_1;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
-    Seq_0 = Seq;
-    Syms_0 = Syms;
+    Seq_0_0 = Seq_0;
+    Syms_0_0 = Syms_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     s0_1 = _MPC_CONSTANT_false;
-    _MPC_PLAINTEXT_s0_1 = std::uint32_t(false);
+    _MPC_PLAINTEXT_s0_1 = false;
     s1_1 = _MPC_CONSTANT_false;
-    _MPC_PLAINTEXT_s1_1 = std::uint32_t(false);
+    _MPC_PLAINTEXT_s1_1 = false;
     scount_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_scount_1 = std::uint32_t(0);
 
@@ -1445,10 +1445,10 @@ def count_123(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared
     c = 0
 
     for i in range(0, N):
-        if Seq[i] == Syms[3] and (s2 or s1):
+        if Seq[i] == Syms[2] and (s2 or s1):
             c = c + 1
-        s2 = (Seq[i] == Syms[2]) and (s1 or s2)
-        s1 = Seq[i] == Syms[1]
+        s2 = (Seq[i] == Syms[1]) and (s1 or s2)
+        s1 = Seq[i] == Syms[0]
 
     return c
 
@@ -1465,10 +1465,10 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
     s3 = False
     c = 0
     for i: plaintext[int] in range(0, N):
-        if ((Seq[i] == Syms[3]) and (s2 or s1)):
+        if ((Seq[i] == Syms[2]) and (s2 or s1)):
             c = (c + 1)
-        s2 = ((Seq[i] == Syms[2]) and (s1 or s2))
-        s1 = (Seq[i] == Syms[1])
+        s2 = ((Seq[i] == Syms[1]) and (s1 or s2))
+        s1 = (Seq[i] == Syms[0])
     return c
 ```
 ### Three-address code CFG
@@ -1481,7 +1481,7 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_123_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def count_123(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
     s1!1 = False
     s2!1 = False
     c!1 = 0
@@ -1489,15 +1489,15 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
         s1!2 = Φ(s1!1, s1!3)
         s2!2 = Φ(s2!1, s2!3)
         c!2 = Φ(c!1, c!4)
-        !1!2 = (Seq!0[i] == Syms!0[3])
+        !1!2 = (Seq!0[i] == Syms!0[2])
         !2!2 = (s2!2 or s1!2)
         !3!2 = (!1!2 and !2!2)
         c!3 = (c!2 + 1)
         c!4 = MUX(!3!2, c!3, c!2)
-        !4!2 = (Seq!0[i] == Syms!0[2])
+        !4!2 = (Seq!0[i] == Syms!0[1])
         !5!2 = (s1!2 or s2!2)
         s2!3 = (!4!2 and !5!2)
-        s1!3 = (Seq!0[i] == Syms!0[1])
+        s1!3 = (Seq!0[i] == Syms!0[0])
     return c!2
 ```
 ### Dependency graph
@@ -1506,7 +1506,7 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 ![](count_123_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def count_123(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
     s1!1 = False
     s2!1 = False
     c!1 = 0
@@ -1514,15 +1514,15 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
         s1!2 = Φ(s1!1, s1!3)
         s2!2 = Φ(s2!1, s2!3)
         c!2 = Φ(c!1, c!4)
-        !1!2 = (Seq!0[i] == Syms!0[3])
+        !1!2 = (Seq!0[i] == Syms!0[2])
         !2!2 = (s2!2 or s1!2)
         !3!2 = (!1!2 and !2!2)
         c!3 = (c!2 + 1)
         c!4 = MUX(!3!2, c!3, c!2)
-        !4!2 = (Seq!0[i] == Syms!0[2])
+        !4!2 = (Seq!0[i] == Syms!0[1])
         !5!2 = (s1!2 or s2!2)
         s2!3 = (!4!2 and !5!2)
-        s1!3 = (Seq!0[i] == Syms!0[1])
+        s1!3 = (Seq!0[i] == Syms!0[0])
     return c!2
 ```
 ### Array MUX refinement (dependence graph)
@@ -1554,9 +1554,9 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_123(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    std::uint32_t N,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Syms
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
@@ -1587,23 +1587,23 @@ encrypto::motion::SecureUnsignedInteger count_123(
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
-    Seq_0 = Seq;
-    Syms_0 = Syms;
+    Seq_0_0 = Seq_0;
+    Syms_0_0 = Syms_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     s1_1 = _MPC_CONSTANT_false;
-    _MPC_PLAINTEXT_s1_1 = std::uint32_t(false);
+    _MPC_PLAINTEXT_s1_1 = false;
     s2_1 = _MPC_CONSTANT_false;
-    _MPC_PLAINTEXT_s2_1 = std::uint32_t(false);
+    _MPC_PLAINTEXT_s2_1 = false;
     c_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_c_1 = std::uint32_t(0);
 
@@ -1613,15 +1613,15 @@ encrypto::motion::SecureUnsignedInteger count_123(
     c_2 = c_1;
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
         i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
-        _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(3)].Get()));
+        _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(2)].Get()));
         _2_2 = (encrypto::motion::ShareWrapper(s2_2.Get()) | encrypto::motion::ShareWrapper(s1_2.Get()));
         _3_2 = (encrypto::motion::ShareWrapper(_1_2.Get()) & encrypto::motion::ShareWrapper(_2_2.Get()));
         c_3 = (c_2 + _MPC_CONSTANT_1);
         c_4 = _3_2.Mux(c_3.Get(), c_2.Get());
-        _4_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(2)].Get()));
+        _4_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(1)].Get()));
         _5_2 = (encrypto::motion::ShareWrapper(s1_2.Get()) | encrypto::motion::ShareWrapper(s2_2.Get()));
         s2_3 = (encrypto::motion::ShareWrapper(_4_2.Get()) & encrypto::motion::ShareWrapper(_5_2.Get()));
-        s1_3 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(1)].Get()));
+        s1_3 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(0)].Get()));
 
         // Update phi values
         s1_2 = s1_3;
@@ -1695,7 +1695,7 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 ![](histogram_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]) -> shared[list[int]]:
+def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int], num_bins!0: plaintext[int]) -> shared[list[int]]:
     result!1 = []
     for i in range(0, num_bins!0):
         result!2 = Φ(result!1, result!3)
@@ -1717,7 +1717,7 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 ![](histogram_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]) -> shared[list[int]]:
+def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int], num_bins!0: plaintext[int]) -> shared[list[int]]:
     result!1 = []
     for i in range(0, num_bins!0):
         result!2 = Φ(result!1, result!3)
@@ -1759,10 +1759,10 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> A,
-    std::vector<encrypto::motion::SecureUnsignedInteger> B,
-    std::uint32_t N,
-    std::uint32_t num_bins
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
+    std::uint32_t N_0,
+    std::uint32_t num_bins_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
@@ -1796,15 +1796,15 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
     // Shared parameter assignments
-    A_0 = A;
-    B_0 = B;
+    A_0_0 = A_0;
+    B_0_0 = B_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
-    num_bins_0 = party->In<Protocol>(encrypto::motion::ToInput(num_bins), 0);
-    _MPC_PLAINTEXT_num_bins_0 = num_bins;
+    num_bins_0_0 = party->In<Protocol>(encrypto::motion::ToInput(num_bins_0), 0);
+    _MPC_PLAINTEXT_num_bins_0_0 = num_bins_0;
 
     // Function body
     result_1 = {};
@@ -1890,7 +1890,7 @@ def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: sha
 ![](infeasible_edges_example_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
+def foo(A!0: shared[list[int]], B!0: shared[list[int]], C!0: shared[list[int]], D!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
     for i in range(0, N!0):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)
@@ -1913,7 +1913,7 @@ def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: sha
 ![](infeasible_edges_example_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
+def foo(A!0: shared[list[int]], B!0: shared[list[int]], C!0: shared[list[int]], D!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
     for i in range(0, N!0):
         A!1 = Φ(A!0, A!2)
         B!1 = Φ(B!0, B!2)
@@ -1959,11 +1959,11 @@ def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: sha
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> foo(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> A,
-    std::vector<encrypto::motion::SecureUnsignedInteger> B,
-    std::vector<encrypto::motion::SecureUnsignedInteger> C,
-    std::vector<encrypto::motion::SecureUnsignedInteger> D,
-    std::uint32_t N
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> D_0,
+    std::uint32_t N_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
@@ -1995,14 +1995,14 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(10)), 0);
 
     // Shared parameter assignments
-    A_0 = A;
-    B_0 = B;
-    C_0 = C;
-    D_0 = D;
+    A_0_0 = A_0;
+    B_0_0 = B_0;
+    C_0_0 = C_0;
+    D_0_0 = D_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
 
@@ -2044,7 +2044,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
 from UTIL import shared
 
 
-def ip(A: shared[list[int]], B: shared[list[int]], N: int) -> shared[int]:
+def inner_product(A: shared[list[int]], B: shared[list[int]], N: int) -> shared[int]:
     sum = 0
     for i in range(0, N):
         temp = A[i] * B[i]
@@ -2054,12 +2054,12 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: int) -> shared[int]:
 
 A = [1, 2, 3]
 B = [4, 5, 6]
-print(ip(A, B, 3))
+print(inner_product(A, B, 3))
 
 ```
 ### Restricted AST
 ```python
-def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[int]:
+def inner_product(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[int]:
     sum = 0
     for i: plaintext[int] in range(0, N):
         temp = (A[i] * B[i])
@@ -2076,7 +2076,7 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[
 ![](inner_product_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[int]:
+def inner_product(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
     for i in range(0, N!0):
         sum!2 = Φ(sum!1, sum!3)
@@ -2090,7 +2090,7 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[
 ![](inner_product_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[int]:
+def inner_product(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
     for i in range(0, N!0):
         sum!2 = Φ(sum!1, sum!3)
@@ -2114,11 +2114,11 @@ def ip(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger ip(
+encrypto::motion::SecureUnsignedInteger inner_product(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> A,
-    std::vector<encrypto::motion::SecureUnsignedInteger> B,
-    std::uint32_t N
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
+    std::uint32_t N_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
@@ -2139,12 +2139,12 @@ encrypto::motion::SecureUnsignedInteger ip(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
     // Shared parameter assignments
-    A_0 = A;
-    B_0 = B;
+    A_0_0 = A_0;
+    B_0_0 = B_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     sum_1 = _MPC_CONSTANT_0;
@@ -2227,7 +2227,7 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 ![](longest_102_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def longest_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
     s0!1 = False
     max_len!1 = 0
     length!1 = 0
@@ -2257,7 +2257,7 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 ![](longest_102_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def longest_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
     s0!1 = False
     max_len!1 = 0
     length!1 = 0
@@ -2315,9 +2315,9 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_102(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    std::uint32_t N,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Syms
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
@@ -2354,21 +2354,21 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     bool _MPC_PLAINTEXT_s0_1;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
-    Seq_0 = Seq;
-    Syms_0 = Syms;
+    Seq_0_0 = Seq_0;
+    Syms_0_0 = Syms_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     s0_1 = _MPC_CONSTANT_false;
-    _MPC_PLAINTEXT_s0_1 = std::uint32_t(false);
+    _MPC_PLAINTEXT_s0_1 = false;
     max_len_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_max_len_1 = std::uint32_t(0);
     length_1 = _MPC_CONSTANT_0;
@@ -2461,7 +2461,7 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> s
 ![](longest_1s_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
+def longest_1s(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_length!1 = 0
     length!1 = 0
     for i in range(1, N!0):
@@ -2482,7 +2482,7 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> s
 ![](longest_1s_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
+def longest_1s(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_length!1 = 0
     length!1 = 0
     for i in range(1, N!0):
@@ -2522,9 +2522,9 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> s
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_1s(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    std::uint32_t N,
-    encrypto::motion::SecureUnsignedInteger Sym
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t N_0,
+    encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
@@ -2555,12 +2555,12 @@ encrypto::motion::SecureUnsignedInteger longest_1s(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Shared parameter assignments
-    Seq_0 = Seq;
-    Sym_0 = Sym;
+    Seq_0_0 = Seq_0;
+    Sym_0_0 = Sym_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     max_length_1 = _MPC_CONSTANT_0;
@@ -2649,7 +2649,7 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) 
 ![](longest_even_0_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
+def longest_even_0(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     current_length!1 = 0
     max_length!1 = 0
     for i in range(1, N!0):
@@ -2675,7 +2675,7 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) 
 ![](longest_even_0_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
+def longest_even_0(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     current_length!1 = 0
     max_length!1 = 0
     for i in range(1, N!0):
@@ -2725,9 +2725,9 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) 
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_even_0(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    std::uint32_t N,
-    encrypto::motion::SecureUnsignedInteger Sym
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t N_0,
+    encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
@@ -2763,12 +2763,12 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Shared parameter assignments
-    Seq_0 = Seq;
-    Sym_0 = Sym;
+    Seq_0_0 = Seq_0;
+    Sym_0_0 = Sym_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     current_length_1 = _MPC_CONSTANT_0;
@@ -2867,7 +2867,7 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 ![](longest_odd_10_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def longest_odd_10(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
     current_length!1 = 0
     max_length!1 = 0
     s2!1 = False
@@ -2897,7 +2897,7 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 ![](longest_odd_10_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def longest_odd_10(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
     current_length!1 = 0
     max_length!1 = 0
     s2!1 = False
@@ -2955,9 +2955,9 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_odd_10(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    std::uint32_t N,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Syms
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
@@ -2994,17 +2994,17 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     std::uint32_t _MPC_PLAINTEXT_current_length_1;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
 
     // Shared parameter assignments
-    Seq_0 = Seq;
-    Syms_0 = Syms;
+    Seq_0_0 = Seq_0;
+    Syms_0_0 = Syms_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     current_length_1 = _MPC_CONSTANT_0;
@@ -3012,7 +3012,7 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     max_length_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_max_length_1 = std::uint32_t(0);
     s2_1 = _MPC_CONSTANT_false;
-    _MPC_PLAINTEXT_s2_1 = std::uint32_t(false);
+    _MPC_PLAINTEXT_s2_1 = false;
 
     // Initialize phi values
     current_length_2 = current_length_1;
@@ -3096,7 +3096,7 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 ![](max_dist_between_syms_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
+def max_dist_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_dist!1 = 0
     current_dist!1 = 0
     for i in range(0, N!0):
@@ -3118,7 +3118,7 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 ![](max_dist_between_syms_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
+def max_dist_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_dist!1 = 0
     current_dist!1 = 0
     for i in range(0, N!0):
@@ -3160,9 +3160,9 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    std::uint32_t N,
-    encrypto::motion::SecureUnsignedInteger Sym
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t N_0,
+    encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
@@ -3194,12 +3194,12 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Shared parameter assignments
-    Seq_0 = Seq;
-    Sym_0 = Sym;
+    Seq_0_0 = Seq_0;
+    Sym_0_0 = Sym_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     max_dist_1 = _MPC_CONSTANT_0;
@@ -3281,7 +3281,7 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 ![](max_sum_between_syms_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
+def max_sum_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_sum!1 = 0
     current_sum!1 = 0
     for i in range(0, N!0):
@@ -3303,7 +3303,7 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 ![](max_sum_between_syms_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
+def max_sum_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_sum!1 = 0
     current_sum!1 = 0
     for i in range(0, N!0):
@@ -3345,9 +3345,9 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq,
-    std::uint32_t N,
-    encrypto::motion::SecureUnsignedInteger Sym
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t N_0,
+    encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
@@ -3378,12 +3378,12 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
     // Shared parameter assignments
-    Seq_0 = Seq;
-    Sym_0 = Sym;
+    Seq_0_0 = Seq_0;
+    Sym_0_0 = Sym_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     max_sum_1 = _MPC_CONSTANT_0;
@@ -3467,7 +3467,7 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 ![](minimal_points_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
+def minimal_points(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     min_X!1 = []
     min_Y!1 = []
     for i in range(0, N!0):
@@ -3498,7 +3498,7 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 ![](minimal_points_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
+def minimal_points(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     min_X!1 = []
     min_Y!1 = []
     for i in range(0, N!0):
@@ -3558,9 +3558,9 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> minimal_points(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords,
-    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords,
-    std::uint32_t N
+    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0,
+    std::uint32_t N_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0;
@@ -3599,15 +3599,15 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     bool _MPC_PLAINTEXT_bx_2;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
 
     // Shared parameter assignments
-    X_coords_0 = X_coords;
-    Y_coords_0 = Y_coords;
+    X_coords_0_0 = X_coords_0;
+    Y_coords_0_0 = Y_coords_0;
 
     // Plaintext parameter assignments
-    N_0 = party->In<Protocol>(encrypto::motion::ToInput(N), 0);
-    _MPC_PLAINTEXT_N_0 = N;
+    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
+    _MPC_PLAINTEXT_N_0_0 = N_0;
 
     // Function body
     min_X_1 = {};
@@ -3621,7 +3621,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i++) {
         i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
         bx_2 = _MPC_CONSTANT_false;
-        _MPC_PLAINTEXT_bx_2 = std::uint32_t(false);
+        _MPC_PLAINTEXT_bx_2 = false;
 
         // Initialize phi values
         bx_3 = bx_2;
@@ -3714,7 +3714,7 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 ![](psi_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]) -> shared[list[int]]:
+def psi(A!0: shared[list[int]], SA!0: plaintext[int], B!0: shared[list[int]], SB!0: plaintext[int]) -> shared[list[int]]:
     dummy!1 = 0
     result!1 = []
     for i in range(0, SA!0):
@@ -3738,7 +3738,7 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 ![](psi_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]) -> shared[list[int]]:
+def psi(A!0: shared[list[int]], SA!0: plaintext[int], B!0: shared[list[int]], SB!0: plaintext[int]) -> shared[list[int]]:
     dummy!1 = 0
     result!1 = []
     for i in range(0, SA!0):
@@ -3785,10 +3785,10 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     encrypto::motion::PartyPointer &party,
-    std::vector<encrypto::motion::SecureUnsignedInteger> A,
-    std::uint32_t SA,
-    std::vector<encrypto::motion::SecureUnsignedInteger> B,
-    std::uint32_t SB
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
+    std::uint32_t SA_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
+    std::uint32_t SB_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
@@ -3823,20 +3823,20 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     bool _MPC_PLAINTEXT_flag_2;
 
     // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(false)), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(true)), 0);
 
     // Shared parameter assignments
-    A_0 = A;
-    B_0 = B;
+    A_0_0 = A_0;
+    B_0_0 = B_0;
 
     // Plaintext parameter assignments
-    SA_0 = party->In<Protocol>(encrypto::motion::ToInput(SA), 0);
-    _MPC_PLAINTEXT_SA_0 = SA;
+    SA_0_0 = party->In<Protocol>(encrypto::motion::ToInput(SA_0), 0);
+    _MPC_PLAINTEXT_SA_0_0 = SA_0;
 
-    SB_0 = party->In<Protocol>(encrypto::motion::ToInput(SB), 0);
-    _MPC_PLAINTEXT_SB_0 = SB;
+    SB_0_0 = party->In<Protocol>(encrypto::motion::ToInput(SB_0), 0);
+    _MPC_PLAINTEXT_SB_0_0 = SB_0;
 
     // Function body
     dummy_1 = _MPC_CONSTANT_0;
@@ -3849,7 +3849,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     for (_MPC_PLAINTEXT_i = std::uint32_t(0); _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_SA_0; _MPC_PLAINTEXT_i++) {
         i = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i), 0);
         flag_2 = _MPC_CONSTANT_false;
-        _MPC_PLAINTEXT_flag_2 = std::uint32_t(false);
+        _MPC_PLAINTEXT_flag_2 = false;
 
         // Initialize phi values
         flag_3 = flag_2;
@@ -3857,7 +3857,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
             j = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_j), 0);
             _1_3 = (encrypto::motion::ShareWrapper(A_0[_MPC_PLAINTEXT_i].Get()) == encrypto::motion::ShareWrapper(B_0[_MPC_PLAINTEXT_j].Get()));
             flag_4 = _MPC_CONSTANT_true;
-            _MPC_PLAINTEXT_flag_4 = std::uint32_t(true);
+            _MPC_PLAINTEXT_flag_4 = true;
             flag_5 = _1_3.Mux(flag_4.Get(), flag_3.Get());
 
             // Update phi values
