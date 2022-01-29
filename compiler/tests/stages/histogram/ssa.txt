@@ -1,4 +1,4 @@
-Function histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]) -> shared[list[int]]:
+Function histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int], num_bins!0: plaintext[int]) -> shared[list[int]]:
 Entry block: 0
 Exit block: 6
 Block 0:

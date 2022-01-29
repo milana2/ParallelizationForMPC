@@ -116,9 +116,6 @@ def rename_variables(result: ssa.Function) -> None:
     C: dict[ssa.Var, int] = dict()
 
     param_vars = [param.var for param in result.parameters]
-    for V in itertools.chain(param_vars, blocks_setting_vars.keys()):
-        C[V] = 1
-        S[V] = [0]
 
     def rename_var(V: ssa.Var, i: Optional[int] = None):
         if i is None:
@@ -286,6 +283,30 @@ def rename_variables(result: ssa.Function) -> None:
         for A in empty2 + [a for a in X.phi_functions] + [a for a in X.assignments]:
             V = old_lhs[A]
             S[V].pop()
+
+    # In Cytron's SSA paper,
+    # all variables V with rename subscript zero (V₀) are assumed to be initialized
+    # at the beginning of the program.
+    #
+    # From Cytron's SSA paper:
+    # > Suppose that a variable V₀ has just one assignment in the original program,
+    # > so that any use of V will be either a use of the value V. at entry to the
+    # > program or a use of the value V₁ from the most recent execution of the
+    # > assignment to V.
+    #
+    # All explicit assignments start at rename subscript one (V₁ = …),
+    # and accesses V before the first assignment are given rename subscript zero (V₀).
+    # Since parameters have explicit initial values (the values passed into the function),
+    # parameters are renamed to have a zero subscript.
+
+    # Assume all variables V have an initial value V₀.
+    for V in itertools.chain(param_vars, blocks_setting_vars.keys()):
+        C[V] = 1
+        S[V] = [0]
+
+    # Rename all parameters V to V₀.
+    for param in result.parameters:
+        param.var = rename_var(param.var, 0)
 
     search(result.entry_block)
 

@@ -1,4 +1,4 @@
-Function psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]) -> shared[list[int]]:
+Function psi(A!0: shared[list[int]], SA!0: plaintext[int], B!0: shared[list[int]], SB!0: plaintext[int]) -> shared[list[int]]:
 Entry block: 0
 Exit block: 3
 Block 0:

@@ -1,4 +1,4 @@
-def inner_product(A: shared[list[int]], B: shared[list[int]], N: plaintext[int]) -> shared[int]:
+def inner_product(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
     for i in range(0, N!0):
         sum!2 = Φ(sum!1, sum!3)

@@ -233,11 +233,7 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
 
     type_env = TypeEnv(
         VarType,
-        {
-            # TODO: fix the below hack once parameter ssa renaming is properly implemented
-            Var(param.var.name, 0): cast(VarType, param.var_type)
-            for param in func.parameters
-        },
+        {param.var: param.var_type for param in func.parameters},
     )
     _add_loop_counter_types(type_env, func.body)
 

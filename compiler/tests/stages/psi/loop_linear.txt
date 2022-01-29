@@ -1,4 +1,4 @@
-def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plaintext[int]) -> shared[list[int]]:
+def psi(A!0: shared[list[int]], SA!0: plaintext[int], B!0: shared[list[int]], SB!0: plaintext[int]) -> shared[list[int]]:
     dummy!1 = 0
     result!1 = []
     for i in range(0, SA!0):

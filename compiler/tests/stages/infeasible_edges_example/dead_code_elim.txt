@@ -1,4 +1,4 @@
-Function foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
+Function foo(A!0: shared[list[int]], B!0: shared[list[int]], C!0: shared[list[int]], D!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
 Entry block: 0
 Exit block: 3
 Block 0:
