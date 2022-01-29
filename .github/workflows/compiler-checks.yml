@@ -48,7 +48,7 @@ jobs:
         working-directory: compiler
         run: |
           sudo apt-get update
-          sudo apt-get -y install cmake g++-10 make libboost-all-dev libflatbuffers-dev libfmt-dev libssl-dev
+          sudo apt-get -y install cmake g++-10 make libboost-all-dev libssl-dev
 
           python -m pip install --upgrade pip
           pip install -r requirements.txt
