@@ -19,7 +19,7 @@ def parse_args():
     parser.add_argument(
         "--quiet",
         action="store_true",
-        help="Overwrite existing output directory",
+        help="Avoid printing output of compiler stages",
     )
     return parser.parse_args()
 
