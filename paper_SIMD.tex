@@ -745,7 +745,7 @@ The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and 
 
 \paragraph{Example 1}
 
-Recall that after removal of infeasible edges, the Aiken's array write example will be (roughly) as follows:
+After Phase 1 of Basic Vectorization the Aiken's array write example will be (roughly) as follows:
 
 \begin{algorithmic}
 \STATE for i in range(N):
@@ -753,36 +753,26 @@ Recall that after removal of infeasible edges, the Aiken's array write example w
 \STATE 2. $\texttt{B}_1$ = $\phi(\texttt{B}_0,\texttt{B}_2)$
 \STATE 3. $\texttt{C}_1$ = $\phi(\texttt{C}_0,\texttt{C}_2)$
 \STATE 4. $\texttt{D}_2$ = $\phi(\texttt{D}_0,\texttt{D}_2)$
-\STATE 5. $\texttt{A}_2$ = update($\texttt{A}_1$, i, $\texttt{B}_1$[i] + 10);
-\STATE 6. $\texttt{B}_2$ = update($\texttt{B}_1$, i, $\texttt{A}_2$[i] * $\texttt{D}_1$[i-1]);
-\STATE 7. $\texttt{C}_2$ = update($\texttt{C}_1$, i, $\texttt{A}_2$[i] * $\texttt{D}_1$[i-1]);
-\STATE 8. $\texttt{D}_2$ = update($\texttt{D}_1$; i, $\texttt{B}_2$[i] * $\texttt{C}_2$[i]);
+\STATE 5. $\texttt{A}_2 = update(\texttt{A}_1, \stackrel{\rightarrow}{i}, \texttt{B}_1[\stackrel{\rightarrow}{i}] + 10)$;
+\STATE 6. $\texttt{B}_2 = update(\texttt{B}_1, \stackrel{\rightarrow}{i}, \texttt{A}_2[\stackrel{\rightarrow}{i}] * \texttt{D}_1[\stackrel{\rightarrow}{i-1}])$;
+\STATE 7. $\texttt{C}_2 = update(\texttt{C}_1, \stackrel{\rightarrow}{i}, \texttt{A}_2[\stackrel{\rightarrow}{i}] * \texttt{D}_1[\stackrel{\rightarrow}{i-1}])$;
+\STATE 8. $\texttt{D}_2 = update(\texttt{D}_1; \stackrel{\rightarrow}{i}, \texttt{B}_2[\stackrel{\rightarrow}{i}] * \texttt{C}_2[\stackrel{\rightarrow}{i}])$;
 \end{algorithmic}
 
-There are no nested loops, thus, array accesses remain as is. The closure of 4 includes 4,6,7, and 8, 
-while 5 is vectorizable. 
-
-
-Removal of infeasible edges leaves $\phi$-nodes 1,2, and 3, i.e., A,B, and C as targetless. 
-After Phase 1 of Basic vectorization we have the following code:
-\begin{algorithmic}
-\STATE for i in range(N):
-\STATE 1. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$
-\STATE 2. $\texttt{A}_1$ = $\texttt{A}$; $\texttt{A}_1[\stackrel{\rightarrow}{i}] = \texttt{B}[\stackrel{\rightarrow}i] + [10,...]$
-\STATE 3. $\texttt{B}_1$ = $\texttt{B}$; $\texttt{B}_1[\stackrel{\rightarrow}i] = \texttt{A}_1[\stackrel{\rightarrow}i] * \texttt{D}_0[\stackrel{\rightarrow}{i-1}]$
-\STATE 4. $\texttt{C}_1$ = $\texttt{C}$; $\texttt{C}_1[\stackrel{\rightarrow}i] = \texttt{A}_1[\stackrel{\rightarrow}i] * \texttt{D}_0[\stackrel{\rightarrow}{i-1}]$
-\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$; $\texttt{D}_1[\stackrel{\rightarrow}i] = \texttt{B}_1[\stackrel{\rightarrow}i] * \texttt{C}_1[\stackrel{\rightarrow}i]$
-\end{algorithmic}
-
-In Phase 2 we get rid of the arrows on statements 3, 4, and 5 as they are not vectorizable and in Phase 3 we add SIMD appropriately:
+There are no nested loops, thus, array accesses remain as is. Phase 2 computes the closure of 4; $cl = \{4,6,7, 8\}$ 
+while 5 is vectorizable. Recall that 1,2, and 3 are targetless phi-nodes. Since the closure $cl$ includes updates to $B$ and $C$,
+the corresponding phi-nodes are added to the closure, i.e., the FOR loop. The uses of $A_1$ and $B_1$ in the vectorized statement
+turn into uses of $A_0$ and $B_0$ respectively. (But note that $A_0$ is irrelevant; the updates writes into array $A_2$ in parallel.)
 
 \begin{algorithmic}
-\STATE 1. $\texttt{A}_1$ = $\texttt{A}$; $\texttt{A}_1[\stackrel{\rightarrow}{i}] = \mathit{ADD\_SIMD}(\texttt{B}[\stackrel{\rightarrow}i],[10,...])$ \COMMENT{Fully vectorized, size N.}
+\STATE 1. $\texttt{A}_2 = update(\texttt{A}_0; \stackrel{\rightarrow}{i}, \mathit{ADD\_SIMD}(\texttt{B}_0[\stackrel{\rightarrow}i],[10,...])$ \COMMENT{Fully vectorized, size N.}
 \STATE FOR i=0; i<N; i++; \COMMENT{ MOTION loop }
-\STATE 2. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$
-\STATE 3. $\texttt{B}_1$ = $\texttt{B}$; $\texttt{B}_1[i] = \mathit{MUL}(\texttt{A}_1[i], \texttt{D}_0[{i-1}])$
-\STATE 4. $\texttt{C}_1$ = $\texttt{C}$; $\texttt{C}_1[i] = \mathit{MUL}(\texttt{A}_1[i], \texttt{D}_0[{i-1}])$
-\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$; $\texttt{D}_1[i] = \mathit{MUL}(\texttt{B}_1[i], \texttt{C}_1[i])$
+\STATE 2. $\texttt{B}_1$ = $\phi(\texttt{B}_0,\texttt{B}_2)$
+\STATE 3. $\texttt{C}_1$ = $\phi(\texttt{C}_0,\texttt{C}_2)$
+\STATE 4. $\texttt{D}_1$ = $\phi(\texttt{D}_0,\texttt{D}_2)$
+\STATE 5. $\texttt{B}_2 = update(\texttt{B}_1, i, \mathit{MUL}(\texttt{A}_2[i], \texttt{D}_1[{i-1}])$
+\STATE 6. $\texttt{C}_2 = update(\texttt{C}_1, i, \mathit{MUL}(\texttt{A}_2[i], \texttt{D}_1[{i-1}])$
+\STATE 7. $\texttt{D}_2 = update(\texttt{D}_1, i, \mathit{MUL}(\texttt{B}_2[i], \texttt{C}_1[i])$
 \end{algorithmic}
 
 
