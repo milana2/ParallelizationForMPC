@@ -629,7 +629,7 @@ loop-carried dependence on $\texttt{A}$; otherwise there is not and we can remov
 Consider the earlier example. There is a single loop, $i$. Clearly, there is no pair $\underline{i}$ and $\underline{i}'$, where $\underline{i} < \underline{i}'$ that make $\underline{i} = \underline{i}'$ (due to the def-use pairs of \texttt{A} 6-8 and 6-10).
 Therefore, we remove the back edge from 6 to 1. Analogously, we remove the back edges from 8 to 2 and 10 to 3. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 12 to 4 remains (def-use pairs for \texttt{D}). As a result of removing these spurious edges, Basic Vectorization will find that statement 6 is vectorizable. Statements 8, 10 and 12 will correctly appear in the FOR loop.
 
-\ana{Commented out previous writeup. Removal/handling of targetless phi-nodes will go into the Extension to Basic vectorization.}
+%\ana{Commented out previous writeup. Removal/handling of targetless phi-nodes will go into the Extension to Basic vectorization.}
 
 \begin{comment}
 The final step is to remove array phi-nodes that are left without incoming back edges after removal of infeasible edges.
@@ -706,7 +706,7 @@ the size of those vectors. Note that this is a heuristic that handles a common c
 
 \subsection{Extension of Basic Vectorization with Array Writes}
 
-\ana{TODO: Handling of Targetless phi nodes should be done here, as an extension to Basic Vectorization.}
+\ana{TODO: This section is work in progress!}
 
 \subsubsection{Restricting Array Writes}
 
@@ -727,7 +727,7 @@ Reads through an arbitrary formula, such as $\texttt{A}[i-1]$ for example, are a
 
 One change to Basic vectorization is the expansion of dimension if the array write or read occurs in a nested loop. That is, if there is an update $\texttt{A}[i,j] = ...$ that occurs in loop nest $i,j,k$, $\texttt{A}[i,j]$ will be rewritten into $\texttt{A}[i,j,k]$. Similarly, a read $\texttt{A}[f(i,j)]$ will be rewritten into $\texttt{A}[f(i,j),k]$. \ana{TODO: This notion of $f(i,j)$ needs a precise definition. For now I'm hoping the hand waving works.} This can be a preprocessing step or it can be incorporated into the Basic Vectorization algorithm.
 
-The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and $Y$ uses an array variable (e.g., the definition can be a propagation $A_2 = A_1$ or a pseudo $\phi$-node $A_2 = \phi(A_0,A_1)$). These edges are not handled in the same way as in Basic Vectorization, specifically, we do not expand dimension as we do for scalars in Basic Vectorization according to the loop nest. A key invariant is that the dimension of an array $A$ cannot drop below $A$'s canonical dimensionality. Below we enumerate the cases of def-use edges.
+The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and $Y$ uses an array variable (e.g., the definition can be an update $A_2 = update(A_1,...)$ or a pseudo $\phi$-node $A_2 = \phi(A_0,A_1)$). These edges are not handled in the same way as in Basic Vectorization, specifically, we do not expand dimension as we do for scalars in Basic Vectorization according to the loop nest. A key invariant is that the dimension of an array $A$ cannot drop below $A$'s canonical dimensionality. Below we enumerate the cases of def-use edges.
 
 \begin{enumerate}
 
@@ -745,19 +745,25 @@ The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and 
 
 \paragraph{Example 1}
 
-Recall that after removal of infeasible edges and redundant phi-nodes, the Aiken's array write example will be (roughly) as follows:
+Recall that after removal of infeasible edges, the Aiken's array write example will be (roughly) as follows:
 
 \begin{algorithmic}
 \STATE for i in range(N):
-\STATE 1. $\texttt{D}_0$ = $\phi(\texttt{D},\texttt{D}_1)$
-\STATE 2. $\texttt{A}_1$ = $\texttt{A}$; $\texttt{A}_1$[i] = $\texttt{B}$[i] + 10;
-\STATE 3. $\texttt{B}_1$ = $\texttt{B}$; $\texttt{B}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
-\STATE 4. $\texttt{C}_1$ = $\texttt{C}$; $\texttt{C}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
-\STATE 5. $\texttt{D}_1$ = $\texttt{D}_0$; $\texttt{D}_1$[i] = $\texttt{B}_1$[i] * $\texttt{C}_1$[i];
+\STATE 1. $\texttt{A}_1$ = $\phi(\texttt{A}_0,\texttt{A}_2)$
+\STATE 2. $\texttt{B}_1$ = $\phi(\texttt{B}_0,\texttt{B}_2)$
+\STATE 3. $\texttt{C}_1$ = $\phi(\texttt{C}_0,\texttt{C}_2)$
+\STATE 4. $\texttt{D}_2$ = $\phi(\texttt{D}_0,\texttt{D}_2)$
+\STATE 5. $\texttt{A}_2$ = update($\texttt{A}_1$, i, $\texttt{B}_1$[i] + 10);
+\STATE 6. $\texttt{B}_2$ = update($\texttt{B}_1$, i, $\texttt{A}_2$[i] * $\texttt{D}_1$[i-1]);
+\STATE 7. $\texttt{C}_2$ = update($\texttt{C}_1$, i, $\texttt{A}_2$[i] * $\texttt{D}_1$[i-1]);
+\STATE 8. $\texttt{D}_2$ = update($\texttt{D}_1$; i, $\texttt{B}_2$[i] * $\texttt{C}_2$[i]);
 \end{algorithmic}
 
-There are no nested loops, thus, array accesses remain as is.
+There are no nested loops, thus, array accesses remain as is. The closure of 4 includes 4,6,7, and 8, 
+while 5 is vectorizable. 
 
+
+Removal of infeasible edges leaves $\phi$-nodes 1,2, and 3, i.e., A,B, and C as targetless. 
 After Phase 1 of Basic vectorization we have the following code:
 \begin{algorithmic}
 \STATE for i in range(N):
