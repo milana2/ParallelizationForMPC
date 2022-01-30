@@ -84,9 +84,13 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + "\n".join(
             var_type.to_cpp(type_env, plaintext=False)
             + " "
-            + var_name.to_cpp(type_env)
+            + var.to_cpp(type_env)
             + ";"
-            for var_name, var_type in type_env.items()
+            for var, var_type in type_env.items()
+            if not any(
+                param.var == var and param.var_type.is_shared()
+                for param in func.parameters
+            )
         )
         + "\n"
     )
@@ -97,6 +101,10 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
             f"{var_type.to_cpp(type_env, plaintext=True)} {var.to_cpp(type_env, plaintext=True)};"
             for var, var_type in type_env.items()
             if var_type.is_plaintext()
+            if not any(
+                param.var == var and param.var_type.is_plaintext()
+                for param in func.parameters
+            )
         )
         + "\n"
     )
@@ -112,35 +120,15 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + "\n"
     )
 
-    param_assignments = (
-        "// Shared parameter assignments\n"
-        + "\n".join(
-            param.var.to_cpp(type_env) + "_0 = " + param.var.to_cpp(type_env) + ";"
-            for param in func.parameters
-            if param.var_type.is_shared()
-        )
-        + "\n"
-    )
-
     plaintext_param_assignments = (
         "// Plaintext parameter assignments\n"
         + "\n\n".join(
             (
                 # Initialize the shared version
                 param.var.to_cpp(type_env)
-                + "_0 = party->In<Protocol>(encrypto::motion::ToInput("
-                + param.var.to_cpp(
-                    type_env
-                )  # no plaintext=True here so we reference the right variable name
+                + " = party->In<Protocol>(encrypto::motion::ToInput("
+                + param.var.to_cpp(type_env, plaintext=True)
                 + "), 0);"
-            )
-            + "\n"
-            + (
-                # Initialize the plaintext version
-                param.var.to_cpp(type_env, plaintext=True)
-                + "_0 = "
-                + param.var.to_cpp(type_env)
-                + ";"
             )
             for param in func.parameters
             if param.var_type.is_plaintext()
@@ -164,8 +152,6 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + indent(plaintext_var_definitions, "    ")
         + "\n"
         + indent(constant_initialization, "    ")
-        + "\n"
-        + indent(param_assignments, "    ")
         + "\n"
         + indent(plaintext_param_assignments, "    ")
         + "\n"

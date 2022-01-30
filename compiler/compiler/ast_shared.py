@@ -264,11 +264,19 @@ class Parameter:
     ] = None  # stores the party index associated with this parameter, if it is shared
 
     def to_cpp(self, type_env: TypeEnv, **kwargs):
-        return (
-            self.var_type.to_cpp(type_env, **kwargs)
-            + " "
-            + self.var.to_cpp(type_env, **kwargs)
-        )
+        plaintext_kwargs = {k: v for k, v in kwargs.items() if k != "plaintext"}
+        if self.var_type.is_shared():
+            return (
+                self.var_type.to_cpp(type_env, **kwargs)
+                + " "
+                + self.var.to_cpp(type_env, **plaintext_kwargs)
+            )
+        else:
+            return (
+                self.var_type.to_cpp(type_env, plaintext=True, **plaintext_kwargs)
+                + " "
+                + self.var.to_cpp(type_env, plaintext=True, **plaintext_kwargs)
+            )
 
     def __str__(self) -> str:
         return f"{self.var}: {self.var_type}"
