@@ -137,14 +137,12 @@ template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> C_0,
-    std::uint32_t D_0,
+    std::uint32_t _MPC_PLAINTEXT_D_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> S_0,
-    std::uint32_t N_0
+    std::uint32_t _MPC_PLAINTEXT_N_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> C_0;
     encrypto::motion::SecureUnsignedInteger D_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> S_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::SecureUnsignedInteger j;
@@ -165,8 +163,6 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     encrypto::motion::SecureUnsignedInteger d_3;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_D_0;
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_j;
     std::tuple<std::uint32_t, std::uint32_t> _MPC_PLAINTEXT__2_1;
@@ -179,16 +175,10 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10000 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(10000)), 0);
 
-    // Shared parameter assignments
-    C_0_0 = C_0;
-    S_0_0 = S_0;
-
     // Plaintext parameter assignments
-    D_0_0 = party->In<Protocol>(encrypto::motion::ToInput(D_0), 0);
-    _MPC_PLAINTEXT_D_0_0 = D_0;
+    D_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_D_0), 0);
 
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     min_sum_1 = _MPC_CONSTANT_10000;
@@ -470,8 +460,8 @@ def biometric_matching_fast(D!0: plaintext[int], N!0: plaintext[int], C!0: share
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric_matching_fast(
     encrypto::motion::PartyPointer &party,
-    std::uint32_t D_0,
-    std::uint32_t N_0,
+    std::uint32_t _MPC_PLAINTEXT_D_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> C_0,
     encrypto::motion::SecureUnsignedInteger C_sqr_sum_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> two_C_0,
@@ -481,11 +471,6 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     // Shared variable declarations
     encrypto::motion::SecureUnsignedInteger D_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> C_0;
-    encrypto::motion::SecureUnsignedInteger C_sqr_sum_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> two_C_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> S_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> S_sqr_sum_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::SecureUnsignedInteger j;
     encrypto::motion::SecureUnsignedInteger k;
@@ -517,8 +502,6 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     std::vector<encrypto::motion::SecureUnsignedInteger> differences_1;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_D_0;
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_j;
     std::uint32_t _MPC_PLAINTEXT_k;
@@ -536,19 +519,10 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
-    // Shared parameter assignments
-    C_0_0 = C_0;
-    C_sqr_sum_0_0 = C_sqr_sum_0;
-    two_C_0_0 = two_C_0;
-    S_0_0 = S_0;
-    S_sqr_sum_0_0 = S_sqr_sum_0;
-
     // Plaintext parameter assignments
-    D_0_0 = party->In<Protocol>(encrypto::motion::ToInput(D_0), 0);
-    _MPC_PLAINTEXT_D_0_0 = D_0;
+    D_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_D_0), 0);
 
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     differences_1 = {};
@@ -715,8 +689,6 @@ encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
     encrypto::motion::SecureUnsignedInteger y_0
 ) {
     // Shared variable declarations
-    encrypto::motion::SecureUnsignedInteger x_0;
-    encrypto::motion::SecureUnsignedInteger y_0;
     encrypto::motion::ShareWrapper _1_1;
     encrypto::motion::SecureUnsignedInteger z_4;
     encrypto::motion::SecureUnsignedInteger z_1;
@@ -733,10 +705,6 @@ encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
-
-    // Shared parameter assignments
-    x_0_0 = x_0;
-    y_0_0 = y_0;
 
     // Plaintext parameter assignments
 
@@ -932,11 +900,9 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0,
-    std::uint32_t N_0
+    std::uint32_t _MPC_PLAINTEXT_N_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::SecureUnsignedInteger j;
@@ -969,7 +935,6 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     encrypto::motion::ShareWrapper _2_2;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_j;
     std::tuple<std::vector<std::uint32_t>, std::vector<std::uint32_t>> _MPC_PLAINTEXT__12_1;
@@ -979,17 +944,12 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     bool _MPC_PLAINTEXT_is_hull_4;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
-
-    // Shared parameter assignments
-    X_coords_0_0 = X_coords_0;
-    Y_coords_0_0 = Y_coords_0;
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
 
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     hull_X_1 = {};
@@ -1159,13 +1119,11 @@ template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_102(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
-    std::uint32_t N_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::ShareWrapper _3_2;
     encrypto::motion::ShareWrapper _6_2;
@@ -1181,23 +1139,17 @@ encrypto::motion::SecureUnsignedInteger count_102(
     encrypto::motion::SecureUnsignedInteger c_1;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     bool _MPC_PLAINTEXT_s0_1;
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
-
-    // Shared parameter assignments
-    Seq_0_0 = Seq_0;
-    Syms_0_0 = Syms_0;
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     s0_1 = _MPC_CONSTANT_false;
@@ -1351,13 +1303,11 @@ template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_10s(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
-    std::uint32_t N_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::ShareWrapper s0_3;
     encrypto::motion::ShareWrapper s0_1;
@@ -1375,7 +1325,6 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     encrypto::motion::SecureUnsignedInteger scount_1;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     bool _MPC_PLAINTEXT_s0_1;
     bool _MPC_PLAINTEXT_s1_1;
@@ -1383,16 +1332,11 @@ encrypto::motion::SecureUnsignedInteger count_10s(
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
-
-    // Shared parameter assignments
-    Seq_0_0 = Seq_0;
-    Syms_0_0 = Syms_0;
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     s0_1 = _MPC_CONSTANT_false;
@@ -1555,13 +1499,11 @@ template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_123(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
-    std::uint32_t N_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::ShareWrapper s1_3;
     encrypto::motion::ShareWrapper s1_1;
@@ -1580,7 +1522,6 @@ encrypto::motion::SecureUnsignedInteger count_123(
     encrypto::motion::SecureUnsignedInteger c_1;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     bool _MPC_PLAINTEXT_s1_1;
     bool _MPC_PLAINTEXT_s2_1;
@@ -1588,16 +1529,11 @@ encrypto::motion::SecureUnsignedInteger count_123(
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
-
-    // Shared parameter assignments
-    Seq_0_0 = Seq_0;
-    Syms_0_0 = Syms_0;
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     s1_1 = _MPC_CONSTANT_false;
@@ -1761,12 +1697,10 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
-    std::uint32_t N_0,
-    std::uint32_t num_bins_0
+    std::uint32_t _MPC_PLAINTEXT_N_0,
+    std::uint32_t _MPC_PLAINTEXT_num_bins_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger num_bins_0;
     encrypto::motion::SecureUnsignedInteger i;
@@ -1783,8 +1717,6 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     std::vector<encrypto::motion::SecureUnsignedInteger> result_1;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
-    std::uint32_t _MPC_PLAINTEXT_num_bins_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_j;
     std::vector<std::uint32_t> _MPC_PLAINTEXT_result_2;
@@ -1795,16 +1727,10 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
-    // Shared parameter assignments
-    A_0_0 = A_0;
-    B_0_0 = B_0;
-
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
-    num_bins_0_0 = party->In<Protocol>(encrypto::motion::ToInput(num_bins_0), 0);
-    _MPC_PLAINTEXT_num_bins_0_0 = num_bins_0;
+    num_bins_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_num_bins_0), 0);
 
     // Function body
     result_1 = {};
@@ -1963,13 +1889,9 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> C_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> D_0,
-    std::uint32_t N_0
+    std::uint32_t _MPC_PLAINTEXT_N_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> C_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> D_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i;
     std::vector<encrypto::motion::SecureUnsignedInteger> A_1;
@@ -1987,22 +1909,14 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     encrypto::motion::SecureUnsignedInteger _1_2;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::tuple<std::vector<std::uint32_t>, std::vector<std::uint32_t>, std::vector<std::uint32_t>, std::vector<std::uint32_t>> _MPC_PLAINTEXT__5_1;
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(10)), 0);
 
-    // Shared parameter assignments
-    A_0_0 = A_0;
-    B_0_0 = B_0;
-    C_0_0 = C_0;
-    D_0_0 = D_0;
-
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
 
@@ -2118,11 +2032,9 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
-    std::uint32_t N_0
+    std::uint32_t _MPC_PLAINTEXT_N_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::SecureUnsignedInteger sum_2;
@@ -2131,20 +2043,14 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     encrypto::motion::SecureUnsignedInteger sum_1;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_sum_1;
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
-    // Shared parameter assignments
-    A_0_0 = A_0;
-    B_0_0 = B_0;
-
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     sum_1 = _MPC_CONSTANT_0;
@@ -2316,13 +2222,11 @@ template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_102(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
-    std::uint32_t N_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::ShareWrapper _8_2;
     encrypto::motion::SecureUnsignedInteger max_len_2;
@@ -2346,7 +2250,6 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     encrypto::motion::ShareWrapper _1_2;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_max_len_1;
     std::uint32_t _MPC_PLAINTEXT_length_4;
@@ -2355,16 +2258,11 @@ encrypto::motion::SecureUnsignedInteger longest_102(
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
-
-    // Shared parameter assignments
-    Seq_0_0 = Seq_0;
-    Syms_0_0 = Syms_0;
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     s0_1 = _MPC_CONSTANT_false;
@@ -2523,13 +2421,11 @@ template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_1s(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
-    std::uint32_t N_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    encrypto::motion::SecureUnsignedInteger Sym_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::ShareWrapper _2_2;
     encrypto::motion::SecureUnsignedInteger max_length_2;
@@ -2544,7 +2440,6 @@ encrypto::motion::SecureUnsignedInteger longest_1s(
     encrypto::motion::SecureUnsignedInteger length_2;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_max_length_1;
     std::uint32_t _MPC_PLAINTEXT_length_4;
@@ -2554,13 +2449,8 @@ encrypto::motion::SecureUnsignedInteger longest_1s(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
-    // Shared parameter assignments
-    Seq_0_0 = Seq_0;
-    Sym_0_0 = Sym_0;
-
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     max_length_1 = _MPC_CONSTANT_0;
@@ -2726,13 +2616,11 @@ template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_even_0(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
-    std::uint32_t N_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    encrypto::motion::SecureUnsignedInteger Sym_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::ShareWrapper _4_2;
     encrypto::motion::SecureUnsignedInteger max_length_2;
@@ -2752,7 +2640,6 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
     encrypto::motion::SecureUnsignedInteger current_length_2;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_max_length_1;
     std::uint32_t _MPC_PLAINTEXT_current_length_4;
@@ -2762,13 +2649,8 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
-    // Shared parameter assignments
-    Seq_0_0 = Seq_0;
-    Sym_0_0 = Sym_0;
-
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     current_length_1 = _MPC_CONSTANT_0;
@@ -2956,13 +2838,11 @@ template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_odd_10(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
-    std::uint32_t N_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::ShareWrapper s2_3;
     encrypto::motion::ShareWrapper s2_1;
@@ -2986,7 +2866,6 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     encrypto::motion::ShareWrapper _1_2;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     bool _MPC_PLAINTEXT_s2_1;
     std::uint32_t _MPC_PLAINTEXT_current_length_4;
@@ -2995,16 +2874,11 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
 
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
-
-    // Shared parameter assignments
-    Seq_0_0 = Seq_0;
-    Syms_0_0 = Syms_0;
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     current_length_1 = _MPC_CONSTANT_0;
@@ -3161,13 +3035,11 @@ template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
-    std::uint32_t N_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    encrypto::motion::SecureUnsignedInteger Sym_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::ShareWrapper _3_2;
     encrypto::motion::SecureUnsignedInteger max_dist_2;
@@ -3183,7 +3055,6 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     encrypto::motion::ShareWrapper _1_2;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_max_dist_1;
     std::uint32_t _MPC_PLAINTEXT_current_dist_4;
@@ -3193,13 +3064,8 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
-    // Shared parameter assignments
-    Seq_0_0 = Seq_0;
-    Sym_0_0 = Sym_0;
-
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     max_dist_1 = _MPC_CONSTANT_0;
@@ -3346,13 +3212,11 @@ template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
-    std::uint32_t N_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    encrypto::motion::SecureUnsignedInteger Sym_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::ShareWrapper _3_2;
     encrypto::motion::SecureUnsignedInteger max_sum_2;
@@ -3368,7 +3232,6 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     encrypto::motion::ShareWrapper _1_2;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_max_sum_1;
     std::uint32_t _MPC_PLAINTEXT_current_sum_4;
@@ -3377,13 +3240,8 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     // Constant initializations
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
 
-    // Shared parameter assignments
-    Seq_0_0 = Seq_0;
-    Sym_0_0 = Sym_0;
-
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     max_sum_1 = _MPC_CONSTANT_0;
@@ -3560,11 +3418,9 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0,
-    std::uint32_t N_0
+    std::uint32_t _MPC_PLAINTEXT_N_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::SecureUnsignedInteger j;
@@ -3590,7 +3446,6 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     encrypto::motion::ShareWrapper _4_3;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_N_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_j;
     std::tuple<std::vector<std::uint32_t>, std::vector<std::uint32_t>> _MPC_PLAINTEXT__13_1;
@@ -3601,13 +3456,8 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     // Constant initializations
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
 
-    // Shared parameter assignments
-    X_coords_0_0 = X_coords_0;
-    Y_coords_0_0 = Y_coords_0;
-
     // Plaintext parameter assignments
-    N_0_0 = party->In<Protocol>(encrypto::motion::ToInput(N_0), 0);
-    _MPC_PLAINTEXT_N_0_0 = N_0;
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
     min_X_1 = {};
@@ -3786,14 +3636,12 @@ template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
-    std::uint32_t SA_0,
+    std::uint32_t _MPC_PLAINTEXT_SA_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
-    std::uint32_t SB_0
+    std::uint32_t _MPC_PLAINTEXT_SB_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> A_0;
     encrypto::motion::SecureUnsignedInteger SA_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> B_0;
     encrypto::motion::SecureUnsignedInteger SB_0;
     encrypto::motion::SecureUnsignedInteger i;
     encrypto::motion::SecureUnsignedInteger j;
@@ -3812,8 +3660,6 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     encrypto::motion::ShareWrapper flag_2;
 
     // Plaintext variable declarations
-    std::uint32_t _MPC_PLAINTEXT_SA_0;
-    std::uint32_t _MPC_PLAINTEXT_SB_0;
     std::uint32_t _MPC_PLAINTEXT_i;
     std::uint32_t _MPC_PLAINTEXT_j;
     std::vector<std::uint32_t> _MPC_PLAINTEXT_result_1;
@@ -3823,20 +3669,14 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     bool _MPC_PLAINTEXT_flag_2;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
-
-    // Shared parameter assignments
-    A_0_0 = A_0;
-    B_0_0 = B_0;
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
 
     // Plaintext parameter assignments
-    SA_0_0 = party->In<Protocol>(encrypto::motion::ToInput(SA_0), 0);
-    _MPC_PLAINTEXT_SA_0_0 = SA_0;
+    SA_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_SA_0), 0);
 
-    SB_0_0 = party->In<Protocol>(encrypto::motion::ToInput(SB_0), 0);
-    _MPC_PLAINTEXT_SB_0_0 = SB_0;
+    SB_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_SB_0), 0);
 
     // Function body
     dummy_1 = _MPC_CONSTANT_0;
