@@ -399,18 +399,29 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 \FOR {each dimension $d$ from highest to 0}
 \FOR {each $\phi$-node $n$ in loop $i_1,...,i_d$}
 \STATE {compute $\mathit{closure}(n)$}
+\ENDFOR
+
+\COMMENT {{\color{red} $cl_1$ and $cl_2$ intersect if they have common statement, or update same array; "intersect" definition can be expanded}}
+
 \WHILE {there are closure $cl_1$ and $cl_2$ that intersect}
 \STATE {merge $cl_1$ and $cl_2$}
 \ENDWHILE
 \FOR {each closure $cl$ (after merge)}
 \STATE {create FOR $i_d = 0; ...$ loop}
 \STATE {add $\phi$-nodes in $cl$ to header block}
+\STATE {{\color{red}{add target-less $\phi$-node for A if $cl$ updates array A}}}
 \STATE {add statements in $cl$ to loop body in some order of dependences}
 \STATE \COMMENT {Dimension is not vectorizable: }
 \STATE {change $\stackrel{\rightarrow}{i_d}$ to $i_d$ in all statements in loop}
 \STATE {treat FOR loop as monolith node: change def-use edges accordingly. Some edges become same-level.}
 \ENDFOR
+{
+\color{red}
+\FOR {each target-less $\phi$-node $A_1 = \phi(A_0,A_k)$}
+\STATE {in vectorizable stmts, replace use of $A_1$ with $A_0$}
+\STATE {discard $\phi$-node if not used in any $cl$}
 \ENDFOR
+}
 \ENDFOR
 
 \COMMENT {Phase 3:}
