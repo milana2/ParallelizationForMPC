@@ -101,7 +101,7 @@ class StagesTestCase(unittest.TestCase):
 
             # Collect expected output
             proc = subprocess.run(
-                ["python3.9", input_fname],
+                ["python3", input_fname],
                 check=True,
                 stdout=subprocess.PIPE,
                 text=True,
