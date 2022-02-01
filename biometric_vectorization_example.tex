@@ -187,6 +187,25 @@ sum!4[I,j] = C
 // may eventually optimize since C is A
 \end{verbatim}
 
+There are three kinds of arrays (for now all kept internally as one-dimensional arrays, but that's under discussion).
+\begin{itemize}
+
+\item Scalars: These are scalar variables that we lift into arrays for the purpose of vectorization. 
+For those, all writes are canonical writes and all reads are canonical reads. We may apply both raise dimension 
+and drop dimension on these.
+
+\item Read-only input arrays: Read-only inputs. There are NO writes while we may have non-canonical reads, $f(i,j,k)$. 
+Vectorization will lift the raise dimension operation at the beginning of the function and raise dimension may reshape 
+arrays. If there are multiple "views" of the input array, there could be multiple raise dimension statements to create
+these views. The invariant is that at reads in loops, the reads of "views" of the original input array will be canonical.
+Only raise-dimension applies.
+ 
+ \item Read-write output arrays: Writes are canonical (by restriction) but reads can be non-canonical. Conjecture:
+ do nothing. Dependence analysis takes care of limiting vectorization so non-canonical access will work. 
+Still work in progress, but we may apply both raise and drop dimension. 
+
+\end{itemize}
+
 \ana{End Work-in-progress notes.}
 
 %\end{document}
