@@ -432,6 +432,9 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 \ishaq{We need to think of a way to handle 4th case for def-use, when a nested block B def is followed by another, different, nested block B' use. Note: The handwritten notes say we can break it into 2 edges. One idea to this end is to insert a def' node which is a copy of the original def. The def' should be placed in a block that contains both B and B'.}
 \ishaq{THE ABOVE COMMENT IS RESOLVED. After transformation to SSA, there should be an intermediate variable (phi node) that is assigned a value depending on whether control branched or not. Should we put this into the writeup?}
 
+\input{biometric_vectorization_example.tex}
+
+\begin{comment}
 \subsection{Example: Biometric}
 
 \subsubsection{MPC-source}
@@ -564,6 +567,7 @@ $\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel
 \ben{The above code implicitly stores the final values of min\_0 and index\_0 in their last indices, but there is no primitive like drop\_dim to make it clear.  This will have to be added in the SSA code generation (though it might not be necessary to include in the paper?).  It also is pretty wishy-washy about the size and layout of each vector (again more of an implementation issue), but maybe we should have a different syntax for array accesses for read/write (e.g. the ADD\_SIMD steps) vs the array definitions (e.g. the SUB\_SIMD and raise/drop\_dim statements)}
 
 \end{algorithmic}
+\end{comment}
 
 \subsection{Correctness Argument}
 
@@ -752,7 +756,7 @@ After Phase 1 of Basic Vectorization the Aiken's array write example will be (ro
 \STATE 1. $\texttt{A}_1$ = $\phi(\texttt{A}_0,\texttt{A}_2)$
 \STATE 2. $\texttt{B}_1$ = $\phi(\texttt{B}_0,\texttt{B}_2)$
 \STATE 3. $\texttt{C}_1$ = $\phi(\texttt{C}_0,\texttt{C}_2)$
-\STATE 4. $\texttt{D}_2$ = $\phi(\texttt{D}_0,\texttt{D}_2)$
+\STATE 4. $\texttt{D}_1$ = $\phi(\texttt{D}_0,\texttt{D}_2)$
 \STATE 5. $\texttt{A}_2 = update(\texttt{A}_1, \stackrel{\rightarrow}{i}, \texttt{B}_1[\stackrel{\rightarrow}{i}] + 10)$;
 \STATE 6. $\texttt{B}_2 = update(\texttt{B}_1, \stackrel{\rightarrow}{i}, \texttt{A}_2[\stackrel{\rightarrow}{i}] * \texttt{D}_1[\stackrel{\rightarrow}{i-1}])$;
 \STATE 7. $\texttt{C}_2 = update(\texttt{C}_1, \stackrel{\rightarrow}{i}, \texttt{A}_2[\stackrel{\rightarrow}{i}] * \texttt{D}_1[\stackrel{\rightarrow}{i-1}])$;
