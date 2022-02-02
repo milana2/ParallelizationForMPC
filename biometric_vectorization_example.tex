@@ -6,6 +6,7 @@
 
 \subsubsection{Benjamin's code with linear loops (MPC Source)}
 
+{\small
 \begin{verbatim}
 min_sum!1 = 10000
 min_index!1 = 0
@@ -24,6 +25,7 @@ for i in range(0, N!0):
    min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
    min_index!4 = MUX(!1!2, min_index!3, min_index!2)
 \end{verbatim}
+}
 
 \subsubsection{Phase 1 of Basic Vectorization}
 
@@ -36,6 +38,7 @@ may have slightly different interpretation. \ana{This is vague but I think it's 
 
 Note the two different versions of $\mathit{raise\_dim}$. \ana{More here! One just adds a least-significant dimension. The other one may reshape an input array.}
 
+{\small
 \begin{verbatim}
 min_sum!1 = 10000
 min_sum!1^ = raise_dim(min_sum!1, (i:N!0))
@@ -60,6 +63,7 @@ for i in range(0, N!0):
    min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
    min_index!4 = MUX(!1!2, min_index!3, min_index!2)
 \end{verbatim}
+}
 
 \subsubsection{Phase 2 of Basic Vectorization}
 
@@ -69,6 +73,7 @@ Starting at the inner phi-node \texttt{sum!3 = PHI(sum!2\^, sum!4)}, the algorit
 
 After processing inner loop code becomes:
 
+{\small
 \begin{verbatim}
 min_sum!1 = 10000
 min_sum!1^ = raise_dim(min_sum!1, (i:N!0))
@@ -93,10 +98,12 @@ for i in range(0, N!0):
    min_sum!4[I] = MUX(!1!2[I], min_sum!3[I], min_sum!2[I])
    min_index!4[I] = MUX(!1!2[I], min_index!3[I], min_index!2[I])
 \end{verbatim}
+}
 
-\noindent When processing the outer loop two closures arise, one for \texttt{min\_sum!2[I] = PHI(...)} and one 
+When processing the outer loop two closures arise, one for \texttt{min\_sum!2[I] = PHI(...)} and one 
 for \texttt{min\_index!2[I] = PHI(...)}. Since the two closures \emph{do not} intersect, we have two distinct FOR-loops on $i$:
 
+{\small
 \begin{verbatim}
 min_sum!1 = 10000
 min_sum!1^ = raise_dim(min_sum!1, (i:N!0))
@@ -121,17 +128,19 @@ min_sum!3 = sum!3^
 for i in range(0, N!0):
   min_sum!2[i] = PHI(min_sum!1^[i], min_sum!4[i-1]) 
   !1!2[i] = (sum!3^[i] < min_sum!2[i])
-   min_sum!4[i] = MUX(!1!2[i], min_sum!3[i], min_sum!2[i])
+  min_sum!4[i] = MUX(!1!2[i], min_sum!3[i], min_sum!2[i])
     
 for i in range(0, N!0):
   min_index!2[i] = PHI(min_index!1^[i], min_index!4[i-1])  
-  min_index!4[i] = MUX(!1!2[i], min_index!3[i], min_index!2[i])
-
+   min_index!4[i] = MUX(!1!2[i], min_index!3[i], min_index!2[i])
 \end{verbatim}
+}
 
 \subsubsection{Phase 3 of Basic Vectorization}
 
 And this phase adds SIMD operations:
+
+{\small
 \begin{verbatim}
 min_sum!1 = 10000
 min_sum!1^ = raise_dim(min_sum!1, (i:N!0))
@@ -156,12 +165,13 @@ min_sum!3 = sum!3^
 for i in range(0, N!0):
   min_sum!2[i] = PHI(min_sum!1^[i], min_sum!4[i-1]) 
   !1!2[i] = CMP(sum!3^[i],min_sum!2[i])
-   min_sum!4[i] = MUX(!1!2[i], min_sum!3[i], min_sum!2[i])
+  min_sum!4[i] = MUX(!1!2[i], min_sum!3[i], min_sum!2[i])
     
 for i in range(0, N!0):
   min_index!2[i] = PHI(min_index!1^[i], min_index!4[i-1])  
-  min_index!4[i] = MUX(!1!2[i], min_index!3[i], min_index!2[i])
+   min_index!4[i] = MUX(!1!2[i], min_index!3[i], min_index!2[i])
 \end{verbatim}
+}
 
 \ana{Begin Work-in-progress notes on implementation. Just some thoughts...} 
 
@@ -190,19 +200,19 @@ sum!4[I,j] = C
 There are three kinds of arrays (for now all kept internally as one-dimensional arrays, but that's under discussion).
 \begin{itemize}
 
-\item Scalars: These are scalar variables that we lift into arrays for the purpose of vectorization. 
+\item Scalars: These are scalar variables we lift into arrays for the purposes of vectorization. 
 For those, all writes are canonical writes and all reads are canonical reads. We may apply both raise dimension 
 and drop dimension on these.
 
-\item Read-only input arrays: Read-only inputs. There are NO writes while we may have non-canonical reads, $f(i,j,k)$. 
-Vectorization will lift the raise dimension operation at the beginning of the function and raise dimension may reshape 
-arrays. If there are multiple "views" of the input array, there could be multiple raise dimension statements to create
-these views. The invariant is that at reads in loops, the reads of "views" of the original input array will be canonical.
-Only raise-dimension applies.
+\item Read-only input arrays: Read-only inputs. There are NO writes, while we may have non-canonical reads, $f(i,j,k)$. 
+Phase 1 of Basic vectorization will add raise dimension operation at the beginning of the function and raise dimension 
+may reshape arrays. If there are multiple "views" of the input array, there could be multiple raise dimension statements to create
+each one of these views. The invariant is that at reads in loops, the reads of "views" of the original input array will be canonical.
+Only raise dimension applies.
  
  \item Read-write output arrays: Writes are canonical (by restriction) but reads can be non-canonical. Conjecture:
  do nothing. Dependence analysis takes care of limiting vectorization so non-canonical access will work. 
-Still work in progress, but we may apply both raise and drop dimension. 
+Still work in progress. We may apply both raise and drop dimension. 
 
 \end{itemize}
 
