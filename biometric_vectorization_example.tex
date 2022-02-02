@@ -34,7 +34,7 @@ The next phase discovers loop-carried dependences and removes affected vectoriza
 
 In the code below, all initializations (e.g., \texttt{min\_sum!3 = i}), operations, and PHI nodes are \emph{implicitly vectorized}. 
 $\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ statements, as well as propagation statements (e.g., \texttt{min\_sum!3 = sum!3\^}) 
-may have slightly different interpretation. \ana{This is vague but I think it's clear.}
+may have slightly different interpretation. \ana{This is vague, may need elaboration.}
 
 Note the two different versions of $\mathit{raise\_dim}$. \ana{More here! One just adds a least-significant dimension. The other one may reshape an input array.}
 
@@ -69,7 +69,7 @@ for i in range(0, N!0):
 
 This phase analyzes statements from the innermost loop to the outermost. The key point is to discover loop-carried dependencies and re-introduce loops whenever dependencies make this necessary.
 
-Starting at the inner phi-node \texttt{sum!3 = PHI(sum!2\^, sum!4)}, the algorithm first computes its closure. The closure amounts to the phi-node itself and the addition node \texttt{sum!4 = (sum!3 + p!3)}, accounting for the loop-carried dependency of the computation of \texttt{sum}. The algorithm replaces this closure with a FOR loop on $j$ removing vectoriaztion on $j$. Note that the SUB and MUL computations remain outside of the loop as they do not depend on phi-nodes that are part of cycles. The dependences are from \texttt{p!3[I,J] = (d!3[I,J] * d!3[I,J])} to the monolithic FOR loop and from the FOR loop to \texttt{sum!3\^ = drop\_dim(sum!3)}. (Lower case index, e.g., $i,j$ indicates non-vectorized dimension, while uppercase index, e.g., $I$ indicates vectorized dimenion.)
+Starting at the inner phi-node \texttt{sum!3 = PHI(sum!2\^, sum!4)}, the algorithm first computes its closure. The closure amounts to the phi-node itself and the addition node \texttt{sum!4 = (sum!3 + p!3)}, accounting for the loop-carried dependency of the computation of \texttt{sum}. The algorithm replaces this closure with a FOR loop on $j$ removing vectoriaztion on $j$. Note that the SUB and MUL computations remain outside of the loop as they do not depend on phi-nodes that are part of cycles. The dependences are from \texttt{p!3[I,J] = (d!3[I,J] * d!3[I,J])} to the monolithic FOR loop and from the FOR loop to \texttt{sum!3\^ = drop\_dim(sum!3)}. (Lower case index, e.g., \texttt{i}, indicates non-vectorized dimension, while uppercase index, e.g., \texttt{I} indicates vectorized dimension.)
 
 After processing inner loop code becomes:
 
@@ -80,10 +80,10 @@ min_sum!1^ = raise_dim(min_sum!1, (i:N!0))
 min_index!1 = 0
 min_index!1^ = raise_dim(min_index!1, (i:N!0))
 S!0^ = raise_dim(S!0, ((i * D!0) + j), (i:N!0,j:D!0))
-C!0^ = raise_dim(C!0, j, (i:N!0,,j:D!0))
+C!0^ = raise_dim(C!0, j, (i:N!0,j:D!0))
 for i in range(0, N!0):
   min_sum!2[I] = PHI(min_sum!1^[I], min_sum!4[I]) 
-   min_index!2[I] = PHI(min_index!1^[I], min_index!4[I])  
+  min_index!2[I] = PHI(min_index!1^[I], min_index!4[I])  
   sum!2 = [0,..,0] 
   sum!2^ = raise_dim(sum!2, (j:D!0))
   d!3[I,J] = S!0^[I,J] - C!0^[I,J]
@@ -95,7 +95,7 @@ for i in range(0, N!0):
   !1!2[I] = (sum!3^[I] < min_sum!2[I])
   min_sum!3 = sum!3^
   min_index!3 = [0,1,2,...,N!0-1]
-   min_sum!4[I] = MUX(!1!2[I], min_sum!3[I], min_sum!2[I])
+  min_sum!4[I] = MUX(!1!2[I], min_sum!3[I], min_sum!2[I])
    min_index!4[I] = MUX(!1!2[I], min_index!3[I], min_index!2[I])
 \end{verbatim}
 }
@@ -110,7 +110,7 @@ min_sum!1^ = raise_dim(min_sum!1, (i:N!0))
 min_index!1 = 0
 min_index!1^ = raise_dim(min_index!1, (i:N!0))
 S!0^ = raise_dim(S!0, ((i * D!0) + j), (i:N!0,j:D!0))
-C!0^ = raise_dim(C!0, j, (i:N!0))
+C!0^ = raise_dim(C!0, j, (i:N!0,j:D!0))
 
 sum!2 = [0,..,0]
 sum!2^ = raise_dim(sum!2, (j:D!0))
@@ -122,7 +122,7 @@ for j in range(0, D!0):
   sum!4[I,j] = (sum!3[I,j] + p!3[I,j])
 
 sum!3^ = drop_dim(sum!3)     
-min_index!3 = [1,2,...N!0]   
+min_index!3 = [0,1,2,...N!0-1]   
 min_sum!3 = sum!3^
 
 for i in range(0, N!0):
