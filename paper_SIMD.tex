@@ -729,9 +729,11 @@ Reads through an arbitrary formula, such as $\texttt{A}[i-1]$ for example, are a
 
 \subsubsection{Changes to Basic Vectorization}
 
-One change to Basic vectorization is the expansion of dimension if the array write or read occurs in a nested loop. That is, if there is an update $\texttt{A}[i,j] = ...$ that occurs in loop dimensionality $i,j,k$, $\texttt{A}[i,j]$ will be rewritten into $\texttt{A}[i,j,k]$. Similarly, a read $\texttt{A}[f(i,j)]$ will be rewritten into $\texttt{A}[f(i,j),k]$. \ana{TODO: This notion of $f(i,j)$ needs a precise definition. For now I'm hoping the hand waving works.} This can be a preprocessing step or it can be incorporated into the Basic Vectorization algorithm.
+There are two changes to Basic Vectorization to account for write arrays. We can account for them during processing of raise dimension/drop dimension in Phase 1 of Basic Vectorization.
 
-The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and $Y$ uses an array variable, e.g., the definition can be an update $A_2 = update(A_1,...)$ or a pseudo $\phi$-node $A_2 = \phi(A_0,A_1)$. Note that $\phi$ nodes for arrays are no subscript operations on those $\phi$-nodes the way there are in scalar arrays. These edges are not handled in the same way as in Basic Vectorization, specifically, we do not raise and drop dimension as we do for scalars in Basic Vectorization. A key invariant is that the dimension of an array $A$ cannot go above or drop below $A$'s canonical dimensionality. We enumerate the cases of def-use edges.
+One change to Basic vectorization is the expansion of dimension if the array write or read occurs in a nested loop. That is, if there is an update $\texttt{A}[i,j] = ...$ that occurs in loop dimensionality $i,j,k$, $\texttt{A}[i,j]$ will be rewritten into $\texttt{A}[i,j,k]$. Similarly, a read $\texttt{A}[f(i,j)]$ will be rewritten into $\texttt{A}[f(i,j),k]$. ($\texttt{A}[f(i,j),k]$ will be reshaped as $f(i,j)*I*J+k$ during Phase 1 of Basic Vectorization. \ana{TODO: Double check.}) 
+
+The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and $Y$ uses an array variable. The definition can be an update $A_2 = update(A_1,...)$ or a pseudo $\phi$-node $A_2 = \phi(A_0,A_1)$. Note that $\phi$ nodes for arrays are no subscript operations on those $\phi$-nodes the way there are in scalar arrays. These edges are not handled in the same way as in Basic Vectorization, specifically, we do not raise and drop dimension as we do for scalars in Basic Vectorization. A key invariant is that the dimension of an array $A$ cannot go above or drop below $A$'s canonical dimensionality. We enumerate the cases of def-use edges.
 
 \begin{enumerate}
 
