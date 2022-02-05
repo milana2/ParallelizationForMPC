@@ -50,13 +50,13 @@ def biometric(C: shared[list[int]], D: plaintext[int], S: shared[list[int]], N: 
     return (min_sum, min_index)
 ```
 ### Three-address code CFG
-![](biometric_tac_cfg.png)
+![](images/biometric_tac_cfg.png)
 ### SSA
-![](biometric_ssa.png)
+![](images/biometric_ssa.png)
 ### SSA ϕ→MUX
-![](biometric_ssa_mux.png)
+![](images/biometric_ssa_mux.png)
 ### Dead code elimination
-![](biometric_dead_code_elim.png)
+![](images/biometric_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def biometric(C!0: shared[list[int]], D!0: plaintext[int], S!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[int], shared[int]]:
@@ -80,9 +80,9 @@ def biometric(C!0: shared[list[int]], D!0: plaintext[int], S!0: shared[list[int]
     return !2!1
 ```
 ### Dependency graph
-![](biometric_dep_graph.png)
+![](images/biometric_dep_graph.png)
 ### Removal of infeasible edges
-![](biometric_remove_infeasible_edges.png)
+![](images/biometric_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def biometric(C!0: shared[list[int]], D!0: plaintext[int], S!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[int], shared[int]]:
@@ -106,7 +106,7 @@ def biometric(C!0: shared[list[int]], D!0: plaintext[int], S!0: shared[list[int]
     return !2!1
 ```
 ### Array MUX refinement (dependence graph)
-![](biometric_array_mux_refinement_dep_graph.png)
+![](images/biometric_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -333,13 +333,13 @@ def biometric_matching_fast(D: plaintext[int], N: plaintext[int], C: shared[list
     return (min_diff, min_index)
 ```
 ### Three-address code CFG
-![](biometric_fast_tac_cfg.png)
+![](images/biometric_fast_tac_cfg.png)
 ### SSA
-![](biometric_fast_ssa.png)
+![](images/biometric_fast_ssa.png)
 ### SSA ϕ→MUX
-![](biometric_fast_ssa_mux.png)
+![](images/biometric_fast_ssa_mux.png)
 ### Dead code elimination
-![](biometric_fast_dead_code_elim.png)
+![](images/biometric_fast_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def biometric_matching_fast(D!0: plaintext[int], N!0: plaintext[int], C!0: shared[list[int]], C_sqr_sum!0: shared[int], two_C!0: shared[list[int]], S!0: shared[list[int]], S_sqr_sum!0: shared[list[int]]) -> tuple[shared[int], shared[int]]:
@@ -376,9 +376,9 @@ def biometric_matching_fast(D!0: plaintext[int], N!0: plaintext[int], C!0: share
     return !3!1
 ```
 ### Dependency graph
-![](biometric_fast_dep_graph.png)
+![](images/biometric_fast_dep_graph.png)
 ### Removal of infeasible edges
-![](biometric_fast_remove_infeasible_edges.png)
+![](images/biometric_fast_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def biometric_matching_fast(D!0: plaintext[int], N!0: plaintext[int], C!0: shared[list[int]], C_sqr_sum!0: shared[int], two_C!0: shared[list[int]], S!0: shared[list[int]], S_sqr_sum!0: shared[list[int]]) -> tuple[shared[int], shared[int]]:
@@ -415,7 +415,7 @@ def biometric_matching_fast(D!0: plaintext[int], N!0: plaintext[int], C!0: share
     return !3!1
 ```
 ### Array MUX refinement (dependence graph)
-![](biometric_fast_array_mux_refinement_dep_graph.png)
+![](images/biometric_fast_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -631,13 +631,13 @@ def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
     return z
 ```
 ### Three-address code CFG
-![](chapterfour_figure_12_tac_cfg.png)
+![](images/chapterfour_figure_12_tac_cfg.png)
 ### SSA
-![](chapterfour_figure_12_ssa.png)
+![](images/chapterfour_figure_12_ssa.png)
 ### SSA ϕ→MUX
-![](chapterfour_figure_12_ssa_mux.png)
+![](images/chapterfour_figure_12_ssa_mux.png)
 ### Dead code elimination
-![](chapterfour_figure_12_dead_code_elim.png)
+![](images/chapterfour_figure_12_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
@@ -651,9 +651,9 @@ def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
     return z!5
 ```
 ### Dependency graph
-![](chapterfour_figure_12_dep_graph.png)
+![](images/chapterfour_figure_12_dep_graph.png)
 ### Removal of infeasible edges
-![](chapterfour_figure_12_remove_infeasible_edges.png)
+![](images/chapterfour_figure_12_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
@@ -667,7 +667,7 @@ def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
     return z!5
 ```
 ### Array MUX refinement (dependence graph)
-![](chapterfour_figure_12_array_mux_refinement_dep_graph.png)
+![](images/chapterfour_figure_12_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -777,13 +777,13 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
     return (hull_X, hull_Y)
 ```
 ### Three-address code CFG
-![](convex_hull_tac_cfg.png)
+![](images/convex_hull_tac_cfg.png)
 ### SSA
-![](convex_hull_ssa.png)
+![](images/convex_hull_ssa.png)
 ### SSA ϕ→MUX
-![](convex_hull_ssa_mux.png)
+![](images/convex_hull_ssa_mux.png)
 ### Dead code elimination
-![](convex_hull_dead_code_elim.png)
+![](images/convex_hull_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def convex_hull(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
@@ -819,9 +819,9 @@ def convex_hull(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!
     return !12!1
 ```
 ### Dependency graph
-![](convex_hull_dep_graph.png)
+![](images/convex_hull_dep_graph.png)
 ### Removal of infeasible edges
-![](convex_hull_remove_infeasible_edges.png)
+![](images/convex_hull_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def convex_hull(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
@@ -857,7 +857,7 @@ def convex_hull(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!
     return !12!1
 ```
 ### Array MUX refinement (dependence graph)
-![](convex_hull_array_mux_refinement_dep_graph.png)
+![](images/convex_hull_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -944,9 +944,9 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     bool _MPC_PLAINTEXT_is_hull_4;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
 
     // Plaintext parameter assignments
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
@@ -1045,13 +1045,13 @@ def count_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
     return c
 ```
 ### Three-address code CFG
-![](count_102_tac_cfg.png)
+![](images/count_102_tac_cfg.png)
 ### SSA
-![](count_102_ssa.png)
+![](images/count_102_ssa.png)
 ### SSA ϕ→MUX
-![](count_102_ssa_mux.png)
+![](images/count_102_ssa_mux.png)
 ### Dead code elimination
-![](count_102_dead_code_elim.png)
+![](images/count_102_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def count_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
@@ -1071,9 +1071,9 @@ def count_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list
     return c!2
 ```
 ### Dependency graph
-![](count_102_dep_graph.png)
+![](images/count_102_dep_graph.png)
 ### Removal of infeasible edges
-![](count_102_remove_infeasible_edges.png)
+![](images/count_102_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def count_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
@@ -1093,7 +1093,7 @@ def count_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list
     return c!2
 ```
 ### Array MUX refinement (dependence graph)
-![](count_102_array_mux_refinement_dep_graph.png)
+![](images/count_102_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -1144,8 +1144,8 @@ encrypto::motion::SecureUnsignedInteger count_102(
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Plaintext parameter assignments
@@ -1223,13 +1223,13 @@ def count_10s(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
     return scount
 ```
 ### Three-address code CFG
-![](count_10s_tac_cfg.png)
+![](images/count_10s_tac_cfg.png)
 ### SSA
-![](count_10s_ssa.png)
+![](images/count_10s_ssa.png)
 ### SSA ϕ→MUX
-![](count_10s_ssa_mux.png)
+![](images/count_10s_ssa_mux.png)
 ### Dead code elimination
-![](count_10s_dead_code_elim.png)
+![](images/count_10s_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def count_10s(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
@@ -1251,9 +1251,9 @@ def count_10s(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list
     return scount!2
 ```
 ### Dependency graph
-![](count_10s_dep_graph.png)
+![](images/count_10s_dep_graph.png)
 ### Removal of infeasible edges
-![](count_10s_remove_infeasible_edges.png)
+![](images/count_10s_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def count_10s(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
@@ -1275,7 +1275,7 @@ def count_10s(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list
     return scount!2
 ```
 ### Array MUX refinement (dependence graph)
-![](count_10s_array_mux_refinement_dep_graph.png)
+![](images/count_10s_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -1331,8 +1331,8 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     std::uint32_t _MPC_PLAINTEXT_scount_1;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Plaintext parameter assignments
@@ -1416,13 +1416,13 @@ def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]
     return c
 ```
 ### Three-address code CFG
-![](count_123_tac_cfg.png)
+![](images/count_123_tac_cfg.png)
 ### SSA
-![](count_123_ssa.png)
+![](images/count_123_ssa.png)
 ### SSA ϕ→MUX
-![](count_123_ssa_mux.png)
+![](images/count_123_ssa_mux.png)
 ### Dead code elimination
-![](count_123_dead_code_elim.png)
+![](images/count_123_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def count_123(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
@@ -1445,9 +1445,9 @@ def count_123(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list
     return c!2
 ```
 ### Dependency graph
-![](count_123_dep_graph.png)
+![](images/count_123_dep_graph.png)
 ### Removal of infeasible edges
-![](count_123_remove_infeasible_edges.png)
+![](images/count_123_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def count_123(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
@@ -1470,7 +1470,7 @@ def count_123(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list
     return c!2
 ```
 ### Array MUX refinement (dependence graph)
-![](count_123_array_mux_refinement_dep_graph.png)
+![](images/count_123_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -1528,8 +1528,8 @@ encrypto::motion::SecureUnsignedInteger count_123(
     std::uint32_t _MPC_PLAINTEXT_c_1;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Plaintext parameter assignments
@@ -1622,13 +1622,13 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
     return result
 ```
 ### Three-address code CFG
-![](histogram_tac_cfg.png)
+![](images/histogram_tac_cfg.png)
 ### SSA
-![](histogram_ssa.png)
+![](images/histogram_ssa.png)
 ### SSA ϕ→MUX
-![](histogram_ssa_mux.png)
+![](images/histogram_ssa_mux.png)
 ### Dead code elimination
-![](histogram_dead_code_elim.png)
+![](images/histogram_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int], num_bins!0: plaintext[int]) -> shared[list[int]]:
@@ -1648,9 +1648,9 @@ def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int
     return result!4
 ```
 ### Dependency graph
-![](histogram_dep_graph.png)
+![](images/histogram_dep_graph.png)
 ### Removal of infeasible edges
-![](histogram_remove_infeasible_edges.png)
+![](images/histogram_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int], num_bins!0: plaintext[int]) -> shared[list[int]]:
@@ -1670,7 +1670,7 @@ def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int
     return result!4
 ```
 ### Array MUX refinement (dependence graph)
-![](histogram_array_mux_refinement_dep_graph.png)
+![](images/histogram_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -1807,13 +1807,13 @@ def foo(A: shared[list[int]], B: shared[list[int]], C: shared[list[int]], D: sha
     return (A, B, C, D)
 ```
 ### Three-address code CFG
-![](infeasible_edges_example_tac_cfg.png)
+![](images/infeasible_edges_example_tac_cfg.png)
 ### SSA
-![](infeasible_edges_example_ssa.png)
+![](images/infeasible_edges_example_ssa.png)
 ### SSA ϕ→MUX
-![](infeasible_edges_example_ssa_mux.png)
+![](images/infeasible_edges_example_ssa_mux.png)
 ### Dead code elimination
-![](infeasible_edges_example_dead_code_elim.png)
+![](images/infeasible_edges_example_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def foo(A!0: shared[list[int]], B!0: shared[list[int]], C!0: shared[list[int]], D!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
@@ -1834,9 +1834,9 @@ def foo(A!0: shared[list[int]], B!0: shared[list[int]], C!0: shared[list[int]], 
     return !5!1
 ```
 ### Dependency graph
-![](infeasible_edges_example_dep_graph.png)
+![](images/infeasible_edges_example_dep_graph.png)
 ### Removal of infeasible edges
-![](infeasible_edges_example_remove_infeasible_edges.png)
+![](images/infeasible_edges_example_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def foo(A!0: shared[list[int]], B!0: shared[list[int]], C!0: shared[list[int]], D!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]], shared[list[int]], shared[list[int]]]:
@@ -1857,7 +1857,7 @@ def foo(A!0: shared[list[int]], B!0: shared[list[int]], C!0: shared[list[int]], 
     return !5!1
 ```
 ### Array MUX refinement (dependence graph)
-![](infeasible_edges_example_array_mux_refinement_dep_graph.png)
+![](images/infeasible_edges_example_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -1981,13 +1981,13 @@ def inner_product(A: shared[list[int]], B: shared[list[int]], N: plaintext[int])
     return sum
 ```
 ### Three-address code CFG
-![](inner_product_tac_cfg.png)
+![](images/inner_product_tac_cfg.png)
 ### SSA
-![](inner_product_ssa.png)
+![](images/inner_product_ssa.png)
 ### SSA ϕ→MUX
-![](inner_product_ssa_mux.png)
+![](images/inner_product_ssa_mux.png)
 ### Dead code elimination
-![](inner_product_dead_code_elim.png)
+![](images/inner_product_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def inner_product(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int]) -> shared[int]:
@@ -1999,9 +1999,9 @@ def inner_product(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext
     return sum!2
 ```
 ### Dependency graph
-![](inner_product_dep_graph.png)
+![](images/inner_product_dep_graph.png)
 ### Removal of infeasible edges
-![](inner_product_remove_infeasible_edges.png)
+![](images/inner_product_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def inner_product(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int]) -> shared[int]:
@@ -2013,7 +2013,7 @@ def inner_product(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext
     return sum!2
 ```
 ### Array MUX refinement (dependence graph)
-![](inner_product_array_mux_refinement_dep_graph.png)
+![](images/inner_product_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -2124,13 +2124,13 @@ def longest_102(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int
     return max_len
 ```
 ### Three-address code CFG
-![](longest_102_tac_cfg.png)
+![](images/longest_102_tac_cfg.png)
 ### SSA
-![](longest_102_ssa.png)
+![](images/longest_102_ssa.png)
 ### SSA ϕ→MUX
-![](longest_102_ssa_mux.png)
+![](images/longest_102_ssa_mux.png)
 ### Dead code elimination
-![](longest_102_dead_code_elim.png)
+![](images/longest_102_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def longest_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
@@ -2158,9 +2158,9 @@ def longest_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[li
     return max_len!2
 ```
 ### Dependency graph
-![](longest_102_dep_graph.png)
+![](images/longest_102_dep_graph.png)
 ### Removal of infeasible edges
-![](longest_102_remove_infeasible_edges.png)
+![](images/longest_102_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def longest_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
@@ -2188,7 +2188,7 @@ def longest_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[li
     return max_len!2
 ```
 ### Array MUX refinement (dependence graph)
-![](longest_102_array_mux_refinement_dep_graph.png)
+![](images/longest_102_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -2257,8 +2257,8 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     bool _MPC_PLAINTEXT_s0_1;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Plaintext parameter assignments
@@ -2350,13 +2350,13 @@ def longest_1s(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> s
     return max_length
 ```
 ### Three-address code CFG
-![](longest_1s_tac_cfg.png)
+![](images/longest_1s_tac_cfg.png)
 ### SSA
-![](longest_1s_ssa.png)
+![](images/longest_1s_ssa.png)
 ### SSA ϕ→MUX
-![](longest_1s_ssa_mux.png)
+![](images/longest_1s_ssa_mux.png)
 ### Dead code elimination
-![](longest_1s_dead_code_elim.png)
+![](images/longest_1s_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def longest_1s(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
@@ -2375,9 +2375,9 @@ def longest_1s(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]
     return max_length!2
 ```
 ### Dependency graph
-![](longest_1s_dep_graph.png)
+![](images/longest_1s_dep_graph.png)
 ### Removal of infeasible edges
-![](longest_1s_remove_infeasible_edges.png)
+![](images/longest_1s_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def longest_1s(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
@@ -2396,7 +2396,7 @@ def longest_1s(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]
     return max_length!2
 ```
 ### Array MUX refinement (dependence graph)
-![](longest_1s_array_mux_refinement_dep_graph.png)
+![](images/longest_1s_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -2530,13 +2530,13 @@ def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) 
     return max_length
 ```
 ### Three-address code CFG
-![](longest_even_0_tac_cfg.png)
+![](images/longest_even_0_tac_cfg.png)
 ### SSA
-![](longest_even_0_ssa.png)
+![](images/longest_even_0_ssa.png)
 ### SSA ϕ→MUX
-![](longest_even_0_ssa_mux.png)
+![](images/longest_even_0_ssa_mux.png)
 ### Dead code elimination
-![](longest_even_0_dead_code_elim.png)
+![](images/longest_even_0_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def longest_even_0(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
@@ -2560,9 +2560,9 @@ def longest_even_0(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[
     return max_length!2
 ```
 ### Dependency graph
-![](longest_even_0_dep_graph.png)
+![](images/longest_even_0_dep_graph.png)
 ### Removal of infeasible edges
-![](longest_even_0_remove_infeasible_edges.png)
+![](images/longest_even_0_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def longest_even_0(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
@@ -2586,7 +2586,7 @@ def longest_even_0(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[
     return max_length!2
 ```
 ### Array MUX refinement (dependence graph)
-![](longest_even_0_array_mux_refinement_dep_graph.png)
+![](images/longest_even_0_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -2740,13 +2740,13 @@ def longest_odd_10(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[
     return max_length
 ```
 ### Three-address code CFG
-![](longest_odd_10_tac_cfg.png)
+![](images/longest_odd_10_tac_cfg.png)
 ### SSA
-![](longest_odd_10_ssa.png)
+![](images/longest_odd_10_ssa.png)
 ### SSA ϕ→MUX
-![](longest_odd_10_ssa_mux.png)
+![](images/longest_odd_10_ssa_mux.png)
 ### Dead code elimination
-![](longest_odd_10_dead_code_elim.png)
+![](images/longest_odd_10_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def longest_odd_10(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
@@ -2774,9 +2774,9 @@ def longest_odd_10(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared
     return max_length!2
 ```
 ### Dependency graph
-![](longest_odd_10_dep_graph.png)
+![](images/longest_odd_10_dep_graph.png)
 ### Removal of infeasible edges
-![](longest_odd_10_remove_infeasible_edges.png)
+![](images/longest_odd_10_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def longest_odd_10(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
@@ -2804,7 +2804,7 @@ def longest_odd_10(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared
     return max_length!2
 ```
 ### Array MUX refinement (dependence graph)
-![](longest_odd_10_array_mux_refinement_dep_graph.png)
+![](images/longest_odd_10_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -2873,9 +2873,9 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     std::uint32_t _MPC_PLAINTEXT_current_length_1;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
 
     // Plaintext parameter assignments
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
@@ -2961,13 +2961,13 @@ def max_dist_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared
     return max_dist
 ```
 ### Three-address code CFG
-![](max_dist_between_syms_tac_cfg.png)
+![](images/max_dist_between_syms_tac_cfg.png)
 ### SSA
-![](max_dist_between_syms_ssa.png)
+![](images/max_dist_between_syms_ssa.png)
 ### SSA ϕ→MUX
-![](max_dist_between_syms_ssa_mux.png)
+![](images/max_dist_between_syms_ssa_mux.png)
 ### Dead code elimination
-![](max_dist_between_syms_dead_code_elim.png)
+![](images/max_dist_between_syms_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def max_dist_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
@@ -2987,9 +2987,9 @@ def max_dist_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: 
     return max_dist!2
 ```
 ### Dependency graph
-![](max_dist_between_syms_dep_graph.png)
+![](images/max_dist_between_syms_dep_graph.png)
 ### Removal of infeasible edges
-![](max_dist_between_syms_remove_infeasible_edges.png)
+![](images/max_dist_between_syms_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def max_dist_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
@@ -3009,7 +3009,7 @@ def max_dist_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: 
     return max_dist!2
 ```
 ### Array MUX refinement (dependence graph)
-![](max_dist_between_syms_array_mux_refinement_dep_graph.png)
+![](images/max_dist_between_syms_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -3138,13 +3138,13 @@ def max_sum_between_syms(Seq: shared[list[int]], N: plaintext[int], Sym: shared[
     return max_sum
 ```
 ### Three-address code CFG
-![](max_sum_between_syms_tac_cfg.png)
+![](images/max_sum_between_syms_tac_cfg.png)
 ### SSA
-![](max_sum_between_syms_ssa.png)
+![](images/max_sum_between_syms_ssa.png)
 ### SSA ϕ→MUX
-![](max_sum_between_syms_ssa_mux.png)
+![](images/max_sum_between_syms_ssa_mux.png)
 ### Dead code elimination
-![](max_sum_between_syms_dead_code_elim.png)
+![](images/max_sum_between_syms_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def max_sum_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
@@ -3164,9 +3164,9 @@ def max_sum_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: s
     return max_sum!2
 ```
 ### Dependency graph
-![](max_sum_between_syms_dep_graph.png)
+![](images/max_sum_between_syms_dep_graph.png)
 ### Removal of infeasible edges
-![](max_sum_between_syms_remove_infeasible_edges.png)
+![](images/max_sum_between_syms_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def max_sum_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
@@ -3186,7 +3186,7 @@ def max_sum_between_syms(Seq!0: shared[list[int]], N!0: plaintext[int], Sym!0: s
     return max_sum!2
 ```
 ### Array MUX refinement (dependence graph)
-![](max_sum_between_syms_array_mux_refinement_dep_graph.png)
+![](images/max_sum_between_syms_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -3316,13 +3316,13 @@ def minimal_points(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: 
     return (min_X, min_Y)
 ```
 ### Three-address code CFG
-![](minimal_points_tac_cfg.png)
+![](images/minimal_points_tac_cfg.png)
 ### SSA
-![](minimal_points_ssa.png)
+![](images/minimal_points_ssa.png)
 ### SSA ϕ→MUX
-![](minimal_points_ssa_mux.png)
+![](images/minimal_points_ssa_mux.png)
 ### Dead code elimination
-![](minimal_points_dead_code_elim.png)
+![](images/minimal_points_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def minimal_points(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
@@ -3351,9 +3351,9 @@ def minimal_points(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]],
     return !13!1
 ```
 ### Dependency graph
-![](minimal_points_dep_graph.png)
+![](images/minimal_points_dep_graph.png)
 ### Removal of infeasible edges
-![](minimal_points_remove_infeasible_edges.png)
+![](images/minimal_points_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def minimal_points(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
@@ -3382,7 +3382,7 @@ def minimal_points(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]],
     return !13!1
 ```
 ### Array MUX refinement (dependence graph)
-![](minimal_points_array_mux_refinement_dep_graph.png)
+![](images/minimal_points_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -3555,13 +3555,13 @@ def psi(A: shared[list[int]], SA: plaintext[int], B: shared[list[int]], SB: plai
     return result
 ```
 ### Three-address code CFG
-![](psi_tac_cfg.png)
+![](images/psi_tac_cfg.png)
 ### SSA
-![](psi_ssa.png)
+![](images/psi_ssa.png)
 ### SSA ϕ→MUX
-![](psi_ssa_mux.png)
+![](images/psi_ssa_mux.png)
 ### Dead code elimination
-![](psi_dead_code_elim.png)
+![](images/psi_dead_code_elim.png)
 ### Linear code with loops
 ```python
 def psi(A!0: shared[list[int]], SA!0: plaintext[int], B!0: shared[list[int]], SB!0: plaintext[int]) -> shared[list[int]]:
@@ -3583,9 +3583,9 @@ def psi(A!0: shared[list[int]], SA!0: plaintext[int], B!0: shared[list[int]], SB
     return result!2
 ```
 ### Dependency graph
-![](psi_dep_graph.png)
+![](images/psi_dep_graph.png)
 ### Removal of infeasible edges
-![](psi_remove_infeasible_edges.png)
+![](images/psi_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
 def psi(A!0: shared[list[int]], SA!0: plaintext[int], B!0: shared[list[int]], SB!0: plaintext[int]) -> shared[list[int]]:
@@ -3607,7 +3607,7 @@ def psi(A!0: shared[list[int]], SA!0: plaintext[int], B!0: shared[list[int]], SB
     return result!2
 ```
 ### Array MUX refinement (dependence graph)
-![](psi_array_mux_refinement_dep_graph.png)
+![](images/psi_array_mux_refinement_dep_graph.png)
 ### Type environment
 | Variable | Type |
 | - | - |
@@ -3669,9 +3669,9 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     bool _MPC_PLAINTEXT_flag_2;
 
     // Constant initializations
-    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
     encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
 
     // Plaintext parameter assignments
     SA_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_SA_0), 0);
