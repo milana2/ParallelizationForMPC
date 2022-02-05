@@ -91,10 +91,7 @@ def main():
     parser.add_argument("path", help="Directory to store files")
     args = parser.parse_args()
 
-    try:
-        os.mkdir(args.path)
-    except FileExistsError:
-        pass
+    os.makedirs(os.path.join(args.path, "images"), exist_ok=True)
 
     md = "# [View the current version of the paper here](paper_SIMD.pdf)\n"
 
@@ -116,28 +113,28 @@ def main():
         md += f"```python\n{restricted_ast}\n```\n"
 
         tac_cfg = compiler.restricted_ast_to_tac_cfg(restricted_ast)
-        filename = f"{test_case_dir.name}_tac_cfg.png"
+        filename = f"images/{test_case_dir.name}_tac_cfg.png"
         path = os.path.join(args.path, filename)
         cfg_to_image(tac_cfg.body, path)
         md += "### Three-address code CFG\n"
         md += f"![]({filename})\n"
 
         ssa = compiler.tac_cfg_to_ssa(tac_cfg)
-        filename = f"{test_case_dir.name}_ssa.png"
+        filename = f"images/{test_case_dir.name}_ssa.png"
         path = os.path.join(args.path, filename)
         cfg_to_image(ssa.body, path)
         md += "### SSA\n"
         md += f"![]({filename})\n"
 
         compiler.replace_phi_with_mux(ssa)
-        filename = f"{test_case_dir.name}_ssa_mux.png"
+        filename = f"images/{test_case_dir.name}_ssa_mux.png"
         path = os.path.join(args.path, filename)
         cfg_to_image(ssa.body, path)
         md += "### SSA ϕ→MUX\n"
         md += f"![]({filename})\n"
 
         compiler.dead_code_elim(ssa)
-        filename = f"{test_case_dir.name}_dead_code_elim.png"
+        filename = f"images/{test_case_dir.name}_dead_code_elim.png"
         path = os.path.join(args.path, filename)
         cfg_to_image(ssa.body, path)
         md += "### Dead code elimination\n"
@@ -148,14 +145,14 @@ def main():
         md += f"```python\n{loop_linear_code}\n```\n"
 
         dep_graph = compiler.DepGraph(loop_linear_code)
-        filename = f"{test_case_dir.name}_dep_graph.png"
+        filename = f"images/{test_case_dir.name}_dep_graph.png"
         path = os.path.join(args.path, filename)
         dep_graph_to_image(dep_graph, loop_linear_code, path)
         md += "### Dependency graph\n"
         md += f"![]({filename})\n"
 
         compiler.vectorize.remove_infeasible_edges(loop_linear_code, dep_graph)
-        filename = f"{test_case_dir.name}_remove_infeasible_edges.png"
+        filename = f"images/{test_case_dir.name}_remove_infeasible_edges.png"
         path = os.path.join(args.path, filename)
         dep_graph_to_image(dep_graph, loop_linear_code, path)
         md += "### Removal of infeasible edges\n"
@@ -166,7 +163,7 @@ def main():
         )
         md += "### Array MUX refinement\n"
         md += f"```python\n{loop_linear_code}\n```\n"
-        filename = f"{test_case_dir.name}_array_mux_refinement_dep_graph.png"
+        filename = f"images/{test_case_dir.name}_array_mux_refinement_dep_graph.png"
         path = os.path.join(args.path, filename)
         dep_graph_to_image(dep_graph, loop_linear_code, path)
         md += "### Array MUX refinement (dependence graph)\n"
