@@ -3,7 +3,7 @@
 N!0: plaintext[int]
 Seq!0: shared[list[int]]
 Sym!0: shared[int]
-i: plaintext[int]
+i!1: plaintext[int]
 length!1: plaintext[int]
 length!2: shared[int]
 length!3: shared[int]

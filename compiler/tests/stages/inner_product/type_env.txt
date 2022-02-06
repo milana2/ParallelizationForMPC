@@ -1,7 +1,7 @@
 A!0: shared[list[int]]
 B!0: shared[list[int]]
 N!0: plaintext[int]
-i: plaintext[int]
+i!1: plaintext[int]
 sum!1: plaintext[int]
 sum!2: shared[int]
 sum!3: shared[int]

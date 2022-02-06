@@ -2,16 +2,16 @@ def count_10s(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list
     s0!1 = False
     s1!1 = False
     scount!1 = 0
-    for i in range(0, N!0):
+    for i!1 in range(0, N!0):
         s0!2 = Φ(s0!1, s0!3)
         s1!2 = Φ(s1!1, s1!3)
         scount!2 = Φ(scount!1, scount!4)
-        !1!2 = (Seq!0[i] != Syms!0[0])
+        !1!2 = (Seq!0[i!1] != Syms!0[0])
         !2!2 = (s1!2 and !1!2)
         scount!3 = (scount!2 + 1)
         scount!4 = MUX(!2!2, scount!3, scount!2)
-        !3!2 = (Seq!0[i] == Syms!0[0])
+        !3!2 = (Seq!0[i!1] == Syms!0[0])
         !4!2 = (s0!2 or s1!2)
         s1!3 = (!3!2 and !4!2)
-        s0!3 = (Seq!0[i] == Syms!0[1])
+        s0!3 = (Seq!0[i!1] == Syms!0[1])
     return scount!2

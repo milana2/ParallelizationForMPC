@@ -5,7 +5,7 @@
 N!0: plaintext[int]
 Seq!0: shared[list[int]]
 Syms!0: shared[list[int]]
-i: plaintext[int]
+i!1: plaintext[int]
 s0!1: plaintext[bool]
 s0!2: shared[bool]
 s0!3: shared[bool]

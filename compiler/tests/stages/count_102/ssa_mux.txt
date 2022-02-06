@@ -14,9 +14,9 @@ Block 1:
     !4!1 = Φ(!4!0, !4!2)
     !5!1 = Φ(!5!0, !5!2)
     !6!1 = Φ(!6!0, !6!2)
-    for i: plaintext[int] in range(0, N!0)
+    for i!1: plaintext[int] in range(0, N!0)
 Block 2:
-    !1!2 = (Seq!0[i] == Syms!0[2])
+    !1!2 = (Seq!0[i!1] == Syms!0[2])
     !2!2 = (s0!2 and !1!2)
     conditional jump !2!2
 Block 3:
@@ -29,9 +29,9 @@ Block 5:
 Block 6:
     (merge from conditional jump !2!2)
     c!4 = MUX(!2!2, c!3, c!2)
-    !3!2 = (Seq!0[i] == Syms!0[1])
-    !4!2 = (Seq!0[i] == Syms!0[0])
-    !5!2 = (Seq!0[i] == Syms!0[0])
+    !3!2 = (Seq!0[i!1] == Syms!0[1])
+    !4!2 = (Seq!0[i!1] == Syms!0[0])
+    !5!2 = (Seq!0[i!1] == Syms!0[0])
     !6!2 = (s0!2 and !5!2)
     s0!3 = (!3!2 or !6!2)
     jump

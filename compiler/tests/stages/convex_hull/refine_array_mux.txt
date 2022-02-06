@@ -1,19 +1,19 @@
 def convex_hull(X_coords!0: shared[list[int]], Y_coords!0: shared[list[int]], N!0: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
     hull_X!1 = []
     hull_Y!1 = []
-    for i in range(0, N!0):
+    for i!1 in range(0, N!0):
         hull_X!2 = Φ(hull_X!1, hull_X!4)
         hull_Y!2 = Φ(hull_Y!1, hull_Y!4)
         is_hull!2 = True
-        p1_X!2 = X_coords!0[i]
-        p1_Y!2 = Y_coords!0[i]
+        p1_X!2 = X_coords!0[i!1]
+        p1_Y!2 = Y_coords!0[i!1]
         !1!2 = (p1_X!2 <= 0)
         !2!2 = (p1_Y!2 >= 0)
         !3!2 = (!1!2 and !2!2)
-        for j in range(0, N!0):
+        for j!1 in range(0, N!0):
             is_hull!3 = Φ(is_hull!2, is_hull!5)
-            p2_X!3 = X_coords!0[j]
-            p2_Y!3 = Y_coords!0[j]
+            p2_X!3 = X_coords!0[j!1]
+            p2_Y!3 = Y_coords!0[j!1]
             !6!3 = (p1_X!2 <= p2_X!3)
             !7!3 = (p1_Y!2 >= p2_Y!3)
             !8!3 = (!6!3 or !7!3)

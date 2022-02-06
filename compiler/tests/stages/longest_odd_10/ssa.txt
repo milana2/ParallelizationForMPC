@@ -18,9 +18,9 @@ Block 1:
     !5!1 = Φ(!5!0, !5!2)
     !6!1 = Φ(!6!0, !6!2)
     !7!1 = Φ(!7!0, !7!2)
-    for i: plaintext[int] in range(0, N!0)
+    for i!1: plaintext[int] in range(0, N!0)
 Block 2:
-    !1!2 = (Seq!0[i] == Syms!0[1])
+    !1!2 = (Seq!0[i!1] == Syms!0[1])
     s1!2 = (s2!2 and !1!2)
     conditional jump s1!2
 Block 3:
@@ -58,6 +58,6 @@ Block 11:
 Block 12:
     max_length!4 = Φ(max_length!3, max_length!2)
     (merge from conditional jump !7!2)
-    s2!3 = (Seq!0[i] == Syms!0[0])
+    s2!3 = (Seq!0[i!1] == Syms!0[0])
     jump
 Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 5, F) (2, 4, T) (4, 6, *) (5, 8, F) (5, 7, T) (6, 11, F) (6, 10, T) (7, 9, *) (8, 9, *) (9, 6, *) (10, 12, *) (11, 12, *) (12, 1, *)

@@ -3,7 +3,7 @@ Nodes:
     current_dist!1 = 0
     max_dist!2 = Φ(max_dist!1, max_dist!4)
     current_dist!2 = Φ(current_dist!1, current_dist!5)
-    !1!2 = (Seq!0[i] == Sym!0)
+    !1!2 = (Seq!0[i!1] == Sym!0)
     !2!2 = not !1!2
     current_dist!4 = 0
     current_dist!3 = (current_dist!2 + 1)
@@ -17,7 +17,7 @@ Forward edges:
     max_dist!2 = Φ(max_dist!1, max_dist!4)  →  !3!2 = (current_dist!5 > max_dist!2)
     max_dist!2 = Φ(max_dist!1, max_dist!4)  →  max_dist!4 = MUX(!3!2, max_dist!3, max_dist!2)
     current_dist!2 = Φ(current_dist!1, current_dist!5)  →  current_dist!3 = (current_dist!2 + 1)
-    !1!2 = (Seq!0[i] == Sym!0)  →  !2!2 = not !1!2
+    !1!2 = (Seq!0[i!1] == Sym!0)  →  !2!2 = not !1!2
     !2!2 = not !1!2  →  current_dist!5 = MUX(!2!2, current_dist!3, current_dist!4)
     current_dist!4 = 0  →  current_dist!5 = MUX(!2!2, current_dist!3, current_dist!4)
     current_dist!3 = (current_dist!2 + 1)  →  current_dist!5 = MUX(!2!2, current_dist!3, current_dist!4)

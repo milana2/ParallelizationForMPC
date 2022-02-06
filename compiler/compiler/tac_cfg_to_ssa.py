@@ -15,16 +15,20 @@ from .util import assert_never
 
 
 def _compute_blocks_setting_vars(
-    function: ssa.Function,
+    function: ssa.Function, include_loop_counters: bool
 ) -> dict[ssa.Var, set[ssa.Block]]:
 
     result: dict[ssa.Var, set[ssa.Block]] = dict()
 
     block: ssa.Block
     for block in function.body.nodes:
-        for assignment in block.assignments:
-            var = assignment.lhs
-
+        term = block.terminator
+        lhss = [a.lhs for a in block.assignments] + (
+            [term.counter]
+            if include_loop_counters and isinstance(term, ssa.For)
+            else []
+        )
+        for var in lhss:
             if var not in result:
                 result[var] = set()
 
@@ -80,7 +84,9 @@ def place_phi_functions(result: ssa.Function) -> None:
         ssa.Block, set[ssa.Block]
     ] = networkx.algorithms.dominance_frontiers(G=result.body, start=result.entry_block)
 
-    blocks_setting_vars = _compute_blocks_setting_vars(result)
+    blocks_setting_vars = _compute_blocks_setting_vars(
+        function=result, include_loop_counters=False
+    )
 
     iter_count = 0
     has_already: Counter[ssa.Block] = Counter()
@@ -110,7 +116,9 @@ def place_phi_functions(result: ssa.Function) -> None:
 
 def rename_variables(result: ssa.Function) -> None:
     dominance_tree = result.compute_dominance_tree()
-    blocks_setting_vars = _compute_blocks_setting_vars(result)
+    blocks_setting_vars = _compute_blocks_setting_vars(
+        function=result, include_loop_counters=True
+    )
 
     S: dict[ssa.Var, list[int]] = dict()
     C: dict[ssa.Var, int] = dict()
@@ -206,7 +214,7 @@ def rename_variables(result: ssa.Function) -> None:
             assert_never(rhs)
 
     def search(X: ssa.Block):
-        old_lhs: dict[Union[ssa.Phi, ssa.Assign], ssa.Var] = dict()
+        old_lhs: dict[Union[ssa.Phi, ssa.Assign, ssa.For], ssa.Var] = dict()
 
         if (
             isinstance(X.terminator, ssa.ConditionalJump)
@@ -246,7 +254,7 @@ def rename_variables(result: ssa.Function) -> None:
             else:
                 assert_never(A)
 
-            if isinstance(A, (ssa.Phi, ssa.Assign)):
+            if isinstance(A, (ssa.Phi, ssa.Assign, ssa.For)):
                 V = A.lhs
                 i = C[V]
                 old_lhs[A] = A.lhs

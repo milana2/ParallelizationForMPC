@@ -176,6 +176,14 @@ class For:
     def __str__(self) -> str:
         return f"for {self.counter}: plaintext[int] in range({self.bound_low}, {self.bound_high})"
 
+    @property
+    def lhs(self) -> Var:
+        return self.counter
+
+    @lhs.setter
+    def lhs(self, lhs: Var) -> None:
+        self.counter = lhs
+
 
 @dataclass(eq=False)
 class Return:
