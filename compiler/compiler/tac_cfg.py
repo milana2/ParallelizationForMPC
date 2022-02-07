@@ -39,12 +39,6 @@ class UnaryOp(_UnaryOp[Operand]):
 class List:
     items: list[Atom]
 
-    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
-        # In order to (hopefully) remain more agnostic towards different backend containers,
-        # we render tuples and lists using C++'s braced initializer list syntax.
-        items = ", ".join(item.to_cpp(type_env, **kwargs) for item in self.items)
-        return "{" + items + "}"
-
     def __str__(self) -> str:
         items = ", ".join([str(item) for item in self.items])
         return f"[{items}]"
@@ -53,10 +47,6 @@ class List:
 @dataclass
 class Tuple:
     items: list[Atom]
-
-    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
-        items = ", ".join(item.to_cpp(type_env, **kwargs) for item in self.items)
-        return "std::make_tuple(" + items + ")"
 
     def __str__(self) -> str:
         items = ", ".join([str(item) for item in self.items])
@@ -70,26 +60,6 @@ class Mux:
     false_value: Operand
     true_value: Operand
 
-    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
-        if isinstance(self.true_value, Var):
-            true_shared = type_env[self.true_value].is_shared()
-        elif isinstance(self.true_value, Constant):
-            true_shared = False
-        else:
-            true_shared = type_env[self.true_value.array].is_shared()
-
-        if isinstance(self.false_value, Var):
-            false_shared = type_env[self.false_value].is_shared()
-        elif isinstance(self.false_value, Constant):
-            false_shared = False
-        else:
-            false_shared = type_env[self.false_value.array].is_shared()
-
-        true_cpp_str = self.true_value.to_cpp(type_env, **kwargs) + ".Get()"
-        false_cpp_str = self.false_value.to_cpp(type_env, **kwargs) + ".Get()"
-
-        return f"{self.condition.to_cpp(type_env, **kwargs)}.Mux({false_cpp_str}, {true_cpp_str})"
-
     def __str__(self) -> str:
         return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
 
@@ -99,10 +69,6 @@ class Update:
     array: Var
     index: SubscriptIndex
     value: Atom
-
-    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
-        plaintext_kwargs = {k: v for k, v in kwargs.items() if k != "plaintext"}
-        return f"{self.array.to_cpp(type_env, **kwargs)};\n{self.array.to_cpp(type_env, **kwargs)}[{self.index.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}] = {self.value.to_cpp(type_env, **kwargs)}"
 
     def __str__(self) -> str:
         return f"Update({self.array}, {self.index}, {self.value})"
@@ -115,30 +81,6 @@ AssignRHS = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux, Update]
 class Assign:
     lhs: Var
     rhs: AssignRHS
-
-    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
-        shared_assignment = (
-            self.lhs.to_cpp(type_env, **kwargs)
-            + " = "
-            + self.rhs.to_cpp(type_env, **kwargs)
-            + ";"
-        )
-
-        plaintext_kwargs = {k: v for k, v in kwargs.items() if k != "plaintext"}
-        plaintext_assignment = (
-            self.lhs.to_cpp(type_env, plaintext=True, **plaintext_kwargs)
-            + " = "
-            + self.rhs.to_cpp(type_env, plaintext=True, **plaintext_kwargs)
-            + ";"
-        )
-
-        if (
-            type_env[self.lhs].is_shared()
-            or type_env[self.lhs].datatype == DataType.TUPLE
-        ):
-            return shared_assignment
-        else:
-            return shared_assignment + "\n" + plaintext_assignment
 
     def __hash__(self):
         return id(self)
