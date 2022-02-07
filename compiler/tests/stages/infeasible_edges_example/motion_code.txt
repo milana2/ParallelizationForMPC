@@ -1,0 +1,69 @@
+template <encrypto::motion::MpcProtocol Protocol>
+std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> foo(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> D_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0
+) {
+    // Shared variable declarations
+    encrypto::motion::SecureUnsignedInteger _1_2;
+    encrypto::motion::SecureUnsignedInteger _2_2;
+    encrypto::motion::SecureUnsignedInteger _3_2;
+    encrypto::motion::SecureUnsignedInteger _4_2;
+    std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> _5_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> D_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> D_2;
+    encrypto::motion::SecureUnsignedInteger N_0;
+    encrypto::motion::SecureUnsignedInteger i_1;
+
+    // Plaintext variable declarations
+    std::tuple<std::vector<std::uint32_t>, std::vector<std::uint32_t>, std::vector<std::uint32_t>, std::vector<std::uint32_t>> _MPC_PLAINTEXT__5_1;
+    std::uint32_t _MPC_PLAINTEXT_i_1;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(10)), 0);
+
+    // Plaintext parameter assignments
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+
+    // Function body
+
+    // Initialize phi values
+    A_1 = A_0;
+    B_1 = B_0;
+    C_1 = C_0;
+    D_1 = D_0;
+    for (_MPC_PLAINTEXT_i_1 = std::uint32_t(0); _MPC_PLAINTEXT_i_1 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i_1++) {
+        i_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_1), 0);
+        _1_2 = (B_1[_MPC_PLAINTEXT_i_1] + _MPC_CONSTANT_10);
+        A_2 = A_1;
+        A_1[_MPC_PLAINTEXT_i_1] = _1_2;
+        _2_2 = (A_2[_MPC_PLAINTEXT_i_1] * D_1[(_MPC_PLAINTEXT_i_1 - std::uint32_t(1))]);
+        B_2 = B_1;
+        B_1[_MPC_PLAINTEXT_i_1] = _2_2;
+        _3_2 = (A_2[_MPC_PLAINTEXT_i_1] * D_1[(_MPC_PLAINTEXT_i_1 - std::uint32_t(1))]);
+        C_2 = C_1;
+        C_1[_MPC_PLAINTEXT_i_1] = _3_2;
+        _4_2 = (B_2[_MPC_PLAINTEXT_i_1] * C_2[_MPC_PLAINTEXT_i_1]);
+        D_2 = D_1;
+        D_1[_MPC_PLAINTEXT_i_1] = _4_2;
+
+        // Update phi values
+        A_1 = A_2;
+        B_1 = B_2;
+        C_1 = C_2;
+        D_1 = D_2;
+    }
+
+    _5_1 = std::make_tuple(A_1, B_1, C_1, D_1);
+
+    return _5_1;
+}

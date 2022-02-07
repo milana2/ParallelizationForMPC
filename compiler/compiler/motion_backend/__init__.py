@@ -86,7 +86,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
             + " "
             + var.to_cpp(type_env)
             + ";"
-            for var, var_type in type_env.items()
+            for var, var_type in sorted(type_env.items(), key=lambda x: str(x[0]))
             if not any(
                 param.var == var and param.var_type.is_shared()
                 for param in func.parameters
@@ -99,7 +99,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         "// Plaintext variable declarations\n"
         + "\n".join(
             f"{var_type.to_cpp(type_env, plaintext=True)} {var.to_cpp(type_env, plaintext=True)};"
-            for var, var_type in type_env.items()
+            for var, var_type in sorted(type_env.items(), key=lambda x: str(x[0]))
             if var_type.is_plaintext()
             if not any(
                 param.var == var and param.var_type.is_plaintext()
@@ -115,7 +115,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + "\n".join(
             f"{const.datatype.to_cpp(type_env, plaintext=False)} {const.to_cpp(type_env)} = "
             + f"party->In<Protocol>({const.to_cpp(type_env, as_motion_input=True)}, 0);"
-            for const in plaintext_constants
+            for const in sorted(plaintext_constants, key=lambda c: c.value)
         )
         + "\n"
     )
@@ -130,7 +130,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
                 + param.var.to_cpp(type_env, plaintext=True)
                 + "), 0);"
             )
-            for param in func.parameters
+            for param in sorted(func.parameters, key=str)
             if param.var_type.is_plaintext()
         )
         + "\n"
@@ -201,7 +201,7 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
     )
 
     rendered_header = header_template.render(
-        circuit_generator=render_function(func, type_env),
+        circuit_generator=render_function(func, type_env)
     )
 
     rendered_cmakelists = cmakelists_template.render(

@@ -1,0 +1,110 @@
+template <encrypto::motion::MpcProtocol Protocol>
+std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> convex_hull(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0
+) {
+    // Shared variable declarations
+    encrypto::motion::ShareWrapper _1_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _10_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _11_2;
+    std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> _12_1;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::ShareWrapper _6_3;
+    encrypto::motion::ShareWrapper _7_3;
+    encrypto::motion::ShareWrapper _8_3;
+    encrypto::motion::ShareWrapper _9_3;
+    encrypto::motion::SecureUnsignedInteger N_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_X_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> hull_Y_4;
+    encrypto::motion::SecureUnsignedInteger i_1;
+    encrypto::motion::ShareWrapper is_hull_2;
+    encrypto::motion::ShareWrapper is_hull_3;
+    encrypto::motion::ShareWrapper is_hull_4;
+    encrypto::motion::ShareWrapper is_hull_5;
+    encrypto::motion::ShareWrapper is_hull_6;
+    encrypto::motion::SecureUnsignedInteger j_1;
+    encrypto::motion::SecureUnsignedInteger p1_X_2;
+    encrypto::motion::SecureUnsignedInteger p1_Y_2;
+    encrypto::motion::SecureUnsignedInteger p2_X_3;
+    encrypto::motion::SecureUnsignedInteger p2_Y_3;
+
+    // Plaintext variable declarations
+    std::tuple<std::vector<std::uint32_t>, std::vector<std::uint32_t>> _MPC_PLAINTEXT__12_1;
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_hull_X_1;
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_hull_Y_1;
+    std::uint32_t _MPC_PLAINTEXT_i_1;
+    bool _MPC_PLAINTEXT_is_hull_2;
+    bool _MPC_PLAINTEXT_is_hull_4;
+    std::uint32_t _MPC_PLAINTEXT_j_1;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
+
+    // Plaintext parameter assignments
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+
+    // Function body
+    hull_X_1 = {};
+    _MPC_PLAINTEXT_hull_X_1 = {};
+    hull_Y_1 = {};
+    _MPC_PLAINTEXT_hull_Y_1 = {};
+
+    // Initialize phi values
+    hull_X_2 = hull_X_1;
+    hull_Y_2 = hull_Y_1;
+    for (_MPC_PLAINTEXT_i_1 = std::uint32_t(0); _MPC_PLAINTEXT_i_1 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i_1++) {
+        i_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_1), 0);
+        is_hull_2 = _MPC_CONSTANT_true;
+        _MPC_PLAINTEXT_is_hull_2 = true;
+        p1_X_2 = X_coords_0[_MPC_PLAINTEXT_i_1];
+        p1_Y_2 = Y_coords_0[_MPC_PLAINTEXT_i_1];
+        _1_2 = ((_MPC_CONSTANT_0 > p1_X_2) | (encrypto::motion::ShareWrapper(p1_X_2.Get()) == encrypto::motion::ShareWrapper(_MPC_CONSTANT_0.Get())));
+        _2_2 = ((p1_Y_2 > _MPC_CONSTANT_0) | (encrypto::motion::ShareWrapper(p1_Y_2.Get()) == encrypto::motion::ShareWrapper(_MPC_CONSTANT_0.Get())));
+        _3_2 = (encrypto::motion::ShareWrapper(_1_2.Get()) & encrypto::motion::ShareWrapper(_2_2.Get()));
+
+        // Initialize phi values
+        is_hull_3 = is_hull_2;
+        for (_MPC_PLAINTEXT_j_1 = std::uint32_t(0); _MPC_PLAINTEXT_j_1 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_j_1++) {
+            j_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_j_1), 0);
+            p2_X_3 = X_coords_0[_MPC_PLAINTEXT_j_1];
+            p2_Y_3 = Y_coords_0[_MPC_PLAINTEXT_j_1];
+            _6_3 = ((p2_X_3 > p1_X_2) | (encrypto::motion::ShareWrapper(p1_X_2.Get()) == encrypto::motion::ShareWrapper(p2_X_3.Get())));
+            _7_3 = ((p1_Y_2 > p2_Y_3) | (encrypto::motion::ShareWrapper(p1_Y_2.Get()) == encrypto::motion::ShareWrapper(p2_Y_3.Get())));
+            _8_3 = (encrypto::motion::ShareWrapper(_6_3.Get()) | encrypto::motion::ShareWrapper(_7_3.Get()));
+            _9_3 = (~_8_3);
+            is_hull_4 = _MPC_CONSTANT_false;
+            _MPC_PLAINTEXT_is_hull_4 = false;
+            is_hull_5 = _9_3.Mux(is_hull_4.Get(), is_hull_3.Get());
+
+            // Update phi values
+            is_hull_3 = is_hull_5;
+        }
+
+        is_hull_6 = _3_2.Mux(is_hull_2.Get(), is_hull_3.Get());
+        _10_2 = {p1_X_2};
+        hull_X_3 = (hull_X_2 + _10_2);
+        _11_2 = {p1_Y_2};
+        hull_Y_3 = (hull_Y_2 + _11_2);
+        hull_X_4 = is_hull_6.Mux(hull_X_3.Get(), hull_X_2.Get());
+        hull_Y_4 = is_hull_6.Mux(hull_Y_3.Get(), hull_Y_2.Get());
+
+        // Update phi values
+        hull_X_2 = hull_X_4;
+        hull_Y_2 = hull_Y_4;
+    }
+
+    _12_1 = std::make_tuple(hull_X_2, hull_Y_2);
+
+    return _12_1;
+}

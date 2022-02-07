@@ -1,0 +1,71 @@
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger count_10s(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
+) {
+    // Shared variable declarations
+    encrypto::motion::ShareWrapper _1_2;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper _3_2;
+    encrypto::motion::ShareWrapper _4_2;
+    encrypto::motion::SecureUnsignedInteger N_0;
+    encrypto::motion::SecureUnsignedInteger i_1;
+    encrypto::motion::ShareWrapper s0_1;
+    encrypto::motion::ShareWrapper s0_2;
+    encrypto::motion::ShareWrapper s0_3;
+    encrypto::motion::ShareWrapper s1_1;
+    encrypto::motion::ShareWrapper s1_2;
+    encrypto::motion::ShareWrapper s1_3;
+    encrypto::motion::SecureUnsignedInteger scount_1;
+    encrypto::motion::SecureUnsignedInteger scount_2;
+    encrypto::motion::SecureUnsignedInteger scount_3;
+    encrypto::motion::SecureUnsignedInteger scount_4;
+
+    // Plaintext variable declarations
+    std::uint32_t _MPC_PLAINTEXT_i_1;
+    bool _MPC_PLAINTEXT_s0_1;
+    bool _MPC_PLAINTEXT_s1_1;
+    std::uint32_t _MPC_PLAINTEXT_scount_1;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+
+    // Plaintext parameter assignments
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+
+    // Function body
+    s0_1 = _MPC_CONSTANT_false;
+    _MPC_PLAINTEXT_s0_1 = false;
+    s1_1 = _MPC_CONSTANT_false;
+    _MPC_PLAINTEXT_s1_1 = false;
+    scount_1 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_scount_1 = std::uint32_t(0);
+
+    // Initialize phi values
+    s0_2 = s0_1;
+    s1_2 = s1_1;
+    scount_2 = scount_1;
+    for (_MPC_PLAINTEXT_i_1 = std::uint32_t(0); _MPC_PLAINTEXT_i_1 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i_1++) {
+        i_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_1), 0);
+        _1_2 = (~(encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i_1].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(0)].Get())));
+        _2_2 = (encrypto::motion::ShareWrapper(s1_2.Get()) & encrypto::motion::ShareWrapper(_1_2.Get()));
+        scount_3 = (scount_2 + _MPC_CONSTANT_1);
+        scount_4 = _2_2.Mux(scount_3.Get(), scount_2.Get());
+        _3_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i_1].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(0)].Get()));
+        _4_2 = (encrypto::motion::ShareWrapper(s0_2.Get()) | encrypto::motion::ShareWrapper(s1_2.Get()));
+        s1_3 = (encrypto::motion::ShareWrapper(_3_2.Get()) & encrypto::motion::ShareWrapper(_4_2.Get()));
+        s0_3 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i_1].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(1)].Get()));
+
+        // Update phi values
+        s0_2 = s0_3;
+        s1_2 = s1_3;
+        scount_2 = scount_4;
+    }
+
+
+    return scount_2;
+}

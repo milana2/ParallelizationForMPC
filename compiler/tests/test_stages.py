@@ -59,6 +59,9 @@ class StagesTestCase(unittest.TestCase):
             type_env = compiler.type_check(loop_linear, dep_graph)
             self.assertEqual(str(type_env), stages["type_env.txt"])
 
+            motion_code = compiler.motion_backend.render_function(loop_linear, type_env)
+            self.assertEqual(str(motion_code), stages["motion_code.txt"])
+
     def test_example_apps(self):
         if not test_context.RUN_EXAMPLE_APPS:
             self.skipTest("Skipping example application compilation")
@@ -197,3 +200,7 @@ def regenerate_stages():
         type_env = compiler.type_check(loop_linear, dep_graph)
         with open(os.path.join(test_case_dir, "type_env.txt"), "w") as f:
             f.write(f"{type_env}\n")
+
+        motion_code = compiler.motion_backend.render_function(loop_linear, type_env)
+        with open(os.path.join(test_case_dir, "motion_code.txt"), "w") as f:
+            f.write(f"{motion_code}\n")
