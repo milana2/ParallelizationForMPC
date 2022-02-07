@@ -196,7 +196,9 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
         params=[
             {
                 "name": param.var.name,
-                "cpp_type": render_type(param.var_type, plaintext=False),
+                "cpp_type": render_type(
+                    param.var_type, plaintext=type_env[param.var].is_plaintext()
+                ),
                 "plaintext_cpp_type": render_type(param.var_type, plaintext=True),
                 "is_shared": param.var_type.visibility == VarVisibility.SHARED,
                 "dims": param.var_type.dims,
