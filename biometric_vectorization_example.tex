@@ -173,11 +173,15 @@ for i in range(0, N!0):
 \end{verbatim}
 }
 
-\ana{TODO: It will be good to add a pass in Phase 3 to get rid of extra dimensionality. 
+\ana{TODO: It will be good to add a pass in Phase 3, or post Phase 3, to get rid of extra dimensionality. 
 Once we have vectorized as much as possible, there is no need to keep higher 
 dimensionality. E.g., there is no need for the 2-dimensional array sum in the first for loop, 
 and similarly, there is no need for 1-dimensional arrays for min\_sum and min\_index.
 We should get rid of these before generating MOTION code.}
+
+\ana{I don't have a crisp algorithm in mind. I don't think it will be difficult but we have to 
+think this through. Put on our TODO list for us to think about since it will simplify MOTION 
+code tremendously.}
 
 \ana{Begin Work-in-progress notes on implementation. Just some thoughts...} 
 
