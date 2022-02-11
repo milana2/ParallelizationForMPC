@@ -24,6 +24,7 @@ for i in range(0, N!0):
    min_index!3 = i
    min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
    min_index!4 = MUX(!1!2, min_index!3, min_index!2)
+!2!1 = (min_sum!2, min_index!2)   
 \end{verbatim}
 }
 
@@ -62,6 +63,9 @@ for i in range(0, N!0):
    min_index!3 = i  // Same-level, will lift when hoisted
    min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
    min_index!4 = MUX(!1!2, min_index!3, min_index!2)
+min_sum!2^ = drop_dim(min_sum!2)
+min_index!2^ = drop_dim(min_index!2)   
+!2!1 = (min_sum!2^, min_index!2^)     
 \end{verbatim}
 }
 
@@ -97,6 +101,9 @@ for i in range(0, N!0):
   min_index!3 = [0,1,2,...,N!0-1]
   min_sum!4[I] = MUX(!1!2[I], min_sum!3[I], min_sum!2[I])
    min_index!4[I] = MUX(!1!2[I], min_index!3[I], min_index!2[I])
+min_sum!2^ = drop_dim(min_sum!2)
+min_index!2^ = drop_dim(min_index!2)   
+!2!1 = (min_sum!2^, min_index!2^)
 \end{verbatim}
 }
 
@@ -133,6 +140,10 @@ for i in range(0, N!0):
 for i in range(0, N!0):
   min_index!2[i] = PHI(min_index!1^[i], min_index!4[i-1])  
    min_index!4[i] = MUX(!1!2[i], min_index!3[i], min_index!2[i])
+
+min_sum!2^ = drop_dim(min_sum!2)
+min_index!2^ = drop_dim(min_index!2)   
+!2!1 = (min_sum!2^, min_index!2^)
 \end{verbatim}
 }
 
@@ -170,6 +181,10 @@ for i in range(0, N!0):
 for i in range(0, N!0):
   min_index!2[i] = PHI(min_index!1^[i], min_index!4[i-1])  
    min_index!4[i] = MUX(!1!2[i], min_index!3[i], min_index!2[i])
+   
+min_sum!2^ = drop_dim(min_sum!2)
+min_index!2^ = drop_dim(min_index!2)   
+!2!1 = (min_sum!2^, min_index!2^)   
 \end{verbatim}
 }
 
