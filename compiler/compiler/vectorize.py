@@ -343,8 +343,9 @@ def _basic_vectorization_phase_1(
     dep_graph: DepGraph,
     type_env: TypeEnv,
     tmp_var_gen: TempVarGenerator,
-) -> list[llc.Statement]:
-    result: list[llc.Statement] = []
+) -> tuple[list[llc.Statement], list[llc.Statement]]:
+    above_loop_result: list[llc.Statement] = []
+    inside_loop_result: list[llc.Statement] = []
 
     for stmt in stmts:
         if isinstance(stmt, (llc.Phi, llc.Assign)):
@@ -357,12 +358,12 @@ def _basic_vectorization_phase_1(
                     return var
                 elif edge_kind is EdgeKind.OUTER_TO_INNER:
                     var_prime = tmp_var_gen.get()
-                    result.append(llc.ChangeDim(var_prime, var, drop=False))
+                    above_loop_result.append(llc.ChangeDim(var_prime, var, drop=False))
                     type_env[var_prime] = var_type.add_dim()
                     return var_prime
                 elif edge_kind is EdgeKind.INNER_TO_OUTER:
                     var_prime = tmp_var_gen.get()
-                    result.append(llc.ChangeDim(var_prime, var, drop=True))
+                    inside_loop_result.append(llc.ChangeDim(var_prime, var, drop=True))
                     type_env[var_prime] = var_type.drop_dim()
                     return var_prime
                 else:
@@ -424,31 +425,36 @@ def _basic_vectorization_phase_1(
             else:
                 assert_never(stmt)
 
-            result.append(stmt)
+            inside_loop_result.append(stmt)
 
         elif isinstance(stmt, llc.For):
-            result.append(
+            for_outside_stmts, for_inside_stmts = _basic_vectorization_phase_1(
+                stmt.body, dep_graph, type_env, tmp_var_gen
+            )
+            inside_loop_result += for_outside_stmts
+            inside_loop_result.append(
                 llc.For(
                     counter=stmt.counter,
                     bound_low=stmt.bound_low,
                     bound_high=stmt.bound_high,
-                    body=_basic_vectorization_phase_1(
-                        stmt.body, dep_graph, type_env, tmp_var_gen
-                    ),
+                    body=for_inside_stmts,
                 )
             )
         else:
             assert not isinstance(stmt, llc.ChangeDim)
             assert_never(stmt)
 
-    return result
+    return above_loop_result, inside_loop_result
 
 
 def basic_vectorization(
     function: llc.Function, dep_graph: DepGraph, type_env: TypeEnv
 ) -> tuple[llc.Function, DepGraph]:
     tmp_var_gen = TempVarGenerator(dep_graph)
-    body = _basic_vectorization_phase_1(function.body, dep_graph, type_env, tmp_var_gen)
+    empty, body = _basic_vectorization_phase_1(
+        function.body, dep_graph, type_env, tmp_var_gen
+    )
+    assert empty == []
     function = llc.Function(
         name=function.name,
         parameters=function.parameters,
