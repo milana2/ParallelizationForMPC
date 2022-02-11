@@ -427,6 +427,25 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 \COMMENT {Phase 3:}
 \STATE {add SIMD for simdified dimensions}
 
+\COMMENT {Phase 4: Dimensionality reduction: remove unnecessary dimensionality. \ana{Draft. Needs work.}}
+\FOR {each FOR i = 0; ... loop from innermost to outermost}
+\FOR {each stmt v[...i...] = ..., including in nested loops}
+\STATE {if def-use from stmt v[...i...] to a non drop\_dim(v,i) use outside of loop, mark "live dimension i"}
+\STATE {otherwise, mark "dead dimension i"}
+\STATE {for all variables v[...i...] (defs and uses) that are "dead dimension i", remove dimension i}
+\COMMENT {Two cases: forward edge will use i, backward edge will use i-1}
+\ENDFOR
+
+\COMMENT {Now clean up drop\_dim and raise\_dim}
+\FOR {each "dead dimension i" def: v[...i...] in loop to use: v' =  drop\_dim(v,i) }
+\STATE {replace v' = drop\_dim(v,i) with v' = v in use}
+\ENDFOR
+\FOR {each "def: v' = raise\_dim(v,i) in outer loop to use: v'[...i...] in loop}
+\STATE {replace v' with v in use statement}
+\ENDFOR
+\ENDFOR
+\STATE {do copy propagation and dead code elimination to get rid of redundant variables and raise dimension statements}
+
 \end{algorithmic}
 
 \ishaq{We need to think of a way to handle 4th case for def-use, when a nested block B def is followed by another, different, nested block B' use. Note: The handwritten notes say we can break it into 2 edges. One idea to this end is to insert a def' node which is a copy of the original def. The def' should be placed in a block that contains both B and B'.}

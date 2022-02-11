@@ -188,6 +188,43 @@ min_index!2^ = drop_dim(min_index!2)
 \end{verbatim}
 }
 
+\subsubsection{Phase 4 of Basic Vectorization}
+
+And this phase gets rid of redundant dimensionality. Code moves back to 
+a version close to the original one. 
+
+{\small
+\begin{verbatim}
+min_sum!1 = 10000
+min_index!1 = 0
+S!0^ = raise_dim(S!0, ((i * D!0) + j), (i:N!0,j:D!0))
+C!0^ = raise_dim(C!0, j, (i:N!0,j:D!0))
+
+sum!2 = [0,..,0]
+d!3[I,J] = SUB_SIMD(S!0^[I,J],C!0^[I,J])
+p!3[I,J] = MUL_SIMD(d!3[I,J] * d!3[I,J])
+
+for j in range(0, D!0):
+  // I dim is a noop. sum is already a one-dimensional vector
+  sum!3[I] = PHI(sum!2^[I], sum!4[I])       
+  sum!4[I] = ADD_SIMD(sum!3[I],p!3[I,j])
+
+min_index!3 = [0,1,...N!0-1]   
+
+for i in range(0, N!0):
+  min_sum!2 = PHI(min_sum!1, min_sum!4) 
+  !1!2[i] = CMP(sum!3[i],min_sum!2)
+  min_sum!4 = MUX(!1!2[i], sum!3[i], min_sum!2)
+    
+for i in range(0, N!0):
+  min_index!2 = PHI(min_index!1, min_index!4)  
+  min_index!4 = MUX(!1!2[i], min_index!3[i], min_index!2)
+   
+!2!1 = (min_sum!2, min_index!2)   
+\end{verbatim}
+}
+
+
 \ana{TODO: It will be good to add a pass in Phase 3, or post Phase 3, to get rid of extra dimensionality. 
 Once we have vectorized as much as possible, there is no need to keep higher 
 dimensionality. E.g., there is no need for the 2-dimensional array sum in the first for loop, 
