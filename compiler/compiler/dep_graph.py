@@ -61,7 +61,9 @@ class DepGraph:
                     all_assignments.append((statement, enclosing_loops))
                 elif isinstance(statement, llc.For):
                     loop = statement
-                    all_assignments.append((DepFor(loop), enclosing_loops))
+                    # Loops are considered to be inside themselves here,
+                    # so that loop index accesses inside the loop can be same-level
+                    all_assignments.append((DepFor(loop), enclosing_loops + [loop]))
                     add_assignments(loop.body, enclosing_loops + [loop])
                 else:
                     assert_never(statement)
