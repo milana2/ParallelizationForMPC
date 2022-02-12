@@ -272,7 +272,10 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
         else:
             # Shouldn't happen before Basic Vectorization phase 1,
             # and type analysis doesn't happen after that.
-            assert not isinstance(stmt, loop_linear_code.ChangeDim)
+            assert not isinstance(
+                stmt,
+                (loop_linear_code.RaiseDim, loop_linear_code.DropDim),
+            )
 
             assert_never(stmt)
 

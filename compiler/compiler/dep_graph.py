@@ -32,7 +32,7 @@ class DepFor:
         return self.inner.counter
 
 
-DepNode = Union[llc.Phi, llc.Assign, llc.ChangeDim, DepParameter, DepFor]
+DepNode = Union[llc.Phi, llc.Assign, llc.RaiseDim, llc.DropDim, DepParameter, DepFor]
 
 
 class EdgeKind(Enum):
@@ -57,7 +57,10 @@ class DepGraph:
             statements: list[llc.Statement], enclosing_loops: list[llc.For]
         ):
             for statement in statements:
-                if isinstance(statement, (llc.Phi, llc.Assign, llc.ChangeDim)):
+                if isinstance(
+                    statement,
+                    (llc.Phi, llc.Assign, llc.RaiseDim, llc.DropDim),
+                ):
                     all_assignments.append((statement, enclosing_loops))
                 elif isinstance(statement, llc.For):
                     loop = statement
@@ -89,7 +92,7 @@ class DepGraph:
                 lhss = assignment.rhs_vars()
             elif isinstance(assignment, llc.Assign):
                 lhss = llc.assign_rhs_accessed_vars(assignment.rhs)
-            elif isinstance(assignment, llc.ChangeDim):
+            elif isinstance(assignment, (llc.RaiseDim, llc.DropDim)):
                 lhss = [assignment.input_arr]
             elif isinstance(assignment, (DepParameter, DepFor)):
                 lhss = []

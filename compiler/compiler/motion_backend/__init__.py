@@ -5,7 +5,7 @@ from textwrap import indent
 from typing import TypedDict, Union
 
 from ..util import assert_never
-from ..loop_linear_code import ChangeDim, Function, Statement, Phi, Assign, For
+from ..loop_linear_code import RaiseDim, DropDim, Function, Statement, Phi, Assign, For
 from ..type_analysis import TypeEnv, VarVisibility, Constant, DataType
 from .. import tac_cfg
 
@@ -67,7 +67,7 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
             return _collect_constants(stmt.body)
         elif isinstance(stmt, Assign):
             return expr_constants(stmt.rhs)
-        elif isinstance(stmt, (Phi, ChangeDim)):
+        elif isinstance(stmt, (Phi, RaiseDim, DropDim)):
             return []
         else:
             assert_never(stmt)

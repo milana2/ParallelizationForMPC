@@ -27,20 +27,37 @@ from .ast_shared import VarType, BinOpKind, Parameter, UnaryOpKind, TypeEnv
 
 
 @dataclass(frozen=True)
-class ChangeDim:
+class DropDim:
     lhs: Var
     input_arr: Var
-    drop: bool
 
     def __str__(self) -> str:
-        drop = "drop" if self.drop else "raise"
-        return f"{self.lhs} = {drop}_dim({self.input_arr})"
+        return f"{self.lhs} = drop_dim({self.input_arr})"
 
     def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
         raise NotImplementedError()
 
 
-Statement = Union[Phi, Assign, "For", ChangeDim]
+@dataclass(frozen=True)
+class RaiseDim:
+    lhs: Var
+    input_arr: Var
+    access_pattern: Optional[SubscriptIndex]
+    dims: tuple[tuple[Var, LoopBound], ...]
+
+    def __str__(self) -> str:
+        dims = ",".join([f"{var}:{bound}" for var, bound in self.dims])
+        dims = "({dims})"
+        if self.access_pattern is None:
+            return f"{self.lhs} = raise_dim({self.input_arr}, {dims})"
+        else:
+            return f"{self.lhs} = raise_dim({self.input_arr}, {self.access_pattern}, {dims})"
+
+    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
+        raise NotImplementedError()
+
+
+Statement = Union[Phi, Assign, "For", RaiseDim, DropDim]
 
 
 @dataclass(frozen=True)

@@ -44,8 +44,8 @@ def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
             result += _arrays_written_in_loop(statement)
         else:
             assert not isinstance(
-                statement, llc.ChangeDim
-            ), "ChangeDim shouldn't exist before Basic Vectorization"
+                statement, (llc.RaiseDim, llc.DropDim)
+            ), "raise_dim()/drop_dim() shouldn't exist before Basic Vectorization"
             assert_never(statement)
     return result
 
@@ -100,8 +100,8 @@ def _arrays_read_in_loop(
             result += _arrays_read_in_loop(parent_loops + [statement], array_name)
         else:
             assert not isinstance(
-                statement, llc.ChangeDim
-            ), "ChangeDim shouldn't exist before Basic Vectorization"
+                statement, (llc.RaiseDim, llc.DropDim)
+            ), "raise_dim()/drop_dim() shouldn't exist before Basic Vectorization"
             assert_never(statement)
     return result
 
@@ -350,7 +350,11 @@ def _basic_vectorization_phase_1(
     for stmt in stmts:
         if isinstance(stmt, (llc.Phi, llc.Assign)):
 
-            def replace_var(var: llc.Var, stmt: DepNode) -> llc.Var:
+            def replace_var(
+                var: llc.Var,
+                stmt: DepNode,
+                access_pattern: Optional[llc.SubscriptIndex] = None,
+            ) -> llc.Var:
                 def_var = dep_graph.var_to_assignment[var]
                 edge_kind = dep_graph.edge_kind(def_var, stmt)
                 var_type = type_env[var]
@@ -358,12 +362,22 @@ def _basic_vectorization_phase_1(
                     return var
                 elif edge_kind is EdgeKind.OUTER_TO_INNER:
                     var_prime = tmp_var_gen.get()
-                    above_loop_result.append(llc.ChangeDim(var_prime, var, drop=False))
+                    above_loop_result.append(
+                        llc.RaiseDim(
+                            lhs=var_prime,
+                            input_arr=var,
+                            access_pattern=access_pattern,
+                            dims=tuple(
+                                (loop.counter, loop.bound_high)
+                                for loop in dep_graph.enclosing_loops[stmt]
+                            ),
+                        )
+                    )
                     type_env[var_prime] = var_type.add_dim()
                     return var_prime
                 elif edge_kind is EdgeKind.INNER_TO_OUTER:
                     var_prime = tmp_var_gen.get()
-                    inside_loop_result.append(llc.ChangeDim(var_prime, var, drop=True))
+                    inside_loop_result.append(llc.DropDim(var_prime, var))
                     type_env[var_prime] = var_type.drop_dim()
                     return var_prime
                 else:
@@ -379,7 +393,7 @@ def _basic_vectorization_phase_1(
 
             def replace_subscript(sub: llc.Subscript, stmt: DepNode) -> llc.Subscript:
                 return llc.Subscript(
-                    array=replace_var(sub.array, stmt),
+                    array=replace_var(sub.array, stmt, sub.index),
                     index=sub.index,
                 )
 
@@ -441,7 +455,7 @@ def _basic_vectorization_phase_1(
                 )
             )
         else:
-            assert not isinstance(stmt, llc.ChangeDim)
+            assert not isinstance(stmt, (llc.RaiseDim, llc.DropDim))
             assert_never(stmt)
 
     return above_loop_result, inside_loop_result
