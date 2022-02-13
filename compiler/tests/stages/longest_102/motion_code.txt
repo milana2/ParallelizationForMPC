@@ -1,0 +1,85 @@
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger longest_102(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
+) {
+    // Shared variable declarations
+    encrypto::motion::ShareWrapper _1_2;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::ShareWrapper _4_2;
+    encrypto::motion::ShareWrapper _5_2;
+    encrypto::motion::ShareWrapper _6_2;
+    encrypto::motion::ShareWrapper _7_2;
+    encrypto::motion::ShareWrapper _8_2;
+    encrypto::motion::SecureUnsignedInteger N_0;
+    encrypto::motion::SecureUnsignedInteger i_1;
+    encrypto::motion::SecureUnsignedInteger length_1;
+    encrypto::motion::SecureUnsignedInteger length_2;
+    encrypto::motion::SecureUnsignedInteger length_3;
+    encrypto::motion::SecureUnsignedInteger length_4;
+    encrypto::motion::SecureUnsignedInteger length_5;
+    encrypto::motion::SecureUnsignedInteger max_len_1;
+    encrypto::motion::SecureUnsignedInteger max_len_2;
+    encrypto::motion::SecureUnsignedInteger max_len_3;
+    encrypto::motion::SecureUnsignedInteger max_len_4;
+    encrypto::motion::ShareWrapper s0_1;
+    encrypto::motion::ShareWrapper s0_2;
+    encrypto::motion::ShareWrapper s0_3;
+    encrypto::motion::ShareWrapper s1_2;
+
+    // Plaintext variable declarations
+    std::uint32_t _MPC_PLAINTEXT_i_1;
+    std::uint32_t _MPC_PLAINTEXT_length_1;
+    std::uint32_t _MPC_PLAINTEXT_length_4;
+    std::uint32_t _MPC_PLAINTEXT_max_len_1;
+    bool _MPC_PLAINTEXT_s0_1;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
+
+    // Plaintext parameter assignments
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+
+    // Function body
+    s0_1 = _MPC_CONSTANT_false;
+    _MPC_PLAINTEXT_s0_1 = false;
+    max_len_1 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_max_len_1 = std::uint32_t(0);
+    length_1 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_length_1 = std::uint32_t(0);
+
+    // Initialize phi values
+    s0_2 = s0_1;
+    max_len_2 = max_len_1;
+    length_2 = length_1;
+    for (_MPC_PLAINTEXT_i_1 = std::uint32_t(0); _MPC_PLAINTEXT_i_1 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i_1++) {
+        i_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_1), 0);
+        _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i_1].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(2)].Get()));
+        s1_2 = (encrypto::motion::ShareWrapper(s0_2.Get()) & encrypto::motion::ShareWrapper(_1_2.Get()));
+        _2_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i_1].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(1)].Get()));
+        _4_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i_1].Get()) == encrypto::motion::ShareWrapper(Syms_0[std::uint32_t(0)].Get()));
+        _5_2 = (encrypto::motion::ShareWrapper(s0_2.Get()) & encrypto::motion::ShareWrapper(_4_2.Get()));
+        s0_3 = (encrypto::motion::ShareWrapper(_2_2.Get()) | encrypto::motion::ShareWrapper(_5_2.Get()));
+        _6_2 = (encrypto::motion::ShareWrapper(s1_2.Get()) | encrypto::motion::ShareWrapper(s0_3.Get()));
+        length_4 = _MPC_CONSTANT_0;
+        _MPC_PLAINTEXT_length_4 = std::uint32_t(0);
+        length_3 = (length_2 + _MPC_CONSTANT_1);
+        length_5 = _6_2.Mux(length_3.Get(), length_4.Get());
+        _7_2 = (length_5 > max_len_2);
+        _8_2 = (encrypto::motion::ShareWrapper(s1_2.Get()) & encrypto::motion::ShareWrapper(_7_2.Get()));
+        max_len_3 = length_5;
+        max_len_4 = _8_2.Mux(max_len_3.Get(), max_len_2.Get());
+
+        // Update phi values
+        s0_2 = s0_3;
+        max_len_2 = max_len_4;
+        length_2 = length_5;
+    }
+
+
+    return max_len_2;
+}

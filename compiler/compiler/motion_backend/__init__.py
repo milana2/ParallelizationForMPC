@@ -1,3 +1,4 @@
+import dataclasses as dt
 import io
 from jinja2 import Environment, FileSystemLoader
 import os
@@ -9,6 +10,15 @@ from ..loop_linear_code import RaiseDim, DropDim, Function, Statement, Phi, Assi
 from ..type_analysis import TypeEnv, VarVisibility, Constant, DataType
 from .. import tac_cfg
 
+from .low_level_rendering import (
+    RenderOptions,
+    render_datatype,
+    render_expr,
+    render_param,
+    render_stmt,
+    render_type,
+)
+
 
 class OutputParams(TypedDict):
     out_dir: str
@@ -16,13 +26,14 @@ class OutputParams(TypedDict):
 
 
 def _render_prototype(func: Function, type_env: TypeEnv) -> str:
-    return_type = type_env[func.return_value].to_cpp(type_env)
+    return_type = render_type(type_env[func.return_value], plaintext=False)
     return (
         f"template <encrypto::motion::MpcProtocol Protocol>\n"
         f"{return_type} {func.name}(\n"
         + indent("encrypto::motion::PartyPointer &party,\n", "    ")
         + indent(
-            ",\n".join(param.to_cpp(type_env) for param in func.parameters), "    "
+            ",\n".join(render_param(param, type_env) for param in func.parameters),
+            "    ",
         )
         + "\n)"
     )
@@ -76,16 +87,18 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
 
 
 def render_function(func: Function, type_env: TypeEnv) -> str:
+    render_opts = RenderOptions(type_env)
+
     func_header = f"{_render_prototype(func, type_env)} {{"
 
     var_definitions = (
         "// Shared variable declarations\n"
         + "\n".join(
-            var_type.to_cpp(type_env, plaintext=False)
+            render_type(var_type, plaintext=False)
             + " "
-            + var.to_cpp(type_env)
+            + render_expr(var, dt.replace(render_opts, plaintext=False))
             + ";"
-            for var, var_type in type_env.items()
+            for var, var_type in sorted(type_env.items(), key=lambda x: str(x[0]))
             if not any(
                 param.var == var and param.var_type.is_shared()
                 for param in func.parameters
@@ -97,8 +110,8 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     plaintext_var_definitions = (
         "// Plaintext variable declarations\n"
         + "\n".join(
-            f"{var_type.to_cpp(type_env, plaintext=True)} {var.to_cpp(type_env, plaintext=True)};"
-            for var, var_type in type_env.items()
+            f"{render_type(var_type, plaintext=True)} {render_expr(var, dt.replace(render_opts, plaintext=True))};"
+            for var, var_type in sorted(type_env.items(), key=lambda x: str(x[0]))
             if var_type.is_plaintext()
             if not any(
                 param.var == var and param.var_type.is_plaintext()
@@ -112,9 +125,9 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     constant_initialization = (
         "// Constant initializations\n"
         + "\n".join(
-            f"{const.datatype.to_cpp(type_env, plaintext=False)} {const.to_cpp(type_env)} = "
-            + f"party->In<Protocol>({const.to_cpp(type_env, as_motion_input=True)}, 0);"
-            for const in plaintext_constants
+            f"{render_datatype(const.datatype, plaintext=False)} {render_expr(const, render_opts)} = "
+            + f"party->In<Protocol>({render_expr(const, dt.replace(render_opts, as_motion_input=True))}, 0);"
+            for const in sorted(plaintext_constants, key=lambda c: str(c.value))
         )
         + "\n"
     )
@@ -124,12 +137,12 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + "\n\n".join(
             (
                 # Initialize the shared version
-                param.var.to_cpp(type_env)
+                render_expr(param.var, render_opts)
                 + " = party->In<Protocol>(encrypto::motion::ToInput("
-                + param.var.to_cpp(type_env, plaintext=True)
+                + render_expr(param.var, dt.replace(render_opts, plaintext=True))
                 + "), 0);"
             )
-            for param in func.parameters
+            for param in sorted(func.parameters, key=str)
             if param.var_type.is_plaintext()
         )
         + "\n"
@@ -138,7 +151,9 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     func_body = (
         "// Function body\n"
         + "\n".join(
-            stmt.to_cpp(type_env) for stmt in func.body if not isinstance(stmt, Phi)
+            render_stmt(stmt, type_env)
+            for stmt in func.body
+            if not isinstance(stmt, Phi)
         )
         + "\n"
     )
@@ -156,7 +171,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + "\n"
         + indent(func_body, "    ")
         + "\n"
-        + indent(f"return {func.return_value.to_cpp(type_env)};", "    ")
+        + indent(f"return {render_expr(func.return_value, render_opts)};", "    ")
         + "\n}"
     )
 
@@ -180,8 +195,10 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
         params=[
             {
                 "name": param.var.name,
-                "cpp_type": param.var_type.to_cpp(type_env),
-                "plaintext_cpp_type": param.var_type.to_cpp(type_env, plaintext=True),
+                "cpp_type": render_type(
+                    param.var_type, plaintext=type_env[param.var].is_plaintext()
+                ),
+                "plaintext_cpp_type": render_type(param.var_type, plaintext=True),
                 "is_shared": param.var_type.visibility == VarVisibility.SHARED,
                 "dims": param.var_type.dims,
                 "party_idx": param.party_idx,
@@ -193,14 +210,14 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
         ],
         protocol="encrypto::motion::MpcProtocol::kBooleanGmw",  # TODO: make this user-configurable
         num_returns=type_env[func.return_value].dims,
-        outputs=[return_type.to_cpp(type_env, plaintext=True)]
+        outputs=[render_type(return_type, plaintext=True)]
         if return_type.datatype != DataType.TUPLE
-        else [t.to_cpp(type_env, plaintext=True) for t in return_type.tuple_types],
+        else [render_type(t, plaintext=True) for t in return_type.tuple_types],
         function_name=func.name,
     )
 
     rendered_header = header_template.render(
-        circuit_generator=render_function(func, type_env),
+        circuit_generator=render_function(func, type_env)
     )
 
     rendered_cmakelists = cmakelists_template.render(

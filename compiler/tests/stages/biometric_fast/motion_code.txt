@@ -1,0 +1,147 @@
+template <encrypto::motion::MpcProtocol Protocol>
+std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric_matching_fast(
+    encrypto::motion::PartyPointer &party,
+    std::uint32_t _MPC_PLAINTEXT_D_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> C_0,
+    encrypto::motion::SecureUnsignedInteger C_sqr_sum_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> two_C_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> S_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> S_sqr_sum_0
+) {
+    // Shared variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> _1_2;
+    encrypto::motion::ShareWrapper _2_3;
+    std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> _3_1;
+    encrypto::motion::SecureUnsignedInteger D_0;
+    encrypto::motion::SecureUnsignedInteger N_0;
+    encrypto::motion::SecureUnsignedInteger a_sqr_plus_b_sqr_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> differences_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> differences_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> differences_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> differences_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> differences_5;
+    encrypto::motion::SecureUnsignedInteger i_1;
+    encrypto::motion::SecureUnsignedInteger i_2;
+    encrypto::motion::SecureUnsignedInteger j_1;
+    encrypto::motion::SecureUnsignedInteger k_1;
+    encrypto::motion::SecureUnsignedInteger min_diff_1;
+    encrypto::motion::SecureUnsignedInteger min_diff_2;
+    encrypto::motion::SecureUnsignedInteger min_diff_3;
+    encrypto::motion::SecureUnsignedInteger min_diff_4;
+    encrypto::motion::SecureUnsignedInteger min_diff_5;
+    encrypto::motion::SecureUnsignedInteger min_diff_6;
+    encrypto::motion::SecureUnsignedInteger min_index_1;
+    encrypto::motion::SecureUnsignedInteger min_index_2;
+    encrypto::motion::SecureUnsignedInteger min_index_3;
+    encrypto::motion::SecureUnsignedInteger min_index_4;
+    encrypto::motion::SecureUnsignedInteger min_index_5;
+    encrypto::motion::SecureUnsignedInteger min_index_6;
+    encrypto::motion::SecureUnsignedInteger this_diff_2;
+    encrypto::motion::SecureUnsignedInteger tmp_3;
+    encrypto::motion::SecureUnsignedInteger two_a_b_2;
+    encrypto::motion::SecureUnsignedInteger two_a_b_3;
+    encrypto::motion::SecureUnsignedInteger two_a_b_4;
+
+    // Plaintext variable declarations
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__1_2;
+    std::tuple<std::uint32_t, std::uint32_t> _MPC_PLAINTEXT__3_1;
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_differences_1;
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_differences_2;
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_differences_3;
+    std::uint32_t _MPC_PLAINTEXT_i_1;
+    std::uint32_t _MPC_PLAINTEXT_i_2;
+    std::uint32_t _MPC_PLAINTEXT_j_1;
+    std::uint32_t _MPC_PLAINTEXT_k_1;
+    std::uint32_t _MPC_PLAINTEXT_min_diff_1;
+    std::uint32_t _MPC_PLAINTEXT_min_index_1;
+    std::uint32_t _MPC_PLAINTEXT_min_index_3;
+    std::uint32_t _MPC_PLAINTEXT_min_index_5;
+    std::uint32_t _MPC_PLAINTEXT_two_a_b_2;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+
+    // Plaintext parameter assignments
+    D_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_D_0), 0);
+
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+
+    // Function body
+    differences_1 = {};
+    _MPC_PLAINTEXT_differences_1 = {};
+
+    // Initialize phi values
+    differences_2 = differences_1;
+    for (_MPC_PLAINTEXT_i_1 = std::uint32_t(0); _MPC_PLAINTEXT_i_1 < _MPC_PLAINTEXT_D_0; _MPC_PLAINTEXT_i_1++) {
+        i_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_1), 0);
+        _1_2 = {_MPC_CONSTANT_0};
+        _MPC_PLAINTEXT__1_2 = {std::uint32_t(0)};
+        differences_3 = (differences_2 + _1_2);
+        _MPC_PLAINTEXT_differences_3 = (_MPC_PLAINTEXT_differences_2 + _MPC_PLAINTEXT__1_2);
+
+        // Update phi values
+        differences_2 = differences_3;
+    }
+
+    min_index_1 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_min_index_1 = std::uint32_t(0);
+    min_diff_1 = differences_2[std::uint32_t(0)];
+    _MPC_PLAINTEXT_min_diff_1 = _MPC_PLAINTEXT_differences_2[std::uint32_t(0)];
+
+    // Initialize phi values
+    differences_4 = differences_2;
+    min_index_2 = min_index_1;
+    min_diff_2 = min_diff_1;
+    for (_MPC_PLAINTEXT_i_2 = std::uint32_t(0); _MPC_PLAINTEXT_i_2 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i_2++) {
+        i_2 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_2), 0);
+        a_sqr_plus_b_sqr_2 = (S_sqr_sum_0[_MPC_PLAINTEXT_i_2] + C_sqr_sum_0);
+        two_a_b_2 = _MPC_CONSTANT_0;
+        _MPC_PLAINTEXT_two_a_b_2 = std::uint32_t(0);
+
+        // Initialize phi values
+        two_a_b_3 = two_a_b_2;
+        for (_MPC_PLAINTEXT_j_1 = std::uint32_t(0); _MPC_PLAINTEXT_j_1 < _MPC_PLAINTEXT_D_0; _MPC_PLAINTEXT_j_1++) {
+            j_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_j_1), 0);
+            tmp_3 = (S_0[((_MPC_PLAINTEXT_i_2 * _MPC_PLAINTEXT_D_0) + _MPC_PLAINTEXT_j_1)] * two_C_0[_MPC_PLAINTEXT_j_1]);
+            two_a_b_4 = (two_a_b_3 + tmp_3);
+
+            // Update phi values
+            two_a_b_3 = two_a_b_4;
+        }
+
+        this_diff_2 = (a_sqr_plus_b_sqr_2 - two_a_b_3);
+        differences_5 = differences_4;
+        differences_4[_MPC_PLAINTEXT_i_2] = this_diff_2;
+        min_diff_3 = differences_5[std::uint32_t(0)];
+        min_index_3 = _MPC_CONSTANT_0;
+        _MPC_PLAINTEXT_min_index_3 = std::uint32_t(0);
+
+        // Initialize phi values
+        min_index_4 = min_index_3;
+        min_diff_4 = min_diff_3;
+        for (_MPC_PLAINTEXT_k_1 = std::uint32_t(0); _MPC_PLAINTEXT_k_1 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_k_1++) {
+            k_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_k_1), 0);
+            _2_3 = (min_diff_4 > differences_5[_MPC_PLAINTEXT_k_1]);
+            min_diff_5 = differences_5[_MPC_PLAINTEXT_k_1];
+            min_index_5 = k_1;
+            _MPC_PLAINTEXT_min_index_5 = _MPC_PLAINTEXT_k_1;
+            min_index_6 = _2_3.Mux(min_index_5.Get(), min_index_4.Get());
+            min_diff_6 = _2_3.Mux(min_diff_5.Get(), min_diff_4.Get());
+
+            // Update phi values
+            min_index_4 = min_index_6;
+            min_diff_4 = min_diff_6;
+        }
+
+
+        // Update phi values
+        differences_4 = differences_5;
+        min_index_2 = min_index_4;
+        min_diff_2 = min_diff_4;
+    }
+
+    _3_1 = std::make_tuple(min_diff_2, min_index_2);
+
+    return _3_1;
+}

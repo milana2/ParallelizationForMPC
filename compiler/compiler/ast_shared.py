@@ -24,20 +24,6 @@ class DataType(Enum):
     BOOL = "bool"
     TUPLE = "tuple"
 
-    def to_cpp(self, type_env: "TypeEnv", plaintext=True, **kwargs) -> str:
-        if self == DataType.INT:
-            if plaintext:
-                return "std::uint32_t"
-            else:
-                return "encrypto::motion::SecureUnsignedInteger"
-        elif self == DataType.BOOL:
-            if plaintext:
-                return "bool"
-            else:
-                return "encrypto::motion::ShareWrapper"
-        else:
-            raise Exception("Unknown data type")
-
     def __str__(self) -> str:
         return self.value
 
@@ -53,12 +39,7 @@ class VarType:
 
     def __hash__(self) -> int:
         return hash(
-            (
-                self.visibility,
-                self.datatype,
-                self.dims,
-                tuple(self.tuple_types),
-            )
+            (self.visibility, self.datatype, self.dims, tuple(self.tuple_types))
         )
 
     def drop_dim(self) -> "VarType":
@@ -175,29 +156,6 @@ class VarType:
 
         return merged_type
 
-    def to_cpp(self, type_env: "TypeEnv", **kwargs) -> str:
-        assert self.visibility is not None
-        assert self.datatype is not None
-        assert self.dims is not None
-
-        if self.datatype == DataType.TUPLE:
-            return f"std::tuple<{', '.join(t.to_cpp(type_env, **kwargs) for t in self.tuple_types)}>"
-        else:
-            str_rep = ""
-            for _ in self.dims:
-                str_rep += "std::vector<"
-            str_rep += self.datatype.to_cpp(
-                type_env,
-                plaintext=kwargs.get(
-                    "plaintext",
-                    self.visibility == VarVisibility.PLAINTEXT,
-                ),
-                **{k: v for k, v in kwargs.items() if k != "plaintext"},
-            )
-            for _ in self.dims:
-                str_rep += ">"
-            return str_rep
-
     def __str__(self) -> str:
         if self.datatype == DataType.TUPLE:
             return "tuple[" + ", ".join(str(t) for t in self.tuple_types) + "]"
@@ -229,13 +187,6 @@ class Var:
 
     rename_subscript: Optional[int] = None
 
-    def to_cpp(self, type_env: "TypeEnv", plaintext=False, **kwargs) -> str:
-        cpp_str = str(self).replace("!", "_")
-        if plaintext:
-            return f"_MPC_PLAINTEXT_{cpp_str}"
-        else:
-            return cpp_str
-
     def __str__(self) -> str:
         name = self.name if isinstance(self.name, str) else f"!{self.name}"
         subscript = "" if self.rename_subscript is None else f"!{self.rename_subscript}"
@@ -265,21 +216,6 @@ class Parameter:
         int
     ] = None  # stores the party index associated with this parameter, if it is shared
 
-    def to_cpp(self, type_env: TypeEnv, **kwargs):
-        plaintext_kwargs = {k: v for k, v in kwargs.items() if k != "plaintext"}
-        if self.var_type.is_shared():
-            return (
-                self.var_type.to_cpp(type_env, **kwargs)
-                + " "
-                + self.var.to_cpp(type_env, **plaintext_kwargs)
-            )
-        else:
-            return (
-                self.var_type.to_cpp(type_env, plaintext=True, **plaintext_kwargs)
-                + " "
-                + self.var.to_cpp(type_env, plaintext=True, **plaintext_kwargs)
-            )
-
     def __str__(self) -> str:
         return f"{self.var}: {self.var_type}"
 
@@ -290,26 +226,6 @@ class Constant:
 
     value: Union[int, bool]
     datatype: DataType
-
-    def to_cpp(
-        self, type_env: TypeEnv, plaintext=False, as_motion_input=False, **kwargs
-    ) -> str:
-        if as_motion_input:
-            if self.datatype == DataType.INT:
-                return f"encrypto::motion::ToInput({self.to_cpp(type_env, plaintext=True, as_motion_input=False)})"
-            elif self.datatype == DataType.BOOL:
-                return f"encrypto::motion::BitVector(1, {self.to_cpp(type_env, plaintext=True, as_motion_input=False)})"
-            else:
-                raise NotImplementedError()
-        elif plaintext:
-            if self.datatype == DataType.INT:
-                return f"std::uint32_t({self.value})"
-            elif self.datatype == DataType.BOOL:
-                return str(self.value).lower()
-            else:
-                raise NotImplementedError()
-        else:
-            return f"_MPC_CONSTANT_" + str(self.value).lower()
 
     def __str__(self) -> str:
         return str(self.value)
@@ -343,12 +259,7 @@ class BinOpKind(Enum):
     BIT_XOR = "^"
 
     def get_ret_datatype(self) -> Optional[DataType]:
-        if self in (
-            BinOpKind.ADD,
-            BinOpKind.SUB,
-            BinOpKind.MUL,
-            BinOpKind.DIV,
-        ):
+        if self in (BinOpKind.ADD, BinOpKind.SUB, BinOpKind.MUL, BinOpKind.DIV):
             return DataType.INT
 
         elif self in (
@@ -363,11 +274,7 @@ class BinOpKind(Enum):
         ):
             return DataType.BOOL
 
-        elif self in (
-            BinOpKind.BIT_AND,
-            BinOpKind.BIT_XOR,
-            BinOpKind.BIT_OR,
-        ):
+        elif self in (BinOpKind.BIT_AND, BinOpKind.BIT_XOR, BinOpKind.BIT_OR):
             return None  # return type is the same as the inputs
 
         else:
@@ -399,16 +306,6 @@ class BinOpKind(Enum):
 
         else:
             raise ValueError(f"Unhandled binary operation {self}")
-
-    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
-        if self == BinOpKind.AND:
-            return "&"
-        elif self == BinOpKind.OR:
-            return "|"
-        elif self == BinOpKind.DIV:
-            return "/"
-        else:
-            return str(self)
 
     def __str__(self) -> str:
         return self.value
@@ -442,12 +339,7 @@ class UnaryOpKind(Enum):
         return self.value
 
 
-class CppConvertible(Protocol):
-    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
-        ...
-
-
-OPERAND = TypeVar("OPERAND", bound=CppConvertible)
+OPERAND = TypeVar("OPERAND")
 
 
 @dataclass
@@ -457,54 +349,6 @@ class BinOp(Generic[OPERAND]):
     left: OPERAND
     operator: BinOpKind
     right: OPERAND
-
-    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
-        # SecureUnsignedIntegers only have operator== and operator> defined on them,
-        # so we have to compose all other comparisons manually
-        if self.operator == BinOpKind.LT:
-            return BinOp(self.right, BinOpKind.GT, self.left).to_cpp(type_env, **kwargs)
-        elif self.operator == BinOpKind.NOT_EQ:
-            return UnaryOp(
-                UnaryOpKind.NOT, BinOp(self.left, BinOpKind.EQ, self.right)
-            ).to_cpp(type_env, **kwargs)
-        elif self.operator == BinOpKind.LT_E:
-            return (
-                "("
-                + BinOp(self.left, BinOpKind.LT, self.right).to_cpp(type_env, **kwargs)
-                + " | "
-                + BinOp(self.left, BinOpKind.EQ, self.right).to_cpp(type_env, **kwargs)
-                + ")"
-            )
-        elif self.operator == BinOpKind.GT_E:
-            return (
-                "("
-                + BinOp(self.left, BinOpKind.GT, self.right).to_cpp(type_env, **kwargs)
-                + " | "
-                + BinOp(self.left, BinOpKind.EQ, self.right).to_cpp(type_env, **kwargs)
-                + ")"
-            )
-
-        # ShareWrappers don't have operator> defined, so this must always be performed on SecureUnsignedIntegers
-        elif self.operator == BinOpKind.GT:
-            return f"({self.left.to_cpp(type_env, **kwargs)} {self.operator.to_cpp(type_env, **kwargs)} {self.right.to_cpp(type_env, **kwargs)})"
-
-        # If we're using an arithmetic primitive operation or we're operating on plaintext values,
-        # don't cast to a share wrapper
-        # Our type analysis should ensure that the only shared values for these operators are
-        # SecureUnsignedIntegers, and MOTION does not allow us to use ShareWrappers for them
-        elif kwargs.get("plaintext") or self.operator in (
-            BinOpKind.ADD,
-            BinOpKind.SUB,
-            BinOpKind.MUL,
-            BinOpKind.DIV,
-        ):
-            return f"({self.left.to_cpp(type_env, **kwargs)} {self.operator.to_cpp(type_env, **kwargs)} {self.right.to_cpp(type_env, **kwargs)})"
-
-        # Otherwise, convert to sharewrappers since they have more operators defined
-        # TODO: go through the operators for ShareWrapper and make sure they're all valid
-        # for our protocol
-        else:
-            return f"(encrypto::motion::ShareWrapper({self.left.to_cpp(type_env, **kwargs)}.Get()) {self.operator.to_cpp(type_env, **kwargs)} encrypto::motion::ShareWrapper({self.right.to_cpp(type_env, **kwargs)}.Get()))"
 
     def __str__(self) -> str:
         return f"({self.left} {self.operator} {self.right})"
@@ -519,14 +363,6 @@ class UnaryOp(Generic[OPERAND]):
 
     operator: UnaryOpKind
     operand: OPERAND
-
-    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
-        if self.operator == UnaryOpKind.NOT:
-            return f"(~{self.operand.to_cpp(type_env, **kwargs)})"
-        else:
-            # TODO: If negating a SecureUnsignedInteger, change this to a binop where we
-            # subtract from _MPC_CONSTANT_0
-            return f"({self.operator.value} {self.operand.to_cpp(type_env, **kwargs)})"
 
     def __str__(self) -> str:
         return f"{self.operator} {self.operand}"
@@ -567,10 +403,6 @@ class Subscript:
 
     array: Var
     index: SubscriptIndex
-
-    def to_cpp(self, type_env: TypeEnv, **kwargs) -> str:
-        plaintext_kwargs = {k: v for k, v in kwargs.items() if k != "plaintext"}
-        return f"{self.array.to_cpp(type_env, **kwargs)}[{self.index.to_cpp(type_env, plaintext=True, **plaintext_kwargs)}]"
 
     def __hash__(self) -> int:
         return id(self)

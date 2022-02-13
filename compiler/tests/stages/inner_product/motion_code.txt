@@ -1,0 +1,43 @@
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger inner_product(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0
+) {
+    // Shared variable declarations
+    encrypto::motion::SecureUnsignedInteger N_0;
+    encrypto::motion::SecureUnsignedInteger i_1;
+    encrypto::motion::SecureUnsignedInteger sum_1;
+    encrypto::motion::SecureUnsignedInteger sum_2;
+    encrypto::motion::SecureUnsignedInteger sum_3;
+    encrypto::motion::SecureUnsignedInteger temp_2;
+
+    // Plaintext variable declarations
+    std::uint32_t _MPC_PLAINTEXT_i_1;
+    std::uint32_t _MPC_PLAINTEXT_sum_1;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+
+    // Plaintext parameter assignments
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+
+    // Function body
+    sum_1 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_sum_1 = std::uint32_t(0);
+
+    // Initialize phi values
+    sum_2 = sum_1;
+    for (_MPC_PLAINTEXT_i_1 = std::uint32_t(0); _MPC_PLAINTEXT_i_1 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i_1++) {
+        i_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_1), 0);
+        temp_2 = (A_0[_MPC_PLAINTEXT_i_1] * B_0[_MPC_PLAINTEXT_i_1]);
+        sum_3 = (sum_2 + temp_2);
+
+        // Update phi values
+        sum_2 = sum_3;
+    }
+
+
+    return sum_2;
+}

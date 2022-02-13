@@ -1,0 +1,63 @@
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger longest_1s(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
+    encrypto::motion::SecureUnsignedInteger Sym_0
+) {
+    // Shared variable declarations
+    encrypto::motion::ShareWrapper _1_2;
+    encrypto::motion::ShareWrapper _2_2;
+    encrypto::motion::SecureUnsignedInteger N_0;
+    encrypto::motion::SecureUnsignedInteger i_1;
+    encrypto::motion::SecureUnsignedInteger length_1;
+    encrypto::motion::SecureUnsignedInteger length_2;
+    encrypto::motion::SecureUnsignedInteger length_3;
+    encrypto::motion::SecureUnsignedInteger length_4;
+    encrypto::motion::SecureUnsignedInteger length_5;
+    encrypto::motion::SecureUnsignedInteger max_length_1;
+    encrypto::motion::SecureUnsignedInteger max_length_2;
+    encrypto::motion::SecureUnsignedInteger max_length_3;
+    encrypto::motion::SecureUnsignedInteger max_length_4;
+
+    // Plaintext variable declarations
+    std::uint32_t _MPC_PLAINTEXT_i_1;
+    std::uint32_t _MPC_PLAINTEXT_length_1;
+    std::uint32_t _MPC_PLAINTEXT_length_4;
+    std::uint32_t _MPC_PLAINTEXT_max_length_1;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+
+    // Plaintext parameter assignments
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+
+    // Function body
+    max_length_1 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_max_length_1 = std::uint32_t(0);
+    length_1 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_length_1 = std::uint32_t(0);
+
+    // Initialize phi values
+    max_length_2 = max_length_1;
+    length_2 = length_1;
+    for (_MPC_PLAINTEXT_i_1 = std::uint32_t(1); _MPC_PLAINTEXT_i_1 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i_1++) {
+        i_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_1), 0);
+        _1_2 = (encrypto::motion::ShareWrapper(Seq_0[_MPC_PLAINTEXT_i_1].Get()) == encrypto::motion::ShareWrapper(Sym_0.Get()));
+        length_4 = _MPC_CONSTANT_0;
+        _MPC_PLAINTEXT_length_4 = std::uint32_t(0);
+        length_3 = (length_2 + _MPC_CONSTANT_1);
+        length_5 = _1_2.Mux(length_3.Get(), length_4.Get());
+        _2_2 = (length_5 > max_length_2);
+        max_length_3 = length_5;
+        max_length_4 = _2_2.Mux(max_length_3.Get(), max_length_2.Get());
+
+        // Update phi values
+        max_length_2 = max_length_4;
+        length_2 = length_5;
+    }
+
+
+    return max_length_2;
+}
