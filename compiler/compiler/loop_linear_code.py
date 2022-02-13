@@ -47,7 +47,7 @@ class RaiseDim:
 
     def __str__(self) -> str:
         dims = ",".join([f"{var}:{bound}" for var, bound in self.dims])
-        dims = "({dims})"
+        dims = f"({dims})"
         if self.access_pattern is None:
             return f"{self.lhs} = raise_dim({self.input_arr}, {dims})"
         else:
