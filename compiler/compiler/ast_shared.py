@@ -509,6 +509,9 @@ class BinOp(Generic[OPERAND]):
     def __str__(self) -> str:
         return f"({self.left} {self.operator} {self.right})"
 
+    def __hash__(self) -> int:
+        return hash((self.left, self.operator, self.right))
+
 
 @dataclass
 class UnaryOp(Generic[OPERAND]):
@@ -527,6 +530,9 @@ class UnaryOp(Generic[OPERAND]):
 
     def __str__(self) -> str:
         return f"{self.operator} {self.operand}"
+
+    def __hash__(self) -> int:
+        return hash((self.operator, self.operand))
 
 
 class SubscriptIndexBinOp(BinOp["SubscriptIndex"]):
