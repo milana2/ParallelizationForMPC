@@ -22,7 +22,7 @@
 template <typename T>
 std::vector<T>
 raise_dim(const std::vector<T> &arr,
-          const std::function<std::size_t(std::vector<std::size_t> &)> &access_pattern,
+          const std::function<std::size_t(const std::vector<std::size_t> &)> &access_pattern,
           const std::vector<std::size_t> &dim_sizes)
 {
     std::size_t raised_size =

@@ -2,7 +2,9 @@ from enum import Enum
 from typing import Iterator, Union
 from dataclasses import dataclass
 
-import networkx  # type: ignore
+import networkx
+
+from .ast_shared import DropDim, RaiseDim
 
 from .util import assert_never
 from . import loop_linear_code as llc
@@ -32,7 +34,7 @@ class DepFor:
         return self.inner.counter
 
 
-DepNode = Union[llc.Phi, llc.Assign, llc.RaiseDim, llc.DropDim, DepParameter, DepFor]
+DepNode = Union[llc.Phi, llc.Assign, DepParameter, DepFor]
 
 
 class EdgeKind(Enum):
@@ -59,7 +61,7 @@ class DepGraph:
             for statement in statements:
                 if isinstance(
                     statement,
-                    (llc.Phi, llc.Assign, llc.RaiseDim, llc.DropDim),
+                    (llc.Phi, llc.Assign, RaiseDim, DropDim),
                 ):
                     all_assignments.append((statement, enclosing_loops))
                 elif isinstance(statement, llc.For):
@@ -91,9 +93,10 @@ class DepGraph:
             if isinstance(assignment, llc.Phi):
                 lhss = assignment.rhs_vars()
             elif isinstance(assignment, llc.Assign):
-                lhss = llc.assign_rhs_accessed_vars(assignment.rhs)
-            elif isinstance(assignment, (llc.RaiseDim, llc.DropDim)):
-                lhss = [assignment.input_arr]
+                if isinstance(assignment.rhs, (RaiseDim, DropDim)):
+                    lhss = [assignment.rhs.arr]
+                else:
+                    lhss = llc.assign_rhs_accessed_vars(assignment.rhs)
             elif isinstance(assignment, (DepParameter, DepFor)):
                 lhss = []
             else:

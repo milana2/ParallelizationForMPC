@@ -17,12 +17,13 @@ from .ast_shared import (
     PLAINTEXT_INT,
     DataType,
     TypeEnv,
+    VectorizedArr,
 )
 from .tac_cfg import AssignRHS, List, Tuple, Mux, Update
 
 
 def _type_assign_expr(
-    expr: Union[AssignRHS, SubscriptIndex], type_env: TypeEnv
+    expr: Union[AssignRHS, SubscriptIndex, VectorizedArr], type_env: TypeEnv
 ) -> VarType:
     """
     Determines the type of an expression in a given type environment.  If an expression

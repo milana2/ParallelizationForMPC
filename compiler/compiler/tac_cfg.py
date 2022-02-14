@@ -1,10 +1,13 @@
 """Data types representing a three-address code control flow graph"""
 
 from enum import Enum
+from lib2to3.pgen2.token import OP
 from typing import Union, Optional
 from dataclasses import dataclass
 
 from .ast_shared import (
+    DropDim,
+    RaiseDim,
     Var,
     VarType,
     DataType,
@@ -19,6 +22,7 @@ from .ast_shared import (
     BinOp as _BinOp,
     UnaryOp as _UnaryOp,
     TypeEnv,
+    VectorizedArr,
     subscript_index_accessed_vars,
 )
 from .util import assert_never
@@ -26,7 +30,7 @@ from .util import assert_never
 
 Atom = Union[Var, Constant]
 
-Operand = Union[Atom, Subscript]
+Operand = Union[Atom, Subscript, "BinOp", "UnaryOp", VectorizedArr]
 
 
 class BinOp(_BinOp[Operand]):
@@ -76,7 +80,7 @@ class Update:
         return f"Update({self.array}, {self.index}, {self.value})"
 
 
-AssignRHS = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux, Update]
+AssignRHS = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux, Update, RaiseDim, DropDim, VectorizedArr]
 
 
 def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
@@ -86,6 +90,8 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
         return []
     elif isinstance(rhs, Subscript):
         return [rhs.array] + subscript_index_accessed_vars(rhs.index)
+    elif isinstance(rhs, VectorizedArr):
+        return [rhs.array] + list(var for var, _ in filter(lambda x: x[1], zip(rhs.idx_vars, rhs.vectorized_dims)))
     elif isinstance(rhs, BinOp):
         return assign_rhs_accessed_vars(rhs.left) + assign_rhs_accessed_vars(rhs.right)
     elif isinstance(rhs, UnaryOp):

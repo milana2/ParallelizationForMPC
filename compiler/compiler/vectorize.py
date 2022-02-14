@@ -1,4 +1,4 @@
-from .ast_shared import TypeEnv
+from .ast_shared import DropDim, RaiseDim, TypeEnv, Var, VectorizedArr
 from . import loop_linear_code as llc
 from .dep_graph import DepGraph, DepNode, EdgeKind
 from .util import assert_never
@@ -43,9 +43,6 @@ def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
         elif isinstance(statement, llc.For):
             result += _arrays_written_in_loop(statement)
         else:
-            assert not isinstance(
-                statement, (llc.RaiseDim, llc.DropDim)
-            ), "raise_dim()/drop_dim() shouldn't exist before Basic Vectorization"
             assert_never(statement)
     return result
 
@@ -99,9 +96,6 @@ def _arrays_read_in_loop(
         elif isinstance(statement, llc.For):
             result += _arrays_read_in_loop(parent_loops + [statement], array_name)
         else:
-            assert not isinstance(
-                statement, (llc.RaiseDim, llc.DropDim)
-            ), "raise_dim()/drop_dim() shouldn't exist before Basic Vectorization"
             assert_never(statement)
     return result
 
@@ -354,7 +348,7 @@ def _basic_vectorization_phase_1(
                 var: llc.Var,
                 stmt: DepNode,
                 access_pattern: Optional[llc.SubscriptIndex] = None,
-            ) -> llc.Var:
+            ) -> Union[llc.Var, VectorizedArr]:
                 def_var = dep_graph.var_to_assignment[var]
                 edge_kind = dep_graph.edge_kind(def_var, stmt)
                 var_type = type_env[var]
@@ -363,27 +357,50 @@ def _basic_vectorization_phase_1(
                 elif edge_kind is EdgeKind.OUTER_TO_INNER:
                     var_prime = tmp_var_gen.get()
                     above_loop_result.append(
-                        llc.RaiseDim(
+                        llc.Assign(
                             lhs=var_prime,
-                            input_arr=var,
-                            access_pattern=access_pattern,
-                            dims=tuple(
-                                (loop.counter, loop.bound_high)
-                                for loop in dep_graph.enclosing_loops[stmt]
+                            rhs=RaiseDim(
+                                var,
+                                access_pattern,
+                                tuple(
+                                    (loop.counter, loop.bound_high)
+                                    for loop in dep_graph.enclosing_loops[stmt]
+                                ),
                             ),
                         )
                     )
                     type_env[var_prime] = var_type.add_dim()
-                    return var_prime
+                    return VectorizedArr(
+                        array=var_prime,
+                        dim_sizes=tuple(loop.bound_high for loop in dep_graph.enclosing_loops[stmt]),
+                        vectorized_dims=tuple(True for _ in dep_graph.enclosing_loops[stmt]),
+                        idx_vars=tuple(loop.counter for loop in dep_graph.enclosing_loops[stmt]),
+                    )
                 elif edge_kind is EdgeKind.INNER_TO_OUTER:
                     var_prime = tmp_var_gen.get()
-                    inside_loop_result.append(llc.DropDim(var_prime, var))
+                    inside_loop_result.append(
+                        llc.Assign(
+                            lhs=var_prime,
+                            rhs=DropDim(
+                                var,
+                                tuple(
+                                    loop.bound_high
+                                    for loop in dep_graph.enclosing_loops[def_var]
+                                ),
+                            ),
+                        )
+                    )
                     type_env[var_prime] = var_type.drop_dim()
-                    return var_prime
+                    return VectorizedArr(
+                        array=var_prime,
+                        dim_sizes=tuple(loop.bound_high for loop in dep_graph.enclosing_loops[def_var][:-1]),
+                        vectorized_dims=tuple(True for _ in dep_graph.enclosing_loops[def_var][:-1]),
+                        idx_vars=tuple(loop.counter for loop in dep_graph.enclosing_loops[def_var][:-1]),
+                    )
                 else:
                     assert_never(edge_kind)
 
-            def replace_atom(atom: llc.Atom, stmt: DepNode) -> llc.Atom:
+            def replace_atom(atom: llc.Atom, stmt: DepNode) -> Union[llc.Atom, VectorizedArr]:
                 if isinstance(atom, llc.Var):
                     return replace_var(atom, stmt)
                 elif isinstance(atom, llc.Constant):
@@ -391,11 +408,12 @@ def _basic_vectorization_phase_1(
                 else:
                     assert_never(atom)
 
-            def replace_subscript(sub: llc.Subscript, stmt: DepNode) -> llc.Subscript:
-                return llc.Subscript(
-                    array=replace_var(sub.array, stmt, sub.index),
-                    index=sub.index,
-                )
+            def replace_subscript(sub: llc.Subscript, stmt: DepNode) -> Union[llc.Subscript, VectorizedArr]:
+                replaced_arr = replace_var(sub.array, stmt, sub.index)
+                if isinstance(replaced_arr, VectorizedArr):
+                    return replaced_arr
+                else:
+                    return sub
 
             def replace_operand(o: llc.Operand, stmt: DepNode) -> llc.Operand:
                 if isinstance(o, (llc.Var, llc.Constant)):
@@ -406,8 +424,12 @@ def _basic_vectorization_phase_1(
                     assert_never(o)
 
             if isinstance(stmt, llc.Phi):
-                stmt.rhs_false = replace_var(stmt.rhs_false, stmt)
-                stmt.rhs_true = replace_var(stmt.rhs_true, stmt)
+                rhs_false = replace_var(stmt.rhs_false, stmt)
+                if isinstance(rhs_false, VectorizedArr):
+                    stmt.rhs_false = rhs_false.array
+                rhs_true = replace_var(stmt.rhs_true, stmt)
+                if isinstance(rhs_true, VectorizedArr):
+                    stmt.rhs_true = rhs_true.array
             elif isinstance(stmt, llc.Assign):
                 if isinstance(stmt.rhs, llc.Var):
                     stmt.rhs = replace_var(stmt.rhs, stmt)
@@ -421,12 +443,14 @@ def _basic_vectorization_phase_1(
                 elif isinstance(stmt.rhs, llc.UnaryOp):
                     stmt.rhs.operand = replace_operand(stmt.rhs.operand, stmt)
                 elif isinstance(stmt.rhs, llc.List):
+                    replaced = [replace_atom(atom, stmt) for atom in stmt.rhs.items]
                     stmt.rhs = llc.List(
-                        [replace_atom(atom, stmt) for atom in stmt.rhs.items]
+                        [v.array if isinstance(v, VectorizedArr) else v for v in replaced]
                     )
                 elif isinstance(stmt.rhs, llc.Tuple):
+                    replaced = [replace_atom(atom, stmt) for atom in stmt.rhs.items]
                     stmt.rhs = llc.Tuple(
-                        [replace_atom(atom, stmt) for atom in stmt.rhs.items]
+                        [v.array if isinstance(v, VectorizedArr) else v for v in replaced]
                     )
                 elif isinstance(stmt.rhs, llc.Mux):
                     stmt.rhs.false_value = replace_operand(stmt.rhs.false_value, stmt)
@@ -455,7 +479,6 @@ def _basic_vectorization_phase_1(
                 )
             )
         else:
-            assert not isinstance(stmt, (llc.RaiseDim, llc.DropDim))
             assert_never(stmt)
 
     return above_loop_result, inside_loop_result
@@ -465,10 +488,10 @@ def basic_vectorization(
     function: llc.Function, dep_graph: DepGraph, type_env: TypeEnv
 ) -> tuple[llc.Function, DepGraph]:
     tmp_var_gen = TempVarGenerator(dep_graph)
-    empty, body = _basic_vectorization_phase_1(
+    before_func, body = _basic_vectorization_phase_1(
         function.body, dep_graph, type_env, tmp_var_gen
     )
-    assert empty == []
+    assert before_func == []
     function = llc.Function(
         name=function.name,
         parameters=function.parameters,

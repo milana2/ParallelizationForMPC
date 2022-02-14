@@ -1,12 +1,14 @@
 import dataclasses as dt
 import io
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader # type: ignore
 import os
 from textwrap import indent
 from typing import TypedDict, Union
 
+from compiler.ast_shared import DropDim, RaiseDim, VectorizedArr
+
 from ..util import assert_never
-from ..loop_linear_code import RaiseDim, DropDim, Function, Statement, Phi, Assign, For
+from ..loop_linear_code import Function, Statement, Phi, Assign, For
 from ..type_analysis import TypeEnv, VarVisibility, Constant, DataType
 from .. import tac_cfg
 
@@ -47,7 +49,7 @@ def _render_call(func: Function, type_env: TypeEnv) -> str:
 
 def _collect_constants(stmts: list[Statement]) -> list[Constant]:
     def expr_constants(
-        expr: Union[tac_cfg.AssignRHS, tac_cfg.SubscriptIndex]
+        expr: Union[tac_cfg.AssignRHS, tac_cfg.SubscriptIndex, RaiseDim, DropDim, VectorizedArr]
     ) -> list[Constant]:
         if isinstance(expr, Constant):
             return [expr]
@@ -70,6 +72,16 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
             ]
         elif isinstance(expr, tac_cfg.Update):
             return [*expr_constants(expr.index), *expr_constants(expr.value)]
+        elif isinstance(expr, RaiseDim):
+            return [
+                const
+                for _, dim_bound in expr.dims
+                for const in expr_constants(dim_bound)
+            ]
+        elif isinstance(expr, DropDim):
+            return [
+                const for dim_bound in expr.dims for const in expr_constants(dim_bound)
+            ]
         else:
             raise AssertionError(f"Unhandled expression type: {type(expr)}")
 

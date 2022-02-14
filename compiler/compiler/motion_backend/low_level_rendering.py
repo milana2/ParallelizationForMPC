@@ -3,20 +3,21 @@ from textwrap import indent
 from typing import Optional, Union
 
 from ..ast_shared import (
-    BinOp,
     BinOpKind,
     Constant,
     DataType,
+    DropDim,
     Parameter,
+    RaiseDim,
     Subscript,
+    SubscriptIndex,
     TypeEnv,
-    UnaryOp,
     UnaryOpKind,
     Var,
     VarType,
     VarVisibility,
 )
-from ..tac_cfg import Assign, AssignRHS, List, Mux, Tuple, Update
+from ..tac_cfg import Assign, AssignRHS, BinOp, List, Mux, Tuple, UnaryOp, Update
 from ..util import assert_never
 from ..loop_linear_code import For, Phi
 
@@ -26,6 +27,8 @@ class RenderOptions:
     type_env: TypeEnv
     plaintext: bool = False
     as_motion_input: bool = False
+    int_type: str = "std::uint32_t"
+    var_mappings: dict[Var, str] = dc.field(default_factory=dict)
 
 
 def render_type(var_type: VarType, plaintext: Optional[bool] = None) -> str:
@@ -182,7 +185,7 @@ def _render_operator(op: Union[BinOpKind, UnaryOpKind]) -> str:
     return str(op)
 
 
-def render_expr(expr: Union[AssignRHS], opts: RenderOptions) -> str:
+def render_expr(expr: Union[AssignRHS, SubscriptIndex], opts: RenderOptions) -> str:
     if isinstance(expr, BinOp):
         if expr.operator == BinOpKind.LT:
             return render_expr(BinOp(expr.right, BinOpKind.GT, expr.left), opts)
@@ -254,7 +257,7 @@ def render_expr(expr: Union[AssignRHS], opts: RenderOptions) -> str:
 
         elif opts.plaintext:
             if expr.datatype == DataType.INT:
-                return f"std::uint32_t({expr.value})"
+                return f"{opts.int_type}({expr.value})"
             elif expr.datatype == DataType.BOOL:
                 return str(expr).lower()
             else:
@@ -263,30 +266,57 @@ def render_expr(expr: Union[AssignRHS], opts: RenderOptions) -> str:
         else:
             return "_MPC_CONSTANT_" + str(expr).lower()
 
+    elif isinstance(expr, DropDim):
+        dims = (
+            "{"
+            + ", ".join(
+                render_expr(loop_bound, dc.replace(opts, plaintext=True))
+                for loop_bound in expr.dims
+            )
+            + "}"
+        )
+        return f"drop_dim({render_expr(expr.arr, opts)}, {dims})"
+
     elif isinstance(expr, List):
         items = ", ".join(render_expr(item, opts) for item in expr.items)
         return "{" + items + "}"
 
     elif isinstance(expr, Mux):
-        if isinstance(expr.true_value, Var):
-            true_shared = opts.type_env[expr.true_value].is_shared()
-        elif isinstance(expr.true_value, Constant):
-            true_shared = False
-        else:
-            true_shared = opts.type_env[expr.true_value.array].is_shared()
-
-        if isinstance(expr.false_value, Var):
-            false_shared = opts.type_env[expr.false_value].is_shared()
-        elif isinstance(expr.false_value, Constant):
-            false_shared = False
-        else:
-            false_shared = opts.type_env[expr.false_value.array].is_shared()
-
         cpp_cond = render_expr(expr.condition, opts)
         cpp_true_val = render_expr(expr.true_value, opts) + ".Get()"
         cpp_false_val = render_expr(expr.false_value, opts) + ".Get()"
 
         return f"{cpp_cond}.Mux({cpp_false_val}, {cpp_true_val})"
+
+    elif isinstance(expr, RaiseDim):
+        if expr.access_pattern is not None:
+            array = render_expr(expr.arr, opts)
+
+            pattern_opts = dc.replace(
+                opts,
+                plaintext=True,
+                int_type="std::size_t",
+                var_mappings={
+                    var: f"indices[{i}]" for i, (var, _) in enumerate(expr.dims)
+                },
+            )
+            access_pattern = f"[&](const auto &indices){{return {render_expr(expr.access_pattern, pattern_opts)};}}, "
+        else:
+            # If we don't have an access pattern, then we're raising a scalar.  Because the
+            # raise_dim() implementation expects an array, we can use the following hack:
+            array = "{" + render_expr(expr.arr, opts) + "}"
+            access_pattern = "[](const auto &){return 0;}"
+
+        dims = (
+            "{"
+            + ", ".join(
+                render_expr(loop_bound, dc.replace(opts, plaintext=True))
+                for _, loop_bound in expr.dims
+            )
+            + "}"
+        )
+
+        return f"raise_dim({array}, {access_pattern}, {dims})"
 
     elif isinstance(expr, Subscript):
         return f"{render_expr(expr.array, opts)}[{render_expr(expr.index, dc.replace(opts, plaintext=True))}]"
@@ -305,6 +335,9 @@ def render_expr(expr: Union[AssignRHS], opts: RenderOptions) -> str:
         return f"{cpp_arr};\n{cpp_arr_access} = {cpp_val}"
 
     elif isinstance(expr, Var):
+        if expr in opts.var_mappings:
+            return opts.var_mappings[expr]
+
         cpp_str = str(expr).replace("!", "_")
         if opts.plaintext:
             return f"_MPC_PLAINTEXT_{cpp_str}"
