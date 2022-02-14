@@ -1,6 +1,5 @@
 from ast import operator
 
-from numpy import isin
 from .ast_shared import DropDim, RaiseDim, TypeEnv, Var, VectorizedArr
 from . import loop_linear_code as llc
 from .dep_graph import DepGraph, DepNode, EdgeKind
