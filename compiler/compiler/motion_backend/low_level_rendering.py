@@ -11,11 +11,14 @@ from ..ast_shared import (
     RaiseDim,
     Subscript,
     SubscriptIndex,
+    SubscriptIndexBinOp,
+    SubscriptIndexUnaryOp,
     TypeEnv,
     UnaryOpKind,
     Var,
     VarType,
     VarVisibility,
+    VectorizedArr,
 )
 from ..tac_cfg import Assign, AssignRHS, BinOp, List, Mux, Tuple, UnaryOp, Update
 from ..util import assert_never
@@ -73,7 +76,7 @@ def render_datatype(datatype: DataType, plaintext: bool) -> str:
         else:
             return "encrypto::motion::ShareWrapper"
 
-    return assert_never(datatype)
+    raise NotImplementedError(f"Unsupported datatype: {datatype}")
 
 
 def render_param(param: Parameter, type_env: TypeEnv) -> str:
@@ -186,28 +189,36 @@ def _render_operator(op: Union[BinOpKind, UnaryOpKind]) -> str:
 
 
 def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> str:
-    if isinstance(expr, BinOp):
+    if isinstance(expr, (BinOp, SubscriptIndexBinOp)):
         if expr.operator == BinOpKind.LT:
-            return render_expr(BinOp(expr.right, BinOpKind.GT, expr.left), ctx)
+            return render_expr(dc.replace(expr, left=expr.right, right=expr.left), ctx)
         elif expr.operator == BinOpKind.NOT_EQ:
-            return render_expr(
-                UnaryOp(UnaryOpKind.NOT, BinOp(expr.left, BinOpKind.EQ, expr.right)),
-                ctx,
-            )
+            if isinstance(expr, BinOp):
+                return render_expr(
+                    UnaryOp(UnaryOpKind.NOT, dc.replace(expr, operator=BinOpKind.EQ)),
+                    ctx,
+                )
+            else:
+                return render_expr(
+                    SubscriptIndexUnaryOp(
+                        UnaryOpKind.NOT, dc.replace(expr, operator=BinOpKind.EQ)
+                    ),
+                    ctx,
+                )
         elif expr.operator == BinOpKind.LT_E:
             return (
                 "("
-                + render_expr(BinOp(expr.left, BinOpKind.LT, expr.right), ctx)
+                + render_expr(dc.replace(expr, operator=BinOpKind.LT), ctx)
                 + " | "
-                + render_expr(BinOp(expr.left, BinOpKind.EQ, expr.right), ctx)
+                + render_expr(dc.replace(expr, operator=BinOpKind.EQ), ctx)
                 + ")"
             )
         elif expr.operator == BinOpKind.GT_E:
             return (
                 "("
-                + render_expr(BinOp(expr.left, BinOpKind.GT, expr.right), ctx)
+                + render_expr(dc.replace(expr, operator=BinOpKind.GT), ctx)
                 + " | "
-                + render_expr(BinOp(expr.left, BinOpKind.EQ, expr.right), ctx)
+                + render_expr(dc.replace(expr, operator=BinOpKind.EQ), ctx)
                 + ")"
             )
 
@@ -253,7 +264,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             elif expr.datatype == DataType.BOOL:
                 return f"encrypto::motion::BitVector(1, {cpp_const})"
             else:
-                assert_never(expr)
+                raise NotImplementedError(f"Unsupported datatype: {expr.datatype}")
 
         elif ctx.plaintext:
             if expr.datatype == DataType.INT:
@@ -261,7 +272,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             elif expr.datatype == DataType.BOOL:
                 return str(expr).lower()
             else:
-                assert_never(expr)
+                raise NotImplementedError(f"Unsupported datatype: {expr.datatype}")
 
         else:
             return "_MPC_CONSTANT_" + str(expr).lower()
@@ -325,7 +336,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         items = ", ".join(render_expr(item, ctx) for item in expr.items)
         return f"std::make_tuple({items})"
 
-    elif isinstance(expr, UnaryOp):
+    elif isinstance(expr, (UnaryOp, SubscriptIndexUnaryOp)):
         return f"({_render_operator(expr.operator)}{render_expr(expr.operand, ctx)})"
 
     elif isinstance(expr, Update):
@@ -343,5 +354,8 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             return f"_MPC_PLAINTEXT_{cpp_str}"
         else:
             return cpp_str
+
+    elif isinstance(expr, VectorizedArr):
+        raise NotImplementedError()
 
     return assert_never(expr)

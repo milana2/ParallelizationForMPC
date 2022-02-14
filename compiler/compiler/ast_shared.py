@@ -426,7 +426,7 @@ class DropDim:
     dims: tuple[LoopBound, ...]
 
     def __str__(self) -> str:
-        dims = ", ".join(str(dim) for dim in self.dims)
+        dims = "(" + ", ".join(str(dim) for dim in self.dims) + ")"
         return f"drop_dim({self.arr}, {dims})"
 
 
@@ -448,6 +448,7 @@ class RaiseDim:
 @dataclass(frozen=True)
 class VectorizedArr:
     """A vectorized array.  Can only be accessed via row-major ordering."""
+
     array: Var
     dim_sizes: tuple[LoopBound, ...]
     vectorized_dims: tuple[bool, ...]

@@ -1,3 +1,6 @@
+from ast import operator
+
+from numpy import isin
 from .ast_shared import DropDim, RaiseDim, TypeEnv, Var, VectorizedArr
 from . import loop_linear_code as llc
 from .dep_graph import DepGraph, DepNode, EdgeKind
@@ -50,7 +53,8 @@ def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
 def _arrays_read_in_rhs(
     rhs: llc.AssignRHS, array_name: Union[str, int]
 ) -> list[llc.Subscript]:
-    if isinstance(rhs, (llc.Var, llc.Constant)):
+    # TODO: is it correct to ignore RaiseDim, DropDim, and VectorizedArr?
+    if isinstance(rhs, (llc.Var, llc.Constant, RaiseDim, DropDim, VectorizedArr)):
         return []
     elif isinstance(rhs, llc.Subscript):
         if rhs.array.name == array_name:
@@ -372,9 +376,15 @@ def _basic_vectorization_phase_1(
                     type_env[var_prime] = var_type.add_dim()
                     return VectorizedArr(
                         array=var_prime,
-                        dim_sizes=tuple(loop.bound_high for loop in dep_graph.enclosing_loops[stmt]),
-                        vectorized_dims=tuple(True for _ in dep_graph.enclosing_loops[stmt]),
-                        idx_vars=tuple(loop.counter for loop in dep_graph.enclosing_loops[stmt]),
+                        dim_sizes=tuple(
+                            loop.bound_high for loop in dep_graph.enclosing_loops[stmt]
+                        ),
+                        vectorized_dims=tuple(
+                            True for _ in dep_graph.enclosing_loops[stmt]
+                        ),
+                        idx_vars=tuple(
+                            loop.counter for loop in dep_graph.enclosing_loops[stmt]
+                        ),
                     )
                 elif edge_kind is EdgeKind.INNER_TO_OUTER:
                     var_prime = tmp_var_gen.get()
@@ -393,14 +403,24 @@ def _basic_vectorization_phase_1(
                     type_env[var_prime] = var_type.drop_dim()
                     return VectorizedArr(
                         array=var_prime,
-                        dim_sizes=tuple(loop.bound_high for loop in dep_graph.enclosing_loops[def_var][:-1]),
-                        vectorized_dims=tuple(True for _ in dep_graph.enclosing_loops[def_var][:-1]),
-                        idx_vars=tuple(loop.counter for loop in dep_graph.enclosing_loops[def_var][:-1]),
+                        dim_sizes=tuple(
+                            loop.bound_high
+                            for loop in dep_graph.enclosing_loops[def_var][:-1]
+                        ),
+                        vectorized_dims=tuple(
+                            True for _ in dep_graph.enclosing_loops[def_var][:-1]
+                        ),
+                        idx_vars=tuple(
+                            loop.counter
+                            for loop in dep_graph.enclosing_loops[def_var][:-1]
+                        ),
                     )
                 else:
                     assert_never(edge_kind)
 
-            def replace_atom(atom: llc.Atom, stmt: DepNode) -> Union[llc.Atom, VectorizedArr]:
+            def replace_atom(
+                atom: llc.Atom, stmt: DepNode
+            ) -> Union[llc.Atom, VectorizedArr]:
                 if isinstance(atom, llc.Var):
                     return replace_var(atom, stmt)
                 elif isinstance(atom, llc.Constant):
@@ -408,7 +428,9 @@ def _basic_vectorization_phase_1(
                 else:
                     assert_never(atom)
 
-            def replace_subscript(sub: llc.Subscript, stmt: DepNode) -> Union[llc.Subscript, VectorizedArr]:
+            def replace_subscript(
+                sub: llc.Subscript, stmt: DepNode
+            ) -> Union[llc.Subscript, VectorizedArr]:
                 replaced_arr = replace_var(sub.array, stmt, sub.index)
                 if isinstance(replaced_arr, VectorizedArr):
                     return replaced_arr
@@ -420,7 +442,20 @@ def _basic_vectorization_phase_1(
                     return replace_atom(o, stmt)
                 elif isinstance(o, llc.Subscript):
                     return replace_subscript(o, stmt)
+                elif isinstance(o, llc.BinOp):
+                    return llc.BinOp(
+                        operator=o.operator,
+                        left=replace_operand(o.left, stmt),
+                        right=replace_operand(o.right, stmt),
+                    )
+                elif isinstance(o, llc.UnaryOp):
+                    return llc.UnaryOp(
+                        operator=o.operator, operand=replace_operand(o.operand, stmt)
+                    )
                 else:
+                    assert not isinstance(
+                        o, VectorizedArr
+                    ), "there shouldn't be any vectorized arrays before basic vectorization"
                     assert_never(o)
 
             if isinstance(stmt, llc.Phi):
@@ -445,12 +480,18 @@ def _basic_vectorization_phase_1(
                 elif isinstance(stmt.rhs, llc.List):
                     replaced = [replace_atom(atom, stmt) for atom in stmt.rhs.items]
                     stmt.rhs = llc.List(
-                        [v.array if isinstance(v, VectorizedArr) else v for v in replaced]
+                        [
+                            v.array if isinstance(v, VectorizedArr) else v
+                            for v in replaced
+                        ]
                     )
                 elif isinstance(stmt.rhs, llc.Tuple):
                     replaced = [replace_atom(atom, stmt) for atom in stmt.rhs.items]
                     stmt.rhs = llc.Tuple(
-                        [v.array if isinstance(v, VectorizedArr) else v for v in replaced]
+                        [
+                            v.array if isinstance(v, VectorizedArr) else v
+                            for v in replaced
+                        ]
                     )
                 elif isinstance(stmt.rhs, llc.Mux):
                     stmt.rhs.false_value = replace_operand(stmt.rhs.false_value, stmt)
@@ -459,6 +500,9 @@ def _basic_vectorization_phase_1(
                     assert not isinstance(
                         stmt.rhs, llc.Update
                     ), "Basic Vectorization does not support array writes for now"
+                    assert not isinstance(
+                        stmt.rhs, (RaiseDim, DropDim, VectorizedArr)
+                    ), "These types are introduced in basic vectorization so they shouldn't exist here"
                     assert_never(stmt.rhs)
             else:
                 assert_never(stmt)

@@ -80,7 +80,19 @@ class Update:
         return f"Update({self.array}, {self.index}, {self.value})"
 
 
-AssignRHS = Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux, Update, RaiseDim, DropDim, VectorizedArr]
+AssignRHS = Union[
+    Atom,
+    Subscript,
+    BinOp,
+    UnaryOp,
+    List,
+    Tuple,
+    Mux,
+    Update,
+    RaiseDim,
+    DropDim,
+    VectorizedArr,
+]
 
 
 def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
@@ -91,7 +103,10 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
     elif isinstance(rhs, Subscript):
         return [rhs.array] + subscript_index_accessed_vars(rhs.index)
     elif isinstance(rhs, VectorizedArr):
-        return [rhs.array] + list(var for var, _ in filter(lambda x: x[1], zip(rhs.idx_vars, rhs.vectorized_dims)))
+        return [rhs.array] + list(
+            var
+            for var, _ in filter(lambda x: x[1], zip(rhs.idx_vars, rhs.vectorized_dims))
+        )
     elif isinstance(rhs, BinOp):
         return assign_rhs_accessed_vars(rhs.left) + assign_rhs_accessed_vars(rhs.right)
     elif isinstance(rhs, UnaryOp):
@@ -110,6 +125,14 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
             + subscript_index_accessed_vars(rhs.index)
             + assign_rhs_accessed_vars(rhs.value)
         )
+    elif isinstance(rhs, RaiseDim):
+        return [rhs.arr] + (
+            subscript_index_accessed_vars(rhs.access_pattern)
+            if rhs.access_pattern
+            else []
+        )
+    elif isinstance(rhs, DropDim):
+        return [rhs.arr]
     else:
         assert_never(rhs)
 

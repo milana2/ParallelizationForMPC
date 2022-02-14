@@ -5,9 +5,11 @@ to static single assignment form
 
 from collections import Counter
 import itertools
-from typing import Optional, Union
+from typing import Optional, Union, cast
 
-import networkx  # type: ignore
+import networkx
+
+from compiler.ast_shared import DropDim, RaiseDim, VectorizedArr  # type: ignore
 
 from . import tac_cfg
 from . import ssa
@@ -174,7 +176,14 @@ def rename_variables(result: ssa.Function) -> None:
             return operand
         elif isinstance(operand, ssa.Subscript):
             return rename_subscript(operand)
+        elif isinstance(operand, ssa.BinOp):
+            return cast(ssa.BinOp, rename_rhs(operand))
+        elif isinstance(operand, ssa.UnaryOp):
+            return cast(ssa.UnaryOp, rename_rhs(operand))
         else:
+            assert not isinstance(
+                operand, VectorizedArr
+            ), "VectorizedArr is introduced in vectorization phase"
             assert_never(operand)
 
     def rename_rhs(rhs: ssa.AssignRHS) -> ssa.AssignRHS:
@@ -211,6 +220,9 @@ def rename_variables(result: ssa.Function) -> None:
                 value=rename_atom(rhs.value),
             )
         else:
+            assert not isinstance(
+                rhs, (RaiseDim, DropDim, VectorizedArr)
+            ), "These types are introduced in the vectorization phase"
             assert_never(rhs)
 
     def search(X: ssa.Block):

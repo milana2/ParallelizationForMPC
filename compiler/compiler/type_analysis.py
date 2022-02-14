@@ -185,10 +185,7 @@ def validate_type_requirements(
             raise TypeError(f"Variable {var_name} has incomplete type {var_type}")
 
         if var_type.datatype == DataType.TUPLE:
-            if (
-                var_type.dims is not None
-                and var_type.dims != 1
-            ):
+            if var_type.dims is not None and var_type.dims != 1:
                 raise TypeError(
                     f"Tuple {var_name} has invalid dimensions {var_type.dims}"
                 )

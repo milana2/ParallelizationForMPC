@@ -1,6 +1,6 @@
 import dataclasses as dt
 import io
-from jinja2 import Environment, FileSystemLoader # type: ignore
+from jinja2 import Environment, FileSystemLoader  # type: ignore
 import os
 from textwrap import indent
 from typing import TypedDict, Union
@@ -49,7 +49,9 @@ def _render_call(func: Function, type_env: TypeEnv) -> str:
 
 def _collect_constants(stmts: list[Statement]) -> list[Constant]:
     def expr_constants(
-        expr: Union[tac_cfg.AssignRHS, tac_cfg.SubscriptIndex, RaiseDim, DropDim, VectorizedArr]
+        expr: Union[
+            tac_cfg.AssignRHS, tac_cfg.SubscriptIndex, RaiseDim, DropDim, VectorizedArr
+        ]
     ) -> list[Constant]:
         if isinstance(expr, Constant):
             return [expr]
