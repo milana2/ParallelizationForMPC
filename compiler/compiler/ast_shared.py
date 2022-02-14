@@ -33,26 +33,33 @@ class DataType(Enum):
 @dataclass
 class VarType:
     visibility: Optional[VarVisibility] = None
-    dims: Optional[list[bool]] = None
+    dims: Optional[int] = None
     datatype: Optional[DataType] = None
     tuple_types: list["VarType"] = field(default_factory=list)
 
     def __hash__(self) -> int:
         return hash(
-            (self.visibility, self.datatype, self.dims, tuple(self.tuple_types))
+            (
+                self.visibility,
+                self.datatype,
+                self.dims,
+                tuple(self.tuple_types),
+            )
         )
 
     def drop_dim(self) -> "VarType":
         if self.dims is None:
             return VarType(self.visibility, None, self.datatype)
         else:
-            return VarType(self.visibility, self.dims[:-1], self.datatype)
+            return VarType(self.visibility, self.dims - 1, self.datatype)
 
     def add_dim(self) -> "VarType":
         if self.dims is None:
             return VarType(self.visibility, None, self.datatype)
         else:
-            return VarType(self.visibility, self.dims + [True], self.datatype)
+            return VarType(
+                self.visibility, self.dims + 1, self.datatype
+            )
 
     def is_plaintext(self) -> bool:
         return self.visibility == VarVisibility.PLAINTEXT
@@ -112,7 +119,9 @@ class VarType:
             merged_type.visibility = VarVisibility.PLAINTEXT
 
         # Determine the dimensionality of the merged type
-        elem_dims = [len(t.dims) for t in types if t.dims is not None]
+        elem_dims = [
+            t.dims for t in types if t.dims is not None
+        ]
         if len(set(elem_dims)) > 1:
             raise TypeError(
                 "Cannot merge types with different dimensionality:\n{}".format(
@@ -120,7 +129,7 @@ class VarType:
                 )
             )
         if len(elem_dims) > 0:
-            merged_type.dims = [True] * elem_dims[0]
+            merged_type.dims = elem_dims[0]
 
         # Determine the datatype of the merged type
         elem_datatypes = [t.datatype for t in types if t.datatype is not None]
@@ -162,11 +171,11 @@ class VarType:
 
         str_rep = f"{self.visibility}["
         if self.dims is not None:
-            for _ in self.dims:
+            for _ in range(self.dims):
                 str_rep += "list["
         str_rep += f"{self.datatype}"
         if self.dims is not None:
-            for _ in self.dims:
+            for _ in range(self.dims):
                 str_rep += "]"
         str_rep += "]"
         if self.dims is None:
@@ -174,7 +183,7 @@ class VarType:
         return str_rep
 
 
-PLAINTEXT_INT = VarType(VarVisibility.PLAINTEXT, [], DataType.INT)
+PLAINTEXT_INT = VarType(VarVisibility.PLAINTEXT, 0, DataType.INT)
 
 
 @dataclass(frozen=True)

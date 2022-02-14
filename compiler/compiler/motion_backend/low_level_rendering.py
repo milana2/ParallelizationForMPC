@@ -41,7 +41,7 @@ def render_type(var_type: VarType, plaintext: Optional[bool] = None) -> str:
         )
 
     str_rep = ""
-    for _dim in var_type.dims:
+    for _dim in range(var_type.dims):
         str_rep += "std::vector<"
 
     str_rep += render_datatype(
@@ -51,7 +51,7 @@ def render_type(var_type: VarType, plaintext: Optional[bool] = None) -> str:
         else var_type.visibility == VarVisibility.PLAINTEXT,
     )
 
-    for _dim in var_type.dims:
+    for _dim in range(var_type.dims):
         str_rep += ">"
 
     return str_rep

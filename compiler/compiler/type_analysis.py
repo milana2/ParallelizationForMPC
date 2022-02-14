@@ -36,7 +36,7 @@ def _type_assign_expr(
         return type_env[expr]
 
     elif isinstance(expr, Constant):
-        return VarType(VarVisibility.PLAINTEXT, [], expr.datatype)
+        return VarType(VarVisibility.PLAINTEXT, 0, expr.datatype)
 
     elif isinstance(expr, Subscript):
         index_type = _type_assign_expr(expr.index, type_env)
@@ -91,7 +91,7 @@ def _type_assign_expr(
             # We assume that all arrays in the source-code are 1-dimensional
             # TODO: remove this condition if multi-dimensional arrays are supported
             # TODO: is it ok to assume that all hard-coded arrays are of ints?
-            return VarType(VarVisibility.PLAINTEXT, [True], DataType.INT)
+            return VarType(VarVisibility.PLAINTEXT, 1, DataType.INT)
 
         elem_type = VarType.merge(
             *[_type_assign_expr(item, type_env) for item in expr.items],
@@ -104,7 +104,7 @@ def _type_assign_expr(
         elem_types = [_type_assign_expr(item, type_env) for item in expr.items]
         return VarType(
             VarVisibility.PLAINTEXT,  # Tuples are always plaintext
-            [True],  # tuples are always 1-dimensional
+            1,  # tuples are always 1-dimensional
             DataType.TUPLE,
             tuple_types=elem_types,
         )
@@ -184,7 +184,10 @@ def validate_type_requirements(
             raise TypeError(f"Variable {var_name} has incomplete type {var_type}")
 
         if var_type.datatype == DataType.TUPLE:
-            if var_type.dims is not None and len(var_type.dims) != 1:
+            if (
+                var_type.dims is not None
+                and var_type.dims != 1
+            ):
                 raise TypeError(
                     f"Tuple {var_name} has invalid dimensions {var_type.dims}"
                 )
