@@ -23,7 +23,7 @@ from ..loop_linear_code import For, Phi
 
 
 @dc.dataclass(frozen=True)
-class RenderOptions:
+class RenderContext:
     type_env: TypeEnv
     plaintext: bool = False
     as_motion_input: bool = False
@@ -82,22 +82,22 @@ def render_param(param: Parameter, type_env: TypeEnv) -> str:
     return (
         render_type(param.var_type, plaintext)
         + " "
-        + render_expr(param.var, RenderOptions(type_env, plaintext=plaintext))
+        + render_expr(param.var, RenderContext(type_env, plaintext=plaintext))
     )
 
 
 def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
     if isinstance(stmt, Assign):
         shared_assignment = (
-            render_expr(stmt.lhs, RenderOptions(type_env, plaintext=False))
+            render_expr(stmt.lhs, RenderContext(type_env, plaintext=False))
             + " = "
-            + render_expr(stmt.rhs, RenderOptions(type_env, plaintext=False))
+            + render_expr(stmt.rhs, RenderContext(type_env, plaintext=False))
             + ";"
         )
         plaintext_assignment = (
-            render_expr(stmt.lhs, RenderOptions(type_env, plaintext=True))
+            render_expr(stmt.lhs, RenderContext(type_env, plaintext=True))
             + " = "
-            + render_expr(stmt.rhs, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.rhs, RenderContext(type_env, plaintext=True))
             + ";"
         )
 
@@ -111,9 +111,9 @@ def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
 
     elif isinstance(stmt, For):
         phi_initializations = "// Initialize phi values\n" + "\n".join(
-            render_expr(phi.lhs, RenderOptions(type_env))
+            render_expr(phi.lhs, RenderContext(type_env))
             + " = "
-            + render_expr(phi.rhs_false, RenderOptions(type_env))
+            + render_expr(phi.rhs_false, RenderContext(type_env))
             + ";"
             for phi in stmt.body
             if isinstance(phi, Phi)
@@ -121,15 +121,15 @@ def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
 
         header = (
             "for ("
-            + render_expr(stmt.counter, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
             + " = "
-            + render_expr(stmt.bound_low, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.bound_low, RenderContext(type_env, plaintext=True))
             + "; "
-            + render_expr(stmt.counter, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
             + " < "
-            + render_expr(stmt.bound_high, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.bound_high, RenderContext(type_env, plaintext=True))
             + "; "
-            + render_expr(stmt.counter, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
             + "++) {"
         )
 
@@ -143,9 +143,9 @@ def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
         )
 
         phi_updates = "// Update phi values\n" + "\n".join(
-            render_expr(phi.lhs, RenderOptions(type_env))
+            render_expr(phi.lhs, RenderContext(type_env))
             + " = "
-            + render_expr(phi.rhs_true, RenderOptions(type_env))
+            + render_expr(phi.rhs_true, RenderContext(type_env))
             + ";"
             for phi in stmt.body
             if isinstance(phi, Phi)
@@ -158,7 +158,7 @@ def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
             + header
             + "\n"
             # Initialize loop counter for use in loop
-            + f"    {render_expr(stmt.counter, RenderOptions(type_env))} = party->In<Protocol>(encrypto::motion::ToInput({render_expr(stmt.counter, RenderOptions(type_env, plaintext=True))}), 0);"
+            + f"    {render_expr(stmt.counter, RenderContext(type_env))} = party->In<Protocol>(encrypto::motion::ToInput({render_expr(stmt.counter, RenderContext(type_env, plaintext=True))}), 0);"
             + "\n"
             + indent(body, "    ")
             + "\n"
@@ -185,42 +185,42 @@ def _render_operator(op: Union[BinOpKind, UnaryOpKind]) -> str:
     return str(op)
 
 
-def render_expr(expr: Union[AssignRHS, SubscriptIndex], opts: RenderOptions) -> str:
+def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> str:
     if isinstance(expr, BinOp):
         if expr.operator == BinOpKind.LT:
-            return render_expr(BinOp(expr.right, BinOpKind.GT, expr.left), opts)
+            return render_expr(BinOp(expr.right, BinOpKind.GT, expr.left), ctx)
         elif expr.operator == BinOpKind.NOT_EQ:
             return render_expr(
                 UnaryOp(UnaryOpKind.NOT, BinOp(expr.left, BinOpKind.EQ, expr.right)),
-                opts,
+                ctx,
             )
         elif expr.operator == BinOpKind.LT_E:
             return (
                 "("
-                + render_expr(BinOp(expr.left, BinOpKind.LT, expr.right), opts)
+                + render_expr(BinOp(expr.left, BinOpKind.LT, expr.right), ctx)
                 + " | "
-                + render_expr(BinOp(expr.left, BinOpKind.EQ, expr.right), opts)
+                + render_expr(BinOp(expr.left, BinOpKind.EQ, expr.right), ctx)
                 + ")"
             )
         elif expr.operator == BinOpKind.GT_E:
             return (
                 "("
-                + render_expr(BinOp(expr.left, BinOpKind.GT, expr.right), opts)
+                + render_expr(BinOp(expr.left, BinOpKind.GT, expr.right), ctx)
                 + " | "
-                + render_expr(BinOp(expr.left, BinOpKind.EQ, expr.right), opts)
+                + render_expr(BinOp(expr.left, BinOpKind.EQ, expr.right), ctx)
                 + ")"
             )
 
         # If we're using an arithmetic primitive operation or we're operating on plaintext values,
         # don't cast to a share wrapper
-        elif opts.plaintext or expr.operator in (
+        elif ctx.plaintext or expr.operator in (
             BinOpKind.ADD,
             BinOpKind.SUB,
             BinOpKind.MUL,
             BinOpKind.DIV,
             BinOpKind.GT,
         ):
-            return f"({render_expr(expr.left, opts)} {expr.operator.value} {render_expr(expr.right, opts)})"
+            return f"({render_expr(expr.left, ctx)} {expr.operator.value} {render_expr(expr.right, ctx)})"
 
         # Otherwise, convert to a ShareWrapper since they have more operators defined
         # TODO: go through the operators for ShareWrapper and make sure they're all valid
@@ -230,22 +230,22 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], opts: RenderOptions) -> 
                 "("
                 + (
                     "encrypto::motion::ShareWrapper("
-                    + render_expr(expr.left, opts)
+                    + render_expr(expr.left, ctx)
                     + ".Get())"
                     + " "
                     + _render_operator(expr.operator)
                     + " "
                     + "encrypto::motion::ShareWrapper("
-                    + render_expr(expr.right, opts)
+                    + render_expr(expr.right, ctx)
                     + ".Get())"
                 )
                 + ")"
             )
 
     elif isinstance(expr, Constant):
-        if opts.as_motion_input:
+        if ctx.as_motion_input:
             cpp_const = render_expr(
-                expr, dc.replace(opts, plaintext=True, as_motion_input=False)
+                expr, dc.replace(ctx, plaintext=True, as_motion_input=False)
             )
 
             if expr.datatype == DataType.INT:
@@ -255,9 +255,9 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], opts: RenderOptions) -> 
             else:
                 assert_never(expr)
 
-        elif opts.plaintext:
+        elif ctx.plaintext:
             if expr.datatype == DataType.INT:
-                return f"{opts.int_type}({expr.value})"
+                return f"{ctx.int_type}({expr.value})"
             elif expr.datatype == DataType.BOOL:
                 return str(expr).lower()
             else:
@@ -270,47 +270,47 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], opts: RenderOptions) -> 
         dims = (
             "{"
             + ", ".join(
-                render_expr(loop_bound, dc.replace(opts, plaintext=True))
+                render_expr(loop_bound, dc.replace(ctx, plaintext=True))
                 for loop_bound in expr.dims
             )
             + "}"
         )
-        return f"drop_dim({render_expr(expr.arr, opts)}, {dims})"
+        return f"drop_dim({render_expr(expr.arr, ctx)}, {dims})"
 
     elif isinstance(expr, List):
-        items = ", ".join(render_expr(item, opts) for item in expr.items)
+        items = ", ".join(render_expr(item, ctx) for item in expr.items)
         return "{" + items + "}"
 
     elif isinstance(expr, Mux):
-        cpp_cond = render_expr(expr.condition, opts)
-        cpp_true_val = render_expr(expr.true_value, opts) + ".Get()"
-        cpp_false_val = render_expr(expr.false_value, opts) + ".Get()"
+        cpp_cond = render_expr(expr.condition, ctx)
+        cpp_true_val = render_expr(expr.true_value, ctx) + ".Get()"
+        cpp_false_val = render_expr(expr.false_value, ctx) + ".Get()"
 
         return f"{cpp_cond}.Mux({cpp_false_val}, {cpp_true_val})"
 
     elif isinstance(expr, RaiseDim):
         if expr.access_pattern is not None:
-            array = render_expr(expr.arr, opts)
+            array = render_expr(expr.arr, ctx)
 
-            pattern_opts = dc.replace(
-                opts,
+            pattern_ctx = dc.replace(
+                ctx,
                 plaintext=True,
                 int_type="std::size_t",
                 var_mappings={
                     var: f"indices[{i}]" for i, (var, _) in enumerate(expr.dims)
                 },
             )
-            access_pattern = f"[&](const auto &indices){{return {render_expr(expr.access_pattern, pattern_opts)};}}, "
+            access_pattern = f"[&](const auto &indices){{return {render_expr(expr.access_pattern, pattern_ctx)};}}, "
         else:
             # If we don't have an access pattern, then we're raising a scalar.  Because the
             # raise_dim() implementation expects an array, we can use the following hack:
-            array = "{" + render_expr(expr.arr, opts) + "}"
+            array = "{" + render_expr(expr.arr, ctx) + "}"
             access_pattern = "[](const auto &){return 0;}"
 
         dims = (
             "{"
             + ", ".join(
-                render_expr(loop_bound, dc.replace(opts, plaintext=True))
+                render_expr(loop_bound, dc.replace(ctx, plaintext=True))
                 for _, loop_bound in expr.dims
             )
             + "}"
@@ -319,27 +319,27 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], opts: RenderOptions) -> 
         return f"raise_dim({array}, {access_pattern}, {dims})"
 
     elif isinstance(expr, Subscript):
-        return f"{render_expr(expr.array, opts)}[{render_expr(expr.index, dc.replace(opts, plaintext=True))}]"
+        return f"{render_expr(expr.array, ctx)}[{render_expr(expr.index, dc.replace(ctx, plaintext=True))}]"
 
     elif isinstance(expr, Tuple):
-        items = ", ".join(render_expr(item, opts) for item in expr.items)
+        items = ", ".join(render_expr(item, ctx) for item in expr.items)
         return f"std::make_tuple({items})"
 
     elif isinstance(expr, UnaryOp):
-        return f"({_render_operator(expr.operator)}{render_expr(expr.operand, opts)})"
+        return f"({_render_operator(expr.operator)}{render_expr(expr.operand, ctx)})"
 
     elif isinstance(expr, Update):
-        cpp_arr = render_expr(expr.array, opts)
-        cpp_arr_access = render_expr(Subscript(expr.array, expr.index), opts)
-        cpp_val = render_expr(expr.value, opts)
+        cpp_arr = render_expr(expr.array, ctx)
+        cpp_arr_access = render_expr(Subscript(expr.array, expr.index), ctx)
+        cpp_val = render_expr(expr.value, ctx)
         return f"{cpp_arr};\n{cpp_arr_access} = {cpp_val}"
 
     elif isinstance(expr, Var):
-        if expr in opts.var_mappings:
-            return opts.var_mappings[expr]
+        if expr in ctx.var_mappings:
+            return ctx.var_mappings[expr]
 
         cpp_str = str(expr).replace("!", "_")
-        if opts.plaintext:
+        if ctx.plaintext:
             return f"_MPC_PLAINTEXT_{cpp_str}"
         else:
             return cpp_str

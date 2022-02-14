@@ -13,7 +13,7 @@ from ..type_analysis import TypeEnv, VarVisibility, Constant, DataType
 from .. import tac_cfg
 
 from .low_level_rendering import (
-    RenderOptions,
+    RenderContext,
     render_datatype,
     render_expr,
     render_param,
@@ -99,7 +99,7 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
 
 
 def render_function(func: Function, type_env: TypeEnv) -> str:
-    render_opts = RenderOptions(type_env)
+    render_ctx = RenderContext(type_env)
 
     func_header = f"{_render_prototype(func, type_env)} {{"
 
@@ -108,7 +108,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + "\n".join(
             render_type(var_type, plaintext=False)
             + " "
-            + render_expr(var, dt.replace(render_opts, plaintext=False))
+            + render_expr(var, dt.replace(render_ctx, plaintext=False))
             + ";"
             for var, var_type in sorted(type_env.items(), key=lambda x: str(x[0]))
             if not any(
@@ -122,7 +122,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     plaintext_var_definitions = (
         "// Plaintext variable declarations\n"
         + "\n".join(
-            f"{render_type(var_type, plaintext=True)} {render_expr(var, dt.replace(render_opts, plaintext=True))};"
+            f"{render_type(var_type, plaintext=True)} {render_expr(var, dt.replace(render_ctx, plaintext=True))};"
             for var, var_type in sorted(type_env.items(), key=lambda x: str(x[0]))
             if var_type.is_plaintext()
             if not any(
@@ -137,8 +137,8 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     constant_initialization = (
         "// Constant initializations\n"
         + "\n".join(
-            f"{render_datatype(const.datatype, plaintext=False)} {render_expr(const, render_opts)} = "
-            + f"party->In<Protocol>({render_expr(const, dt.replace(render_opts, as_motion_input=True))}, 0);"
+            f"{render_datatype(const.datatype, plaintext=False)} {render_expr(const, render_ctx)} = "
+            + f"party->In<Protocol>({render_expr(const, dt.replace(render_ctx, as_motion_input=True))}, 0);"
             for const in sorted(plaintext_constants, key=lambda c: str(c.value))
         )
         + "\n"
@@ -149,9 +149,9 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + "\n\n".join(
             (
                 # Initialize the shared version
-                render_expr(param.var, render_opts)
+                render_expr(param.var, render_ctx)
                 + " = party->In<Protocol>(encrypto::motion::ToInput("
-                + render_expr(param.var, dt.replace(render_opts, plaintext=True))
+                + render_expr(param.var, dt.replace(render_ctx, plaintext=True))
                 + "), 0);"
             )
             for param in sorted(func.parameters, key=str)
@@ -183,7 +183,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + "\n"
         + indent(func_body, "    ")
         + "\n"
-        + indent(f"return {render_expr(func.return_value, render_opts)};", "    ")
+        + indent(f"return {render_expr(func.return_value, render_ctx)};", "    ")
         + "\n}"
     )
 
