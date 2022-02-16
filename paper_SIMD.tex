@@ -427,22 +427,21 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 \COMMENT {Phase 3:}
 \STATE {add SIMD for simdified dimensions}
 
-\COMMENT {Phase 4: Dimensionality reduction: remove unnecessary dimensionality. \ana{Draft. Needs work.}}
-\FOR {each FOR i = 0; ... loop from innermost to outermost}
-\FOR {each stmt v[...i...] = ..., including in nested loops}
-\STATE {if def-use from stmt v[...i...] to a non drop\_dim(v,i) use outside of loop, mark "live dimension i"}
-\STATE {otherwise, mark "dead dimension i"}
-\STATE {for all variables v[...i...] (defs and uses) that are "dead dimension i", remove dimension i}
-\COMMENT {Two cases: forward edge will use i, backward edge will use i-1}
+\COMMENT {Phase 4: Dimensionality reduction: remove unnecessary dimensionality. \ana{Better draft! Needs a bit more work.}}
+
+\COMMENT { A dimension i is dead on exit from stmt v[...i...] = ... if all def-uses with targets outside of the enclosing 
+FOR i=0 ... MOTION loop end at target (use) v' = drop\_dim(v, i). } 
+\FOR {each stmt and dimension v[...i...] = ...}
+\STATE {if i is a dead dimension on exit from stmt v[...i...] = ..., remove i from v[...i...] (at def and at all uses)} 
+%\COMMENT{ A stmt v[...i] is a "dead dimension i" if all edges out of FOR i = 0; ... loop end at drop\_dim(v, i)}
 \ENDFOR
 
 \COMMENT {Now clean up drop\_dim and raise\_dim}
-\FOR {each "dead dimension i" def: v[...i...] in loop to use: v' =  drop\_dim(v,i) }
-\STATE {replace v' = drop\_dim(v,i) with v' = v in use}
+\FOR {each v' =  drop\_dim(v,i) }
+\STATE {replace with v' = v if i is dead in v.}
 \ENDFOR
-\FOR {each "def: v' = raise\_dim(v,i) in outer loop to use: v'[...i...] in loop}
+\FOR {each v' = raise\_dim(v,i) in outer loop to use: v'[...i...] in loop}
 \STATE {replace v' with v in use statement}
-\ENDFOR
 \ENDFOR
 \STATE {do copy propagation and dead code elimination to get rid of redundant variables and raise dimension statements}
 
