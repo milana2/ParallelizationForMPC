@@ -1,19 +1,26 @@
-PDF=pdflatex
-BIB=bibtex
-INDX=makeindex
-PDF_ARGS=-interaction nonstopmode
-all: clean paper_SIMD.tex
-	$(PDF) paper_SIMD.tex
-	$(BIB) paper_SIMD
-	$(PDF) paper_SIMD.tex
-	$(PDF) paper_SIMD.tex
-nostop: thespaper_SIMD.tex
-	$(PDF) $(PDF_ARGS) paper_SIMD.tex
-	$(BIB) paper_SIMD
-	$(PDF) $(PDF_ARGS) paper_SIMD.tex
-	$(PDF) $(PDF_ARGS) paper_SIMD.tex
+all: final
+
+ps: *.tex
+	latex paper_SIMD.tex && dvips -t letter -o paper_SIMD.ps  paper_SIMD.dvi
+
+dvi: *.tex
+	latex paper_SIMD.tex
+
+pdf: *.tex
+	bibtex -min-crossrefs=10 main
+	pdflatex -synctex=-1 -shell-escape paper_SIMD.tex paper_SIMD.pdf
+
+bib:
+	bibtex -min-crossrefs=10 main
+
+final: *.tex
+	pdflatex -synctex=-1 -shell-escape paper_SIMD.tex paper_SIMD.pdf
+	bibtex -min-crossrefs=10 main
+	pdflatex -synctex=-1 -shell-escape paper_SIMD.tex paper_SIMD.pdf
+	pdflatex -synctex=-1 -shell-escape paper_SIMD.tex paper_SIMD.pdf
+
+quick: *.tex
+	pdflatex -synctex=-1 -shell-escape paper_SIMD.tex paper_SIMD.pdf
+
 clean:
-	rm -f *.{ps,log,aux,out,dvi,bbl,blg,idx,ilg,ind,lof,lot,toc}
-	rm -f paper_SIMD.pdf
-
-
+	rm -rf *.aux *.bbl *.blg *.brf *.log *.out *.toc *.synctex latex.out
