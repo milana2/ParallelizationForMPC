@@ -440,8 +440,8 @@ FOR i=0 ... MOTION loop end at target (use) v' = drop\_dim(v, i). }
 \FOR {each v' =  drop\_dim(v,i) }
 \STATE {replace with v' = v if i is dead in v.}
 \ENDFOR
-\FOR {each v' = raise\_dim(v,i) in outer loop to use: v'[...i...] in loop}
-\STATE {replace v' with v in use statement}
+\FOR {each use v'[...i...] in loop with def in outer scope}
+\STATE {drop to lowest dimension}
 \ENDFOR
 \STATE {do copy propagation and dead code elimination to get rid of redundant variables and raise dimension statements}
 
