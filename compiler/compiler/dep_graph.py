@@ -23,19 +23,7 @@ class DepParameter:
         return self.var
 
 
-@dataclass(frozen=True)
-class DepFor:
-    inner: llc.For
-
-    def __str__(self) -> str:
-        return self.inner.heading_str()
-
-    @property
-    def lhs(self) -> llc.Var:
-        return self.inner.counter
-
-
-DepNode = Union[llc.Phi, llc.Assign, DepParameter, DepFor]
+DepNode = Union[llc.Phi, llc.Assign, llc.For, DepParameter]
 
 
 class EdgeKind(Enum):
@@ -69,7 +57,7 @@ class DepGraph:
                     loop = statement
                     # Loops are considered to be inside themselves here,
                     # so that loop index accesses inside the loop can be same-level
-                    all_assignments.append((DepFor(loop), enclosing_loops + [loop]))
+                    all_assignments.append((loop, enclosing_loops + [loop]))
                     add_assignments(loop.body, enclosing_loops + [loop])
                 else:
                     assert_never(statement)
@@ -98,7 +86,7 @@ class DepGraph:
                     lhss = [assignment.rhs.arr]
                 else:
                     lhss = llc.assign_rhs_accessed_vars(assignment.rhs)
-            elif isinstance(assignment, (DepParameter, DepFor)):
+            elif isinstance(assignment, (DepParameter, llc.For)):
                 lhss = []
             else:
                 assert_never(assignment)

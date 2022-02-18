@@ -45,6 +45,11 @@ class For:
         body = "\n".join([str(statement) for statement in self.body])
         return self.heading_str() + "\n" + indent(body, "    ")
 
+    # needed for dependency graph
+    @property
+    def lhs(self) -> Var:
+        return self.counter
+
 
 @dataclass
 class Function:

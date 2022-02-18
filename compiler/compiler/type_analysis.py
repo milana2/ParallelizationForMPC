@@ -1,10 +1,10 @@
 import sys
 from typing import Optional, Union, cast
 
-from compiler.util import assert_never
+from .util import assert_never
 
 from . import loop_linear_code
-from .dep_graph import DepFor, DepGraph, DepNode, DepParameter
+from .dep_graph import DepGraph, DepNode, DepParameter
 from .ast_shared import (
     Var,
     Constant,
@@ -268,7 +268,7 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
                 # No changes to this variable's type, don't extend the worklist
                 continue
             type_env[stmt.lhs] = phi_type
-        elif isinstance(stmt, (DepParameter, DepFor)):
+        elif isinstance(stmt, (DepParameter, loop_linear_code.For)):
             pass
         else:
             # Shouldn't happen before Basic Vectorization phase 1,
