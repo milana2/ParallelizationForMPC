@@ -1,3 +1,4 @@
+from copy import copy
 from enum import Enum
 from typing import Iterator, Union
 from dataclasses import dataclass
@@ -63,7 +64,7 @@ class DepGraph:
                     statement,
                     (llc.Phi, llc.Assign, RaiseDim, DropDim),
                 ):
-                    all_assignments.append((statement, enclosing_loops))
+                    all_assignments.append((statement, copy(enclosing_loops)))
                 elif isinstance(statement, llc.For):
                     loop = statement
                     # Loops are considered to be inside themselves here,
@@ -152,3 +153,17 @@ class DepGraph:
             return EdgeKind.OUTER_TO_INNER
         else:
             return EdgeKind.INNER_TO_OUTER
+
+    def has_same_level_path(
+        self, src: DepNode, dest: DepNode, visited: set[DepNode] = set()
+    ) -> bool:
+        if src == dest:
+            return True
+        else:
+            return any(
+                self.def_use_graph.has_edge(src, use_stmt)
+                and self.has_same_level_path(use_stmt, dest, visited | {src})
+                and self.edge_kind(src, use_stmt) == EdgeKind.SAME_LEVEL
+                for use_stmt in self.def_use_graph.successors(src)
+                if use_stmt not in visited
+            )

@@ -57,9 +57,7 @@ class VarType:
         if self.dims is None:
             return VarType(self.visibility, None, self.datatype)
         else:
-            return VarType(
-                self.visibility, self.dims + 1, self.datatype
-            )
+            return VarType(self.visibility, self.dims + 1, self.datatype)
 
     def is_plaintext(self) -> bool:
         return self.visibility == VarVisibility.PLAINTEXT
@@ -119,9 +117,7 @@ class VarType:
             merged_type.visibility = VarVisibility.PLAINTEXT
 
         # Determine the dimensionality of the merged type
-        elem_dims = [
-            t.dims for t in types if t.dims is not None
-        ]
+        elem_dims = [t.dims for t in types if t.dims is not None]
         if len(set(elem_dims)) > 1:
             raise TypeError(
                 "Cannot merge types with different dimensionality:\n{}".format(
@@ -445,7 +441,7 @@ class RaiseDim:
             return f"raise_dim({self.arr}, {self.access_pattern}, {dims})"
 
 
-@dataclass(frozen=True)
+@dataclass
 class VectorizedArr:
     """A vectorized array.  Can only be accessed via row-major ordering."""
 

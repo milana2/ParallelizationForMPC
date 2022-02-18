@@ -2,11 +2,12 @@ from ast import operator
 
 from .ast_shared import DropDim, RaiseDim, TypeEnv, Var, VectorizedArr
 from . import loop_linear_code as llc
-from .dep_graph import DepGraph, DepNode, EdgeKind
+from .dep_graph import DepGraph, DepNode, EdgeKind, DepFor
 from .util import assert_never
 
+import dataclasses as dc
 from dataclasses import dataclass
-from typing import Iterable, Union, Optional
+from typing import Iterable, Union, Optional, Set
 
 import z3  # type: ignore
 
@@ -527,6 +528,129 @@ def _basic_vectorization_phase_1(
     return above_loop_result, inside_loop_result
 
 
+def _basic_vectorization_phase_2(
+    stmts: list[llc.Statement],
+    dep_graph: DepGraph,
+    surrounding_loop: Optional[llc.For] = None,
+) -> list[llc.Statement]:
+    flattened_stmts: list[llc.Statement] = []
+    phis = set()
+
+    # Transform all inner loops first
+    for stmt in stmts:
+        if isinstance(stmt, llc.Phi):
+            flattened_stmts.append(stmt)
+            phis.add(stmt)
+        elif isinstance(stmt, llc.Assign):
+            flattened_stmts.append(stmt)
+        elif isinstance(stmt, llc.For):
+            flattened_stmts.extend(
+                _basic_vectorization_phase_2(stmt.body, dep_graph, stmt)
+            )
+        else:
+            assert_never(stmt)
+
+    # If we're updating a loop body, we have to modify the enclosing loops field of
+    # the dependency graph.  Since whichever loop we're in will be replaced by a new
+    # loop deeper in this function, we can simply pop the lowest enclosing loop from
+    # every statement we're considering.
+    if surrounding_loop is not None:
+        for stmt in flattened_stmts:
+            # The dependency graph uses DepFor instead of llc.For, so we must
+            # wrap llc.For statements in a DepFor.
+            tgt: Union[llc.Assign, llc.Phi, DepFor]
+            if isinstance(stmt, llc.For):
+                tgt = DepFor(stmt)
+            else:
+                tgt = stmt
+
+            dep_graph.enclosing_loops[tgt].pop()
+
+    # At this point, `flattened_stmts` is a single-level replacement of `stmts` (any
+    # remaining loops are now monolithic loops where def-use edges into the loop are
+    # considered same-level).
+    #
+    # We now construct a closure for each phi node to reconstruct necessary for loops.
+    # `new_stmts` tracks statements which are outside of the closure (and therefore are
+    #   vectorizable).  If we construct a loop for a closure, that loop will be appended
+    #   to `new_stmts` since anything which depends on the result of that closure would
+    #   be in the closure. (TODO: check this assumption - I think it only holds if we
+    #   merge all closures in a loop)
+    closure = []
+    new_stmts = []
+    for phi in phis:
+        for stmt in flattened_stmts:
+            # As above, we must wrap llc.For statements in a DepFor.
+            if isinstance(stmt, llc.For):
+                tgt = DepFor(stmt)
+            else:
+                tgt = stmt
+
+            if dep_graph.has_same_level_path(
+                phi, tgt
+            ) and dep_graph.has_same_level_path(tgt, phi):
+                closure.append(stmt)
+            else:
+                new_stmts.append(stmt)
+
+    # If we have a closure (this should happen iff we're inside of a loop) then create
+    # a new for loop to hold the closure's contents, unvectorize this loop's dimension,
+    # and update the dependency graph.
+    if closure:
+        assert surrounding_loop is not None
+
+        # Create new loop
+        monolithic_for = dc.replace(surrounding_loop, body=closure)
+        new_dep_for = DepFor(monolithic_for)
+        dep_graph.enclosing_loops[new_dep_for] = dep_graph.enclosing_loops[
+            DepFor(surrounding_loop)
+        ]
+
+        nesting_level = len(dep_graph.enclosing_loops[new_dep_for])
+
+        # Unvectorize anything using this loop's counter and update def-use edges
+        # to point to this loop as well
+        def unvectorize_dim(rhs: llc.AssignRHS):
+            if isinstance(rhs, VectorizedArr):
+                rhs.vectorized_dims = tuple(
+                    v if idx != nesting_level else False
+                    for idx, v in enumerate(rhs.vectorized_dims)
+                )
+            elif isinstance(rhs, llc.BinOp):
+                unvectorize_dim(rhs.left)
+                unvectorize_dim(rhs.right)
+            elif isinstance(rhs, llc.UnaryOp):
+                unvectorize_dim(rhs.operand)
+
+        def update_loop_contents(stmts: list[llc.Statement]):
+            for stmt in stmts:
+                # As above, we must wrap llc.For statements in a DepFor.
+                # We also recurse here so that the dependency graph is updated
+                # by the time we access it.
+                tgt: Union[llc.Assign, llc.Phi, DepFor]
+                if isinstance(stmt, llc.For):
+                    update_loop_contents(stmt.body)
+                    tgt = DepFor(stmt)
+                else:
+                    tgt = stmt
+
+                # Update def-use edges
+                for src in dep_graph.def_use_graph.predecessors(tgt):
+                    dep_graph.def_use_graph.add_edge(src, new_dep_for)
+
+                # Update enclosing loops
+                dep_graph.enclosing_loops[tgt][nesting_level] = monolithic_for
+
+                # Update vectorization if applicable
+                if isinstance(stmt, llc.Assign):
+                    unvectorize_dim(stmt.rhs)
+
+        update_loop_contents(monolithic_for.body)
+        new_stmts.append(monolithic_for)
+
+    return new_stmts
+
+
 def basic_vectorization(
     function: llc.Function, dep_graph: DepGraph, type_env: TypeEnv
 ) -> tuple[llc.Function, DepGraph]:
@@ -534,7 +658,8 @@ def basic_vectorization(
     before_func, body = _basic_vectorization_phase_1(
         function.body, dep_graph, type_env, tmp_var_gen
     )
-    assert before_func == []
+    assert not before_func
+    body = _basic_vectorization_phase_2(body, dep_graph)
     function = llc.Function(
         name=function.name,
         parameters=function.parameters,
