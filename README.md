@@ -1593,35 +1593,36 @@ from UTIL import shared
 # But we were first to suggest this as a benchmark :).
 # requires: len(A) == len(B) = N
 def histogram(
-    A: shared[list[int]], B: shared[list[int]], N: int, num_bins: int
+    A: shared[list[int]], B: shared[list[int]], N: int, num_bins: int, result: list[int] 
 ) -> shared[list[int]]:
-    result: list[int] = []
-    # initialize result to 0
-    for i in range(num_bins):
-        result = result + [0]
     for i in range(num_bins):
         for j in range(N):
             if A[j] == i:
-                result[i] = result[i] + B[j]
+                val = result[i] + B[j]
+            else:
+                val = result[i]
+            result[i] = val
     return result
 
 
 A = [0, 2, 1, 0, 3, 4, 2, 3]
 B = [10, 1, 5, 2, 15, 0, 10, 1000]
 N = 8  # len(A)
-print(histogram(A, B, N, 5))
+#R = [12, 5, 11, 1015, 0]
+R = [0, 0, 0, 0, 0]
+print(histogram(A, B, N, 5, R))
 
 ```
 ### Restricted AST
 ```python
-def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int]) -> shared[list[int]]:
-    result = []
-    for i: plaintext[int] in range(0, num_bins):
-        result = (result + [0])
+def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num_bins: plaintext[int], result: plaintext[list[int]]) -> shared[list[int]]:
     for i: plaintext[int] in range(0, num_bins):
         for j: plaintext[int] in range(0, N):
             if (A[j] == i):
-                result[i] = (result[i] + B[j])
+                val = (result[i] + B[j])
+            else:
+                val = result[i]
+            result[i] = val
     return result
 ```
 ### Three-address code CFG
@@ -1634,21 +1635,17 @@ def histogram(A: shared[list[int]], B: shared[list[int]], N: plaintext[int], num
 ![](images/histogram_dead_code_elim.png)
 ### Linear code with loops
 ```python
-def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int], num_bins!0: plaintext[int]) -> shared[list[int]]:
-    result!1 = []
+def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int], num_bins!0: plaintext[int], result!0: plaintext[list[int]]) -> shared[list[int]]:
     for i!1 in range(0, num_bins!0):
-        result!2 = Φ(result!1, result!3)
-        !1!2 = [0]
-        result!3 = (result!2 + !1!2)
-    for i!2 in range(0, num_bins!0):
-        result!4 = Φ(result!2, result!5)
+        result!1 = Φ(result!0, result!2)
         for j!1 in range(0, N!0):
-            result!5 = Φ(result!4, result!7)
-            !2!3 = (A!0[j!1] == i!2)
-            !3!3 = (result!5[i!2] + B!0[j!1])
-            result!6 = Update(result!5, i!2, !3!3)
-            result!7 = MUX(!2!3, result!6, result!5)
-    return result!4
+            result!2 = Φ(result!1, result!3)
+            !1!3 = (A!0[j!1] == i!1)
+            val!4 = result!2[i!1]
+            val!3 = (result!2[i!1] + B!0[j!1])
+            val!5 = MUX(!1!3, val!3, val!4)
+            result!3 = Update(result!2, i!1, val!5)
+    return result!1
 ```
 ### Dependency graph
 ![](images/histogram_dep_graph.png)
@@ -1656,21 +1653,17 @@ def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int
 ![](images/histogram_remove_infeasible_edges.png)
 ### Array MUX refinement
 ```python
-def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int], num_bins!0: plaintext[int]) -> shared[list[int]]:
-    result!1 = []
+def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int], num_bins!0: plaintext[int], result!0: plaintext[list[int]]) -> shared[list[int]]:
     for i!1 in range(0, num_bins!0):
-        result!2 = Φ(result!1, result!3)
-        !1!2 = [0]
-        result!3 = (result!2 + !1!2)
-    for i!2 in range(0, num_bins!0):
-        result!4 = Φ(result!2, result!5)
+        result!1 = Φ(result!0, result!2)
         for j!1 in range(0, N!0):
-            result!5 = Φ(result!4, result!7)
-            !2!3 = (A!0[j!1] == i!2)
-            !3!3 = (result!5[i!2] + B!0[j!1])
-            result!6 = Update(result!5, i!2, !3!3)
-            result!7 = MUX(!2!3, result!6, result!5)
-    return result!4
+            result!2 = Φ(result!1, result!3)
+            !1!3 = (A!0[j!1] == i!1)
+            val!4 = result!2[i!1]
+            val!3 = (result!2[i!1] + B!0[j!1])
+            val!5 = MUX(!1!3, val!3, val!4)
+            result!3 = Update(result!2, i!1, val!5)
+    return result!1
 ```
 ### Array MUX refinement (dependence graph)
 ![](images/histogram_array_mux_refinement_dep_graph.png)
@@ -1681,19 +1674,16 @@ def histogram(A!0: shared[list[int]], B!0: shared[list[int]], N!0: plaintext[int
 | `B!0` | `shared[list[int]]` |
 | `N!0` | `plaintext[int]` |
 | `num_bins!0` | `plaintext[int]` |
+| `result!0` | `plaintext[list[int]]` |
 | `i!1` | `plaintext[int]` |
-| `i!2` | `plaintext[int]` |
 | `j!1` | `plaintext[int]` |
-| `!2!3` | `shared[bool]` |
-| `result!5` | `shared[list[int]]` |
-| `result!6` | `shared[list[int]]` |
-| `result!7` | `shared[list[int]]` |
-| `result!4` | `shared[list[int]]` |
-| `!3!3` | `shared[int]` |
-| `result!2` | `plaintext[list[int]]` |
-| `!1!2` | `plaintext[list[int]]` |
-| `result!3` | `plaintext[list[int]]` |
-| `result!1` | `plaintext[list[int]]` |
+| `val!5` | `shared[int]` |
+| `result!2` | `shared[list[int]]` |
+| `result!3` | `shared[list[int]]` |
+| `!1!3` | `shared[bool]` |
+| `val!4` | `shared[int]` |
+| `val!3` | `shared[int]` |
+| `result!1` | `shared[list[int]]` |
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
@@ -1702,86 +1692,66 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
-    std::uint32_t _MPC_PLAINTEXT_num_bins_0
+    std::uint32_t _MPC_PLAINTEXT_num_bins_0,
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_result_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::SecureUnsignedInteger> _1_2;
-    encrypto::motion::ShareWrapper _2_3;
-    encrypto::motion::SecureUnsignedInteger _3_3;
+    encrypto::motion::ShareWrapper _1_3;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i_1;
-    encrypto::motion::SecureUnsignedInteger i_2;
     encrypto::motion::SecureUnsignedInteger j_1;
     encrypto::motion::SecureUnsignedInteger num_bins_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_1;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_3;
-    std::vector<encrypto::motion::SecureUnsignedInteger> result_4;
-    std::vector<encrypto::motion::SecureUnsignedInteger> result_5;
-    std::vector<encrypto::motion::SecureUnsignedInteger> result_6;
-    std::vector<encrypto::motion::SecureUnsignedInteger> result_7;
+    encrypto::motion::SecureUnsignedInteger val_3;
+    encrypto::motion::SecureUnsignedInteger val_4;
+    encrypto::motion::SecureUnsignedInteger val_5;
 
     // Plaintext variable declarations
-    std::vector<std::uint32_t> _MPC_PLAINTEXT__1_2;
     std::uint32_t _MPC_PLAINTEXT_i_1;
-    std::uint32_t _MPC_PLAINTEXT_i_2;
     std::uint32_t _MPC_PLAINTEXT_j_1;
-    std::vector<std::uint32_t> _MPC_PLAINTEXT_result_1;
-    std::vector<std::uint32_t> _MPC_PLAINTEXT_result_2;
-    std::vector<std::uint32_t> _MPC_PLAINTEXT_result_3;
 
     // Constant initializations
-    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+
 
     // Plaintext parameter assignments
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     num_bins_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_num_bins_0), 0);
 
+    result_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_result_0), 0);
+
     // Function body
-    result_1 = {};
-    _MPC_PLAINTEXT_result_1 = {};
 
     // Initialize phi values
-    result_2 = result_1;
+    result_1 = result_0;
     for (_MPC_PLAINTEXT_i_1 = std::uint32_t(0); _MPC_PLAINTEXT_i_1 < _MPC_PLAINTEXT_num_bins_0; _MPC_PLAINTEXT_i_1++) {
         i_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_1), 0);
-        _1_2 = {_MPC_CONSTANT_0};
-        _MPC_PLAINTEXT__1_2 = {std::uint32_t(0)};
-        result_3 = (result_2 + _1_2);
-        _MPC_PLAINTEXT_result_3 = (_MPC_PLAINTEXT_result_2 + _MPC_PLAINTEXT__1_2);
-
-        // Update phi values
-        result_2 = result_3;
-    }
-
-
-    // Initialize phi values
-    result_4 = result_2;
-    for (_MPC_PLAINTEXT_i_2 = std::uint32_t(0); _MPC_PLAINTEXT_i_2 < _MPC_PLAINTEXT_num_bins_0; _MPC_PLAINTEXT_i_2++) {
-        i_2 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_2), 0);
 
         // Initialize phi values
-        result_5 = result_4;
+        result_2 = result_1;
         for (_MPC_PLAINTEXT_j_1 = std::uint32_t(0); _MPC_PLAINTEXT_j_1 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_j_1++) {
             j_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_j_1), 0);
-            _2_3 = (encrypto::motion::ShareWrapper(A_0[_MPC_PLAINTEXT_j_1].Get()) == encrypto::motion::ShareWrapper(i_2.Get()));
-            _3_3 = (result_5[_MPC_PLAINTEXT_i_2] + B_0[_MPC_PLAINTEXT_j_1]);
-            result_6 = result_5;
-            result_5[_MPC_PLAINTEXT_i_2] = _3_3;
-            result_7 = _2_3.Mux(result_6.Get(), result_5.Get());
+            _1_3 = (encrypto::motion::ShareWrapper(A_0[_MPC_PLAINTEXT_j_1].Get()) == encrypto::motion::ShareWrapper(i_1.Get()));
+            val_4 = result_2[_MPC_PLAINTEXT_i_1];
+            val_3 = (result_2[_MPC_PLAINTEXT_i_1] + B_0[_MPC_PLAINTEXT_j_1]);
+            val_5 = _1_3.Mux(val_3.Get(), val_4.Get());
+            result_3 = result_2;
+            result_2[_MPC_PLAINTEXT_i_1] = val_5;
 
             // Update phi values
-            result_5 = result_7;
+            result_2 = result_3;
         }
 
 
         // Update phi values
-        result_4 = result_5;
+        result_1 = result_2;
     }
 
 
-    return result_4;
+    return result_1;
 }
 ```
 ## `infeasible_edges_example`
