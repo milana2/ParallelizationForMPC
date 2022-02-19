@@ -16,20 +16,21 @@ from UTIL import shared
 # But we were first to suggest this as a benchmark :).
 # requires: len(A) == len(B) = N
 def histogram(
-    A: shared[list[int]], B: shared[list[int]], N: int, num_bins: int
+    A: shared[list[int]], B: shared[list[int]], N: int, num_bins: int, result: list[int] 
 ) -> shared[list[int]]:
-    result: list[int] = []
-    # initialize result to 0
-    for i in range(num_bins):
-        result = result + [0]
     for i in range(num_bins):
         for j in range(N):
             if A[j] == i:
-                result[i] = result[i] + B[j]
+                val = result[i] + B[j]
+            else:
+                val = result[i]
+            result[i] = val
     return result
 
 
 A = [0, 2, 1, 0, 3, 4, 2, 3]
 B = [10, 1, 5, 2, 15, 0, 10, 1000]
 N = 8  # len(A)
-print(histogram(A, B, N, 5))
+#R = [12, 5, 11, 1015, 0]
+R = [0, 0, 0, 0, 0]
+print(histogram(A, B, N, 5, R))
