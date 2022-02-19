@@ -382,17 +382,17 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 
 \STATE \COMMENT { Phase 1: Raise dimension of scalar variables to corresponding loop nest. We can traverse stmts linearly in MPC-source. }
 
-%\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i,j,k$}
+\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y,...)$ in loop $i,j,k$}
 %\FOR {each $Y_n$}
 \FOR {each def-use edge $\mathit{stmt}' (\mbox{def of } Y) \rightarrow \mathit{stmt} (\mbox{def of } X)$}
-\STATE {case def-use edge $\mathit{stmt}' (\mbox{def of } Y) \rightarrow \mathit{stmt} (\mbox{def of } X)$ of} \\
+\STATE {case def-use edge of} \\
 \STATE \hspace{0.25cm} {same-level: $Y'$ is $Y$} \\
 \STATE \hspace{0.25cm} {outer-to-inner: add $Y'[i,j,k] = \mathit{raise\_dim}(Y)$ at $\mathit{stmt'}$}
 \STATE \hspace{0.25cm} {inner-to-outer: add $Y'[i,j,k] = \mathit{drop\_dim}(Y)$ at $\mathit{stmt}$}
 \ENDFOR
 
 \COMMENT { Optimistically vectorize all. $\stackrel{\rightarrow}{i}$ means vectorized dimension. }
-\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i,j,k$}
+%\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i,j,k$}
 \STATE {change to $X[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j},\stackrel{\rightarrow}{k}] = \mathit{Op}(Y'_1[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j},\stackrel{\rightarrow}{k}],Y'_2[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j},\stackrel{\rightarrow}{k}])$ }
 \ENDFOR
 
