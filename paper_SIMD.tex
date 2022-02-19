@@ -380,21 +380,23 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 
 \begin{algorithmic}
 
-\STATE \COMMENT {Phase 1: Raise dimension of scalar variables to corresponding loop nest. We may assume linear traversal of the MPC-source.}
+\STATE \COMMENT { Phase 1: Raise dimension of scalar variables to corresponding loop nest. We can traverse stmts linearly in MPC-source. }
 
-\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i_1,...,i_k$}
-\FOR {each $Y_i$}
-\STATE {case def-use edge $\mathit{stmt}' (\mbox{def of } Y_i) \rightarrow \mathit{stmt} (\mbox{def of } X)$ of} \\
-\STATE \hspace{0.25cm} {same-level $\rightarrow$ add $Y'_i = Y_i$} \\
-\STATE \hspace{0.25cm} {outer-to-inner $\rightarrow$ add $Y'_i[i_1,...,i_k] = \mathit{raise\_dim}(Y_i)$}
-\STATE \hspace{0.25cm} {inner-to-outer $\rightarrow$ add $Y'_i[i_1,...,i_k] = \mathit{drop\_dim}(Y_i)$}
+%\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i,j,k$}
+%\FOR {each $Y_n$}
+\FOR {each def-use edge $\mathit{stmt}' (\mbox{def of } Y) \rightarrow \mathit{stmt} (\mbox{def of } X)$}
+\STATE {case def-use edge $\mathit{stmt}' (\mbox{def of } Y) \rightarrow \mathit{stmt} (\mbox{def of } X)$ of} \\
+\STATE \hspace{0.25cm} {same-level: $Y'$ is $Y$} \\
+\STATE \hspace{0.25cm} {outer-to-inner: add $Y'[i,j,k] = \mathit{raise\_dim}(Y)$ at $\mathit{stmt'}$}
+\STATE \hspace{0.25cm} {inner-to-outer: add $Y'[i,j,k] = \mathit{drop\_dim}(Y)$ at $\mathit{stmt}$}
 \ENDFOR
 
-\COMMENT {Optimistically vectorize all. $\stackrel{\rightarrow}{i}$ means vectorized dimension.}
-\STATE {change to $X[\stackrel{\rightarrow}{i_1},...\stackrel{\rightarrow}{i_k}] = \mathit{Op}(Y'_1[\stackrel{\rightarrow}{i_1},...,\stackrel{\rightarrow}{i_k}],Y'_2[\stackrel{\rightarrow}{i_1},...,\stackrel{\rightarrow}{i_k}])$ }
+\COMMENT { Optimistically vectorize all. $\stackrel{\rightarrow}{i}$ means vectorized dimension. }
+\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i,j,k$}
+\STATE {change to $X[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j},\stackrel{\rightarrow}{k}] = \mathit{Op}(Y'_1[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j},\stackrel{\rightarrow}{k}],Y'_2[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j},\stackrel{\rightarrow}{k}])$ }
 \ENDFOR
 
-\COMMENT {Phase 2: Recreating FOR loops for cycles; vectorizable statements hoisted up.}
+\COMMENT { Phase 2: Recreating FOR loops for cycles; vectorizable statements hoisted up. }
 
 \FOR {each dimension $d$ from highest to 0}
 \FOR {each $\phi$-node $n$ in loop $i_1,...,i_d$}
@@ -411,7 +413,7 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 \STATE {add $\phi$-nodes in $cl$ to header block}
 \STATE {{\color{red}{add target-less $\phi$-node for A if $cl$ updates array A}}}
 \STATE {add statements in $cl$ to loop body in some order of dependences}
-\STATE \COMMENT {Dimension is not vectorizable: }
+\STATE \COMMENT { Dimension is not vectorizable: }
 \STATE {change $\stackrel{\rightarrow}{i_d}$ to $i_d$ in all statements in loop}
 \STATE {treat FOR loop as monolith node: some def-use edges become same-level.}
 \ENDFOR
@@ -424,22 +426,22 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 }
 \ENDFOR
 
-\COMMENT {Phase 3: Dimensionality reduction: remove unnecessary dimensionality. \ana{Better draft! Needs a bit more work.}}
+\COMMENT { Phase 3: Dimensionality reduction: removing unnecessary dimensionality. }
 
 \COMMENT { A dimension $i$ is dead on exit from stmt $X[...i...] = ...$ if all def-uses with targets outside of the enclosing 
 FOR $i=0 ...$ MOTION loop end at target (use) $X' = \mathit{drop\_dim}(X, i)$. } 
 \FOR {each stmt and dimension $X[...i...] = ...$}
-\STATE {if $i$ is a dead dimension on exit from stmt $X[...i...] = ...$, remove $i$ from $X$} 
+\STATE {if $i$ is a dead dimension on exit from stmt $X[...i...] = ...$, remove $i$ from $X$ (all defs and uses)} 
 %\COMMENT{ A stmt v[...i] is a "dead dimension i" if all edges out of FOR i = 0; ... loop end at drop\_dim(v, i)}
 \ENDFOR
 
-\COMMENT {Now clean up drop\_dim and raise\_dim}
+\COMMENT { Now clean up drop\_dim and raise\_dim }
 \FOR {each $X' =  \mathit{drop\_dim(X,i)}$ }
 \STATE {replace with $X' = X$ if $i$ is dead in $X$.}
 \ENDFOR
 \STATE {do (1) (extended) constant propagation, (2) copy propagation and (3) dead code elimination to get rid of redundant variables and raise and drop dimension statements}
 
-\COMMENT {Phase 4:}
+\COMMENT { Phase 4: }
 \STATE {add SIMD for simdified dimensions}
 
 \end{algorithmic}
