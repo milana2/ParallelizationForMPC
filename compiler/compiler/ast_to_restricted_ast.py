@@ -446,9 +446,7 @@ class _TypeConverter(_StrictNodeVisitor):
                 for child in node.slice.elts
             ]
 
-            child_dim_set = set(
-                var_type.dims for var_type in inner_types
-            )
+            child_dim_set = set(var_type.dims for var_type in inner_types)
             if len(child_dim_set) != 1:
                 self.raise_syntax_error(
                     node, "Tuple datatypes must have the same number of dimensions"

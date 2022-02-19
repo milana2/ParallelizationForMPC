@@ -452,10 +452,16 @@ class VectorizedArr:
 
     def __str__(self) -> str:
         subscript = ", ".join(
-            str(var) if not vectorized else str(var).upper()
+            str(var)
             for var, vectorized in zip(self.idx_vars, self.vectorized_dims)
+            if not vectorized
         )
-        return f"{self.array}{{{subscript}}}"
+        if subscript:
+            subscript = f"[{subscript}]"
+        return f"{self.array}{subscript}"
+
+    def __hash__(self) -> int:
+        return hash((self.array, self.dim_sizes, self.vectorized_dims, self.idx_vars))
 
 
 BLOCK = TypeVar("BLOCK")

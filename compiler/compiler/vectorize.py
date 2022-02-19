@@ -459,12 +459,8 @@ def _basic_vectorization_phase_1(
                     assert_never(o)
 
             if isinstance(stmt, llc.Phi):
-                rhs_false = replace_var(stmt.rhs_false, stmt)
-                if isinstance(rhs_false, VectorizedArr):
-                    stmt.rhs_false = rhs_false.array
-                rhs_true = replace_var(stmt.rhs_true, stmt)
-                if isinstance(rhs_true, VectorizedArr):
-                    stmt.rhs_true = rhs_true.array
+                stmt.rhs_false = replace_var(stmt.rhs_false, stmt)
+                stmt.rhs_true = replace_var(stmt.rhs_true, stmt)
             elif isinstance(stmt, llc.Assign):
                 if isinstance(stmt.rhs, llc.Var):
                     stmt.rhs = replace_var(stmt.rhs, stmt)
@@ -567,37 +563,47 @@ def _basic_vectorization_phase_2(
     # remaining loops are now monolithic loops where def-use edges into the loop are
     # considered same-level).
     #
-    # We now construct a closure for each phi node to reconstruct necessary for loops.
-    closure = []
-    for phi in phis:
-        for stmt in flattened_stmts:
+    # We now can determine which statements must be in the reconstructed monolithic
+    # for loop.  A statement is in the reconstructed loop if it is part of a closure with
+    # one of the surrounding loop's phi nodes or if it uses the loop counter.
+    in_loop = []
+    for stmt in flattened_stmts:
+        # If the statement uses the loop counter, it is included
+        if dep_graph.def_use_graph.has_edge(surrounding_loop, stmt):
+            in_loop.append(stmt)
+            continue
+
+        # Otherwise, check to see if this statement is part of a closure
+        for phi in phis:
             if dep_graph.has_same_level_path(
                 phi, stmt
             ) and dep_graph.has_same_level_path(stmt, phi):
-                closure.append(stmt)
+                in_loop.append(stmt)
+                break
 
     # The returned list of statements begin with anything outside of the closure.  Since all
     # closures are merged into a single loop, there won't be any statements which depend on
     # variables inside of the closure which are not in the closure themselves.
     # TODO: check the above assumption
-    new_stmts = [stmt for stmt in flattened_stmts if stmt not in closure]
+    new_stmts = [stmt for stmt in flattened_stmts if stmt not in in_loop]
 
     # If we have a closure (this should happen iff we're inside of a loop) then create
     # a new for loop to hold the closure's contents, unvectorize this loop's dimension,
     # and update the dependency graph.
-    if closure:
+    #
+    # We also have to hoist any statements which depend on the loop's counter out of the
+    # loop and replace their corresponding usages.
+    if in_loop:
         assert surrounding_loop is not None
 
         # Create new loop
-        monolithic_for = dc.replace(surrounding_loop, body=closure)
+        monolithic_for = dc.replace(surrounding_loop, body=in_loop)
         dep_graph.enclosing_loops[monolithic_for] = dep_graph.enclosing_loops[
             surrounding_loop
         ]
 
         nesting_level = len(dep_graph.enclosing_loops[monolithic_for]) - 1
 
-        # Unvectorize anything using this loop's counter and update def-use edges
-        # to point to this loop as well
         def unvectorize_dim(rhs: llc.AssignRHS):
             if isinstance(rhs, VectorizedArr):
                 rhs.vectorized_dims = tuple(
@@ -610,11 +616,9 @@ def _basic_vectorization_phase_2(
             elif isinstance(rhs, llc.UnaryOp):
                 unvectorize_dim(rhs.operand)
 
+        # Update def-use edges and enclosing loops, and unvectorize the loop's dimension
         def update_loop_contents(stmts: list[llc.Statement]):
             for stmt in stmts:
-                if isinstance(stmt, llc.For):
-                    update_loop_contents(stmt.body)
-
                 # Update def-use edges
                 for src in dep_graph.def_use_graph.predecessors(stmt):
                     dep_graph.def_use_graph.add_edge(src, monolithic_for)
@@ -625,6 +629,13 @@ def _basic_vectorization_phase_2(
                 # Update vectorization if applicable
                 if isinstance(stmt, llc.Assign):
                     unvectorize_dim(stmt.rhs)
+                elif isinstance(stmt, llc.Phi):
+                    unvectorize_dim(stmt.rhs_true)
+                    unvectorize_dim(stmt.rhs_false)
+                elif isinstance(stmt, llc.For):
+                    update_loop_contents(stmt.body)
+                else:
+                    assert_never(stmt)
 
         update_loop_contents(monolithic_for.body)
         new_stmts.append(monolithic_for)

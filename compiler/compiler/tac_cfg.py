@@ -104,8 +104,9 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
         return [rhs.array] + subscript_index_accessed_vars(rhs.index)
     elif isinstance(rhs, VectorizedArr):
         return [rhs.array] + list(
-            var
-            for var, _ in filter(lambda x: x[1], zip(rhs.idx_vars, rhs.vectorized_dims))
+            counter
+            for counter, vectorized in zip(rhs.idx_vars, rhs.vectorized_dims)
+            if not vectorized
         )
     elif isinstance(rhs, BinOp):
         return assign_rhs_accessed_vars(rhs.left) + assign_rhs_accessed_vars(rhs.right)
