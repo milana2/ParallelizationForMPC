@@ -147,51 +147,58 @@ min_index!2^ = drop_dim(min_index!2)
 \end{verbatim}
 }
 
+
+
 \subsubsection{Phase 3 of Basic Vectorization}
 
-And this phase adds SIMD operations:
+This phase removes redundant dimensionality. 
+It starts by removing redundant dimensions in MOTION loops followed
+by removal of redundant drop dimension statements.
+It then does (extended) constant propagation 
+to "bypass" raise statements, copy propagation
+and dead code elimination.
+
+The code becomes closer to what we started with:
 
 {\small
 \begin{verbatim}
 min_sum!1 = 10000
-min_sum!1^ = raise_dim(min_sum!1, (i:N!0))
 min_index!1 = 0
-min_index!1^ = raise_dim(min_index!1, (i:N!0))
 S!0^ = raise_dim(S!0, ((i * D!0) + j), (i:N!0,j:D!0))
 C!0^ = raise_dim(C!0, j, (i:N!0,j:D!0))
 
 sum!2 = [0,..,0]
-sum!2^ = raise_dim(sum!2, (j:D!0))
-d!3[I,J] = SUB_SIMD(S!0^[I,J],C!0^[I,J])
-p!3[I,J] = MUL_SIMD(d!3[I,J] * d!3[I,J])
+d!3[I,J] = S!0^[I,J] - C!0^[I,J]
+p!3[I,J] = (d!3[I,J] * d!3[I,J])
 
+// j is redundant for sum!3 and sum!4
 for j in range(0, D!0):
-  sum!3[I,j] = PHI(sum!2^[I,j], sum!4[I,j-1])       
-  sum!4[I,j] = ADD_SIMD(sum!3[I,j],p!3[I,j])
+  sum!3[I] = PHI(sum!2^[I], sum!4[I])       
+  sum!4[I] = (sum!3[I] + p!3[I,j])
 
-sum!3^ = drop_dim(sum!3)     
-min_index!3 = [0,1,...N!0-1]   
-min_sum!3 = sum!3^
+// drop_dim is redundant, removing
+// then copy propagation and dead code elimination 
+min_index!3 = [0,1,2,...N!0-1] // or min_index!3 = [i, (i:N!0)]
 
+// i is redundant for min_sum!2, min_sum!4 but not for !12![i]!
 for i in range(0, N!0):
-  min_sum!2[i] = PHI(min_sum!1^[i], min_sum!4[i-1]) 
-  !1!2[i] = CMP(sum!3^[i],min_sum!2[i])
-  min_sum!4[i] = MUX(!1!2[i], min_sum!3[i], min_sum!2[i])
-    
+  min_sum!2 = PHI(min_sum!1, min_sum!4) 
+  !1!2[i] = (sum!3[i] < min_sum!2)
+  min_sum!4 = MUX(!1!2[i], sum!3[i], min_sum!2)
+
+// same, i is redundant for min_index!2, min_index!4
 for i in range(0, N!0):
-  min_index!2[i] = PHI(min_index!1^[i], min_index!4[i-1])  
-   min_index!4[i] = MUX(!1!2[i], min_index!3[i], min_index!2[i])
-   
-min_sum!2^ = drop_dim(min_sum!2)
-min_index!2^ = drop_dim(min_index!2)   
-!2!1 = (min_sum!2^, min_index!2^)   
+  min_index!2 = PHI(min_index!1, min_index!4)  
+   min_index!4 = MUX(!1!2[i], min_index!3[i], min_index!2)
+
+// drop_dim becomes redundant
+!2!1 = (min_sum!2, min_index!2)
 \end{verbatim}
 }
 
 \subsubsection{Phase 4 of Basic Vectorization}
 
-And this phase gets rid of redundant dimensionality. Code moves back to 
-a version close to the original one. 
+And this phase adds SIMD operations:
 
 {\small
 \begin{verbatim}
