@@ -298,13 +298,175 @@
 \section{Introduction}
 \label{sec:introduction}
 
+\begin{itemize}
+\item We define the scheduling problem for MPC. 
+We present an analytical model to reason about cost of schedules
+and show that scheduling is NP-hard via a reduction to the shortest 
+common supersequence problem.
 
-\section{Background and Problem Statement}
-\label{sec:background}
+\item We present a compiler that takes a Python-like high-level 
+program and produces amortized (i.e., vectorized) low-level cryptographic 
+code in the MOTION framework. Central to our approach is a new 
+vectorization algorithm that produces optimal schedules for a large 
+number of MPC programs.
+
+\item We present an implementation and evaluation in the MOTION framework. 
+\ana{Fill in with final results. Mention benchmarks (standard + new ones + HyCC). }
+
+
+\end{itemize}
+
+\section{Overview}
+\label{sec:overview}
+
+\subsection{Source}
+
+As a running example, we assume a standard MPC benchmark, Biometric matching.
+An intuitive implementation is as follows:
+
+{\small
+\begin{verbatim}
+def biometric(C: shared[list[int]], D: int, 
+              S: shared[list[int]], N: int) -> 
+                      tuple[shared[int], shared[int]]:
+    min_sum = 10000
+    min_index = 0  
+    for i in range(N):
+        sum = 0
+        for j in range(D):
+            d = S[i * D + j] - C[j]
+            p = d * d
+            sum = sum + p
+        if sum < min_sum:
+            min_sum = sum
+            min_index = i
+    return (min_sum, min_index)
+\end{verbatim}
+}
+
+Array \texttt{C} is the feature vector of \texttt{D} 
+features that we wish to match and array \texttt{S} is the database of \texttt{N} vectors of size \texttt{D}
+that we match against. The programmer annotates the inputs and outputs as \emph{shared}.
+The program iterates over the entries in the database and computes
+the sum of squares of the differences of individual features. The program returns the 
+index \texttt{i} of the vector that gives the best match plus the corresponding sum of squares.
+
+
+Our compiler imposes the following restrictions. We note that in most cases, the restrictions 
+can be easily lifted and we plan to do so in future iterations of our compiler. 
+
+\begin{enumerate}
+\item The program contains arbitrarily nested loops, however, loop bounds are fixed: \texttt{0 <= i < N}.
+A standard restriction in MPC is that the bounds must be known at circuit-generation time.
+\item Arrays are one-dimensional. N-dimensional arrays are linearized and accessed 
+in row-major order and at this point the programmer is responsible for linearization
+and access. 
+\item Array subscrpts are plaintext values.
+\item Our compiler allows for output (write) arrays, however it restricts
+write access to \emph{canonical writes} along the dimensions of the array (i.e., \texttt{A[i,j] = ...}
+where \texttt{i} and \texttt{j} loop over the two dimensions of \texttt{A} is allowed, 
+but \texttt{A[i,j+2] = ...} is not allowed). Read access is arbitrary. 
+\end{enumerate}
+
+\subsection{MPC Source and Cost of Schedule}
+
+The compiler generates an IR, MPC source:
+{\small
+\begin{verbatim}
+1. min_sum!1 = 10000
+2. min_index!1 = 0
+3. for i in range(0, N!0):
+4.    min_sum!2 = PHI(min_sum!1, min_sum!4)
+5.    min_index!2 = PHI(min_index!1, min_index!4)
+6.    sum!2 = 0
+7.    for j in range(0, D!0):
+8.      sum!3 = PHI(sum!2, sum!4)
+9.      d!3 = (S!0[((i * D!0) + j)] - C!0[j]) // MPC
+10.     p!3 = (d!3 * d!3) // MPC
+11.     sum!4 = (sum!3 + p!3) // MPC
+12.  !1!2 = (sum!3 < min_sum!2) // MPC
+13.  min_sum!3 = sum!3
+14.  min_index!3 = i
+15.  min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2) // MPC
+16.  min_index!4 = MUX(!1!2, min_index!3, min_index!2) // MPC
+17.!2!1 = (min_sum!2, min_index!2)   
+\end{verbatim}
+}
+
+We linearize the source turning conditionals into MUX statements. The PHI nodes
+are remnants of the SSA IR; our compiler generates code that picks the correct value 
+when producing MOTION output and the MOTION framework in turn linearizes 
+MPC source loops when it generates the circuit.
+
+We turn to our analytical model to compute the cost of this program. Assuming fixed 
+cost $\beta$ for a local MPC operation (essentially just ADD) and cost $\alpha$ for a remote
+MPC operation (e.g., MUX, CMP, and remaining operations), the cost of the iterative schedule 
+will be $N*D*(2*\alpha+\beta) + N*3*\alpha$. 
+
+Our key contribution is the vectorizing transformation. We can compute all $N*D$ 
+subtraction operations (line 9) in a single SIMD instruction; similarly we can compute 
+all multiplication operations (line 10) in a single SIMD instruction. And while we cannot
+vectorize computation of the N individual sums, we can compute the N sums in parallel. 
+Our compiler automatically detects these opportunities and transforms the program. 
+It is standard that MPC researchers write vectorized versions of the Biometric
+program by hand; we are the first (to the best of our knowledge) to automatically 
+transform an intuitive, iterative MPC program into an unintuitive vectorized one.
+
+\subsection{Vectorization and Cost of Schedule}
+
+Our compiler produces the following vectorized program. (Note that this is
+still higher-level IR, our compiler turns this code into MOTION variables 
+loops and SIMD primitives, which MOTION then uses to generate the circuit.)
+
+{\small
+\begin{verbatim}
+min_sum!1 = 10000
+min_index!1 = 0
+// S!0^ is same as S!0. C!0 replicates C!0 N-times: 
+S!0^ = raise_dim(S!0, ((i * D!0) + j), (i:N!0,j:D!0))
+C!0^ = raise_dim(C!0, j, (i:N!0,j:D!0))
+
+sum!2 = [0,..,0]
+// Computes all differences and all products "at once"
+d!3[I,J] = SUB_SIMD(S!0^[I,J],C!0^[I,J])
+p!3[I,J] = MUL_SIMD(d!3[I,J] * d!3[I,J])
+
+for j in range(0, D!0):
+  // sum!2[I], sum!3[I], sum!4[I] are vectors of size N  
+  // Computes N intermediate sums "at once"
+  sum!3[I] = PHI(sum!2^[I], sum!4[I])       
+  sum!4[I] = ADD_SIMD(sum!3[I],p!3[I,j])
+
+min_index!3 = [0,1,...N!0-1]   
+
+for i in range(0, N!0):
+  min_sum!2 = PHI(min_sum!1, min_sum!4) 
+  !1!2[i] = CMP(sum!3[i],min_sum!2)
+  min_sum!4 = MUX(!1!2[i], sum!3[i], min_sum!2)
+    
+for i in range(0, N!0):
+  min_index!2 = PHI(min_index!1, min_index!4)  
+  min_index!4 = MUX(!1!2[i], min_index!3[i], min_index!2)
+!2!1 = (min_sum!2, min_index!2)   
+\end{verbatim}
+}
+
+In MPC compilers a vectorized operation that computing M operations "at once" costs 
+essentially the same ($\alpha$ or $\beta$) as an individual operation. We elaborate 
+on these in the following section. Thus, the vectorized program costs 
+$2*\alpha$ + $D * \beta + N*3*\alpha$. The first term in the sum corresponds to the vectorized
+subtraction and multiplication, the second term corresponds to the for loop on $j$ and the third 
+one corresponds to the remaining for loops on $i$. Clearly, $2*\alpha + D * \beta + N*3*\alpha << N*D*(2*\alpha+\beta) + N*3*\alpha$.
+Our experimental results illustrate this as well. \ana{Add numbers.}
+
+
+\section{Analytical Model}
+\label{sec:model}
 
 \subsection{Scheduling in MPC}
+\label{sec:mpc}
 
-\ana{Here we need more on MPC before jumping to scheduling. MPC-source, basic assumptions about static loop bounds, etc.}
+%\ana{Here we need more on MPC before jumping to scheduling. MPC-source, basic assumptions about static loop bounds, etc.}
 
 For this treatment we make the following simplifying assumptions:
 
@@ -317,13 +479,16 @@ For this treatment we make the following simplifying assumptions:
 in parallel still cost 2. \ishaq{We need to reword this assumption to something like "$K$ parallel MUL costs much less than $K$ (because they get amortized), but any mix of $K$  MUL and MUX still cost roughly $K$. Specifically, we should take away the low constants (2 and 1) because we know for low constants this is not true.} \ana{Again, core assumption that MUL and MUX don't benefit from amortization stays. We have to replace constant costs with functions, as in (3).}
 \end{enumerate}
 
-
-\subsection{Scheduling in HPC}
-\label{sec:hpc}
-
+\subsection{Problem Statement}
+\label{sec:problem}
 
 
-\section{\bf Preliminaries}
+\subsection{Scheduling is NP-hard}
+\label{sec:np}
+
+
+
+\section{\bf Compiler Framework}
 \label{sec:preliminaries}
 
 We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. We write $i_1,i_2,...i_k$ to denote the loop nest: $i_1$ is the outermost loop, $i_2$, is immediately nested in $i_1$, and so on until $i_k$. As an example, a statement nested in $i_1,i_2,...i_k$ can access array $A[f(i_1,i_2,...i_k)]$. We write $A[i_1,i_2,...i_k]$ interchangeably. \ana{Need to state this more precisely.}
@@ -382,18 +547,18 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 
 \STATE \COMMENT { Phase 1: Raise dimension of scalar variables to corresponding loop nest. We can traverse stmts linearly in MPC-source. }
 
-\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y,...)$ in loop $i,j,k$}
+\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i,j,k$}
 %\FOR {each $Y_n$}
-\FOR {each def-use edge $\mathit{stmt}' (\mbox{def of } Y) \rightarrow \mathit{stmt} (\mbox{def of } X)$}
-\STATE {case def-use edge of} \\
-\STATE \hspace{0.25cm} {same-level: $Y'$ is $Y$} \\
-\STATE \hspace{0.25cm} {outer-to-inner: add $Y'[i,j,k] = \mathit{raise\_dim}(Y)$ at $\mathit{stmt'}$}
-\STATE \hspace{0.25cm} {inner-to-outer: add $Y'[i,j,k] = \mathit{drop\_dim}(Y)$ at $\mathit{stmt}$}
+\FOR {each argument $Y_n$} %def-use edge $\mathit{stmt}' (\mbox{def of } Y) \rightarrow \mathit{stmt} (\mbox{def of } X)$}
+\STATE {case def-use edge $\mathit{stmt}' (\mbox{def of } Y_n) \rightarrow \mathit{stmt} (\mbox{def of } X)$ of} \\
+\STATE \hspace{0.25cm} {same-level: $Y'_n$ is $Y_n$} \\
+\STATE \hspace{0.25cm} {outer-to-inner: add $Y'_n[i,j,k] = \mathit{raise\_dim}(Y_n)$ at $\mathit{stmt'}$}
+\STATE \hspace{0.25cm} {inner-to-outer: add $Y'_n[i,j,k] = \mathit{drop\_dim}(Y_n)$ at $\mathit{stmt}$}
 \ENDFOR
 
-\COMMENT { Optimistically vectorize all. $\stackrel{\rightarrow}{i}$ means vectorized dimension. }
+\COMMENT { Optimistically vectorize all. $I$ means vectorized dimension. }
 %\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i,j,k$}
-\STATE {change to $X[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j},\stackrel{\rightarrow}{k}] = \mathit{Op}(Y'_1[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j},\stackrel{\rightarrow}{k}],Y'_2[\stackrel{\rightarrow}{i},\stackrel{\rightarrow}{j},\stackrel{\rightarrow}{k}])$ }
+\STATE {change to $X[I,J,K] = \mathit{Op}(Y'_1[I,J,K],Y'_2[I,J,K])$ }
 \ENDFOR
 
 \COMMENT { Phase 2: Recreating FOR loops for cycles; vectorizable statements hoisted up. }
@@ -414,7 +579,7 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 \STATE {{\color{red}{add target-less $\phi$-node for A if $cl$ updates array A}}}
 \STATE {add statements in $cl$ to loop body in some order of dependences}
 \STATE \COMMENT { Dimension is not vectorizable: }
-\STATE {change $\stackrel{\rightarrow}{i_d}$ to $i_d$ in all statements in loop}
+\STATE {change ${I_d}$ to $i_d$ in all statements in loop}
 \STATE {treat FOR loop as monolith node: some def-use edges become same-level.}
 \ENDFOR
 {
@@ -740,7 +905,8 @@ For now, we restrict array updates to \emph{canonical updates}. Assume (for simp
 
 The update $\texttt{A}[i,j]$ can be nested into an inner loop and there may be multiple updates, i.e., writes to $\texttt{A}[i,j]$. However, update such as $\texttt{A}[i-1,j] = ...$ or $\texttt{A}[i-1,j-1] = ...$, etc., is not allowed. Additionally, while there could be several different loops that perform canonical updates, they must be of the same dimensionality, i.e., an update of higher or lower dimension, e.g., $A[i,j,k] = ...$ is not allowed. We compute the \emph{canonical dimensionality} of each write array in the obvious way \emph{before basic vectorization}. This restriction simplifies reasoning in this early stage of the compiler; we will look to relax the restriction in future work.
 
-Another restriction/assumption is that we assume the output array is given as input with initial values, and it is of size consistent with its canonical dimensionality. \ana{This restriction will require that we update our benchmarks that come with output arrays.}
+Another restriction/assumption is that we assume the output array is given as input with initial values, and it is of size consistent with its canonical dimensionality. 
+%\ana{This restriction will require that we update our benchmarks that come with output arrays.}
 
 Reads through an arbitrary formula, such as $\texttt{A}[i-1]$ for example, are allowed; currently, our projection function returns dummy values if the read formula is out of bounds; we assume the programmer ensures that the program still computes correct output in this case.
 

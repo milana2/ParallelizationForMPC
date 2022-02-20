@@ -155,7 +155,7 @@ This phase removes redundant dimensionality.
 It starts by removing redundant dimensions in MOTION loops followed
 by removal of redundant drop dimension statements.
 It then does (extended) constant propagation 
-to "bypass" raise statements, copy propagation
+to "bypass" raise statements, followed by copy propagation
 and dead code elimination.
 
 The code becomes closer to what we started with:
