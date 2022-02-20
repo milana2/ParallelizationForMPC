@@ -415,14 +415,14 @@ transform an intuitive, iterative MPC program into an unintuitive vectorized one
 \subsection{Vectorization and Cost of Schedule}
 
 Our compiler produces the following vectorized program. (Note that this is
-still higher-level IR, our compiler turns this code into MOTION variables 
+still higher-level IR, our compiler turns this code into MOTION variables, 
 loops and SIMD primitives, which MOTION then uses to generate the circuit.)
 
 {\small
 \begin{verbatim}
 min_sum!1 = 10000
 min_index!1 = 0
-// S!0^ is same as S!0. C!0 replicates C!0 N-times: 
+// S!0^ is same as S!0. C!0^ replicates C!0 N-times: 
 S!0^ = raise_dim(S!0, ((i * D!0) + j), (i:N!0,j:D!0))
 C!0^ = raise_dim(C!0, j, (i:N!0,j:D!0))
 
@@ -434,7 +434,7 @@ p!3[I,J] = MUL_SIMD(d!3[I,J] * d!3[I,J])
 for j in range(0, D!0):
   // sum!2[I], sum!3[I], sum!4[I] are vectors of size N  
   // Computes N intermediate sums "at once"
-  sum!3[I] = PHI(sum!2^[I], sum!4[I])       
+  sum!3[I] = PHI(sum!2[I], sum!4[I])       
   sum!4[I] = ADD_SIMD(sum!3[I],p!3[I,j])
 
 min_index!3 = [0,1,...N!0-1]   
@@ -471,27 +471,51 @@ Our experimental results illustrate this as well. \ana{Add numbers.}
 For this treatment we make the following simplifying assumptions:
 
 \begin{enumerate}
-\item All statements in the program execute using the same protocol (sharing). That is, there is no share conversion. \ishaq{This is not an assumption, this is our setting. We work in the single protocol world.}
-\item All MPC instructions have the same unit cost, 1 unit. \ishaq{Don't we need to distinguish between local (cheap) vs. interactive (expensive) instructions? I don't see how we could assume this. -- Past suggestion from Vassilis: Ideally we should assume cost to be a convex function.}\ana{After discussion 1/12: replace single costs 1 with two levels of costs: $\alpha$ for non-local operations, e.g., MUL, and $\beta$ for local ops, e.g., ADD.}
-\item There is unlimited bandwidth---i.e., a single MPC-instruction costs as much as $N$ amortized instructions, namely 1 unit.\ishaq{Comment from Vassilis: We assume there are infinite parallel capacities, this is the standard assumption in PRAM (Cryptographic Parallel RAM).}\ana{PRAM assumption stays. We have to replace the unit cost of 1 with a suitable amortization function $f(n)$, which I don't think changes much in the cost modeling and analysis.}
+\item All statements in the program execute using the same protocol (sharing). That is, there is no share conversion. 
+%\ishaq{This is not an assumption, this is our setting. We work in the single protocol world.}
+\item There are two tiers of MPC instructions, local and remote. A local instruction (essentially just ADD) has cost $\beta$ 
+and a remote instruction (e.g., MUX, MUL, SHL, etc.) has cost $\alpha$, where $\alpha >> \beta$. We assume that all remote 
+instructions have the same cost.
+%\ishaq{Don't we need to distinguish between local (cheap) vs. interactive (expensive) instructions? I don't see how we could assume this. -- Past suggestion from Vassilis: Ideally we should assume cost to be a convex function.}\ana{After discussion 1/12: replace single costs 1 with two levels of costs: $\alpha$ for non-local operations, e.g., MUL, and $\beta$ for local ops, e.g., ADD.}
+\item We assume infinite parallel capacity---i.e., a single MPC-instruction costs as much as $N$ amortized instructions, namely $\alpha$ or $\beta$. 
+This is a standard assumption in Cryptographic Parallel RAM. ABY presents empirical support for this assumption~\ana{Add citations. PRAM, ABY.}
+%\ishaq{Comment from Vassilis: We assume there are infinite parallel capacities, this is the standard assumption in PRAM (Cryptographic Parallel RAM).}\ana{PRAM assumption stays. We have to replace the unit cost of 1 with a suitable amortization function $f(n)$, which I don't think changes much in the cost modeling and analysis.}
 \item MPC instructions scheduled in parallel benefit from amortization \emph{only if} they are the same instruction. Given our previous assumption,
-2 MUL instructions scheduled in parallel benefit from amortization and cost 1, however a MUL and a MUX instructions scheduled
-in parallel still cost 2. \ishaq{We need to reword this assumption to something like "$K$ parallel MUL costs much less than $K$ (because they get amortized), but any mix of $K$  MUL and MUX still cost roughly $K$. Specifically, we should take away the low constants (2 and 1) because we know for low constants this is not true.} \ana{Again, core assumption that MUL and MUX don't benefit from amortization stays. We have to replace constant costs with functions, as in (3).}
+2 MUL instructions scheduled in parallel benefit from amortization and cost $\alpha$, however a MUL and a MUX instructions scheduled
+in parallel still cost $2\alpha$. 
+%\ishaq{We need to reword this assumption to something like "$K$ parallel MUL costs much less than $K$ (because they get amortized), but any mix of $K$  MUL and MUX still cost roughly $K$. Specifically, we should take away the low constants (2 and 1) because we know for low constants this is not true.} \ana{Again, core assumption that MUL and MUX don't benefit from amortization stays. We have to replace constant costs with functions, as in (3).}
 \end{enumerate}
 
 \subsection{Problem Statement}
 \label{sec:problem}
 
+\ana{Ishaq? Basically, define sequential schedule, then define an equivalent parallel schedule. A parallel schedule is equivalent if it preserves def-use relations in sequential schedule, or in other words, schedules def ahead of the use. Problem is to minimize cost of Parallel schedule.}
 
 \subsection{Scheduling is NP-hard}
 \label{sec:np}
 
-
+\ana{Ishaq?}
 
 \section{\bf Compiler Framework}
 \label{sec:preliminaries}
 
-We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. We write $i_1,i_2,...i_k$ to denote the loop nest: $i_1$ is the outermost loop, $i_2$, is immediately nested in $i_1$, and so on until $i_k$. As an example, a statement nested in $i_1,i_2,...i_k$ can access array $A[f(i_1,i_2,...i_k)]$. We write $A[i_1,i_2,...i_k]$ interchangeably. \ana{Need to state this more precisely.}
+\begin{figure*}
+  \includegraphics[width=1.0\linewidth]{figs_paper_SIMD/compiler_framework.png}
+  \caption{Compiler Framework.} 
+  \label{fig:compiler_framework}
+\end{figure*}
+
+
+%We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. 
+
+\figref{fig:compiler_framework} presents an overview of our compiler. In this section, we describe several of the phases of the compiler. 
+Sections~\secref{sec:vectorization} and~\secref{sec:div_and_conq} describe vectorization and divide-and-conquer.
+We write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$. 
+We write $A[i,j,k]$ to denote canonical access to an array element. \ana{Need to state this more precisely.}
+
+\subsection{Semantic Analysis}
+
+\ana{Benjamin?}
 
 \subsection{Pseudo $\phi$-nodes}
 
@@ -499,12 +523,16 @@ A pseudo $\phi$-node $X_1 = \phi(X_0,X_2)$ in a loop header is evaluated during 
 
 %\ana{We need to double check that the following captures all cases of def-use edges.}
 
-\subsection{Def-use Edges}
+\subsection{Dependence Analysis}
+
+\ana{TOTO Ana: Shorten this section. Lots of this is unnecessary.}
+
+\subsubsection{Def-use Edges}
 
 The dependence graph has the following def-use edges:
 
 \begin{itemize}
-\item same-level forward $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest $i_1,i_2,...i_k$. E.g., $\texttt{d} = \mathit{SUM}(\texttt{S}[i,j], \texttt{C}[j])$ to $\texttt{p} = \mathit{MUL}(\texttt{d},\texttt{d})$ in Biometric is a same-level edge. A $\phi$ node can be a source of a same-level forward edge but not a target.
+\item same-level forward $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest $i_1,i_2,...i_k$. E.g., $\texttt{d} = \mathit{SUB}(\texttt{S}[i,j], \texttt{C}[j])$ to $\texttt{p} = \mathit{MUL}(\texttt{d},\texttt{d})$ in Biometric is a same-level edge. A $\phi$ node can be a source of a same-level forward edge but not a target.
 \item outer-to-inner forward $X\rightarrow Y$ where $X$ is in an outer loop nest, $i_1,i_2,...i_j$, and $Y$ is in an inner one, $i_1,i_2,...i_j,...,i_k$. A $\phi$-node can be a source or a target of an outer-to-inner forward edge.
 \item inner-to-outer forward $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i_1,i_2,...i_k,i_{k+1}$, and $Y$ is in the enclosing loop nest $i_1,i_2,...i_k$. E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer forward edge. Note that the source is \emph{always} a $\phi$-node in the immediately enclosing loop. The interpretation of this edge is that the use node $Y$ uses the definition made in the last iteration of the inner loop.
 \ben{The current representation of pseudo $\phi$-nodes shows them attached to the loop header (i.e. in the loop).  We may want to clarify that they are also evaluated at the loop's termination.}
@@ -514,7 +542,7 @@ The dependence graph has the following def-use edges:
 \item mixed forward edge $X\rightarrow Y$. $X$ is a $phi$-node in some loop $i_1,i_2,...i_k,i_{k+1}$ and $Y$ is a node in a loop nested into $i_1,i_2,...i_k$. We transform mixed forward edges as follows. Let $\x_j$ be the variable defined at the phi-node $X$. We add a variable and assignment $\x'_j = \x_j$ immediately after the $i_1,i_2,...i_k$ loop. Then we replace the use of $\x_j$ at $Y$ with $\x'_j$. This transforms a mixed forward edge into an "inner-to-outer" forward edge followed by an outer-to-inner forward edge. Thus Basic Vectorization handles one of "same-level", "inner-to-outer", or "outer-to-inner" def-use edges.
  \end{itemize}
 
-\subsection{Helper Functions}
+\subsubsection{Closures}
 
 We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. \ana{Cycle(n) is probably a better name.} The closure of $n$ is defined as follows:
 \begin{itemize}
@@ -522,6 +550,21 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 \item $X$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $X$, and $X \rightarrow n$ is a same-level back-edge.
 \item $Y$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $Y$ and there is a same-level path from $Y$ to some $X$ in $\mathit{closure}(n)$.
 \end{itemize}
+
+\subsection{Taint Analysis}
+
+\ana{Ben?}
+
+\section{Vectorization}
+\label{sec:vectorization}
+
+\ana{TODO: Still work in progress, all over.}
+
+%\ana{Add back-edges into Phase 1. A back-edge from a non-phi-node in loop $i$ to a phi-node in loop $i$'s header is a same-level edge. The only difference with the handling of normal same-level forward def-use is that the operand index will become $i-1$. A back edge from a phi-node in loop $j$ to a phi-node in loop $i$, where $j$ is nested in $i$ is an inner-to-outer edge and will require dropping dimension. We can show these are the only kinds of back-edges that may occur.}
+
+%\subsection{Algorithm (Still work in progress.)}
+
+\subsection{Raise Dimension and Drop Dimension}
 
 We define the $\mathit{raise\_dim}$ (raise dimensions) and $\mathit{drop\_dim}$ (drop dimension) functions. Raise dimension "lifts" a lower-dimension array (\ana{The right term here is tensor, I am pretty sure!}) into a higher dimension one. This is necessary when a lower-dimensional array is used in a higher dimensional loop and, essentially, is just copying of values. For example, Biometric contains the statement $d = \mathit{SUB}(S[i, j], C[j])$, in the $j$-loop which is nested into the $i$-loop. Here $C$ is a one-dimensional array, however, to vectorize across both loops it is necessary to turn it into a two-dimensional array: $C[i,j]$ becomes $[C[0],C[1],...C[J],C[0],C[1],...C[J], ... C[0],C[1],...C[J]]$, which turns the row into a matrix of $I$ identical rows. (We use capital letters to denote the upper bounds of loops, e.g., $J$ is the upper bound of the $j$-loop and $I$ is the upper bound of the $i$-loop.)
 
@@ -535,11 +578,6 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 
 \ana{This section is still informal. Needs work to make more precise.}
 
-\section{Vectorization}
-
-\ana{Add back-edges into Phase 1. A back-edge from a non-phi-node in loop $i$ to a phi-node in loop $i$'s header is a same-level edge. The only difference with the handling of normal same-level forward def-use is that the operand index will become $i-1$. A back edge from a phi-node in loop $j$ to a phi-node in loop $i$, where $j$ is nested in $i$ is an inner-to-outer edge and will require dropping dimension. We can show these are the only kinds of back-edges that may occur.}
-
-%\subsection{Algorithm (Still work in progress.)}
 
 \subsection{Basic Vectorization}
 
@@ -611,8 +649,8 @@ FOR $i=0 ...$ MOTION loop end at target (use) $X' = \mathit{drop\_dim}(X, i)$. }
 
 \end{algorithmic}
 
-\ishaq{We need to think of a way to handle 4th case for def-use, when a nested block B def is followed by another, different, nested block B' use. Note: The handwritten notes say we can break it into 2 edges. One idea to this end is to insert a def' node which is a copy of the original def. The def' should be placed in a block that contains both B and B'.}
-\ishaq{THE ABOVE COMMENT IS RESOLVED. After transformation to SSA, there should be an intermediate variable (phi node) that is assigned a value depending on whether control branched or not. Should we put this into the writeup?}
+%\ishaq{We need to think of a way to handle 4th case for def-use, when a nested block B def is followed by another, different, nested block B' use. Note: The handwritten notes say we can break it into 2 edges. One idea to this end is to insert a def' node which is a copy of the original def. The def' should be placed in a block that contains both B and B'.}
+%\ishaq{THE ABOVE COMMENT IS RESOLVED. After transformation to SSA, there should be an intermediate variable (phi node) that is assigned a value depending on whether control branched or not. Should we put this into the writeup?}
 
 \input{biometric_vectorization_example.tex}
 
@@ -871,7 +909,7 @@ This is to reduce the dimensionality of simd-ified computation. Technically, $\t
 a simdified operation that can be carried out in parallel "in one round". However, particularly when \texttt{A} is a multi-dimensional array, there is
 substantial increase in the size of the arrays (vectors) we send to SIMD operations. Refining to an update to a specific index would reduce
 the size of those vectors. Note that this is a heuristic that handles a common case, but not all cases of array updates.
-\ana{TODO: Simplify this algorithm, taking into account the restriction to canonical updates. It should be handling \_all\_ cases.}
+%\ana{TODO: Simplify this algorithm, taking into account the restriction to canonical updates. It should be handling \_all\_ cases.}
 
 
 \begin{algorithmic}
@@ -920,7 +958,8 @@ The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and 
 
 \begin{enumerate}
 
-\item same-level $X \rightarrow Y$. We do nothing, just propagate the array, which happens to be of the right dimension. \ana{There might be some opportunities to do copy propagation optimization and save some cycles, but let's leave this for later.}
+\item same-level $X \rightarrow Y$. We do nothing, just propagate the array, which happens to be of the right dimension. 
+%\ana{There might be some opportunities to do copy propagation optimization and save some cycles, but let's leave this for later.}
 
 \item inner-to-outer $X \rightarrow Y$. If dimensionality of the loop enclosure of $X$ is greater than the canonical dimensionality of the array, then add \emph{drop\_dim(...)} at $Y$, as in Basic Vectorization. Otherwise, do nothing.
 
@@ -1032,6 +1071,7 @@ After Phase 2 and Phase 3. The EQ operation is vectorizable across both dimensio
 
 
 \section{Divide-and-Conquer}
+\label{sec:div_and_conq}
 
 \ana{TODO: Now that we have broken FOR loops into smaller chunks, we can add Divide-and-conquer reasoning with Z3 and implement this additional transform.}
 
