@@ -213,7 +213,7 @@ p!3[I,J] = MUL_SIMD(d!3[I,J] * d!3[I,J])
 
 for j in range(0, D!0):
   // I dim is a noop. sum is already a one-dimensional vector
-  sum!3[I] = PHI(sum!2^[I], sum!4[I])       
+  sum!3[I] = PHI(sum!2[I], sum!4[I])       
   sum!4[I] = ADD_SIMD(sum!3[I],p!3[I,j])
 
 min_index!3 = [0,1,...N!0-1]   
