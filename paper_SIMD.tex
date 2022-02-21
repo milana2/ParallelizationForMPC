@@ -145,7 +145,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title[Scheduling and Amortization for MPC]{Scheduling and Amortization for MPC}
+\title[Scheduling and Vectorization for MPC]{Scheduling and Vectorization for MPC}
 
 %
 % The "author" command and its associated commands are used to define the authors and their affiliations.
@@ -275,7 +275,7 @@
 %
 % Keywords. The author(s) should pick words that accurately describe the work being
 % presented. Separate the keywords with commas.
-\keywords{protocol mixing; linear programming; multiparty computation; program analysis; cryptography}
+\keywords{multiparty computation; compilers; cryptography}
 
 
 \begin{comment}
@@ -321,7 +321,9 @@ number of MPC programs.
 
 \subsection{Source}
 
-As a running example, we assume a standard MPC benchmark, Biometric matching.
+As a running example, consider Biometric matching, a standard MPC benchmark.
+Array \texttt{C} is the feature vector of \texttt{D} features that we wish to match and array \texttt{S} 
+is the database of \texttt{N} vectors of size \texttt{D} that we match against.
 An intuitive implementation is as follows:
 
 {\small
@@ -331,10 +333,10 @@ def biometric(C: shared[list[int]], D: int,
                       tuple[shared[int], shared[int]]:
     min_sum = 10000
     min_index = 0  
-    for i in range(N):
+    for i in range(N): #loop over database
         sum = 0
-        for j in range(D):
-            d = S[i * D + j] - C[j]
+        for j in range(D): #loop over features
+            d = S[i * D + j] - C[j] #i.e., d = S[i,j] - C[j]
             p = d * d
             sum = sum + p
         if sum < min_sum:
@@ -344,15 +346,15 @@ def biometric(C: shared[list[int]], D: int,
 \end{verbatim}
 }
 
-Array \texttt{C} is the feature vector of \texttt{D} 
-features that we wish to match and array \texttt{S} is the database of \texttt{N} vectors of size \texttt{D}
-that we match against. The programmer annotates the inputs and outputs as \emph{shared}.
-The program iterates over the entries in the database and computes
+Our compiler takes (essentially) standard IMP syntax.
+The programmer can write intuitive iterative programs as the one above.
+They annotate certain inputs and outputs as \emph{shared}.
+Here the code iterates over the entries in the database and computes
 the sum of squares of the differences of individual features. The program returns the 
 index \texttt{i} of the vector that gives the best match plus the corresponding sum of squares.
 
 
-Our compiler imposes the following restrictions. We note that in most cases, the restrictions 
+Our compiler imposes the following restrictions. We note that in some cases, the restrictions 
 can be easily lifted and we plan to do so in future iterations of our compiler. 
 
 \begin{enumerate}
@@ -363,9 +365,9 @@ in row-major order and at this point the programmer is responsible for lineariza
 and access. 
 \item Array subscrpts are plaintext values.
 \item Our compiler allows for output (write) arrays, however it restricts
-write access to \emph{canonical writes} along the dimensions of the array (i.e., \texttt{A[i,j] = ...}
+write access to \emph{canonical writes} along the dimensions of the array. I.e., \texttt{A[i,j] = ...}
 where \texttt{i} and \texttt{j} loop over the two dimensions of \texttt{A} is allowed, 
-but \texttt{A[i,j+2] = ...} is not allowed). Read access is arbitrary. 
+but \texttt{A[i,j+2] = ...} is not allowed. Read access is arbitrary. 
 \end{enumerate}
 
 \subsection{MPC Source and Cost of Schedule}
@@ -393,29 +395,29 @@ The compiler generates an IR, MPC source:
 \end{verbatim}
 }
 
-We linearize the source turning conditionals into MUX statements. The PHI nodes
-are remnants of the SSA IR; our compiler generates code that picks the correct value 
-when producing MOTION output and the MOTION framework in turn linearizes 
-MPC source loops when it generates the circuit.
+The compiler linearizes the source turning conditionals into MUX statements. The PHI nodes
+are remnants of the SSA IR; the compiler generates code that picks the correct value 
+when producing MOTION output; the MOTION framework in turn linearizes 
+loops when it generates the circuit.
 
 We turn to our analytical model to compute the cost of this program. Assuming fixed 
 cost $\beta$ for a local MPC operation (essentially just ADD) and cost $\alpha$ for a remote
 MPC operation (e.g., MUX, CMP, and remaining operations), the cost of the iterative schedule 
 will be $N*D*(2*\alpha+\beta) + N*3*\alpha$. 
 
-Our key contribution is the vectorizing transformation. We can compute all $N*D$ 
+A key contribution is the vectorizing transformation. We can compute all $N*D$ 
 subtraction operations (line 9) in a single SIMD instruction; similarly we can compute 
 all multiplication operations (line 10) in a single SIMD instruction. And while we cannot
 vectorize computation of the N individual sums, we can compute the N sums in parallel. 
-Our compiler automatically detects these opportunities and transforms the program. 
+Our compiler \emph{automatically detects these opportunities and transforms the program}. 
 It is standard that MPC researchers write vectorized versions of the Biometric
 program by hand; we are the first (to the best of our knowledge) to automatically 
 transform an intuitive, iterative MPC program into an unintuitive vectorized one.
 
-\subsection{Vectorization and Cost of Schedule}
+\subsection{Vectorized MPC Source and Cost of Schedule}
 
 Our compiler produces the following vectorized program. (Note that this is
-still higher-level IR, our compiler turns this code into MOTION variables, 
+still higher-level IR, Vectorized MPC Source. Our compiler turns this code into MOTION variables, 
 loops and SIMD primitives, which MOTION then uses to generate the circuit.)
 
 {\small
