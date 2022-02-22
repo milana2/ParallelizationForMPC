@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from .ast_shared import TypeEnv, Var, VectorizedArr, Subscript
+from .ast_shared import TypeEnv, Var, VectorizedAccess, Subscript
 from .tac_cfg import DropDim, LiftExpr, Assign
 from . import loop_linear_code as llc
 from .dep_graph import DepGraph, DepNode, EdgeKind
@@ -56,7 +56,7 @@ def _arrays_read_in_rhs(
     rhs: llc.AssignRHS, array_name: Union[str, int]
 ) -> list[llc.Subscript]:
     # TODO: is it correct to ignore LiftExpr, DropDim, and VectorizedArr?
-    if isinstance(rhs, (llc.Var, llc.Constant, LiftExpr, DropDim, VectorizedArr)):
+    if isinstance(rhs, (llc.Var, llc.Constant, LiftExpr, DropDim, VectorizedAccess)):
         return []
     elif isinstance(rhs, llc.Subscript):
         if rhs.array.name == array_name:
@@ -341,7 +341,6 @@ def refine_array_mux(
 def _basic_vectorization_phase_1(
     stmts: list[llc.Statement],
     dep_graph: DepGraph,
-    type_env: TypeEnv,
     tmp_var_gen: TempVarGenerator,
 ) -> tuple[list[llc.Statement], list[llc.Statement]]:
     above_loop_result: list[llc.Statement] = []
@@ -354,10 +353,9 @@ def _basic_vectorization_phase_1(
                 var: llc.Var,
                 stmt: DepNode,
                 access_pattern: Optional[llc.SubscriptIndex] = None,
-            ) -> Union[llc.Var, VectorizedArr]:
+            ) -> llc.Var:
                 def_var = dep_graph.var_to_assignment[var]
                 edge_kind = dep_graph.edge_kind(def_var, stmt)
-                var_type = type_env[var]
                 if edge_kind is EdgeKind.SAME_LEVEL:
                     return var
                 elif edge_kind is EdgeKind.OUTER_TO_INNER:
@@ -376,19 +374,7 @@ def _basic_vectorization_phase_1(
                             ),
                         )
                     )
-                    type_env[var_prime] = var_type.add_dim()
-                    return VectorizedArr(
-                        array=var_prime,
-                        dim_sizes=tuple(
-                            loop.bound_high for loop in dep_graph.enclosing_loops[stmt]
-                        ),
-                        vectorized_dims=tuple(
-                            True for _ in dep_graph.enclosing_loops[stmt]
-                        ),
-                        idx_vars=tuple(
-                            loop.counter for loop in dep_graph.enclosing_loops[stmt]
-                        ),
-                    )
+                    return var_prime
                 elif edge_kind is EdgeKind.INNER_TO_OUTER:
                     var_prime = tmp_var_gen.get()
                     inside_loop_result.append(
@@ -403,27 +389,11 @@ def _basic_vectorization_phase_1(
                             ),
                         )
                     )
-                    type_env[var_prime] = var_type.drop_dim()
-                    return VectorizedArr(
-                        array=var_prime,
-                        dim_sizes=tuple(
-                            loop.bound_high
-                            for loop in dep_graph.enclosing_loops[def_var][:-1]
-                        ),
-                        vectorized_dims=tuple(
-                            True for _ in dep_graph.enclosing_loops[def_var][:-1]
-                        ),
-                        idx_vars=tuple(
-                            loop.counter
-                            for loop in dep_graph.enclosing_loops[def_var][:-1]
-                        ),
-                    )
+                    return var_prime
                 else:
                     assert_never(edge_kind)
 
-            def replace_atom(
-                atom: llc.Atom, stmt: DepNode
-            ) -> Union[llc.Atom, VectorizedArr]:
+            def replace_atom(atom: llc.Atom, stmt: DepNode) -> llc.Atom:
                 if isinstance(atom, llc.Var):
                     return replace_var(atom, stmt)
                 elif isinstance(atom, llc.Constant):
@@ -433,9 +403,9 @@ def _basic_vectorization_phase_1(
 
             def replace_subscript(
                 sub: llc.Subscript, stmt: DepNode
-            ) -> Union[llc.Subscript, VectorizedArr]:
+            ) -> Union[llc.Subscript, Var]:
                 replaced_arr = replace_var(sub.array, stmt, sub.index)
-                if isinstance(replaced_arr, VectorizedArr):
+                if replaced_arr != sub:
                     return replaced_arr
                 else:
                     return sub
@@ -457,7 +427,7 @@ def _basic_vectorization_phase_1(
                     )
                 else:
                     assert not isinstance(
-                        o, VectorizedArr
+                        o, VectorizedAccess
                     ), "there shouldn't be any vectorized arrays before basic vectorization"
                     assert_never(o)
 
@@ -480,7 +450,7 @@ def _basic_vectorization_phase_1(
                     replaced = [replace_atom(atom, stmt) for atom in stmt.rhs.items]
                     stmt.rhs = llc.List(
                         [
-                            v.array if isinstance(v, VectorizedArr) else v
+                            v.array if isinstance(v, VectorizedAccess) else v
                             for v in replaced
                         ]
                     )
@@ -488,7 +458,7 @@ def _basic_vectorization_phase_1(
                     replaced = [replace_atom(atom, stmt) for atom in stmt.rhs.items]
                     stmt.rhs = llc.Tuple(
                         [
-                            v.array if isinstance(v, VectorizedArr) else v
+                            v.array if isinstance(v, VectorizedAccess) else v
                             for v in replaced
                         ]
                     )
@@ -500,7 +470,7 @@ def _basic_vectorization_phase_1(
                         stmt.rhs, llc.Update
                     ), "Basic Vectorization does not support array writes for now"
                     assert not isinstance(
-                        stmt.rhs, (LiftExpr, DropDim, VectorizedArr)
+                        stmt.rhs, (LiftExpr, DropDim, VectorizedAccess)
                     ), "These types are introduced in basic vectorization so they shouldn't exist here"
                     assert_never(stmt.rhs)
             else:
@@ -510,7 +480,7 @@ def _basic_vectorization_phase_1(
 
         elif isinstance(stmt, llc.For):
             for_outside_stmts, for_inside_stmts = _basic_vectorization_phase_1(
-                stmt.body, dep_graph, type_env, tmp_var_gen
+                stmt.body, dep_graph, tmp_var_gen
             )
             inside_loop_result += for_outside_stmts
             new_loop = llc.For(
@@ -650,7 +620,7 @@ def _basic_vectorization_phase_2(
             elif dc.is_dataclass(stmt):
                 for field in dc.fields(stmt):
                     val = getattr(stmt, field.name)
-                    if isinstance(val, VectorizedArr):
+                    if isinstance(val, VectorizedAccess):
                         new_vectorization = tuple(
                             vectorization if dim != monolithic_for.counter else False
                             for dim, vectorization in zip(
@@ -683,7 +653,7 @@ def _basic_vectorization_phase_2(
             return True
         elif isinstance(stmt, (list, tuple)):
             return any(uses_loop_counter(item) for item in stmt)
-        elif isinstance(stmt, VectorizedArr):
+        elif isinstance(stmt, VectorizedAccess):
             return any(
                 uses_loop_counter(item)
                 for item, vectorized in zip(stmt.idx_vars, stmt.vectorized_dims)
@@ -763,13 +733,13 @@ def _basic_vectorization_phase_2(
     return output
 
 
-def basic_vectorization(
-    function: llc.Function, dep_graph: DepGraph, type_env: TypeEnv
+def basic_vectorization_phase_1(
+    function: llc.Function, dep_graph: DepGraph
 ) -> tuple[llc.Function, DepGraph]:
     tmp_var_gen = TempVarGenerator(dep_graph)
 
     before_func, body = _basic_vectorization_phase_1(
-        function.body, dep_graph, type_env, tmp_var_gen
+        function.body, dep_graph, tmp_var_gen
     )
     assert not before_func
 
@@ -780,6 +750,7 @@ def basic_vectorization(
         return_value=function.return_value,
         return_type=function.return_type,
     )
+    return function, DepGraph(function)
 
     print(f"Basic vectorization phase 1:")
     print(function)

@@ -1,7 +1,7 @@
-import sys
+import dataclasses as dc
 from typing import Optional, Union, cast
 
-from .util import assert_never
+from .util import assert_never, replace_pattern
 
 from . import loop_linear_code
 from .dep_graph import DepGraph, DepNode, DepParameter
@@ -17,13 +17,13 @@ from .ast_shared import (
     PLAINTEXT_INT,
     DataType,
     TypeEnv,
-    VectorizedArr,
+    VectorizedAccess,
 )
-from .tac_cfg import AssignRHS, List, Tuple, Mux, Update
+from .tac_cfg import AssignRHS, List, Tuple, Mux, Update, LiftExpr, DropDim
 
 
 def _type_assign_expr(
-    expr: Union[AssignRHS, SubscriptIndex, VectorizedArr], type_env: TypeEnv
+    expr: Union[AssignRHS, SubscriptIndex, VectorizedAccess], type_env: TypeEnv
 ) -> VarType:
     """
     Determines the type of an expression in a given type environment.  If an expression
@@ -127,16 +127,6 @@ def _type_assign_expr(
         )
         expr_type.visibility = VarVisibility.SHARED
 
-        # Validate the dimensions
-        if (
-            cond_type.dims is not None
-            and expr_type.dims is not None
-            and cond_type.dims > expr_type.dims
-        ):
-            raise TypeError(
-                "The true/false values of a MUX must have the same or fewer dimensions than the condition"
-            )
-
         return expr_type
 
     elif isinstance(expr, Update):
@@ -155,7 +145,33 @@ def _type_assign_expr(
         val_arr_type = val_type.add_dim()
         return VarType.merge(val_arr_type, arr_type)
 
-    raise AssertionError(f"Unexpected type {type(expr)} passed to _type_assign_expr")
+    elif isinstance(expr, LiftExpr):
+        expr_type = _type_assign_expr(expr.expr, type_env)
+        dim_sizes = [dim_size for _, dim_size in expr.dims]
+
+        return dc.replace(
+            expr_type,
+            _dims=len(expr.dims),
+            dim_sizes=dim_sizes,
+        )
+
+    elif isinstance(expr, DropDim):
+        expr_type = _type_assign_expr(expr.array, type_env)
+        return expr_type.drop_dim()
+
+    elif isinstance(expr, VectorizedAccess):
+        arr_type = type_env[expr.array]
+        return dc.replace(
+            arr_type,
+            dim_sizes=[
+                dim_size
+                for dim_size, vectorized in zip(expr.dim_sizes, expr.vectorized_dims)
+                if vectorized
+            ],
+        )
+
+    else:
+        assert_never(expr)
 
 
 def _add_loop_counter_types(
@@ -218,7 +234,9 @@ def validate_type_requirements(
             if type_env[stmt.lhs] != phi_type:
                 raise TypeError(f"Type mismatch in phi {stmt.lhs} = {stmt.rhs_vars()}")
 
-    if return_type is not None and type_env[return_var] != return_type:
+    if return_type is not None and not type_env[return_var].is_equivalent_to(
+        return_type
+    ):
         from pprint import pprint
 
         pprint(type_env[return_var])
@@ -229,7 +247,9 @@ def validate_type_requirements(
         )
 
 
-def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
+def type_check(
+    func: loop_linear_code.Function, dep_graph: DepGraph
+) -> tuple[loop_linear_code.Function, TypeEnv]:
     """
     Perform taint analysis to detect which variables are plaintext and which are shared.
     """
@@ -271,13 +291,6 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
         elif isinstance(stmt, (DepParameter, loop_linear_code.For)):
             pass
         else:
-            # Shouldn't happen before Basic Vectorization phase 1,
-            # and type analysis doesn't happen after that.
-            assert not isinstance(
-                stmt,
-                (loop_linear_code.RaiseDim, loop_linear_code.DropDim),
-            )
-
             assert_never(stmt)
 
         # If we get to this point, the lhs has been reassigned so we must add dependencies
@@ -292,6 +305,25 @@ def type_check(func: loop_linear_code.Function, dep_graph: DepGraph) -> TypeEnv:
         if var_type.visibility is None:
             var_type.visibility = VarVisibility.PLAINTEXT
 
+    # Once all typing is done, we can replace all usages of lifted variables with
+    # VectorizedAccesses
+    for var, var_type in type_env.items():
+        # A variable has been vectorized iff its dimensions are known
+        if not var_type.dim_sizes:
+            continue
+
+        func = replace_pattern(
+            func,
+            var,
+            VectorizedAccess(
+                var,
+                tuple(var_type.dim_sizes),
+                tuple(True for _ in var_type.dim_sizes),
+                (),
+            ),
+            include_lhs=False,
+        )
+
     validate_type_requirements(func.body, type_env, func.return_value, func.return_type)
 
-    return type_env
+    return func, type_env

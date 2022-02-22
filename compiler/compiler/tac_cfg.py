@@ -20,7 +20,7 @@ from .ast_shared import (
     BinOp as _BinOp,
     UnaryOp as _UnaryOp,
     TypeEnv,
-    VectorizedArr,
+    VectorizedAccess,
     subscript_index_accessed_vars,
 )
 from .util import assert_never
@@ -28,7 +28,7 @@ from .util import assert_never
 
 Atom = Union[Var, Constant]
 
-Operand = Union[Atom, Subscript, "BinOp", "UnaryOp", VectorizedArr]
+Operand = Union[Atom, Subscript, "BinOp", "UnaryOp", VectorizedAccess]
 
 
 class BinOp(_BinOp[Operand]):
@@ -89,18 +89,18 @@ AssignRHS = Union[
     Update,
     "LiftExpr",
     "DropDim",
-    VectorizedArr,
+    VectorizedAccess,
 ]
 
 
 @dataclass(frozen=True)
 class DropDim:
-    arr: Var
+    array: Var
     dims: tuple[LoopBound, ...]
 
     def __str__(self) -> str:
         dims = "(" + ", ".join(str(dim) for dim in self.dims) + ")"
-        return f"drop_dim({self.arr}, {dims})"
+        return f"drop_dim({self.array}, {dims})"
 
 
 @dataclass(frozen=True)
@@ -120,7 +120,7 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
         return []
     elif isinstance(rhs, Subscript):
         return [rhs.array] + subscript_index_accessed_vars(rhs.index)
-    elif isinstance(rhs, VectorizedArr):
+    elif isinstance(rhs, VectorizedAccess):
         return [rhs.array] + list(
             counter
             for counter, vectorized in zip(rhs.idx_vars, rhs.vectorized_dims)
@@ -147,7 +147,7 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
     elif isinstance(rhs, LiftExpr):
         return assign_rhs_accessed_vars(rhs.expr)
     elif isinstance(rhs, DropDim):
-        return [rhs.arr]
+        return [rhs.array]
     else:
         assert_never(rhs)
 

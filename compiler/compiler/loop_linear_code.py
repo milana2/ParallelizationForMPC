@@ -30,7 +30,7 @@ from .ast_shared import (
     Parameter,
     UnaryOpKind,
     TypeEnv,
-    VectorizedArr,
+    VectorizedAccess,
 )
 from .util import assert_never
 

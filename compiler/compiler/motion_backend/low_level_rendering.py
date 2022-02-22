@@ -16,7 +16,7 @@ from ..ast_shared import (
     Var,
     VarType,
     VarVisibility,
-    VectorizedArr,
+    VectorizedAccess,
 )
 from ..tac_cfg import (
     Assign,
@@ -46,7 +46,7 @@ class RenderContext:
 def render_type(var_type: VarType, plaintext: Optional[bool] = None) -> str:
     assert var_type.visibility is not None
     assert var_type.datatype is not None
-    assert var_type.dims is not None
+    assert var_type._dims is not None
 
     if var_type.datatype == DataType.TUPLE:
         return (
@@ -56,7 +56,7 @@ def render_type(var_type: VarType, plaintext: Optional[bool] = None) -> str:
         )
 
     str_rep = ""
-    for _dim in range(var_type.dims):
+    for _dim in range(var_type._dims):
         str_rep += "std::vector<"
 
     str_rep += render_datatype(
@@ -66,7 +66,7 @@ def render_type(var_type: VarType, plaintext: Optional[bool] = None) -> str:
         else var_type.visibility == VarVisibility.PLAINTEXT,
     )
 
-    for _dim in range(var_type.dims):
+    for _dim in range(var_type._dims):
         str_rep += ">"
 
     return str_rep
@@ -295,7 +295,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             )
             + "}"
         )
-        return f"drop_dim({render_expr(expr.arr, ctx)}, {dims})"
+        return f"drop_dim({render_expr(expr.array, ctx)}, {dims})"
 
     elif isinstance(expr, List):
         items = ", ".join(render_expr(item, ctx) for item in expr.items)
@@ -364,7 +364,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         else:
             return cpp_str
 
-    elif isinstance(expr, VectorizedArr):
+    elif isinstance(expr, VectorizedAccess):
         raise NotImplementedError()
 
     return assert_never(expr)

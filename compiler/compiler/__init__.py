@@ -86,16 +86,16 @@ def compile(
         print(dep_graph)
         print()
 
-    type_env = type_check(linear, dep_graph)
+    (linear, dep_graph) = vectorize.basic_vectorization_phase_1(linear, dep_graph)
+    if not quiet:
+        print("Basic Vectorization phase 1:")
+        print(linear)
+        print()
+
+    (linear, type_env) = type_check(linear, dep_graph)
     if not quiet:
         print("Type environment:")
         print(type_env)
-        print()
-
-    (linear, dep_graph) = vectorize.basic_vectorization(linear, dep_graph, type_env)
-    if not quiet:
-        print("Basic Vectorization:")
-        print(linear)
         print()
 
     return

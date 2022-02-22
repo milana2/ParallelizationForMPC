@@ -5,7 +5,7 @@ import os
 from textwrap import indent
 from typing import TypedDict, Union
 
-from ..ast_shared import VectorizedArr
+from ..ast_shared import VectorizedAccess
 
 from ..util import assert_never
 from ..loop_linear_code import Function, Statement, Phi, Assign, For
@@ -54,7 +54,7 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
             tac_cfg.SubscriptIndex,
             tac_cfg.LiftExpr,
             tac_cfg.DropDim,
-            VectorizedArr,
+            VectorizedAccess,
         ]
     ) -> list[Constant]:
         if isinstance(expr, Constant):
