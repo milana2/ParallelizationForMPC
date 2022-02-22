@@ -39,7 +39,7 @@ class VarType:
     tuple_types: list["VarType"] = field(default_factory=list)
 
     # For vectorized accesses, we need to know the size of the dimensions
-    dim_sizes: Optional[list["LoopBound"]] = None
+    dim_sizes: Optional[list[tuple["Var", "LoopBound"]]] = None
 
     @property
     def dims(self) -> Optional[int]:
@@ -87,7 +87,7 @@ class VarType:
         )
 
     def add_dim(self) -> "VarType":
-        return dc.replace(self, dims=self._dims + 1 if self._dims is not None else 1)
+        return dc.replace(self, _dims=self._dims + 1 if self._dims is not None else 1)
 
     def is_plaintext(self) -> bool:
         return self.visibility == VarVisibility.PLAINTEXT
@@ -218,8 +218,8 @@ class VarType:
         str_rep += f"{self.datatype}"
 
         if self.dim_sizes is not None:
-            for size in self.dim_sizes:
-                str_rep += f"; {size}]"
+            for idx, bound in self.dim_sizes:
+                str_rep += f"; ({idx}:{bound})]"
         elif self._dims is not None:
             for _ in range(self._dims):
                 str_rep += "; ?]"
@@ -477,15 +477,21 @@ class VectorizedAccess:
     idx_vars: tuple[Var, ...]
 
     def __str__(self) -> str:
-        subscript = ", ".join(
-            str(var).lower() if not vectorized else str(var).upper()
-            for var, vectorized in zip(self.idx_vars, self.vectorized_dims)
-            # if not vectorized
+        vectorized_idxs = ", ".join(
+            str(size).upper()
+            for size, vectorized in zip(self.dim_sizes, self.vectorized_dims)
+            if vectorized
         )
-
-        if subscript:
-            subscript = f"[{subscript}]"
-        return f"{self.array}{subscript}"
+        if vectorized_idxs:
+            vectorized_idxs = "{" + vectorized_idxs + "}"
+        unvectorized_idxs = ", ".join(
+            str(var).lower()
+            for var, vectorized in zip(self.idx_vars, self.vectorized_dims)
+            if not vectorized
+        )
+        if unvectorized_idxs:
+            unvectorized_idxs = "[" + unvectorized_idxs + "]"
+        return f"{self.array}{vectorized_idxs}{unvectorized_idxs}"
 
     def __hash__(self) -> int:
         return hash((self.array, self.dim_sizes, self.vectorized_dims, self.idx_vars))

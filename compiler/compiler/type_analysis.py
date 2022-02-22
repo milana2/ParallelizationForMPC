@@ -147,12 +147,11 @@ def _type_assign_expr(
 
     elif isinstance(expr, LiftExpr):
         expr_type = _type_assign_expr(expr.expr, type_env)
-        dim_sizes = [dim_size for _, dim_size in expr.dims]
 
         return dc.replace(
             expr_type,
             _dims=len(expr.dims),
-            dim_sizes=dim_sizes,
+            dim_sizes=expr.dims,
         )
 
     elif isinstance(expr, DropDim):
@@ -164,8 +163,10 @@ def _type_assign_expr(
         return dc.replace(
             arr_type,
             dim_sizes=[
-                dim_size
-                for dim_size, vectorized in zip(expr.dim_sizes, expr.vectorized_dims)
+                (idx, dim_size)
+                for dim_size, idx, vectorized in zip(
+                    expr.dim_sizes, expr.idx_vars, expr.vectorized_dims
+                )
                 if vectorized
             ],
         )
@@ -223,7 +224,12 @@ def validate_type_requirements(
             if not _type_assign_expr(stmt.rhs, type_env).is_complete():
                 raise TypeError(f"Unable to type expression {stmt.rhs}")
 
-            if type_env[stmt.lhs] != _type_assign_expr(stmt.rhs, type_env):
+            if isinstance(stmt.lhs, VectorizedAccess):
+                lhs_type = type_env[stmt.lhs.array]
+            else:
+                lhs_type = type_env[stmt.lhs]
+
+            if lhs_type != _type_assign_expr(stmt.rhs, type_env):
                 raise TypeError(f"Type mismatch in assignment {stmt.lhs} = {stmt.rhs}")
         elif isinstance(stmt, loop_linear_code.Phi):
             elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
@@ -231,7 +237,12 @@ def validate_type_requirements(
             if not phi_type.is_complete():
                 raise TypeError(f"Unable to type phi expression {stmt}")
 
-            if type_env[stmt.lhs] != phi_type:
+            if isinstance(stmt.lhs, VectorizedAccess):
+                lhs_type = type_env[stmt.lhs.array]
+            else:
+                lhs_type = type_env[stmt.lhs]
+
+            if lhs_type != phi_type:
                 raise TypeError(f"Type mismatch in phi {stmt.lhs} = {stmt.rhs_vars()}")
 
     if return_type is not None and not type_env[return_var].is_equivalent_to(
@@ -317,11 +328,11 @@ def type_check(
             var,
             VectorizedAccess(
                 var,
-                tuple(var_type.dim_sizes),
-                tuple(True for _ in var_type.dim_sizes),
-                (),
+                dim_sizes=tuple(bound for _, bound in var_type.dim_sizes),
+                vectorized_dims=tuple(True for _ in var_type.dim_sizes),
+                idx_vars=tuple(var for var, _ in var_type.dim_sizes),
             ),
-            include_lhs=False,
+            #   include_lhs=False,
         )
 
     validate_type_requirements(func.body, type_env, func.return_value, func.return_type)

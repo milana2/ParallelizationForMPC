@@ -99,8 +99,7 @@ class DropDim:
     dims: tuple[LoopBound, ...]
 
     def __str__(self) -> str:
-        dims = "(" + ", ".join(str(dim) for dim in self.dims) + ")"
-        return f"drop_dim({self.array}, {dims})"
+        return f"drop_dim({self.array})"
 
 
 @dataclass(frozen=True)
@@ -154,7 +153,7 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
 
 @dataclass(eq=False)
 class Assign:
-    lhs: Var
+    lhs: Union[Var, VectorizedAccess]
     rhs: AssignRHS
 
     def __hash__(self):

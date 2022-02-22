@@ -507,6 +507,7 @@ def _find_loop_depth(stmts: list[llc.Statement]) -> int:
 
 def _basic_vectorization_phase_2(
     stmts: list[llc.Statement],
+    type_env: TypeEnv,
     dep_graph: DepGraph,
     tmp_var_gen: TempVarGenerator,
     tgt_depth: int,
@@ -522,6 +523,7 @@ def _basic_vectorization_phase_2(
                     ret.extend(
                         _basic_vectorization_phase_2(
                             stmt.body,
+                            type_env,
                             dep_graph,
                             tmp_var_gen,
                             tgt_depth,
@@ -534,6 +536,7 @@ def _basic_vectorization_phase_2(
                             stmt,
                             body=_basic_vectorization_phase_2(
                                 stmt.body,
+                                type_env,
                                 dep_graph,
                                 tmp_var_gen,
                                 tgt_depth,
@@ -603,12 +606,14 @@ def _basic_vectorization_phase_2(
 
     # Helper function to generate a monolithic for loop from a closure
     def generate_monolithic_for(
-        closure: list[llc.Statement], lifted_vars: dict[llc.Var, llc.Var]
+        closure: list[llc.Statement], lifted_vars: dict[llc.Var, VectorizedAccess]
     ) -> llc.For:
         # Create new loop
+        new_counter = tmp_var_gen.get()
+        type_env[new_counter] = type_env[loop_stack[-1].counter]
         monolithic_for = dc.replace(
             loop_stack[-1],
-            counter=tmp_var_gen.get(),
+            counter=new_counter,
             body=closure,
             is_monolithic=True,
         )
@@ -639,9 +644,7 @@ def _basic_vectorization_phase_2(
             monolithic_for, loop_stack[-1].counter, monolithic_for.counter
         )
         for orig_var, lifted in lifted_vars.items():
-            monolithic_for = util.replace_pattern(
-                monolithic_for, orig_var, Subscript(lifted, monolithic_for.counter)
-            )
+            monolithic_for = util.replace_pattern(monolithic_for, orig_var, lifted)
         unvectorize_loop_dim(monolithic_for)
         return monolithic_for
 
@@ -676,14 +679,40 @@ def _basic_vectorization_phase_2(
         else:
             return False
 
-    def lift_vars(stmt: llc.Statement) -> dict[llc.Var, llc.Assign]:
+    def lift_vars(
+        stmt: llc.Statement,
+    ) -> dict[llc.Var, tuple[llc.Assign, VectorizedAccess]]:
         if isinstance(stmt, llc.Assign):
             if uses_loop_counter(stmt):
                 new_rhs = LiftExpr(
                     stmt.rhs,
                     ((loop_stack[-1].counter, loop_stack[-1].bound_high),),
                 )
-                return {stmt.lhs: llc.Assign(tmp_var_gen.get(), new_rhs)}
+                new_var = tmp_var_gen.get()
+                new_var_type = type_env[stmt.lhs].add_dim()
+                if new_var_type.dim_sizes is not None:
+                    new_var_type.dim_sizes.append(
+                        (
+                            loop_stack[-1].counter,
+                            loop_stack[-1].bound_high,
+                        )
+                    )
+                else:
+                    new_var_type.dim_sizes = [
+                        (loop_stack[-1].counter, loop_stack[-1].bound_high)
+                    ]
+                assert new_var_type.dim_sizes is not None
+                assert new_var_type.dims is not None
+
+                lifted_access = VectorizedAccess(
+                    new_var,
+                    tuple(bound for _, bound in new_var_type.dim_sizes),
+                    tuple([True] * (new_var_type.dims - 1) + [False]),
+                    tuple(var for var, _ in new_var_type.dim_sizes),
+                )
+
+                type_env[new_var] = new_var_type
+                return {stmt.lhs: (llc.Assign(new_var, new_rhs), lifted_access)}
             else:
                 return {}
         elif isinstance(stmt, llc.For):
@@ -700,7 +729,7 @@ def _basic_vectorization_phase_2(
     # Generate output
     output: list[llc.Statement] = []
     used_closures = set()
-    lifted_arrs: dict[llc.Var, llc.Var] = {}
+    lifted_arrs: dict[llc.Var, VectorizedAccess] = {}
     for stmt in vectorizeable:
         for phi, closure in closures:
             if phi in used_closures:
@@ -719,9 +748,10 @@ def _basic_vectorization_phase_2(
         # then lift all substatements.
         if uses_loop_counter(stmt):
             lifted = lift_vars(stmt)
-            for orig_var, assign in lifted.items():
-                lifted_arrs[orig_var] = assign.lhs
-                output.append(assign)
+            for orig_var, val in lifted.items():
+                assignment, lifted_access = val
+                lifted_arrs[orig_var] = lifted_access
+                output.append(assignment)
         else:
             output.append(stmt)
 
@@ -752,14 +782,18 @@ def basic_vectorization_phase_1(
     )
     return function, DepGraph(function)
 
-    print(f"Basic vectorization phase 1:")
-    print(function)
-    print()
+
+def basic_vectorization_phase_2(
+    function: llc.Function, type_env: TypeEnv, dep_graph: DepGraph
+) -> tuple[llc.Function, TypeEnv, DepGraph]:
+    tmp_var_gen = TempVarGenerator(dep_graph)
 
     loop_depth = _find_loop_depth(function.body) + 1
     for d in reversed(range(loop_depth)):
         dep_graph = DepGraph(function)
-        body = _basic_vectorization_phase_2(function.body, dep_graph, tmp_var_gen, d)
+        body = _basic_vectorization_phase_2(
+            function.body, type_env, dep_graph, tmp_var_gen, d
+        )
 
         function = llc.Function(
             name=function.name,
@@ -769,4 +803,4 @@ def basic_vectorization_phase_1(
             return_type=function.return_type,
         )
 
-    return (function, DepGraph(function))
+    return (function, type_env, DepGraph(function))

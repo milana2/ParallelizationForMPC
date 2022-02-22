@@ -68,6 +68,8 @@ class DepGraph:
 
         for assignment, _ in all_assignments:
             lhs = assignment.lhs
+            if isinstance(lhs, llc.VectorizedAccess):
+                lhs = lhs.array
 
             # This should be true if the SSA renaming is correct
             assert lhs not in self.var_to_assignment
@@ -80,11 +82,11 @@ class DepGraph:
 
         for assignment, _ in all_assignments:
 
-            def collect_lhss(stmt: DepNode) -> list[llc.Var]:
+            def collect_rhs(stmt: DepNode) -> list[llc.AssignRHS]:
                 if isinstance(stmt, llc.Phi):
                     return stmt.rhs_vars()
                 elif isinstance(stmt, llc.Assign):
-                    return llc.assign_rhs_accessed_vars(stmt.rhs)
+                    return [stmt.rhs]
                 elif isinstance(stmt, DepParameter):
                     return []
                 elif isinstance(stmt, llc.For):
@@ -92,14 +94,18 @@ class DepGraph:
                         return [
                             used_var
                             for substmt in stmt.body
-                            for used_var in collect_lhss(substmt)
+                            for used_var in collect_rhs(substmt)
                         ]
                     else:
                         return []
                 else:
                     assert_never(stmt)
 
-            lhss = collect_lhss(assignment)
+            lhss = [
+                var
+                for expr in collect_rhs(assignment)
+                for var in llc.assign_rhs_accessed_vars(expr)
+            ]
 
             for lhs in lhss:
                 try:
