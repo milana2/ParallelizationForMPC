@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 import networkx
 
-from .ast_shared import DropDim, RaiseDim
+from .tac_cfg import DropDim, LiftExpr
 
 from .util import assert_never
 from . import loop_linear_code as llc
@@ -50,7 +50,7 @@ class DepGraph:
             for statement in statements:
                 if isinstance(
                     statement,
-                    (llc.Phi, llc.Assign, RaiseDim, DropDim),
+                    (llc.Phi, llc.Assign),
                 ):
                     all_assignments.append((statement, copy(enclosing_loops)))
                 elif isinstance(statement, llc.For):
@@ -79,17 +79,27 @@ class DepGraph:
             self.def_use_graph.add_node(assignment)
 
         for assignment, _ in all_assignments:
-            if isinstance(assignment, llc.Phi):
-                lhss = assignment.rhs_vars()
-            elif isinstance(assignment, llc.Assign):
-                if isinstance(assignment.rhs, (RaiseDim, DropDim)):
-                    lhss = [assignment.rhs.arr]
+
+            def collect_lhss(stmt: DepNode) -> list[llc.Var]:
+                if isinstance(stmt, llc.Phi):
+                    return stmt.rhs_vars()
+                elif isinstance(stmt, llc.Assign):
+                    return llc.assign_rhs_accessed_vars(stmt.rhs)
+                elif isinstance(stmt, DepParameter):
+                    return []
+                elif isinstance(stmt, llc.For):
+                    if stmt.is_monolithic:
+                        return [
+                            used_var
+                            for substmt in stmt.body
+                            for used_var in collect_lhss(substmt)
+                        ]
+                    else:
+                        return []
                 else:
-                    lhss = llc.assign_rhs_accessed_vars(assignment.rhs)
-            elif isinstance(assignment, (DepParameter, llc.For)):
-                lhss = []
-            else:
-                assert_never(assignment)
+                    assert_never(stmt)
+
+            lhss = collect_lhss(assignment)
 
             for lhs in lhss:
                 try:

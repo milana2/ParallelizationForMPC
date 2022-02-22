@@ -5,7 +5,7 @@ import os
 from textwrap import indent
 from typing import TypedDict, Union
 
-from compiler.ast_shared import DropDim, RaiseDim, VectorizedArr
+from ..ast_shared import VectorizedArr
 
 from ..util import assert_never
 from ..loop_linear_code import Function, Statement, Phi, Assign, For
@@ -50,7 +50,11 @@ def _render_call(func: Function, type_env: TypeEnv) -> str:
 def _collect_constants(stmts: list[Statement]) -> list[Constant]:
     def expr_constants(
         expr: Union[
-            tac_cfg.AssignRHS, tac_cfg.SubscriptIndex, RaiseDim, DropDim, VectorizedArr
+            tac_cfg.AssignRHS,
+            tac_cfg.SubscriptIndex,
+            tac_cfg.LiftExpr,
+            tac_cfg.DropDim,
+            VectorizedArr,
         ]
     ) -> list[Constant]:
         if isinstance(expr, Constant):
@@ -74,13 +78,13 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
             ]
         elif isinstance(expr, tac_cfg.Update):
             return [*expr_constants(expr.index), *expr_constants(expr.value)]
-        elif isinstance(expr, RaiseDim):
+        elif isinstance(expr, tac_cfg.LiftExpr):
             return [
                 const
                 for _, dim_bound in expr.dims
                 for const in expr_constants(dim_bound)
             ]
-        elif isinstance(expr, DropDim):
+        elif isinstance(expr, tac_cfg.DropDim):
             return [
                 const for dim_bound in expr.dims for const in expr_constants(dim_bound)
             ]

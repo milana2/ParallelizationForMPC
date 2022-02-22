@@ -6,9 +6,7 @@ from ..ast_shared import (
     BinOpKind,
     Constant,
     DataType,
-    DropDim,
     Parameter,
-    RaiseDim,
     Subscript,
     SubscriptIndex,
     SubscriptIndexBinOp,
@@ -20,7 +18,18 @@ from ..ast_shared import (
     VarVisibility,
     VectorizedArr,
 )
-from ..tac_cfg import Assign, AssignRHS, BinOp, List, Mux, Tuple, UnaryOp, Update
+from ..tac_cfg import (
+    Assign,
+    AssignRHS,
+    BinOp,
+    List,
+    Mux,
+    Tuple,
+    UnaryOp,
+    Update,
+    LiftExpr,
+    DropDim,
+)
 from ..util import assert_never
 from ..loop_linear_code import For, Phi
 
@@ -299,7 +308,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
 
         return f"{cpp_cond}.Mux({cpp_false_val}, {cpp_true_val})"
 
-    elif isinstance(expr, RaiseDim):
+    elif isinstance(expr, LiftExpr):
         if expr.access_pattern is not None:
             array = render_expr(expr.arr, ctx)
 

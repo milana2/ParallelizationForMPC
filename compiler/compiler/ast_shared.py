@@ -416,31 +416,6 @@ class Subscript:
         return f"{self.array}[{self.index}]"
 
 
-@dataclass(frozen=True)
-class DropDim:
-    arr: Var
-    dims: tuple[LoopBound, ...]
-
-    def __str__(self) -> str:
-        dims = "(" + ", ".join(str(dim) for dim in self.dims) + ")"
-        return f"drop_dim({self.arr}, {dims})"
-
-
-@dataclass(frozen=True)
-class RaiseDim:
-    arr: Var
-    access_pattern: Optional[SubscriptIndex]
-    dims: tuple[tuple[Var, LoopBound], ...]
-
-    def __str__(self) -> str:
-        dims = ", ".join([f"{var}:{bound}" for var, bound in self.dims])
-        dims = f"({dims})"
-        if self.access_pattern is None:
-            return f"raise_dim({self.arr}, {dims})"
-        else:
-            return f"raise_dim({self.arr}, {self.access_pattern}, {dims})"
-
-
 @dataclass
 class VectorizedArr:
     """A vectorized array.  Can only be accessed via row-major ordering."""
@@ -452,10 +427,11 @@ class VectorizedArr:
 
     def __str__(self) -> str:
         subscript = ", ".join(
-            str(var)
+            str(var).lower() if not vectorized else str(var).upper()
             for var, vectorized in zip(self.idx_vars, self.vectorized_dims)
-            if not vectorized
+            # if not vectorized
         )
+
         if subscript:
             subscript = f"[{subscript}]"
         return f"{self.array}{subscript}"

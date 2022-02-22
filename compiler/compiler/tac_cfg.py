@@ -6,8 +6,6 @@ from typing import Union, Optional
 from dataclasses import dataclass
 
 from .ast_shared import (
-    DropDim,
-    RaiseDim,
     Var,
     VarType,
     DataType,
@@ -89,10 +87,30 @@ AssignRHS = Union[
     Tuple,
     Mux,
     Update,
-    RaiseDim,
-    DropDim,
+    "LiftExpr",
+    "DropDim",
     VectorizedArr,
 ]
+
+
+@dataclass(frozen=True)
+class DropDim:
+    arr: Var
+    dims: tuple[LoopBound, ...]
+
+    def __str__(self) -> str:
+        dims = "(" + ", ".join(str(dim) for dim in self.dims) + ")"
+        return f"drop_dim({self.arr}, {dims})"
+
+
+@dataclass(frozen=True)
+class LiftExpr:
+    expr: AssignRHS
+    dims: tuple[tuple[Var, LoopBound], ...]
+
+    def __str__(self) -> str:
+        dims = ", ".join([f"{var}:{bound}" for var, bound in self.dims])
+        return f"lift({self.expr}, ({dims}))"
 
 
 def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
@@ -126,12 +144,8 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
             + subscript_index_accessed_vars(rhs.index)
             + assign_rhs_accessed_vars(rhs.value)
         )
-    elif isinstance(rhs, RaiseDim):
-        return [rhs.arr] + (
-            subscript_index_accessed_vars(rhs.access_pattern)
-            if rhs.access_pattern
-            else []
-        )
+    elif isinstance(rhs, LiftExpr):
+        return assign_rhs_accessed_vars(rhs.expr)
     elif isinstance(rhs, DropDim):
         return [rhs.arr]
     else:

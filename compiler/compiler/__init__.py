@@ -98,6 +98,8 @@ def compile(
         print(linear)
         print()
 
+    return
+
     motion_code = motion_backend.render_function(linear, type_env)
     if not quiet:
         print("Motion code:")

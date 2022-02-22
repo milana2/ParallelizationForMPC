@@ -9,7 +9,7 @@ from typing import Optional, Union, cast
 
 import networkx
 
-from compiler.ast_shared import DropDim, RaiseDim, VectorizedArr  # type: ignore
+from compiler.ast_shared import VectorizedArr  # type: ignore
 
 from . import tac_cfg
 from . import ssa
@@ -221,7 +221,7 @@ def rename_variables(result: ssa.Function) -> None:
             )
         else:
             assert not isinstance(
-                rhs, (RaiseDim, DropDim, VectorizedArr)
+                rhs, (tac_cfg.LiftExpr, tac_cfg.DropDim, VectorizedArr)
             ), "These types are introduced in the vectorization phase"
             assert_never(rhs)
 

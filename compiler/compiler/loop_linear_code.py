@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Union, Optional
+from typing import Union, Optional, cast, TypeVar
 from textwrap import indent
 
 from .ssa import (
@@ -23,7 +23,16 @@ from .ssa import (
     Update,
     assign_rhs_accessed_vars,
 )
-from .ast_shared import VarType, BinOpKind, Parameter, UnaryOpKind, TypeEnv
+from .tac_cfg import LiftExpr, DropDim
+from .ast_shared import (
+    VarType,
+    BinOpKind,
+    Parameter,
+    UnaryOpKind,
+    TypeEnv,
+    VectorizedArr,
+)
+from .util import assert_never
 
 Statement = Union[Phi, Assign, "For"]
 
@@ -34,6 +43,7 @@ class For:
     bound_low: LoopBound
     bound_high: LoopBound
     body: list[Statement]
+    is_monolithic: bool = False
 
     def __hash__(self):
         return id(self)

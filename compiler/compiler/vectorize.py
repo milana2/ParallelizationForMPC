@@ -1,13 +1,15 @@
-from ast import operator
+from collections import defaultdict
 
-from .ast_shared import DropDim, RaiseDim, TypeEnv, Var, VectorizedArr
+from .ast_shared import TypeEnv, Var, VectorizedArr, Subscript
+from .tac_cfg import DropDim, LiftExpr, Assign
 from . import loop_linear_code as llc
 from .dep_graph import DepGraph, DepNode, EdgeKind
+from . import util
 from .util import assert_never
 
 import dataclasses as dc
 from dataclasses import dataclass
-from typing import Iterable, Union, Optional, Set
+from typing import Iterable, Union, Optional, cast
 
 import z3  # type: ignore
 
@@ -53,8 +55,8 @@ def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
 def _arrays_read_in_rhs(
     rhs: llc.AssignRHS, array_name: Union[str, int]
 ) -> list[llc.Subscript]:
-    # TODO: is it correct to ignore RaiseDim, DropDim, and VectorizedArr?
-    if isinstance(rhs, (llc.Var, llc.Constant, RaiseDim, DropDim, VectorizedArr)):
+    # TODO: is it correct to ignore LiftExpr, DropDim, and VectorizedArr?
+    if isinstance(rhs, (llc.Var, llc.Constant, LiftExpr, DropDim, VectorizedArr)):
         return []
     elif isinstance(rhs, llc.Subscript):
         if rhs.array.name == array_name:
@@ -115,7 +117,7 @@ def _z3_subscript_index_bin_op(
     elif op is llc.BinOpKind.SUB:
         return left - right
     elif op is llc.BinOpKind.MUL:
-        return left * right
+        return cast(z3.ArithRef, left * right)
     elif op is llc.BinOpKind.DIV:
         return left / right
     else:
@@ -363,9 +365,10 @@ def _basic_vectorization_phase_1(
                     above_loop_result.append(
                         llc.Assign(
                             lhs=var_prime,
-                            rhs=RaiseDim(
-                                var,
-                                access_pattern,
+                            rhs=LiftExpr(
+                                Subscript(var, access_pattern)
+                                if access_pattern
+                                else var,
                                 tuple(
                                     (loop.counter, loop.bound_high)
                                     for loop in dep_graph.enclosing_loops[stmt]
@@ -497,7 +500,7 @@ def _basic_vectorization_phase_1(
                         stmt.rhs, llc.Update
                     ), "Basic Vectorization does not support array writes for now"
                     assert not isinstance(
-                        stmt.rhs, (RaiseDim, DropDim, VectorizedArr)
+                        stmt.rhs, (LiftExpr, DropDim, VectorizedArr)
                     ), "These types are introduced in basic vectorization so they shouldn't exist here"
                     assert_never(stmt.rhs)
             else:
@@ -525,122 +528,239 @@ def _basic_vectorization_phase_1(
     return above_loop_result, inside_loop_result
 
 
+def _find_loop_depth(stmts: list[llc.Statement]) -> int:
+    return max(
+        1 + _find_loop_depth(stmt.body) if isinstance(stmt, llc.For) else 0
+        for stmt in stmts
+    )
+
+
 def _basic_vectorization_phase_2(
     stmts: list[llc.Statement],
     dep_graph: DepGraph,
-    surrounding_loop: Optional[llc.For] = None,
+    tmp_var_gen: TempVarGenerator,
+    tgt_depth: int,
+    loop_stack: list[llc.For] = [],
 ) -> list[llc.Statement]:
-    flattened_stmts: list[llc.Statement] = []
-    phis = set()
+    # If we're lower than the target depth, just recursively call this function
+    if len(loop_stack) < tgt_depth:
+        ret: list[llc.Statement] = []
+        for stmt in stmts:
+            if isinstance(stmt, llc.For):
+                # If we're updating the next level, it will handle recreating loops
+                if len(loop_stack) == tgt_depth - 1:
+                    ret.extend(
+                        _basic_vectorization_phase_2(
+                            stmt.body,
+                            dep_graph,
+                            tmp_var_gen,
+                            tgt_depth,
+                            loop_stack + [stmt],
+                        ),
+                    )
+                else:
+                    ret.append(
+                        dc.replace(
+                            stmt,
+                            body=_basic_vectorization_phase_2(
+                                stmt.body,
+                                dep_graph,
+                                tmp_var_gen,
+                                tgt_depth,
+                                loop_stack + [stmt],
+                            ),
+                        )
+                    )
+            else:
+                ret.append(stmt)
+        return ret
 
-    # Transform all inner loops first
-    for stmt in stmts:
-        if isinstance(stmt, llc.Phi):
-            flattened_stmts.append(stmt)
-            phis.add(stmt)
-        elif isinstance(stmt, llc.Assign):
-            flattened_stmts.append(stmt)
-        elif isinstance(stmt, llc.For):
-            flattened_stmts.extend(
-                _basic_vectorization_phase_2(stmt.body, dep_graph, stmt)
-            )
-        else:
-            assert_never(stmt)
+    # Otherwise, we're modifying this layer of the loop nest
+    # We assume that all deeper loops have been handled already.
 
-    # If we're updating a loop body, we have to modify the enclosing loops field of
-    # the dependency graph.  We optimistically remove the current loop from every statement
-    # in `flattened_stmts` (if they stay in the monolithic for loop they will be added back).
-    if surrounding_loop is not None:
-        nesting_level = len(dep_graph.enclosing_loops[surrounding_loop]) - 1
-
-        def remove_loop(stmts: list[llc.Statement]):
-            for stmt in stmts:
-                if isinstance(stmt, llc.For):
-                    remove_loop(stmt.body)
-                del dep_graph.enclosing_loops[stmts][nesting_level]
-
-    # At this point, `flattened_stmts` is a single-level replacement of `stmts` (any
-    # remaining loops are now monolithic loops where def-use edges into the loop are
-    # considered same-level).
-    #
     # We now can determine which statements must be in the reconstructed monolithic
     # for loop.  A statement is in the reconstructed loop if it is part of a closure with
     # one of the surrounding loop's phi nodes or if it uses the loop counter.
-    in_loop = []
-    for stmt in flattened_stmts:
-        # If the statement uses the loop counter, it is included
-        if dep_graph.def_use_graph.has_edge(surrounding_loop, stmt):
-            in_loop.append(stmt)
-            continue
-
-        # Otherwise, check to see if this statement is part of a closure
+    phis = set(phi for phi in stmts if isinstance(phi, llc.Phi))
+    raw_closures = defaultdict(list)
+    vectorizeable = []
+    for idx, stmt in enumerate(stmts):
+        added_to_closure = False
         for phi in phis:
             if dep_graph.has_same_level_path(
                 phi, stmt
             ) and dep_graph.has_same_level_path(stmt, phi):
-                in_loop.append(stmt)
-                break
+                added_to_closure = True
+                raw_closures[phi].append((idx, stmt))
 
-    # The returned list of statements begin with anything outside of the closure.  Since all
-    # closures are merged into a single loop, there won't be any statements which depend on
-    # variables inside of the closure which are not in the closure themselves.
-    # TODO: check the above assumption
-    new_stmts = [stmt for stmt in flattened_stmts if stmt not in in_loop]
+        if not added_to_closure:
+            vectorizeable.append(stmt)
 
-    # If we have a closure (this should happen iff we're inside of a loop) then create
-    # a new for loop to hold the closure's contents, unvectorize this loop's dimension,
-    # and update the dependency graph.
-    #
-    # We also have to hoist any statements which depend on the loop's counter out of the
-    # loop and replace their corresponding usages.
-    if in_loop:
-        assert surrounding_loop is not None
+    # Merge closures
+    closures = []
+    used_phis = set()
+    for phi, closure_stmts in raw_closures.items():
+        if phi in used_phis:
+            continue
 
+        used_phis.add(phi)
+
+        # Check over every unmerged closure to see if it can be
+        # merged with this one
+        for other_phi, other_closure_stmts in raw_closures.items():
+            if other_phi in used_phis:
+                continue
+
+            if any(
+                stmt[0] == other_stmt[0]
+                for stmt, other_stmt in zip(closure_stmts, other_closure_stmts)
+            ):
+                used_phis.add(other_phi)
+                raw_closures[phi].extend(other_closure_stmts)
+
+        # Sort the statements in the closure by their index to retain def-use order
+        raw_closures[phi].sort(key=lambda x: x[0])
+
+        # Drop any duplicate statements
+        closure = []
+        used_indices = set()
+        for idx, stmt in raw_closures[phi]:
+            if idx not in used_indices:
+                closure.append(stmt)
+                used_indices.add(idx)
+
+        closures.append((phi, closure))
+
+    # Helper function to generate a monolithic for loop from a closure
+    def generate_monolithic_for(
+        closure: list[llc.Statement], lifted_vars: dict[llc.Var, llc.Var]
+    ) -> llc.For:
         # Create new loop
-        monolithic_for = dc.replace(surrounding_loop, body=in_loop)
-        dep_graph.enclosing_loops[monolithic_for] = dep_graph.enclosing_loops[
-            surrounding_loop
-        ]
+        monolithic_for = dc.replace(
+            loop_stack[-1],
+            counter=tmp_var_gen.get(),
+            body=closure,
+            is_monolithic=True,
+        )
 
-        nesting_level = len(dep_graph.enclosing_loops[monolithic_for]) - 1
+        def unvectorize_loop_dim(stmt):
+            if isinstance(stmt, (list, tuple)):
+                for sub_stmt in stmt:
+                    unvectorize_loop_dim(sub_stmt)
+            elif dc.is_dataclass(stmt):
+                for field in dc.fields(stmt):
+                    val = getattr(stmt, field.name)
+                    if isinstance(val, VectorizedArr):
+                        new_vectorization = tuple(
+                            vectorization if dim != monolithic_for.counter else False
+                            for dim, vectorization in zip(
+                                val.idx_vars, val.vectorized_dims
+                            )
+                        )
+                        setattr(
+                            stmt,
+                            field.name,
+                            dc.replace(val, vectorized_dims=new_vectorization),
+                        )
+                    else:
+                        unvectorize_loop_dim(val)
 
-        def unvectorize_dim(rhs: llc.AssignRHS):
-            if isinstance(rhs, VectorizedArr):
-                rhs.vectorized_dims = tuple(
-                    v if idx != nesting_level else False
-                    for idx, v in enumerate(rhs.vectorized_dims)
+        monolithic_for = util.replace_pattern(
+            monolithic_for, loop_stack[-1].counter, monolithic_for.counter
+        )
+        for orig_var, lifted in lifted_vars.items():
+            monolithic_for = util.replace_pattern(
+                monolithic_for, orig_var, Subscript(lifted, monolithic_for.counter)
+            )
+        unvectorize_loop_dim(monolithic_for)
+        return monolithic_for
+
+    def uses_loop_counter(stmt) -> bool:
+        if not loop_stack:
+            return False
+
+        if stmt == loop_stack[-1].counter:
+            return True
+        elif isinstance(stmt, (list, tuple)):
+            return any(uses_loop_counter(item) for item in stmt)
+        elif isinstance(stmt, VectorizedArr):
+            return any(
+                uses_loop_counter(item)
+                for item, vectorized in zip(stmt.idx_vars, stmt.vectorized_dims)
+                if not vectorized
+            )
+        elif isinstance(stmt, llc.LiftExpr):
+            # If the loop counter is bound in the lifted expression,
+            # we can ignore it
+            if any(idx == loop_stack[-1].counter for idx, _ in stmt.dims):
+                return False
+            # Otherwise, it's a free variable in the loop counter so
+            # we need to lift it
+            else:
+                return uses_loop_counter(stmt.expr)
+        elif dc.is_dataclass(stmt):
+            return any(
+                uses_loop_counter(getattr(stmt, field.name))
+                for field in dc.fields(stmt)
+            )
+        else:
+            return False
+
+    def lift_vars(stmt: llc.Statement) -> dict[llc.Var, llc.Assign]:
+        if isinstance(stmt, llc.Assign):
+            if uses_loop_counter(stmt):
+                new_rhs = LiftExpr(
+                    stmt.rhs,
+                    ((loop_stack[-1].counter, loop_stack[-1].bound_high),),
                 )
-            elif isinstance(rhs, llc.BinOp):
-                unvectorize_dim(rhs.left)
-                unvectorize_dim(rhs.right)
-            elif isinstance(rhs, llc.UnaryOp):
-                unvectorize_dim(rhs.operand)
+                return {stmt.lhs: llc.Assign(tmp_var_gen.get(), new_rhs)}
+            else:
+                return {}
+        elif isinstance(stmt, llc.For):
+            return {
+                var: assign
+                for substmt in stmt.body
+                for var, assign in lift_vars(substmt).items()
+            }
+        elif isinstance(stmt, llc.Phi):
+            return {}
+        else:
+            assert_never(stmt)
 
-        # Update def-use edges and enclosing loops, and unvectorize the loop's dimension
-        def update_loop_contents(stmts: list[llc.Statement]):
-            for stmt in stmts:
-                # Update def-use edges
-                for src in dep_graph.def_use_graph.predecessors(stmt):
-                    dep_graph.def_use_graph.add_edge(src, monolithic_for)
+    # Generate output
+    output: list[llc.Statement] = []
+    used_closures = set()
+    lifted_arrs: dict[llc.Var, llc.Var] = {}
+    for stmt in vectorizeable:
+        for phi, closure in closures:
+            if phi in used_closures:
+                continue
 
-                # Update enclosing loops
-                dep_graph.enclosing_loops[stmt].insert(nesting_level, monolithic_for)
+            # of creating a new for loop to hold the closure's contents, unvectorizing the loop's
+            # dimension, and updating the dependency graph.
+            if any(
+                dep_graph.has_same_level_path(closure_stmt, stmt)
+                for closure_stmt in closure
+            ):
+                used_closures.add(phi)
+                output.append(generate_monolithic_for(closure, lifted_arrs))
 
-                # Update vectorization if applicable
-                if isinstance(stmt, llc.Assign):
-                    unvectorize_dim(stmt.rhs)
-                elif isinstance(stmt, llc.Phi):
-                    unvectorize_dim(stmt.rhs_true)
-                    unvectorize_dim(stmt.rhs_false)
-                elif isinstance(stmt, llc.For):
-                    update_loop_contents(stmt.body)
-                else:
-                    assert_never(stmt)
+        # Now that all needed closures have been added, add this statement.  If it needs to be lifted,
+        # then lift all substatements.
+        if uses_loop_counter(stmt):
+            lifted = lift_vars(stmt)
+            for orig_var, assign in lifted.items():
+                lifted_arrs[orig_var] = assign.lhs
+                output.append(assign)
+        else:
+            output.append(stmt)
 
-        update_loop_contents(monolithic_for.body)
-        new_stmts.append(monolithic_for)
+    # Add any remaining closures
+    for phi, closure in closures:
+        if phi not in used_closures:
+            output.append(generate_monolithic_for(closure, lifted_arrs))
 
-    return new_stmts
+    return output
 
 
 def basic_vectorization(
@@ -660,15 +780,22 @@ def basic_vectorization(
         return_value=function.return_value,
         return_type=function.return_type,
     )
-    dep_graph = DepGraph(function)
 
-    body = _basic_vectorization_phase_2(body, dep_graph)
-    function = llc.Function(
-        name=function.name,
-        parameters=function.parameters,
-        body=body,
-        return_value=function.return_value,
-        return_type=function.return_type,
-    )
+    print(f"Basic vectorization phase 1:")
+    print(function)
+    print()
+
+    loop_depth = _find_loop_depth(function.body) + 1
+    for d in reversed(range(loop_depth)):
+        dep_graph = DepGraph(function)
+        body = _basic_vectorization_phase_2(function.body, dep_graph, tmp_var_gen, d)
+
+        function = llc.Function(
+            name=function.name,
+            parameters=function.parameters,
+            body=body,
+            return_value=function.return_value,
+            return_type=function.return_type,
+        )
 
     return (function, DepGraph(function))
