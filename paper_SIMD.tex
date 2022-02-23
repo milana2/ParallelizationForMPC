@@ -493,10 +493,19 @@ in parallel still cost $2\alpha$.
 
 \ana{Ishaq? Basically, define sequential schedule, then define an equivalent parallel schedule. A parallel schedule is equivalent if it preserves def-use relations in sequential schedule, or in other words, schedules def ahead of the use. Problem is to minimize cost of Parallel schedule.}
 
+We have def-use dependency graph $G(V, E)$ for the input program. Each vertex/node in this graph represents an operation/instruction in the program and an edge represents dependence i.e. an edge from $V_1$ to $V_2$ means the result of operation in $V_1$ is used in the operation in $V_2$. To build a parallel schedule, we translate this graph $G(V, E)$ into another dependency graph $G'(V', E')$ such that:
+
+\begin{enumerate}
+    \item We collapse multiple vertices of the same type (i.e. same operation) in $V$ into a single vertex in $V'$.
+    \item dependencies are not broken i.e. If there is an edge from $V_1$ to $V_2$ ($V_1, V_2 \in V$), and we put them in vertices $V'_1, V'_2 \in G'$ respectively, then an edge must exist from $V'_1$ to $V'_2$.
+\end{enumerate}
+
+We want to build a graph $G'$ with fewest possible vertices since fewer vertices means more parallelization. \ishaq{TODO: make it more concrete, pick some variables e.g. $\alpha, \beta$ like above and show 1) parallel schedule will have lower cost (this should be easy). and 2) some sort of optimality? this would be hard}
+
 \subsection{Scheduling is NP-hard}
 \label{sec:np}
 
-\ana{Ishaq?}
+\ana{Ishaq?}\ishaq{TODO: As a first step, pull the super-sequence proof from Lindsay's thesis? }
 
 \section{\bf Compiler Framework}
 \label{sec:preliminaries}
