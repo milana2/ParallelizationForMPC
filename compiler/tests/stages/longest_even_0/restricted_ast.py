@@ -1,4 +1,4 @@
-def longest_even_0(Seq: shared[list[int]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
+def longest_even_0(Seq: shared[list[int; ?]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     current_length = 0
     max_length = 0
     for i: plaintext[int] in range(1, N):

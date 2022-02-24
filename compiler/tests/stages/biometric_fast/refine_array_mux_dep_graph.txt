@@ -11,6 +11,9 @@ Nodes:
     differences!2 = Φ(differences!1, differences!3)
     !1!2 = [0]
     differences!3 = (differences!2 + !1!2)
+    differences!2 = Φ(differences!1, differences!3)
+    !1!2 = [0]
+    differences!3 = (differences!2 + !1!2)
     min_index!1 = 0
     min_diff!1 = differences!2[0]
     for i!2 in range(0, N!0):
@@ -20,6 +23,30 @@ Nodes:
     a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i!2] + C_sqr_sum!0)
     two_a_b!2 = 0
     for j!1 in range(0, D!0):
+        two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
+        tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
+        two_a_b!4 = (two_a_b!3 + tmp!3)
+    this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
+    differences!5 = Update(differences!4, i!2, this_diff!2)
+    min_diff!3 = differences!5[0]
+    min_index!3 = 0
+    for k!1 in range(0, N!0):
+        min_index!4 = Φ(min_index!3, min_index!6)
+        min_diff!4 = Φ(min_diff!3, min_diff!6)
+        !2!3 = (differences!5[k!1] < min_diff!4)
+        min_diff!5 = differences!5[k!1]
+        min_index!5 = k!1
+        min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+        min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)
+    differences!4 = Φ(differences!2, differences!5)
+    min_index!2 = Φ(min_index!1, min_index!4)
+    min_diff!2 = Φ(min_diff!1, min_diff!4)
+    a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i!2] + C_sqr_sum!0)
+    two_a_b!2 = 0
+    for j!1 in range(0, D!0):
+    two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
+    tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
+    two_a_b!4 = (two_a_b!3 + tmp!3)
     two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
     tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
     two_a_b!4 = (two_a_b!3 + tmp!3)
@@ -28,6 +55,13 @@ Nodes:
     min_diff!3 = differences!5[0]
     min_index!3 = 0
     for k!1 in range(0, N!0):
+    min_index!4 = Φ(min_index!3, min_index!6)
+    min_diff!4 = Φ(min_diff!3, min_diff!6)
+    !2!3 = (differences!5[k!1] < min_diff!4)
+    min_diff!5 = differences!5[k!1]
+    min_index!5 = k!1
+    min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+    min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)
     min_index!4 = Φ(min_index!3, min_index!6)
     min_diff!4 = Φ(min_diff!3, min_diff!6)
     !2!3 = (differences!5[k!1] < min_diff!4)
@@ -49,15 +83,81 @@ Forward edges:
     !1!2 = [0]  →  differences!3 = (differences!2 + !1!2)
     min_index!1 = 0  →  min_index!2 = Φ(min_index!1, min_index!4)
     min_diff!1 = differences!2[0]  →  min_diff!2 = Φ(min_diff!1, min_diff!4)
-    for i!2 in range(0, N!0):  →  a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i!2] + C_sqr_sum!0)
-    for i!2 in range(0, N!0):  →  tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
-    for i!2 in range(0, N!0):  →  differences!5 = Update(differences!4, i!2, this_diff!2)
+    for i!2 in range(0, N!0):
+    differences!4 = Φ(differences!2, differences!5)
+    min_index!2 = Φ(min_index!1, min_index!4)
+    min_diff!2 = Φ(min_diff!1, min_diff!4)
+    a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i!2] + C_sqr_sum!0)
+    two_a_b!2 = 0
+    for j!1 in range(0, D!0):
+        two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
+        tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
+        two_a_b!4 = (two_a_b!3 + tmp!3)
+    this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
+    differences!5 = Update(differences!4, i!2, this_diff!2)
+    min_diff!3 = differences!5[0]
+    min_index!3 = 0
+    for k!1 in range(0, N!0):
+        min_index!4 = Φ(min_index!3, min_index!6)
+        min_diff!4 = Φ(min_diff!3, min_diff!6)
+        !2!3 = (differences!5[k!1] < min_diff!4)
+        min_diff!5 = differences!5[k!1]
+        min_index!5 = k!1
+        min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+        min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)  →  a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i!2] + C_sqr_sum!0)
+    for i!2 in range(0, N!0):
+    differences!4 = Φ(differences!2, differences!5)
+    min_index!2 = Φ(min_index!1, min_index!4)
+    min_diff!2 = Φ(min_diff!1, min_diff!4)
+    a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i!2] + C_sqr_sum!0)
+    two_a_b!2 = 0
+    for j!1 in range(0, D!0):
+        two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
+        tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
+        two_a_b!4 = (two_a_b!3 + tmp!3)
+    this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
+    differences!5 = Update(differences!4, i!2, this_diff!2)
+    min_diff!3 = differences!5[0]
+    min_index!3 = 0
+    for k!1 in range(0, N!0):
+        min_index!4 = Φ(min_index!3, min_index!6)
+        min_diff!4 = Φ(min_diff!3, min_diff!6)
+        !2!3 = (differences!5[k!1] < min_diff!4)
+        min_diff!5 = differences!5[k!1]
+        min_index!5 = k!1
+        min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+        min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)  →  tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
+    for i!2 in range(0, N!0):
+    differences!4 = Φ(differences!2, differences!5)
+    min_index!2 = Φ(min_index!1, min_index!4)
+    min_diff!2 = Φ(min_diff!1, min_diff!4)
+    a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i!2] + C_sqr_sum!0)
+    two_a_b!2 = 0
+    for j!1 in range(0, D!0):
+        two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
+        tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
+        two_a_b!4 = (two_a_b!3 + tmp!3)
+    this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
+    differences!5 = Update(differences!4, i!2, this_diff!2)
+    min_diff!3 = differences!5[0]
+    min_index!3 = 0
+    for k!1 in range(0, N!0):
+        min_index!4 = Φ(min_index!3, min_index!6)
+        min_diff!4 = Φ(min_diff!3, min_diff!6)
+        !2!3 = (differences!5[k!1] < min_diff!4)
+        min_diff!5 = differences!5[k!1]
+        min_index!5 = k!1
+        min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+        min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)  →  differences!5 = Update(differences!4, i!2, this_diff!2)
     differences!4 = Φ(differences!2, differences!5)  →  differences!5 = Update(differences!4, i!2, this_diff!2)
     min_index!2 = Φ(min_index!1, min_index!4)  →  !3!1 = (min_diff!2, min_index!2)
     min_diff!2 = Φ(min_diff!1, min_diff!4)  →  !3!1 = (min_diff!2, min_index!2)
     a_sqr_plus_b_sqr!2 = (S_sqr_sum!0[i!2] + C_sqr_sum!0)  →  this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
     two_a_b!2 = 0  →  two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
-    for j!1 in range(0, D!0):  →  tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
+    for j!1 in range(0, D!0):
+    two_a_b!3 = Φ(two_a_b!2, two_a_b!4)
+    tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
+    two_a_b!4 = (two_a_b!3 + tmp!3)  →  tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])
     two_a_b!3 = Φ(two_a_b!2, two_a_b!4)  →  two_a_b!4 = (two_a_b!3 + tmp!3)
     two_a_b!3 = Φ(two_a_b!2, two_a_b!4)  →  this_diff!2 = (a_sqr_plus_b_sqr!2 - two_a_b!3)
     tmp!3 = (S!0[((i!2 * D!0) + j!1)] * two_C!0[j!1])  →  two_a_b!4 = (two_a_b!3 + tmp!3)
@@ -67,9 +167,30 @@ Forward edges:
     differences!5 = Update(differences!4, i!2, this_diff!2)  →  min_diff!5 = differences!5[k!1]
     min_diff!3 = differences!5[0]  →  min_diff!4 = Φ(min_diff!3, min_diff!6)
     min_index!3 = 0  →  min_index!4 = Φ(min_index!3, min_index!6)
-    for k!1 in range(0, N!0):  →  !2!3 = (differences!5[k!1] < min_diff!4)
-    for k!1 in range(0, N!0):  →  min_diff!5 = differences!5[k!1]
-    for k!1 in range(0, N!0):  →  min_index!5 = k!1
+    for k!1 in range(0, N!0):
+    min_index!4 = Φ(min_index!3, min_index!6)
+    min_diff!4 = Φ(min_diff!3, min_diff!6)
+    !2!3 = (differences!5[k!1] < min_diff!4)
+    min_diff!5 = differences!5[k!1]
+    min_index!5 = k!1
+    min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+    min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)  →  !2!3 = (differences!5[k!1] < min_diff!4)
+    for k!1 in range(0, N!0):
+    min_index!4 = Φ(min_index!3, min_index!6)
+    min_diff!4 = Φ(min_diff!3, min_diff!6)
+    !2!3 = (differences!5[k!1] < min_diff!4)
+    min_diff!5 = differences!5[k!1]
+    min_index!5 = k!1
+    min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+    min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)  →  min_diff!5 = differences!5[k!1]
+    for k!1 in range(0, N!0):
+    min_index!4 = Φ(min_index!3, min_index!6)
+    min_diff!4 = Φ(min_diff!3, min_diff!6)
+    !2!3 = (differences!5[k!1] < min_diff!4)
+    min_diff!5 = differences!5[k!1]
+    min_index!5 = k!1
+    min_index!6 = MUX(!2!3, min_index!5, min_index!4)
+    min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)  →  min_index!5 = k!1
     min_index!4 = Φ(min_index!3, min_index!6)  →  min_index!6 = MUX(!2!3, min_index!5, min_index!4)
     min_diff!4 = Φ(min_diff!3, min_diff!6)  →  !2!3 = (differences!5[k!1] < min_diff!4)
     min_diff!4 = Φ(min_diff!3, min_diff!6)  →  min_diff!6 = MUX(!2!3, min_diff!5, min_diff!4)

@@ -15,14 +15,44 @@ Nodes:
     !3!2 = (current_sum!5 > max_sum!2)
     max_sum!3 = current_sum!5
     max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
+    max_sum!2 = Φ(max_sum!1, max_sum!4)
+    current_sum!2 = Φ(current_sum!1, current_sum!5)
+    !1!2 = (Seq!0[i!1] == Sym!0)
+    !2!2 = not !1!2
+    current_sum!4 = 0
+    current_sum!3 = (current_sum!2 + Seq!0[i!1])
+    current_sum!5 = MUX(!2!2, current_sum!3, current_sum!4)
+    !3!2 = (current_sum!5 > max_sum!2)
+    max_sum!3 = current_sum!5
+    max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
 Forward edges:
     parameter Seq!0  →  !1!2 = (Seq!0[i!1] == Sym!0)
     parameter Seq!0  →  current_sum!3 = (current_sum!2 + Seq!0[i!1])
     parameter Sym!0  →  !1!2 = (Seq!0[i!1] == Sym!0)
     max_sum!1 = 0  →  max_sum!2 = Φ(max_sum!1, max_sum!4)
     current_sum!1 = 0  →  current_sum!2 = Φ(current_sum!1, current_sum!5)
-    for i!1 in range(0, N!0):  →  !1!2 = (Seq!0[i!1] == Sym!0)
-    for i!1 in range(0, N!0):  →  current_sum!3 = (current_sum!2 + Seq!0[i!1])
+    for i!1 in range(0, N!0):
+    max_sum!2 = Φ(max_sum!1, max_sum!4)
+    current_sum!2 = Φ(current_sum!1, current_sum!5)
+    !1!2 = (Seq!0[i!1] == Sym!0)
+    !2!2 = not !1!2
+    current_sum!4 = 0
+    current_sum!3 = (current_sum!2 + Seq!0[i!1])
+    current_sum!5 = MUX(!2!2, current_sum!3, current_sum!4)
+    !3!2 = (current_sum!5 > max_sum!2)
+    max_sum!3 = current_sum!5
+    max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)  →  !1!2 = (Seq!0[i!1] == Sym!0)
+    for i!1 in range(0, N!0):
+    max_sum!2 = Φ(max_sum!1, max_sum!4)
+    current_sum!2 = Φ(current_sum!1, current_sum!5)
+    !1!2 = (Seq!0[i!1] == Sym!0)
+    !2!2 = not !1!2
+    current_sum!4 = 0
+    current_sum!3 = (current_sum!2 + Seq!0[i!1])
+    current_sum!5 = MUX(!2!2, current_sum!3, current_sum!4)
+    !3!2 = (current_sum!5 > max_sum!2)
+    max_sum!3 = current_sum!5
+    max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)  →  current_sum!3 = (current_sum!2 + Seq!0[i!1])
     max_sum!2 = Φ(max_sum!1, max_sum!4)  →  !3!2 = (current_sum!5 > max_sum!2)
     max_sum!2 = Φ(max_sum!1, max_sum!4)  →  max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
     current_sum!2 = Φ(current_sum!1, current_sum!5)  →  current_sum!3 = (current_sum!2 + Seq!0[i!1])

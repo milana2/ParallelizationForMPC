@@ -1,4 +1,4 @@
-def count_123(Seq: shared[list[int]], N: plaintext[int], Syms: shared[list[int]]) -> shared[int]:
+def count_123(Seq: shared[list[int; ?]], N: plaintext[int], Syms: shared[list[int; ?]]) -> shared[int]:
     s1 = False
     s2 = False
     s3 = False
