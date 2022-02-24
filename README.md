@@ -286,7 +286,7 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     std::uint32_t _MPC_PLAINTEXT_N_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
     encrypto::motion::SecureUnsignedInteger _10_0;
     encrypto::motion::SecureUnsignedInteger _11_0;
     encrypto::motion::SecureUnsignedInteger _12_0;
@@ -296,28 +296,28 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> _2_1;
     std::vector<encrypto::motion::SecureUnsignedInteger> _3_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _4_0;
-    std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _5_0;
-    std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _6_0;
-    std::vector<std::vector<encrypto::motion::SecureUnsignedInteger>> _7_0;
-    encrypto::motion::SecureUnsignedInteger _8_0;
-    encrypto::motion::SecureUnsignedInteger _9_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _5_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _6_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _7_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _8_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _9_0;
     encrypto::motion::SecureUnsignedInteger D_0;
     encrypto::motion::SecureUnsignedInteger N_0;
-    encrypto::motion::SecureUnsignedInteger d_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> d_3;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger j_1;
     encrypto::motion::SecureUnsignedInteger min_index_1;
-    encrypto::motion::SecureUnsignedInteger min_index_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_index_2;
     encrypto::motion::SecureUnsignedInteger min_index_3;
-    encrypto::motion::SecureUnsignedInteger min_index_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_index_4;
     encrypto::motion::SecureUnsignedInteger min_sum_1;
-    encrypto::motion::SecureUnsignedInteger min_sum_2;
-    encrypto::motion::SecureUnsignedInteger min_sum_3;
-    encrypto::motion::SecureUnsignedInteger min_sum_4;
-    encrypto::motion::SecureUnsignedInteger p_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_sum_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_sum_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> min_sum_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> p_3;
     encrypto::motion::SecureUnsignedInteger sum_2;
-    encrypto::motion::SecureUnsignedInteger sum_3;
-    encrypto::motion::SecureUnsignedInteger sum_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> sum_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> sum_4;
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__12_0;
@@ -327,7 +327,7 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     std::tuple<std::uint32_t, std::uint32_t> _MPC_PLAINTEXT__2_1;
     std::vector<std::uint32_t> _MPC_PLAINTEXT__3_0;
     std::vector<std::uint32_t> _MPC_PLAINTEXT__4_0;
-    std::vector<std::vector<std::uint32_t>> _MPC_PLAINTEXT__5_0;
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__5_0;
     std::uint32_t _MPC_PLAINTEXT_i_1;
     std::uint32_t _MPC_PLAINTEXT_j_1;
     std::uint32_t _MPC_PLAINTEXT_min_index_1;
@@ -807,14 +807,14 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger count_102(
+std::vector<encrypto::motion::SecureUnsignedInteger> count_102(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _10_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _11_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _12_0;
@@ -822,22 +822,22 @@ encrypto::motion::SecureUnsignedInteger count_102(
     std::vector<encrypto::motion::SecureUnsignedInteger> _14_0;
     encrypto::motion::SecureUnsignedInteger _15_0;
     encrypto::motion::SecureUnsignedInteger _16_0;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper _3_2;
-    encrypto::motion::ShareWrapper _5_2;
-    encrypto::motion::ShareWrapper _6_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
+    std::vector<encrypto::motion::ShareWrapper> _3_2;
+    std::vector<encrypto::motion::ShareWrapper> _5_2;
+    std::vector<encrypto::motion::ShareWrapper> _6_2;
     std::vector<encrypto::motion::ShareWrapper> _7_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _8_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _9_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger c_1;
-    encrypto::motion::SecureUnsignedInteger c_2;
-    encrypto::motion::SecureUnsignedInteger c_3;
-    encrypto::motion::SecureUnsignedInteger c_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> c_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> c_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> c_4;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::ShareWrapper s0_1;
-    encrypto::motion::ShareWrapper s0_2;
-    encrypto::motion::ShareWrapper s0_3;
+    std::vector<encrypto::motion::ShareWrapper> s0_2;
+    std::vector<encrypto::motion::ShareWrapper> s0_3;
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__15_0;
@@ -1156,14 +1156,14 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger count_10s(
+std::vector<encrypto::motion::SecureUnsignedInteger> count_10s(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _10_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _11_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _12_0;
@@ -1171,9 +1171,9 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     encrypto::motion::SecureUnsignedInteger _14_0;
     encrypto::motion::SecureUnsignedInteger _15_0;
     encrypto::motion::SecureUnsignedInteger _16_0;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper _3_2;
-    encrypto::motion::ShareWrapper _4_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
+    std::vector<encrypto::motion::ShareWrapper> _3_2;
+    std::vector<encrypto::motion::ShareWrapper> _4_2;
     std::vector<encrypto::motion::ShareWrapper> _5_0;
     std::vector<encrypto::motion::ShareWrapper> _6_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _7_0;
@@ -1182,15 +1182,15 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::ShareWrapper s0_1;
-    encrypto::motion::ShareWrapper s0_2;
-    encrypto::motion::ShareWrapper s0_3;
+    std::vector<encrypto::motion::ShareWrapper> s0_2;
+    std::vector<encrypto::motion::ShareWrapper> s0_3;
     encrypto::motion::ShareWrapper s1_1;
-    encrypto::motion::ShareWrapper s1_2;
-    encrypto::motion::ShareWrapper s1_3;
+    std::vector<encrypto::motion::ShareWrapper> s1_2;
+    std::vector<encrypto::motion::ShareWrapper> s1_3;
     encrypto::motion::SecureUnsignedInteger scount_1;
-    encrypto::motion::SecureUnsignedInteger scount_2;
-    encrypto::motion::SecureUnsignedInteger scount_3;
-    encrypto::motion::SecureUnsignedInteger scount_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> scount_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> scount_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> scount_4;
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__14_0;
@@ -1535,14 +1535,14 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger count_123(
+std::vector<encrypto::motion::SecureUnsignedInteger> count_123(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _10_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _11_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _12_0;
@@ -1551,26 +1551,26 @@ encrypto::motion::SecureUnsignedInteger count_123(
     encrypto::motion::SecureUnsignedInteger _15_0;
     encrypto::motion::SecureUnsignedInteger _16_0;
     encrypto::motion::SecureUnsignedInteger _17_0;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper _3_2;
-    encrypto::motion::ShareWrapper _4_2;
-    encrypto::motion::ShareWrapper _5_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
+    std::vector<encrypto::motion::ShareWrapper> _3_2;
+    std::vector<encrypto::motion::ShareWrapper> _4_2;
+    std::vector<encrypto::motion::ShareWrapper> _5_2;
     std::vector<encrypto::motion::ShareWrapper> _6_0;
     std::vector<encrypto::motion::ShareWrapper> _7_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _8_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _9_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger c_1;
-    encrypto::motion::SecureUnsignedInteger c_2;
-    encrypto::motion::SecureUnsignedInteger c_3;
-    encrypto::motion::SecureUnsignedInteger c_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> c_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> c_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> c_4;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::ShareWrapper s1_1;
-    encrypto::motion::ShareWrapper s1_2;
-    encrypto::motion::ShareWrapper s1_3;
+    std::vector<encrypto::motion::ShareWrapper> s1_2;
+    std::vector<encrypto::motion::ShareWrapper> s1_3;
     encrypto::motion::ShareWrapper s2_1;
-    encrypto::motion::ShareWrapper s2_2;
-    encrypto::motion::ShareWrapper s2_3;
+    std::vector<encrypto::motion::ShareWrapper> s2_2;
+    std::vector<encrypto::motion::ShareWrapper> s2_3;
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__15_0;
@@ -1789,7 +1789,7 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger inner_product(
+std::vector<encrypto::motion::SecureUnsignedInteger> inner_product(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
@@ -1803,9 +1803,9 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger sum_1;
-    encrypto::motion::SecureUnsignedInteger sum_2;
-    encrypto::motion::SecureUnsignedInteger sum_3;
-    encrypto::motion::SecureUnsignedInteger temp_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> sum_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> sum_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> temp_2;
 
     // Plaintext variable declarations
     std::vector<std::uint32_t> _MPC_PLAINTEXT__1_0;
@@ -2148,14 +2148,14 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger longest_102(
+std::vector<encrypto::motion::SecureUnsignedInteger> longest_102(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _10_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _11_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _12_0;
@@ -2166,29 +2166,29 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     std::vector<encrypto::motion::SecureUnsignedInteger> _17_0;
     encrypto::motion::SecureUnsignedInteger _18_0;
     encrypto::motion::SecureUnsignedInteger _19_0;
-    encrypto::motion::ShareWrapper _2_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
     encrypto::motion::SecureUnsignedInteger _20_0;
-    encrypto::motion::ShareWrapper _4_2;
-    encrypto::motion::ShareWrapper _5_2;
-    encrypto::motion::ShareWrapper _6_2;
-    encrypto::motion::ShareWrapper _7_2;
-    encrypto::motion::ShareWrapper _8_2;
+    std::vector<encrypto::motion::ShareWrapper> _4_2;
+    std::vector<encrypto::motion::ShareWrapper> _5_2;
+    std::vector<encrypto::motion::ShareWrapper> _6_2;
+    std::vector<encrypto::motion::ShareWrapper> _7_2;
+    std::vector<encrypto::motion::ShareWrapper> _8_2;
     std::vector<encrypto::motion::ShareWrapper> _9_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger length_1;
-    encrypto::motion::SecureUnsignedInteger length_2;
-    encrypto::motion::SecureUnsignedInteger length_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> length_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> length_3;
     encrypto::motion::SecureUnsignedInteger length_4;
-    encrypto::motion::SecureUnsignedInteger length_5;
+    std::vector<encrypto::motion::SecureUnsignedInteger> length_5;
     encrypto::motion::SecureUnsignedInteger max_len_1;
-    encrypto::motion::SecureUnsignedInteger max_len_2;
-    encrypto::motion::SecureUnsignedInteger max_len_3;
-    encrypto::motion::SecureUnsignedInteger max_len_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_len_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_len_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_len_4;
     encrypto::motion::ShareWrapper s0_1;
-    encrypto::motion::ShareWrapper s0_2;
-    encrypto::motion::ShareWrapper s0_3;
-    encrypto::motion::ShareWrapper s1_2;
+    std::vector<encrypto::motion::ShareWrapper> s0_2;
+    std::vector<encrypto::motion::ShareWrapper> s0_3;
+    std::vector<encrypto::motion::ShareWrapper> s1_2;
 
     // Plaintext variable declarations
     std::vector<std::uint32_t> _MPC_PLAINTEXT__10_0;
@@ -2486,15 +2486,15 @@ def longest_1s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[i
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger longest_1s(
+std::vector<encrypto::motion::SecureUnsignedInteger> longest_1s(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
-    encrypto::motion::ShareWrapper _2_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _3_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _4_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _5_0;
@@ -2504,14 +2504,14 @@ encrypto::motion::SecureUnsignedInteger longest_1s(
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger length_1;
-    encrypto::motion::SecureUnsignedInteger length_2;
-    encrypto::motion::SecureUnsignedInteger length_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> length_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> length_3;
     encrypto::motion::SecureUnsignedInteger length_4;
-    encrypto::motion::SecureUnsignedInteger length_5;
+    std::vector<encrypto::motion::SecureUnsignedInteger> length_5;
     encrypto::motion::SecureUnsignedInteger max_length_1;
-    encrypto::motion::SecureUnsignedInteger max_length_2;
-    encrypto::motion::SecureUnsignedInteger max_length_3;
-    encrypto::motion::SecureUnsignedInteger max_length_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_4;
 
     // Plaintext variable declarations
     std::vector<std::uint32_t> _MPC_PLAINTEXT__3_0;
@@ -2819,18 +2819,18 @@ def longest_even_0(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shar
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger longest_even_0(
+std::vector<encrypto::motion::SecureUnsignedInteger> longest_even_0(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
     encrypto::motion::SecureUnsignedInteger _10_0;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::SecureUnsignedInteger _3_2;
-    encrypto::motion::ShareWrapper _4_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _3_2;
+    std::vector<encrypto::motion::ShareWrapper> _4_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _5_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _6_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _7_0;
@@ -2838,18 +2838,18 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
     encrypto::motion::SecureUnsignedInteger _9_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger current_length_1;
-    encrypto::motion::SecureUnsignedInteger current_length_2;
-    encrypto::motion::SecureUnsignedInteger current_length_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_3;
     encrypto::motion::SecureUnsignedInteger current_length_4;
-    encrypto::motion::SecureUnsignedInteger current_length_5;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_5;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger max_length_1;
-    encrypto::motion::SecureUnsignedInteger max_length_2;
-    encrypto::motion::SecureUnsignedInteger max_length_3;
-    encrypto::motion::SecureUnsignedInteger max_length_4;
-    encrypto::motion::SecureUnsignedInteger tmp_max_len_2;
-    encrypto::motion::SecureUnsignedInteger tmp_max_len_3;
-    encrypto::motion::SecureUnsignedInteger tmp_max_len_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> tmp_max_len_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> tmp_max_len_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> tmp_max_len_4;
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__10_0;
@@ -3212,14 +3212,14 @@ def longest_odd_10(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: sha
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger longest_odd_10(
+std::vector<encrypto::motion::SecureUnsignedInteger> longest_odd_10(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
     std::vector<encrypto::motion::ShareWrapper> _10_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _11_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _12_0;
@@ -3228,29 +3228,29 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     encrypto::motion::SecureUnsignedInteger _15_0;
     encrypto::motion::SecureUnsignedInteger _16_0;
     encrypto::motion::SecureUnsignedInteger _17_0;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::SecureUnsignedInteger _4_2;
-    encrypto::motion::ShareWrapper _5_2;
-    encrypto::motion::ShareWrapper _6_2;
-    encrypto::motion::ShareWrapper _7_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _4_2;
+    std::vector<encrypto::motion::ShareWrapper> _5_2;
+    std::vector<encrypto::motion::ShareWrapper> _6_2;
+    std::vector<encrypto::motion::ShareWrapper> _7_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _8_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _9_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger current_length_1;
-    encrypto::motion::SecureUnsignedInteger current_length_2;
-    encrypto::motion::SecureUnsignedInteger current_length_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_3;
     encrypto::motion::SecureUnsignedInteger current_length_4;
-    encrypto::motion::SecureUnsignedInteger current_length_5;
-    encrypto::motion::SecureUnsignedInteger current_length_6;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_5;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_6;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger max_length_1;
-    encrypto::motion::SecureUnsignedInteger max_length_2;
-    encrypto::motion::SecureUnsignedInteger max_length_3;
-    encrypto::motion::SecureUnsignedInteger max_length_4;
-    encrypto::motion::ShareWrapper s1_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_4;
+    std::vector<encrypto::motion::ShareWrapper> s1_2;
     encrypto::motion::ShareWrapper s2_1;
-    encrypto::motion::ShareWrapper s2_2;
-    encrypto::motion::ShareWrapper s2_3;
+    std::vector<encrypto::motion::ShareWrapper> s2_2;
+    std::vector<encrypto::motion::ShareWrapper> s2_3;
 
     // Plaintext variable declarations
     std::vector<bool> _MPC_PLAINTEXT__10_0;
@@ -3549,16 +3549,16 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
+std::vector<encrypto::motion::SecureUnsignedInteger> max_dist_between_syms(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper _3_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
+    std::vector<encrypto::motion::ShareWrapper> _3_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _4_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _5_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _6_0;
@@ -3567,15 +3567,15 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     encrypto::motion::SecureUnsignedInteger _9_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger current_dist_1;
-    encrypto::motion::SecureUnsignedInteger current_dist_2;
-    encrypto::motion::SecureUnsignedInteger current_dist_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_dist_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_dist_3;
     encrypto::motion::SecureUnsignedInteger current_dist_4;
-    encrypto::motion::SecureUnsignedInteger current_dist_5;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_dist_5;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger max_dist_1;
-    encrypto::motion::SecureUnsignedInteger max_dist_2;
-    encrypto::motion::SecureUnsignedInteger max_dist_3;
-    encrypto::motion::SecureUnsignedInteger max_dist_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_dist_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_dist_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_dist_4;
 
     // Plaintext variable declarations
     std::vector<std::uint32_t> _MPC_PLAINTEXT__4_0;
@@ -3853,17 +3853,17 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
 ### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
+std::vector<encrypto::motion::SecureUnsignedInteger> max_sum_between_syms(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
     encrypto::motion::SecureUnsignedInteger _10_0;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper _3_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
+    std::vector<encrypto::motion::ShareWrapper> _3_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _4_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _5_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _6_0;
@@ -3872,15 +3872,15 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     encrypto::motion::SecureUnsignedInteger _9_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger current_sum_1;
-    encrypto::motion::SecureUnsignedInteger current_sum_2;
-    encrypto::motion::SecureUnsignedInteger current_sum_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_sum_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_sum_3;
     encrypto::motion::SecureUnsignedInteger current_sum_4;
-    encrypto::motion::SecureUnsignedInteger current_sum_5;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_sum_5;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger max_sum_1;
-    encrypto::motion::SecureUnsignedInteger max_sum_2;
-    encrypto::motion::SecureUnsignedInteger max_sum_3;
-    encrypto::motion::SecureUnsignedInteger max_sum_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_sum_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_sum_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_sum_4;
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__10_0;
