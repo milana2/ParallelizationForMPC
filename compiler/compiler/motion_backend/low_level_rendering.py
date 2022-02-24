@@ -100,33 +100,58 @@ def render_param(param: Parameter, type_env: TypeEnv) -> str:
 
 def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
     if isinstance(stmt, Assign):
-        shared_assignment = (
-            render_expr(stmt.lhs, RenderContext(type_env, plaintext=False))
-            + " = "
-            + render_expr(stmt.rhs, RenderContext(type_env, plaintext=False))
-            + ";"
-        )
-        plaintext_assignment = (
-            render_expr(stmt.lhs, RenderContext(type_env, plaintext=True))
-            + " = "
-            + render_expr(stmt.rhs, RenderContext(type_env, plaintext=True))
-            + ";"
-        )
-
-        if (
-            type_env[stmt.lhs].is_shared()
-            or type_env[stmt.lhs].datatype == DataType.TUPLE
-        ):
-            return shared_assignment
+        # If we're assigning to a vectorized value, use a specialized function for this.
+        if isinstance(stmt.lhs, VectorizedAccess):
+            ctx = RenderContext(type_env, plaintext=False)
+            dim_sizes = (
+                "{"
+                + ", ".join(
+                    render_expr(loop_bound, dc.replace(ctx, plaintext=True))
+                    for loop_bound in stmt.lhs.dim_sizes
+                )
+                + "}"
+            )
+            vectorized_dims = (
+                "{"
+                + ", ".join(
+                    str(vectorized).lower() for vectorized in stmt.lhs.vectorized_dims
+                )
+                + "}"
+            )
+            idxs = (
+                "{"
+                + ", ".join(
+                    render_expr(var, dc.replace(ctx, plaintext=True))
+                    for var in stmt.lhs.idx_vars
+                )
+                + "}"
+            )
+            return f"vectorized_assign({render_expr(stmt.lhs.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(stmt.rhs, ctx)});"
         else:
-            return shared_assignment + "\n" + plaintext_assignment
+            shared_assignment = (
+                render_expr(stmt.lhs, RenderContext(type_env, plaintext=False))
+                + " = "
+                + render_expr(stmt.rhs, RenderContext(type_env, plaintext=False))
+                + ";"
+            )
+            plaintext_assignment = (
+                render_expr(stmt.lhs, RenderContext(type_env, plaintext=True))
+                + " = "
+                + render_expr(stmt.rhs, RenderContext(type_env, plaintext=True))
+                + ";"
+            )
+
+            if (
+                type_env[stmt.lhs].is_shared()
+                or type_env[stmt.lhs].datatype == DataType.TUPLE
+            ):
+                return shared_assignment
+            else:
+                return shared_assignment + "\n" + plaintext_assignment
 
     elif isinstance(stmt, For):
         phi_initializations = "// Initialize phi values\n" + "\n".join(
-            render_expr(phi.lhs, RenderContext(type_env))
-            + " = "
-            + render_expr(phi.rhs_false, RenderContext(type_env))
-            + ";"
+            render_stmt(Assign(phi.lhs, phi.rhs_false), type_env)
             for phi in stmt.body
             if isinstance(phi, Phi)
         )
@@ -155,10 +180,7 @@ def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
         )
 
         phi_updates = "// Update phi values\n" + "\n".join(
-            render_expr(phi.lhs, RenderContext(type_env))
-            + " = "
-            + render_expr(phi.rhs_true, RenderContext(type_env))
-            + ";"
+            render_stmt(Assign(phi.lhs, phi.rhs_true), type_env)
             for phi in stmt.body
             if isinstance(phi, Phi)
         )
@@ -200,7 +222,12 @@ def _render_operator(op: Union[BinOpKind, UnaryOpKind]) -> str:
 def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> str:
     if isinstance(expr, (BinOp, SubscriptIndexBinOp)):
         if expr.operator == BinOpKind.LT:
-            return render_expr(dc.replace(expr, left=expr.right, right=expr.left), ctx)
+            return render_expr(
+                dc.replace(
+                    expr, left=expr.right, right=expr.left, operator=BinOpKind.GT
+                ),
+                ctx,
+            )
         elif expr.operator == BinOpKind.NOT_EQ:
             if isinstance(expr, BinOp):
                 return render_expr(
@@ -295,7 +322,13 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             )
             + "}"
         )
-        return f"drop_dim({render_expr(expr.array, ctx)}, {dims})"
+        # Since we want to manipulate the array, we don't want the input to drop_dim()
+        # to be vectorized
+        if isinstance(expr.array, VectorizedAccess):
+            array = render_expr(expr.array.array, ctx)
+        else:
+            array = render_expr(expr.array, ctx)
+        return f"drop_dim({array}, {dims})"
 
     elif isinstance(expr, List):
         items = ", ".join(render_expr(item, ctx) for item in expr.items)
@@ -309,23 +342,15 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         return f"{cpp_cond}.Mux({cpp_false_val}, {cpp_true_val})"
 
     elif isinstance(expr, LiftExpr):
-        if expr.access_pattern is not None:
-            array = render_expr(expr.arr, ctx)
-
-            pattern_ctx = dc.replace(
-                ctx,
-                plaintext=True,
-                int_type="std::size_t",
-                var_mappings={
-                    var: f"indices[{i}]" for i, (var, _) in enumerate(expr.dims)
-                },
-            )
-            access_pattern = f"[&](const auto &indices){{return {render_expr(expr.access_pattern, pattern_ctx)};}}, "
-        else:
-            # If we don't have an access pattern, then we're raising a scalar.  Because the
-            # raise_dim() implementation expects an array, we can use the following hack:
-            array = "{" + render_expr(expr.arr, ctx) + "}"
-            access_pattern = "[](const auto &){return 0;}"
+        inner_ctx = dc.replace(
+            ctx,
+            plaintext=True,
+            int_type="std::size_t",
+            var_mappings={var: f"indices[{i}]" for i, (var, _) in enumerate(expr.dims)},
+        )
+        inner_expr = (
+            f"[&](const auto &indices){{return {render_expr(expr.expr, inner_ctx)};}}, "
+        )
 
         dims = (
             "{"
@@ -336,7 +361,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             + "}"
         )
 
-        return f"raise_dim({array}, {access_pattern}, {dims})"
+        return f"lift({inner_expr}, {dims})"
 
     elif isinstance(expr, Subscript):
         return f"{render_expr(expr.array, ctx)}[{render_expr(expr.index, dc.replace(ctx, plaintext=True))}]"
@@ -365,6 +390,27 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             return cpp_str
 
     elif isinstance(expr, VectorizedAccess):
-        raise NotImplementedError()
+        dim_sizes = (
+            "{"
+            + ", ".join(
+                render_expr(loop_bound, dc.replace(ctx, plaintext=True))
+                for loop_bound in expr.dim_sizes
+            )
+            + "}"
+        )
+        vectorized_dims = (
+            "{"
+            + ", ".join(str(vectorized).lower() for vectorized in expr.vectorized_dims)
+            + "}"
+        )
+        idxs = (
+            "{"
+            + ", ".join(
+                render_expr(var, dc.replace(ctx, plaintext=True))
+                for var in expr.idx_vars
+            )
+            + "}"
+        )
+        return f"vectorized_access({render_expr(expr.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs})"
 
     return assert_never(expr)

@@ -31,6 +31,9 @@ def _compute_blocks_setting_vars(
             else []
         )
         for var in lhss:
+            assert isinstance(
+                var, ssa.Var
+            ), "VectorizedAccesses are not added until basic vectorization"
             if var not in result:
                 result[var] = set()
 
@@ -267,6 +270,9 @@ def rename_variables(result: ssa.Function) -> None:
                 assert_never(A)
 
             if isinstance(A, (ssa.Phi, ssa.Assign, ssa.For)):
+                assert isinstance(
+                    A.lhs, ssa.Var
+                ), "VectorizedAccesses are not added until basic vectorization"
                 V = A.lhs
                 i = C[V]
                 old_lhs[A] = A.lhs
@@ -284,6 +290,9 @@ def rename_variables(result: ssa.Function) -> None:
             ][0]
             for F in Y.phi_functions:
                 phi_branch_true = {0: False, 1: True}[j]
+                assert isinstance(F.rhs_false, ssa.Var) and isinstance(
+                    F.rhs_true, ssa.Var
+                ), "VectorizedAccesses are not added until basic vectorization"
                 V = F.rhs_true if phi_branch_true else F.rhs_false
                 i = S[V][-1]
                 if isinstance(V, ssa.Subscript):

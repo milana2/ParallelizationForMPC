@@ -26,7 +26,12 @@ class TempVarGenerator:
     def __init__(self, dep_graph: DepGraph) -> None:
         nodes: Iterable[DepNode] = dep_graph.def_use_graph.nodes
         self._max_temp_var_num = max(
-            [0 if isinstance(a.lhs.name, str) else a.lhs.name for a in nodes]
+            [
+                0 if isinstance(a.lhs.name, str) else a.lhs.name
+                for a in nodes
+                # Skip vectorized assignments since every variable will be initially assigned
+                if not isinstance(a.lhs, VectorizedAccess)
+            ]
         )
 
     def get(self) -> llc.Var:
@@ -208,10 +213,17 @@ def _get_k(j: llc.For, A_use: ArrayRead) -> list[llc.For]:
 def _remove_back_edge(A_name: Union[str, int], dep_graph: DepGraph, j: llc.For) -> None:
     """Remove back edge to Phi node in loop j"""
     for A_use in j.body:
-        if isinstance(A_use, llc.Phi) and A_use.lhs.name == A_name:
+        if (
+            isinstance(A_use, llc.Phi)
+            and isinstance(A_use.lhs, llc.Var)  # needed for mypy
+            and A_use.lhs.name == A_name
+        ):
             assert dep_graph.enclosing_loops[A_use][-1] == j
             A_defs: list[DepNode] = list(dep_graph.def_use_graph.predecessors(A_use))
             for A_def in A_defs:
+                assert isinstance(
+                    A_def.lhs, llc.Var
+                ), "VectorizedAccesses aren't added until basic vectorization"
                 assert A_def.lhs.name == A_name
                 if dep_graph.is_back_edge(A_def, A_use):
                     dep_graph.def_use_graph.remove_edge(A_def, A_use)
@@ -219,6 +231,9 @@ def _remove_back_edge(A_name: Union[str, int], dep_graph: DepGraph, j: llc.For) 
 
 def _prune_edges_from_loop(i: list[llc.For], j: llc.For, dep_graph: DepGraph) -> None:
     for A_def in _arrays_written_in_loop(j):
+        assert isinstance(
+            A_def.lhs, llc.Var
+        ), "VectorizedAccesses aren't added until basic vectorization"
         A_def_name = A_def.lhs.name
         dep = False
         for A_use in _arrays_read_in_loop([j], A_def_name):
@@ -432,7 +447,13 @@ def _basic_vectorization_phase_1(
                     assert_never(o)
 
             if isinstance(stmt, llc.Phi):
+                assert isinstance(
+                    stmt.rhs_false, llc.Var
+                ), "VectorizedAccesses are not added until after this phase"
                 stmt.rhs_false = replace_var(stmt.rhs_false, stmt)
+                assert isinstance(
+                    stmt.rhs_true, llc.Var
+                ), "VectorizedAccesses are not added until after this phase"
                 stmt.rhs_true = replace_var(stmt.rhs_true, stmt)
             elif isinstance(stmt, llc.Assign):
                 if isinstance(stmt.rhs, llc.Var):
@@ -689,7 +710,11 @@ def _basic_vectorization_phase_2(
                     ((loop_stack[-1].counter, loop_stack[-1].bound_high),),
                 )
                 new_var = tmp_var_gen.get()
-                new_var_type = type_env[stmt.lhs].add_dim()
+                if isinstance(stmt.lhs, Var):
+                    orig_var = stmt.lhs
+                else:
+                    orig_var = stmt.lhs.array
+                new_var_type = type_env[orig_var].add_dim()
                 if new_var_type.dim_sizes is not None:
                     new_var_type.dim_sizes.append(
                         (
@@ -712,7 +737,7 @@ def _basic_vectorization_phase_2(
                 )
 
                 type_env[new_var] = new_var_type
-                return {stmt.lhs: (llc.Assign(new_var, new_rhs), lifted_access)}
+                return {orig_var: (llc.Assign(new_var, new_rhs), lifted_access)}
             else:
                 return {}
         elif isinstance(stmt, llc.For):

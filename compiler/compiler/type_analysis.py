@@ -281,10 +281,15 @@ def type_check(
             except (TypeError, AssertionError) as e:
                 raise TypeError(f"Unable to type statement {stmt}") from e
 
-            if expr_type == type_env[stmt.lhs]:
-                # No changes to this variable's type, don't extend the worklist
+            if isinstance(stmt.lhs, Var):
+                if expr_type == type_env[stmt.lhs]:
+                    # No changes to this variable's type, don't extend the worklist
+                    continue
+                type_env[stmt.lhs] = expr_type
+            else:
+                # We've assigned to a vectorized access, don't extend the worklist
+                # TODO: handle updating the variable's type
                 continue
-            type_env[stmt.lhs] = expr_type
 
         elif isinstance(stmt, loop_linear_code.Phi):
             elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
@@ -295,10 +300,15 @@ def type_check(
                 )
             except (TypeError, AssertionError) as e:
                 raise TypeError(f"Unable to type statement {stmt}") from e
-            if phi_type == type_env[stmt.lhs]:
-                # No changes to this variable's type, don't extend the worklist
+            if isinstance(stmt.lhs, Var):
+                if phi_type == type_env[stmt.lhs]:
+                    # No changes to this variable's type, don't extend the worklist
+                    continue
+                type_env[stmt.lhs] = phi_type
+            else:
+                # We've assigned to a vectorized access, don't extend the worklist
+                # TODO: handle updating the variable's type
                 continue
-            type_env[stmt.lhs] = phi_type
         elif isinstance(stmt, (DepParameter, loop_linear_code.For)):
             pass
         else:

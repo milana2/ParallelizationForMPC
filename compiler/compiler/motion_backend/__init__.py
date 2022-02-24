@@ -10,7 +10,7 @@ from ..ast_shared import VectorizedAccess
 from ..util import assert_never
 from ..loop_linear_code import Function, Statement, Phi, Assign, For
 from ..type_analysis import TypeEnv, VarVisibility, Constant, DataType
-from .. import tac_cfg
+from .. import tac_cfg, ast_shared
 
 from .low_level_rendering import (
     RenderContext,
@@ -61,9 +61,9 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
             return [expr]
         elif isinstance(expr, (tac_cfg.Var, tac_cfg.Subscript)):
             return []
-        elif isinstance(expr, tac_cfg.BinOp):
+        elif isinstance(expr, (tac_cfg.BinOp, ast_shared.SubscriptIndexBinOp)):
             return [*expr_constants(expr.left), *expr_constants(expr.right)]
-        elif isinstance(expr, tac_cfg.UnaryOp):
+        elif isinstance(expr, (tac_cfg.UnaryOp, ast_shared.SubscriptIndexUnaryOp)):
             return expr_constants(expr.operand)
         elif isinstance(expr, tac_cfg.List):
             return [const for val in expr.items for const in expr_constants(val)]
@@ -88,16 +88,18 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
             return [
                 const for dim_bound in expr.dims for const in expr_constants(dim_bound)
             ]
+        elif isinstance(expr, VectorizedAccess):
+            return [const for size in expr.dim_sizes for const in expr_constants(size)]
         else:
-            raise AssertionError(f"Unhandled expression type: {type(expr)}")
+            assert_never(expr)
 
     def stmt_constants(stmt: Statement) -> list[Constant]:
         if isinstance(stmt, For):
             return _collect_constants(stmt.body)
         elif isinstance(stmt, Assign):
             return expr_constants(stmt.rhs)
-        elif isinstance(stmt, (Phi, RaiseDim, DropDim)):
-            return []
+        elif isinstance(stmt, Phi):
+            return [const for rhs in stmt.rhs_vars() for const in expr_constants(rhs)]
         else:
             assert_never(stmt)
 

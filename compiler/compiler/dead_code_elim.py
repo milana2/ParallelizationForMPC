@@ -54,6 +54,9 @@ def _compute_statements_setting_vars(
 
         for assignment in assignments:
             if isinstance(assignment, (ssa.Phi, ssa.Assign)):
+                assert isinstance(
+                    assignment.lhs, ssa.Var
+                ), "VectorizedAccesses are not added until basic vectorization"
                 var = assignment.lhs
             elif isinstance(assignment, ssa.For):
                 var = assignment.counter

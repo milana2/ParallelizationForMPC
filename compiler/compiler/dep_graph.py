@@ -1,6 +1,6 @@
 from copy import copy
 from enum import Enum
-from typing import Iterator, Union
+from typing import Iterator, Union, cast
 from dataclasses import dataclass
 
 import networkx
@@ -84,7 +84,7 @@ class DepGraph:
 
             def collect_rhs(stmt: DepNode) -> list[llc.AssignRHS]:
                 if isinstance(stmt, llc.Phi):
-                    return stmt.rhs_vars()
+                    return cast(list[llc.AssignRHS], stmt.rhs_vars())
                 elif isinstance(stmt, llc.Assign):
                     return [stmt.rhs]
                 elif isinstance(stmt, DepParameter):
