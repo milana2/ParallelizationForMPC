@@ -1,10 +1,13 @@
 from collections import defaultdict
 from enum import Enum
 from typing import Generic, TypeVar, Union, Optional, Protocol
+import dataclasses as dc
 from dataclasses import dataclass, field
 from textwrap import indent
 
 import networkx  # type: ignore
+
+from .util import assert_never
 
 
 class VarVisibility(Enum):
@@ -31,26 +34,60 @@ class DataType(Enum):
 @dataclass
 class VarType:
     visibility: Optional[VarVisibility] = None
-    dims: Optional[int] = None
+    _dims: Optional[int] = None
     datatype: Optional[DataType] = None
     tuple_types: list["VarType"] = field(default_factory=list)
 
+    # For vectorized accesses, we need to know the size of the dimensions
+    dim_sizes: Optional[list[tuple["Var", "LoopBound"]]] = None
+
+    @property
+    def dims(self) -> Optional[int]:
+        # If we have dim_sizes, then we are vectorized.  We treat vectorized
+        # values as scalar.
+        if self.dim_sizes is not None:
+            return 0
+        # Otherwise, we are unknown vectorization - just return what we know
+        return self._dims
+
     def __hash__(self) -> int:
         return hash(
-            (self.visibility, self.datatype, self.dims, tuple(self.tuple_types))
+            (
+                self.visibility,
+                self.datatype,
+                self._dims,
+                tuple(self.tuple_types),
+            )
+        )
+
+    # Determines if two types are equivalent if vectorized values are considered scalar.
+    def is_equivalent_to(self, o: "VarType") -> bool:
+        return (
+            self.visibility == o.visibility
+            and self.datatype == o.datatype
+            and self.dims == o.dims
+            and all(
+                st.is_equivalent_to(ot)
+                for st, ot in zip(self.tuple_types, o.tuple_types)
+            )
         )
 
     def drop_dim(self) -> "VarType":
-        if self.dims is None:
-            return VarType(self.visibility, None, self.datatype)
-        else:
-            return VarType(self.visibility, self.dims - 1, self.datatype)
+        return dc.replace(
+            self,
+            _dims=self._dims - 1 if self._dims is not None else None,
+            dim_sizes=self.dim_sizes[:-1] if self.dim_sizes is not None else None,
+        )
+
+    def drop_dims(self) -> "VarType":
+        return dc.replace(
+            self,
+            _dims=self._dims - 1 if self._dims is not None else None,
+            dim_sizes=self.dim_sizes[:-1] if self.dim_sizes is not None else None,
+        )
 
     def add_dim(self) -> "VarType":
-        if self.dims is None:
-            return VarType(self.visibility, None, self.datatype)
-        else:
-            return VarType(self.visibility, self.dims + 1, self.datatype)
+        return dc.replace(self, _dims=self._dims + 1 if self._dims is not None else 1)
 
     def is_plaintext(self) -> bool:
         return self.visibility == VarVisibility.PLAINTEXT
@@ -62,22 +99,24 @@ class VarType:
         return (
             self.visibility in [supertype.visibility, None]
             and self.datatype in [supertype.datatype, None]
-            and self.dims in [supertype.dims, None]
+            and self._dims in [supertype._dims, None]
             and all(
                 t.could_become(subtype)
                 for t, subtype in zip(self.tuple_types, supertype.tuple_types)
             )
+            and self.dim_sizes in [supertype.dim_sizes, None]
         )
 
     def is_complete(self) -> bool:
         return (
             self.visibility is not None
             and self.datatype is not None
-            and self.dims is not None
+            and self._dims is not None
             and (
                 self.datatype != DataType.TUPLE
                 or all(t.is_complete() for t in self.tuple_types)
             )
+            # dim_sizes is optional (only necessary for lifted arrays)
         )
 
     @staticmethod
@@ -118,7 +157,7 @@ class VarType:
                 )
             )
         if len(elem_dims) > 0:
-            merged_type.dims = elem_dims[0]
+            merged_type._dims = elem_dims[0]
 
         # Determine the datatype of the merged type
         elem_datatypes = [t.datatype for t in types if t.datatype is not None]
@@ -152,6 +191,16 @@ class VarType:
             if len(elem_tuple_types[i]) > 0:
                 merged_type.tuple_types[i] = elem_tuple_types[i][0]
 
+        dim_sizes = [tuple(t.dim_sizes) for t in types if t.dim_sizes is not None]
+        if len(set(dim_sizes)) > 1:
+            raise TypeError(
+                "Cannot merge types with different dimension sizes:\n{}".format(
+                    "\n".join(repr(t) for t in types)
+                )
+            )
+        if len(set(dim_sizes)) > 0:
+            merged_type.dim_sizes = list(dim_sizes[0])
+
         return merged_type
 
     def __str__(self) -> str:
@@ -159,13 +208,22 @@ class VarType:
             return "tuple[" + ", ".join(str(t) for t in self.tuple_types) + "]"
 
         str_rep = f"{self.visibility}["
-        if self.dims is not None:
-            for _ in range(self.dims):
+        if self.dim_sizes is not None:
+            for _ in self.dim_sizes:
                 str_rep += "list["
+        elif self._dims is not None:
+            for _ in range(self._dims):
+                str_rep += "list["
+
         str_rep += f"{self.datatype}"
-        if self.dims is not None:
-            for _ in range(self.dims):
-                str_rep += "]"
+
+        if self.dim_sizes is not None:
+            for idx, bound in self.dim_sizes:
+                str_rep += f"; ({idx}:{bound})]"
+        elif self._dims is not None:
+            for _ in range(self._dims):
+                str_rep += "; ?]"
+
         str_rep += "]"
         if self.dims is None:
             str_rep += "(unknown dims)"
@@ -351,6 +409,9 @@ class BinOp(Generic[OPERAND]):
     def __str__(self) -> str:
         return f"({self.left} {self.operator} {self.right})"
 
+    def __hash__(self) -> int:
+        return hash((self.left, self.operator, self.right))
+
 
 @dataclass
 class UnaryOp(Generic[OPERAND]):
@@ -362,6 +423,9 @@ class UnaryOp(Generic[OPERAND]):
     def __str__(self) -> str:
         return f"{self.operator} {self.operand}"
 
+    def __hash__(self) -> int:
+        return hash((self.operator, self.operand))
+
 
 class SubscriptIndexBinOp(BinOp["SubscriptIndex"]):
     pass
@@ -372,6 +436,21 @@ class SubscriptIndexUnaryOp(UnaryOp["SubscriptIndex"]):
 
 
 SubscriptIndex = Union[Var, Constant, SubscriptIndexBinOp, SubscriptIndexUnaryOp]
+
+
+def subscript_index_accessed_vars(index: SubscriptIndex) -> list[Var]:
+    if isinstance(index, Var):
+        return [index]
+    elif isinstance(index, Constant):
+        return []
+    elif isinstance(index, SubscriptIndexBinOp):
+        left = subscript_index_accessed_vars(index.left)
+        right = subscript_index_accessed_vars(index.right)
+        return left + right
+    elif isinstance(index, SubscriptIndexUnaryOp):
+        return subscript_index_accessed_vars(index.operand)
+    else:
+        assert_never(index)
 
 
 @dataclass(frozen=True)
@@ -386,6 +465,36 @@ class Subscript:
 
     def __str__(self) -> str:
         return f"{self.array}[{self.index}]"
+
+
+@dataclass
+class VectorizedAccess:
+    """A vectorized array.  Can only be accessed via row-major ordering."""
+
+    array: Var
+    dim_sizes: tuple[LoopBound, ...]
+    vectorized_dims: tuple[bool, ...]
+    idx_vars: tuple[Var, ...]
+
+    def __str__(self) -> str:
+        vectorized_idxs = ", ".join(
+            str(size).upper()
+            for size, vectorized in zip(self.dim_sizes, self.vectorized_dims)
+            if vectorized
+        )
+        if vectorized_idxs:
+            vectorized_idxs = "{" + vectorized_idxs + "}"
+        unvectorized_idxs = ", ".join(
+            str(var).lower()
+            for var, vectorized in zip(self.idx_vars, self.vectorized_dims)
+            if not vectorized
+        )
+        if unvectorized_idxs:
+            unvectorized_idxs = "[" + unvectorized_idxs + "]"
+        return f"{self.array}{vectorized_idxs}{unvectorized_idxs}"
+
+    def __hash__(self) -> int:
+        return hash((self.array, self.dim_sizes, self.vectorized_dims, self.idx_vars))
 
 
 BLOCK = TypeVar("BLOCK")

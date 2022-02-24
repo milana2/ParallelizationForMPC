@@ -3,35 +3,50 @@ from textwrap import indent
 from typing import Optional, Union
 
 from ..ast_shared import (
-    BinOp,
     BinOpKind,
     Constant,
     DataType,
     Parameter,
     Subscript,
+    SubscriptIndex,
+    SubscriptIndexBinOp,
+    SubscriptIndexUnaryOp,
     TypeEnv,
-    UnaryOp,
     UnaryOpKind,
     Var,
     VarType,
     VarVisibility,
+    VectorizedAccess,
 )
-from ..tac_cfg import Assign, AssignRHS, List, Mux, Tuple, Update
+from ..tac_cfg import (
+    Assign,
+    AssignRHS,
+    BinOp,
+    List,
+    Mux,
+    Tuple,
+    UnaryOp,
+    Update,
+    LiftExpr,
+    DropDim,
+)
 from ..util import assert_never
 from ..loop_linear_code import For, Phi
 
 
 @dc.dataclass(frozen=True)
-class RenderOptions:
+class RenderContext:
     type_env: TypeEnv
     plaintext: bool = False
     as_motion_input: bool = False
+    int_type: str = "std::uint32_t"
+    var_mappings: dict[Var, str] = dc.field(default_factory=dict)
 
 
 def render_type(var_type: VarType, plaintext: Optional[bool] = None) -> str:
     assert var_type.visibility is not None
     assert var_type.datatype is not None
-    assert var_type.dims is not None
+    assert var_type._dims is not None
 
     if var_type.datatype == DataType.TUPLE:
         return (
@@ -41,7 +56,7 @@ def render_type(var_type: VarType, plaintext: Optional[bool] = None) -> str:
         )
 
     str_rep = ""
-    for _ in range(var_type.dims):
+    for _dim in range(var_type._dims):
         str_rep += "std::vector<"
 
     str_rep += render_datatype(
@@ -51,7 +66,7 @@ def render_type(var_type: VarType, plaintext: Optional[bool] = None) -> str:
         else var_type.visibility == VarVisibility.PLAINTEXT,
     )
 
-    for _ in range(var_type.dims):
+    for _dim in range(var_type._dims):
         str_rep += ">"
 
     return str_rep
@@ -70,7 +85,7 @@ def render_datatype(datatype: DataType, plaintext: bool) -> str:
         else:
             return "encrypto::motion::ShareWrapper"
 
-    return assert_never(datatype)
+    raise NotImplementedError(f"Unsupported datatype: {datatype}")
 
 
 def render_param(param: Parameter, type_env: TypeEnv) -> str:
@@ -79,54 +94,79 @@ def render_param(param: Parameter, type_env: TypeEnv) -> str:
     return (
         render_type(param.var_type, plaintext)
         + " "
-        + render_expr(param.var, RenderOptions(type_env, plaintext=plaintext))
+        + render_expr(param.var, RenderContext(type_env, plaintext=plaintext))
     )
 
 
 def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
     if isinstance(stmt, Assign):
-        shared_assignment = (
-            render_expr(stmt.lhs, RenderOptions(type_env, plaintext=False))
-            + " = "
-            + render_expr(stmt.rhs, RenderOptions(type_env, plaintext=False))
-            + ";"
-        )
-        plaintext_assignment = (
-            render_expr(stmt.lhs, RenderOptions(type_env, plaintext=True))
-            + " = "
-            + render_expr(stmt.rhs, RenderOptions(type_env, plaintext=True))
-            + ";"
-        )
-
-        if (
-            type_env[stmt.lhs].is_shared()
-            or type_env[stmt.lhs].datatype == DataType.TUPLE
-        ):
-            return shared_assignment
+        # If we're assigning to a vectorized value, use a specialized function for this.
+        if isinstance(stmt.lhs, VectorizedAccess):
+            ctx = RenderContext(type_env, plaintext=False)
+            dim_sizes = (
+                "{"
+                + ", ".join(
+                    render_expr(loop_bound, dc.replace(ctx, plaintext=True))
+                    for loop_bound in stmt.lhs.dim_sizes
+                )
+                + "}"
+            )
+            vectorized_dims = (
+                "{"
+                + ", ".join(
+                    str(vectorized).lower() for vectorized in stmt.lhs.vectorized_dims
+                )
+                + "}"
+            )
+            idxs = (
+                "{"
+                + ", ".join(
+                    render_expr(var, dc.replace(ctx, plaintext=True))
+                    for var in stmt.lhs.idx_vars
+                )
+                + "}"
+            )
+            return f"vectorized_assign({render_expr(stmt.lhs.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(stmt.rhs, ctx)});"
         else:
-            return shared_assignment + "\n" + plaintext_assignment
+            shared_assignment = (
+                render_expr(stmt.lhs, RenderContext(type_env, plaintext=False))
+                + " = "
+                + render_expr(stmt.rhs, RenderContext(type_env, plaintext=False))
+                + ";"
+            )
+            plaintext_assignment = (
+                render_expr(stmt.lhs, RenderContext(type_env, plaintext=True))
+                + " = "
+                + render_expr(stmt.rhs, RenderContext(type_env, plaintext=True))
+                + ";"
+            )
+
+            if (
+                type_env[stmt.lhs].is_shared()
+                or type_env[stmt.lhs].datatype == DataType.TUPLE
+            ):
+                return shared_assignment
+            else:
+                return shared_assignment + "\n" + plaintext_assignment
 
     elif isinstance(stmt, For):
         phi_initializations = "// Initialize phi values\n" + "\n".join(
-            render_expr(phi.lhs, RenderOptions(type_env))
-            + " = "
-            + render_expr(phi.rhs_false, RenderOptions(type_env))
-            + ";"
+            render_stmt(Assign(phi.lhs, phi.rhs_false), type_env)
             for phi in stmt.body
             if isinstance(phi, Phi)
         )
 
         header = (
             "for ("
-            + render_expr(stmt.counter, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
             + " = "
-            + render_expr(stmt.bound_low, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.bound_low, RenderContext(type_env, plaintext=True))
             + "; "
-            + render_expr(stmt.counter, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
             + " < "
-            + render_expr(stmt.bound_high, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.bound_high, RenderContext(type_env, plaintext=True))
             + "; "
-            + render_expr(stmt.counter, RenderOptions(type_env, plaintext=True))
+            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
             + "++) {"
         )
 
@@ -140,10 +180,7 @@ def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
         )
 
         phi_updates = "// Update phi values\n" + "\n".join(
-            render_expr(phi.lhs, RenderOptions(type_env))
-            + " = "
-            + render_expr(phi.rhs_true, RenderOptions(type_env))
-            + ";"
+            render_stmt(Assign(phi.lhs, phi.rhs_true), type_env)
             for phi in stmt.body
             if isinstance(phi, Phi)
         )
@@ -155,7 +192,7 @@ def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
             + header
             + "\n"
             # Initialize loop counter for use in loop
-            + f"    {render_expr(stmt.counter, RenderOptions(type_env))} = party->In<Protocol>(encrypto::motion::ToInput({render_expr(stmt.counter, RenderOptions(type_env, plaintext=True))}), 0);"
+            + f"    {render_expr(stmt.counter, RenderContext(type_env))} = party->In<Protocol>(encrypto::motion::ToInput({render_expr(stmt.counter, RenderContext(type_env, plaintext=True))}), 0);"
             + "\n"
             + indent(body, "    ")
             + "\n"
@@ -182,42 +219,55 @@ def _render_operator(op: Union[BinOpKind, UnaryOpKind]) -> str:
     return str(op)
 
 
-def render_expr(expr: Union[AssignRHS], opts: RenderOptions) -> str:
-    if isinstance(expr, BinOp):
+def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> str:
+    if isinstance(expr, (BinOp, SubscriptIndexBinOp)):
         if expr.operator == BinOpKind.LT:
-            return render_expr(BinOp(expr.right, BinOpKind.GT, expr.left), opts)
-        elif expr.operator == BinOpKind.NOT_EQ:
             return render_expr(
-                UnaryOp(UnaryOpKind.NOT, BinOp(expr.left, BinOpKind.EQ, expr.right)),
-                opts,
+                dc.replace(
+                    expr, left=expr.right, right=expr.left, operator=BinOpKind.GT
+                ),
+                ctx,
             )
+        elif expr.operator == BinOpKind.NOT_EQ:
+            if isinstance(expr, BinOp):
+                return render_expr(
+                    UnaryOp(UnaryOpKind.NOT, dc.replace(expr, operator=BinOpKind.EQ)),
+                    ctx,
+                )
+            else:
+                return render_expr(
+                    SubscriptIndexUnaryOp(
+                        UnaryOpKind.NOT, dc.replace(expr, operator=BinOpKind.EQ)
+                    ),
+                    ctx,
+                )
         elif expr.operator == BinOpKind.LT_E:
             return (
                 "("
-                + render_expr(BinOp(expr.left, BinOpKind.LT, expr.right), opts)
+                + render_expr(dc.replace(expr, operator=BinOpKind.LT), ctx)
                 + " | "
-                + render_expr(BinOp(expr.left, BinOpKind.EQ, expr.right), opts)
+                + render_expr(dc.replace(expr, operator=BinOpKind.EQ), ctx)
                 + ")"
             )
         elif expr.operator == BinOpKind.GT_E:
             return (
                 "("
-                + render_expr(BinOp(expr.left, BinOpKind.GT, expr.right), opts)
+                + render_expr(dc.replace(expr, operator=BinOpKind.GT), ctx)
                 + " | "
-                + render_expr(BinOp(expr.left, BinOpKind.EQ, expr.right), opts)
+                + render_expr(dc.replace(expr, operator=BinOpKind.EQ), ctx)
                 + ")"
             )
 
         # If we're using an arithmetic primitive operation or we're operating on plaintext values,
         # don't cast to a share wrapper
-        elif opts.plaintext or expr.operator in (
+        elif ctx.plaintext or expr.operator in (
             BinOpKind.ADD,
             BinOpKind.SUB,
             BinOpKind.MUL,
             BinOpKind.DIV,
             BinOpKind.GT,
         ):
-            return f"({render_expr(expr.left, opts)} {expr.operator.value} {render_expr(expr.right, opts)})"
+            return f"({render_expr(expr.left, ctx)} {expr.operator.value} {render_expr(expr.right, ctx)})"
 
         # Otherwise, convert to a ShareWrapper since they have more operators defined
         # TODO: go through the operators for ShareWrapper and make sure they're all valid
@@ -227,22 +277,22 @@ def render_expr(expr: Union[AssignRHS], opts: RenderOptions) -> str:
                 "("
                 + (
                     "encrypto::motion::ShareWrapper("
-                    + render_expr(expr.left, opts)
+                    + render_expr(expr.left, ctx)
                     + ".Get())"
                     + " "
                     + _render_operator(expr.operator)
                     + " "
                     + "encrypto::motion::ShareWrapper("
-                    + render_expr(expr.right, opts)
+                    + render_expr(expr.right, ctx)
                     + ".Get())"
                 )
                 + ")"
             )
 
     elif isinstance(expr, Constant):
-        if opts.as_motion_input:
+        if ctx.as_motion_input:
             cpp_const = render_expr(
-                expr, dc.replace(opts, plaintext=True, as_motion_input=False)
+                expr, dc.replace(ctx, plaintext=True, as_motion_input=False)
             )
 
             if expr.datatype == DataType.INT:
@@ -250,65 +300,117 @@ def render_expr(expr: Union[AssignRHS], opts: RenderOptions) -> str:
             elif expr.datatype == DataType.BOOL:
                 return f"encrypto::motion::BitVector(1, {cpp_const})"
             else:
-                assert_never(expr)
+                raise NotImplementedError(f"Unsupported datatype: {expr.datatype}")
 
-        elif opts.plaintext:
+        elif ctx.plaintext:
             if expr.datatype == DataType.INT:
-                return f"std::uint32_t({expr.value})"
+                return f"{ctx.int_type}({expr.value})"
             elif expr.datatype == DataType.BOOL:
                 return str(expr).lower()
             else:
-                assert_never(expr)
+                raise NotImplementedError(f"Unsupported datatype: {expr.datatype}")
 
         else:
             return "_MPC_CONSTANT_" + str(expr).lower()
 
+    elif isinstance(expr, DropDim):
+        dims = (
+            "{"
+            + ", ".join(
+                render_expr(loop_bound, dc.replace(ctx, plaintext=True))
+                for loop_bound in expr.dims
+            )
+            + "}"
+        )
+        # Since we want to manipulate the array, we don't want the input to drop_dim()
+        # to be vectorized
+        if isinstance(expr.array, VectorizedAccess):
+            array = render_expr(expr.array.array, ctx)
+        else:
+            array = render_expr(expr.array, ctx)
+        return f"drop_dim({array}, {dims})"
+
     elif isinstance(expr, List):
-        items = ", ".join(render_expr(item, opts) for item in expr.items)
+        items = ", ".join(render_expr(item, ctx) for item in expr.items)
         return "{" + items + "}"
 
     elif isinstance(expr, Mux):
-        if isinstance(expr.true_value, Var):
-            true_shared = opts.type_env[expr.true_value].is_shared()
-        elif isinstance(expr.true_value, Constant):
-            true_shared = False
-        else:
-            true_shared = opts.type_env[expr.true_value.array].is_shared()
-
-        if isinstance(expr.false_value, Var):
-            false_shared = opts.type_env[expr.false_value].is_shared()
-        elif isinstance(expr.false_value, Constant):
-            false_shared = False
-        else:
-            false_shared = opts.type_env[expr.false_value.array].is_shared()
-
-        cpp_cond = render_expr(expr.condition, opts)
-        cpp_true_val = render_expr(expr.true_value, opts) + ".Get()"
-        cpp_false_val = render_expr(expr.false_value, opts) + ".Get()"
+        cpp_cond = render_expr(expr.condition, ctx)
+        cpp_true_val = render_expr(expr.true_value, ctx) + ".Get()"
+        cpp_false_val = render_expr(expr.false_value, ctx) + ".Get()"
 
         return f"{cpp_cond}.Mux({cpp_false_val}, {cpp_true_val})"
 
+    elif isinstance(expr, LiftExpr):
+        inner_ctx = dc.replace(
+            ctx,
+            plaintext=True,
+            int_type="std::size_t",
+            var_mappings={var: f"indices[{i}]" for i, (var, _) in enumerate(expr.dims)},
+        )
+        inner_expr = (
+            f"[&](const auto &indices){{return {render_expr(expr.expr, inner_ctx)};}}, "
+        )
+
+        dims = (
+            "{"
+            + ", ".join(
+                render_expr(loop_bound, dc.replace(ctx, plaintext=True))
+                for _, loop_bound in expr.dims
+            )
+            + "}"
+        )
+
+        return f"lift({inner_expr}, {dims})"
+
     elif isinstance(expr, Subscript):
-        return f"{render_expr(expr.array, opts)}[{render_expr(expr.index, dc.replace(opts, plaintext=True))}]"
+        return f"{render_expr(expr.array, ctx)}[{render_expr(expr.index, dc.replace(ctx, plaintext=True))}]"
 
     elif isinstance(expr, Tuple):
-        items = ", ".join(render_expr(item, opts) for item in expr.items)
+        items = ", ".join(render_expr(item, ctx) for item in expr.items)
         return f"std::make_tuple({items})"
 
-    elif isinstance(expr, UnaryOp):
-        return f"({_render_operator(expr.operator)}{render_expr(expr.operand, opts)})"
+    elif isinstance(expr, (UnaryOp, SubscriptIndexUnaryOp)):
+        return f"({_render_operator(expr.operator)}{render_expr(expr.operand, ctx)})"
 
     elif isinstance(expr, Update):
-        cpp_arr = render_expr(expr.array, opts)
-        cpp_arr_access = render_expr(Subscript(expr.array, expr.index), opts)
-        cpp_val = render_expr(expr.value, opts)
+        cpp_arr = render_expr(expr.array, ctx)
+        cpp_arr_access = render_expr(Subscript(expr.array, expr.index), ctx)
+        cpp_val = render_expr(expr.value, ctx)
         return f"{cpp_arr};\n{cpp_arr_access} = {cpp_val}"
 
     elif isinstance(expr, Var):
+        if expr in ctx.var_mappings:
+            return ctx.var_mappings[expr]
+
         cpp_str = str(expr).replace("!", "_")
-        if opts.plaintext:
+        if ctx.plaintext:
             return f"_MPC_PLAINTEXT_{cpp_str}"
         else:
             return cpp_str
+
+    elif isinstance(expr, VectorizedAccess):
+        dim_sizes = (
+            "{"
+            + ", ".join(
+                render_expr(loop_bound, dc.replace(ctx, plaintext=True))
+                for loop_bound in expr.dim_sizes
+            )
+            + "}"
+        )
+        vectorized_dims = (
+            "{"
+            + ", ".join(str(vectorized).lower() for vectorized in expr.vectorized_dims)
+            + "}"
+        )
+        idxs = (
+            "{"
+            + ", ".join(
+                render_expr(var, dc.replace(ctx, plaintext=True))
+                for var in expr.idx_vars
+            )
+            + "}"
+        )
+        return f"vectorized_access({render_expr(expr.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs})"
 
     return assert_never(expr)

@@ -1,4 +1,4 @@
-def biometric_matching_fast(D!0: plaintext[int], N!0: plaintext[int], C!0: shared[list[int]], C_sqr_sum!0: shared[int], two_C!0: shared[list[int]], S!0: shared[list[int]], S_sqr_sum!0: shared[list[int]]) -> tuple[shared[int], shared[int]]:
+def biometric_matching_fast(D!0: plaintext[int], N!0: plaintext[int], C!0: shared[list[int; ?]], C_sqr_sum!0: shared[int], two_C!0: shared[list[int; ?]], S!0: shared[list[int; ?]], S_sqr_sum!0: shared[list[int; ?]]) -> tuple[shared[int], shared[int]]:
     differences!1 = []
     for i!1 in range(0, D!0):
         differences!2 = Φ(differences!1, differences!3)

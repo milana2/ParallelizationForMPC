@@ -1,6 +1,7 @@
 """Data types representing code in static single assignment form"""
 
 from dataclasses import dataclass
+from typing import Union
 
 import networkx  # type: ignore
 
@@ -11,6 +12,7 @@ from .ast_shared import (
     SubscriptIndex,
     SubscriptIndexBinOp,
     SubscriptIndexUnaryOp,
+    VectorizedAccess,
 )
 from .tac_cfg import (
     BinOp,
@@ -31,18 +33,34 @@ from .tac_cfg import (
     Atom,
     Operand,
     Update,
+    assign_rhs_accessed_vars,
 )
 from .tac_cfg import Block as _BaseBlock
+from .util import assert_never
 
 
 @dataclass(eq=False)
 class Phi:
-    lhs: Var
-    rhs_false: Var
-    rhs_true: Var
+    lhs: Union[Var, VectorizedAccess]
+    rhs_false: Union[Var, VectorizedAccess]
+    rhs_true: Union[Var, VectorizedAccess]
 
     def rhs_vars(self) -> list[Var]:
-        return [self.rhs_false, self.rhs_true]
+        if isinstance(self.rhs_false, Var):
+            rhs_false_var = self.rhs_false
+        elif isinstance(self.rhs_false, VectorizedAccess):
+            rhs_false_var = self.rhs_false.array
+        else:
+            assert_never(self.rhs_false)
+
+        if isinstance(self.rhs_true, Var):
+            rhs_true_var = self.rhs_true
+        elif isinstance(self.rhs_true, VectorizedAccess):
+            rhs_true_var = self.rhs_true.array
+        else:
+            assert_never(self.rhs_true)
+
+        return [rhs_false_var, rhs_true_var]
 
     def __hash__(self):
         return id(self)

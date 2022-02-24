@@ -1,0 +1,18 @@
+def longest_1s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
+    max_length!1 = 0
+    length!1 = 0
+    !3!0 = lift(max_length!1, (i!1:N!0))
+    !4!0 = lift(length!1, (i!1:N!0))
+    !5!0 = lift(Seq!0[i!1], (i!1:N!0))
+    !6!0 = lift(Sym!0, (i!1:N!0))
+    for i!1 in range(1, N!0):
+        max_length!2 = Φ(!3!0, max_length!4)
+        length!2 = Φ(!4!0, length!5)
+        !1!2 = (!5!0 == !6!0)
+        length!4 = 0
+        length!3 = (length!2 + 1)
+        length!5 = MUX(!1!2, length!3, length!4)
+        !2!2 = (length!5 > max_length!2)
+        max_length!3 = length!5
+        max_length!4 = MUX(!2!2, max_length!3, max_length!2)
+    return max_length!2

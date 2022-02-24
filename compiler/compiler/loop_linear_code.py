@@ -1,8 +1,10 @@
 from dataclasses import dataclass
-from typing import Union, Optional
+from typing import Union, Optional, cast, TypeVar
 from textwrap import indent
 
 from .ssa import (
+    Atom,
+    Operand,
     Var,
     Phi,
     Assign,
@@ -19,9 +21,18 @@ from .ssa import (
     Tuple,
     Mux,
     Update,
+    assign_rhs_accessed_vars,
 )
-from .ast_shared import VarType, BinOpKind, Parameter, UnaryOpKind, TypeEnv
-
+from .tac_cfg import LiftExpr, DropDim
+from .ast_shared import (
+    VarType,
+    BinOpKind,
+    Parameter,
+    UnaryOpKind,
+    TypeEnv,
+    VectorizedAccess,
+)
+from .util import assert_never
 
 Statement = Union[Phi, Assign, "For"]
 
@@ -32,6 +43,7 @@ class For:
     bound_low: LoopBound
     bound_high: LoopBound
     body: list[Statement]
+    is_monolithic: bool = False
 
     def __hash__(self):
         return id(self)
@@ -42,6 +54,11 @@ class For:
     def __str__(self) -> str:
         body = "\n".join([str(statement) for statement in self.body])
         return self.heading_str() + "\n" + indent(body, "    ")
+
+    # needed for dependency graph
+    @property
+    def lhs(self) -> Var:
+        return self.counter
 
 
 @dataclass

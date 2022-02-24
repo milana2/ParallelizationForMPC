@@ -17,64 +17,18 @@ class _StatementBlock:
     block: ssa.Block
 
 
-def _accessed_vars_subscript_index(index: ssa.SubscriptIndex) -> list[ssa.Var]:
-    if isinstance(index, ssa.Var):
-        return [index]
-    elif isinstance(index, ssa.Constant):
-        return []
-    elif isinstance(index, ssa.SubscriptIndexBinOp):
-        left = _accessed_vars_subscript_index(index.left)
-        right = _accessed_vars_subscript_index(index.right)
-        return left + right
-    elif isinstance(index, ssa.SubscriptIndexUnaryOp):
-        return _accessed_vars_subscript_index(index.operand)
-    else:
-        assert_never(index)
-
-
-def _accessed_vars_assign_rhs(rhs: ssa.AssignRHS) -> list[ssa.Var]:
-    if isinstance(rhs, ssa.Var):
-        return [rhs]
-    elif isinstance(rhs, ssa.Constant):
-        return []
-    elif isinstance(rhs, ssa.Subscript):
-        return [rhs.array] + _accessed_vars_subscript_index(rhs.index)
-    elif isinstance(rhs, ssa.BinOp):
-        return _accessed_vars_assign_rhs(rhs.left) + _accessed_vars_assign_rhs(
-            rhs.right
-        )
-    elif isinstance(rhs, ssa.UnaryOp):
-        return _accessed_vars_assign_rhs(rhs.operand)
-    elif isinstance(rhs, (ssa.List, ssa.Tuple)):
-        return [var for item in rhs.items for var in _accessed_vars_assign_rhs(item)]
-    elif isinstance(rhs, ssa.Mux):
-        return (
-            [rhs.condition]
-            + _accessed_vars_assign_rhs(rhs.false_value)
-            + _accessed_vars_assign_rhs(rhs.true_value)
-        )
-    elif isinstance(rhs, ssa.Update):
-        return (
-            [rhs.array]
-            + _accessed_vars_subscript_index(rhs.index)
-            + _accessed_vars_assign_rhs(rhs.value)
-        )
-    else:
-        assert_never(rhs)
-
-
 def _accessed_vars(s: _StatementBlock) -> list[ssa.Var]:
     if isinstance(s.statement, ssa.Phi):
         return s.statement.rhs_vars()
     elif isinstance(s.statement, ssa.Assign):
-        return _accessed_vars_assign_rhs(s.statement.rhs)
+        return ssa.assign_rhs_accessed_vars(s.statement.rhs)
     elif isinstance(s.statement, ssa.Jump):
         return []
     elif isinstance(s.statement, ssa.ConditionalJump):
         return [s.statement.condition]
     elif isinstance(s.statement, ssa.For):
-        low = _accessed_vars_assign_rhs(s.statement.bound_low)
-        high = _accessed_vars_assign_rhs(s.statement.bound_high)
+        low = ssa.assign_rhs_accessed_vars(s.statement.bound_low)
+        high = ssa.assign_rhs_accessed_vars(s.statement.bound_high)
         return low + high
     elif isinstance(s.statement, ssa.Return):
         return [s.statement.value]
@@ -100,6 +54,9 @@ def _compute_statements_setting_vars(
 
         for assignment in assignments:
             if isinstance(assignment, (ssa.Phi, ssa.Assign)):
+                assert isinstance(
+                    assignment.lhs, ssa.Var
+                ), "VectorizedAccesses are not added until basic vectorization"
                 var = assignment.lhs
             elif isinstance(assignment, ssa.For):
                 var = assignment.counter

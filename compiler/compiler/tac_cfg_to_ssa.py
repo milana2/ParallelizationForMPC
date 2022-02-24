@@ -5,9 +5,11 @@ to static single assignment form
 
 from collections import Counter
 import itertools
-from typing import Optional, Union
+from typing import Optional, Union, cast
 
-import networkx  # type: ignore
+import networkx
+
+from compiler.ast_shared import VectorizedAccess  # type: ignore
 
 from . import tac_cfg
 from . import ssa
@@ -29,6 +31,9 @@ def _compute_blocks_setting_vars(
             else []
         )
         for var in lhss:
+            assert isinstance(
+                var, ssa.Var
+            ), "VectorizedAccesses are not added until basic vectorization"
             if var not in result:
                 result[var] = set()
 
@@ -174,7 +179,14 @@ def rename_variables(result: ssa.Function) -> None:
             return operand
         elif isinstance(operand, ssa.Subscript):
             return rename_subscript(operand)
+        elif isinstance(operand, ssa.BinOp):
+            return cast(ssa.BinOp, rename_rhs(operand))
+        elif isinstance(operand, ssa.UnaryOp):
+            return cast(ssa.UnaryOp, rename_rhs(operand))
         else:
+            assert not isinstance(
+                operand, VectorizedAccess
+            ), "VectorizedArr is introduced in vectorization phase"
             assert_never(operand)
 
     def rename_rhs(rhs: ssa.AssignRHS) -> ssa.AssignRHS:
@@ -211,6 +223,9 @@ def rename_variables(result: ssa.Function) -> None:
                 value=rename_atom(rhs.value),
             )
         else:
+            assert not isinstance(
+                rhs, (tac_cfg.LiftExpr, tac_cfg.DropDim, VectorizedAccess)
+            ), "These types are introduced in the vectorization phase"
             assert_never(rhs)
 
     def search(X: ssa.Block):
@@ -255,6 +270,9 @@ def rename_variables(result: ssa.Function) -> None:
                 assert_never(A)
 
             if isinstance(A, (ssa.Phi, ssa.Assign, ssa.For)):
+                assert isinstance(
+                    A.lhs, ssa.Var
+                ), "VectorizedAccesses are not added until basic vectorization"
                 V = A.lhs
                 i = C[V]
                 old_lhs[A] = A.lhs
@@ -272,6 +290,9 @@ def rename_variables(result: ssa.Function) -> None:
             ][0]
             for F in Y.phi_functions:
                 phi_branch_true = {0: False, 1: True}[j]
+                assert isinstance(F.rhs_false, ssa.Var) and isinstance(
+                    F.rhs_true, ssa.Var
+                ), "VectorizedAccesses are not added until basic vectorization"
                 V = F.rhs_true if phi_branch_true else F.rhs_false
                 i = S[V][-1]
                 if isinstance(V, ssa.Subscript):

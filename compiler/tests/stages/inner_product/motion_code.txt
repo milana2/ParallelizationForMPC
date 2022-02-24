@@ -6,6 +6,10 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     std::uint32_t _MPC_PLAINTEXT_N_0
 ) {
     // Shared variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> _1_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _2_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _3_0;
+    encrypto::motion::SecureUnsignedInteger _4_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger sum_1;
@@ -14,6 +18,8 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     encrypto::motion::SecureUnsignedInteger temp_2;
 
     // Plaintext variable declarations
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__1_0;
+    std::uint32_t _MPC_PLAINTEXT__4_0;
     std::uint32_t _MPC_PLAINTEXT_i_1;
     std::uint32_t _MPC_PLAINTEXT_sum_1;
 
@@ -26,16 +32,19 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     // Function body
     sum_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_sum_1 = std::uint32_t(0);
+    vectorized_assign(_1_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_sum_1;}, , {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_2_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_A_0[indices[0]];}, , {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_3_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_B_0[indices[0]];}, , {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(temp_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, (vectorized_access(_2_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}) * vectorized_access(_3_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1})));
 
     // Initialize phi values
-    sum_2 = sum_1;
-    for (_MPC_PLAINTEXT_i_1 = std::uint32_t(0); _MPC_PLAINTEXT_i_1 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT_i_1++) {
-        i_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_i_1), 0);
-        temp_2 = (A_0[_MPC_PLAINTEXT_i_1] * B_0[_MPC_PLAINTEXT_i_1]);
-        sum_3 = (sum_2 + temp_2);
+    vectorized_assign(sum_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__4_0}, vectorized_access(_1_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__4_0}));
+    for (_MPC_PLAINTEXT__4_0 = std::uint32_t(0); _MPC_PLAINTEXT__4_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__4_0++) {
+        _4_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__4_0), 0);
+        vectorized_assign(sum_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__4_0}, (vectorized_access(sum_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__4_0}) + vectorized_access(temp_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__4_0})));
 
         // Update phi values
-        sum_2 = sum_3;
+        vectorized_assign(sum_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__4_0}, vectorized_access(sum_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__4_0}));
     }
 
 

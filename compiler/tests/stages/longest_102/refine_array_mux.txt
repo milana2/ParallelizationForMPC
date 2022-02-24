@@ -1,4 +1,4 @@
-def longest_102(Seq!0: shared[list[int]], N!0: plaintext[int], Syms!0: shared[list[int]]) -> shared[int]:
+def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
     max_len!1 = 0
     length!1 = 0
