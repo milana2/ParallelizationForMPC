@@ -1,12 +1,12 @@
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger count_123(
+std::vector<encrypto::motion::SecureUnsignedInteger> count_123(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _10_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _11_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _12_0;
@@ -15,26 +15,26 @@ encrypto::motion::SecureUnsignedInteger count_123(
     encrypto::motion::SecureUnsignedInteger _15_0;
     encrypto::motion::SecureUnsignedInteger _16_0;
     encrypto::motion::SecureUnsignedInteger _17_0;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper _3_2;
-    encrypto::motion::ShareWrapper _4_2;
-    encrypto::motion::ShareWrapper _5_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
+    std::vector<encrypto::motion::ShareWrapper> _3_2;
+    std::vector<encrypto::motion::ShareWrapper> _4_2;
+    std::vector<encrypto::motion::ShareWrapper> _5_2;
     std::vector<encrypto::motion::ShareWrapper> _6_0;
     std::vector<encrypto::motion::ShareWrapper> _7_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _8_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _9_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger c_1;
-    encrypto::motion::SecureUnsignedInteger c_2;
-    encrypto::motion::SecureUnsignedInteger c_3;
-    encrypto::motion::SecureUnsignedInteger c_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> c_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> c_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> c_4;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::ShareWrapper s1_1;
-    encrypto::motion::ShareWrapper s1_2;
-    encrypto::motion::ShareWrapper s1_3;
+    std::vector<encrypto::motion::ShareWrapper> s1_2;
+    std::vector<encrypto::motion::ShareWrapper> s1_3;
     encrypto::motion::ShareWrapper s2_1;
-    encrypto::motion::ShareWrapper s2_2;
-    encrypto::motion::ShareWrapper s2_3;
+    std::vector<encrypto::motion::ShareWrapper> s2_2;
+    std::vector<encrypto::motion::ShareWrapper> s2_3;
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__15_0;

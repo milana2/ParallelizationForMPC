@@ -50,6 +50,14 @@ class VarType:
         # Otherwise, we are unknown vectorization - just return what we know
         return self._dims
 
+    @property
+    def unvectorized_dims(self) -> Optional[int]:
+        # If we have dim_sizes, then we are vectorized.
+        if self.dim_sizes is not None:
+            return len(self.dim_sizes)
+        # Otherwise, we are unknown vectorization - just return what we know
+        return self._dims
+
     def __hash__(self) -> int:
         return hash(
             (

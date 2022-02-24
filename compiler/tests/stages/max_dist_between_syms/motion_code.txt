@@ -1,14 +1,14 @@
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
+std::vector<encrypto::motion::SecureUnsignedInteger> max_dist_between_syms(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
-    encrypto::motion::ShareWrapper _2_2;
-    encrypto::motion::ShareWrapper _3_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
+    std::vector<encrypto::motion::ShareWrapper> _3_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _4_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _5_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _6_0;
@@ -17,15 +17,15 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     encrypto::motion::SecureUnsignedInteger _9_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger current_dist_1;
-    encrypto::motion::SecureUnsignedInteger current_dist_2;
-    encrypto::motion::SecureUnsignedInteger current_dist_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_dist_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_dist_3;
     encrypto::motion::SecureUnsignedInteger current_dist_4;
-    encrypto::motion::SecureUnsignedInteger current_dist_5;
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_dist_5;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger max_dist_1;
-    encrypto::motion::SecureUnsignedInteger max_dist_2;
-    encrypto::motion::SecureUnsignedInteger max_dist_3;
-    encrypto::motion::SecureUnsignedInteger max_dist_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_dist_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_dist_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_dist_4;
 
     // Plaintext variable declarations
     std::vector<std::uint32_t> _MPC_PLAINTEXT__4_0;

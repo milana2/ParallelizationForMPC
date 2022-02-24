@@ -1,5 +1,5 @@
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger inner_product(
+std::vector<encrypto::motion::SecureUnsignedInteger> inner_product(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> B_0,
@@ -13,9 +13,9 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger sum_1;
-    encrypto::motion::SecureUnsignedInteger sum_2;
-    encrypto::motion::SecureUnsignedInteger sum_3;
-    encrypto::motion::SecureUnsignedInteger temp_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> sum_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> sum_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> temp_2;
 
     // Plaintext variable declarations
     std::vector<std::uint32_t> _MPC_PLAINTEXT__1_0;

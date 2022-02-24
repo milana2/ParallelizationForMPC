@@ -1,13 +1,13 @@
 template <encrypto::motion::MpcProtocol Protocol>
-encrypto::motion::SecureUnsignedInteger longest_1s(
+std::vector<encrypto::motion::SecureUnsignedInteger> longest_1s(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> Seq_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    encrypto::motion::ShareWrapper _1_2;
-    encrypto::motion::ShareWrapper _2_2;
+    std::vector<encrypto::motion::ShareWrapper> _1_2;
+    std::vector<encrypto::motion::ShareWrapper> _2_2;
     std::vector<encrypto::motion::SecureUnsignedInteger> _3_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _4_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> _5_0;
@@ -17,14 +17,14 @@ encrypto::motion::SecureUnsignedInteger longest_1s(
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger length_1;
-    encrypto::motion::SecureUnsignedInteger length_2;
-    encrypto::motion::SecureUnsignedInteger length_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> length_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> length_3;
     encrypto::motion::SecureUnsignedInteger length_4;
-    encrypto::motion::SecureUnsignedInteger length_5;
+    std::vector<encrypto::motion::SecureUnsignedInteger> length_5;
     encrypto::motion::SecureUnsignedInteger max_length_1;
-    encrypto::motion::SecureUnsignedInteger max_length_2;
-    encrypto::motion::SecureUnsignedInteger max_length_3;
-    encrypto::motion::SecureUnsignedInteger max_length_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_4;
 
     // Plaintext variable declarations
     std::vector<std::uint32_t> _MPC_PLAINTEXT__3_0;
