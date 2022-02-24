@@ -282,13 +282,32 @@ def type_check(
                 raise TypeError(f"Unable to type statement {stmt}") from e
 
             if isinstance(stmt.lhs, Var):
+                orig_var = stmt.lhs
+                new_var_type = expr_type
+            elif isinstance(stmt.lhs, VectorizedAccess):
+                orig_var = stmt.lhs.array
+                new_var_type = dc.replace(
+                    expr_type,
+                    dim_sizes=[
+                        (idx, dim_size)
+                        for idx, dim_size, vectorized in zip(
+                            stmt.lhs.idx_vars,
+                            stmt.lhs.dim_sizes,
+                            stmt.lhs.vectorized_dims,
+                        )
+                        if vectorized
+                    ],
+                )
+            else:
+                assert_never(stmt.lhs)
+
+            if isinstance(stmt.lhs, Var):
                 if expr_type == type_env[stmt.lhs]:
                     # No changes to this variable's type, don't extend the worklist
                     continue
                 type_env[stmt.lhs] = expr_type
             else:
-                # We've assigned to a vectorized access, don't extend the worklist
-                # TODO: handle updating the variable's type
+                # VectorizedAccesses are inserted after type analysis is complete
                 continue
 
         elif isinstance(stmt, loop_linear_code.Phi):
@@ -300,15 +319,16 @@ def type_check(
                 )
             except (TypeError, AssertionError) as e:
                 raise TypeError(f"Unable to type statement {stmt}") from e
+
             if isinstance(stmt.lhs, Var):
                 if phi_type == type_env[stmt.lhs]:
                     # No changes to this variable's type, don't extend the worklist
                     continue
                 type_env[stmt.lhs] = phi_type
             else:
-                # We've assigned to a vectorized access, don't extend the worklist
-                # TODO: handle updating the variable's type
+                # VectorizedAccesses are inserted after type analysis is complete
                 continue
+
         elif isinstance(stmt, (DepParameter, loop_linear_code.For)):
             pass
         else:
@@ -342,7 +362,7 @@ def type_check(
                 vectorized_dims=tuple(True for _ in var_type.dim_sizes),
                 idx_vars=tuple(var for var, _ in var_type.dim_sizes),
             ),
-            #   include_lhs=False,
+            include_return=False,
         )
 
     validate_type_requirements(func.body, type_env, func.return_value, func.return_type)

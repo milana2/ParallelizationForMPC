@@ -12,26 +12,28 @@ P = TypeVar("P")
 
 
 # Replace a pattern in a dataclass tree, returning the updated value
-def replace_pattern(expr: E, pattern: P, replacement: P, include_lhs=True) -> E:
+def replace_pattern(expr: E, pattern: P, replacement: P, include_return=True) -> E:
     if expr == pattern:
         return cast(E, replacement)
     elif isinstance(expr, list):
         return cast(
-            E, [replace_pattern(e, pattern, replacement, include_lhs) for e in expr]
+            E, [replace_pattern(e, pattern, replacement, include_return) for e in expr]
         )
     elif isinstance(expr, tuple):
         return cast(
             E,
-            tuple(replace_pattern(e, pattern, replacement, include_lhs) for e in expr),
+            tuple(
+                replace_pattern(e, pattern, replacement, include_return) for e in expr
+            ),
         )
     elif not dc.is_dataclass(expr):
         return expr
     else:
         new_params = {
             field.name: getattr(expr, field.name)
-            if (not include_lhs and field.name == "lhs")
+            if (not include_return and field.name == "return_value")
             else replace_pattern(
-                getattr(expr, field.name), pattern, replacement, include_lhs
+                getattr(expr, field.name), pattern, replacement, include_return
             )
             for field in dc.fields(expr)
         }
