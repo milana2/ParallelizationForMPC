@@ -11,7 +11,7 @@ import compiler
 import compiler.loop_linear_code as llc
 from compiler.type_analysis import TypeEnv
 from compiler.util import assert_never
-from tests.context import STAGES_DIR
+from tests.context import STAGES_DIR, SKIPPED_TESTS
 
 
 def cfg_to_image(G: networkx.DiGraph, path: str):
@@ -57,7 +57,7 @@ def dep_graph_to_image(
             assert_never(statement)
         num = str(i).rjust(3)
         indent = "    " * indent
-        main_label += fr"{num} {indent}{s}\l"
+        main_label += rf"{num} {indent}{s}\l"
 
     dot.add_node(pydot.Node(name="main_node", label=main_label, shape="box"))
 
@@ -66,6 +66,11 @@ def dep_graph_to_image(
     }
 
     for var_def, var_use in dep_graph.edges():
+        if isinstance(var_def, compiler.dep_graph.DepParameter) or isinstance(
+            var_use, compiler.dep_graph.DepParameter
+        ):
+            continue
+
         def_index = statement_indices[var_def]
         use_index = statement_indices[var_use]
         style = "dashed" if dep_graph.is_back_edge(var_def, var_use) else "solid"
@@ -97,6 +102,9 @@ def main():
 
     md += "# Compiler stages with different benchmarks\n"
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
+        if test_case_dir.name in SKIPPED_TESTS:
+            continue
+
         md += f"## `{test_case_dir.name}`\n"
         input_path = os.path.join(test_case_dir, "input.py")
         with open(input_path, "r") as f:
@@ -169,9 +177,39 @@ def main():
         md += "### Array MUX refinement (dependence graph)\n"
         md += f"![]({filename})\n"
 
-        type_env = compiler.type_check(loop_linear_code, dep_graph)
-        md += "### Type environment\n"
+        (loop_linear_code, dep_graph) = compiler.vectorize.basic_vectorization_phase_1(
+            loop_linear_code, dep_graph
+        )
+        md += "### Basic Vectorization Phase 1\n"
+        md += f"```python\n{loop_linear_code}\n```\n"
+        filename = f"images/{test_case_dir.name}_bv_phase_1_dep_graph.png"
+        path = os.path.join(args.path, filename)
+        dep_graph_to_image(dep_graph, loop_linear_code, path)
+        md += "### Basic Vectorization Phase 1 (dependence graph)\n"
+        md += f"![]({filename})\n"
+
+        (loop_linear_code, type_env) = compiler.type_check(loop_linear_code, dep_graph)
+        md += "### Type Environment After Basic Vectorization Phase 1\n"
         md += f"{type_env_to_table(type_env)}\n"
+        md += "### Typed Basic Vectorization Phase 1\n"
+        md += f"```python\n{loop_linear_code}\n```\n"
+
+        (
+            loop_linear_code,
+            type_env,
+            dep_graph,
+        ) = compiler.vectorize.basic_vectorization_phase_2(
+            loop_linear_code, type_env, dep_graph
+        )
+        md += "### Basic Vectorization Phase 2\n"
+        md += f"```python\n{loop_linear_code}\n```\n"
+        md += "### Type Environment After Basic Vectorization Phase 2\n"
+        md += f"{type_env_to_table(type_env)}\n"
+        filename = f"images/{test_case_dir.name}_bv_phase_2_dep_graph.png"
+        path = os.path.join(args.path, filename)
+        dep_graph_to_image(dep_graph, loop_linear_code, path)
+        md += "### Basic Vectorization Phase 2 (dependence graph)\n"
+        md += f"![]({filename})\n"
 
         motion_code = compiler.motion_backend.render_function(
             loop_linear_code, type_env

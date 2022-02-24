@@ -7,27 +7,13 @@ import compiler
 
 from . import context as test_context
 
-SKIPPED_TESTS = [
-    "biometric_fast",
-    "convex_hull",
-    "histogram",
-    "minimal_points",
-    "psi",
-    # The tests beyond this point fail to compile since they return a vector
-    # Once our test harness can handle this, they can be re-enabled
-    "cross_join",
-    "cross_join_trivial",
-    "gauss_decomp",
-    "infeasible_edges_example",
-]
-
 
 class StagesTestCase(unittest.TestCase):
     maxDiff = None
 
     def test_stages(self):
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
-            if test_case_dir.name in SKIPPED_TESTS:
+            if test_case_dir.name in test_context.SKIPPED_TESTS:
                 continue
 
             print(f"Testing {test_case_dir.name}...")
@@ -102,7 +88,7 @@ class StagesTestCase(unittest.TestCase):
             self.skipTest("Skipping example application compilation")
 
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
-            if test_case_dir.name in SKIPPED_TESTS:
+            if test_case_dir.name in test_context.SKIPPED_TESTS:
                 continue
 
             input_fname = os.path.join(test_case_dir.path, "input.py")
@@ -168,7 +154,7 @@ class StagesTestCase(unittest.TestCase):
 
 def regenerate_stages():
     for test_case_dir in os.scandir(test_context.STAGES_DIR):
-        if test_case_dir.name in SKIPPED_TESTS:
+        if test_case_dir.name in test_context.SKIPPED_TESTS:
             continue
 
         print(f"Regenerating {test_case_dir.name}...")
