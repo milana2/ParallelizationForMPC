@@ -60,29 +60,29 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     _MPC_PLAINTEXT_current_dist_4 = std::uint32_t(0);
 
     // Initialize phi values
-    vectorized_assign(max_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}, vectorized_access(_4_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}));
+    vectorized_assign(current_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}, vectorized_access(_5_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}));
     for (_MPC_PLAINTEXT__9_0 = std::uint32_t(0); _MPC_PLAINTEXT__9_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__9_0++) {
         _9_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__9_0), 0);
-        vectorized_assign(max_dist_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}, vectorized_access(_3_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}).Mux(vectorized_access(max_dist_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}).Get(), vectorized_access(max_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}).Get()));
+        vectorized_assign(current_dist_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}, (vectorized_access(current_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}) + _MPC_CONSTANT_1));
+        vectorized_assign(current_dist_5, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}, vectorized_access(_2_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}).Mux(vectorized_access(current_dist_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}).Get(), current_dist_4.Get()));
 
         // Update phi values
-        vectorized_assign(max_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}, vectorized_access(max_dist_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}));
+        vectorized_assign(current_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}, vectorized_access(current_dist_5, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__9_0}));
     }
 
+    vectorized_assign(max_dist_3, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, vectorized_access(current_dist_5, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}));
 
     // Initialize phi values
-    vectorized_assign(current_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}, vectorized_access(_5_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}));
+    vectorized_assign(max_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}, vectorized_access(_4_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}));
     for (_MPC_PLAINTEXT__10_0 = std::uint32_t(0); _MPC_PLAINTEXT__10_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__10_0++) {
         _10_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__10_0), 0);
-        vectorized_assign(current_dist_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}, (vectorized_access(current_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}) + _MPC_CONSTANT_1));
-        vectorized_assign(current_dist_5, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}, vectorized_access(_2_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}).Mux(vectorized_access(current_dist_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}).Get(), current_dist_4.Get()));
+        vectorized_assign(max_dist_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}, vectorized_access(_3_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}).Mux(vectorized_access(max_dist_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}).Get(), vectorized_access(max_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}).Get()));
 
         // Update phi values
-        vectorized_assign(current_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}, vectorized_access(current_dist_5, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}));
+        vectorized_assign(max_dist_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}, vectorized_access(max_dist_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__10_0}));
     }
 
     vectorized_assign(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, (vectorized_access(current_dist_5, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}) > vectorized_access(max_dist_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1})));
-    vectorized_assign(max_dist_3, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, vectorized_access(current_dist_5, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}));
     _8_0 = drop_dim(max_dist_2, {_MPC_PLAINTEXT_N_0});
     return _8_0;
 

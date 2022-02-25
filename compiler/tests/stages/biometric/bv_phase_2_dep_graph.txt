@@ -19,20 +19,20 @@ Nodes:
     sum!3{N!0}[!12!0] = Φ(!5!0{N!0}[!12!0], sum!4{N!0}[!12!0])
     sum!4{N!0}[!12!0] = (sum!3{N!0}[!12!0] + p!3{N!0}[!12!0])
     !8!0{N!0} = drop_dim(sum!3{N!0, D!0})
-    for !13!0 in range(0, N!0):
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])
-    !1!2{N!0} = (!8!0{N!0} < min_sum!2{N!0})
     !9!0{N!0} = drop_dim(sum!3{N!0, D!0})
     min_sum!3{N!0} = !9!0{N!0}
-    !14!0 = lift(i!1, (i!1:N!0))
+    !1!2{N!0} = (!8!0{N!0} < min_sum!2{N!0})
+    !13!0 = lift(i!1, (i!1:N!0))
+    for !14!0 in range(0, N!0):
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])
     for !15!0 in range(0, N!0):
     min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])
     min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])
     !10!0 = drop_dim(min_sum!2{N!0})
     !11!0 = drop_dim(min_index!2{N!0})
     !2!1 = (!10!0, !11!0)
@@ -43,13 +43,13 @@ Forward edges:
     parameter S!0  →  !6!0{N!0, D!0} = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
     min_sum!1 = 10000  →  !3!0{N!0} = lift(min_sum!1, (i!1:N!0))
     min_index!1 = 0  →  !4!0{N!0} = lift(min_index!1, (i!1:N!0))
-    !3!0{N!0} = lift(min_sum!1, (i!1:N!0))  →  for !13!0 in range(0, N!0):
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])
-    !3!0{N!0} = lift(min_sum!1, (i!1:N!0))  →  min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
+    !3!0{N!0} = lift(min_sum!1, (i!1:N!0))  →  for !14!0 in range(0, N!0):
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])
+    !3!0{N!0} = lift(min_sum!1, (i!1:N!0))  →  min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
     !4!0{N!0} = lift(min_index!1, (i!1:N!0))  →  for !15!0 in range(0, N!0):
     min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])
     !4!0{N!0} = lift(min_index!1, (i!1:N!0))  →  min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
     sum!2 = 0  →  !5!0{N!0, D!0} = lift(sum!2, (i!1:N!0, j!1:D!0))
     !5!0{N!0, D!0} = lift(sum!2, (i!1:N!0, j!1:D!0))  →  for !12!0 in range(0, D!0):
@@ -79,50 +79,50 @@ Forward edges:
     sum!3{N!0}[!12!0] = Φ(!5!0{N!0}[!12!0], sum!4{N!0}[!12!0])
     sum!4{N!0}[!12!0] = (sum!3{N!0}[!12!0] + p!3{N!0}[!12!0])
     !8!0{N!0} = drop_dim(sum!3{N!0, D!0})  →  !1!2{N!0} = (!8!0{N!0} < min_sum!2{N!0})
-    for !13!0 in range(0, N!0):
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])  →  for !13!0 in range(0, N!0):
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])
-    for !13!0 in range(0, N!0):
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])  →  min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])  →  for !13!0 in range(0, N!0):
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])  →  min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])  →  !1!2{N!0} = (!8!0{N!0} < min_sum!2{N!0})
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])  →  for !13!0 in range(0, N!0):
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])
     !9!0{N!0} = drop_dim(sum!3{N!0, D!0})  →  min_sum!3{N!0} = !9!0{N!0}
-    min_sum!3{N!0} = !9!0{N!0}  →  for !13!0 in range(0, N!0):
-    min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])
-    min_sum!3{N!0} = !9!0{N!0}  →  min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])
-    !14!0 = lift(i!1, (i!1:N!0))  →  for !15!0 in range(0, N!0):
+    min_sum!3{N!0} = !9!0{N!0}  →  for !14!0 in range(0, N!0):
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])
+    min_sum!3{N!0} = !9!0{N!0}  →  min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])
+    !13!0 = lift(i!1, (i!1:N!0))  →  for !15!0 in range(0, N!0):
     min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])
-    !14!0 = lift(i!1, (i!1:N!0))  →  min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])
+    !13!0 = lift(i!1, (i!1:N!0))  →  min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])
+    for !14!0 in range(0, N!0):
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])  →  for !14!0 in range(0, N!0):
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])
+    for !14!0 in range(0, N!0):
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])  →  min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])  →  !1!2{N!0} = (!8!0{N!0} < min_sum!2{N!0})
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])  →  for !14!0 in range(0, N!0):
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])  →  min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])  →  for !14!0 in range(0, N!0):
+    min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])
     for !15!0 in range(0, N!0):
     min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])  →  for !15!0 in range(0, N!0):
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])  →  for !15!0 in range(0, N!0):
     min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])
     for !15!0 in range(0, N!0):
     min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])  →  min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])  →  min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])
     min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])  →  for !15!0 in range(0, N!0):
     min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])
-    min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])  →  min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])  →  for !15!0 in range(0, N!0):
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])
+    min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])  →  min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])  →  for !15!0 in range(0, N!0):
     min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])
     !10!0 = drop_dim(min_sum!2{N!0})  →  !2!1 = (!10!0, !11!0)
     !11!0 = drop_dim(min_index!2{N!0})  →  !2!1 = (!10!0, !11!0)
     !2!1 = (!10!0, !11!0)  →  return !2!1
 Back edges:
     sum!4{N!0}[!12!0] = (sum!3{N!0}[!12!0] + p!3{N!0}[!12!0])  →  sum!3{N!0}[!12!0] = Φ(!5!0{N!0}[!12!0], sum!4{N!0}[!12!0])
-    min_sum!4[!13!0] = MUX(!1!2[!13!0], min_sum!3[!13!0], min_sum!2[!13!0])  →  min_sum!2[!13!0] = Φ(!3!0[!13!0], min_sum!4[!13!0])
-    min_index!4[!15!0] = MUX(!1!2[!15!0], !14!0[i!1], min_index!2[!15!0])  →  min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])
+    min_sum!4[!14!0] = MUX(!1!2[!14!0], min_sum!3[!14!0], min_sum!2[!14!0])  →  min_sum!2[!14!0] = Φ(!3!0[!14!0], min_sum!4[!14!0])
+    min_index!4[!15!0] = MUX(!1!2[!15!0], !13!0[i!1], min_index!2[!15!0])  →  min_index!2[!15!0] = Φ(!4!0[!15!0], min_index!4[!15!0])

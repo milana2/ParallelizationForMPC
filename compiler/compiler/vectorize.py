@@ -1,4 +1,5 @@
 from collections import defaultdict
+import functools
 
 from .ast_shared import TypeEnv, Var, VectorizedAccess, Subscript
 from .tac_cfg import DropDim, LiftExpr, Assign
@@ -760,39 +761,89 @@ def _basic_vectorization_phase_2(
         else:
             assert_never(stmt)
 
+    def ordering(
+        s1: Union[llc.Statement, list[llc.Statement]],
+        s2: Union[llc.Statement, list[llc.Statement]],
+    ) -> int:
+        # If s1 is a closure
+        if isinstance(s1, list):
+            # If s2 is a closure
+            if isinstance(s2, list):
+                orderings = set(ordering(ss1, s2) for ss1 in s1)
+                orderings.discard(0)
+                if len(orderings) == 2:
+                    raise AssertionError(
+                        "Two closures have been detected with circular dependencies"
+                    )
+                elif len(orderings) == 1:
+                    return orderings.pop()
+                else:
+                    return 0
+            # If s2 is a statement
+            else:
+                # If there is a dependency from s1 to s2, s1 must be placed first
+                if any(dep_graph.has_same_level_path(ss1, s2) for ss1 in s1):
+                    return -1
+                # If there is a dependency from s2 to s1, then s2 must be placed first
+                elif any(dep_graph.has_same_level_path(s2, ss1) for ss1 in s1):
+                    return 1
+                # Otherwise, they can be placed in any order
+                else:
+                    return 0
+        # If s1 is a statement
+        else:
+            # If s2 is a closure
+            if isinstance(s2, list):
+                # If there is a dependency from s1 to s2, s1 must be placed first
+                if any(dep_graph.has_same_level_path(s1, ss2) for ss2 in s2):
+                    return -1
+                # If there is a dependency from s2 to s1, then s2 must be placed first
+                elif any(dep_graph.has_same_level_path(ss2, s1) for ss2 in s2):
+                    return 1
+                # Otherwise, they can be placed in any order
+                else:
+                    return 0
+            # If s2 is a statement
+            else:
+                # If there is a dependency from s1 to s2, s1 must be placed first
+                if dep_graph.has_same_level_path(s1, s2):
+                    return -1
+                # If there is a dependency from s2 to s1, then s2 must be placed first
+                elif dep_graph.has_same_level_path(s2, s1):
+                    return 1
+                # Otherwise, they can be placed in any order
+                else:
+                    return 0
+
+    stmts_and_closures: list[
+        Union[llc.Statement, list[llc.Statement]]
+    ] = vectorizeable + [
+        closure for _, closure in closures  # type: ignore
+    ]  # type: ignore
+
+    stmts_and_closures = sorted(
+        stmts_and_closures, key=functools.cmp_to_key(ordering)
+    )  # Sort by index to retain def-use order
+
     # Generate output
     output: list[llc.Statement] = []
-    used_closures = set()
     lifted_arrs: dict[llc.Var, VectorizedAccess] = {}
-    for stmt in vectorizeable:
-        for phi, closure in closures:
-            if phi in used_closures:
-                continue
 
-            # of creating a new for loop to hold the closure's contents, unvectorizing the loop's
-            # dimension, and updating the dependency graph.
-            if any(
-                dep_graph.has_same_level_path(closure_stmt, stmt)
-                for closure_stmt in closure
-            ):
-                used_closures.add(phi)
-                output.append(generate_monolithic_for(closure, lifted_arrs))
-
-        # Now that all needed closures have been added, add this statement.  If it needs to be lifted,
-        # then lift all substatements.
-        if uses_loop_counter(stmt):
-            lifted = lift_vars(stmt)
-            for orig_var, val in lifted.items():
-                assignment, lifted_access = val
-                lifted_arrs[orig_var] = lifted_access
-                output.append(assignment)
-        else:
-            output.append(stmt)
-
-    # Add any remaining closures
-    for phi, closure in closures:
-        if phi not in used_closures:
+    for stmt_or_closure in stmts_and_closures:
+        if isinstance(stmt_or_closure, list):
+            closure = stmt_or_closure
             output.append(generate_monolithic_for(closure, lifted_arrs))
+        else:
+            stmt = stmt_or_closure
+            # If the statement uses the loop counter, we need to lift it
+            if uses_loop_counter(stmt):
+                lifted = lift_vars(stmt)
+                for orig_var, val in lifted.items():
+                    assignment, lifted_access = val
+                    lifted_arrs[orig_var] = lifted_access
+                    output.append(assignment)
+            else:
+                output.append(stmt)
 
     return output
 

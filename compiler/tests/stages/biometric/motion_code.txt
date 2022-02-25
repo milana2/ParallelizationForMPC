@@ -11,8 +11,8 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     encrypto::motion::SecureUnsignedInteger _10_0;
     encrypto::motion::SecureUnsignedInteger _11_0;
     encrypto::motion::SecureUnsignedInteger _12_0;
-    encrypto::motion::SecureUnsignedInteger _13_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _14_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _13_0;
+    encrypto::motion::SecureUnsignedInteger _14_0;
     encrypto::motion::SecureUnsignedInteger _15_0;
     std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> _2_1;
     std::vector<encrypto::motion::SecureUnsignedInteger> _3_0;
@@ -42,8 +42,8 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__12_0;
-    std::uint32_t _MPC_PLAINTEXT__13_0;
-    std::vector<std::uint32_t> _MPC_PLAINTEXT__14_0;
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__13_0;
+    std::uint32_t _MPC_PLAINTEXT__14_0;
     std::uint32_t _MPC_PLAINTEXT__15_0;
     std::tuple<std::uint32_t, std::uint32_t> _MPC_PLAINTEXT__2_1;
     std::vector<std::uint32_t> _MPC_PLAINTEXT__3_0;
@@ -91,28 +91,28 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     }
 
     vectorized_assign(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, drop_dim(sum_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}));
-
-    // Initialize phi values
-    vectorized_assign(min_sum_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__13_0}, vectorized_access(_3_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__13_0}));
-    for (_MPC_PLAINTEXT__13_0 = std::uint32_t(0); _MPC_PLAINTEXT__13_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__13_0++) {
-        _13_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__13_0), 0);
-        vectorized_assign(min_sum_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__13_0}, vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__13_0}).Mux(vectorized_access(min_sum_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__13_0}).Get(), vectorized_access(min_sum_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__13_0}).Get()));
-
-        // Update phi values
-        vectorized_assign(min_sum_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__13_0}, vectorized_access(min_sum_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__13_0}));
-    }
-
-    vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, (vectorized_access(min_sum_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}) > vectorized_access(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1})));
     vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, drop_dim(sum_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}));
     vectorized_assign(min_sum_3, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}));
-    _14_0 = lift([&](const auto &indices){return indices[0];}, , {_MPC_PLAINTEXT_N_0});
-    _MPC_PLAINTEXT__14_0 = lift([&](const auto &indices){return indices[0];}, , {_MPC_PLAINTEXT_N_0});
+    vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, (vectorized_access(min_sum_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}) > vectorized_access(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1})));
+    _13_0 = lift([&](const auto &indices){return indices[0];}, , {_MPC_PLAINTEXT_N_0});
+    _MPC_PLAINTEXT__13_0 = lift([&](const auto &indices){return indices[0];}, , {_MPC_PLAINTEXT_N_0});
+
+    // Initialize phi values
+    vectorized_assign(min_sum_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__14_0}, vectorized_access(_3_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__14_0}));
+    for (_MPC_PLAINTEXT__14_0 = std::uint32_t(0); _MPC_PLAINTEXT__14_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__14_0++) {
+        _14_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__14_0), 0);
+        vectorized_assign(min_sum_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__14_0}, vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__14_0}).Mux(vectorized_access(min_sum_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__14_0}).Get(), vectorized_access(min_sum_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__14_0}).Get()));
+
+        // Update phi values
+        vectorized_assign(min_sum_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__14_0}, vectorized_access(min_sum_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__14_0}));
+    }
+
 
     // Initialize phi values
     vectorized_assign(min_index_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}, vectorized_access(_4_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}));
     for (_MPC_PLAINTEXT__15_0 = std::uint32_t(0); _MPC_PLAINTEXT__15_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__15_0++) {
         _15_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__15_0), 0);
-        vectorized_assign(min_index_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}, vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}).Mux(vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT_i_1}).Get(), vectorized_access(min_index_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}).Get()));
+        vectorized_assign(min_index_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}, vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}).Mux(vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT_i_1}).Get(), vectorized_access(min_index_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}).Get()));
 
         // Update phi values
         vectorized_assign(min_index_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}, vectorized_access(min_index_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}));
