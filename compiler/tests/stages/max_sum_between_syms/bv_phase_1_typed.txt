@@ -17,4 +17,6 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
         !3!2{N!0} = (current_sum!5{N!0} > max_sum!2{N!0})
         max_sum!3{N!0} = current_sum!5{N!0}
         max_sum!4{N!0} = MUX(!3!2{N!0}, max_sum!3{N!0}, max_sum!2{N!0})
-    return max_sum!2
+    !9!0 = drop_dim(max_sum!2{N!0})
+    return !9!0
+

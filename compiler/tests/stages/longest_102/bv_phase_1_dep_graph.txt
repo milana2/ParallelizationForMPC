@@ -49,6 +49,8 @@ Nodes:
     !8!2 = (s1!2 and !7!2)
     max_len!3 = length!5
     max_len!4 = MUX(!8!2, max_len!3, max_len!2)
+    !18!0 = drop_dim(max_len!2)
+    return !18!0
 Forward edges:
     parameter Seq!0  →  !12!0 = lift(Seq!0[i!1], (i!1:N!0))
     parameter Seq!0  →  !14!0 = lift(Seq!0[i!1], (i!1:N!0))
@@ -126,6 +128,7 @@ Forward edges:
     s0!2 = Φ(!9!0, s0!3)  →  !5!2 = (s0!2 and !4!2)
     max_len!2 = Φ(!10!0, max_len!4)  →  !7!2 = (max_len!2 < length!5)
     max_len!2 = Φ(!10!0, max_len!4)  →  max_len!4 = MUX(!8!2, max_len!3, max_len!2)
+    max_len!2 = Φ(!10!0, max_len!4)  →  !18!0 = drop_dim(max_len!2)
     length!2 = Φ(!11!0, length!5)  →  length!3 = (length!2 + 1)
     !1!2 = (!12!0 == !13!0)  →  s1!2 = (s0!2 and !1!2)
     s1!2 = (s0!2 and !1!2)  →  !6!2 = (s1!2 or s0!3)
@@ -142,6 +145,7 @@ Forward edges:
     !7!2 = (max_len!2 < length!5)  →  !8!2 = (s1!2 and !7!2)
     !8!2 = (s1!2 and !7!2)  →  max_len!4 = MUX(!8!2, max_len!3, max_len!2)
     max_len!3 = length!5  →  max_len!4 = MUX(!8!2, max_len!3, max_len!2)
+    !18!0 = drop_dim(max_len!2)  →  return !18!0
 Back edges:
     s0!3 = (!2!2 or !5!2)  →  s0!2 = Φ(!9!0, s0!3)
     length!5 = MUX(!6!2, length!3, length!4)  →  length!2 = Φ(!11!0, length!5)

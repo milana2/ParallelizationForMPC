@@ -29,4 +29,6 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
         !8!2 = (s1!2 and !7!2)
         max_len!3 = length!5
         max_len!4 = MUX(!8!2, max_len!3, max_len!2)
-    return max_len!2
+    !18!0 = drop_dim(max_len!2)
+    return !18!0
+

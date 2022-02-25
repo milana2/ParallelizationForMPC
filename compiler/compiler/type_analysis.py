@@ -190,7 +190,7 @@ def _add_loop_counter_types(
 def validate_type_requirements(
     stmts: list[loop_linear_code.Statement],
     type_env: TypeEnv,
-    return_var: Var,
+    return_stmt: loop_linear_code.Statement,
     return_type: Optional[VarType],
 ) -> None:
     """
@@ -218,7 +218,7 @@ def validate_type_requirements(
                 raise TypeError(
                     f"Loop counter {stmt.counter.name} is not a plaintext integer"
                 )
-            validate_type_requirements(stmt.body, type_env, return_var, None)
+            validate_type_requirements(stmt.body, type_env, return_stmt, None)
         elif isinstance(stmt, loop_linear_code.Assign):
             # The type assignment function checks for type errors internally
             if not _type_assign_expr(stmt.rhs, type_env).is_complete():
@@ -245,16 +245,16 @@ def validate_type_requirements(
             if lhs_type != phi_type:
                 raise TypeError(f"Type mismatch in phi {stmt.lhs} = {stmt.rhs_vars()}")
 
-    if return_type is not None and not type_env[return_var].is_equivalent_to(
+    if not isinstance(return_stmt, loop_linear_code.Return):
+        raise TypeError(
+            f"Final statement {return_stmt} in function is not a Return statement"
+        )
+
+    if return_type is not None and not type_env[return_stmt.value].is_equivalent_to(
         return_type
     ):
-        from pprint import pprint
-
-        pprint(type_env[return_var])
-        pprint(return_type)
-
         raise TypeError(
-            f"Return type {type_env[return_var]} does not match expected type {return_type}"
+            f"Return type {type_env[return_stmt.value]} does not match expected type {return_type}"
         )
 
 
@@ -329,7 +329,9 @@ def type_check(
                 # VectorizedAccesses are inserted after type analysis is complete
                 continue
 
-        elif isinstance(stmt, (DepParameter, loop_linear_code.For)):
+        elif isinstance(
+            stmt, (DepParameter, loop_linear_code.For, loop_linear_code.Return)
+        ):
             pass
         else:
             assert_never(stmt)
@@ -365,6 +367,6 @@ def type_check(
             include_return=False,
         )
 
-    validate_type_requirements(func.body, type_env, func.return_value, func.return_type)
+    validate_type_requirements(func.body, type_env, func.body[-1], func.return_type)
 
     return func, type_env

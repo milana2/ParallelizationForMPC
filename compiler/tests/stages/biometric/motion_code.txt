@@ -121,6 +121,6 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     _10_0 = drop_dim(min_sum_2, {_MPC_PLAINTEXT_N_0});
     _11_0 = drop_dim(min_index_2, {_MPC_PLAINTEXT_N_0});
     _2_1 = std::make_tuple(_10_0, _11_0);
-
     return _2_1;
+
 }

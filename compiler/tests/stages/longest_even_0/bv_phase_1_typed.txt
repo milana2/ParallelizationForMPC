@@ -20,4 +20,6 @@ def longest_even_0(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shar
         !4!2{N!0} = (!3!2{N!0} == 0)
         max_length!3{N!0} = tmp_max_len!4{N!0}
         max_length!4{N!0} = MUX(!4!2{N!0}, max_length!3{N!0}, max_length!2{N!0})
-    return max_length!2
+    !9!0 = drop_dim(max_length!2{N!0})
+    return !9!0
+

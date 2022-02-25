@@ -30,6 +30,8 @@ Nodes:
     !3!2 = (current_sum!5 > max_sum!2)
     max_sum!3 = current_sum!5
     max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
+    !9!0 = drop_dim(max_sum!2)
+    return !9!0
 Forward edges:
     parameter Seq!0  →  !6!0 = lift(Seq!0[i!1], (i!1:N!0))
     parameter Seq!0  →  !8!0 = lift(Seq!0[i!1], (i!1:N!0))
@@ -65,6 +67,7 @@ Forward edges:
     max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)  →  !8!0 = lift(Seq!0[i!1], (i!1:N!0))
     max_sum!2 = Φ(!4!0, max_sum!4)  →  !3!2 = (current_sum!5 > max_sum!2)
     max_sum!2 = Φ(!4!0, max_sum!4)  →  max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
+    max_sum!2 = Φ(!4!0, max_sum!4)  →  !9!0 = drop_dim(max_sum!2)
     current_sum!2 = Φ(!5!0, current_sum!5)  →  current_sum!3 = (current_sum!2 + !8!0)
     !1!2 = (!6!0 == !7!0)  →  !2!2 = not !1!2
     !2!2 = not !1!2  →  current_sum!5 = MUX(!2!2, current_sum!3, current_sum!4)
@@ -74,6 +77,7 @@ Forward edges:
     current_sum!5 = MUX(!2!2, current_sum!3, current_sum!4)  →  max_sum!3 = current_sum!5
     !3!2 = (current_sum!5 > max_sum!2)  →  max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
     max_sum!3 = current_sum!5  →  max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
+    !9!0 = drop_dim(max_sum!2)  →  return !9!0
 Back edges:
     current_sum!5 = MUX(!2!2, current_sum!3, current_sum!4)  →  current_sum!2 = Φ(!5!0, current_sum!5)
     max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)  →  max_sum!2 = Φ(!4!0, max_sum!4)

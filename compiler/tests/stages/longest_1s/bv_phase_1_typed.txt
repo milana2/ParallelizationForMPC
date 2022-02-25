@@ -15,4 +15,6 @@ def longest_1s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[i
         !2!2{N!0} = (length!5{N!0} > max_length!2{N!0})
         max_length!3{N!0} = length!5{N!0}
         max_length!4{N!0} = MUX(!2!2{N!0}, max_length!3{N!0}, max_length!2{N!0})
-    return max_length!2
+    !7!0 = drop_dim(max_length!2{N!0})
+    return !7!0
+

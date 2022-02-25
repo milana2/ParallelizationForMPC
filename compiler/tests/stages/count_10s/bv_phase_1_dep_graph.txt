@@ -37,6 +37,8 @@ Nodes:
     !4!2 = (s0!2 or s1!2)
     s1!3 = (!3!2 and !4!2)
     s0!3 = (!12!0 == !13!0)
+    !14!0 = drop_dim(scount!2)
+    return !14!0
 Forward edges:
     parameter Seq!0  →  !8!0 = lift(Seq!0[i!1], (i!1:N!0))
     parameter Seq!0  →  !10!0 = lift(Seq!0[i!1], (i!1:N!0))
@@ -97,11 +99,13 @@ Forward edges:
     s1!2 = Φ(!6!0, s1!3)  →  !4!2 = (s0!2 or s1!2)
     scount!2 = Φ(!7!0, scount!4)  →  scount!3 = (scount!2 + 1)
     scount!2 = Φ(!7!0, scount!4)  →  scount!4 = MUX(!2!2, scount!3, scount!2)
+    scount!2 = Φ(!7!0, scount!4)  →  !14!0 = drop_dim(scount!2)
     !1!2 = (!8!0 != !9!0)  →  !2!2 = (s1!2 and !1!2)
     !2!2 = (s1!2 and !1!2)  →  scount!4 = MUX(!2!2, scount!3, scount!2)
     scount!3 = (scount!2 + 1)  →  scount!4 = MUX(!2!2, scount!3, scount!2)
     !3!2 = (!10!0 == !11!0)  →  s1!3 = (!3!2 and !4!2)
     !4!2 = (s0!2 or s1!2)  →  s1!3 = (!3!2 and !4!2)
+    !14!0 = drop_dim(scount!2)  →  return !14!0
 Back edges:
     scount!4 = MUX(!2!2, scount!3, scount!2)  →  scount!2 = Φ(!7!0, scount!4)
     s1!3 = (!3!2 and !4!2)  →  s1!2 = Φ(!6!0, s1!3)

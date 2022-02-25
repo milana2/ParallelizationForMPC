@@ -5,3 +5,4 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
         temp!2 = (A!0[i!1] * B!0[i!1])
         sum!3 = (sum!2 + temp!2)
     return sum!2
+

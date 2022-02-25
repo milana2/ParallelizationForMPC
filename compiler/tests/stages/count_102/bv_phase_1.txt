@@ -20,4 +20,6 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         !5!2 = (!13!0 == !14!0)
         !6!2 = (s0!2 and !5!2)
         s0!3 = (!3!2 or !6!2)
-    return c!2
+    !15!0 = drop_dim(c!2)
+    return !15!0
+

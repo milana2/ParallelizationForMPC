@@ -24,4 +24,6 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         !5!2 = (s1!2 or s2!2)
         s2!3 = (!4!2 and !5!2)
         s1!3 = (!13!0 == !14!0)
-    return c!2
+    !15!0 = drop_dim(c!2)
+    return !15!0
+

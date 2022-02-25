@@ -23,7 +23,7 @@ class DepParameter:
         return self.var
 
 
-DepNode = Union[llc.Phi, llc.Assign, llc.For, DepParameter]
+DepNode = Union[llc.Phi, llc.Assign, llc.For, llc.Return, DepParameter]
 
 
 class EdgeKind(Enum):
@@ -50,7 +50,7 @@ class DepGraph:
             for statement in statements:
                 if isinstance(
                     statement,
-                    (llc.Phi, llc.Assign),
+                    (llc.Phi, llc.Assign, llc.Return),
                 ):
                     all_assignments.append((statement, copy(enclosing_loops)))
                 elif isinstance(statement, llc.For):
@@ -59,6 +59,8 @@ class DepGraph:
                     # so that loop index accesses inside the loop can be same-level
                     all_assignments.append((loop, enclosing_loops + [loop]))
                     add_assignments(loop.body, enclosing_loops + [loop])
+                elif isinstance(statement, llc.Return):
+                    all_assignments.append((statement, copy(enclosing_loops)))
                 else:
                     assert_never(statement)
 
@@ -67,6 +69,11 @@ class DepGraph:
         self.var_to_assignment: dict[llc.Var, DepNode] = dict()
 
         for assignment, _ in all_assignments:
+            # Return statements aren't actually assignments, but they do use variables.
+            # Since they don't have an lhs, we can skip them here.
+            if isinstance(assignment, llc.Return):
+                continue
+
             lhs = assignment.lhs
             if isinstance(lhs, llc.VectorizedAccess):
                 lhs = lhs.array
@@ -98,6 +105,8 @@ class DepGraph:
                         ]
                     else:
                         return []
+                elif isinstance(stmt, llc.Return):
+                    return [stmt.value]
                 else:
                     assert_never(stmt)
 
@@ -118,8 +127,6 @@ class DepGraph:
         self.enclosing_loops = dict()
         for assignment, enclosing_loops in all_assignments:
             self.enclosing_loops[assignment] = enclosing_loops
-
-        # TODO: Handle return value
 
     def __str__(self) -> str:
         nodes = "\n".join([f"    {node}" for node in self.def_use_graph.nodes])

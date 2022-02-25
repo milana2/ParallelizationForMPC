@@ -17,3 +17,4 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
         min_index!4 = MUX(!1!2, min_index!3, min_index!2)
     !2!1 = (min_sum!2, min_index!2)
     return !2!1
+

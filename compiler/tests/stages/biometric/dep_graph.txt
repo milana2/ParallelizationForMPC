@@ -37,6 +37,7 @@ Nodes:
     min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
     min_index!4 = MUX(!1!2, min_index!3, min_index!2)
     !2!1 = (min_sum!2, min_index!2)
+    return !2!1
 Forward edges:
     parameter C!0  →  d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
     parameter D!0  →  d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
@@ -91,6 +92,7 @@ Forward edges:
     !1!2 = (sum!3 < min_sum!2)  →  min_index!4 = MUX(!1!2, min_index!3, min_index!2)
     min_sum!3 = sum!3  →  min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)
     min_index!3 = i!1  →  min_index!4 = MUX(!1!2, min_index!3, min_index!2)
+    !2!1 = (min_sum!2, min_index!2)  →  return !2!1
 Back edges:
     sum!4 = (sum!3 + p!3)  →  sum!3 = Φ(sum!2, sum!4)
     min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2)  →  min_sum!2 = Φ(min_sum!1, min_sum!4)

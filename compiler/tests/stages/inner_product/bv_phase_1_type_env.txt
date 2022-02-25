@@ -1,6 +1,7 @@
 !1!0: plaintext[list[int; (i!1:N!0)]]
 !2!0: shared[list[int; (i!1:N!0)]]
 !3!0: shared[list[int; (i!1:N!0)]]
+!4!0: shared[int]
 A!0: shared[list[int; ?]]
 B!0: shared[list[int; ?]]
 N!0: plaintext[int]

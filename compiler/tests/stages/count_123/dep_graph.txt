@@ -30,6 +30,7 @@ Nodes:
     !5!2 = (s1!2 or s2!2)
     s2!3 = (!4!2 and !5!2)
     s1!3 = (Seq!0[i!1] == Syms!0[0])
+    return c!2
 Forward edges:
     parameter Seq!0  →  !1!2 = (Seq!0[i!1] == Syms!0[2])
     parameter Seq!0  →  !4!2 = (Seq!0[i!1] == Syms!0[1])
@@ -85,6 +86,7 @@ Forward edges:
     s2!2 = Φ(s2!1, s2!3)  →  !5!2 = (s1!2 or s2!2)
     c!2 = Φ(c!1, c!4)  →  c!3 = (c!2 + 1)
     c!2 = Φ(c!1, c!4)  →  c!4 = MUX(!3!2, c!3, c!2)
+    c!2 = Φ(c!1, c!4)  →  return c!2
     !1!2 = (Seq!0[i!1] == Syms!0[2])  →  !3!2 = (!1!2 and !2!2)
     !2!2 = (s2!2 or s1!2)  →  !3!2 = (!1!2 and !2!2)
     !3!2 = (!1!2 and !2!2)  →  c!4 = MUX(!3!2, c!3, c!2)

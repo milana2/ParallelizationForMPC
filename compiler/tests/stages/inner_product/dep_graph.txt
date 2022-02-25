@@ -10,6 +10,7 @@ Nodes:
     sum!2 = Φ(sum!1, sum!3)
     temp!2 = (A!0[i!1] * B!0[i!1])
     sum!3 = (sum!2 + temp!2)
+    return sum!2
 Forward edges:
     parameter A!0  →  temp!2 = (A!0[i!1] * B!0[i!1])
     parameter B!0  →  temp!2 = (A!0[i!1] * B!0[i!1])
@@ -19,6 +20,7 @@ Forward edges:
     temp!2 = (A!0[i!1] * B!0[i!1])
     sum!3 = (sum!2 + temp!2)  →  temp!2 = (A!0[i!1] * B!0[i!1])
     sum!2 = Φ(sum!1, sum!3)  →  sum!3 = (sum!2 + temp!2)
+    sum!2 = Φ(sum!1, sum!3)  →  return sum!2
     temp!2 = (A!0[i!1] * B!0[i!1])  →  sum!3 = (sum!2 + temp!2)
 Back edges:
     sum!3 = (sum!2 + temp!2)  →  sum!2 = Φ(sum!1, sum!3)

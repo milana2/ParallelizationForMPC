@@ -16,3 +16,4 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s2!3 = (!4!2 and !5!2)
         s1!3 = (Seq!0[i!1] == Syms!0[0])
     return c!2
+

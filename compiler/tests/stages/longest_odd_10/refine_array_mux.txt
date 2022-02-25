@@ -21,3 +21,4 @@ def longest_odd_10(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: sha
         max_length!4 = MUX(!7!2, max_length!3, max_length!2)
         s2!3 = (Seq!0[i!1] == Syms!0[0])
     return max_length!2
+

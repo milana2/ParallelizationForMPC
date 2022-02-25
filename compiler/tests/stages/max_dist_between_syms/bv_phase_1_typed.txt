@@ -16,4 +16,6 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
         !3!2{N!0} = (current_dist!5{N!0} > max_dist!2{N!0})
         max_dist!3{N!0} = current_dist!5{N!0}
         max_dist!4{N!0} = MUX(!3!2{N!0}, max_dist!3{N!0}, max_dist!2{N!0})
-    return max_dist!2
+    !8!0 = drop_dim(max_dist!2{N!0})
+    return !8!0
+

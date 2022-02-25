@@ -34,7 +34,7 @@ from .ast_shared import (
 )
 from .util import assert_never
 
-Statement = Union[Phi, Assign, "For"]
+Statement = Union[Phi, Assign, "For", "Return"]
 
 
 @dataclass(frozen=True)
@@ -61,12 +61,19 @@ class For:
         return self.counter
 
 
+@dataclass(frozen=True)
+class Return:
+    value: Var
+
+    def __str__(self) -> str:
+        return f"return {self.value}"
+
+
 @dataclass
 class Function:
     name: str
     parameters: list[Parameter]
     body: list[Statement]
-    return_value: Var
     return_type: Optional[VarType]
 
     def __str__(self) -> str:
@@ -77,5 +84,4 @@ class Function:
             + (f" -> {self.return_type}" if self.return_type is not None else "")
             + ":\n"
             + indent(body, "    ")
-            + f"    return {self.return_value}"
         )

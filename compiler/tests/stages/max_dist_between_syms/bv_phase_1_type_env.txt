@@ -5,6 +5,7 @@
 !5!0: plaintext[list[int; (i!1:N!0)]]
 !6!0: shared[list[int; (i!1:N!0)]]
 !7!0: shared[list[int; (i!1:N!0)]]
+!8!0: shared[int]
 N!0: plaintext[int]
 Seq!0: shared[list[int; ?]]
 Sym!0: shared[int]

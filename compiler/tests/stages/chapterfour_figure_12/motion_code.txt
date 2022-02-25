@@ -36,6 +36,6 @@ encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
     _MPC_PLAINTEXT_z_2 = std::uint32_t(1);
     z_4 = _2_1.Mux(z_2.Get(), z_3.Get());
     z_5 = _1_1.Mux(z_1.Get(), z_4.Get());
-
     return z_5;
+
 }

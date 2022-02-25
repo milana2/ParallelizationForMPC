@@ -31,7 +31,7 @@ from ..tac_cfg import (
     DropDim,
 )
 from ..util import assert_never
-from ..loop_linear_code import For, Phi
+from ..loop_linear_code import For, Phi, Return
 
 
 @dc.dataclass(frozen=True)
@@ -98,7 +98,7 @@ def render_param(param: Parameter, type_env: TypeEnv) -> str:
     )
 
 
-def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
+def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
     if isinstance(stmt, Assign):
         # If we're assigning to a vectorized value, use a specialized function for this.
         if isinstance(stmt.lhs, VectorizedAccess):
@@ -198,6 +198,13 @@ def render_stmt(stmt: Union[Assign, For], type_env: TypeEnv) -> str:
             + "\n"
             + indent(phi_updates, "    ")
             + "\n}\n"
+        )
+
+    elif isinstance(stmt, Return):
+        return (
+            "return "
+            + render_expr(stmt.value, RenderContext(type_env, plaintext=False))
+            + ";"
         )
 
     return assert_never(stmt)

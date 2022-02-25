@@ -27,4 +27,6 @@ def longest_odd_10(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: sha
         max_length!3{N!0} = current_length!6{N!0}
         max_length!4{N!0} = MUX(!7!2{N!0}, max_length!3{N!0}, max_length!2{N!0})
         s2!3{N!0} = (!13!0{N!0} == !14!0{N!0})
-    return max_length!2
+    !15!0 = drop_dim(max_length!2{N!0})
+    return !15!0
+

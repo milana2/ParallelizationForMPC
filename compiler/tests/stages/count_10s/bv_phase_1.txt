@@ -23,4 +23,6 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         !4!2 = (s0!2 or s1!2)
         s1!3 = (!3!2 and !4!2)
         s0!3 = (!12!0 == !13!0)
-    return scount!2
+    !14!0 = drop_dim(scount!2)
+    return !14!0
+

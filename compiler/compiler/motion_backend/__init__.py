@@ -8,7 +8,7 @@ from typing import TypedDict, Union
 from ..ast_shared import VectorizedAccess
 
 from ..util import assert_never
-from ..loop_linear_code import Function, Statement, Phi, Assign, For
+from ..loop_linear_code import Function, Statement, Phi, Assign, For, Return
 from ..type_analysis import TypeEnv, VarVisibility, Constant, DataType
 from .. import tac_cfg, ast_shared
 
@@ -28,7 +28,8 @@ class OutputParams(TypedDict):
 
 
 def _render_prototype(func: Function, type_env: TypeEnv) -> str:
-    return_type = render_type(type_env[func.return_value], plaintext=False)
+    assert isinstance(func.body[-1], Return)
+    return_type = render_type(type_env[func.body[-1].value], plaintext=False)
     return (
         f"template <encrypto::motion::MpcProtocol Protocol>\n"
         f"{return_type} {func.name}(\n"
@@ -100,6 +101,8 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
             return expr_constants(stmt.rhs)
         elif isinstance(stmt, Phi):
             return [const for rhs in stmt.rhs_vars() for const in expr_constants(rhs)]
+        elif isinstance(stmt, Return):
+            return expr_constants(stmt.value)
         else:
             assert_never(stmt)
 
@@ -190,8 +193,6 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
         + indent(plaintext_param_assignments, "    ")
         + "\n"
         + indent(func_body, "    ")
-        + "\n"
-        + indent(f"return {render_expr(func.return_value, render_ctx)};", "    ")
         + "\n}"
     )
 
@@ -208,7 +209,8 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
     cpp_template = template_env.get_template("circuit_gen.cpp.jinja")
     cmakelists_template = template_env.get_template("CMakeLists.txt.jinja")
 
-    return_type = type_env[func.return_value]
+    assert isinstance(func.body[-1], Return)
+    return_type = type_env[func.body[-1].value]
 
     rendered_main = main_template.render(
         header_fname=f"{func.name}.h",
@@ -229,7 +231,7 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
             for param in func.parameters
         ],
         protocol="encrypto::motion::MpcProtocol::kBooleanGmw",  # TODO: make this user-configurable
-        num_returns=type_env[func.return_value].dims,
+        num_returns=type_env[func.body[-1].value].dims,
         outputs=[render_type(return_type, plaintext=True)]
         if return_type.datatype != DataType.TUPLE
         else [render_type(t, plaintext=True) for t in return_type.tuple_types],

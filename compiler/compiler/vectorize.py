@@ -29,8 +29,10 @@ class TempVarGenerator:
             [
                 0 if isinstance(a.lhs.name, str) else a.lhs.name
                 for a in nodes
+                # Return statements assign no variable
+                if not isinstance(a, llc.Return)
                 # Skip vectorized assignments since every variable will be initially assigned
-                if not isinstance(a.lhs, VectorizedAccess)
+                and not isinstance(a.lhs, (VectorizedAccess))
             ]
         )
 
@@ -45,7 +47,7 @@ def _arrays_written_in_loop(loop: llc.For) -> list[llc.Assign]:
     """
     result: list[llc.Assign] = []
     for statement in loop.body:
-        if isinstance(statement, llc.Phi):
+        if isinstance(statement, (llc.Phi, llc.Return)):
             pass
         elif isinstance(statement, llc.Assign):
             if isinstance(statement.rhs, llc.Update):
@@ -97,7 +99,7 @@ def _arrays_read_in_loop(
 ) -> list[ArrayRead]:
     result: list[ArrayRead] = []
     for statement in parent_loops[-1].body:
-        if isinstance(statement, llc.Phi):
+        if isinstance(statement, (llc.Phi, llc.Return)):
             pass
         elif isinstance(statement, llc.Assign):
             result += [
@@ -221,6 +223,9 @@ def _remove_back_edge(A_name: Union[str, int], dep_graph: DepGraph, j: llc.For) 
             assert dep_graph.enclosing_loops[A_use][-1] == j
             A_defs: list[DepNode] = list(dep_graph.def_use_graph.predecessors(A_use))
             for A_def in A_defs:
+                assert not isinstance(
+                    A_def, llc.Return
+                ), "Return statements have no successors in the dependency graph"
                 assert isinstance(
                     A_def.lhs, llc.Var
                 ), "VectorizedAccesses aren't added until basic vectorization"
@@ -346,7 +351,6 @@ def refine_array_mux(
         name=function.name,
         parameters=function.parameters,
         body=_refine_array_mux_statements(function.body, dep_graph, tmp_var_gen),
-        return_value=function.return_value,
         return_type=function.return_type,
     )
     dep_graph = DepGraph(function)
@@ -513,6 +517,11 @@ def _basic_vectorization_phase_1(
             dep_graph.enclosing_loops[new_loop] = dep_graph.enclosing_loops[stmt]
 
             inside_loop_result.append(new_loop)
+
+        elif isinstance(stmt, llc.Return):
+            new_var = replace_var(stmt.value, stmt)
+            inside_loop_result.append(llc.Return(new_var))
+
         else:
             assert_never(stmt)
 
@@ -746,7 +755,7 @@ def _basic_vectorization_phase_2(
                 for substmt in stmt.body
                 for var, assign in lift_vars(substmt).items()
             }
-        elif isinstance(stmt, llc.Phi):
+        elif isinstance(stmt, (llc.Phi, llc.Return)):
             return {}
         else:
             assert_never(stmt)
@@ -802,7 +811,6 @@ def basic_vectorization_phase_1(
         name=function.name,
         parameters=function.parameters,
         body=body,
-        return_value=function.return_value,
         return_type=function.return_type,
     )
     return function, DepGraph(function)
@@ -824,7 +832,6 @@ def basic_vectorization_phase_2(
             name=function.name,
             parameters=function.parameters,
             body=body,
-            return_value=function.return_value,
             return_type=function.return_type,
         )
 

@@ -7,3 +7,4 @@ def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
     z!4 = MUX(!2!1, z!2, z!3)
     z!5 = MUX(!1!1, z!1, z!4)
     return z!5
+
