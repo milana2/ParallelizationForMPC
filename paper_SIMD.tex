@@ -812,6 +812,7 @@ $\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel
 
 Array writes limit vectorization as they sometimes introduce infeasible loop-carried dependencies. Consider the following example: \ana{Have to add citation to Aiken's paper}
 
+{\small
 \begin{verbatim}
 for i in range(N):
   A[i] = B[i] + 10;
@@ -819,9 +820,11 @@ for i in range(N):
   C[i] = A[i] * D[i-1];
   D[i] = B[i] * C[i];
 \end{verbatim}
+}
 
 In Cytron's SSA this code (roughly) translates into
 
+{\small
 \begin{verbatim}
 for i in range(N):
 1. A_1 = PHI(A_0,A_2)
@@ -833,6 +836,7 @@ for i in range(N):
 7. C_2 = update(C_1, i, A_2[i] * D_1[i-1]);
 8. D_2 = update(D_1, i, B_2[i] * C_2[i]);
 \end{verbatim}
+}
 
 \begin{comment}
 \begin{algorithmic}
@@ -1022,6 +1026,7 @@ In addition to the changes for the handling of target-less phi-nodes, Basic Vect
 First, the canonical dimensionality of all \texttt{A,B,C} and \texttt{D} is 1. 
 After Phase 1 of Basic Vectorization the Aiken's array write example will be (roughly) as follows:
 
+{\small
 \begin{verbatim}
 for i in range(N):
 1. A_1 = PHI(A_0,A_2)
@@ -1033,6 +1038,7 @@ for i in range(N):
 7. C_2 = update(C_1, I, A_2[I] * D_1[I-1]);
 8. D_2 = update(D_1, I, B_2[I] * C_2[I]);
 \end{verbatim}
+}
 
 Note that since all def-uses are same-level (i.e., reads and writes of the array elements) 
 no raise dimension or drop dimension happens.
@@ -1057,6 +1063,7 @@ the corresponding phi-nodes are added back to the closure and the def-use edges 
 turn into uses of \texttt{A\_0} and \texttt{B\_0} respectively; this is done for all original target-less phi-node. (But note that \texttt{A\_0} is irrelevant; the update writes into array \texttt{A\_2} in parallel.)
 Finally, the target-less phi-node for \texttt{A} is discarded. 
 
+{\small
 \begin{verbatim}
 1. A_2 = update(A_0, I, ADD_SIMD(B_0[I],10));
    equiv. to A_2[I] = ADD_SIMD(B_0[I],10)
@@ -1069,6 +1076,7 @@ FOR i=0; i<N; i++; // MOTION loop
 6. C_2 = update(C_1, i, A_2[i] * D_1[i-1]);
 7. D_2 = update(D_1, i, B_2[i] * C_2[i]);
 \end{verbatim}
+}
 
 
 
@@ -1087,12 +1095,15 @@ FOR i=0; i<N; i++; // MOTION loop
 
 \paragraph{Example 2} Now consider the MPC Source of Histogram:
 
+{\small
 \begin{verbatim}
 for i in range(0, num_bins):   res1 = PHI(res, res2)   for j in range(0, N):      res2 = PHI(res1, res3)      tmp1 = (A[j] == i)      tmp2 = (res2[i] + B[j])      tmp3 = MUX(tmp1, res2[i], tmp2)      res3 = Update(res2, i, tmp3)     return res1
 \end{verbatim}
+}
 
 The canonical dimensionality of \texttt{res} is 1. Also, the phi-node \texttt{res2 = PHI(res1, res3)} is a target-less phi-node (the implication being that the inner for loop can be vectorized across $i$). After Phase 1, Basic vectorization produces the following (everything is implicitly vectorized along $i$ and $j$ and the update is turned into a regular write):
 
+{\small
 \begin{verbatim}
 A1 = raise_dim(A, j, ((i:num_bins),(j:N)))
 B1 = raise_dim(B, j, ((i:num_bins),(j:N)))
@@ -1101,9 +1112,11 @@ for i in range(0, num_bins):   res1 = PHI(res, res2) // target-less, no drop_di
    res1' = raise_dim(res1, (j:N))   for j in range(0, N):      res2 = PHI(res1', res3)      tmp1 = (A1 == I)      tmp2 = (res2 + B1)      tmp3 = MUX(tmp1, res2, tmp2)
       res3 = res2 // copy propagation: res2 into res3      res3 = tmp3 // "normal": res3[I,J] = tmp3[I,J]    return res1
 \end{verbatim}
+}
 
 Processing the inner loop in Phase 2 vectorizes \texttt{tmp1 = (A1 == I)} along the $j$ dimension but leaves the rest of the statements in a MOTION loop. Processing the outer loop is interesting. This is because the PHI node is a target-less node, and therefore, there are no closures! Thus everything can be vectorized along the $i$ dimension:
 
+{\small
 \begin{verbatim}
 A1 = raise_dim(A, j, ((i:num_bins),(j:N)))
 B1 = raise_dim(B, j, ((i:num_bins),(j:N)))
@@ -1111,14 +1124,16 @@ I1 = raise_dim(i, ((i:num_bins),(j:N)))
 
 tmp1[I,J] = (A1[I,J] == I1[I,J])
 
-res1' = raise_dim(res, (j:N)) // raising original array to a 2-dimensional arrayfor j in range(0, N):   res2 = PHI(res1', res3)   tmp2[I,j] = (res2[I,j] + B1[I,j])   tmp3[I,j] = MUX(tmp1[I,j], res2[I,j], tmp2[I,j])   res3 = res2
+res1' = raise_dim(res, (j:N)) // raising res to a 2-dim. arrayfor j in range(0, N):   res2 = PHI(res1', res3)   tmp2[I,j] = (res2[I,j] + B1[I,j])   tmp3[I,j] = MUX(tmp1[I,j], res2[I,j], tmp2[I,j])   res3 = res2
    res3[I,j] = tmp3[I,j]
 res1 = drop_dim(res2) // Have to add drop_dim before removing redundant phi-node      return res1
 \end{verbatim}
+}
 
 The cleanup phase can then get rid of $j$ in the res variables and tmp variables, so the loop operates over the num\_bins-size vectors. 
 This will lead to dropping raise\_dim and drop\_dim as well: 
 
+{\small
 \begin{verbatim}
 A1 = raise_dim(A, j, ((i:num_bins),(j:N)))
 B1 = raise_dim(B, j, ((i:num_bins),(j:N)))
@@ -1129,6 +1144,7 @@ tmp1[I,J] = (A1[I,J] == I1[I,J])
 for j in range(0, N):   res2 = PHI(res1', res3) // now 1-dim array   tmp2[I] = (res2[I] + B1[I,j])   tmp3[I] = MUX(tmp1[I,j], res2[I], tmp2[I])   res3 = res2
    res3[I] = tmp3[I]return res2
 \end{verbatim}
+}
 
 \begin{comment}
 \paragraph{Example 2}
