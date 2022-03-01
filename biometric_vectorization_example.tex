@@ -34,10 +34,11 @@ The transformation preserves the dependence edges. It raises the dimensions of s
 The next phase discovers loop-carried dependences and removes affected vectorization.
 
 In the code below, all initializations (e.g., \texttt{min\_sum!3 = i}), operations, and PHI nodes are \emph{implicitly vectorized}. 
-$\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ statements, as well as propagation statements (e.g., \texttt{min\_sum!3 = sum!3\^}) 
-may have slightly different interpretation. \ana{This is vague, may need elaboration.}
+$\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ statements have slightly different interpretation. %\ana{This is vague, may need elaboration.}
 
-Note the two different versions of $\mathit{raise\_dim}$. \ana{More here! One just adds a least-significant dimension. The other one may reshape an input array.}
+The example illustrates the two different versions of $\mathit{raise\_dim}$. \texttt{C!0' = raise\_dim(C!0, j, (i:N!0,j:D!0))} reshapes
+the read-only input array, while \texttt{sum!3' = drop\_dim(sum!3)} removes the $j$ dimension of \texttt{sum!3}.
+%\ana{More here! One just adds a least-significant dimension. The other one may reshape an input array.}
 
 {\small
 \begin{verbatim}
@@ -236,7 +237,7 @@ for i in range(0, N!0):
 
 %\ana{I don't have a crisp algorithm in mind. I don't think it will be difficult but we have to think this through. Put on our TODO list for us to think about since it will simplify MOTION code tremendously.}
 
-\ana{Begin Work-in-progress notes on implementation. Just some thoughts...} 
+%\ana{Begin Work-in-progress notes on implementation. Just some thoughts...} 
 \begin{comment}
 For now, I suggest we go with a "naive" implementation and try to do only minimal optimizations. 
 All arrays are stored in the program as one-dimensional arrays. Arrays lifted from scalars have dimensionality of the loop enclosure in 
@@ -260,25 +261,8 @@ sum!4[I,j] = C
 // may eventually optimize since C is A
 \end{verbatim}
 \end{comment}
-There are three kinds of arrays (for now all kept internally as one-dimensional arrays, but that's under discussion).
-\begin{itemize}
 
-\item Scalars: These are scalar variables we lift into arrays for the purposes of vectorization. 
-For those, all writes are canonical writes and all reads are canonical reads. We may apply both raise dimension 
-and drop dimension on these.
 
-\item Read-only input arrays: Read-only inputs. There are NO writes, while we may have non-canonical reads, $f(i,j,k)$. 
-Phase 1 of Basic vectorization will add raise dimension operation at the beginning of the function and raise dimension 
-may reshape arrays. If there are multiple "views" of the input array, there could be multiple raise dimension statements to create
-each one of these views. The invariant is that at reads in loops, the reads of "views" of the original input array will be canonical.
-Only raise dimension applies.
- 
- \item Read-write output arrays: Writes are canonical (by restriction) but reads can be non-canonical. Conjecture:
- do nothing. Dependence analysis takes care of limiting vectorization so non-canonical access will work. 
-Still work in progress. We may apply both raise and drop dimension. 
-
-\end{itemize}
-
-\ana{End Work-in-progress notes.}
+%\ana{End Work-in-progress notes.}
 
 %\end{document}

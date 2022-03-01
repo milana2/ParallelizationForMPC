@@ -521,8 +521,12 @@ We want to build a graph $G'$ with fewest possible vertices since fewer vertices
 
 \figref{fig:compiler_framework} presents an overview of our compiler. In this section, we describe several of the phases of the compiler. 
 Sections~\secref{sec:vectorization} and~\secref{sec:div_and_conq} describe vectorization and divide-and-conquer.
-We write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$. 
-We write $A[i,j,k]$ to denote canonical access to an array element. \ana{Need to state this more precisely.}
+We write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$
+and we use $I,J,K$ to denote the corresponding upper bounds. For simplicity, we write $A[i,j,k]$ to denote canonical access 
+to an array element. In the program, canonical access is achieved via the standard row-major order formula: $(J*K)*i + K*j + k$.
+To simplify the presentation we describe our algorithms in terms of three-element tuples $i,j,k$.
+All discussion generalizes to arbitrarily large loop nests.
+%\ana{Need to state this more precisely.}
 
 \subsection{Semantic Analysis}
 
@@ -573,7 +577,40 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 \section{Vectorization}
 \label{sec:vectorization}
 
-\ana{TODO: Still work in progress, all over.}
+An important component of our algorithm is the "lifting" of scalars to the corresponding loop dimensionality. 
+For example, \texttt{d = S[i * D + j] - C[j]} equiv. to \texttt{d = S[i,j] - C[j]}, which gave rise to \texttt{N*D} subtraction operations in the sequential schedule, 
+is lifted. The argument arrays \texttt{S} and \texttt{C} are lifted and the scaler \texttt{d} is lifted: \texttt{d[i,j] = S[i,j] - C[i,j]}.
+The algorithm then detects that the statement can be vectorized. 
+
+There are three kinds of arrays (for now all kept internally as one-dimensional arrays, but that's under discussion).
+\begin{itemize}
+
+\item Scalars: These are scalar variables we lift into arrays for the purposes of vectorization. 
+For those, all writes are canonical writes and all reads are canonical reads. We will apply raise dimension when 
+a scalar is used in an inner loop (e.g., \texttt{sum0} in line 6 of the MPC source code will be raised to a 1-dimensional 
+array since \texttt{sum0} is used in the inner $j$-loop). Drop dimension applies as well; this happens when a scalar
+written in an inner loop is used outside of the loop (e.g., \texttt{sum0} for which the lifted inner loop computes 
+\texttt{D} values, but the outer loop only needs the last one.)
+
+\item Read-only input arrays: Read-only inputs. There are NO writes, while we may have non-canonical reads, $f(i,j,k)$. 
+Phase 1 of Basic vectorization will add raise dimension operation at the beginning of the function to lift these arrays, 
+and raise dimension may \emph{reshape} arrays. If there are multiple "views" of the input array, there would be multiple raise dimension statements to create
+each one of these views. The invariant is that at reads in loops, the reads of "views" of the original input array are canonical.
+Only raise dimension applies to these arrays, and only in the beginning of the program. For example, 1-dimensional array 
+\texttt{C} is lifted into 2-dimensional array \texttt{N x D} by copying the row \texttt{N} times. 
+ 
+ \item Read-write output arrays: Writes are canonical (by restriction) but reads can be non-canonical. 
+ Dependence analysis limits vectorization when non-canonical read access refers to array writes in
+ previous iterations, thus creating loop-carried dependences. We may apply both raise and drop dimension, however, 
+ they respect the fixed dimensionality of the output array. The array cannot be raised to a dimension lower than
+ its canonical (fixed) dimensionality and it cannot be dropped lower. In addition, non-canonical reads may 
+ require lifting (i.e., reshaping) of the array after the most recent write, rather than in the beginning of the program, 
+ in order to reduce a non-canonical read to a canonical one. 
+
+\end{itemize}
+
+In the sections below we detail the $\mathit{raise\_dim}$ (raise dimension) and $\mathit{drop\_dim}$ (drop dimension) operations,
+followed by our vectorization algorithm.
 
 %\ana{Add back-edges into Phase 1. A back-edge from a non-phi-node in loop $i$ to a phi-node in loop $i$'s header is a same-level edge. The only difference with the handling of normal same-level forward def-use is that the operand index will become $i-1$. A back edge from a phi-node in loop $j$ to a phi-node in loop $i$, where $j$ is nested in $i$ is an inner-to-outer edge and will require dropping dimension. We can show these are the only kinds of back-edges that may occur.}
 
@@ -581,6 +618,33 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 
 \subsection{Raise Dimension and Drop Dimension}
 
+There are two conceptual versions of $\mathit{raise\_dim}$. One applies on read-only input arrays and reshapes those arrays 
+when necessary to ensure canonical read access in the corresponding loop. The signature of $\mathit{raise\_dim}$
+is as follows. It takes the original array \texttt{C}, the access pattern function $f(i,j,k)$ in loop nest $i,j,k$ and the loop bounds
+\texttt{((i:I),(j:J),(k:K))}: 
+\[ \mathit{raise\_dim}(\texttt{A}, f(i,j,k), \texttt{((i:I),(j:J),(k:K))}) \]
+It produces a new 3-dimensional array \texttt{A'} by iterating over $i,j,k$ and setting each element of  \texttt{A'} as follows:
+\[ \texttt{A'[i,j,k] =  A[f(i,j,k)]} \]
+The end result is that uses of \texttt{[A[f(i,jk)]} in loop nest $i,j,k$ are replaced with canonical read-accesses to \texttt{A'[i,j,k]}
+that can be vectorized. In the running Biometric example, \texttt{C'} = $\mathit{raise\_dim}$\texttt{(C, j, (i:N,j:D))} lifts the 
+1-dimensional array \texttt{C} into a 2-dimensional array. The $i,j$ loop now accesses \texttt{C'} in the canonical way, \texttt{C'[i,j]}. 
+Similarly, \texttt{S'} = $\mathit{raise\_dim}$\texttt{(S, i*D+j, (i:N,j:D))} tries to lift \texttt{S}, but the operation turns into a no-op 
+because \texttt{S} is already a 2-dimensional array and the read access is canonical. 
+
+The other version of $\mathit{raise\_dim}$ applies on scalars and read-write arrays. It lifts a lower-dimension array into a 
+higher-dimension for access in a nested loop. Here \texttt{A} is an $i$ array and raise dimension adds two additional dimensions:
+\[ \mathit{raise\_dim}(\texttt{A}, \texttt{(j:J,k:K)}) \]
+This version is reduced to the above version by adding the access pattern function, which is just $i$: 
+\[ \mathit{raise\_dim}(\texttt{A}, i, \texttt{(j:J,k:K)}) \]
+
+The corresponding $\mathit{drop\_dim}$ is carried out when an array written in an inner loop is used in an enclosing loop. 
+It takes a higher dimensional array, say $i,j,k$ and removes trailing dimensions, say $j,k$:
+\[ \mathit{drop\_dim}(\texttt{A}, \texttt{(j:J,k:K)}) \]
+It iterates over $i$ and takes the result at the maximal index of $j$ and $k$, i.e., the result at the last iterations of $j$ and $k$:
+\[ \texttt{A'[i] = A[i,J-1,K-1]} \]
+
+
+\begin{comment}
 We define the $\mathit{raise\_dim}$ (raise dimensions) and $\mathit{drop\_dim}$ (drop dimension) functions. Raise dimension "lifts" a lower-dimension array (\ana{The right term here is tensor, I am pretty sure!}) into a higher dimension one. This is necessary when a lower-dimensional array is used in a higher dimensional loop and, essentially, is just copying of values. For example, Biometric contains the statement $d = \mathit{SUB}(S[i, j], C[j])$, in the $j$-loop which is nested into the $i$-loop. Here $C$ is a one-dimensional array, however, to vectorize across both loops it is necessary to turn it into a two-dimensional array: $C[i,j]$ becomes $[C[0],C[1],...C[J],C[0],C[1],...C[J], ... C[0],C[1],...C[J]]$, which turns the row into a matrix of $I$ identical rows. (We use capital letters to denote the upper bounds of loops, e.g., $J$ is the upper bound of the $j$-loop and $I$ is the upper bound of the $i$-loop.)
 
 $\mathit{raise\_dim}(A[i_1,...,i_k],i_j)$ is defined as follows.  It results in a new {k+1}-dimensional array $A'$ where for every $0 \le i_{k} < I_{k+1}$, $A'[i_1, \ldots, i_j, \ldots, i_k] = A[i_1, \ldots, i_k]$. Adding $n$ dimensions is trivially extended as a composition of $n$ $\mathit{raise\_dim}$ that each adds a single dimension.
@@ -592,7 +656,7 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 \ben{I'm not sure if I wrote up the above paragraphs correctly -- the idea is that we're just copying values to extend over dimension $j$ or only retain its last elements.  The current writeup implies that $1 < j < k$ though, which isn't always true.  Python implementations of $\mathit{raise\_dim}()$ and $\mathit{drop\_dim}()$ can be found here: \url{https://github.com/milana2/ParallelizationForMPC/blob/master/compiler/compiler/motion_backend/reference_implementations.py}}
 
 \ana{This section is still informal. Needs work to make more precise.}
-
+\end{comment}
 
 \subsection{Basic Vectorization}
 
