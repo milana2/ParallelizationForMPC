@@ -13,9 +13,7 @@
 \newcommand{\bben}[1]{{\color{orange} \footnote{\ben{#1}}}}
 
 \newcommand{\revised}[1]{#1}
-\newcommand{\brevised}[1]{#1}
-
-
+\newcommand{\brevised}[1]{{\color{blue} #1}}
 
 \newcommand{\rrefer}[2]{%
     \IfEqCase{#1}{%
@@ -37,9 +35,12 @@
 
 \newcommand{\para}[1]{\ensuremath{{\textsf{Parallel} (#1)}\xspace}}
 
-\renewcommand{\G}{\ensuremath{\mathcal{G}}\xspace}
+% macros for notation
+\newcommand{\add}{{\sf ADD}}
+\newcommand{\mul}{\sf MUL}
+\newcommand{\G}{\ensuremath{\mathcal{G}}\xspace}
 \newcommand{\PA}{\ensuremath{\mathsf{PA}}\xspace}
-\renewcommand{\C}{\ensuremath{\mathcal{C}}\xspace}
+\newcommand{\C}{\ensuremath{\mathcal{C}}\xspace}
 \newcommand{\mG}{\ensuremath{\bar{\mathcal{G}}}\xspace}
 \newcommand{\scheduler}{\ensuremath{\tt S}\xspace}
 \newcommand{\PPI}{\ensuremath{\Pi}\xspace}
@@ -82,12 +83,12 @@
 \newcommand{\trule}[1]{\textsc{\scriptsize ({#1})}}
 
 \lstset{% general command to set parameter(s)
-	basicstyle=\linespread{0.8}\sffamily\small,
-	numbers=left,
-	xleftmargin=16pt,
-	escapechar=@,
-	tabsize=2,
-	columns=fullflexible
+    basicstyle=\linespread{0.8}\sffamily\small,
+    numbers=left,
+    xleftmargin=16pt,
+    escapechar=@,
+    tabsize=2,
+    columns=fullflexible
 }
 
   \newcommand{\vnote}[1]{\stepcounter{notecount}\todo[inline,bordercolor=borderamber,linecolor=borderamber,color=lightamber]{\footnotesize{\sc \bf Vassilis:} #1}{}}
