@@ -1278,7 +1278,7 @@ return res1
 \end{verbatim}
 }
 
-The canonical dimensionality of \texttt{res} is 1. Also, the phi-node \texttt{res1 = PHI(res, res2)} is a target-less phi-node (the implication being that the inner for loop can be vectorized across $i$). After Phase 1, Basic vectorization produces the following code (statements are implicitly vectorized along $i$ and $j$). \ana{Define the interpretation of vectorized Update!}
+The canonical dimensionality of \texttt{res} is 1. Also, the phi-node \texttt{res1 = PHI(res, res2)} is a target-less phi-node (the implication being that the inner for loop can be vectorized across $i$). After Phase 1, Basic vectorization produces the following code (statements are implicitly vectorized along $i$ and $j$). In a vectorized update statement, we can ignore the incoming array, \texttt{res2} in this case. The update writes (in parallel) all locations of the 2-dimensional array, in this case it sets up each \texttt{res3[i,j] = tmp3[i,j]}.
 
 {\small
 \begin{verbatim}
