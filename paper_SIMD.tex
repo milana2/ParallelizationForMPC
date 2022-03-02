@@ -1334,8 +1334,7 @@ for j in range(0, N):
    res2 = PHI(res1, res3) // now 1-dim array
    tmp2[I] = ADD_SIMD(res2[I],B1[I,j])
    tmp3[I] = MUX_SIMD(tmp1[I,j], res2[I], tmp2[I])
-   res3 = res2
-   res3[I] = tmp3[I]
+   res3 = Update(res2, I, tmp3[I])
 return res2
 \end{verbatim}
 }
