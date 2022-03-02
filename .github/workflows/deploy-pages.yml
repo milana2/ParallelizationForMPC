@@ -31,7 +31,7 @@ jobs:
       - name: Build paper
         run: |
           yes '' | pdflatex paper_SIMD.tex || true
-          mv paper_SIMD.pdf static
+          mv paper_SIMD.pdf static || true
       - name: Push to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
