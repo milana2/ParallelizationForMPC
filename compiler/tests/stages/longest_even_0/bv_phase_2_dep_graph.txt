@@ -11,27 +11,30 @@ Nodes:
     !1!2{N!0} = (!7!0{N!0} == !8!0{N!0})
     current_length!4 = 0
     for !10!0 in range(1, N!0):
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
     tmp_max_len!3{N!0} = current_length!5{N!0}
     for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
-    !2!2{N!0} = (current_length!5{N!0} > max_length!2{N!0})
-    !3!2{N!0} = (tmp_max_len!4{N!0} & 1)
-    !4!2{N!0} = (!3!2{N!0} == 0)
     !9!0 = drop_dim(max_length!2{N!0})
     return !9!0
 Forward edges:
@@ -40,136 +43,245 @@ Forward edges:
     current_length!1 = 0  →  !5!0{N!0} = lift(current_length!1, (i!1:N!0))
     max_length!1 = 0  →  !6!0{N!0} = lift(max_length!1, (i!1:N!0))
     !5!0{N!0} = lift(current_length!1, (i!1:N!0))  →  for !10!0 in range(1, N!0):
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
-    !5!0{N!0} = lift(current_length!1, (i!1:N!0))  →  current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    !5!0{N!0} = lift(current_length!1, (i!1:N!0))  →  current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     !6!0{N!0} = lift(max_length!1, (i!1:N!0))  →  for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
-    !6!0{N!0} = lift(max_length!1, (i!1:N!0))  →  max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    !6!0{N!0} = lift(max_length!1, (i!1:N!0))  →  max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     !7!0{N!0} = lift(Seq!0[i!1], (i!1:N!0))  →  !1!2{N!0} = (!7!0{N!0} == !8!0{N!0})
     !8!0{N!0} = lift(Sym!0, (i!1:N!0))  →  !1!2{N!0} = (!7!0{N!0} == !8!0{N!0})
+    !1!2{N!0} = (!7!0{N!0} == !8!0{N!0})  →  for !10!0 in range(1, N!0):
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
+    current_length!3[!10!0] = (current_length!2[!10!0] + 1)
+    current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
+    !1!2{N!0} = (!7!0{N!0} == !8!0{N!0})  →  current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
     current_length!4 = 0  →  for !10!0 in range(1, N!0):
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
     current_length!4 = 0  →  current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
     for !10!0 in range(1, N!0):
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)  →  for !10!0 in range(1, N!0):
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
     for !10!0 in range(1, N!0):
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)  →  current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     for !10!0 in range(1, N!0):
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)  →  current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])  →  for !10!0 in range(1, N!0):
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])  →  for !10!0 in range(1, N!0):
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])  →  current_length!3[!10!0] = (current_length!2[!10!0] + 1)
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])  →  current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)  →  for !10!0 in range(1, N!0):
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)  →  current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)  →  for !10!0 in range(1, N!0):
-    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
+    current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
     current_length!3[!10!0] = (current_length!2[!10!0] + 1)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)
     current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)  →  tmp_max_len!3{N!0} = current_length!5{N!0}
-    current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)  →  !2!2{N!0} = (current_length!5{N!0} > max_length!2{N!0})
-    tmp_max_len!3{N!0} = current_length!5{N!0}  →  for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)  →  for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
+    max_length!3[!11!0] = tmp_max_len!4[!11!0]
+    max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
+    current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)  →  !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
+    tmp_max_len!3{N!0} = current_length!5{N!0}  →  for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
+    tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
+    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
     tmp_max_len!3{N!0} = current_length!5{N!0}  →  tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
     for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
     for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  tmp_max_len!2[!11!0] = max_length!2[!11!0]
     for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
+    max_length!3[!11!0] = tmp_max_len!4[!11!0]
+    max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
+    for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
+    tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
+    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
     for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
+    max_length!3[!11!0] = tmp_max_len!4[!11!0]
+    max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
+    tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
+    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
+    max_length!3[!11!0] = tmp_max_len!4[!11!0]
+    max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  !4!2[!11!0] = (!3!2[!11!0] == 0)
+    for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
+    tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
+    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  max_length!3[!11!0] = tmp_max_len!4[!11!0]
     for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])  →  for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])  →  for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])  →  tmp_max_len!2[!11!0] = max_length!2[!11!0]
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])  →  max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])  →  !2!2{N!0} = (current_length!5{N!0} > max_length!2{N!0})
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])  →  tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])  →  !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])  →  max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]  →  for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]  →  tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
-    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])  →  for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])  →  for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
-    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])  →  max_length!3[!11!0] = tmp_max_len!4[!11!0]
-    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])  →  !3!2{N!0} = (tmp_max_len!4{N!0} & 1)
-    max_length!3[!11!0] = tmp_max_len!4[!11!0]  →  for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])  →  tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])  →  for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
+    max_length!3[!11!0] = tmp_max_len!4[!11!0]
+    max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
+    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])  →  !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])  →  max_length!3[!11!0] = tmp_max_len!4[!11!0]
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)  →  for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
+    tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
+    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
+    max_length!3[!11!0] = tmp_max_len!4[!11!0]
+    max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)  →  !4!2[!11!0] = (!3!2[!11!0] == 0)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)  →  for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
+    tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
+    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
+    max_length!3[!11!0] = tmp_max_len!4[!11!0]
+    max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
+    !4!2[!11!0] = (!3!2[!11!0] == 0)  →  max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
+    max_length!3[!11!0] = tmp_max_len!4[!11!0]  →  for !11!0 in range(1, N!0):
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
+    tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
+    tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
     max_length!3[!11!0] = tmp_max_len!4[!11!0]  →  max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  for !11!0 in range(1, N!0):
-    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])
     tmp_max_len!2[!11!0] = max_length!2[!11!0]
+    !2!2[!11!0] = (current_length!5[!11!0] > max_length!2[!11!0])
     tmp_max_len!4[!11!0] = MUX(!2!2[!11!0], tmp_max_len!3[!11!0], tmp_max_len!2[!11!0])
+    !3!2[!11!0] = (tmp_max_len!4[!11!0] & 1)
+    !4!2[!11!0] = (!3!2[!11!0] == 0)
     max_length!3[!11!0] = tmp_max_len!4[!11!0]
     max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])
-    !3!2{N!0} = (tmp_max_len!4{N!0} & 1)  →  !4!2{N!0} = (!3!2{N!0} == 0)
     !9!0 = drop_dim(max_length!2{N!0})  →  return !9!0
 Back edges:
-    current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)  →  current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[!10!0])
-    max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[!11!0])
+    current_length!5[!10!0] = MUX(!1!2[!10!0], current_length!3[!10!0], current_length!4)  →  current_length!2[!10!0] = Φ(!5!0[!10!0], current_length!5[(!10!0 - 1)])
+    max_length!4[!11!0] = MUX(!4!2[!11!0], max_length!3[!11!0], max_length!2[!11!0])  →  max_length!2[!11!0] = Φ(!6!0[!11!0], max_length!4[(!11!0 - 1)])

@@ -6,43 +6,43 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     std::vector<encrypto::motion::SecureUnsignedInteger> Syms_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::ShareWrapper> _1_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _10_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _11_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _12_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _13_0;
+    std::vector<encrypto::motion::ShareWrapper> _1_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _10_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _11_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _12_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _13_0((_MPC_PLAINTEXT_N_0));
     encrypto::motion::SecureUnsignedInteger _14_0;
     encrypto::motion::SecureUnsignedInteger _15_0;
     encrypto::motion::SecureUnsignedInteger _16_0;
     encrypto::motion::SecureUnsignedInteger _17_0;
-    std::vector<encrypto::motion::ShareWrapper> _2_2;
-    std::vector<encrypto::motion::ShareWrapper> _3_2;
-    std::vector<encrypto::motion::ShareWrapper> _4_2;
-    std::vector<encrypto::motion::ShareWrapper> _5_0;
-    std::vector<encrypto::motion::ShareWrapper> _6_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _7_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _8_0;
-    std::vector<encrypto::motion::SecureUnsignedInteger> _9_0;
+    std::vector<encrypto::motion::ShareWrapper> _2_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _3_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _4_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _5_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _6_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _7_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _8_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _9_0((_MPC_PLAINTEXT_N_0));
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::ShareWrapper s0_1;
-    std::vector<encrypto::motion::ShareWrapper> s0_2;
-    std::vector<encrypto::motion::ShareWrapper> s0_3;
+    std::vector<encrypto::motion::ShareWrapper> s0_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> s0_3((_MPC_PLAINTEXT_N_0));
     encrypto::motion::ShareWrapper s1_1;
-    std::vector<encrypto::motion::ShareWrapper> s1_2;
-    std::vector<encrypto::motion::ShareWrapper> s1_3;
+    std::vector<encrypto::motion::ShareWrapper> s1_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> s1_3((_MPC_PLAINTEXT_N_0));
     encrypto::motion::SecureUnsignedInteger scount_1;
-    std::vector<encrypto::motion::SecureUnsignedInteger> scount_2;
-    std::vector<encrypto::motion::SecureUnsignedInteger> scount_3;
-    std::vector<encrypto::motion::SecureUnsignedInteger> scount_4;
+    std::vector<encrypto::motion::SecureUnsignedInteger> scount_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> scount_3((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> scount_4((_MPC_PLAINTEXT_N_0));
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__15_0;
     std::uint32_t _MPC_PLAINTEXT__16_0;
     std::uint32_t _MPC_PLAINTEXT__17_0;
-    std::vector<bool> _MPC_PLAINTEXT__5_0;
-    std::vector<bool> _MPC_PLAINTEXT__6_0;
-    std::vector<std::uint32_t> _MPC_PLAINTEXT__7_0;
+    std::vector<bool> _MPC_PLAINTEXT__5_0((_MPC_PLAINTEXT_N_0));
+    std::vector<bool> _MPC_PLAINTEXT__6_0((_MPC_PLAINTEXT_N_0));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__7_0((_MPC_PLAINTEXT_N_0));
     std::uint32_t _MPC_PLAINTEXT_i_1;
     bool _MPC_PLAINTEXT_s0_1;
     bool _MPC_PLAINTEXT_s1_1;
@@ -63,55 +63,70 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     _MPC_PLAINTEXT_s1_1 = false;
     scount_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_scount_1 = std::uint32_t(0);
-    vectorized_assign(_5_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_s0_1;}, , {_MPC_PLAINTEXT_N_0}));
-    vectorized_assign(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_s1_1;}, , {_MPC_PLAINTEXT_N_0}));
-    vectorized_assign(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_scount_1;}, , {_MPC_PLAINTEXT_N_0}));
-    vectorized_assign(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_Seq_0[indices[0]];}, , {_MPC_PLAINTEXT_N_0}));
-    vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_Syms_0[std::size_t(0)];}, , {_MPC_PLAINTEXT_N_0}));
-    vectorized_assign(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_Seq_0[indices[0]];}, , {_MPC_PLAINTEXT_N_0}));
-    vectorized_assign(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_Syms_0[std::size_t(0)];}, , {_MPC_PLAINTEXT_N_0}));
-    vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_Seq_0[indices[0]];}, , {_MPC_PLAINTEXT_N_0}));
-    vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift([&](const auto &indices){return _MPC_PLAINTEXT_Syms_0[std::size_t(1)];}, , {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_5_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s0_1;}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s1_1;}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return scount_1;}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(0)];}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(0)];}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(1)];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, (~(encrypto::motion::ShareWrapper(vectorized_access(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get()) == encrypto::motion::ShareWrapper(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get()))));
     vectorized_assign(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, (encrypto::motion::ShareWrapper(vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get()) == encrypto::motion::ShareWrapper(vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get())));
     vectorized_assign(s0_3, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, (encrypto::motion::ShareWrapper(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get()) == encrypto::motion::ShareWrapper(vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get())));
 
+    // Initialize loop counter
+    _MPC_PLAINTEXT__15_0 = std::uint32_t(0);
     // Initialize phi values
-    vectorized_assign(s0_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}, vectorized_access(_5_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}));
-    for (_MPC_PLAINTEXT__15_0 = std::uint32_t(0); _MPC_PLAINTEXT__15_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__15_0++) {
+    s0_2[_MPC_PLAINTEXT__15_0] = _5_0[_MPC_PLAINTEXT__15_0];
+    for (; _MPC_PLAINTEXT__15_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__15_0++) {
         _15_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__15_0), 0);
-
-
         // Update phi values
-        vectorized_assign(s0_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}, vectorized_access(s0_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__15_0}));
+        if (_MPC_PLAINTEXT__15_0 != std::uint32_t(0)) {
+            s0_2[_MPC_PLAINTEXT__15_0] = s0_3[(_MPC_PLAINTEXT__15_0 - std::uint32_t(1))];
+        }
+
+
+
     }
 
 
+    // Initialize loop counter
+    _MPC_PLAINTEXT__16_0 = std::uint32_t(0);
     // Initialize phi values
-    vectorized_assign(s1_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__16_0}, vectorized_access(_6_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__16_0}));
-    for (_MPC_PLAINTEXT__16_0 = std::uint32_t(0); _MPC_PLAINTEXT__16_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__16_0++) {
+    s1_2[_MPC_PLAINTEXT__16_0] = _6_0[_MPC_PLAINTEXT__16_0];
+    for (; _MPC_PLAINTEXT__16_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__16_0++) {
         _16_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__16_0), 0);
-        vectorized_assign(_4_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__16_0}, (encrypto::motion::ShareWrapper(vectorized_access(s0_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__16_0}).Get()) | encrypto::motion::ShareWrapper(vectorized_access(s1_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__16_0}).Get())));
-        vectorized_assign(s1_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__16_0}, (encrypto::motion::ShareWrapper(vectorized_access(_3_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__16_0}).Get()) & encrypto::motion::ShareWrapper(vectorized_access(_4_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__16_0}).Get())));
-
         // Update phi values
-        vectorized_assign(s1_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__16_0}, vectorized_access(s1_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__16_0}));
+        if (_MPC_PLAINTEXT__16_0 != std::uint32_t(0)) {
+            s1_2[_MPC_PLAINTEXT__16_0] = s1_3[(_MPC_PLAINTEXT__16_0 - std::uint32_t(1))];
+        }
+
+        _4_2[_MPC_PLAINTEXT__16_0] = (encrypto::motion::ShareWrapper(s0_2[_MPC_PLAINTEXT__16_0].Get()) | encrypto::motion::ShareWrapper(s1_2[_MPC_PLAINTEXT__16_0].Get()));
+        s1_3[_MPC_PLAINTEXT__16_0] = (encrypto::motion::ShareWrapper(_3_2[_MPC_PLAINTEXT__16_0].Get()) & encrypto::motion::ShareWrapper(_4_2[_MPC_PLAINTEXT__16_0].Get()));
+
     }
 
     vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, (encrypto::motion::ShareWrapper(vectorized_access(s1_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get()) & encrypto::motion::ShareWrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get())));
 
+    // Initialize loop counter
+    _MPC_PLAINTEXT__17_0 = std::uint32_t(0);
     // Initialize phi values
-    vectorized_assign(scount_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__17_0}, vectorized_access(_7_0, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__17_0}));
-    for (_MPC_PLAINTEXT__17_0 = std::uint32_t(0); _MPC_PLAINTEXT__17_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__17_0++) {
+    scount_2[_MPC_PLAINTEXT__17_0] = _7_0[_MPC_PLAINTEXT__17_0];
+    for (; _MPC_PLAINTEXT__17_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__17_0++) {
         _17_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__17_0), 0);
-        vectorized_assign(scount_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__17_0}, (vectorized_access(scount_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__17_0}) + _MPC_CONSTANT_1));
-        vectorized_assign(scount_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__17_0}, vectorized_access(_2_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__17_0}).Mux(vectorized_access(scount_3, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__17_0}).Get(), vectorized_access(scount_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__17_0}).Get()));
-
         // Update phi values
-        vectorized_assign(scount_2, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__17_0}, vectorized_access(scount_4, {_MPC_PLAINTEXT_N_0}, {false}, {_MPC_PLAINTEXT__17_0}));
+        if (_MPC_PLAINTEXT__17_0 != std::uint32_t(0)) {
+            scount_2[_MPC_PLAINTEXT__17_0] = scount_4[(_MPC_PLAINTEXT__17_0 - std::uint32_t(1))];
+        }
+
+        scount_3[_MPC_PLAINTEXT__17_0] = (scount_2[_MPC_PLAINTEXT__17_0] + _MPC_CONSTANT_1);
+        scount_4[_MPC_PLAINTEXT__17_0] = _2_2[_MPC_PLAINTEXT__17_0].Mux(scount_3[_MPC_PLAINTEXT__17_0].Get(), scount_2[_MPC_PLAINTEXT__17_0].Get());
+
     }
 
-    _14_0 = drop_dim(scount_2, {_MPC_PLAINTEXT_N_0});
+    _14_0 = drop_dim_monoreturn(scount_2, {_MPC_PLAINTEXT_N_0});
     return _14_0;
 
 }

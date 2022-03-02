@@ -22,7 +22,7 @@ from .ast_shared import (
 from .tac_cfg import AssignRHS, List, Tuple, Mux, Update, LiftExpr, DropDim
 
 
-def _type_assign_expr(
+def type_assign_expr(
     expr: Union[AssignRHS, SubscriptIndex, VectorizedAccess], type_env: TypeEnv
 ) -> VarType:
     """
@@ -40,7 +40,7 @@ def _type_assign_expr(
         return VarType(VarVisibility.PLAINTEXT, 0, expr.datatype)
 
     elif isinstance(expr, Subscript):
-        index_type = _type_assign_expr(expr.index, type_env)
+        index_type = type_assign_expr(expr.index, type_env)
         if not index_type.could_become(PLAINTEXT_INT):
             raise TypeError(
                 f"Array subscript index {expr.index} is not a plaintext int"
@@ -53,8 +53,8 @@ def _type_assign_expr(
         return type_env[expr.array].drop_dim()
 
     elif isinstance(expr, BinOp):
-        lhs_type = _type_assign_expr(expr.left, type_env)
-        rhs_type = _type_assign_expr(expr.right, type_env)
+        lhs_type = type_assign_expr(expr.left, type_env)
+        rhs_type = type_assign_expr(expr.right, type_env)
 
         expr_type = VarType.merge(lhs_type, rhs_type)
 
@@ -75,7 +75,7 @@ def _type_assign_expr(
 
     elif isinstance(expr, UnaryOp):
         op_datatype = expr.operator.get_ret_datatype()
-        expr_type = _type_assign_expr(expr.operand, type_env)
+        expr_type = type_assign_expr(expr.operand, type_env)
 
         if expr_type.datatype not in [*expr.operator.get_operand_datatypes(), None]:
             raise TypeError(
@@ -95,14 +95,14 @@ def _type_assign_expr(
             return VarType(VarVisibility.PLAINTEXT, 1, DataType.INT)
 
         elem_type = VarType.merge(
-            *[_type_assign_expr(item, type_env) for item in expr.items],
+            *[type_assign_expr(item, type_env) for item in expr.items],
             mixed_shared_plaintext_allowed=True,
         )
 
         return elem_type.add_dim()
 
     elif isinstance(expr, Tuple):
-        elem_types = [_type_assign_expr(item, type_env) for item in expr.items]
+        elem_types = [type_assign_expr(item, type_env) for item in expr.items]
         return VarType(
             VarVisibility.PLAINTEXT,  # Tuples are always plaintext
             1,  # tuples are always 1-dimensional
@@ -111,14 +111,14 @@ def _type_assign_expr(
         )
 
     elif isinstance(expr, Mux):
-        cond_type = _type_assign_expr(expr.condition, type_env)
+        cond_type = type_assign_expr(expr.condition, type_env)
         if cond_type.is_plaintext():
             raise AssertionError(
                 f"Condition {expr.condition} of Mux expression {expr} is not a shared variable."
             )
 
-        true_type = _type_assign_expr(expr.true_value, type_env)
-        false_type = _type_assign_expr(expr.false_value, type_env)
+        true_type = type_assign_expr(expr.true_value, type_env)
+        false_type = type_assign_expr(expr.false_value, type_env)
 
         expr_type = VarType.merge(
             true_type,
@@ -130,9 +130,9 @@ def _type_assign_expr(
         return expr_type
 
     elif isinstance(expr, Update):
-        val_type = _type_assign_expr(expr.value, type_env)
+        val_type = type_assign_expr(expr.value, type_env)
         arr_type = type_env[expr.array]
-        index_type = _type_assign_expr(expr.index, type_env)
+        index_type = type_assign_expr(expr.index, type_env)
 
         if arr_type.datatype == DataType.TUPLE:
             raise TypeError(f"Tuples cannot be updated")
@@ -146,7 +146,7 @@ def _type_assign_expr(
         return VarType.merge(val_arr_type, arr_type)
 
     elif isinstance(expr, LiftExpr):
-        expr_type = _type_assign_expr(expr.expr, type_env)
+        expr_type = type_assign_expr(expr.expr, type_env)
 
         return dc.replace(
             expr_type,
@@ -155,7 +155,7 @@ def _type_assign_expr(
         )
 
     elif isinstance(expr, DropDim):
-        expr_type = _type_assign_expr(expr.array, type_env)
+        expr_type = type_assign_expr(expr.array, type_env)
         return expr_type.drop_dim()
 
     elif isinstance(expr, VectorizedAccess):
@@ -221,7 +221,7 @@ def validate_type_requirements(
             validate_type_requirements(stmt.body, type_env, return_stmt, None)
         elif isinstance(stmt, loop_linear_code.Assign):
             # The type assignment function checks for type errors internally
-            if not _type_assign_expr(stmt.rhs, type_env).is_complete():
+            if not type_assign_expr(stmt.rhs, type_env).is_complete():
                 raise TypeError(f"Unable to type expression {stmt.rhs}")
 
             if isinstance(stmt.lhs, VectorizedAccess):
@@ -229,10 +229,10 @@ def validate_type_requirements(
             else:
                 lhs_type = type_env[stmt.lhs]
 
-            if lhs_type != _type_assign_expr(stmt.rhs, type_env):
+            if lhs_type != type_assign_expr(stmt.rhs, type_env):
                 raise TypeError(f"Type mismatch in assignment {stmt.lhs} = {stmt.rhs}")
         elif isinstance(stmt, loop_linear_code.Phi):
-            elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
+            elem_types = [type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
             phi_type = VarType.merge(*elem_types, mixed_shared_plaintext_allowed=True)
             if not phi_type.is_complete():
                 raise TypeError(f"Unable to type phi expression {stmt}")
@@ -277,7 +277,7 @@ def type_check(
         stmt = worklist.pop()
         if isinstance(stmt, loop_linear_code.Assign):
             try:
-                expr_type = _type_assign_expr(stmt.rhs, type_env)
+                expr_type = type_assign_expr(stmt.rhs, type_env)
             except (TypeError, AssertionError) as e:
                 raise TypeError(f"Unable to type statement {stmt}") from e
 
@@ -311,7 +311,7 @@ def type_check(
                 continue
 
         elif isinstance(stmt, loop_linear_code.Phi):
-            elem_types = [_type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
+            elem_types = [type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
             try:
                 phi_type = VarType.merge(
                     *elem_types,

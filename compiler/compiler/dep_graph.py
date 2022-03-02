@@ -172,8 +172,7 @@ class DepGraph:
             return True
         else:
             return any(
-                self.def_use_graph.has_edge(src, use_stmt)
-                and self.has_same_level_path(use_stmt, dest, visited | {src})
+                self.has_same_level_path(use_stmt, dest, visited | {src})
                 and self.edge_kind(src, use_stmt) == EdgeKind.SAME_LEVEL
                 for use_stmt in self.def_use_graph.successors(src)
                 if use_stmt not in visited

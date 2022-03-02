@@ -1,8 +1,8 @@
 from collections import defaultdict
 import functools
 
-from .ast_shared import TypeEnv, Var, VectorizedAccess, Subscript
-from .tac_cfg import DropDim, LiftExpr, Assign
+from .ast_shared import TypeEnv, Var, VectorizedAccess, Subscript, DataType
+from .tac_cfg import DropDim, LiftExpr, Assign, BinOp, BinOpKind
 from . import loop_linear_code as llc
 from .dep_graph import DepGraph, DepNode, EdgeKind
 from . import util
@@ -367,89 +367,88 @@ def _basic_vectorization_phase_1(
     inside_loop_result: list[llc.Statement] = []
 
     for stmt in stmts:
+
+        def replace_var(
+            var: llc.Var,
+            stmt: DepNode,
+            access_pattern: Optional[llc.SubscriptIndex] = None,
+        ) -> llc.Var:
+            def_var = dep_graph.var_to_assignment[var]
+            edge_kind = dep_graph.edge_kind(def_var, stmt)
+            if edge_kind is EdgeKind.SAME_LEVEL:
+                return var
+            elif edge_kind is EdgeKind.OUTER_TO_INNER:
+                var_prime = tmp_var_gen.get()
+                above_loop_result.append(
+                    llc.Assign(
+                        lhs=var_prime,
+                        rhs=LiftExpr(
+                            Subscript(var, access_pattern) if access_pattern else var,
+                            tuple(
+                                (loop.counter, loop.bound_high)
+                                for loop in dep_graph.enclosing_loops[stmt]
+                            ),
+                        ),
+                    )
+                )
+                return var_prime
+            elif edge_kind is EdgeKind.INNER_TO_OUTER:
+                var_prime = tmp_var_gen.get()
+                inside_loop_result.append(
+                    llc.Assign(
+                        lhs=var_prime,
+                        rhs=DropDim(
+                            var,
+                            tuple(
+                                loop.bound_high
+                                for loop in dep_graph.enclosing_loops[def_var]
+                            ),
+                        ),
+                    )
+                )
+                return var_prime
+            else:
+                assert_never(edge_kind)
+
+        def replace_atom(atom: llc.Atom, stmt: DepNode) -> llc.Atom:
+            if isinstance(atom, llc.Var):
+                return replace_var(atom, stmt)
+            elif isinstance(atom, llc.Constant):
+                return atom
+            else:
+                assert_never(atom)
+
+        def replace_subscript(
+            sub: llc.Subscript, stmt: DepNode
+        ) -> Union[llc.Subscript, Var]:
+            replaced_arr = replace_var(sub.array, stmt, sub.index)
+            if replaced_arr != sub:
+                return replaced_arr
+            else:
+                return sub
+
+        def replace_operand(o: llc.Operand, stmt: DepNode) -> llc.Operand:
+            if isinstance(o, (llc.Var, llc.Constant)):
+                return replace_atom(o, stmt)
+            elif isinstance(o, llc.Subscript):
+                return replace_subscript(o, stmt)
+            elif isinstance(o, llc.BinOp):
+                return llc.BinOp(
+                    operator=o.operator,
+                    left=replace_operand(o.left, stmt),
+                    right=replace_operand(o.right, stmt),
+                )
+            elif isinstance(o, llc.UnaryOp):
+                return llc.UnaryOp(
+                    operator=o.operator, operand=replace_operand(o.operand, stmt)
+                )
+            else:
+                assert not isinstance(
+                    o, VectorizedAccess
+                ), "there shouldn't be any vectorized arrays before basic vectorization"
+                assert_never(o)
+
         if isinstance(stmt, (llc.Phi, llc.Assign)):
-
-            def replace_var(
-                var: llc.Var,
-                stmt: DepNode,
-                access_pattern: Optional[llc.SubscriptIndex] = None,
-            ) -> llc.Var:
-                def_var = dep_graph.var_to_assignment[var]
-                edge_kind = dep_graph.edge_kind(def_var, stmt)
-                if edge_kind is EdgeKind.SAME_LEVEL:
-                    return var
-                elif edge_kind is EdgeKind.OUTER_TO_INNER:
-                    var_prime = tmp_var_gen.get()
-                    above_loop_result.append(
-                        llc.Assign(
-                            lhs=var_prime,
-                            rhs=LiftExpr(
-                                Subscript(var, access_pattern)
-                                if access_pattern
-                                else var,
-                                tuple(
-                                    (loop.counter, loop.bound_high)
-                                    for loop in dep_graph.enclosing_loops[stmt]
-                                ),
-                            ),
-                        )
-                    )
-                    return var_prime
-                elif edge_kind is EdgeKind.INNER_TO_OUTER:
-                    var_prime = tmp_var_gen.get()
-                    inside_loop_result.append(
-                        llc.Assign(
-                            lhs=var_prime,
-                            rhs=DropDim(
-                                var,
-                                tuple(
-                                    loop.bound_high
-                                    for loop in dep_graph.enclosing_loops[def_var]
-                                ),
-                            ),
-                        )
-                    )
-                    return var_prime
-                else:
-                    assert_never(edge_kind)
-
-            def replace_atom(atom: llc.Atom, stmt: DepNode) -> llc.Atom:
-                if isinstance(atom, llc.Var):
-                    return replace_var(atom, stmt)
-                elif isinstance(atom, llc.Constant):
-                    return atom
-                else:
-                    assert_never(atom)
-
-            def replace_subscript(
-                sub: llc.Subscript, stmt: DepNode
-            ) -> Union[llc.Subscript, Var]:
-                replaced_arr = replace_var(sub.array, stmt, sub.index)
-                if replaced_arr != sub:
-                    return replaced_arr
-                else:
-                    return sub
-
-            def replace_operand(o: llc.Operand, stmt: DepNode) -> llc.Operand:
-                if isinstance(o, (llc.Var, llc.Constant)):
-                    return replace_atom(o, stmt)
-                elif isinstance(o, llc.Subscript):
-                    return replace_subscript(o, stmt)
-                elif isinstance(o, llc.BinOp):
-                    return llc.BinOp(
-                        operator=o.operator,
-                        left=replace_operand(o.left, stmt),
-                        right=replace_operand(o.right, stmt),
-                    )
-                elif isinstance(o, llc.UnaryOp):
-                    return llc.UnaryOp(
-                        operator=o.operator, operand=replace_operand(o.operand, stmt)
-                    )
-                else:
-                    assert not isinstance(
-                        o, VectorizedAccess
-                    ), "there shouldn't be any vectorized arrays before basic vectorization"
-                    assert_never(o)
 
             if isinstance(stmt, llc.Phi):
                 assert isinstance(
@@ -671,12 +670,24 @@ def _basic_vectorization_phase_2(
                     else:
                         unvectorize_loop_dim(val)
 
+        for orig_var, lifted in lifted_vars.items():
+            monolithic_for = util.replace_pattern(monolithic_for, orig_var, lifted)
         monolithic_for = util.replace_pattern(
             monolithic_for, loop_stack[-1].counter, monolithic_for.counter
         )
-        for orig_var, lifted in lifted_vars.items():
-            monolithic_for = util.replace_pattern(monolithic_for, orig_var, lifted)
         unvectorize_loop_dim(monolithic_for)
+        # For each phi node in the loop, update the true branch of that node to use the previous iteration's value
+        for phi in monolithic_for.body:
+            if isinstance(phi, llc.Phi):
+                phi.rhs_true = util.replace_pattern(
+                    phi.rhs_true,
+                    monolithic_for.counter,
+                    llc.BinOp(
+                        monolithic_for.counter,
+                        llc.BinOpKind.SUB,
+                        llc.Constant(1, DataType.INT),
+                    ),
+                )
         return monolithic_for
 
     def uses_loop_counter(stmt) -> bool:

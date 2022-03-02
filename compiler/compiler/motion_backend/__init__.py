@@ -120,6 +120,17 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
             render_type(var_type, plaintext=False)
             + " "
             + render_expr(var, dt.replace(render_ctx, plaintext=False))
+            # Initialize vectorized arrays with a size
+            + (
+                "(("
+                + ") * (".join(
+                    render_expr(bound, dt.replace(render_ctx, plaintext=True))
+                    for _, bound in var_type.dim_sizes
+                )
+                + "))"
+                if var_type.dim_sizes
+                else ""
+            )
             + ";"
             for var, var_type in sorted(type_env.items(), key=lambda x: str(x[0]))
             if not any(
@@ -133,7 +144,21 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     plaintext_var_definitions = (
         "// Plaintext variable declarations\n"
         + "\n".join(
-            f"{render_type(var_type, plaintext=True)} {render_expr(var, dt.replace(render_ctx, plaintext=True))};"
+            render_type(var_type, plaintext=True)
+            + " "
+            + render_expr(var, dt.replace(render_ctx, plaintext=True))
+            # Initialize vectorized arrays with a size
+            + (
+                "(("
+                + ") * (".join(
+                    render_expr(bound, dt.replace(render_ctx, plaintext=True))
+                    for _, bound in var_type.dim_sizes
+                )
+                + "))"
+                if var_type.dim_sizes
+                else ""
+            )
+            + ";"
             for var, var_type in sorted(type_env.items(), key=lambda x: str(x[0]))
             if var_type.is_plaintext()
             if not any(

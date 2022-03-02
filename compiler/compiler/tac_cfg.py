@@ -133,7 +133,7 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
         return [var for item in rhs.items for var in assign_rhs_accessed_vars(item)]
     elif isinstance(rhs, Mux):
         return (
-            [rhs.condition]
+            assign_rhs_accessed_vars(rhs.condition)
             + assign_rhs_accessed_vars(rhs.false_value)
             + assign_rhs_accessed_vars(rhs.true_value)
         )

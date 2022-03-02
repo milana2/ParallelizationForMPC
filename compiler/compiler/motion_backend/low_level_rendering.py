@@ -32,6 +32,7 @@ from ..tac_cfg import (
 )
 from ..util import assert_never
 from ..loop_linear_code import For, Phi, Return
+from ..type_analysis import type_assign_expr
 
 
 @dc.dataclass(frozen=True)
@@ -103,6 +104,13 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
         # If we're assigning to a vectorized value, use a specialized function for this.
         if isinstance(stmt.lhs, VectorizedAccess):
             ctx = RenderContext(type_env, plaintext=False)
+            val_expr = render_expr(stmt.rhs, ctx)
+
+            # If this isn't a true vectorized access, just subscript normally
+            if all(vectorized == False for vectorized in stmt.lhs.vectorized_dims):
+                lhs = render_expr(stmt.lhs, ctx)
+                return f"{lhs} = {val_expr};"
+
             dim_sizes = (
                 "{"
                 + ", ".join(
@@ -126,7 +134,8 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
                 )
                 + "}"
             )
-            return f"vectorized_assign({render_expr(stmt.lhs.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(stmt.rhs, ctx)});"
+
+            return f"vectorized_assign({render_expr(stmt.lhs.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {val_expr});"
         else:
             shared_assignment = (
                 render_expr(stmt.lhs, RenderContext(type_env, plaintext=False))
@@ -150,6 +159,14 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
                 return shared_assignment + "\n" + plaintext_assignment
 
     elif isinstance(stmt, For):
+        ctr_initializer = (
+            "// Initialize loop counter\n"
+            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
+            + " = "
+            + render_expr(stmt.bound_low, RenderContext(type_env, plaintext=True))
+            + ";"
+        )
+
         phi_initializations = "// Initialize phi values\n" + "\n".join(
             render_stmt(Assign(phi.lhs, phi.rhs_false), type_env)
             for phi in stmt.body
@@ -157,17 +174,31 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
         )
 
         header = (
-            "for ("
-            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
-            + " = "
-            + render_expr(stmt.bound_low, RenderContext(type_env, plaintext=True))
-            + "; "
+            "for (; "
             + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
             + " < "
             + render_expr(stmt.bound_high, RenderContext(type_env, plaintext=True))
             + "; "
             + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
             + "++) {"
+        )
+
+        phi_updates = (
+            "// Update phi values\n"
+            + "if ("
+            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True))
+            + " != "
+            + render_expr(stmt.bound_low, RenderContext(type_env, plaintext=True))
+            + ") {\n"
+            + indent(
+                "\n".join(
+                    render_stmt(Assign(phi.lhs, phi.rhs_true), type_env)
+                    for phi in stmt.body
+                    if isinstance(phi, Phi)
+                ),
+                "    ",
+            )
+            + "\n}\n"
         )
 
         body = (
@@ -179,14 +210,10 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
             + "\n"
         )
 
-        phi_updates = "// Update phi values\n" + "\n".join(
-            render_stmt(Assign(phi.lhs, phi.rhs_true), type_env)
-            for phi in stmt.body
-            if isinstance(phi, Phi)
-        )
-
         return (
             "\n"
+            + ctr_initializer
+            + "\n"
             + phi_initializations
             + "\n"
             + header
@@ -194,9 +221,9 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
             # Initialize loop counter for use in loop
             + f"    {render_expr(stmt.counter, RenderContext(type_env))} = party->In<Protocol>(encrypto::motion::ToInput({render_expr(stmt.counter, RenderContext(type_env, plaintext=True))}), 0);"
             + "\n"
-            + indent(body, "    ")
-            + "\n"
             + indent(phi_updates, "    ")
+            + "\n"
+            + indent(body, "    ")
             + "\n}\n"
         )
 
@@ -335,7 +362,13 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             array = render_expr(expr.array.array, ctx)
         else:
             array = render_expr(expr.array, ctx)
-        return f"drop_dim({array}, {dims})"
+
+        specialization = ""
+        # If the returned array will be of size 1, then we need to use a specialized form of drop_dim()
+        if len(expr.dims) == 1:
+            specialization = "_monoreturn"
+
+        return f"drop_dim{specialization}({array}, {dims})"
 
     elif isinstance(expr, List):
         items = ", ".join(render_expr(item, ctx) for item in expr.items)
@@ -349,15 +382,32 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         return f"{cpp_cond}.Mux({cpp_false_val}, {cpp_true_val})"
 
     elif isinstance(expr, LiftExpr):
+        raw_idx_map = lambda idx: f"indices[{idx}]"
+        if (
+            not ctx.plaintext
+            and type_assign_expr(expr.expr, ctx.type_env).is_plaintext()
+        ):
+            if type_assign_expr(expr.expr, ctx.type_env).datatype == DataType.INT:
+                idx_type_conversion = (
+                    lambda val: f"encrypto::motion::SecureUnsignedInteger({val})"
+                )
+            else:
+                idx_type_conversion = lambda val: val
+
+            to_shared = (
+                lambda val: f"party->In<Protocol>(encrypto::motion::ToInput({val}), 0)"
+            )
+
+            idx_map = lambda idx: idx_type_conversion(to_shared(raw_idx_map(idx)))
+        else:
+            idx_map = raw_idx_map
+
         inner_ctx = dc.replace(
             ctx,
-            plaintext=True,
-            int_type="std::size_t",
-            var_mappings={var: f"indices[{i}]" for i, (var, _) in enumerate(expr.dims)},
+            int_type="std::uint32_t",
+            var_mappings={var: idx_map(i) for i, (var, _) in enumerate(expr.dims)},
         )
-        inner_expr = (
-            f"[&](const auto &indices){{return {render_expr(expr.expr, inner_ctx)};}}, "
-        )
+        inner_expr = f"std::function([&](const std::vector<std::uint32_t> &indices){{return {render_expr(expr.expr, inner_ctx)};}})"
 
         dims = (
             "{"
@@ -397,6 +447,25 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             return cpp_str
 
     elif isinstance(expr, VectorizedAccess):
+        # If this isn't a true vectorized access, just subscript normally
+        if all(vectorized == False for vectorized in expr.vectorized_dims):
+            subscript = " + ".join(
+                f"({render_expr(idx, dc.replace(ctx, plaintext=True))} * "
+                + "*".join(
+                    render_expr(bound, dc.replace(ctx, plaintext=True))
+                    for bound in expr.dim_sizes[dim + 1 :]
+                )
+                + ")"
+                # Skip the last dimension for now since it doesn't get multiplied
+                for dim, idx in enumerate(expr.idx_vars[:-1])
+            )
+
+            # Since the last dimension has no multiplicative factor, render it separately
+            if subscript:
+                subscript += " + "
+            subscript += render_expr(expr.idx_vars[-1], dc.replace(ctx, plaintext=True))
+            return f"{render_expr(expr.array, ctx)}[{subscript}]"
+
         dim_sizes = (
             "{"
             + ", ".join(

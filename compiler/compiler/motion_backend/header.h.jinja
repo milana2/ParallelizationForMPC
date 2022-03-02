@@ -9,36 +9,32 @@
 #include "secure_type/secure_unsigned_integer.h"
 
 /**
- * Reshapes @p arr to the shape provided by @p dim_sizes.  @p access_pattern provides
- *   the mapping between the original and the reshaped array.
+ * Maps @p expr to an array specified by the provided dimensions.
  *
- * @param arr             The array to reshape.
- * @param access_pattern  Mapping of an index in the output array (broken down
- *                          by dimension) to an index in the input array.
- * @param dim_sizes       The size of each dimension in the output array.
+ * @param expr       The expression which will be evaluated at every position of the generated array.
+ * @param dim_sizes  The size of each dimension in the output array.
  *
- * @returns The reshaped array.
+ * @returns The lifted array.
  */
 template <typename T>
 std::vector<T>
-raise_dim(const std::vector<T> &arr,
-          const std::function<std::size_t(const std::vector<std::size_t> &)> &access_pattern,
-          const std::vector<std::size_t> &dim_sizes)
+lift(const std::function<T(const std::vector<std::uint32_t> &)> &expr,
+     const std::vector<std::uint32_t> &dim_sizes)
 {
-    std::size_t raised_size =
-        std::accumulate(dim_sizes.begin(), dim_sizes.end(), 1, std::multiplies<std::size_t>());
+    std::uint32_t raised_size =
+        std::accumulate(dim_sizes.begin(), dim_sizes.end(), 1, std::multiplies<std::uint32_t>());
 
     std::vector<T> raised(raised_size);
-    for (std::size_t i = 0; i < raised_size; ++i) {
+    for (std::uint32_t i = 0; i < raised_size; ++i) {
         // Extract the per-dimension index of the current element.
-        std::vector<std::size_t> dim_idxs(dim_sizes.size());
-        std::size_t j = i;
-        for (std::size_t k = 0; k < dim_idxs.size(); ++k) {
+        std::vector<std::uint32_t> dim_idxs(dim_sizes.size());
+        std::uint32_t j = i;
+        for (std::uint32_t k = 0; k < dim_idxs.size(); ++k) {
             dim_idxs[k] = j % dim_sizes[k];
             j /= dim_sizes[k];
         }
 
-        raised[i] = arr[access_pattern(dim_idxs)];
+        raised[i] = expr(dim_idxs);
     }
 
     return raised;
@@ -54,13 +50,13 @@ raise_dim(const std::vector<T> &arr,
  * @returns A copy of @p arr with the last dimension dropped.
  */
 template <typename T>
-std::vector<T> drop_dim(const std::vector<T> &arr, const std::vector<std::size_t> &dim_sizes)
+std::vector<T> drop_dim(const std::vector<T> &arr, const std::vector<std::uint32_t> &dim_sizes)
 {
     std::vector<T> dropped(arr.size() / dim_sizes.back());
 
-    for (std::size_t i = 0; i < dropped.size(); ++i) {
-        std::size_t j = i;
-        for (std::size_t k = 0; k < dim_sizes.size() - 1; ++k) {
+    for (std::uint32_t i = 0; i < dropped.size(); ++i) {
+        std::uint32_t j = i;
+        for (std::uint32_t k = 0; k < dim_sizes.size() - 1; ++k) {
             j *= dim_sizes[k];
         }
         j += dim_sizes.back() - 1;
@@ -68,6 +64,86 @@ std::vector<T> drop_dim(const std::vector<T> &arr, const std::vector<std::size_t
     }
 
     return dropped;
+}
+
+template <typename T>
+T drop_dim_monoreturn(const std::vector<T> &arr, const std::vector<std::uint32_t> &dim_sizes)
+{
+    std::vector<T> dropped = drop_dim(arr, dim_sizes);
+    assert(dropped.size() == 1);
+    return dropped[0];
+}
+
+/**
+ * Provides a SIMD representation of a slice of an array.
+ * 
+ */
+template <typename T>
+T vectorized_access(const std::vector<T> &arr, const std::vector<std::uint32_t> &dim_sizes, const std::vector<bool> &vectorized_dims, const std::vector<std::uint32_t> &idxs) {
+    std::vector<T> bucket;
+
+    // Collect the elements of the selected slice.
+    // TODO: switch to a more efficient implementation.
+    for (std::uint32_t i = 0; i < arr.size(); ++i) {
+        // Extract the per-dimension index of the current element.
+        std::vector<std::uint32_t> dim_idxs(dim_sizes.size());
+        std::uint32_t j = i;
+        for (int k = dim_idxs.size() - 1; k >= 0; --k) {
+            dim_idxs[k] = j % dim_sizes[k];
+            j /= dim_sizes[k];
+        }
+
+        // Check that the indices match for all non-vectorized dimensions.
+        bool match = true;
+        for (std::uint32_t k = 0; k < dim_idxs.size(); ++k) {
+            if (vectorized_dims[k]) {
+                continue;
+            }
+
+            if (dim_idxs[k] != idxs[k]) {
+                match = false;
+                break;
+            }
+        }
+
+        if (match) {
+            bucket.push_back(arr[i]);
+        }
+    }
+    
+    return T::Simdify(bucket);
+}
+
+template <typename T, typename V>
+void vectorized_assign(std::vector<T> &tgt, const std::vector<std::uint32_t> &dim_sizes, const std::vector<bool> &vectorized_dims, const std::vector<std::uint32_t> &idxs, const std::vector<V> unvectorized_repr) {
+    // For each element in the unvectorized representation, find the corresponding index in the
+    // target array and assign the value.
+    for (std::uint32_t i=0; i < unvectorized_repr.size(); i++) {
+        std::vector<std::uint32_t> tgt_dim_idxs(dim_sizes.size());
+        std::uint32_t j = i;
+        for (int dim_idx = dim_sizes.size() - 1; dim_idx >= 0; --dim_idx) {
+            if (vectorized_dims[dim_idx]) {
+                tgt_dim_idxs[dim_idx] = j % dim_sizes[dim_idx];
+                j /= dim_sizes[dim_idx];
+            } else {
+                tgt_dim_idxs[dim_idx] = idxs[dim_idx];
+            }
+        }
+
+        // Compute the index of the element in the target array.
+        std::uint32_t tgt_idx = 0;
+        for (std::uint32_t dim_idx = 0; dim_idx < dim_sizes.size(); ++dim_idx) {
+            tgt_idx *= dim_sizes[dim_idx];
+            tgt_idx += tgt_dim_idxs[dim_idx];
+        }
+
+        tgt[tgt_idx] = unvectorized_repr[i];
+    }
+}
+
+template <typename T, typename V>
+void vectorized_assign(std::vector<T> &tgt, const std::vector<std::uint32_t> &dim_sizes, const std::vector<bool> &vectorized_dims, const std::vector<std::uint32_t> &idxs, V vectorized_repr) {
+    vectorized_assign(tgt, dim_sizes, vectorized_dims, idxs, vectorized_repr.Unsimdify());
 }
 
 // clang-format off

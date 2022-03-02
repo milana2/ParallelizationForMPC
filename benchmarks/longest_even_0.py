@@ -24,3 +24,6 @@ def longest_even_0(Seq: shared[list[int]], N: int, Sym: shared[int]) -> shared[i
             max_length = tmp_max_len
 
     return max_length
+
+
+print(longest_even_0([0, 0, 1, 0, 0, 0], 6, 0))

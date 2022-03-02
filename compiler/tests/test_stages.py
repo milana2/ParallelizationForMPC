@@ -111,7 +111,7 @@ class StagesTestCase(unittest.TestCase):
 
             # Collect expected output
             proc = subprocess.run(
-                ["python3", input_fname],
+                ["python3.9", input_fname],
                 check=True,
                 stdout=subprocess.PIPE,
                 text=True,
@@ -144,8 +144,12 @@ class StagesTestCase(unittest.TestCase):
                 text=True,
             )
 
+            print("Waiting...")
+
             party0.wait(30)
             party1.wait(30)
+
+            print("wait complete")
 
             received_output = party1.stdout.read()
 
