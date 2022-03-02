@@ -496,6 +496,7 @@ in parallel still cost $2\alpha$.
 
 \ana{Ishaq? Basically, define sequential schedule, then define an equivalent parallel schedule. A parallel schedule is equivalent if it preserves def-use relations in sequential schedule, or in other words, schedules def ahead of the use. Problem is to minimize cost of Parallel schedule.}
 
+
 At the lowest level, we have two types of MPC instructions 1) local/non-interactive instruction (i.e. \add) and 2) remote/interactive instruction (i.e. \mul). Let the cost of a single \add instruction be given by a monotonically decreasing $f(n)$, where the argument $n$ is the number of \add instructions being executed in parallel. Similarly the cost of a single \mul is given by a monotonically decreasing function $g(n)$.
 
 Given a serial schedule (a linear graph) of an MPC program i.e. a sequence of instructions $\mathcal{S}:=(S_1, \dots, S_n)$, where $S_i \in \{\text{\add, \mul}\}, 1 \leq i \leq n$, and a def-use dependency graph $G(V, E)$ corresponding to $\mathcal{S}$, our task is to construct a parallel schedule (another linear graph) $\mathcal{P} := (P_1, \dots, P_n)$ observing the following conditions:
@@ -624,8 +625,12 @@ which is a contradiction since $P$ is a schedule with minimal cost.)
 
 \figref{fig:compiler_framework} presents an overview of our compiler. In this section, we describe several of the phases of the compiler. 
 Sections~\secref{sec:vectorization} and~\secref{sec:div_and_conq} describe vectorization and divide-and-conquer.
-We write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$. 
-We write $A[i,j,k]$ to denote canonical access to an array element. \ana{Need to state this more precisely.}
+We write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$
+and we use $I,J,K$ to denote the corresponding upper bounds. For simplicity, we write $A[i,j,k]$ to denote canonical access 
+to an array element. In the program, canonical access is achieved via the standard row-major order formula: $(J*K)*i + K*j + k$.
+To simplify the presentation we describe our algorithms in terms of three-element tuples $i,j,k$.
+All discussion generalizes to arbitrarily large loop nests.
+%\ana{Need to state this more precisely.}
 
 \subsection{Semantic Analysis}
 
@@ -643,26 +648,28 @@ A pseudo $\phi$-node $X_1 = \phi(X_0,X_2)$ in a loop header is evaluated during 
 
 \subsection{Dependence Analysis}
 
-\ana{TOTO Ana: Shorten this section. Lots of this is unnecessary.}
 
 \subsubsection{Def-use Edges}
 
 The dependence graph has the following def-use edges:
 
 \begin{itemize}
-\item same-level forward $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest $i_1,i_2,...i_k$. E.g., $\texttt{d} = \mathit{SUB}(\texttt{S}[i,j], \texttt{C}[j])$ to $\texttt{p} = \mathit{MUL}(\texttt{d},\texttt{d})$ in Biometric is a same-level edge. A $\phi$ node can be a source of a same-level forward edge but not a target.
-\item outer-to-inner forward $X\rightarrow Y$ where $X$ is in an outer loop nest, $i_1,i_2,...i_j$, and $Y$ is in an inner one, $i_1,i_2,...i_j,...,i_k$. A $\phi$-node can be a source or a target of an outer-to-inner forward edge.
-\item inner-to-outer forward $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i_1,i_2,...i_k,i_{k+1}$, and $Y$ is in the enclosing loop nest $i_1,i_2,...i_k$. E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer forward edge. Note that the source is \emph{always} a $\phi$-node in the immediately enclosing loop. The interpretation of this edge is that the use node $Y$ uses the definition made in the last iteration of the inner loop.
-\ben{The current representation of pseudo $\phi$-nodes shows them attached to the loop header (i.e. in the loop).  We may want to clarify that they are also evaluated at the loop's termination.}
-\item same-level back-edge $X\rightarrow Y$. $Y$ is a phi-node in the header of the loop and $X$ is a definition of the variable in the loop body. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
-\item inner-to-outer back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in a loop nested into $Y$'s loop (not necessarily immediately).
+\item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge from \texttt{d = S[i,j] - C[j]} to \texttt{p = d*d} in the Biometric MPC-source is a same-level edge. A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
+\item outer-to-inner $X\rightarrow Y$ where $X$ is in an outer loop nest, say $i$, and $Y$ is in an inner one, say $i,j,k$. 
+%A $\phi$-node can be a source or a target of an outer-to-inner forward edge.
+\item inner-to-outer $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer edge. An inner-to-outer edge can be a back-edge as well in which case both $X$ and $Y$ are phi-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
 
-\item mixed forward edge $X\rightarrow Y$. $X$ is a $phi$-node in some loop $i_1,i_2,...i_k,i_{k+1}$ and $Y$ is a node in a loop nested into $i_1,i_2,...i_k$. We transform mixed forward edges as follows. Let $\x_j$ be the variable defined at the phi-node $X$. We add a variable and assignment $\x'_j = \x_j$ immediately after the $i_1,i_2,...i_k$ loop. Then we replace the use of $\x_j$ at $Y$ with $\x'_j$. This transforms a mixed forward edge into an "inner-to-outer" forward edge followed by an outer-to-inner forward edge. Thus Basic Vectorization handles one of "same-level", "inner-to-outer", or "outer-to-inner" def-use edges.
+%Note that the source is \emph{always} a $\phi$-node of the $i,j,k$ loop and the target is in the immediately enclosing loop. The interpretation of this edge is that the use node $Y$ uses the definition made in the last iteration of the inner loop.
+%\ben{The current representation of pseudo $\phi$-nodes shows them attached to the loop header (i.e. in the loop).  We may want to clarify that they are also evaluated at the loop's termination.}
+%\item same-level back-edge $X\rightarrow Y$. $Y$ is a phi-node in the header of the loop and $X$ is a definition of the variable in the loop body. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
+%\item inner-to-outer back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in a loop nested into $Y$'s loop (not necessarily immediately).
+
+\item mixed forward edge $X\rightarrow Y$. $X$ is in some loop $i,j,k$ and $Y$ is in a loop nested into $i,j,k'$. We transform mixed forward edges as follows. Let $\x$ be the variable defined at $X$. We add a variable and assignment $\x' = \x$ immediately after the $i,j,k$ loop. Then we replace the use of $\x$ at $Y$ with $\x'$. This transforms a mixed forward edge into an "inner-to-outer" forward edge followed by an outer-to-inner forward edge. Thus, Basic Vectorization handles one of "same-level", "inner-to-outer", or "outer-to-inner" def-use edges.
  \end{itemize}
 
 \subsubsection{Closures}
 
-We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. \ana{Cycle(n) is probably a better name.} The closure of $n$ is defined as follows:
+We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. The closure of $n$ is defined as follows:
 \begin{itemize}
 \item $n$ is in $\mathit{closure}(n)$
 \item $X$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $X$, and $X \rightarrow n$ is a same-level back-edge.
@@ -676,7 +683,40 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 \section{Vectorization}
 \label{sec:vectorization}
 
-\ana{TODO: Still work in progress, all over.}
+An important component of our algorithm is the "lifting" of scalars to the corresponding loop dimensionality. 
+For example, \texttt{d = S[i * D + j] - C[j]} equiv. to \texttt{d = S[i,j] - C[j]}, which gave rise to \texttt{N*D} subtraction operations in the sequential schedule, 
+is lifted. The argument arrays \texttt{S} and \texttt{C} are lifted and the scaler \texttt{d} is lifted: \texttt{d[i,j] = S[i,j] - C[i,j]}.
+The algorithm then detects that the statement can be vectorized. 
+
+There are three kinds of arrays (for now all kept internally as one-dimensional arrays, but that's under discussion).
+\begin{itemize}
+
+\item Scalars: These are scalar variables we lift into arrays for the purposes of vectorization. 
+For those, all writes are canonical writes and all reads are canonical reads. We will apply raise dimension when 
+a scalar is used in an inner loop (e.g., \texttt{sum0} in line 6 of the MPC source code will be raised to a 1-dimensional 
+array since \texttt{sum0} is used in the inner $j$-loop). Drop dimension applies as well; this happens when a scalar
+written in an inner loop is used outside of the loop (e.g., \texttt{sum0} for which the lifted inner loop computes 
+\texttt{D} values, but the outer loop only needs the last one.)
+
+\item Read-only input arrays: Read-only inputs. There are NO writes, while we may have non-canonical reads, $f(i,j,k)$. 
+Phase 1 of Basic vectorization will add raise dimension operation at the beginning of the function to lift these arrays, 
+and raise dimension may \emph{reshape} arrays. If there are multiple "views" of the input array, there would be multiple raise dimension statements to create
+each one of these views. The invariant is that at reads in loops, the reads of "views" of the original input array are canonical.
+Only raise dimension applies to these arrays, and only in the beginning of the program. For example, 1-dimensional array 
+\texttt{C} is lifted into 2-dimensional array \texttt{N x D} by copying the row \texttt{N} times. 
+ 
+ \item Read-write output arrays: Writes are canonical (by restriction) but reads can be non-canonical. 
+ Dependence analysis limits vectorization when non-canonical read access refers to array writes in
+ previous iterations, thus creating loop-carried dependences. We may apply both raise and drop dimension, however, 
+ they respect the fixed dimensionality of the output array. The array cannot be raised to a dimension lower than
+ its canonical (fixed) dimensionality and it cannot be dropped lower. In addition, non-canonical reads may 
+ require lifting (i.e., reshaping) of the array after the most recent write, rather than in the beginning of the program, 
+ in order to reduce a non-canonical read to a canonical one. 
+
+\end{itemize}
+
+In the sections below we detail the $\mathit{raise\_dim}$ (raise dimension) and $\mathit{drop\_dim}$ (drop dimension) operations,
+followed by our vectorization algorithm.
 
 %\ana{Add back-edges into Phase 1. A back-edge from a non-phi-node in loop $i$ to a phi-node in loop $i$'s header is a same-level edge. The only difference with the handling of normal same-level forward def-use is that the operand index will become $i-1$. A back edge from a phi-node in loop $j$ to a phi-node in loop $i$, where $j$ is nested in $i$ is an inner-to-outer edge and will require dropping dimension. We can show these are the only kinds of back-edges that may occur.}
 
@@ -684,6 +724,33 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 
 \subsection{Raise Dimension and Drop Dimension}
 
+There are two conceptual versions of $\mathit{raise\_dim}$. One applies on read-only input arrays and reshapes those arrays 
+when necessary to ensure canonical read access in the corresponding loop. The signature of $\mathit{raise\_dim}$
+is as follows. It takes the original array \texttt{C}, the access pattern function $f(i,j,k)$ in loop nest $i,j,k$ and the loop bounds
+\texttt{((i:I),(j:J),(k:K))}: 
+\[ \mathit{raise\_dim}(\texttt{A}, f(i,j,k), \texttt{((i:I),(j:J),(k:K))}) \]
+It produces a new 3-dimensional array \texttt{A'} by iterating over $i,j,k$ and setting each element of  \texttt{A'} as follows:
+\[ \texttt{A'[i,j,k] =  A[f(i,j,k)]} \]
+The end result is that uses of \texttt{[A[f(i,jk)]} in loop nest $i,j,k$ are replaced with canonical read-accesses to \texttt{A'[i,j,k]}
+that can be vectorized. In the running Biometric example, \texttt{C'} = $\mathit{raise\_dim}$\texttt{(C, j, (i:N,j:D))} lifts the 
+1-dimensional array \texttt{C} into a 2-dimensional array. The $i,j$ loop now accesses \texttt{C'} in the canonical way, \texttt{C'[i,j]}. 
+Similarly, \texttt{S'} = $\mathit{raise\_dim}$\texttt{(S, i*D+j, (i:N,j:D))} tries to lift \texttt{S}, but the operation turns into a no-op 
+because \texttt{S} is already a 2-dimensional array and the read access is canonical. 
+
+The other version of $\mathit{raise\_dim}$ applies on scalars and read-write arrays. It lifts a lower-dimension array into a 
+higher-dimension for access in a nested loop. Here \texttt{A} is an $i$ array and raise dimension adds two additional dimensions:
+\[ \mathit{raise\_dim}(\texttt{A}, \texttt{(j:J,k:K)}) \]
+This version is reduced to the above version by adding the access pattern function, which is just $i$: 
+\[ \mathit{raise\_dim}(\texttt{A}, i, \texttt{(j:J,k:K)}) \]
+
+The corresponding $\mathit{drop\_dim}$ is carried out when an array written in an inner loop is used in an enclosing loop. 
+It takes a higher dimensional array, say $i,j,k$ and removes trailing dimensions, say $j,k$:
+\[ \mathit{drop\_dim}(\texttt{A}, \texttt{(j:J,k:K)}) \]
+It iterates over $i$ and takes the result at the maximal index of $j$ and $k$, i.e., the result at the last iterations of $j$ and $k$:
+\[ \texttt{A'[i] = A[i,J-1,K-1]} \]
+
+
+\begin{comment}
 We define the $\mathit{raise\_dim}$ (raise dimensions) and $\mathit{drop\_dim}$ (drop dimension) functions. Raise dimension "lifts" a lower-dimension array (\ana{The right term here is tensor, I am pretty sure!}) into a higher dimension one. This is necessary when a lower-dimensional array is used in a higher dimensional loop and, essentially, is just copying of values. For example, Biometric contains the statement $d = \mathit{SUB}(S[i, j], C[j])$, in the $j$-loop which is nested into the $i$-loop. Here $C$ is a one-dimensional array, however, to vectorize across both loops it is necessary to turn it into a two-dimensional array: $C[i,j]$ becomes $[C[0],C[1],...C[J],C[0],C[1],...C[J], ... C[0],C[1],...C[J]]$, which turns the row into a matrix of $I$ identical rows. (We use capital letters to denote the upper bounds of loops, e.g., $J$ is the upper bound of the $j$-loop and $I$ is the upper bound of the $i$-loop.)
 
 $\mathit{raise\_dim}(A[i_1,...,i_k],i_j)$ is defined as follows.  It results in a new {k+1}-dimensional array $A'$ where for every $0 \le i_{k} < I_{k+1}$, $A'[i_1, \ldots, i_j, \ldots, i_k] = A[i_1, \ldots, i_k]$. Adding $n$ dimensions is trivially extended as a composition of $n$ $\mathit{raise\_dim}$ that each adds a single dimension.
@@ -695,7 +762,7 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 \ben{I'm not sure if I wrote up the above paragraphs correctly -- the idea is that we're just copying values to extend over dimension $j$ or only retain its last elements.  The current writeup implies that $1 < j < k$ though, which isn't always true.  Python implementations of $\mathit{raise\_dim}()$ and $\mathit{drop\_dim}()$ can be found here: \url{https://github.com/milana2/ParallelizationForMPC/blob/master/compiler/compiler/motion_backend/reference_implementations.py}}
 
 \ana{This section is still informal. Needs work to make more precise.}
-
+\end{comment}
 
 \subsection{Basic Vectorization}
 
@@ -747,7 +814,7 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 }
 \ENDFOR
 
-\COMMENT { Phase 3: Dimensionality reduction: removing unnecessary dimensionality. }
+\COMMENT { Phase 3: Remove unnecessary dimensionality. }
 
 \COMMENT { A dimension $i$ is dead on exit from stmt $X[...i...] = ...$ if all def-uses with targets outside of the enclosing 
 FOR $i=0 ...$ MOTION loop end at target (use) $X' = \mathit{drop\_dim}(X, i)$. } 
@@ -766,9 +833,6 @@ FOR $i=0 ...$ MOTION loop end at target (use) $X' = \mathit{drop\_dim}(X, i)$. }
 \STATE {add SIMD for simdified dimensions}
 
 \end{algorithmic}
-
-%\ishaq{We need to think of a way to handle 4th case for def-use, when a nested block B def is followed by another, different, nested block B' use. Note: The handwritten notes say we can break it into 2 edges. One idea to this end is to insert a def' node which is a copy of the original def. The def' should be placed in a block that contains both B and B'.}
-%\ishaq{THE ABOVE COMMENT IS RESOLVED. After transformation to SSA, there should be an intermediate variable (phi node) that is assigned a value depending on whether control branched or not. Should we put this into the writeup?}
 
 \input{biometric_vectorization_example.tex}
 
@@ -909,12 +973,41 @@ $\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel
 
 \subsection{Correctness Argument}
 
-\subsection{Towards Extension of Basic Vectorization}
+\ana{Add the AI-based proof here.}
+
+\subsection{Extension of Basic Vectorization with Array Writes}
 
 \subsubsection{Removal of Infeasible Edges}
 
 Array writes limit vectorization as they sometimes introduce infeasible loop-carried dependencies. Consider the following example: \ana{Have to add citation to Aiken's paper}
 
+{\small
+\begin{verbatim}
+for i in range(N):
+  A[i] = B[i] + 10;
+  B[i] = A[i] * D[i-1];
+  C[i] = A[i] * D[i-1];
+  D[i] = B[i] * C[i];
+\end{verbatim}
+}
+
+In Cytron's SSA this code (roughly) translates into
+
+{\small
+\begin{verbatim}
+for i in range(N):
+1. A_1 = PHI(A_0,A_2)
+2. B_1 = PHI(B_0,B_2)
+3. C_1 = PHI(C_0,C_2)
+4. D_1 = PHI(D_0,D_2)
+5. A_2 = update(A_1, i, B_1[i] + 10); 
+6. B_2 = update(B_1, i, A_2[i] * D_1[i-1]);
+7. C_2 = update(C_1, i, A_2[i] * D_1[i-1]);
+8. D_2 = update(D_1, i, B_2[i] * C_2[i]);
+\end{verbatim}
+}
+
+\begin{comment}
 \begin{algorithmic}
 \STATE for i in range(N):
 \STATE \hspace{0.25cm} A[i] = B[i] + 10;
@@ -922,8 +1015,6 @@ Array writes limit vectorization as they sometimes introduce infeasible loop-car
 \STATE \hspace{0.25cm} C[i] = A[i] * D[i-1];
 \STATE \hspace{0.25cm} D[i] = B[i] * C[i];
 \end{algorithmic}
-
-In Cytron's SSA this code (roughly) translates into
 
 \begin{algorithmic}
 \STATE for i in range(N):
@@ -936,10 +1027,12 @@ In Cytron's SSA this code (roughly) translates into
 \STATE 7. $\texttt{C}_1$ = $\texttt{C}_0$; $\texttt{C}_1$[i] = $\texttt{A}_1$[i] * $\texttt{D}_0$[i-1];
 \STATE 8. $\texttt{D}_1$ = $\texttt{D}_0$; $\texttt{D}_1$[i] = $\texttt{B}_1$[i] * $\texttt{C}_1$[i];
 \end{algorithmic}
+\end{comment}
 
-There is a cycle around $\texttt{B}_0$ = $\phi(\texttt{B},\texttt{B}_1)$ that includes statement $\texttt{A}_1$[i] = $\texttt{B}_0$[i] + 10;
-and that statement won't be vectorized even though in fact there is no loop-carried dependency from the write of $\texttt{B}_1$[i] at 8 to the
-read of $ ... = \texttt{B}_0$[i] at 6.
+There is a cycle around \texttt{B\_1 = PHI(B\_0,B\_2)} that includes statement 
+\texttt{A\_1 = update(A\_0, i, B\_1[i] + 10)} and that statement won't be vectorized even 
+though in fact there is no loop-carried dependency from the write of \texttt{B\_1[i]} at 6 to the
+read of \texttt{ ... = B\_1[i]} at 8.
 
 The following algorithm removes certain infeasible loop-carried dependencies that are due to array writes. Consider a loop with index $0 \le j < J$
 nested at $i,j,k$. Here $i$ represents the enclosing loops of $j$ and $k$ represents the enclosed loops in $j$.
@@ -959,8 +1052,6 @@ nested at $i,j,k$. Here $i$ represents the enclosing loops of $j$ and $k$ repres
 \ENDFOR
 \end{algorithmic}
 
-\ishaq{Note to self: This algorithm is an instantiation for $j$ loop, the one for $k$ loop will be exactly the same, modulo variable name.}.
-
 Consider a loop $j$ enclosed in some fixed $\underline{i}$. Only if an update (definition) $\texttt{A}_m[f(i,j,k)] = ... $ at some iteration $\underline{j}$
 references the \emph{same} array element as a use $ ... = \texttt{A}_n[f'(i,j,k)]$ at some later iteration $\underline{j}'$,
 we may have a loop-carried dependence for $\texttt{A}$ due to this def-use pair. (In contrast, Cytron's algorithm inserts a loop-carried dependency every time there is an array update.)
@@ -968,8 +1059,17 @@ The algorithm above examines all def-use pairs in loop $j$, including defs and u
 $f(\underline{i},\underline{j},\underline{k}) = f'(\underline{i},\underline{j}',\underline{k}')$. If such values exist for some def-use pair, then there is a potential
 loop-carried dependence on $\texttt{A}$; otherwise there is not and we can remove the spurious backward edge thus ``freeing up'' statements for vectorization. %\ana{Double check this!!!}
 
-Consider the earlier example. There is a single loop, $i$. Clearly, there is no pair $\underline{i}$ and $\underline{i}'$, where $\underline{i} < \underline{i}'$ that make $\underline{i} = \underline{i}'$ (due to the def-use pairs of \texttt{A} 6-8 and 6-10).
-Therefore, we remove the back edge from 6 to 1. Analogously, we remove the back edges from 8 to 2 and 10 to 3. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 12 to 4 remains (def-use pairs for \texttt{D}). As a result of removing these spurious edges, Basic Vectorization will find that statement 6 is vectorizable. Statements 8, 10 and 12 will correctly appear in the FOR loop.
+Consider the earlier example. There is a single loop, $i$. Clearly, there is no pair $\underline{i}$ and $\underline{i}'$, where $\underline{i} < \underline{i}'$ that make $\underline{i} = \underline{i}'$ 
+due to the def-use pairs of \texttt{A} 5-6 and 5-7.
+Therefore, we remove the back edge from 5 to the phi-node 1. Analogously, we remove the back edges from 6 to 2 and from 7 to 3. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 8 to 4 remains (def-use pairs for \texttt{D}). As a result of removing these spurious edges, Basic Vectorization will find that statement 5 is vectorizable. Statements 6, 7 and 8 will correctly appear in the FOR loop.
+
+Note however, that this step renders some array phi-nodes target-less. We handle target-less phi-nodes with a minor extension of Basic Vectorization. 
+First, we merge closures that update the same array. This simplifies handling of array $\phi$-nodes: if each closure is turned into a separate loop
+each loop will need to have its own array phi-node to account for the update and this would complicate the analysis.
+Second, we add the target-less node of array \texttt{A} back to the closure that updates \texttt{A} ---
+the intuition is, even if there is no loop-carried dependence from writes to reads on \texttt{A}, \texttt{A} is written and the write (i.e., update) cannot be vectorized; 
+therefore, the updated array has to carry to the next iteration of the loop. Third, in cases when the phi-node remains target-less, i.e., cases when the
+array write can be vectorized, we have to properly remove the phi-node replacing uses of the left-hand side of the phi-node with its arguments.
 
 %\ana{Commented out previous writeup. Removal/handling of targetless phi-nodes will go into the Extension to Basic vectorization.}
 
@@ -1015,7 +1115,7 @@ respectively, i.e., the arrays before the loop.
 
 \subsubsection{Array MUX refinement}
 
-\ana{TODO: I think we should implement this.}
+\ana{TODO: WIP, get to BV without MUX refinement for now? For now, skip MUX refinement.}
 
 Next, the algorithm refines array MUX statements.
 MPC-source after Cytron's SSA may result in statements $\texttt{A}_j = \emph{MUX}(..., \texttt{A}_k, \texttt{A}_l)$, which imply that any index
@@ -1046,33 +1146,34 @@ the size of those vectors. Note that this is a heuristic that handles a common c
 \ENDFOR
 \end{algorithmic}
 
-\subsection{Extension of Basic Vectorization with Array Writes}
 
 \subsubsection{Restricting Array Writes}
 
-For now, we restrict array updates to \emph{canonical updates}. Assume (for simplicity) a two-dimensional array $\texttt{A}[I,J]$. A canonical update is the following:
-\begin{algorithmic}
-\STATE for i in range(I):
-\STATE \hspace{0.25cm} for j in range(J):
-\STATE \hspace{0.55cm} ...
-\STATE \hspace{0.55cm} A[i,j] = ...
-\STATE \hspace{0.55cm} ...
-\end{algorithmic}
+For now, we restrict array updates to \emph{canonical updates}. Assume (for simplicity) a two-dimensional array \texttt{A[I,J]}. A canonical update is the following:
+\begin{verbatim}
+for i in range(I):
+  for j in range(J):
+    ...
+    A[i,j] = ...
+    ...
+\end{verbatim}
 
-The update $\texttt{A}[i,j]$ can be nested into an inner loop and there may be multiple updates, i.e., writes to $\texttt{A}[i,j]$. However, update such as $\texttt{A}[i-1,j] = ...$ or $\texttt{A}[i-1,j-1] = ...$, etc., is not allowed. Additionally, while there could be several different loops that perform canonical updates, they must be of the same dimensionality, i.e., an update of higher or lower dimension, e.g., $A[i,j,k] = ...$ is not allowed. We compute the \emph{canonical dimensionality} of each write array in the obvious way \emph{before basic vectorization}. This restriction simplifies reasoning in this early stage of the compiler; we will look to relax the restriction in future work.
+The update \texttt{A[i,j]} can be nested into an inner loop and there may be multiple updates, i.e., writes to \texttt{A[i,j]}. However, update such as \texttt{A[i-1,j] = ...} or \texttt{A[i-1,j-1] = ...}, etc., is not allowed. Additionally, while there could be several different loops that perform canonical updates, they must be of the same dimensionality, i.e., an update of higher or lower dimension, e.g., \texttt{A[i,j,k] = ...} is not allowed. We compute the \emph{canonical dimensionality} of each write array by examining the array writes in the original program and rejecting programs that violate the canonical write restriction. This restriction simplifies reasoning in this early stage of the compiler; we will look to relax the restriction in future work.
 
 Another restriction/assumption is that we assume the output array is given as input with initial values, and it is of size consistent with its canonical dimensionality. 
 %\ana{This restriction will require that we update our benchmarks that come with output arrays.}
 
-Reads through an arbitrary formula, such as $\texttt{A}[i-1]$ for example, are allowed; currently, our projection function returns dummy values if the read formula is out of bounds; we assume the programmer ensures that the program still computes correct output in this case.
+Reads through an arbitrary formula, such as \texttt{A[i-1]} for example, are allowed; currently, the projection function returns dummy values if the read formula is out of bounds; we assume the programmer ensures that the program still computes correct output in this case.
 
 \subsubsection{Changes to Basic Vectorization}
 
+\begin{comment}
 There are two changes to Basic Vectorization to account for write arrays. We can account for them during processing of raise dimension/drop dimension in Phase 1 of Basic Vectorization.
 
 One change to Basic vectorization is the expansion of dimension if the array write or read occurs in a nested loop. That is, if there is an update $\texttt{A}[i,j] = ...$ that occurs in loop dimensionality $i,j,k$, $\texttt{A}[i,j]$ will be rewritten into $\texttt{A}[i,j,k]$. Similarly, a read $\texttt{A}[f(i,j)]$ will be rewritten into $\texttt{A}[f(i,j),k]$. ($\texttt{A}[f(i,j),k]$ will be reshaped as $f(i,j)*I*J+k$ during Phase 1 of Basic Vectorization. \ana{TODO: Double check.}) 
+\end{comment}
 
-The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and $Y$ uses an array variable. The definition can be an update $A_2 = update(A_1,...)$ or a pseudo $\phi$-node $A_2 = \phi(A_0,A_1)$. Note that $\phi$ nodes for arrays are no subscript operations on those $\phi$-nodes the way there are in scalar arrays. These edges are not handled in the same way as in Basic Vectorization, specifically, we do not raise and drop dimension as we do for scalars in Basic Vectorization. A key invariant is that the dimension of an array $A$ cannot go above or drop below $A$'s canonical dimensionality. We enumerate the cases of def-use edges.
+In addition to the changes for the handling of target-less phi-nodes, Basic Vectorization has to handle differently def-use edges $X \rightarrow Y$ where $X$ defines and $Y$ uses an array variable. The definition can be an update \texttt{A\_2 = update(A\_1,i,...)} or a pseudo $\phi$-node \texttt{A\_2 = PHI(A\_0,A\_1)}, etc.. Note that $\phi$-nodes for arrays have no subscript operations the way there are subscript operations in analysis-introduced arrays representing scalars. In addition, array variables are different from scalar variables. Raising and dropping dimension still apply, however, the dimension cannot be raised or dropped to a dimension lower than the canonical one:
 
 \begin{enumerate}
 
@@ -1092,9 +1193,26 @@ The other change concerns def-use edges $X \rightarrow Y$ where $X$ defines and 
 \paragraph{Example 1}
 
 First, the canonical dimensionality of all \texttt{A,B,C} and \texttt{D} is 1. 
-Thus, there is no addition of extra dimension for inner loops. After Phase 1 
-of Basic Vectorization the Aiken's array write example will be (roughly) as follows:
+After Phase 1 of Basic Vectorization the Aiken's array write example will be (roughly) as follows:
 
+{\small
+\begin{verbatim}
+for i in range(N):
+1. A_1 = PHI(A_0,A_2)
+2. B_1 = PHI(B_0,B_2)
+3. C_1 = PHI(C_0,C_2)
+4. D_1 = PHI(D_0,D_2)
+5. A_2 = update(A_1, I, B_1[I] + 10); 
+6. B_2 = update(B_1, I, A_2[I] * D_1[I-1]);
+7. C_2 = update(C_1, I, A_2[I] * D_1[I-1]);
+8. D_2 = update(D_1, I, B_2[I] * C_2[I]);
+\end{verbatim}
+}
+
+Note that since all def-uses are same-level (i.e., reads and writes of the array elements) 
+no raise dimension or drop dimension happens.
+
+\begin{comment}
 \begin{algorithmic}
 \STATE for i in range(N):
 \STATE 1. $\texttt{A}_1$ = $\phi(\texttt{A}_0,\texttt{A}_2)$
@@ -1106,12 +1224,32 @@ of Basic Vectorization the Aiken's array write example will be (roughly) as foll
 \STATE 7. $\texttt{C}_2 = update(\texttt{C}_1, \stackrel{\rightarrow}{i}, \texttt{A}_2[\stackrel{\rightarrow}{i}] * \texttt{D}_1[\stackrel{\rightarrow}{i-1}])$;
 \STATE 8. $\texttt{D}_2 = update(\texttt{D}_1; \stackrel{\rightarrow}{i}, \texttt{B}_2[\stackrel{\rightarrow}{i}] * \texttt{C}_2[\stackrel{\rightarrow}{i}])$;
 \end{algorithmic}
+\end{comment}
 
 Phase 2 computes the closure of 4; $cl = \{4,6,7, 8\}$ 
-while 5 is vectorizable. Recall that 1,2, and 3 are targetless phi-nodes. Since the closure $cl$ includes updates to $B$ and $C$,
-the corresponding phi-nodes are added to the closure, i.e., the FOR loop. The uses of $A_1$ and $B_1$ in the vectorized statement
-turn into uses of $A_0$ and $B_0$ respectively. (But note that $A_0$ is irrelevant; the updates writes into array $A_2$ in parallel.)
+while 5 is vectorizable. Recall that 1,2, and 3 are target-less phi-nodes. Since the closure $cl$ includes updates to \texttt{B} and \texttt{C},
+the corresponding phi-nodes are added back to the closure and the def-use edges are added back to the target-less nodes. The uses of \texttt{A\_1} and \texttt{B\_1} in the vectorized statement
+turn into uses of \texttt{A\_0} and \texttt{B\_0} respectively; this is done for all original target-less phi-node. (But note that \texttt{A\_0} is irrelevant; the update writes into array \texttt{A\_2} in parallel.)
+Finally, the target-less phi-node for \texttt{A} is discarded. 
 
+{\small
+\begin{verbatim}
+1. A_2 = update(A_0, I, ADD_SIMD(B_0[I],10));
+   equiv. to A_2[I] = ADD_SIMD(B_0[I],10)
+FOR i=0; i<N; i++; // MOTION loop
+2. B_1 = PHI(B_0,B_2)
+3. C_1 = PHI(C_0,C_2)
+4. D_1 = PHI(D_0,D_2)
+5. B_2 = update(B_1, i, A_2[i] * D_1[i-1]);
+   equiv. to B_2 = B_1; B_2[i] = A_2[i] * D_1[i-1];
+6. C_2 = update(C_1, i, A_2[i] * D_1[i-1]);
+7. D_2 = update(D_1, i, B_2[i] * C_2[i]);
+\end{verbatim}
+}
+
+
+
+\begin{comment}
 \begin{algorithmic}
 \STATE 1. $\texttt{A}_2 = update(\texttt{A}_0; \stackrel{\rightarrow}{i}, \mathit{ADD\_SIMD}(\texttt{B}_0[\stackrel{\rightarrow}i],[10,...])$ \COMMENT{Fully vectorized, size N.}
 \STATE FOR i=0; i<N; i++; \COMMENT{ MOTION loop }
@@ -1122,8 +1260,87 @@ turn into uses of $A_0$ and $B_0$ respectively. (But note that $A_0$ is irreleva
 \STATE 6. $\texttt{C}_2 = update(\texttt{C}_1, i, \mathit{MUL}(\texttt{A}_2[i], \texttt{D}_1[{i-1}])$
 \STATE 7. $\texttt{D}_2 = update(\texttt{D}_1, i, \mathit{MUL}(\texttt{B}_2[i], \texttt{C}_1[i])$
 \end{algorithmic}
+\end{comment}
 
-\ana{TODO: Format either Histogram or Matrix Multiplication. Both are interesting examples that use output arrays.}
+\paragraph{Example 2} Now consider the MPC Source of Histogram:
+
+{\small
+\begin{verbatim}
+for i in range(0, num_bins):
+   res1 = PHI(res, res2)
+   for j in range(0, N):
+      res2 = PHI(res1, res3)
+      tmp1 = (A[j] == i)
+      tmp2 = (res2[i] + B[j])
+      tmp3 = MUX(tmp1, res2[i], tmp2)
+      res3 = Update(res2, i, tmp3)     
+return res1
+\end{verbatim}
+}
+
+The canonical dimensionality of \texttt{res} is 1. Also, the phi-node \texttt{res2 = PHI(res1, res3)} is a target-less phi-node (the implication being that the inner for loop can be vectorized across $i$). After Phase 1, Basic vectorization produces the following (everything is implicitly vectorized along $i$ and $j$ and the update is turned into a regular write):
+
+{\small
+\begin{verbatim}
+A1 = raise_dim(A, j, ((i:num_bins),(j:N)))
+B1 = raise_dim(B, j, ((i:num_bins),(j:N)))
+I = raise_dim(i, ((i:num_bins),(j:N)))
+for i in range(0, num_bins):
+   res1 = PHI(res, res2) // target-less, no drop_dim
+   res1' = raise_dim(res1, (j:N))
+   for j in range(0, N):
+      res2 = PHI(res1', res3)
+      tmp1 = (A1 == I)
+      tmp2 = (res2 + B1)
+      tmp3 = MUX(tmp1, res2, tmp2)
+      res3 = res2 // copy propagation: res2 into res3
+      res3 = tmp3 // "normal": res3[I,J] = tmp3[I,J]    
+return res1
+\end{verbatim}
+}
+
+Processing the inner loop in Phase 2 vectorizes \texttt{tmp1 = (A1 == I)} along the $j$ dimension but leaves the rest of the statements in a MOTION loop. Processing the outer loop is interesting. This is because the PHI node is a target-less node, and therefore, there are no closures! Thus everything can be vectorized along the $i$ dimension:
+
+{\small
+\begin{verbatim}
+A1 = raise_dim(A, j, ((i:num_bins),(j:N)))
+B1 = raise_dim(B, j, ((i:num_bins),(j:N)))
+I1 = raise_dim(i, ((i:num_bins),(j:N)))
+
+tmp1[I,J] = (A1[I,J] == I1[I,J])
+
+res1' = raise_dim(res, (j:N)) // raising res to a 2-dim. array
+for j in range(0, N):
+   res2 = PHI(res1', res3)
+   tmp2[I,j] = (res2[I,j] + B1[I,j])
+   tmp3[I,j] = MUX(tmp1[I,j], res2[I,j], tmp2[I,j])
+   res3 = res2
+   res3[I,j] = tmp3[I,j]
+res1 = drop_dim(res2) // Have to add drop_dim before removing redundant phi-node      
+return res1
+\end{verbatim}
+}
+
+The cleanup phase can then get rid of $j$ in the res variables and tmp variables, so the loop operates over the num\_bins-size vectors. 
+This will lead to dropping raise\_dim and drop\_dim as well: 
+
+{\small
+\begin{verbatim}
+A1 = raise_dim(A, j, ((i:num_bins),(j:N)))
+B1 = raise_dim(B, j, ((i:num_bins),(j:N)))
+I1 = raise_dim(i, ((i:num_bins),(j:N)))
+
+tmp1[I,J] = (A1[I,J] == I1[I,J])
+
+for j in range(0, N):
+   res2 = PHI(res1', res3) // now 1-dim array
+   tmp2[I] = (res2[I] + B1[I,j])
+   tmp3[I] = MUX(tmp1[I,j], res2[I], tmp2[I])
+   res3 = res2
+   res3[I] = tmp3[I]
+return res2
+\end{verbatim}
+}
 
 \begin{comment}
 \paragraph{Example 2}
@@ -1214,3 +1431,5 @@ After Phase 2 and Phase 3. The EQ operation is vectorizable across both dimensio
 
 % that's all folks
 \end{document}
+
+
