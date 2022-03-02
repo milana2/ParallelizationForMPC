@@ -165,7 +165,7 @@ int main(const int argc, const char *const argv[])
         {%- for idx in range(outputs | count) %}
             auto out{{idx}} = std::get<{{idx}}>(output).Out();
         {%- endfor -%}
-    {%- endif -%}
+    {%- endif %}
 
     party->Run();
 

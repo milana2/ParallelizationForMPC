@@ -12,6 +12,9 @@ SKIPPED_TESTS = [
     "histogram",
     "minimal_points",
     "psi",
+    # The following tests cause issues since they don't loop from 0
+    "longest_1s",
+    "longest_even_0",
     # The tests beyond this point fail to compile since they return a vector
     # Once our test harness can handle this, they can be re-enabled
     "cross_join",

@@ -6,37 +6,37 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
     encrypto::motion::SecureUnsignedInteger Sym_0
 ) {
     // Shared variable declarations
-    std::vector<encrypto::motion::ShareWrapper> _1_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _1_2((_MPC_PLAINTEXT_N_0 + 1));
     encrypto::motion::SecureUnsignedInteger _10_0;
     encrypto::motion::SecureUnsignedInteger _11_0;
-    std::vector<encrypto::motion::ShareWrapper> _2_2((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> _3_2((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::ShareWrapper> _4_2((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> _5_0((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> _6_0((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> _7_0((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> _8_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _2_2((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _3_2((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::ShareWrapper> _4_2((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _5_0((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _6_0((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _7_0((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _8_0((_MPC_PLAINTEXT_N_0 + 1));
     encrypto::motion::SecureUnsignedInteger _9_0;
     encrypto::motion::SecureUnsignedInteger N_0;
     encrypto::motion::SecureUnsignedInteger current_length_1;
-    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_2((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_3((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_2((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_3((_MPC_PLAINTEXT_N_0 + 1));
     encrypto::motion::SecureUnsignedInteger current_length_4;
-    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_5((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> current_length_5((_MPC_PLAINTEXT_N_0 + 1));
     encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger max_length_1;
-    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_2((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_3((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_4((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> tmp_max_len_2((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> tmp_max_len_3((_MPC_PLAINTEXT_N_0));
-    std::vector<encrypto::motion::SecureUnsignedInteger> tmp_max_len_4((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_2((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_3((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_length_4((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> tmp_max_len_2((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> tmp_max_len_3((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<encrypto::motion::SecureUnsignedInteger> tmp_max_len_4((_MPC_PLAINTEXT_N_0 + 1));
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__10_0;
     std::uint32_t _MPC_PLAINTEXT__11_0;
-    std::vector<std::uint32_t> _MPC_PLAINTEXT__5_0((_MPC_PLAINTEXT_N_0));
-    std::vector<std::uint32_t> _MPC_PLAINTEXT__6_0((_MPC_PLAINTEXT_N_0));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__5_0((_MPC_PLAINTEXT_N_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__6_0((_MPC_PLAINTEXT_N_0 + 1));
     std::uint32_t _MPC_PLAINTEXT_current_length_1;
     std::uint32_t _MPC_PLAINTEXT_current_length_4;
     std::uint32_t _MPC_PLAINTEXT_i_1;
@@ -77,6 +77,8 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
         current_length_5[_MPC_PLAINTEXT__10_0] = _1_2[_MPC_PLAINTEXT__10_0].Mux(current_length_3[_MPC_PLAINTEXT__10_0].Get(), current_length_4.Get());
 
     }
+    // Update phi values
+    current_length_2[_MPC_PLAINTEXT__10_0] = current_length_5[(_MPC_PLAINTEXT__10_0 - std::uint32_t(1))];
 
     vectorized_assign(tmp_max_len_3, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, vectorized_access(current_length_5, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}));
 
@@ -100,6 +102,8 @@ encrypto::motion::SecureUnsignedInteger longest_even_0(
         max_length_4[_MPC_PLAINTEXT__11_0] = _4_2[_MPC_PLAINTEXT__11_0].Mux(max_length_3[_MPC_PLAINTEXT__11_0].Get(), max_length_2[_MPC_PLAINTEXT__11_0].Get());
 
     }
+    // Update phi values
+    max_length_2[_MPC_PLAINTEXT__11_0] = max_length_4[(_MPC_PLAINTEXT__11_0 - std::uint32_t(1))];
 
     _9_0 = drop_dim_monoreturn(max_length_2, {_MPC_PLAINTEXT_N_0});
     return _9_0;

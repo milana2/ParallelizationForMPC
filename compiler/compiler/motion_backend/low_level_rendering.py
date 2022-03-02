@@ -183,6 +183,12 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
             + "++) {"
         )
 
+        phi_assignments = "\n".join(
+            render_stmt(Assign(phi.lhs, phi.rhs_true), type_env)
+            for phi in stmt.body
+            if isinstance(phi, Phi)
+        )
+
         phi_updates = (
             "// Update phi values\n"
             + "if ("
@@ -191,11 +197,7 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
             + render_expr(stmt.bound_low, RenderContext(type_env, plaintext=True))
             + ") {\n"
             + indent(
-                "\n".join(
-                    render_stmt(Assign(phi.lhs, phi.rhs_true), type_env)
-                    for phi in stmt.body
-                    if isinstance(phi, Phi)
-                ),
+                phi_assignments,
                 "    ",
             )
             + "\n}\n"
@@ -225,6 +227,9 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
             + "\n"
             + indent(body, "    ")
             + "\n}\n"
+            + "// Assign final phi values\n"
+            + phi_assignments
+            + "\n"
         )
 
     elif isinstance(stmt, Return):

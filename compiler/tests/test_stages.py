@@ -12,6 +12,9 @@ class StagesTestCase(unittest.TestCase):
     maxDiff = None
 
     def test_stages(self):
+        if test_context.RUN_EXAMPLE_APPS:
+            self.skipTest("Only verifying output of example applications")
+
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
             if test_case_dir.name in test_context.SKIPPED_TESTS:
                 continue
@@ -111,7 +114,7 @@ class StagesTestCase(unittest.TestCase):
 
             # Collect expected output
             proc = subprocess.run(
-                ["python3.9", input_fname],
+                ["python3", input_fname],
                 check=True,
                 stdout=subprocess.PIPE,
                 text=True,
@@ -144,12 +147,8 @@ class StagesTestCase(unittest.TestCase):
                 text=True,
             )
 
-            print("Waiting...")
-
             party0.wait(30)
             party1.wait(30)
-
-            print("wait complete")
 
             received_output = party1.stdout.read()
 
