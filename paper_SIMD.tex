@@ -523,7 +523,7 @@ Note that we use an MPC-Source control flow graph (CFG) $G'(V', E')$ along with 
 
 % We want to build a graph $G'$ with fewest possible vertices since fewer vertices means more parallelization. 
 
-\ishaq{TODO: @Ana: I am still confused about what prevents a reviewer from saying, "you argue correctness of the schedule from unrolled MPC, you don't argue it for the pre-unrolled CFG that you use". Please comment.}
+\ishaq{TODO: @Ana: I am still confused about what prevents a reviewer from saying, "you argue correctness of the schedule from unrolled MPC, you don't argue it for the pre-unrolled CFG that you use". Please comment.} \ana{The correctness proof answer this question. The unrolled schedule is the \emph{concretization} of MPC source. We define (1) the obvious $\gamma$, (2) we define partial order over MPC source codes (this is our abstract domain $A$), and (3) a partial order over unrolled schedules. Then we prove two theorems that $A \le A' \Rightarrow \gamma(A) \subseteq \gamma(A')$ and that the MPC source $\le$ Vectorized MPC source.}
 
 \subsection{Scheduling is NP-hard}
 \label{sec:np}
