@@ -497,7 +497,7 @@ in parallel still cost $2\alpha$.
 \ana{Ishaq? Basically, define sequential schedule, then define an equivalent parallel schedule. A parallel schedule is equivalent if it preserves def-use relations in sequential schedule, or in other words, schedules def ahead of the use. Problem is to minimize cost of Parallel schedule.}
 
 \ana{Commenting out this section to have paper compile on Github. Will revert!}
-\begin{comment}
+%\begin{comment}
 
 At the lowest level, we have two types of MPC instructions 1) local/non-interactive instruction (i.e. \add) and 2) remote/interactive instruction (i.e. \mul). Let the cost of a single \add instruction be given by a monotonically decreasing $f(n)$, where the argument $n$ is the number of \add instructions being executed in parallel. Similarly the cost of a single \mul is given by a monotonically decreasing function $g(n)$.
 
@@ -525,9 +525,9 @@ Note that we use an MPC-Source control flow graph (CFG) $G'(V', E')$ along with 
 
 % We want to build a graph $G'$ with fewest possible vertices since fewer vertices means more parallelization. 
 
-\ishaq{TODO: @Ana: I am still confused about what prevents a reviewer from saying, "you argue correctness of the schedule from unrolled MPC, you don't argue it for the pre-unrolled CFG that you use". Please comment.} \ana{The correctness proof answer this question. The unrolled schedule is the \emph{concretization} of MPC source. We define (1) the obvious $\gamma$, (2) we define partial order over MPC source codes (this is our abstract domain $A$), and (3) a partial order over unrolled schedules. Then we prove two theorems that $A \le A' \Rightarrow \gamma(A) \subseteq \gamma(A')$ and that the MPC source $\le$ Vectorized MPC source.}
+%\ishaq{TODO: @Ana: I am still confused about what prevents a reviewer from saying, "you argue correctness of the schedule from unrolled MPC, you don't argue it for the pre-unrolled CFG that you use". Please comment.} \ana{The correctness proof answer this question. The unrolled schedule is the \emph{concretization} of MPC source. We define (1) the obvious $\gamma$, (2) we define partial order over MPC source codes (this is our abstract domain $A$), and (3) a partial order over unrolled schedules. Then we prove two theorems that $A \le A' \Rightarrow \gamma(A) \subseteq \gamma(A')$ and that the MPC source $\le$ Vectorized MPC source.}
 
-\end{comment}
+%\end{comment}
 
 \subsection{Scheduling is NP-hard}
 \label{sec:np}
