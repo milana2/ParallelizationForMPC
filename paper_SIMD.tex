@@ -978,7 +978,102 @@ $\texttt{index}_1[\stackrel{\rightarrow}{i}] = \mathit{MUX}(\texttt{c}[\stackrel
 
 \subsection{Correctness Argument}
 
-\ana{Add the AI-based proof here.}
+We build a correctness argument that loosely follows the theory of Abstract Interpretation. 
+We define the syntax of MPC Source programs. The domain of MPC Source programs
+expressible in the syntax (with certain semantic restrictions) is the abstract domain $A$. 
+We then define the \emph{linearization} of an MPC Source program as an interpretation 
+over the syntax. The linearization, which is a \emph{schedule}, is the concrete domain $C$. 
+Since we reason over def-use graphs in $A$ we define a partial order relation over elements of $A$ 
+in terms of def-use relations. We define a partial order over elements of $C$ as well,
+in terms of def-use relations in the concrete domain $C$. We prove two theorems
+that state (informally) that the schedule corresponding to the original program computes the same 
+result as the schedule corresponding to the vectorized program.
+
+
+\begin{figure}%[!b]
+%\small
+\[
+\begin{array}{l@{~~~~~}l}
+  \begin{array}{l@{~}l@{~~~}l}
+  s &::= s;s & sequence \\
+     & \mid \x[i,J,k] = \y[i,J,k] \; \mathit{op\_SIMD} \; \z[i,J,k] & operation \\ 
+     & \mid \x[i,J,k]  = \texttt{PHI}(\x_1[i,J,k],\x_2[i,J,k\!-\!1]) & \mathit{phi} \; \mathit{node} \\
+     & \mid \x[i,J,k] = \mathit{raise\_dim}(\x'[i],(J\!:\!J,k\!:\!K)) & \mathit{raise} \; \mathit{dimension(s)} \\
+     & \mid \x[i,J] = \mathit{drop\_dim}(\x'[i,J,k],k)  & \mathit{drop} \; \mathit{dimension(s)} \\
+     & \mid \x = \y & \mathit{propagation} \\
+     & \mid \texttt{FOR} \; 0 \le i < I: s  & \mathit{loop} \\
+  \end{array}    \\
+\end{array}
+\]
+\vspace{-3mm}
+\caption{MPC Source Syntax}\label{fig:MPC_Source_syntax}
+\vspace{-5mm}
+\end{figure}
+
+\paragraph{MPC Source Syntax}
+
+\figref{fig:MPC_Source_syntax} defines the syntax for our intermediate representation, MPC Source. 
+There are semantics restrictions over the syntax as well: a variable $\x[i,j,k]$ is a 3-dimensional array 
+$(i:I,j:J,k:K)$ and also, a statement $\x[i,J,k] = ...$ is enclosed in loops over $i$ and $k$ as shown below. 
+Thus, $i$ and $k$ are in scope.
+\begin{verbatim}
+FOR 0 <= i < I:
+    ...
+    FOR 0 <= k < K:
+        x[i,J,k] = ...
+\end{verbatim}
+
+Statements $\mathit{operation, phi, raise \; dimension(s), drop \; dimension(s)}$ are \emph{base} statements, 
+and $\mathit{sequence, loop}$ are \emph{compound statements}.
+
+\paragraph{Linearization}
+
+Linearization is the concretization operation, which, as we mentioned earlier computes a schedule.
+The concretization function $\gamma: A \rightarrow C$ is defined as an interpretation of
+MPC Source syntax, as it is standard. The concretization of each one 
+of the base statements is as follows: 
+\[\begin{array}{l}
+\gamma(\x[i,J,k] = \y[i,J,k] \; \mathit{op\_SIMD} \; \z[i,J,k]) = \\ 
+\x[i,0,k] = \y[i,0,k] \; \mathit{op} \; \z[i,0,k] \;\; || \\
+\x[i,1,k] = \y[i,1,k] \; \mathit{op} \; \z[i,1,k] \;\; || \; ...\; || \\
+\x[i,I-1,k] = \y[i,I-1,k] \; \mathit{op} \; \z[i,I-1,k]
+\end{array}\]
+meaning that the vectorized dimension(s) are expanded into parallel statements. || introduces SIMD (parallel) execution.
+
+The concretization of the FOR statement is as follows:
+\[ \gamma(\texttt{FOR} \; 0 \le i < I: s) = \gamma(s)[0/i] ; \gamma(s)[1/i] ; ... \gamma(s)[I-1/i] \]
+$\gamma$ simply unrolls the loop substituting $i$ with 0, 1, etc. Here ; denotes sequential execution.
+
+\paragraph{Partial Orders}
+
+For each MPC Source program $a$ we compute the def-use edges in the standard way: if base statement $s1 \in a$ defines variable \x, e.g., $\x[i,j,k] = ...$, 
+and base statement $s2 \in a$ uses \x, e.g., $... = ... \x[i,j,k]$ and there is a path in the trivial CFG from $s1$ to $s2$, then there is a def-use edge from
+ $s1$ to $s2$. We extend the dimensionality of a statement into $s1[i,j,k]$ where $s1[i,j,k]$ inherits the dimensionality of the left-hand-side of the assignment.
+  
+ Let $a_0, a_1$ be two MPC Source programs in $A$. 
+ Two base statements, $s_0 \in a_0$ and $s_1 \in a_1$ are \emph{same}, written $s_0 \equiv s_1$ if they are of the same operation and they operate on 
+ the same variables: same variable name and same dimensionality. Recall that dimensions in MPC Source are either iterative, lower case, or vectorized, upper case. 
+ Two statements are same even if one operates on an iterative dimension and the other one operates on a vectorized one, e.g., $s_0[i,j,k] \equiv s_1[I,j,K]$.
+  
+ \begin{definition} Let $a_0, a_1 \in A$. We say that $a_0 \le a_1$ iff for every def-use edge $s1 \rightarrow s2$ in $a_0$ there is an edge
+ $s1' \rightarrow s2'$ where $s1 \equiv s1'$, $s2 \equiv s2'$ and the two edges of either both forward or both backward.
+ \end{definition}
+ 
+ The def-use edges in the concrete schedule are as expected. There is a def use edge from statement $s1$ that defines $\x[\underline{i},\underline{j},\underline{k}]$
+ to statement $s2$ that uses $\x[\underline{i},\underline{j},\underline{k}]$ if $s1$ is scheduled ahead of $s2$ in the linear schedule. We note that the underlined
+ indices, e.g., $\underline{i}$, refer to fixed values, not iterative or vectorized dimensions since in the concrete schedule all induction variables are expanded. 
+ E.g., there is a def-use edge from the statement that defines $\x[0,1,2]$ and a statement that uses $\x[0,1,2]$.
+ 
+\paragraph{Theorems} 
+
+\begin{theorem} $a_0 \le a_1 \Rightarrow \gamma(a_0) \subseteq \gamma(a_1)$.
+\end{theorem}
+
+\begin{theorem} Let $a_0$ be the iterative MPC Source and let $a_1$ be the vectorized MPC Source computed by the vectorization algorithm. 
+We have that $a_0 \le a_1$. 
+\end{theorem}
+
+\ana{Write the proof sketch and final argument, etc.}
 
 \subsection{Extension of Basic Vectorization with Array Writes}
 
