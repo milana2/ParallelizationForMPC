@@ -307,11 +307,13 @@ We present an analytical model to reason about cost of schedules
 and show that scheduling is NP-hard via a reduction to the shortest 
 common supersequence problem.
 
-\item We present a compiler that takes a Python-like high-level 
+\item We present a compiler that takes an IMP-like high-level 
 program and produces amortized (i.e., vectorized) low-level cryptographic 
-code in the MOTION framework. Central to our approach is a new 
-vectorization algorithm that produces optimal schedules for a large 
-number of MPC programs.
+code in the MOTION framework. Central contributions are 1) a novel compiler framework, 
+2) a vectorization algorithm that produces optimal schedules for a large 
+number of MPC programs, and 3) reasoning over output arrays without Array SSA; we remove 
+infeasible loop-carried dependences introduced by standard SSA to improve vectorization.
+
 
 \item We present an implementation and evaluation in the MOTION framework. 
 \ana{Fill in with final results. Mention benchmarks (standard + new ones + HyCC). }
