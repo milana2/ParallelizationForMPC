@@ -93,7 +93,7 @@ def type_env_to_table(type_env: TypeEnv) -> str:
 def build_benchmark_table() -> str:
     table = "## Benchmark Data\n"
     table += "| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages | Communication Size | Runtime | Circuit Generation Time |\n"
-    table += "|: - | - | - | - | - | - | - | - |\n"
+    table += "| - | - | - | - | - | - | - | - |\n"
 
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
         if test_case_dir.name in SKIPPED_TESTS:
