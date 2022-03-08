@@ -92,8 +92,8 @@ def type_env_to_table(type_env: TypeEnv) -> str:
 
 def build_benchmark_table() -> str:
     table = "## Benchmark Data\n"
-    table += "| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages | Communication Size | Runtime | Circuit Generation Time |\n"
-    table += "| - | - | - | - | - | - | - | - |\n"
+    table += "| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |\n"
+    table += "| - | - | - | - | - | - | - | - | - | - |\n"
 
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
         if test_case_dir.name in SKIPPED_TESTS:
@@ -119,20 +119,10 @@ def build_benchmark_table() -> str:
             table += str(data.circuit_stats.num_gates) + "|"
             table += str(data.circuit_stats.num_simd_gates) + "|"
             table += str(data.circuit_stats.num_nonsimd_gates) + "|"
-            table += (
-                str(
-                    data.timing_stats.communication.send_num_msgs
-                    + data.timing_stats.communication.recv_num_msgs
-                )
-                + "|"
-            )
-            table += (
-                str(
-                    data.timing_stats.communication.send_size
-                    + data.timing_stats.communication.recv_size
-                )
-                + " MiB |"
-            )
+            table += str(data.timing_stats.communication.send_num_msgs) + "|"
+            table += str(data.timing_stats.communication.send_size) + " MiB |"
+            table += str(data.timing_stats.communication.recv_num_msgs) + "|"
+            table += str(data.timing_stats.communication.recv_size) + " MiB |"
             table += str(data.timing_stats.gates_online.mean) + " ms |"
             table += str(data.circuit_stats.circuit_gen_time) + " ms |\n"
 
