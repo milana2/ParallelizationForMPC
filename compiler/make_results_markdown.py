@@ -134,7 +134,7 @@ def build_benchmark_table() -> str:
                 + " MiB |"
             )
             table += str(data.timing_stats.gates_online.mean) + " ms |"
-            table += str(data.timing_stats.gates_setup.mean) + " ms |\n"
+            table += str(data.circuit_stats.circuit_gen_time) + " ms |\n"
 
     return table
 

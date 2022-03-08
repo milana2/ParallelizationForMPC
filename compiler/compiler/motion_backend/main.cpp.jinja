@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <regex>
 
@@ -160,7 +161,11 @@ int main(const int argc, const char *const argv[])
         {%- endif %}
     {% endfor %} //clang-format on
 
+    auto circuit_gen_start = std::chrono::steady_clock::now();
     auto output = {{function_name}}<{{protocol}}>(party, {{params | map(attribute = "name") | join(", ")}});
+    auto circuit_gen_end = std::chrono::steady_clock::now();
+    auto circuit_gen_time = std::chrono::duration_cast<std::chrono::milliseconds>(circuit_gen_end - circuit_gen_start).count();
+
     {%- if (outputs|count) == 1 %}
         auto out0 = output.Out();
     {%- else %}
@@ -197,7 +202,8 @@ int main(const int argc, const char *const argv[])
     {%- if(outputs|count) > 1 -%} << ")" {%- endif -%}
     << std::endl;
 
-    std::cout << collect_stats(party->GetBackend()) << std::endl;
+    std::cout << collect_stats(party->GetBackend());
+    std::cout << "circuit_gen_time: " << circuit_gen_time << std::endl;
 
     return 0;
 }

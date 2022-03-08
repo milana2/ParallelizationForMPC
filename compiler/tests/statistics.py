@@ -195,6 +195,7 @@ class CircuitStatistics:
     num_outputs: int
     num_simd_gates: int
     num_nonsimd_gates: int
+    circuit_gen_time: float  # in milliseconds
 
 
 def parse_circuit_data(lines: list[str]) -> CircuitStatistics:
@@ -218,10 +219,15 @@ def parse_circuit_data(lines: list[str]) -> CircuitStatistics:
     assert nonsimd_gates_data[0] == "num_nonsimd_gates:"
     num_nonsimd_gates = int(nonsimd_gates_data[1])
 
+    circuit_gen_time_data = lines[5].split()
+    assert circuit_gen_time_data[0] == "circuit_gen_time:"
+    circuit_gen_time = float(circuit_gen_time_data[1])
+
     return CircuitStatistics(
         num_gates=num_gates,
         num_inputs=num_inputs,
         num_outputs=num_outputs,
         num_simd_gates=num_simd_gates,
         num_nonsimd_gates=num_nonsimd_gates,
+        circuit_gen_time=circuit_gen_time,
     )
