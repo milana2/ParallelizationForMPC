@@ -1,7 +1,23 @@
 # [View the current version of the paper here](paper_SIMD.pdf)
 ## Benchmark Data
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages | Communication Size | Runtime | Circuit Generation Time |
-|: - | - | - | - | - | - | - | - |
+| - | - | - | - | - | - | - | - |
+|biometric|5471|4519|912|9890|1.628 MiB |2145.642 ms |124.799 ms |
+|biometric (Non-Vectorized)|58602|0|58558|94142|9.342 MiB |11524.767 ms |1915.055 ms |
+|count_102|3220|104|3079|7636|0.776 MiB |1884.893 ms |117.724 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|11020|1.086 MiB |2260.977 ms |95.395 ms |
+|count_10s|2297|105|2158|5692|0.574 MiB |1357.177 ms |79.976 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|7948|0.782 MiB |1650.068 ms |107.409 ms |
+|count_123|2304|109|2160|5696|0.576 MiB |1436.152 ms |66.946 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|7976|0.784 MiB |1557.418 ms |131.031 ms |
+|inner_product|3886|2969|906|7160|0.774 MiB |1304.55 ms |78.1 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|16104|1.592 MiB |2224.983 ms |223.865 ms |
+|longest_102|5469|110|5312|11280|1.136 MiB |3514.528 ms |113.578 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|14700|1.45 MiB |3143.574 ms |154.151 ms |
+|max_dist_between_syms|4262|37|4197|8904|0.882 MiB |2520.878 ms |96.591 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|9772|0.962 MiB |2077.238 ms |93.934 ms |
+|max_sum_between_syms|4261|37|4197|8904|0.882 MiB |2442.571 ms |156.589 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|9772|0.962 MiB |1806.198 ms |163.294 ms |
 
 # Compiler stages with different benchmarks
 ## `biometric`
