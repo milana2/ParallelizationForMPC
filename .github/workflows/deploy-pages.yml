@@ -25,7 +25,12 @@ jobs:
             texlive-latex-extra \
             texlive-bibtex-extra \
             texlive-publishers \
-            texlive-science
+            texlive-science \
+            cmake \
+            g++-10 \
+            make \
+            libboost-all-dev \
+            libssl-dev
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Build results markdown
