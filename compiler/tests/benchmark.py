@@ -16,15 +16,17 @@ class BenchmarkOutput:
 
 
 def run_benchmark(
-    benchmark_name: str, benchmark_path: str
+    benchmark_name: str, benchmark_path: str, vectorized=True
 ) -> tuple[BenchmarkOutput, BenchmarkOutput]:
     input_fname = os.path.join(benchmark_path, "input.py")
 
     with open(input_fname, "r") as f:
         input_py = f.read().strip()
 
-    app_path = os.path.join(benchmark_path, "motion_app")
-    compiler.compile(f"{benchmark_name}.py", input_py, True, app_path, True)
+    app_path = os.path.join(
+        benchmark_path, "motion_app" + ("-vectorized" if vectorized else "")
+    )
+    compiler.compile(f"{benchmark_name}.py", input_py, True, vectorized, app_path, True)
 
     subprocess.run(
         ["cmake", "-S", app_path, "-B", os.path.join(app_path, "build")],

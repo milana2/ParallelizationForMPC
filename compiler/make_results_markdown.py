@@ -91,40 +91,50 @@ def type_env_to_table(type_env: TypeEnv) -> str:
 
 
 def build_benchmark_table() -> str:
-    table = "## Benchmark Data"
+    table = "## Benchmark Data\n"
     table += "| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages | Communication Size | Runtime | Circuit Generation Time |\n"
-    table += "| - | - | - | - | - | - | - | - |\n"
+    table += "|: - | - | - | - | - | - | - | - |\n"
 
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
         if test_case_dir.name in SKIPPED_TESTS:
             continue
 
-        try:
-            party0, party1 = run_benchmark(test_case_dir.name, test_case_dir.path)
-        except:
-            continue
+        for vectorized in (True, False):
+            try:
+                data, _ = run_benchmark(
+                    test_case_dir.name, test_case_dir.path, vectorized
+                )
+            except Exception as e:
+                print(
+                    f"Skipping {test_case_dir.name} (vectorized={vectorized}) due to error: {e}"
+                )
+                continue
 
-        table += "|"
-        table += test_case_dir.name + "|"
-        table += str(party0.circuit_stats.num_gates) + "|"
-        table += str(party0.circuit_stats.num_simd_gates) + "|"
-        table += str(party0.circuit_stats.num_nonsimd_gates) + "|"
-        table += (
-            str(
-                party0.timing_stats.communication.send_num_msgs
-                + party0.timing_stats.communication.recv_num_msgs
+            table += "|"
+            table += (
+                test_case_dir.name
+                + (" (Non-Vectorized)" if not vectorized else "")
+                + "|"
             )
-            + "|"
-        )
-        table += (
-            str(
-                party0.timing_stats.communication.send_size
-                + party0.timing_stats.communication.recv_size
+            table += str(data.circuit_stats.num_gates) + "|"
+            table += str(data.circuit_stats.num_simd_gates) + "|"
+            table += str(data.circuit_stats.num_nonsimd_gates) + "|"
+            table += (
+                str(
+                    data.timing_stats.communication.send_num_msgs
+                    + data.timing_stats.communication.recv_num_msgs
+                )
+                + "|"
             )
-            + " MiB |"
-        )
-        table += str(party0.timing_stats.gates_online.mean) + " ms |"
-        table += str(party0.timing_stats.gates_setup.mean) + " ms |\n"
+            table += (
+                str(
+                    data.timing_stats.communication.send_size
+                    + data.timing_stats.communication.recv_size
+                )
+                + " MiB |"
+            )
+            table += str(data.timing_stats.gates_online.mean) + " ms |"
+            table += str(data.timing_stats.gates_setup.mean) + " ms |\n"
 
     return table
 

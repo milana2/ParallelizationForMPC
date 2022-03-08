@@ -20,6 +20,7 @@ def compile(
     filename: str,
     text: str,
     quiet: bool = True,
+    run_vectorization: bool = True,
     out_dir: Optional[str] = None,
     overwrite_out_dir: bool = False,
 ):
@@ -86,11 +87,12 @@ def compile(
         print(dep_graph)
         print()
 
-    (linear, dep_graph) = vectorize.basic_vectorization_phase_1(linear, dep_graph)
-    if not quiet:
-        print("Basic Vectorization phase 1 (no typing):")
-        print(linear)
-        print()
+    if run_vectorization:
+        (linear, dep_graph) = vectorize.basic_vectorization_phase_1(linear, dep_graph)
+        if not quiet:
+            print("Basic Vectorization phase 1 (no typing):")
+            print(linear)
+            print()
 
     (linear, type_env) = type_check(linear, dep_graph)
     if not quiet:
@@ -102,17 +104,18 @@ def compile(
         print(linear)
         print()
 
-    (linear, type_env, dep_graph) = vectorize.basic_vectorization_phase_2(
-        linear, type_env, dep_graph
-    )
-    if not quiet:
-        print("Type environment after basic vectorization phase 2:")
-        print(type_env)
-        print()
+    if run_vectorization:
+        (linear, type_env, dep_graph) = vectorize.basic_vectorization_phase_2(
+            linear, type_env, dep_graph
+        )
+        if not quiet:
+            print("Type environment after basic vectorization phase 2:")
+            print(type_env)
+            print()
 
-        print("Basic Vectorization phase 2:")
-        print(linear)
-        print()
+            print("Basic Vectorization phase 2:")
+            print(linear)
+            print()
 
     motion_code = motion_backend.render_function(linear, type_env)
     if not quiet:

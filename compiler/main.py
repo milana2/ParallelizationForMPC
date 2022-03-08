@@ -30,6 +30,7 @@ if __name__ == "__main__":
         args.input.name,
         args.input.read(),
         args.quiet,
+        True,  # Only output vectorized code when invoked from the command line
         args.out_dir,
         args.overwrite,
     )
