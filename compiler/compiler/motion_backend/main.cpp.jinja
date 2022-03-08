@@ -11,6 +11,8 @@
 #include "communication/tcp_transport.h"
 #include "statistics/analysis.h"
 
+#include "collect_stats.h"
+
 #include "{{ header_fname }}"
 
 namespace program_options = boost::program_options;
@@ -54,7 +56,7 @@ program_options::variables_map parse_options(const int argc, const char *const a
             program_options::value<std::vector<std::uint32_t>>()->multitoken()
          {%- endif -%}
          {%- if param.default_value is not none -%}
-             ->default_value({{ param.default_value|string|replace('[','{')|replace(']','}') }})
+             ->default_value({{param.plaintext_cpp_type}}({{ param.default_value|string|replace('[','{')|replace(']','}') }}))
          {%- endif -%}
             , "input for {{ param.name }}")
         {%- endfor %} // clang-format on
@@ -194,6 +196,8 @@ int main(const int argc, const char *const argv[])
 
     {%- if(outputs|count) > 1 -%} << ")" {%- endif -%}
     << std::endl;
+
+    std::cout << collect_stats(party->GetBackend()) << std::endl;
 
     return 0;
 }

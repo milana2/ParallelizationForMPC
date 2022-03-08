@@ -6,6 +6,7 @@ import unittest
 import compiler
 
 from . import context as test_context
+from .benchmark import run_benchmark
 
 
 class StagesTestCase(unittest.TestCase):
@@ -96,22 +97,6 @@ class StagesTestCase(unittest.TestCase):
 
             input_fname = os.path.join(test_case_dir.path, "input.py")
 
-            with open(input_fname, "r") as f:
-                input_py = f.read().strip()
-
-            app_path = os.path.join(test_case_dir.path, "motion_app")
-            compiler.compile(f"{test_case_dir.name}.py", input_py, True, app_path, True)
-
-            subprocess.run(
-                ["cmake", "-S", app_path, "-B", os.path.join(app_path, "build")],
-                check=True,
-            )
-
-            subprocess.run(
-                ["cmake", "--build", os.path.join(app_path, "build")],
-                check=True,
-            )
-
             # Collect expected output
             proc = subprocess.run(
                 ["python3", input_fname],
@@ -121,38 +106,11 @@ class StagesTestCase(unittest.TestCase):
             )
             expected_output = proc.stdout
 
-            # Run our program (assume two parties)
-            # We only capture stdout because (hopefully!) both parties generate the same result
-            exe_name = os.path.join(app_path, "build", test_case_dir.name)
-            party0 = subprocess.Popen(
-                [
-                    exe_name,
-                    "--parties",
-                    "0,127.0.0.1,2300",
-                    "1,127.0.0.1,2301",
-                    "--my-id",
-                    "0",
-                ],
-            )
-            party1 = subprocess.Popen(
-                [
-                    exe_name,
-                    "--parties",
-                    "0,127.0.0.1,2300",
-                    "1,127.0.0.1,2301",
-                    "--my-id",
-                    "1",
-                ],
-                stdout=subprocess.PIPE,
-                text=True,
-            )
+            party0, party1 = run_benchmark(test_case_dir.name, test_case_dir.path)
 
-            party0.wait(30)
-            party1.wait(30)
-
-            received_output = party1.stdout.read()
-
-            self.assertEqual(received_output, expected_output)
+            self.assertEqual(party0.output.strip(), party1.output.strip())
+            self.assertEqual(party0.output.strip(), expected_output.strip())
+            self.assertEqual(party1.output.strip(), expected_output.strip())
 
 
 def regenerate_stages():

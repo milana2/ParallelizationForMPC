@@ -12,6 +12,7 @@ import compiler.loop_linear_code as llc
 from compiler.type_analysis import TypeEnv
 from compiler.util import assert_never
 from tests.context import STAGES_DIR, SKIPPED_TESTS
+from tests.benchmark import run_benchmark
 
 
 def cfg_to_image(G: networkx.DiGraph, path: str):
@@ -89,6 +90,45 @@ def type_env_to_table(type_env: TypeEnv) -> str:
     )
 
 
+def build_benchmark_table() -> str:
+    table = "## Benchmark Data"
+    table += "| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages | Communication Size | Runtime | Circuit Generation Time |\n"
+    table += "| - | - | - | - | - | - | - | - |\n"
+
+    for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
+        if test_case_dir.name in SKIPPED_TESTS:
+            continue
+
+        try:
+            party0, party1 = run_benchmark(test_case_dir.name, test_case_dir.path)
+        except:
+            continue
+
+        table += "|"
+        table += test_case_dir.name + "|"
+        table += str(party0.circuit_stats.num_gates) + "|"
+        table += str(party0.circuit_stats.num_simd_gates) + "|"
+        table += str(party0.circuit_stats.num_nonsimd_gates) + "|"
+        table += (
+            str(
+                party0.timing_stats.communication.send_num_msgs
+                + party0.timing_stats.communication.recv_num_msgs
+            )
+            + "|"
+        )
+        table += (
+            str(
+                party0.timing_stats.communication.send_size
+                + party0.timing_stats.communication.recv_size
+            )
+            + " MiB |"
+        )
+        table += str(party0.timing_stats.gates_online.mean) + " ms |"
+        table += str(party0.timing_stats.gates_setup.mean) + " ms |\n"
+
+    return table
+
+
 def main():
     parser = ArgumentParser(
         description="Generate a markdown file with results of the compiler on benchmarks"
@@ -99,6 +139,8 @@ def main():
     os.makedirs(os.path.join(args.path, "images"), exist_ok=True)
 
     md = "# [View the current version of the paper here](paper_SIMD.pdf)\n"
+
+    md += build_benchmark_table() + "\n"
 
     md += "# Compiler stages with different benchmarks\n"
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):

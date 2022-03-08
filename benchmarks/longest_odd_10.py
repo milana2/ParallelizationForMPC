@@ -28,3 +28,6 @@ def longest_odd_10(
         s2 = Seq[i] == Syms[0]
 
     return max_length
+
+
+print(longest_odd_10([0, 1, 0, 1, 0, 1, 0, 1], 8, [0, 1]))

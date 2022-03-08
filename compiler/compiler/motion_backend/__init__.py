@@ -2,6 +2,7 @@ import dataclasses as dt
 import io
 from jinja2 import Environment, FileSystemLoader  # type: ignore
 import os
+import shutil
 from textwrap import indent
 from typing import TypedDict, Union
 
@@ -274,14 +275,14 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
     rendered_cmakelists = cmakelists_template.render(
         app_name=func.name,
         motion_dir=os.path.join(project_root, "MOTION"),
-        cpp_files=["main.cpp"],
+        cpp_files=["main.cpp", "collect_stats.cpp"],
     )
 
     output_dir = os.path.abspath(params["out_dir"])
 
     os.makedirs(output_dir, exist_ok=params["overwrite"])
 
-    with open(os.path.join(output_dir, f"main.cpp"), "w") as main_file:
+    with open(os.path.join(output_dir, "main.cpp"), "w") as main_file:
         main_file.write(rendered_main)
 
     with open(os.path.join(output_dir, f"{func.name}.h"), "w") as header_file:
@@ -289,3 +290,12 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
 
     with open(os.path.join(output_dir, "CMakeLists.txt"), "w") as cmakelists_file:
         cmakelists_file.write(rendered_cmakelists)
+
+    shutil.copyfile(
+        os.path.join(template_dir, "collect_stats.h"),
+        os.path.join(output_dir, "collect_stats.h"),
+    )
+    shutil.copyfile(
+        os.path.join(template_dir, "collect_stats.cpp"),
+        os.path.join(output_dir, "collect_stats.cpp"),
+    )

@@ -9,3 +9,6 @@ def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
         else:
             z = 0
     return z
+
+
+print(chapterfour_figure_12(1, 1))
