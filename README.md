@@ -1,6 +1,7 @@
 # [View the current version of the paper here](paper_SIMD.pdf)
-## Benchmark Data| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages | Communication Size | Runtime | Circuit Generation Time |
-| - | - | - | - | - | - | - | - |
+## Benchmark Data
+| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages | Communication Size | Runtime | Circuit Generation Time |
+|: - | - | - | - | - | - | - | - |
 
 # Compiler stages with different benchmarks
 ## `biometric`
