@@ -1035,7 +1035,7 @@ The concretization function $\gamma: A \rightarrow C$ is defined as an interpret
 MPC Source syntax, as it is standard. The concretization of each one 
 of the base statements is as follows: 
 \[\begin{array}{l}
-\gamma(\x[i,J,k] = \y[i,J,k] \; \mathit{op\_SIMD} \; \z[i,J,k]) = \\ 
+\gamma(\x[i,J,k] = \mathit{op\_SIMD}(\y[i,J,k], \z[i,J,k])) = \\ 
 \x[i,0,k] = \y[i,0,k] \; \mathit{op} \; \z[i,0,k] \;\; || \\
 \x[i,1,k] = \y[i,1,k] \; \mathit{op} \; \z[i,1,k] \;\; || \; ...\; || \\
 \x[i,I-1,k] = \y[i,I-1,k] \; \mathit{op} \; \z[i,I-1,k]
