@@ -23,6 +23,7 @@ def compile(
     run_vectorization: bool = True,
     out_dir: Optional[str] = None,
     overwrite_out_dir: bool = False,
+    protocol: Optional[str] = None,
 ):
     try:
         ast_module = ast.parse(text, filename=filename)
@@ -124,6 +125,15 @@ def compile(
         print()
 
     if out_dir:
+        if protocol not in motion_backend.VALID_PROTOCOLS:
+            raise ValueError(
+                "Invalid protocol: {}. Valid protocols are: {}".format(
+                    protocol, motion_backend.VALID_PROTOCOLS
+                )
+            )
+
         motion_backend.render_application(
-            linear, type_env, {"out_dir": out_dir, "overwrite": overwrite_out_dir}
+            linear,
+            type_env,
+            {"out_dir": out_dir, "overwrite": overwrite_out_dir, "protocol": protocol},
         )

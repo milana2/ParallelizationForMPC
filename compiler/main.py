@@ -21,6 +21,10 @@ def parse_args():
         action="store_true",
         help="Avoid printing output of compiler stages",
     )
+    parser.add_argument(
+        "--protocol",
+        help="Protocol to use when running benchmarks",
+    )
     return parser.parse_args()
 
 
@@ -33,4 +37,5 @@ if __name__ == "__main__":
         True,  # Only output vectorized code when invoked from the command line
         args.out_dir,
         args.overwrite,
+        args.protocol,
     )

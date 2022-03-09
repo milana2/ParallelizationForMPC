@@ -16,7 +16,7 @@ class BenchmarkOutput:
 
 
 def run_benchmark(
-    benchmark_name: str, benchmark_path: str, vectorized=True
+    benchmark_name: str, benchmark_path: str, protocol: str, vectorized=True
 ) -> tuple[BenchmarkOutput, BenchmarkOutput]:
     input_fname = os.path.join(benchmark_path, "input.py")
 
@@ -26,7 +26,9 @@ def run_benchmark(
     app_path = os.path.join(
         benchmark_path, "motion_app" + ("-vectorized" if vectorized else "")
     )
-    compiler.compile(f"{benchmark_name}.py", input_py, True, vectorized, app_path, True)
+    compiler.compile(
+        f"{benchmark_name}.py", input_py, True, vectorized, app_path, True, protocol
+    )
 
     subprocess.run(
         ["cmake", "-S", app_path, "-B", os.path.join(app_path, "build")],

@@ -90,41 +90,46 @@ def type_env_to_table(type_env: TypeEnv) -> str:
     )
 
 
-def build_benchmark_table() -> str:
+def build_benchmark_tables() -> str:
     table = "## Benchmark Data\n"
-    table += "| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |\n"
-    table += "| - | - | - | - | - | - | - | - | - | - |\n"
+    for protocol in compiler.motion_backend.VALID_PROTOCOLS:
+        table += f"\n### {protocol}\n"
 
-    for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
-        if test_case_dir.name in SKIPPED_TESTS:
-            continue
+        table += "| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |\n"
+        table += "| - | - | - | - | - | - | - | - | - | - |\n"
 
-        for vectorized in (True, False):
-            try:
-                data, _ = run_benchmark(
-                    test_case_dir.name, test_case_dir.path, vectorized
-                )
-            except Exception as e:
-                print(
-                    f"Skipping {test_case_dir.name} (vectorized={vectorized}) due to error: {e}"
-                )
+        for test_case_dir in sorted(
+            os.scandir(STAGES_DIR), key=lambda entry: entry.name
+        ):
+            if test_case_dir.name in SKIPPED_TESTS:
                 continue
 
-            table += "|"
-            table += (
-                test_case_dir.name
-                + (" (Non-Vectorized)" if not vectorized else "")
-                + "|"
-            )
-            table += str(data.circuit_stats.num_gates) + "|"
-            table += str(data.circuit_stats.num_simd_gates) + "|"
-            table += str(data.circuit_stats.num_nonsimd_gates) + "|"
-            table += str(data.timing_stats.communication.send_num_msgs) + "|"
-            table += str(data.timing_stats.communication.send_size) + " MiB |"
-            table += str(data.timing_stats.communication.recv_num_msgs) + "|"
-            table += str(data.timing_stats.communication.recv_size) + " MiB |"
-            table += str(data.timing_stats.gates_online.mean) + " ms |"
-            table += str(data.circuit_stats.circuit_gen_time) + " ms |\n"
+            for vectorized in (True, False):
+                try:
+                    data, _ = run_benchmark(
+                        test_case_dir.name, test_case_dir.path, protocol, vectorized
+                    )
+                except Exception as e:
+                    print(
+                        f"Skipping {test_case_dir.name} (vectorized={vectorized}) due to error: {e}"
+                    )
+                    continue
+
+                table += "|"
+                table += (
+                    test_case_dir.name
+                    + (" (Non-Vectorized)" if not vectorized else "")
+                    + "|"
+                )
+                table += str(data.circuit_stats.num_gates) + "|"
+                table += str(data.circuit_stats.num_simd_gates) + "|"
+                table += str(data.circuit_stats.num_nonsimd_gates) + "|"
+                table += str(data.timing_stats.communication.send_num_msgs) + "|"
+                table += str(data.timing_stats.communication.send_size) + " MiB |"
+                table += str(data.timing_stats.communication.recv_num_msgs) + "|"
+                table += str(data.timing_stats.communication.recv_size) + " MiB |"
+                table += str(data.timing_stats.gates_online.mean) + " ms |"
+                table += str(data.circuit_stats.circuit_gen_time) + " ms |\n"
 
     return table
 
@@ -140,7 +145,7 @@ def main():
 
     md = "# [View the current version of the paper here](paper_SIMD.pdf)\n"
 
-    md += build_benchmark_table() + "\n"
+    md += build_benchmark_tables() + "\n"
 
     md += "# Compiler stages with different benchmarks\n"
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):

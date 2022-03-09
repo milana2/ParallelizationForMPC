@@ -91,26 +91,29 @@ class StagesTestCase(unittest.TestCase):
         if not test_context.RUN_EXAMPLE_APPS:
             self.skipTest("Skipping example application compilation")
 
-        for test_case_dir in os.scandir(test_context.STAGES_DIR):
-            if test_case_dir.name in test_context.SKIPPED_TESTS:
-                continue
+        for protocol in compiler.motion_backend.VALID_PROTOCOLS:
+            for test_case_dir in os.scandir(test_context.STAGES_DIR):
+                if test_case_dir.name in test_context.SKIPPED_TESTS:
+                    continue
 
-            input_fname = os.path.join(test_case_dir.path, "input.py")
+                input_fname = os.path.join(test_case_dir.path, "input.py")
 
-            # Collect expected output
-            proc = subprocess.run(
-                ["python3", input_fname],
-                check=True,
-                stdout=subprocess.PIPE,
-                text=True,
-            )
-            expected_output = proc.stdout
+                # Collect expected output
+                proc = subprocess.run(
+                    ["python3", input_fname],
+                    check=True,
+                    stdout=subprocess.PIPE,
+                    text=True,
+                )
+                expected_output = proc.stdout
 
-            party0, party1 = run_benchmark(test_case_dir.name, test_case_dir.path)
+                party0, party1 = run_benchmark(
+                    test_case_dir.name, test_case_dir.path, protocol
+                )
 
-            self.assertEqual(party0.output.strip(), party1.output.strip())
-            self.assertEqual(party0.output.strip(), expected_output.strip())
-            self.assertEqual(party1.output.strip(), expected_output.strip())
+                self.assertEqual(party0.output.strip(), party1.output.strip())
+                self.assertEqual(party0.output.strip(), expected_output.strip())
+                self.assertEqual(party1.output.strip(), expected_output.strip())
 
 
 def regenerate_stages():

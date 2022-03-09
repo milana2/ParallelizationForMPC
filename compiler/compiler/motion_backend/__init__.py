@@ -22,10 +22,13 @@ from .low_level_rendering import (
     render_type,
 )
 
+VALID_PROTOCOLS = ["BooleanGmw", "Bmr"]
+
 
 class OutputParams(TypedDict):
     out_dir: str
     overwrite: bool
+    protocol: str
 
 
 def _render_prototype(func: Function, type_env: TypeEnv) -> str:
@@ -260,7 +263,7 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
             }
             for param in func.parameters
         ],
-        protocol="encrypto::motion::MpcProtocol::kBooleanGmw",  # TODO: make this user-configurable
+        protocol=f"encrypto::motion::MpcProtocol::k{params['protocol']}",
         num_returns=type_env[func.body[-1].value].dims,
         outputs=[render_type(return_type, plaintext=True)]
         if return_type.datatype != DataType.TUPLE
