@@ -4,42 +4,42 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5471|4519|912|4945|0.814 MiB |4945|0.814 MiB |2199.303 ms |387.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |10364.685 ms |4787.0 ms |
-|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |1861.537 ms |256.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2191.216 ms |365.0 ms |
-|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1388.498 ms |187.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1243.782 ms |248.0 ms |
-|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1281.104 ms |185.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1466.688 ms |245.0 ms |
-|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1286.577 ms |268.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |1878.401 ms |682.0 ms |
-|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |3109.099 ms |486.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2770.981 ms |526.0 ms |
-|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2225.652 ms |316.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1979.558 ms |346.0 ms |
-|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2170.629 ms |317.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2165.43 ms |338.0 ms |
+|biometric|5471|4519|912|4945|0.814 MiB |4945|0.814 MiB |1995.154 ms |386.0 ms |
+|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |10279.145 ms |4776.0 ms |
+|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |1734.897 ms |253.0 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |1950.623 ms |342.0 ms |
+|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1424.378 ms |178.0 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1283.905 ms |240.0 ms |
+|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1254.486 ms |177.0 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1369.278 ms |266.0 ms |
+|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1210.149 ms |263.0 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2257.624 ms |650.0 ms |
+|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |3617.445 ms |410.0 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |3139.509 ms |496.0 ms |
+|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2307.232 ms |312.0 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |2061.258 ms |331.0 ms |
+|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2442.709 ms |318.0 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2024.152 ms |340.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4494|3638|816|7865|4.528 MiB |7857|4.527 MiB |614.901 ms |464.0 ms |
-|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5077.182 ms |5626.0 ms |
-|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |195.751 ms |177.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |367.787 ms |319.0 ms |
-|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |146.149 ms |131.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |202.698 ms |225.0 ms |
-|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |179.728 ms |134.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |181.795 ms |227.0 ms |
-|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |429.264 ms |281.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |828.861 ms |780.0 ms |
-|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |543.271 ms |347.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |438.045 ms |491.0 ms |
-|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |341.98 ms |261.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |336.624 ms |296.0 ms |
-|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |413.862 ms |296.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |311.8 ms |296.0 ms |
+|biometric|4494|3638|816|7865|4.528 MiB |7857|4.527 MiB |609.064 ms |448.0 ms |
+|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |4690.028 ms |4959.0 ms |
+|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |200.197 ms |177.0 ms |
+|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |283.113 ms |318.0 ms |
+|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |168.093 ms |127.0 ms |
+|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |231.771 ms |218.0 ms |
+|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |136.11 ms |128.0 ms |
+|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |224.936 ms |222.0 ms |
+|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |332.515 ms |278.0 ms |
+|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |872.593 ms |766.0 ms |
+|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |456.94 ms |341.0 ms |
+|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |523.764 ms |479.0 ms |
+|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |368.296 ms |258.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |366.786 ms |294.0 ms |
+|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |376.542 ms |255.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |345.35 ms |291.0 ms |
 
 # Compiler stages with different benchmarks
 ## `biometric`
@@ -120,7 +120,6 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
         min_index!4 = MUX(!1!2, min_index!3, min_index!2)
     !2!1 = (min_sum!2, min_index!2)
     return !2!1
-
 ```
 ### Dependency graph
 ![](images/biometric_dep_graph.png)
@@ -147,7 +146,6 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
         min_index!4 = MUX(!1!2, min_index!3, min_index!2)
     !2!1 = (min_sum!2, min_index!2)
     return !2!1
-
 ```
 ### Array MUX refinement (dependence graph)
 ![](images/biometric_array_mux_refinement_dep_graph.png)
@@ -181,7 +179,6 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
     !11!0 = drop_dim(min_index!2)
     !2!1 = (!10!0, !11!0)
     return !2!1
-
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
 ![](images/biometric_bv_phase_1_dep_graph.png)
@@ -248,7 +245,6 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
     !11!0 = drop_dim(min_index!2{N!0})
     !2!1 = (!10!0, !11!0)
     return !2!1
-
 ```
 ### Basic Vectorization Phase 2
 ```python
@@ -281,7 +277,6 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
     !11!0 = drop_dim(min_index!2{N!0})
     !2!1 = (!10!0, !11!0)
     return !2!1
-
 ```
 ### Type Environment After Basic Vectorization Phase 2
 | Variable | Type |
@@ -534,7 +529,6 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         !6!2 = (s0!2 and !5!2)
         s0!3 = (!3!2 or !6!2)
     return c!2
-
 ```
 ### Dependency graph
 ![](images/count_102_dep_graph.png)
@@ -557,7 +551,6 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         !6!2 = (s0!2 and !5!2)
         s0!3 = (!3!2 or !6!2)
     return c!2
-
 ```
 ### Array MUX refinement (dependence graph)
 ![](images/count_102_array_mux_refinement_dep_graph.png)
@@ -587,7 +580,6 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s0!3 = (!3!2 or !6!2)
     !15!0 = drop_dim(c!2)
     return !15!0
-
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
 ![](images/count_102_bv_phase_1_dep_graph.png)
@@ -645,7 +637,6 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s0!3{N!0} = (!3!2{N!0} or !6!2{N!0})
     !15!0 = drop_dim(c!2{N!0})
     return !15!0
-
 ```
 ### Basic Vectorization Phase 2
 ```python
@@ -674,7 +665,6 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         c!4[!17!0] = MUX(!2!2[!17!0], c!3[!17!0], c!2[!17!0])
     !15!0 = drop_dim(c!2{N!0})
     return !15!0
-
 ```
 ### Type Environment After Basic Vectorization Phase 2
 | Variable | Type |
@@ -890,7 +880,6 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s1!3 = (!3!2 and !4!2)
         s0!3 = (Seq!0[i!1] == Syms!0[1])
     return scount!2
-
 ```
 ### Dependency graph
 ![](images/count_10s_dep_graph.png)
@@ -915,7 +904,6 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s1!3 = (!3!2 and !4!2)
         s0!3 = (Seq!0[i!1] == Syms!0[1])
     return scount!2
-
 ```
 ### Array MUX refinement (dependence graph)
 ![](images/count_10s_array_mux_refinement_dep_graph.png)
@@ -948,7 +936,6 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s0!3 = (!12!0 == !13!0)
     !14!0 = drop_dim(scount!2)
     return !14!0
-
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
 ![](images/count_10s_bv_phase_1_dep_graph.png)
@@ -1012,7 +999,6 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s0!3{N!0} = (!12!0{N!0} == !13!0{N!0})
     !14!0 = drop_dim(scount!2{N!0})
     return !14!0
-
 ```
 ### Basic Vectorization Phase 2
 ```python
@@ -1045,7 +1031,6 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         scount!4[!17!0] = MUX(!2!2[!17!0], scount!3[!17!0], scount!2[!17!0])
     !14!0 = drop_dim(scount!2{N!0})
     return !14!0
-
 ```
 ### Type Environment After Basic Vectorization Phase 2
 | Variable | Type |
@@ -1296,7 +1281,6 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s2!3 = (!4!2 and !5!2)
         s1!3 = (Seq!0[i!1] == Syms!0[0])
     return c!2
-
 ```
 ### Dependency graph
 ![](images/count_123_dep_graph.png)
@@ -1322,7 +1306,6 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s2!3 = (!4!2 and !5!2)
         s1!3 = (Seq!0[i!1] == Syms!0[0])
     return c!2
-
 ```
 ### Array MUX refinement (dependence graph)
 ![](images/count_123_array_mux_refinement_dep_graph.png)
@@ -1356,7 +1339,6 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s1!3 = (!13!0 == !14!0)
     !15!0 = drop_dim(c!2)
     return !15!0
-
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
 ![](images/count_123_bv_phase_1_dep_graph.png)
@@ -1422,7 +1404,6 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s1!3{N!0} = (!13!0{N!0} == !14!0{N!0})
     !15!0 = drop_dim(c!2{N!0})
     return !15!0
-
 ```
 ### Basic Vectorization Phase 2
 ```python
@@ -1456,7 +1437,6 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         c!4[!18!0] = MUX(!3!2[!18!0], c!3[!18!0], c!2[!18!0])
     !15!0 = drop_dim(c!2{N!0})
     return !15!0
-
 ```
 ### Type Environment After Basic Vectorization Phase 2
 | Variable | Type |
@@ -1683,7 +1663,6 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
         temp!2 = (A!0[i!1] * B!0[i!1])
         sum!3 = (sum!2 + temp!2)
     return sum!2
-
 ```
 ### Dependency graph
 ![](images/inner_product_dep_graph.png)
@@ -1698,7 +1677,6 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
         temp!2 = (A!0[i!1] * B!0[i!1])
         sum!3 = (sum!2 + temp!2)
     return sum!2
-
 ```
 ### Array MUX refinement (dependence graph)
 ![](images/inner_product_array_mux_refinement_dep_graph.png)
@@ -1715,7 +1693,6 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
         sum!3 = (sum!2 + temp!2)
     !4!0 = drop_dim(sum!2)
     return !4!0
-
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
 ![](images/inner_product_bv_phase_1_dep_graph.png)
@@ -1747,7 +1724,6 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
         sum!3{N!0} = (sum!2{N!0} + temp!2{N!0})
     !4!0 = drop_dim(sum!2{N!0})
     return !4!0
-
 ```
 ### Basic Vectorization Phase 2
 ```python
@@ -1762,7 +1738,6 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
         sum!3[!5!0] = (sum!2[!5!0] + temp!2[!5!0])
     !4!0 = drop_dim(sum!2{N!0})
     return !4!0
-
 ```
 ### Type Environment After Basic Vectorization Phase 2
 | Variable | Type |
@@ -1931,7 +1906,6 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
         max_len!3 = length!5
         max_len!4 = MUX(!8!2, max_len!3, max_len!2)
     return max_len!2
-
 ```
 ### Dependency graph
 ![](images/longest_102_dep_graph.png)
@@ -1962,7 +1936,6 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
         max_len!3 = length!5
         max_len!4 = MUX(!8!2, max_len!3, max_len!2)
     return max_len!2
-
 ```
 ### Array MUX refinement (dependence graph)
 ![](images/longest_102_array_mux_refinement_dep_graph.png)
@@ -2001,7 +1974,6 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
         max_len!4 = MUX(!8!2, max_len!3, max_len!2)
     !18!0 = drop_dim(max_len!2)
     return !18!0
-
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
 ![](images/longest_102_bv_phase_1_dep_graph.png)
@@ -2077,7 +2049,6 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
         max_len!4{N!0} = MUX(!8!2{N!0}, max_len!3{N!0}, max_len!2{N!0})
     !18!0 = drop_dim(max_len!2{N!0})
     return !18!0
-
 ```
 ### Basic Vectorization Phase 2
 ```python
@@ -2116,7 +2087,6 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
         max_len!4[!21!0] = MUX(!8!2[!21!0], max_len!3[!21!0], max_len!2[!21!0])
     !18!0 = drop_dim(max_len!2{N!0})
     return !18!0
-
 ```
 ### Type Environment After Basic Vectorization Phase 2
 | Variable | Type |
@@ -2379,7 +2349,6 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
         max_dist!3 = current_dist!5
         max_dist!4 = MUX(!3!2, max_dist!3, max_dist!2)
     return max_dist!2
-
 ```
 ### Dependency graph
 ![](images/max_dist_between_syms_dep_graph.png)
@@ -2402,7 +2371,6 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
         max_dist!3 = current_dist!5
         max_dist!4 = MUX(!3!2, max_dist!3, max_dist!2)
     return max_dist!2
-
 ```
 ### Array MUX refinement (dependence graph)
 ![](images/max_dist_between_syms_array_mux_refinement_dep_graph.png)
@@ -2428,7 +2396,6 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
         max_dist!4 = MUX(!3!2, max_dist!3, max_dist!2)
     !8!0 = drop_dim(max_dist!2)
     return !8!0
-
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
 ![](images/max_dist_between_syms_bv_phase_1_dep_graph.png)
@@ -2478,7 +2445,6 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
         max_dist!4{N!0} = MUX(!3!2{N!0}, max_dist!3{N!0}, max_dist!2{N!0})
     !8!0 = drop_dim(max_dist!2{N!0})
     return !8!0
-
 ```
 ### Basic Vectorization Phase 2
 ```python
@@ -2503,7 +2469,6 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
         max_dist!4[!10!0] = MUX(!3!2[!10!0], max_dist!3[!10!0], max_dist!2[!10!0])
     !8!0 = drop_dim(max_dist!2{N!0})
     return !8!0
-
 ```
 ### Type Environment After Basic Vectorization Phase 2
 | Variable | Type |
@@ -2704,7 +2669,6 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
         max_sum!3 = current_sum!5
         max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
     return max_sum!2
-
 ```
 ### Dependency graph
 ![](images/max_sum_between_syms_dep_graph.png)
@@ -2727,7 +2691,6 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
         max_sum!3 = current_sum!5
         max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
     return max_sum!2
-
 ```
 ### Array MUX refinement (dependence graph)
 ![](images/max_sum_between_syms_array_mux_refinement_dep_graph.png)
@@ -2754,7 +2717,6 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
         max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
     !9!0 = drop_dim(max_sum!2)
     return !9!0
-
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
 ![](images/max_sum_between_syms_bv_phase_1_dep_graph.png)
@@ -2806,7 +2768,6 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
         max_sum!4{N!0} = MUX(!3!2{N!0}, max_sum!3{N!0}, max_sum!2{N!0})
     !9!0 = drop_dim(max_sum!2{N!0})
     return !9!0
-
 ```
 ### Basic Vectorization Phase 2
 ```python
@@ -2832,7 +2793,6 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
         max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
     !9!0 = drop_dim(max_sum!2{N!0})
     return !9!0
-
 ```
 ### Type Environment After Basic Vectorization Phase 2
 | Variable | Type |
