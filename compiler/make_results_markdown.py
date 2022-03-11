@@ -143,11 +143,12 @@ def main():
 
     os.makedirs(os.path.join(args.path, "images"), exist_ok=True)
 
-    md = "# [View the current version of the paper here](paper_SIMD.pdf)\n"
+    md = "# Compiler results data\n"
+    md = "## [View the current version of the paper here](paper_SIMD.pdf)\n"
 
     md += build_benchmark_tables() + "\n"
 
-    md += "# Compiler stages with different benchmarks\n"
+    md += "## Compiler stages with different benchmarks\n"
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
         if test_case_dir.name in SKIPPED_TESTS:
             continue
