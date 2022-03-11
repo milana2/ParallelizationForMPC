@@ -9,4 +9,3 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
         sum!3{N!0} = (sum!2{N!0} + temp!2{N!0})
     !4!0 = drop_dim(sum!2{N!0})
     return !4!0
-

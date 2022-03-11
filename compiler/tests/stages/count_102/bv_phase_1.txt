@@ -22,4 +22,3 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s0!3 = (!3!2 or !6!2)
     !15!0 = drop_dim(c!2)
     return !15!0
-

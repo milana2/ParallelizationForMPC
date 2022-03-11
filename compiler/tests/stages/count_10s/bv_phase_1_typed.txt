@@ -25,4 +25,3 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s0!3{N!0} = (!12!0{N!0} == !13!0{N!0})
     !14!0 = drop_dim(scount!2{N!0})
     return !14!0
-

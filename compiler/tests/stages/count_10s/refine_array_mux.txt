@@ -15,4 +15,3 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s1!3 = (!3!2 and !4!2)
         s0!3 = (Seq!0[i!1] == Syms!0[1])
     return scount!2
-

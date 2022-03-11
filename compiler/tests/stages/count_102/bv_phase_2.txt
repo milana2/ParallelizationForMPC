@@ -23,4 +23,3 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         c!4[!17!0] = MUX(!2!2[!17!0], c!3[!17!0], c!2[!17!0])
     !15!0 = drop_dim(c!2{N!0})
     return !15!0
-

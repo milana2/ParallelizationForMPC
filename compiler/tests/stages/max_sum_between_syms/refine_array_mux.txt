@@ -13,4 +13,3 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
         max_sum!3 = current_sum!5
         max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
     return max_sum!2
-
