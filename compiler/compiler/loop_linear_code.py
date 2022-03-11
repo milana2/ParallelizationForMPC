@@ -78,7 +78,7 @@ class Function:
 
     def __str__(self) -> str:
         parameters = ", ".join([str(parameter) for parameter in self.parameters])
-        body = "\n".join([str(statement) for statement in self.body]) + "\n"
+        body = "\n".join([str(statement) for statement in self.body])
         return (
             f"def {self.name}({parameters})"
             + (f" -> {self.return_type}" if self.return_type is not None else "")
