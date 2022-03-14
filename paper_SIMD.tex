@@ -913,14 +913,14 @@ MPC Source syntax, as it is standard. The concretization of each one
 of the base statements is as follows: 
 \[\begin{array}{l}
 \gamma(\x[i,J,k] = \mathit{op\_SIMD}(\y[i,J,k], \z[i,J,k])) = \\ 
-\x[i,0,k] = \y[i,0,k] \; \mathit{op} \; \z[i,0,k] \;\; || \\
-\x[i,1,k] = \y[i,1,k] \; \mathit{op} \; \z[i,1,k] \;\; || \; ...\; || \\
-\x[i,I-1,k] = \y[i,I-1,k] \; \mathit{op} \; \z[i,I-1,k]
+~~\x[i,0,k] = \y[i,0,k] \; \mathit{op} \; \z[i,0,k] \;\; || \\
+~~~~\x[i,1,k] = \y[i,1,k] \; \mathit{op} \; \z[i,1,k] \;\; || \; ...\; || \\
+~~~~~~\x[i,I-1,k] = \y[i,I-1,k] \; \mathit{op} \; \z[i,I-1,k]
 \end{array}\]
 meaning that the vectorized dimension(s) are expanded into parallel statements. || introduces SIMD (parallel) execution.
 
 The concretization of the FOR statement is as follows:
-\[ \gamma(\texttt{FOR} \; 0 \le i < I: s) = \gamma(s)[0/i] ; \gamma(s)[1/i] ; ... \gamma(s)[I-1/i] \]
+\[ \gamma(\texttt{FOR} \; 0 \le i < I: s) = \gamma(s)[0/i] \; ; \; \gamma(s)[1/i] \; ; \; ... \gamma(s)[I-1/i] \]
 $\gamma$ simply unrolls the loop substituting $i$ with 0, 1, etc. Here ; denotes sequential execution.
 
 \paragraph{Partial Orders}
