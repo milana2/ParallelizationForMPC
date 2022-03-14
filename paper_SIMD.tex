@@ -562,7 +562,27 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 
 \subsection{Taint Analysis}
 
-\ana{Ben?}
+We require that all inputs are marked as either shared or plaintext.  We then determine if intermediate variables are shared through taint analysis with "taintedness" referring to the shared attribute.  Specifically, our compiler follows the following rules:
+\begin{itemize}
+\item If any variable on the right-hand side of an assignment is shared, then the assigned variable is shared
+\item If all variables on the right-hand side of an assignment are plaintext, then the assigned variable is plaintext
+\item Loop counters are always plaintext
+\item Any variables which cannot be determined as shared or plaintext via the above rules are plaintext
+\end{itemize}
+
+The first two rules are standard for taint analysis, and the third rule follows from the MPC problem statement. \ben{Is the explanation for the third rule correct?}  The final rule is needed to handle cycles of plaintext values.  For example, in the below snippet \texttt{sum!2} and \texttt{sum!3} form a dependency cycle and cannot be marked as plaintext through simple taint analysis:
+{\small
+\begin{verbatim}
+plaintext_array = [0, 1, 2, ...]
+sum!1 = 0
+for i in range(0, N):
+    sum!2 = PHI(sum!1, sum!3)
+    sum!3 = sum!2 + plaintext_array[i]
+\end{verbatim}
+}
+\ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}
+
+When converting to MOTION code, any plaintext value used in the right-hand side of a shared assignment is implicitly converted to a shared value for that expression. \ben{Is this necessary to include?}
 
 \section{Vectorization}
 \label{sec:vectorization}
