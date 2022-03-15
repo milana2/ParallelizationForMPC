@@ -4,41 +4,42 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5471|4519|912|4945|0.814 MiB |4945|0.814 MiB |2018.769 ms |449.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |12392.952 ms |4521.0 ms |
-|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |2022.676 ms |288.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2130.121 ms |392.0 ms |
-|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1346.256 ms |210.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1732.707 ms |271.0 ms |
-|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1318.258 ms |202.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1520.068 ms |277.0 ms |
-|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1181.881 ms |299.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2514.47 ms |734.0 ms |
-|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |3095.705 ms |461.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2788.154 ms |566.0 ms |
-|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2349.835 ms |356.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1908.324 ms |380.0 ms |
-|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2256.233 ms |356.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2048.951 ms |380.0 ms |
+|biometric|5471|4519|912|4945|0.814 MiB |4945|0.814 MiB |2225.185 ms |431.0 ms |
+|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |12405.958 ms |4430.0 ms |
+|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |1965.819 ms |285.0 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2157.585 ms |390.0 ms |
+|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1350.381 ms |200.0 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1385.985 ms |275.0 ms |
+|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1473.052 ms |201.0 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1529.898 ms |277.0 ms |
+|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1199.356 ms |301.0 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2069.661 ms |740.0 ms |
+|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |3181.417 ms |461.0 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2930.354 ms |570.0 ms |
+|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2276.634 ms |353.0 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |2007.487 ms |377.0 ms |
+|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2430.254 ms |357.0 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2023.634 ms |385.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4494|3638|816|7865|4.528 MiB |7857|4.527 MiB |663.689 ms |505.0 ms |
-|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |203.206 ms |199.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |315.255 ms |362.0 ms |
-|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |160.057 ms |144.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |217.746 ms |252.0 ms |
-|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |229.298 ms |147.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |232.177 ms |254.0 ms |
-|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |409.993 ms |317.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |1178.177 ms |936.0 ms |
-|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |480.496 ms |406.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |572.28 ms |552.0 ms |
-|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |394.14 ms |297.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |404.073 ms |333.0 ms |
-|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |358.841 ms |294.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |415.875 ms |334.0 ms |
+|biometric|4494|3638|816|7865|4.528 MiB |7857|4.527 MiB |693.874 ms |507.0 ms |
+|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5389.278 ms |5755.0 ms |
+|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |274.869 ms |200.0 ms |
+|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |311.283 ms |362.0 ms |
+|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |243.279 ms |145.0 ms |
+|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |214.935 ms |253.0 ms |
+|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |181.993 ms |145.0 ms |
+|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |192.834 ms |252.0 ms |
+|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |446.259 ms |316.0 ms |
+|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |850.884 ms |863.0 ms |
+|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |480.255 ms |391.0 ms |
+|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |695.036 ms |560.0 ms |
+|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |389.543 ms |292.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |383.854 ms |334.0 ms |
+|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |372.163 ms |292.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |376.714 ms |335.0 ms |
 
 ## Compiler stages with different benchmarks
 ## `biometric`
