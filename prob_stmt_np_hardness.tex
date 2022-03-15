@@ -3,8 +3,7 @@
 
 \ana{Ishaq? Basically, define sequential schedule, then define an equivalent parallel schedule. A parallel schedule is equivalent if it preserves def-use relations in sequential schedule, or in other words, schedules def ahead of the use. Problem is to minimize cost of Parallel schedule.}
 
-\ana{Commenting out this section to have paper compile on Github. Will revert!}
-%\begin{comment}
+\ishaq{TODO: make it consistent with the next section.}
 
 At the lowest level, we have two types of MPC instructions 1) local/non-interactive instruction (i.e. \add) and 2) remote/interactive instruction (i.e. \mul). Let the cost of a single \add instruction be given by a monotonically decreasing $f(n)$, where the argument $n$ is the number of \add instructions being executed in parallel. Similarly the cost of a single \mul is given by a monotonically decreasing function $g(n)$.
 
@@ -39,85 +38,38 @@ Note that we use an MPC-Source control flow graph (CFG) $G'(V', E')$ along with 
 \subsection{Scheduling is NP-hard}
 \label{sec:np}
 
-\ana{Commented out this section to have paper compile on Github. Will revert!}
+\ishaq{TODO: need make amortized cost a function (like in the problem statement above), it is proving to be tricky.}
 
-\begin{comment}
-\ishaq{The follow text is all from Linsay's thesis}.
-\brevised{
-We consider two operations, call them $A$ and $M$. $A$ and $M$ are two abstract MPC instruction, 
-but as an example, $A$ stands for the ADD MPC instruction 
-and $M$ stands for the MUL instruction. Each instruction in the program is either an $A$-instruction or
-an $M$-instruction. In order to benefit from parallelization/amortization, we must schedule two or more 
-$A$-instructions in the same parallel node (or two or more $M$-instructions in the same parallel node). 
-Scheduling $A$-instructions in parallel with $M$-instruction does not benefit from amortization.
-It incurs the exact same cost as scheduling the $A$-instructions in a node $P_A$, scheduling the $M$-instructions 
-in a node $P_M$, and having $P_A$ precede $P_M$ in the parallel schedule. This is the difference 
-between classical scheduling, as studied in parallel computing, and MPC scheduling. 
+We consider two operations, call them $A$ and $M$. $A$ and $M$ are two abstract MPC instruction, but as an example, $A$ stands for the ADD MPC instruction and $M$ stands for the MUL instruction. Each instruction in the program is either an $A$-instruction or an $M$-instruction. In order to benefit from parallelization/amortization, we must schedule two or more $A$-instructions in the same parallel node (or two or more $M$-instructions in the same parallel node). We also assume that scheduling $A$-instructions in parallel with $M$-instruction does not benefit from amortization\footnote{this is not strictly true, but assuming it, e.g. as in \cite{Ishaq2019, Demmler2015ABYA, Mohassel2018}, helps with the exposition.}. It incurs the exact same cost as scheduling the $A$-instructions in a node $P_A$, scheduling the $M$-instructions in a node $P_M$, and having $P_A$ precede $P_M$ in the parallel schedule.
 
-In our theoretical treatment, we make the following assumptions:
+We use the following cost model:
 
 \begin{enumerate}
-
-\item $A$ and $M$ are of equal cost, 1 unit.
-\item There is unlimited bandwidth---i.e., a single $A$-instruction (or $M$-instruction) costs as much as $N$ amortized $A$-instructions 
-(or $M$-instructions), namely 1 unit.
- 
+    \item $A$ costs $\alpha$ units and $M$ costs $\beta$ unites.
+    \item There is unlimited bandwidth i.e. a single $A$-instruction (or $M$-instruction) costs as much as $N$ amortized $A$-instructions (or $M$-instructions), concretely either $\alpha$ unites or $\beta$ units.
 \end{enumerate}
 
-%  Furthermore the run time cost of 
-% computing operations of the same type remains the same regardless of the number of operations that are run.
-% Roughly speaking, 1 A operation costs the same as 100 A operations and 1000 A operations. 
+Consider a loop body that consists of $n$ sequences: $S_1$, ... $S_n$ of $A$ and $M$ instructions. More precisely, the loop body is such that its instructions can be grouped into such sequences. $S_1$, ... $S_n$ can execute in parallel, however, all instructions within a sequence must execute sequentially. For example, consider the three sequences (the right arrow indicates a \emph{dependence}, meaning that the source node must execute before the target node): 
 
-Consider a loop body that consists of $n$ sequences: $S_1$, ... $S_n$ of $A$ and $M$ instructions. 
-More precisely, the loop body is such that its instructions can be grouped into such sequences. 
-$S_1$, ... $S_n$ can execute in parallel, however, all instructions within a sequence must 
-execute sequentially. For example, consider the three sequences (the right arrow indicates a \emph{dependence},
-meaning that the source node must execute before the target node): 
 \begin{enumerate}
-\item $A \rightarrow M \rightarrow A$
-\item $A \rightarrow A \rightarrow A$
-\item $M \rightarrow A \rightarrow M$
+    \item $A \rightarrow M \rightarrow A$
+    \item $A \rightarrow A \rightarrow A$
+    \item $M \rightarrow A \rightarrow M$
 \end{enumerate} 
 
-A \emph{schedule} $P: P_1 \rightarrow P_2 \dots \rightarrow P_k$ is such that for each sequence 
-$S_i$ in the set, if $S_i[k]$ precedes $S_i[k']$ in $S_i$ then $S_i[k]$ is scheduled in node $P_l$, $S_i[k]$ 
-is scheduled in node $P_{l'}$, and $P_l$ precedes $P_{l'}$ in $P$. 
+A \emph{schedule} $P: P_1 \rightarrow P_2 \dots \rightarrow P_k$ is such that for each sequence $S_i$ in the set, if $S_i[j]$ precedes $S_i[j']$ in $S_i$ then $S_i[j]$ is scheduled in node $P_\ell$, $S_i[j']$ is scheduled in node $P_{\ell'}$, and $P_\ell$ precedes $P_{l\ell'}$ in $P$. 
 
 The cost of a schedule $P$ is 
 
 \begin{equation}
-\mathit{cost}(P) = \sum_{i=1}^k \mathit{cost}(P_i)
+    \mathit{cost}(P) = \sum_{i=1}^k \mathit{cost}(P_i)
 \end{equation}
 
-where $\mathit{cost}(P_i) = 1$ if $P_i$ consists of $A$-instructions only, or $M$-instructions only, 
-and $\mathit{cost}(P_i) = 2$ if $P_i$ mixes $A$-instructions and $M$-instructions. 
+where $\mathit{cost}(P_i) = \alpha$ if $P_i$ consists of $A$-instructions only, $\beta$ if $P_i$ consists of $M$-instructions only, and $\mathit{cost}(P_i) = \alpha + \beta$ if $P_i$ mixes $A$-instructions and $M$-instructions. 
 
-The problem is to find a schedule $P$ with \emph{minimal cost}. For example, 
-a schedule with minimal cost for the sequences above is
-\[ A(1), A(2) \rightarrow M(1), A(2), M(3) \rightarrow A(1), A(2), A(3) \rightarrow M(3) \]
-(The parentheses above indicate the sequence where the instruction comes from: (1), (2), or (3).)
-The cost of this schedule is 5. 
+The problem is to find a schedule $P$ with \emph{minimal cost}. For example, a schedule with minimal cost for the sequences above is \[ A(1), A(2) \rightarrow M(1), A(2), M(3) \rightarrow A(1), A(2), A(3) \rightarrow M(3) \] (The parentheses above indicate the sequence where the instruction comes from: (1), (2), or (3).) The cost of this schedule is $3\alpha + 2\beta$. 
 
-The problem of finding a schedule $P$ with a minimal $cost(P)$ for a given loop body has been shown
-to be an NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, 
-a known NP-Hard problem\cite{Maier1978},\cite{Vazirani2010}. The shortest common supersequence problem is as follows: 
-given two or more sequences find the the shortest sequence that contains all of the original sequences. This can be solved
-in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the 
-number of sequences. For our problem $n$ is the maximum length of a node and $k$ is the number
-of total number of nodes. %\ana{I think it is clear without additional explanation...}
-%\ana{Also, add the full statement of the problem here. Now it's not clear what's NP-hard, what's n, what's k, etc.?}
-%\lindsey{not exactly sure what need to go it there, but does that make it clearer?}
+The problem of finding a schedule $P$ with a minimal $cost(P)$ for a given loop body has been shown to be an NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, a known NP-Hard problem\cite{Maier1978},\cite{Vazirani2010}. The shortest common supersequence problem is as follows: {\it given two or more sequences find the the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. For our problem $n$ is the maximum length of a node and $k$ is the number of total number of nodes.
 
-To see the reduction, 
-suppose $P$ is a schedule with minimal cost (computed by a black-box algorithm). 
-We can derive a schedule $P'$ with the same cost as $P$, by mapping each mixed node $P_i \in P$ 
-to two consecutive nodes in $P'$: an $A$-instruction node followed by an $M$-instruction node.
-Clearly, $P'$, which now is a sequence of $A$'s and $M$'s, is a supersequence of each sequence 
-$S_i$, i.e., $P'$ is a common supersequence 
-of $S_1 \dots S_n$. It is also a shortest common supersequence. (To see this, suppose, a 
-shorter common supersequence, $P''$, exists. $P''$ is a schedule of $S_1 \dots S_n$
-and the $\mathit{cost}(P'')$ equals the length of $P''$. Since $P'$ is longer than
-$P''$, and $\mathit{cost}(P') = \mathit{cost}(P)$, that means $\mathit{cost}(P'') < \mathit{cost}(P)$, 
-which is a contradiction since $P$ is a schedule with minimal cost.)
-}
-\end{comment}
+To see the reduction, suppose $P$ is a schedule with minimal cost (computed by a black-box algorithm). We can derive a schedule $P'$ with the same cost as $P$, by mapping each mixed node $P_i \in P$ to two consecutive nodes in $P'$: an $A$-instruction node followed by an $M$-instruction node. Clearly, $P'$, which now is a sequence of $A$'s and $M$'s, is a supersequence of each sequence $S_i$, i.e., $P'$ is a common supersequence of $S_1 \dots S_n$. It is also a shortest common supersequence. To see this, let $X$ and $Y$ denote, respectively, the number of $A$ and $M$ nodes in $P'$. The cost of $P'$, and $P$, is $X \cdot \alpha + Y \cdot \beta$. Now suppose, there exists a shorter common supersequence, $P''$ that consists of $X'$ nodes of type $A$-instructions $Y'$ nodes of type $M$-instructions. Since $P''$ is shorter than $P'$, therefore $X' + Y' < X + Y$, and $X' \cdot \alpha + Y' \cdot \beta < X \cdot \alpha + Y \cdot \beta$ i.e. $\mathit{cost}(P'') < \mathit{cost}(P')$. But $\mathit{cost}(P') = \mathit{cost}(P)$ and $\mathit{cost}(P)$ is the optimal cost.  Therefore $\mathit{cost}(P'') < \mathit{cost}(P')$ is contradiction and no such $P''$ exists.
+
