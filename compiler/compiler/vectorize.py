@@ -472,20 +472,12 @@ def _basic_vectorization_phase_1(
                 elif isinstance(stmt.rhs, llc.UnaryOp):
                     stmt.rhs.operand = replace_operand(stmt.rhs.operand, stmt)
                 elif isinstance(stmt.rhs, llc.List):
-                    replaced = [replace_atom(atom, stmt) for atom in stmt.rhs.items]
                     stmt.rhs = llc.List(
-                        [
-                            v.array if isinstance(v, VectorizedAccess) else v
-                            for v in replaced
-                        ]
+                        [replace_atom(atom, stmt) for atom in stmt.rhs.items]
                     )
                 elif isinstance(stmt.rhs, llc.Tuple):
-                    replaced = [replace_atom(atom, stmt) for atom in stmt.rhs.items]
                     stmt.rhs = llc.Tuple(
-                        [
-                            v.array if isinstance(v, VectorizedAccess) else v
-                            for v in replaced
-                        ]
+                        [replace_atom(atom, stmt) for atom in stmt.rhs.items]
                     )
                 elif isinstance(stmt.rhs, llc.Mux):
                     stmt.rhs.false_value = replace_operand(stmt.rhs.false_value, stmt)
