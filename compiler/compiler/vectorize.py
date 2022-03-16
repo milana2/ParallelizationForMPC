@@ -416,6 +416,7 @@ def _basic_vectorization_phase_1(
             elif isinstance(atom, llc.Constant):
                 return atom
             else:
+                assert not isinstance(atom, llc.VectorizedAccess)
                 assert_never(atom)
 
         def replace_subscript(
