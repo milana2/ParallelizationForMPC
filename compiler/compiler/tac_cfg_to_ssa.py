@@ -170,6 +170,7 @@ def rename_variables(result: ssa.Function) -> None:
         elif isinstance(atom, ssa.Constant):
             return atom
         else:
+            assert not isinstance(atom, ssa.VectorizedAccess)
             assert_never(atom)
 
     def rename_operand(operand: ssa.Operand) -> ssa.Operand:

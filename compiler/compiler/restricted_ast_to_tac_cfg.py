@@ -120,6 +120,7 @@ def _build_expression_as_var(
         builder.add_assignment(tac_cfg.Assign(lhs=var, rhs=atom))
         return var
     else:
+        assert not isinstance(atom, tac_cfg.VectorizedAccess)
         assert_never(atom)
 
 
