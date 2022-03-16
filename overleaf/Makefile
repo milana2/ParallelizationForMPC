@@ -23,4 +23,4 @@ quick: *.tex
 	pdflatex -synctex=-1 -shell-escape paper_SIMD.tex paper_SIMD.pdf
 
 clean:
-	rm -rf *.aux *.bbl *.blg *.brf *.log *.out *.toc *.synctex latex.out
+	rm -rf *.aux *.bbl *.blg *.brf *.log *.out *.toc *.synctex *.out *.bcf *.xml
