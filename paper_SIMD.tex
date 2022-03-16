@@ -1179,7 +1179,7 @@ In addition to the changes for the handling of target-less phi-nodes, Basic Vect
 \item same-level $X \rightarrow Y$. We do nothing, just propagate the array, which happens to be of the right dimension. 
 %\ana{There might be some opportunities to do copy propagation optimization and save some cycles, but let's leave this for later.}
 
-\item inner-to-outer $X \rightarrow Y$. If dimensionality of the loop enclosure of $X$ is greater than the canonical dimensionality of the array, then add \emph{drop\_dim(...)} at $Y$, as in Basic Vectorization. Otherwise, do nothing.
+\item inner-to-outer $X \rightarrow Y$. If dimensionality of the loop enclosure of $X$ is greater than the canonical dimensionality of the array, then add \emph{drop\_dim(...)} at $Y$, as in Basic Vectorization. Otherwise, do nothing. \ana{I think it will be better to add drop dim and raise dim as in the previous case but change the semantics of both as written here.}
 
 \item outer-to-inner $X \rightarrow Y$. If dimensionality of loop enclosure of $Y$ is greater than the canonical dimensionality of the array, then add \emph{raise\_dim(...)} (at $X$) as in Basic Vectorization. Otherwise, do nothing.
 
