@@ -26,9 +26,9 @@ from .ast_shared import (
 from .util import assert_never
 
 
-Atom = Union[Var, Constant]
+Atom = Union[Var, Constant, VectorizedAccess]
 
-Operand = Union[Atom, Subscript, "BinOp", "UnaryOp", VectorizedAccess]
+Operand = Union[Atom, Subscript, "BinOp", "UnaryOp"]
 
 
 class BinOp(_BinOp[Operand]):
@@ -89,7 +89,6 @@ AssignRHS = Union[
     Update,
     "LiftExpr",
     "DropDim",
-    VectorizedAccess,
 ]
 
 
