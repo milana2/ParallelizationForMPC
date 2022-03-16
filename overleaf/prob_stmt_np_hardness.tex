@@ -3,53 +3,28 @@
 
 \ana{Ishaq? Basically, define sequential schedule, then define an equivalent parallel schedule. A parallel schedule is equivalent if it preserves def-use relations in sequential schedule, or in other words, schedules def ahead of the use. Problem is to minimize cost of Parallel schedule.}
 
-\ishaq{TODO: make it consistent with the next section.}
+At the lowest level, we have two types of MPC instructions (also called \emph{gates} in similar works) 1) local/non-interactive instruction (i.e. an addition instruction $A$) and 2) remote/interactive instruction (i.e. a multiplication instruction $M$). Each instruction in the program is either an $A$-instruction or an $M$-instruction.
 
-At the lowest level, we have two types of MPC instructions 1) local/non-interactive instruction (i.e. \add) and 2) remote/interactive instruction (i.e. \mul). Let the cost of a single \add instruction be given by a monotonically decreasing $f(n)$, where the argument $n$ is the number of \add instructions being executed in parallel. Similarly the cost of a single \mul is given by a monotonically decreasing function $g(n)$.
-
-Given a serial schedule (a linear graph) of an MPC program i.e. a sequence of instructions $\mathcal{S}:=(S_1, \dots, S_n)$, where $S_i \in \{\text{\add, \mul}\}, 1 \leq i \leq n$, and a def-use dependency graph $G(V, E)$ corresponding to $\mathcal{S}$, our task is to construct a parallel schedule (another linear graph) $\mathcal{P} := (P_1, \dots, P_n)$ observing the following conditions:
-
-\begin{enumerate}
-    \item Multiple, not necessarily continuous instructions of the same type (i.e. either \add or \mul) from $\mathcal{S}$ can be grouped into a single $P_i$  However, all such instructions must be of the same type (either \add or \mul).
-    \item Def-use dependencies of the graph $G(V, E)$ are should be preserved i.e. if instructions $S_i, S_j, i < j$ are a def-use (an edge exists from $S_i$ to $S_j$ in $G$), then they can only be mapped to $P_{i'}, P_{j'}, i' < j'$.
-\end{enumerate}
-
-Our goal is to construct minimize the height of the graph $\mathcal{P}$. Indeed, a graph $\mathcal{P}$ with minimum height will maximize parallelization.
-
-\paragraph{Correctness} Correctness of $\mathcal{P}$ is guaranteed by definition. Since def-use dependencies are preserved, the function (being computed) remains the same.
-
-\paragraph{Cost Comparison} For the sequential schedule $\mathcal{S}$ consisting of $L$ local and $R$ remote instructions, the total cost is $\mathit{cost}(\mathcal{S}) = L \cdot f(1) + R \cdot g(1)$. In the extreme case where all $L$ and all $R$ instructions can be parallelized, the cost of $\mathcal{P}$ is $\mathit{cost}(\mathcal{P}) = L \cdot f(L) + R \cdot g(R)$. Since both $f$ and $g$ are monotonically decreasing, $\mathit{cost}(\mathcal{P}) < \mathit{cost}(\mathcal{S})$. Cost of all other parallel schedules lies between the extremes of $\mathit{cost}(\mathcal{S})$ and $\mathit{cost}(\mathcal{P})$.
-
-Note that we use an MPC-Source control flow graph (CFG) $G'(V', E')$ along with def-use graph $G(V,E)$ to construct $\mathcal{P}$. We consider a linearized MPC schedule $\mathcal{S}$ above for ease of exposition. The argument becomes slightly more involved when dealing with a graph $G'$ that may contain cycles.
-
-% Given a def-use dependency graph $G(V, E)$ that is constructed from for the input program. Each vertex/node in this graph represents an operation/instruction in the program and an edge represents dependence i.e. an edge from $V_1$ to $V_2$ means the result of operation in $V_1$ is used in the operation in $V_2$. To build a parallel schedule, we translate this graph $G(V, E)$ into another dependency graph $G'(V', E')$ such that:
-
-% \begin{enumerate}
-%     \item We collapse multiple vertices of the same type (i.e. same operation) in $V$ into a single vertex in $V'$.
-%     \item dependencies are not broken i.e. If there is an edge from $V_1$ to $V_2$ ($V_1, V_2 \in V$), and we put them in vertices $V'_1, V'_2 \in G'$ respectively, then an edge must exist from $V'_1$ to $V'_2$.
-% \end{enumerate}
-
-% We want to build a graph $G'$ with fewest possible vertices since fewer vertices means more parallelization. 
-
-%\ishaq{TODO: @Ana: I am still confused about what prevents a reviewer from saying, "you argue correctness of the schedule from unrolled MPC, you don't argue it for the pre-unrolled CFG that you use". Please comment.} \ana{The correctness proof answer this question. The unrolled schedule is the \emph{concretization} of MPC source. We define (1) the obvious $\gamma$, (2) we define partial order over MPC source codes (this is our abstract domain $A$), and (3) a partial order over unrolled schedules. Then we prove two theorems that $A \le A' \Rightarrow \gamma(A) \subseteq \gamma(A')$ and that the MPC source $\le$ Vectorized MPC source.}
-
-%\end{comment}
-
-\subsection{Scheduling is NP-hard}
-\label{sec:np}
-
-\ishaq{TODO: need make amortized cost a function (like in the problem statement above), it is proving to be tricky.}
-
-We consider two operations, call them $A$ and $M$. $A$ and $M$ are two abstract MPC instruction, but as an example, $A$ stands for the ADD MPC instruction and $M$ stands for the MUL instruction. Each instruction in the program is either an $A$-instruction or an $M$-instruction. In order to benefit from parallelization/amortization, we must schedule two or more $A$-instructions in the same parallel node (or two or more $M$-instructions in the same parallel node). We also assume that scheduling $A$-instructions in parallel with $M$-instruction does not benefit from amortization\footnote{this is not strictly true, but assuming it, e.g. as in \cite{Ishaq2019, Demmler2015ABYA, Mohassel2018}, helps with the exposition.}. It incurs the exact same cost as scheduling the $A$-instructions in a node $P_A$, scheduling the $M$-instructions in a node $P_M$, and having $P_A$ precede $P_M$ in the parallel schedule.
-
-We use the following cost model:
+In order to benefit from parallelization/amortization, we must schedule two or more $A$-instructions in the same parallel node (or two or more $M$-instructions in the same parallel node). We also assume that scheduling $A$-instructions in parallel with $M$-instruction does not benefit from amortization\footnote{this is not strictly true, but assuming it, e.g. as in \cite{Ishaq2019, Demmler2015ABYA, Mohassel2018}, helps with the exposition.}. It incurs the exact same cost as scheduling the $A$-instructions in a node $P_A$, scheduling the $M$-instructions in a node $P_M$, and having $P_A$ precede $P_M$ in the parallel schedule. We use the following cost model:
 
 \begin{enumerate}
     \item $A$ costs $\alpha$ units and $M$ costs $\beta$ unites.
     \item There is unlimited bandwidth i.e. a single $A$-instruction (or $M$-instruction) costs as much as $N$ amortized $A$-instructions (or $M$-instructions), concretely either $\alpha$ unites or $\beta$ units.
 \end{enumerate}
 
-Consider a loop body that consists of $n$ sequences: $S_1$, ... $S_n$ of $A$ and $M$ instructions. More precisely, the loop body is such that its instructions can be grouped into such sequences. $S_1$, ... $S_n$ can execute in parallel, however, all instructions within a sequence must execute sequentially. For example, consider the three sequences (the right arrow indicates a \emph{dependence}, meaning that the source node must execute before the target node): 
+% Let the cost of a single \add ~instruction be given by a monotonically decreasing $f(n)$, where the argument $n$ is the number of \add ~instructions being executed in parallel. Similarly the cost of a single \mul ~is given by a monotonically decreasing function $g(n)$.
+
+% Given a serial schedule (a linear graph) of an MPC program i.e. a sequence of instructions $\mathcal{S}:=(S_1, \dots, S_n)$, where $S_i \in \{A, M\}, 1 \leq i \leq n$, and a def-use dependency graph $G(V, E)$ corresponding to $\mathcal{S}$, our task is to construct a parallel schedule (another linear graph) $\mathcal{P} := (P_1, \dots, P_n)$ observing the following conditions:
+
+% \begin{enumerate}
+%     \item Multiple, not necessarily continuous instructions of the same type (i.e. either $A$ or $M$) from $\mathcal{S}$ can be grouped into a single $P_i$.
+%     \item Def-use dependencies of the graph $G(V, E)$ should be preserved i.e. if instructions $S_i, S_j, i < j$ are a def-use (an edge exists from $S_i$ to $S_j$ in $G$), then they can only be mapped to $P_{i'}, P_{j'}, i' < j'$.
+% \end{enumerate}
+
+% Our goal is to construct minimize the height of the graph $\mathcal{P}$. Indeed, a graph $\mathcal{P}$ with minimum height will maximize parallelization.
+
+\ishaq{Should be better to model this as a tree, and the branches (before they merge) can be executed in parallel, Right now it is too imprecise. Ideas please?}
+Consider an MPC program as a set of $n$ sequences: $\{S_1, \dots, S_n\}$. Each $S_i$ is a tuple of $A$ and $M$ instructions.\footnote{Every MPC program can be transformed into such a set of sequences.} All elements of the set $\{S_1, \dots, S_n\}$ can execute in parallel, however, all instructions within an element (i.e. sequence) must execute sequentially. For example, consider the three sequences, right arrow indicates a \emph{dependence}, meaning that the source node must execute before the target node: 
 
 \begin{enumerate}
     \item $A \rightarrow M \rightarrow A$
@@ -57,7 +32,7 @@ Consider a loop body that consists of $n$ sequences: $S_1$, ... $S_n$ of $A$ and
     \item $M \rightarrow A \rightarrow M$
 \end{enumerate} 
 
-A \emph{schedule} $P: P_1 \rightarrow P_2 \dots \rightarrow P_k$ is such that for each sequence $S_i$ in the set, if $S_i[j]$ precedes $S_i[j']$ in $S_i$ then $S_i[j]$ is scheduled in node $P_\ell$, $S_i[j']$ is scheduled in node $P_{\ell'}$, and $P_\ell$ precedes $P_{l\ell'}$ in $P$. 
+A \emph{schedule} $P: P_1 \rightarrow P_2 \dots \rightarrow P_k$ is such that for each sequence $S_i$ in the set, if $S_i[j]$ precedes $S_i[j']$ in $S_i$ then $S_i[j]$ is scheduled in node $P_\ell$, $S_i[j']$ is scheduled in node $P_{\ell'}$, and $P_\ell$ precedes $P_{\ell'}$ in $P$. 
 
 The cost of a schedule $P$ is 
 
@@ -65,9 +40,26 @@ The cost of a schedule $P$ is
     \mathit{cost}(P) = \sum_{i=1}^k \mathit{cost}(P_i)
 \end{equation}
 
-where $\mathit{cost}(P_i) = \alpha$ if $P_i$ consists of $A$-instructions only, $\beta$ if $P_i$ consists of $M$-instructions only, and $\mathit{cost}(P_i) = \alpha + \beta$ if $P_i$ mixes $A$-instructions and $M$-instructions. 
+where $\mathit{cost}(P_i) = \alpha$ if $P_i$ consists of $A$-instructions only, it is $\beta$ if $P_i$ consists of $M$-instructions only, and it is $(\alpha + \beta)$ if $P_i$ mixes $A$-instructions and $M$-instructions. 
 
-The problem is to find a schedule $P$ with \emph{minimal cost}. For example, a schedule with minimal cost for the sequences above is \[ A(1), A(2) \rightarrow M(1), A(2), M(3) \rightarrow A(1), A(2), A(3) \rightarrow M(3) \] (The parentheses above indicate the sequence where the instruction comes from: (1), (2), or (3).) The cost of this schedule is $3\alpha + 2\beta$. 
+The problem is to find a schedule $P$ with \emph{minimal cost}. For example, a schedule with minimal cost for the sequences above is 
+
+$$ 
+A(1), A(2) \rightarrow M(1), A(2), M(3) \rightarrow A(1), A(2), A(3) \rightarrow M(3)
+$$
+
+The parentheses above indicate the sequence where the instruction comes from: (1), (2), or (3). The cost of this schedule is $3\alpha + 2\beta$.
+
+\paragraph{Correctness} Correctness of $\mathcal{P}$ is guaranteed by definition. Since \emph{dependencies} are preserved, the computed function remains the same.
+
+% \paragraph{Cost Comparison} For the sequential schedule $\mathcal{S}$ consisting of $L$ local and $R$ remote instructions, the total cost is $\mathit{cost}(\mathcal{S}) = L \cdot f(1) + R \cdot g(1)$. In the extreme case where all $L$ and all $R$ instructions can be parallelized, the cost of $\mathcal{P}$ is $\mathit{cost}(\mathcal{P}) = L \cdot f(L) + R \cdot g(R)$. Since both $f$ and $g$ are monotonically decreasing, $\mathit{cost}(\mathcal{P}) < \mathit{cost}(\mathcal{S})$. Cost of all other parallel schedules lies between the extremes of $\mathit{cost}(\mathcal{S})$ and $\mathit{cost}(\mathcal{P})$.
+
+% Note that we use an MPC-Source control flow graph (CFG) $G'(V', E')$ along with def-use graph $G(V,E)$ to construct $\mathcal{P}$. We consider a linearized MPC schedule $\mathcal{S}$ above for ease of exposition. The argument becomes slightly more involved when dealing with a graph $G'$ that may contain cycles.
+
+\subsection{Scheduling is NP-hard}
+\label{sec:np}
+
+\ishaq{TODO: rather than multiple amortized instructions costing the same as a single non-amortized instruction, Assume a function monotonically decreasing function for costs and prove the theorem using that function.}
 
 The problem of finding a schedule $P$ with a minimal $cost(P)$ for a given loop body has been shown to be an NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, a known NP-Hard problem\cite{Maier1978},\cite{Vazirani2010}. The shortest common supersequence problem is as follows: {\it given two or more sequences find the the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. For our problem $n$ is the maximum length of a node and $k$ is the number of total number of nodes.
 
