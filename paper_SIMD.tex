@@ -518,7 +518,22 @@ All discussion generalizes to arbitrarily large loop nests.
 
 \subsection{Semantic Analysis}
 
-\ana{Benjamin?}
+Our compiler performs the following semantic analysis steps:
+
+\begin{enumerate}
+  \item
+        \textbf{Parsing}:
+        Use Python's \texttt{ast} module to parse the input source code to a Python AST.
+  \item
+        \textbf{Syntax checking}:
+        Ensure that the AST matches a restricted subset that our compiler supports.
+        This step outputs an instance of the \texttt{restricted\_ast.Function} class, which represents our restricted subset of the Python AST.
+  \item
+        \textbf{3-address CFG conversion}: TODO
+  \item
+        \textbf{SSA conversion}:
+        Convert the 3-address CFG to SSA with Cytron's algorithm.
+\end{enumerate}
 
 \subsection{MUX Nodes and Pseudo $\phi$-nodes}
 
