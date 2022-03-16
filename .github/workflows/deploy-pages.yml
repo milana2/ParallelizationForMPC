@@ -43,8 +43,8 @@ jobs:
         run: ./compiler/make_results_markdown.py static
       - name: Build paper
         run: |
-          yes '' | pdflatex paper_SIMD.tex || true
-          mv paper_SIMD.pdf static || true
+          yes '' | make -C overleaf || true
+          mv overleaf/paper_SIMD.pdf static || true
       - name: Push to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
