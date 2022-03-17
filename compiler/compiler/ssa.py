@@ -44,6 +44,7 @@ class Phi:
     lhs: Union[Var, VectorizedAccess]
     rhs_false: Union[Var, VectorizedAccess]
     rhs_true: Union[Var, VectorizedAccess]
+    targetless: bool = False
 
     def rhs_vars(self) -> list[Var]:
         if isinstance(self.rhs_false, Var):
@@ -66,7 +67,9 @@ class Phi:
         return id(self)
 
     def __str__(self) -> str:
-        return f"{self.lhs} = Φ({self.rhs_false}, {self.rhs_true})"
+        return f"{self.lhs} = Φ({self.rhs_false}, {self.rhs_true})" + (
+            " (targetless)" if self.targetless else ""
+        )
 
 
 @dataclass(eq=False)

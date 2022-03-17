@@ -221,6 +221,11 @@ def _remove_back_edge(A_name: Union[str, int], dep_graph: DepGraph, j: llc.For) 
             and isinstance(A_use.lhs, llc.Var)  # needed for mypy
             and A_use.lhs.name == A_name
         ):
+            A_use.targetless = True
+            """
+            NOTE: because we want to keep the back edges for basic vectorization, the below
+            code to remove all back edges is commented out.
+
             assert dep_graph.enclosing_loops[A_use][-1] == j
             A_defs: list[DepNode] = list(dep_graph.def_use_graph.predecessors(A_use))
             for A_def in A_defs:
@@ -233,6 +238,7 @@ def _remove_back_edge(A_name: Union[str, int], dep_graph: DepGraph, j: llc.For) 
                 assert A_def.lhs.name == A_name
                 if dep_graph.is_back_edge(A_def, A_use):
                     dep_graph.def_use_graph.remove_edge(A_def, A_use)
+            """
 
 
 def _prune_edges_from_loop(i: list[llc.For], j: llc.For, dep_graph: DepGraph) -> None:
@@ -491,10 +497,9 @@ def _basic_vectorization_phase_1(
                 elif isinstance(stmt.rhs, llc.Mux):
                     stmt.rhs.false_value = replace_operand(stmt.rhs.false_value, stmt)
                     stmt.rhs.true_value = replace_operand(stmt.rhs.true_value, stmt)
+                elif isinstance(stmt.rhs, llc.Update):
+                    pass  # array writes cannot be vectorized
                 else:
-                    assert not isinstance(
-                        stmt.rhs, llc.Update
-                    ), "Basic Vectorization does not support array writes for now"
                     assert not isinstance(
                         stmt.rhs, (LiftExpr, DropDim, VectorizedAccess)
                     ), "These types are introduced in basic vectorization so they shouldn't exist here"
