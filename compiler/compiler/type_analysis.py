@@ -19,7 +19,16 @@ from .ast_shared import (
     TypeEnv,
     VectorizedAccess,
 )
-from .tac_cfg import AssignRHS, List, Tuple, Mux, Update, LiftExpr, DropDim
+from .tac_cfg import (
+    AssignRHS,
+    List,
+    Tuple,
+    Mux,
+    Update,
+    VectorizedUpdate,
+    LiftExpr,
+    DropDim,
+)
 
 
 def type_assign_expr(
@@ -135,7 +144,7 @@ def type_assign_expr(
         index_type = type_assign_expr(expr.index, type_env)
 
         if arr_type.datatype == DataType.TUPLE:
-            raise TypeError(f"Tuples cannot be updated")
+            raise TypeError("Tuples cannot be updated")
 
         if not index_type.could_become(PLAINTEXT_INT):
             raise TypeError(
@@ -144,6 +153,23 @@ def type_assign_expr(
 
         val_arr_type = val_type.add_dim()
         return VarType.merge(val_arr_type, arr_type)
+
+    elif isinstance(expr, VectorizedUpdate):
+        val_type = type_assign_expr(expr.value, type_env)
+        arr_type = type_env[expr.array]
+        index_types = [type_assign_expr(idx_var, type_env) for idx_var in expr.idx_vars]
+
+        if arr_type.datatype == DataType.TUPLE:
+            raise TypeError("Tuples cannot be updated")
+
+        if not all(
+            index_type.could_become(PLAINTEXT_INT) for index_type in index_types
+        ):
+            raise TypeError(
+                f"Array subscript indices {expr.idx_vars} are not plaintext ints"
+            )
+
+        return VarType.merge(val_type, arr_type)
 
     elif isinstance(expr, LiftExpr):
         expr_type = type_assign_expr(expr.expr, type_env)
@@ -279,6 +305,8 @@ def type_check(
             try:
                 expr_type = type_assign_expr(stmt.rhs, type_env)
             except (TypeError, AssertionError) as e:
+                print(type_env)
+                print()
                 raise TypeError(f"Unable to type statement {stmt}") from e
 
             if isinstance(stmt.lhs, Var):
@@ -348,6 +376,8 @@ def type_check(
         if var_type.visibility is None:
             var_type.visibility = VarVisibility.PLAINTEXT
 
+    validate_type_requirements(func.body, type_env, func.body[-1], func.return_type)
+
     # Once all typing is done, we can replace all usages of lifted variables with
     # VectorizedAccesses
     for var, var_type in type_env.items():
@@ -366,7 +396,5 @@ def type_check(
             ),
             include_return=False,
         )
-
-    validate_type_requirements(func.body, type_env, func.body[-1], func.return_type)
 
     return func, type_env

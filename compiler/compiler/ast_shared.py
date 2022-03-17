@@ -73,7 +73,7 @@ class VarType:
         return (
             self.visibility == o.visibility
             and self.datatype == o.datatype
-            and self.dims == o.dims
+            and self.unvectorized_dims == o.unvectorized_dims
             and all(
                 st.is_equivalent_to(ot)
                 for st, ot in zip(self.tuple_types, o.tuple_types)
@@ -83,14 +83,9 @@ class VarType:
     def drop_dim(self) -> "VarType":
         return dc.replace(
             self,
-            _dims=self._dims - 1 if self._dims is not None else None,
-            dim_sizes=self.dim_sizes[:-1] if self.dim_sizes is not None else None,
-        )
-
-    def drop_dims(self) -> "VarType":
-        return dc.replace(
-            self,
-            _dims=self._dims - 1 if self._dims is not None else None,
+            _dims=self.unvectorized_dims - 1
+            if self.unvectorized_dims is not None
+            else None,
             dim_sizes=self.dim_sizes[:-1] if self.dim_sizes is not None else None,
         )
 
@@ -157,7 +152,7 @@ class VarType:
             merged_type.visibility = VarVisibility.PLAINTEXT
 
         # Determine the dimensionality of the merged type
-        elem_dims = [t.dims for t in types if t.dims is not None]
+        elem_dims = [t._dims for t in types if t._dims is not None]
         if len(set(elem_dims)) > 1:
             raise TypeError(
                 "Cannot merge types with different dimensionality:\n{}".format(
@@ -499,7 +494,8 @@ class VectorizedAccess:
         )
         if unvectorized_idxs:
             unvectorized_idxs = "[" + unvectorized_idxs + "]"
-        return f"{self.array}{vectorized_idxs}{unvectorized_idxs}"
+        # return f"{self.array}{vectorized_idxs}{unvectorized_idxs}"
+        return f"{self.array}{unvectorized_idxs}"
 
     def __hash__(self) -> int:
         return hash((self.array, self.dim_sizes, self.vectorized_dims, self.idx_vars))
