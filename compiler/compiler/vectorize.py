@@ -369,9 +369,10 @@ def _basic_vectorization_phase_1(
     dep_graph: DepGraph,
     type_env: TypeEnv,
     tmp_var_gen: TempVarGenerator,
-) -> tuple[list[llc.Statement], list[llc.Statement]]:
+) -> tuple[list[llc.Statement], list[llc.Statement], list[llc.Statement]]:
     above_loop_result: list[llc.Statement] = []
     inside_loop_result: list[llc.Statement] = []
+    after_loop_result: list[llc.Statement] = []
 
     for stmt in stmts:
 
@@ -411,7 +412,7 @@ def _basic_vectorization_phase_1(
                 return var_prime
             elif edge_kind is EdgeKind.INNER_TO_OUTER:
                 var_prime = tmp_var_gen.get()
-                inside_loop_result.append(
+                after_loop_result.append(
                     llc.Assign(
                         lhs=var_prime,
                         rhs=DropDim(
@@ -538,7 +539,11 @@ def _basic_vectorization_phase_1(
             inside_loop_result.append(stmt)
 
         elif isinstance(stmt, llc.For):
-            for_outside_stmts, for_inside_stmts = _basic_vectorization_phase_1(
+            (
+                for_outside_stmts,
+                for_inside_stmts,
+                for_after_stmts,
+            ) = _basic_vectorization_phase_1(
                 stmt.body, dep_graph, type_env, tmp_var_gen
             )
             inside_loop_result += for_outside_stmts
@@ -551,6 +556,7 @@ def _basic_vectorization_phase_1(
             dep_graph.enclosing_loops[new_loop] = dep_graph.enclosing_loops[stmt]
 
             inside_loop_result.append(new_loop)
+            inside_loop_result.extend(for_after_stmts)
 
         elif isinstance(stmt, llc.Return):
             new_var = replace_var(stmt.value, stmt)
@@ -559,7 +565,7 @@ def _basic_vectorization_phase_1(
         else:
             assert_never(stmt)
 
-    return above_loop_result, inside_loop_result
+    return above_loop_result, inside_loop_result, after_loop_result
 
 
 def _find_loop_depth(stmts: list[llc.Statement]) -> int:
@@ -1008,10 +1014,11 @@ def basic_vectorization_phase_1(
 ) -> tuple[llc.Function, DepGraph]:
     tmp_var_gen = TempVarGenerator(dep_graph)
 
-    before_func, body = _basic_vectorization_phase_1(
+    before_func, body, after_func = _basic_vectorization_phase_1(
         function.body, dep_graph, type_env, tmp_var_gen
     )
     assert not before_func
+    assert not after_func
 
     function = llc.Function(
         name=function.name,
@@ -1044,7 +1051,6 @@ def basic_vectorization_phase_2(
             return_type=function.return_type,
         )
 
-        print(local_phi_renames)
         phi_renames.update(local_phi_renames)
 
     # Now that we've restructured the fuction based on phi closures, we need to clean up

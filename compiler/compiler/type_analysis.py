@@ -305,8 +305,6 @@ def type_check(
             try:
                 expr_type = type_assign_expr(stmt.rhs, type_env)
             except (TypeError, AssertionError) as e:
-                print(type_env)
-                print()
                 raise TypeError(f"Unable to type statement {stmt}") from e
 
             if isinstance(stmt.lhs, Var):

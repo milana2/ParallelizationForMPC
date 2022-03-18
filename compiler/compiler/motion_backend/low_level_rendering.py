@@ -27,6 +27,7 @@ from ..tac_cfg import (
     Tuple,
     UnaryOp,
     Update,
+    VectorizedUpdate,
     LiftExpr,
     DropDim,
 )
@@ -493,5 +494,48 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             + "}"
         )
         return f"vectorized_access({render_expr(expr.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs})"
+
+    elif isinstance(expr, VectorizedUpdate):
+        # If this isn't a true vectorized access, just subscript normally
+        if all(vectorized == False for vectorized in expr.vectorized_dims):
+            subscript = " + ".join(
+                f"({render_expr(idx, dc.replace(ctx, plaintext=True))} * "
+                + "*".join(
+                    render_expr(bound, dc.replace(ctx, plaintext=True))
+                    for bound in expr.dim_sizes[dim + 1 :]
+                )
+                + ")"
+                # Skip the last dimension for now since it doesn't get multiplied
+                for dim, idx in enumerate(expr.idx_vars[:-1])
+            )
+
+            # Since the last dimension has no multiplicative factor, render it separately
+            if subscript:
+                subscript += " + "
+            subscript += render_expr(expr.idx_vars[-1], dc.replace(ctx, plaintext=True))
+            return f"{render_expr(expr.array, ctx)}[{subscript}]"
+
+        dim_sizes = (
+            "{"
+            + ", ".join(
+                render_expr(loop_bound, dc.replace(ctx, plaintext=True))
+                for loop_bound in expr.dim_sizes
+            )
+            + "}"
+        )
+        vectorized_dims = (
+            "{"
+            + ", ".join(str(vectorized).lower() for vectorized in expr.vectorized_dims)
+            + "}"
+        )
+        idxs = (
+            "{"
+            + ", ".join(
+                render_expr(var, dc.replace(ctx, plaintext=True))
+                for var in expr.idx_vars
+            )
+            + "}"
+        )
+        return f"vectorized_update({render_expr(expr.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(expr.value, ctx)})"
 
     return assert_never(expr)
