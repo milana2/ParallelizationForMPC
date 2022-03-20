@@ -1191,14 +1191,14 @@ One change to Basic vectorization is the expansion of dimension if the array wri
 \end{comment}
 
 In addition to the changes for the handling of target-less phi-nodes, Basic Vectorization has to handle def-use edges $X \rightarrow Y$ where $X$ defines and $Y$ uses an array variable. The definition can be an update \texttt{A\_2 = update(A\_1,i,...)}, a pseudo $\phi$-node \texttt{A\_2 = PHI(A\_0,A\_1)}, etc.. Note that $\phi$-nodes for arrays have no subscript operations the way there are subscript operations in analysis-introduced arrays representing scalars. While there are variations, the most intuitive implementation will perform Basic Vectorization Phase 1 as is, inserting 
-$\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ in the same way. However, the implementation of raise dimension and drop dimension will be adapted because the dimension cannot be raised or drop to a dimension lower than the canonical one. Consider a def-use edge $X \rightarrow Y$ for an array $\texttt{A}$.
+$\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ in the same way. However, the implementation of raise dimension and drop dimension will be adapted because the dimension cannot be raised or dropped to a dimension lower than the canonical one. Consider a def-use edge $X \rightarrow Y$ for an array $\texttt{A}$.
 
 \begin{enumerate}
 
-\item same-level $X \rightarrow Y$. We propagate the array, which happens to be of the right dimension. 
+\item same-level $X \rightarrow Y$. Do nothing, propagate the array, which happens to be of the right dimension. 
 %\ana{There might be some opportunities to do copy propagation optimization and save some cycles, but let's leave this for later.}
 
-\item inner-to-outer $X \rightarrow Y$ triggers the addition of $\mathit{drop\_dim}$. However, if the dimensionality of the loop enclosure of $X$ is equal or less than the canonical dimensionality of the array, then $\mathit{drop\_dim}$ has no effect, otherwise its behavior is as in Basic Vectorization.
+\item inner-to-outer $X \rightarrow Y$ triggers the addition of $\mathit{drop\_dim}$. However, the dimensionality cannot be dropped below the canonical dimensionality of the array. E.g., if the dimensionality of the loop enclosure $X$ is already at the canonical one, then $\mathit{drop\_dim}$ has no effect.
 
 \item outer-to-inner $X \rightarrow Y$ riggers  $\mathit{raise\_dim}$. Again, if the dimensionality of the loop enclosure of $Y$ is smaller or same as the canonical dimensionality of the array, then it has no effect, otherwise, if dimensionality is greater than the canonical dimensionality, $\mathit{raise\_dim(...)}$ (at $X$) is the same as in Basic Vectorization.
 
