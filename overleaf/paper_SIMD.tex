@@ -437,7 +437,7 @@ C!0^ = raise_dim(C!0, j, (i:N!0,j:D!0))
 sum!2 = [0,..,0]
 // Computes all differences and all products "at once"
 d!3[I,J] = SUB_SIMD(S!0^[I,J],C!0^[I,J])
-p!3[I,J] = MUL_SIMD(d!3[I,J] * d!3[I,J])
+p!3[I,J] = MUL_SIMD(d!3[I,J],d!3[I,J])
 
 for j in range(0, D!0):
   // sum!2[I], sum!3[I], sum!4[I] are vectors of size N  
@@ -696,7 +696,9 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 \STATE {case def-use edge $\mathit{stmt}' (\mbox{def of } Y_n) \rightarrow \mathit{stmt} (\mbox{def of } X)$ of} \\
 \STATE \hspace{0.25cm} {same-level: $Y'_n$ is $Y_n$} \\
 \STATE \hspace{0.25cm} {outer-to-inner: add $Y'_n[i,j,k] = \mathit{raise\_dim}(Y_n)$ at $\mathit{stmt'}$}
+\STATE \hspace{0.25cm} {(more precisely, right after $\mathit{stmt'}$)}
 \STATE \hspace{0.25cm} {inner-to-outer: add $Y'_n[i,j,k] = \mathit{drop\_dim}(Y_n)$ at $\mathit{stmt}$}
+\STATE \hspace{0.25cm} {(more precisely, in loop of $\mathit{stmt}$ right after loop of $\mathit{stmt'}$)}
 \ENDFOR
 
 \COMMENT { Optimistically vectorize all. $I$ means vectorized dimension. }
@@ -729,7 +731,7 @@ $\mathit{drop\_dim}(A[i_1,\ldots, i_j, \ldots,i_k], i_j)$ produces a k-dimension
 \color{red}
 \FOR {each target-less $\phi$-node $A_1 = \phi(A_0,A_k)$}
 \STATE {in vectorizable stmts, replace use of $A_1$ with $A_0$}
-\STATE {discard $\phi$-node if not used in any $cl$}
+\STATE {discard $\phi$-node if not used in any $cl$, replacing $A_1$ with $A_0$ or $A_k$ appropriately}
 \ENDFOR
 }
 \ENDFOR
@@ -1078,7 +1080,7 @@ Consider the earlier example. There is a single loop, $i$. Clearly, there is no 
 due to the def-use pairs of \texttt{A} 5-6 and 5-7.
 Therefore, we remove the back edge from 5 to the phi-node 1. Analogously, we remove the back edges from 6 to 2 and from 7 to 3. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 8 to 4 remains (def-use pairs for \texttt{D}). As a result of removing these spurious edges, Basic Vectorization will find that statement 5 is vectorizable. Statements 6, 7 and 8 will correctly appear in the FOR loop.
 
-Note however, that this step renders some array phi-nodes target-less. We handle target-less phi-nodes with a minor extension of Basic Vectorization. 
+Note however, that this step renders some array phi-nodes target-less. We handle target-less phi-nodes with a minor extension of Basic Vectorization (Phase 2). 
 First, we merge closures that update the same array. This simplifies handling of array $\phi$-nodes: if each closure is turned into a separate loop
 each loop will need to have its own array phi-node to account for the update and this would complicate the analysis.
 Second, we add the target-less node of array \texttt{A} back to the closure that updates \texttt{A} ---
@@ -1188,20 +1190,25 @@ There are two changes to Basic Vectorization to account for write arrays. We can
 One change to Basic vectorization is the expansion of dimension if the array write or read occurs in a nested loop. That is, if there is an update $\texttt{A}[i,j] = ...$ that occurs in loop dimensionality $i,j,k$, $\texttt{A}[i,j]$ will be rewritten into $\texttt{A}[i,j,k]$. Similarly, a read $\texttt{A}[f(i,j)]$ will be rewritten into $\texttt{A}[f(i,j),k]$. ($\texttt{A}[f(i,j),k]$ will be reshaped as $f(i,j)*I*J+k$ during Phase 1 of Basic Vectorization. \ana{TODO: Double check.}) 
 \end{comment}
 
-In addition to the changes for the handling of target-less phi-nodes, Basic Vectorization has to handle differently def-use edges $X \rightarrow Y$ where $X$ defines and $Y$ uses an array variable. The definition can be an update \texttt{A\_2 = update(A\_1,i,...)} or a pseudo $\phi$-node \texttt{A\_2 = PHI(A\_0,A\_1)}, etc.. Note that $\phi$-nodes for arrays have no subscript operations the way there are subscript operations in analysis-introduced arrays representing scalars. Raising and dropping dimension still apply, however, the dimension cannot be raised or dropped to a dimension lower than the canonical one:
+In addition to the changes for the handling of target-less phi-nodes, Basic Vectorization has to handle def-use edges $X \rightarrow Y$ where $X$ defines and $Y$ uses an array variable. The definition can be an update \texttt{A\_2 = update(A\_1,i,...)}, a pseudo $\phi$-node \texttt{A\_2 = PHI(A\_0,A\_1)}, etc.. Note that $\phi$-nodes for arrays have no subscript operations the way there are subscript operations in analysis-introduced arrays representing scalars. While there are variations, the most intuitive implementation will perform Basic Vectorization Phase 1 as is, inserting 
+$\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ in the same way. However, the implementation of raise dimension and drop dimension will be adapted because the dimension cannot be raised or drop to a dimension lower than the canonical one. Consider a def-use edge $X \rightarrow Y$ for an array $\texttt{A}$.
 
 \begin{enumerate}
 
-\item same-level $X \rightarrow Y$. We do nothing, just propagate the array, which happens to be of the right dimension. 
+\item same-level $X \rightarrow Y$. We propagate the array, which happens to be of the right dimension. 
 %\ana{There might be some opportunities to do copy propagation optimization and save some cycles, but let's leave this for later.}
 
-\item inner-to-outer $X \rightarrow Y$. If dimensionality of the loop enclosure of $X$ is greater than the canonical dimensionality of the array, then add \emph{drop\_dim(...)} at $Y$, as in Basic Vectorization. Otherwise, do nothing. \ana{I think it will be better to add drop dim and raise dim as in the previous case but change the semantics of both as written here.}
+\item inner-to-outer $X \rightarrow Y$ triggers the addition of $\mathit{drop\_dim}$. However, if the dimensionality of the loop enclosure of $X$ is equal or less than the canonical dimensionality of the array, then $\mathit{drop\_dim}$ has no effect, otherwise its behavior is as in Basic Vectorization.
 
-\item outer-to-inner $X \rightarrow Y$. If dimensionality of loop enclosure of $Y$ is greater than the canonical dimensionality of the array, then add \emph{raise\_dim(...)} (at $X$) as in Basic Vectorization. Otherwise, do nothing.
+\item outer-to-inner $X \rightarrow Y$ riggers  $\mathit{raise\_dim}$. Again, if the dimensionality of the loop enclosure of $Y$ is smaller or same as the canonical dimensionality of the array, then it has no effect, otherwise, if dimensionality is greater than the canonical dimensionality, $\mathit{raise\_dim(...)}$ (at $X$) is the same as in Basic Vectorization.
 
 \item "mixed" $X \rightarrow Y$. We assume that the mixed edge is transformed into an inner-to-outer followed by outer-to-inner edge before we perform vectorization, just as with Basic vectorization.
 
 \end{enumerate}
+
+If the use of the array is a read $\texttt{A}[f(i,j,k)]$ different than a canonical read $\texttt{A}[i,j,k]$, then we need to add a reshape operation as 
+all arrays are $\texttt{A}[i,j,k]$. It can be added after raise\_dim/drop\_dim or incorporated in these operations.
+The bulk of the change is in Phase 2 of Basic Vectorization as outlined earlier.
 
 \subsubsection{Examples with Array Writes}
 
@@ -1301,7 +1308,7 @@ A1 = raise_dim(A, j, ((i:num_bins),(j:N)))
 B1 = raise_dim(B, j, ((i:num_bins),(j:N)))
 I = raise_dim(i, ((i:num_bins),(j:N)))
 for i in range(0, num_bins):
-   res1 = PHI(res, res2) // target-less, no drop_dim
+   res1 = PHI(res, res2') // target-less phi-node
    res1' = raise_dim(res1, (j:N))
    for j in range(0, N):
       res2 = PHI(res1', res3)
@@ -1309,11 +1316,13 @@ for i in range(0, num_bins):
       tmp2 = (res2 + B1)
       tmp3 = MUX(tmp1, res2, tmp2)
       res3 = Update(res2, (I,J), tmp3) 
-return res1
+   res2' = drop_dim(res2)    
+res1'' = drop_dim(res1)
+return res1''
 \end{verbatim}
 }
 
-Processing the inner loop in Phase 2 vectorizes \texttt{tmp1 = (A1 == I)} along the $j$ dimension but leaves the rest of the statements in a MOTION loop. Processing the outer loop is interesting. This is because the PHI node is a target-less node, and therefore, there are no closures! Thus, everything can be vectorized along the $i$ dimension:
+Processing the inner loop in Phase 2 vectorizes \texttt{tmp1 = (A1 == I)} along the $j$ dimension but leaves the rest of the statements in a MOTION loop. Processing the outer loop is interesting. This is because the PHI node is a target-less node, and therefore, there are no closures! Several things happen. (1) Everything can be vectorized along the $i$ dimension. (2) We remove the target-less PHI node, however, we must update uses of \texttt{res1} appropriately: the use at raise\_dim goes to the first argument of the PHI function and the use at drop\_dim goes to the second argument.
 
 {\small
 \begin{verbatim}
@@ -1323,17 +1332,20 @@ I1 = raise_dim(i, ((i:num_bins),(j:N)))
 
 tmp1[I,J] = (A1[I,J] == I1[I,J])
 
-res1' = raise_dim(res, (j:N)) // raising res to a 2-dim. array
+res1' = raise_dim(res, (j:N)) // replacing res1 with res, 1st arg
 for j in range(0, N):
    res2 = PHI(res1', res3)
    tmp2[I,j] = (res2[I,j] + B1[I,j])
    tmp3[I,j] = MUX(tmp1[I,j], res2[I,j], tmp2[I,j])
    res3 = Update(res2, (I,j), tmp3)
-res1 = drop_dim(res2) // Add drop_dim before removing redundant phi-node!      
+   equiv. to res3 = res2; res3[I,j] = tmp3[I,j]
+res2' = drop_dim(res2)   
+res1 = drop_dim(res2') // replacing with res2', 2nd arg. NOOP
 return res1
 \end{verbatim}
 }
 
+\begin{comment}
 The cleanup phase can then get rid of $j$ in the \texttt{res} variables and \texttt{tmp} variables, so the loop operates over the \texttt{num\_bins}-size vectors. 
 This will lead to dropping raise\_dim and drop\_dim as well: 
 
@@ -1353,6 +1365,7 @@ for j in range(0, N):
 return res2
 \end{verbatim}
 }
+\end{comment}
 
 \begin{comment}
 \paragraph{Example 2}

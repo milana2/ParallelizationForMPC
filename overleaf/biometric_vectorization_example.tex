@@ -210,7 +210,7 @@ C!0^ = raise_dim(C!0, j, (i:N!0,j:D!0))
 
 sum!2 = [0,..,0]
 d!3[I,J] = SUB_SIMD(S!0^[I,J],C!0^[I,J])
-p!3[I,J] = MUL_SIMD(d!3[I,J] * d!3[I,J])
+p!3[I,J] = MUL_SIMD(d!3[I,J], d!3[I,J])
 
 for j in range(0, D!0):
   // I dim is a noop. sum is already a one-dimensional vector
