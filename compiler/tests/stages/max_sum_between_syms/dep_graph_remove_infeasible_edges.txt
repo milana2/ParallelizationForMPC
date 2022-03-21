@@ -27,8 +27,11 @@ Nodes:
     max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
     return max_sum!2
 Forward edges:
+    parameter Seq!0  →  parameter Seq!0
     parameter Seq!0  →  !1!2 = (Seq!0[i!1] == Sym!0)
     parameter Seq!0  →  current_sum!3 = (current_sum!2 + Seq!0[i!1])
+    parameter N!0  →  parameter N!0
+    parameter Sym!0  →  parameter Sym!0
     parameter Sym!0  →  !1!2 = (Seq!0[i!1] == Sym!0)
     max_sum!1 = 0  →  max_sum!2 = Φ(max_sum!1, max_sum!4)
     current_sum!1 = 0  →  current_sum!2 = Φ(current_sum!1, current_sum!5)

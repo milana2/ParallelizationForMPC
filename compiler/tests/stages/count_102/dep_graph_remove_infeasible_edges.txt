@@ -27,9 +27,12 @@ Nodes:
     s0!3 = (!3!2 or !6!2)
     return c!2
 Forward edges:
+    parameter Seq!0  →  parameter Seq!0
     parameter Seq!0  →  !1!2 = (Seq!0[i!1] == Syms!0[2])
     parameter Seq!0  →  !3!2 = (Seq!0[i!1] == Syms!0[1])
     parameter Seq!0  →  !5!2 = (Seq!0[i!1] == Syms!0[0])
+    parameter N!0  →  parameter N!0
+    parameter Syms!0  →  parameter Syms!0
     parameter Syms!0  →  !1!2 = (Seq!0[i!1] == Syms!0[2])
     parameter Syms!0  →  !3!2 = (Seq!0[i!1] == Syms!0[1])
     parameter Syms!0  →  !5!2 = (Seq!0[i!1] == Syms!0[0])

@@ -42,9 +42,12 @@ Nodes:
     max_len!4 = MUX(!8!2, max_len!3, max_len!2)
     return max_len!2
 Forward edges:
+    parameter Seq!0  →  parameter Seq!0
     parameter Seq!0  →  !1!2 = (Seq!0[i!1] == Syms!0[2])
     parameter Seq!0  →  !2!2 = (Seq!0[i!1] == Syms!0[1])
     parameter Seq!0  →  !4!2 = (Seq!0[i!1] == Syms!0[0])
+    parameter N!0  →  parameter N!0
+    parameter Syms!0  →  parameter Syms!0
     parameter Syms!0  →  !1!2 = (Seq!0[i!1] == Syms!0[2])
     parameter Syms!0  →  !2!2 = (Seq!0[i!1] == Syms!0[1])
     parameter Syms!0  →  !4!2 = (Seq!0[i!1] == Syms!0[0])

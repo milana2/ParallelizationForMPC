@@ -57,32 +57,26 @@ class StagesTestCase(unittest.TestCase):
                 str(dep_graph), stages["dep_graph_remove_infeasible_edges.txt"]
             )
 
-            (loop_linear, dep_graph) = compiler.vectorize.refine_array_mux(
-                loop_linear, dep_graph
-            )
-            self.assertEqual(str(loop_linear), stages["refine_array_mux.txt"])
-            self.assertEqual(str(dep_graph), stages["refine_array_mux_dep_graph.txt"])
+            (loop_linear, type_env) = compiler.type_check(loop_linear, dep_graph)
+            self.assertEqual(str(loop_linear), stages["unvectorized_linear.txt"])
+            self.assertEqual(str(type_env), stages["unvectorized_type_env.txt"])
 
             (loop_linear, dep_graph) = compiler.vectorize.basic_vectorization_phase_1(
-                loop_linear, dep_graph
+                loop_linear, type_env
             )
             self.assertEqual(str(loop_linear), stages["bv_phase_1.txt"])
             self.assertEqual(str(dep_graph), stages["bv_phase_1_dep_graph.txt"])
 
-            (loop_linear, type_env) = compiler.type_check(loop_linear, dep_graph)
-            self.assertEqual(str(loop_linear), stages["bv_phase_1_typed.txt"])
-            self.assertEqual(str(type_env), stages["bv_phase_1_type_env.txt"])
-
             (
                 loop_linear,
-                type_env,
                 dep_graph,
-            ) = compiler.vectorize.basic_vectorization_phase_2(
-                loop_linear, type_env, dep_graph
-            )
+            ) = compiler.vectorize.basic_vectorization_phase_2(loop_linear)
             self.assertEqual(str(loop_linear), stages["bv_phase_2.txt"])
             self.assertEqual(str(dep_graph), stages["bv_phase_2_dep_graph.txt"])
-            self.assertEqual(str(type_env), stages["bv_phase_2_type_env.txt"])
+
+            (loop_linear, type_env) = compiler.type_check(loop_linear, dep_graph)
+            self.assertEqual(str(loop_linear), stages["vectorized_linear.txt"])
+            self.assertEqual(str(type_env), stages["vectorized_type_env.txt"])
 
             motion_code = compiler.motion_backend.render_function(loop_linear, type_env)
             self.assertEqual(str(motion_code), stages["motion_code.txt"])
@@ -161,42 +155,33 @@ def regenerate_stages():
         ) as f:
             f.write(f"{dep_graph}\n")
 
-        (loop_linear, dep_graph) = compiler.vectorize.refine_array_mux(
-            loop_linear, dep_graph
-        )
-        with open(os.path.join(test_case_dir, "refine_array_mux.txt"), "w") as f:
+        (loop_linear, type_env) = compiler.type_check(loop_linear, dep_graph)
+        with open(os.path.join(test_case_dir, "unvectorized_linear.txt"), "w") as f:
             f.write(f"{loop_linear}\n")
-        with open(
-            os.path.join(test_case_dir, "refine_array_mux_dep_graph.txt"), "w"
-        ) as f:
-            f.write(f"{dep_graph}\n")
+        with open(os.path.join(test_case_dir, "unvectorized_type_env.txt"), "w") as f:
+            f.write(f"{type_env}\n")
 
         (loop_linear, dep_graph) = compiler.vectorize.basic_vectorization_phase_1(
-            loop_linear, dep_graph
+            loop_linear, type_env
         )
         with open(os.path.join(test_case_dir, "bv_phase_1.txt"), "w") as f:
             f.write(f"{loop_linear}\n")
         with open(os.path.join(test_case_dir, "bv_phase_1_dep_graph.txt"), "w") as f:
             f.write(f"{dep_graph}\n")
 
-        (loop_linear, type_env) = compiler.type_check(loop_linear, dep_graph)
-        with open(os.path.join(test_case_dir, "bv_phase_1_typed.txt"), "w") as f:
-            f.write(f"{loop_linear}\n")
-        with open(os.path.join(test_case_dir, "bv_phase_1_type_env.txt"), "w") as f:
-            f.write(f"{type_env}\n")
-
         (
             loop_linear,
-            type_env,
             dep_graph,
-        ) = compiler.vectorize.basic_vectorization_phase_2(
-            loop_linear, type_env, dep_graph
-        )
+        ) = compiler.vectorize.basic_vectorization_phase_2(loop_linear)
         with open(os.path.join(test_case_dir, "bv_phase_2.txt"), "w") as f:
             f.write(f"{loop_linear}\n")
         with open(os.path.join(test_case_dir, "bv_phase_2_dep_graph.txt"), "w") as f:
             f.write(f"{dep_graph}\n")
-        with open(os.path.join(test_case_dir, "bv_phase_2_type_env.txt"), "w") as f:
+
+        (loop_linear, type_env) = compiler.type_check(loop_linear, dep_graph)
+        with open(os.path.join(test_case_dir, "vectorized_linear.txt"), "w") as f:
+            f.write(f"{loop_linear}\n")
+        with open(os.path.join(test_case_dir, "vectorized_type_env.txt"), "w") as f:
             f.write(f"{type_env}\n")
 
         motion_code = compiler.motion_backend.render_function(loop_linear, type_env)

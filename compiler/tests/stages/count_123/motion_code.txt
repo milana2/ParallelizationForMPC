@@ -29,7 +29,6 @@ encrypto::motion::SecureUnsignedInteger count_123(
     std::vector<encrypto::motion::SecureUnsignedInteger> c_2((_MPC_PLAINTEXT_N_0 + 1));
     std::vector<encrypto::motion::SecureUnsignedInteger> c_3((_MPC_PLAINTEXT_N_0 + 1));
     std::vector<encrypto::motion::SecureUnsignedInteger> c_4((_MPC_PLAINTEXT_N_0 + 1));
-    encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::ShareWrapper s1_1;
     std::vector<encrypto::motion::ShareWrapper> s1_2((_MPC_PLAINTEXT_N_0 + 1));
     std::vector<encrypto::motion::ShareWrapper> s1_3((_MPC_PLAINTEXT_N_0 + 1));
@@ -45,7 +44,6 @@ encrypto::motion::SecureUnsignedInteger count_123(
     std::vector<bool> _MPC_PLAINTEXT__7_0((_MPC_PLAINTEXT_N_0 + 1));
     std::vector<std::uint32_t> _MPC_PLAINTEXT__8_0((_MPC_PLAINTEXT_N_0 + 1));
     std::uint32_t _MPC_PLAINTEXT_c_1;
-    std::uint32_t _MPC_PLAINTEXT_i_1;
     bool _MPC_PLAINTEXT_s1_1;
     bool _MPC_PLAINTEXT_s2_1;
 
@@ -85,14 +83,14 @@ encrypto::motion::SecureUnsignedInteger count_123(
         _16_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__16_0), 0);
         // Update phi values
         if (_MPC_PLAINTEXT__16_0 != std::uint32_t(0)) {
-            s1_2[_MPC_PLAINTEXT__16_0] = s1_3[(_MPC_PLAINTEXT__16_0 - std::uint32_t(1))];
+            s1_2[_MPC_PLAINTEXT__16_0] = s1_3[_MPC_PLAINTEXT__16_0];
         }
 
 
 
     }
     // Assign final phi values
-    s1_2[_MPC_PLAINTEXT__16_0] = s1_3[(_MPC_PLAINTEXT__16_0 - std::uint32_t(1))];
+    s1_2[_MPC_PLAINTEXT__16_0] = s1_3[_MPC_PLAINTEXT__16_0];
 
 
     // Initialize loop counter
@@ -103,7 +101,7 @@ encrypto::motion::SecureUnsignedInteger count_123(
         _17_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__17_0), 0);
         // Update phi values
         if (_MPC_PLAINTEXT__17_0 != std::uint32_t(0)) {
-            s2_2[_MPC_PLAINTEXT__17_0] = s2_3[(_MPC_PLAINTEXT__17_0 - std::uint32_t(1))];
+            s2_2[_MPC_PLAINTEXT__17_0] = s2_3[_MPC_PLAINTEXT__17_0];
         }
 
         _5_2[_MPC_PLAINTEXT__17_0] = (encrypto::motion::ShareWrapper(s1_2[_MPC_PLAINTEXT__17_0].Get()) | encrypto::motion::ShareWrapper(s2_2[_MPC_PLAINTEXT__17_0].Get()));
@@ -111,7 +109,7 @@ encrypto::motion::SecureUnsignedInteger count_123(
 
     }
     // Assign final phi values
-    s2_2[_MPC_PLAINTEXT__17_0] = s2_3[(_MPC_PLAINTEXT__17_0 - std::uint32_t(1))];
+    s2_2[_MPC_PLAINTEXT__17_0] = s2_3[_MPC_PLAINTEXT__17_0];
 
     vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, (encrypto::motion::ShareWrapper(vectorized_access(s2_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get()) | encrypto::motion::ShareWrapper(vectorized_access(s1_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get())));
     vectorized_assign(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, (encrypto::motion::ShareWrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get()) & encrypto::motion::ShareWrapper(vectorized_access(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}).Get())));
@@ -124,7 +122,7 @@ encrypto::motion::SecureUnsignedInteger count_123(
         _18_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__18_0), 0);
         // Update phi values
         if (_MPC_PLAINTEXT__18_0 != std::uint32_t(0)) {
-            c_2[_MPC_PLAINTEXT__18_0] = c_4[(_MPC_PLAINTEXT__18_0 - std::uint32_t(1))];
+            c_2[_MPC_PLAINTEXT__18_0] = c_4[_MPC_PLAINTEXT__18_0];
         }
 
         c_3[_MPC_PLAINTEXT__18_0] = (c_2[_MPC_PLAINTEXT__18_0] + _MPC_CONSTANT_1);
@@ -132,7 +130,7 @@ encrypto::motion::SecureUnsignedInteger count_123(
 
     }
     // Assign final phi values
-    c_2[_MPC_PLAINTEXT__18_0] = c_4[(_MPC_PLAINTEXT__18_0 - std::uint32_t(1))];
+    c_2[_MPC_PLAINTEXT__18_0] = c_4[_MPC_PLAINTEXT__18_0];
 
     _15_0 = drop_dim_monoreturn(c_2, {_MPC_PLAINTEXT_N_0});
     return _15_0;

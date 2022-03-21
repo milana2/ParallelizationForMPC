@@ -81,43 +81,27 @@ def compile(
 
     (linear, type_env) = type_check(linear, dep_graph)
     if not quiet:
-        print("Type environment before vectorization")
+        print("Unvectorized type environment:")
         print(type_env)
         print()
 
-        print("Linear code after type analysis:")
-        print(linear)
-        print()
-
     if run_vectorization:
-        (linear, dep_graph) = vectorize.basic_vectorization_phase_1(
-            linear, dep_graph, type_env
-        )
+        (linear, dep_graph) = vectorize.basic_vectorization_phase_1(linear, type_env)
         if not quiet:
-            print("Basic Vectorization phase 1 (no typing):")
+            print("Basic Vectorization phase 1:")
+            print(linear)
+            print()
+
+        (linear, dep_graph) = vectorize.basic_vectorization_phase_2(linear)
+        if not quiet:
+            print("Basic Vectorization phase 2:")
             print(linear)
             print()
 
         (linear, type_env) = type_check(linear, dep_graph)
         if not quiet:
-            print("Type environment after basic vectorization phase 1:")
+            print("Vectorized type environment:")
             print(type_env)
-            print()
-
-            print("Basic Vectorization phase 1 (with vectorized array knowledge):")
-            print(linear)
-            print()
-
-        (linear, type_env, dep_graph) = vectorize.basic_vectorization_phase_2(
-            linear, type_env, dep_graph
-        )
-        if not quiet:
-            print("Type environment after basic vectorization phase 2:")
-            print(type_env)
-            print()
-
-            print("Basic Vectorization phase 2:")
-            print(linear)
             print()
 
     motion_code = motion_backend.render_function(linear, type_env)

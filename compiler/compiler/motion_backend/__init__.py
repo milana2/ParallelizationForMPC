@@ -141,7 +141,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
                     # this by allocating an extra slot per dimension here and working around
                     # that dimension inside the C++ helper functions
                     render_expr(bound, dt.replace(render_ctx, plaintext=True)) + " + 1"
-                    for _, bound in var_type.dim_sizes
+                    for bound in var_type.dim_sizes
                 )
                 + "))"
                 if var_type.dim_sizes
@@ -168,7 +168,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
                 "(("
                 + ") * (".join(
                     render_expr(bound, dt.replace(render_ctx, plaintext=True)) + " + 1"
-                    for _, bound in var_type.dim_sizes
+                    for bound in var_type.dim_sizes
                 )
                 + "))"
                 if var_type.dim_sizes

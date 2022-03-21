@@ -39,7 +39,7 @@ class VarType:
     tuple_types: list["VarType"] = field(default_factory=list)
 
     # For vectorized accesses, we need to know the size of the dimensions
-    dim_sizes: Optional[list[tuple["Var", "LoopBound"]]] = None
+    dim_sizes: Optional[list["LoopBound"]] = None
 
     @property
     def dims(self) -> Optional[int]:
@@ -221,8 +221,8 @@ class VarType:
         str_rep += f"{self.datatype}"
 
         if self.dim_sizes is not None:
-            for idx, bound in self.dim_sizes:
-                str_rep += f"; ({idx}:{bound})]"
+            for bound in self.dim_sizes:
+                str_rep += f"; ({bound})]"
         elif self._dims is not None:
             for _ in range(self._dims):
                 str_rep += "; ?]"
@@ -485,17 +485,14 @@ class VectorizedAccess:
             for size, vectorized in zip(self.dim_sizes, self.vectorized_dims)
             if vectorized
         )
-        if vectorized_idxs:
-            vectorized_idxs = "{" + vectorized_idxs + "}"
+        vectorized_idxs = "{" + vectorized_idxs + "}"
         unvectorized_idxs = ", ".join(
             str(var).lower()
             for var, vectorized in zip(self.idx_vars, self.vectorized_dims)
             if not vectorized
         )
-        if unvectorized_idxs:
-            unvectorized_idxs = "[" + unvectorized_idxs + "]"
-        # return f"{self.array}{vectorized_idxs}{unvectorized_idxs}"
-        return f"{self.array}{unvectorized_idxs}"
+        unvectorized_idxs = "[" + unvectorized_idxs + "]"
+        return f"{self.array}{vectorized_idxs}{unvectorized_idxs}"
 
     def __hash__(self) -> int:
         return hash((self.array, self.dim_sizes, self.vectorized_dims, self.idx_vars))

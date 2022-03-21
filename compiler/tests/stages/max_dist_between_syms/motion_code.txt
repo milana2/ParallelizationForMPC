@@ -22,7 +22,6 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     std::vector<encrypto::motion::SecureUnsignedInteger> current_dist_3((_MPC_PLAINTEXT_N_0 + 1));
     encrypto::motion::SecureUnsignedInteger current_dist_4;
     std::vector<encrypto::motion::SecureUnsignedInteger> current_dist_5((_MPC_PLAINTEXT_N_0 + 1));
-    encrypto::motion::SecureUnsignedInteger i_1;
     encrypto::motion::SecureUnsignedInteger max_dist_1;
     std::vector<encrypto::motion::SecureUnsignedInteger> max_dist_2((_MPC_PLAINTEXT_N_0 + 1));
     std::vector<encrypto::motion::SecureUnsignedInteger> max_dist_3((_MPC_PLAINTEXT_N_0 + 1));
@@ -35,7 +34,6 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     std::uint32_t _MPC_PLAINTEXT__9_0;
     std::uint32_t _MPC_PLAINTEXT_current_dist_1;
     std::uint32_t _MPC_PLAINTEXT_current_dist_4;
-    std::uint32_t _MPC_PLAINTEXT_i_1;
     std::uint32_t _MPC_PLAINTEXT_max_dist_1;
 
     // Constant initializations
@@ -67,7 +65,7 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
         _9_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__9_0), 0);
         // Update phi values
         if (_MPC_PLAINTEXT__9_0 != std::uint32_t(0)) {
-            current_dist_2[_MPC_PLAINTEXT__9_0] = current_dist_5[(_MPC_PLAINTEXT__9_0 - std::uint32_t(1))];
+            current_dist_2[_MPC_PLAINTEXT__9_0] = current_dist_5[_MPC_PLAINTEXT__9_0];
         }
 
         current_dist_3[_MPC_PLAINTEXT__9_0] = (current_dist_2[_MPC_PLAINTEXT__9_0] + _MPC_CONSTANT_1);
@@ -75,7 +73,7 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
 
     }
     // Assign final phi values
-    current_dist_2[_MPC_PLAINTEXT__9_0] = current_dist_5[(_MPC_PLAINTEXT__9_0 - std::uint32_t(1))];
+    current_dist_2[_MPC_PLAINTEXT__9_0] = current_dist_5[_MPC_PLAINTEXT__9_0];
 
     vectorized_assign(max_dist_3, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}, vectorized_access(current_dist_5, {_MPC_PLAINTEXT_N_0}, {true}, {_MPC_PLAINTEXT_i_1}));
 
@@ -87,7 +85,7 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
         _10_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__10_0), 0);
         // Update phi values
         if (_MPC_PLAINTEXT__10_0 != std::uint32_t(0)) {
-            max_dist_2[_MPC_PLAINTEXT__10_0] = max_dist_4[(_MPC_PLAINTEXT__10_0 - std::uint32_t(1))];
+            max_dist_2[_MPC_PLAINTEXT__10_0] = max_dist_4[_MPC_PLAINTEXT__10_0];
         }
 
         _3_2[_MPC_PLAINTEXT__10_0] = (current_dist_5[_MPC_PLAINTEXT__10_0] > max_dist_2[_MPC_PLAINTEXT__10_0]);
@@ -95,7 +93,7 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
 
     }
     // Assign final phi values
-    max_dist_2[_MPC_PLAINTEXT__10_0] = max_dist_4[(_MPC_PLAINTEXT__10_0 - std::uint32_t(1))];
+    max_dist_2[_MPC_PLAINTEXT__10_0] = max_dist_4[_MPC_PLAINTEXT__10_0];
 
     _8_0 = drop_dim_monoreturn(max_dist_2, {_MPC_PLAINTEXT_N_0});
     return _8_0;
