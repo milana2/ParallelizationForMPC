@@ -140,7 +140,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
                     # they end up getting an extra final value per dimension.  We account for
                     # this by allocating an extra slot per dimension here and working around
                     # that dimension inside the C++ helper functions
-                    render_expr(bound, dt.replace(render_ctx, plaintext=True)) + " + 1"
+                    render_expr(bound, dt.replace(render_ctx, plaintext=True))
                     for bound in var_type.dim_sizes
                 )
                 + "))"
@@ -199,12 +199,23 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     plaintext_param_assignments = (
         "// Plaintext parameter assignments\n"
         + "\n".join(
+            # Initialize the shared version
             (
-                # Initialize the shared version
                 render_expr(param.var, render_ctx)
                 + " = party->In<Protocol>(encrypto::motion::ToInput("
                 + render_expr(param.var, dt.replace(render_ctx, plaintext=True))
                 + "), 0);"
+            )
+            if param.var_type.dims == 0
+            else (
+                f"{render_expr(param.var, render_ctx)}.clear();\n"
+                + "std::transform("
+                + render_expr(param.var, dt.replace(render_ctx, plaintext=True))
+                + ".begin(), "
+                + render_expr(param.var, dt.replace(render_ctx, plaintext=True))
+                + ".end(), "
+                + f"std::back_inserter({render_expr(param.var, render_ctx)}), "
+                + "[&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });"
             )
             for param in sorted(func.parameters, key=str)
             if param.var_type.is_plaintext()

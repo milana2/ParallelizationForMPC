@@ -166,7 +166,7 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
     elif isinstance(rhs, LiftExpr):
         return assign_rhs_accessed_vars(rhs.expr)
     elif isinstance(rhs, DropDim):
-        return [rhs.array]
+        return assign_rhs_accessed_vars(rhs.array)
     else:
         assert_never(rhs)
 

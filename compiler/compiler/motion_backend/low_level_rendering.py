@@ -1,3 +1,4 @@
+from copy import copy
 import dataclasses as dc
 from textwrap import indent
 from typing import Optional, Union
@@ -33,7 +34,7 @@ from ..tac_cfg import (
 )
 from ..util import assert_never
 from ..loop_linear_code import For, Phi, Return
-from ..type_analysis import type_assign_expr
+from ..type_analysis import type_assign_expr, PLAINTEXT_INT
 
 
 @dc.dataclass(frozen=True)
@@ -131,7 +132,10 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
                 "{"
                 + ", ".join(
                     render_expr(var, dc.replace(ctx, plaintext=True))
-                    for var in stmt.lhs.idx_vars
+                    for var, vectorized in zip(
+                        stmt.lhs.idx_vars, stmt.lhs.vectorized_dims
+                    )
+                    if not vectorized
                 )
                 + "}"
             )
@@ -228,9 +232,6 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
             + "\n"
             + indent(body, "    ")
             + "\n}\n"
-            + "// Assign final phi values\n"
-            + phi_assignments
-            + "\n"
         )
 
     elif isinstance(stmt, Return):
@@ -389,11 +390,14 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
 
     elif isinstance(expr, LiftExpr):
         raw_idx_map = lambda idx: f"indices[{idx}]"
+        augmented_env = copy(ctx.type_env)
+        for idx_var, _dim_size in expr.dims:
+            augmented_env[idx_var] = PLAINTEXT_INT
         if (
             not ctx.plaintext
-            and type_assign_expr(expr.expr, ctx.type_env).is_plaintext()
+            and type_assign_expr(expr.expr, augmented_env).is_plaintext()
         ):
-            if type_assign_expr(expr.expr, ctx.type_env).datatype == DataType.INT:
+            if type_assign_expr(expr.expr, augmented_env).datatype == DataType.INT:
                 idx_type_conversion = (
                     lambda val: f"encrypto::motion::SecureUnsignedInteger({val})"
                 )
@@ -489,7 +493,8 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             "{"
             + ", ".join(
                 render_expr(var, dc.replace(ctx, plaintext=True))
-                for var in expr.idx_vars
+                for var, vectorized in zip(expr.idx_vars, expr.vectorized_dims)
+                if not vectorized
             )
             + "}"
         )
@@ -532,7 +537,8 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             "{"
             + ", ".join(
                 render_expr(var, dc.replace(ctx, plaintext=True))
-                for var in expr.idx_vars
+                for var, vectorized in zip(expr.idx_vars, expr.vectorized_dims)
+                if not vectorized
             )
             + "}"
         )

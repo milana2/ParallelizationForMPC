@@ -408,11 +408,19 @@ def _basic_vectorization_phase_1(
                 if enclosure_dimensionality <= canonical_dimensionality:
                     return var
 
+                if isinstance(def_var, llc.Phi):
+                    assert isinstance(
+                        def_var.rhs_true, llc.Var
+                    ), "VectorizedAccesses are added after phase 1"
+                    drop_expr = def_var.rhs_true
+                else:
+                    drop_expr = var
+
                 var_prime = tmp_var_gen.get()
                 drop_dim = llc.Assign(
                     lhs=var_prime,
                     rhs=DropDim(
-                        var,
+                        drop_expr,
                         tuple(
                             loop.bound_high
                             for loop in dep_graph.enclosing_loops[def_var]
@@ -583,7 +591,13 @@ def _merge_vectorized_accesses(
         for access in vectorized_accesses
         if access and not all(access.vectorized_dims)
     )
-    all_idx_vars = set(access.idx_vars for access in vectorized_accesses if access)
+    all_idx_vars = set(
+        access.idx_vars
+        for access in vectorized_accesses
+        if access
+        # Ignore accesses which are BinOps (these come from phi nodes with backedges)
+        and not any(isinstance(var, llc.BinOp) for var in access.idx_vars)
+    )
 
     if len(all_dim_sizes) != 1:
         raise TypeError(
@@ -928,6 +942,18 @@ def _basic_vectorization_phase_2(
             monolithic_for, loop_stack[-1].counter, monolithic_for.counter
         )
         unvectorize_loop_dim(monolithic_for)
+        # For each phi node in the loop, update the true branch of that node to use the previous iteration's value
+        for phi in monolithic_for.body:
+            if isinstance(phi, llc.Phi):
+                phi.rhs_true = util.replace_pattern(
+                    phi.rhs_true,
+                    monolithic_for.counter,
+                    llc.BinOp(
+                        monolithic_for.counter,
+                        llc.BinOpKind.SUB,
+                        llc.Constant(1, DataType.INT),
+                    ),
+                )
         return monolithic_for
 
     def uses_loop_counter(stmt) -> bool:
