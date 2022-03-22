@@ -15,14 +15,14 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
             d!3{N!0, D!0}[] = (!6!0{N!0, D!0}[] - !7!0{N!0, D!0}[])
             p!3{N!0, D!0}[] = (d!3{N!0, D!0}[] * d!3{N!0, D!0}[])
             sum!4{N!0, D!0}[] = (sum!3{N!0, D!0}[] + p!3{N!0, D!0}[])
-        !8!0{N!0}[] = drop_dim(sum!3{N!0, D!0}[])
+        !8!0{N!0}[] = drop_dim(sum!4{N!0, D!0}[])
         !1!2{N!0}[] = (!8!0{N!0}[] < min_sum!2{N!0}[])
-        !9!0{N!0}[] = drop_dim(sum!3{N!0, D!0}[])
+        !9!0{N!0}[] = drop_dim(sum!4{N!0, D!0}[])
         min_sum!3{N!0}[] = !9!0{N!0}[]
         min_index!3 = i!1
         min_sum!4{N!0}[] = MUX(!1!2{N!0}[], min_sum!3{N!0}[], min_sum!2{N!0}[])
         min_index!4{N!0}[] = MUX(!1!2{N!0}[], min_index!3, min_index!2{N!0}[])
-    !10!0 = drop_dim(min_sum!2{N!0}[])
-    !11!0 = drop_dim(min_index!2{N!0}[])
+    !10!0 = drop_dim(min_sum!4{N!0}[])
+    !11!0 = drop_dim(min_index!4{N!0}[])
     !2!1 = (!10!0, !11!0)
     return !2!1

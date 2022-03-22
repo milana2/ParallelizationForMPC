@@ -49,7 +49,7 @@ Nodes:
     !8!2{N!0}[] = (s1!2{N!0}[] and !7!2{N!0}[])
     max_len!3{N!0}[] = length!5{N!0}[]
     max_len!4{N!0}[] = MUX(!8!2{N!0}[], max_len!3{N!0}[], max_len!2{N!0}[])
-    !18!0 = drop_dim(max_len!2{N!0}[])
+    !18!0 = drop_dim(max_len!4{N!0}[])
     return !18!0
 Forward edges:
     parameter Seq!0  →  parameter Seq!0
@@ -131,7 +131,6 @@ Forward edges:
     s0!2{N!0}[] = Φ(!9!0{N!0}[], s0!3{N!0}[])  →  !5!2{N!0}[] = (s0!2{N!0}[] and !4!2{N!0}[])
     max_len!2{N!0}[] = Φ(!10!0{N!0}[], max_len!4{N!0}[])  →  !7!2{N!0}[] = (max_len!2{N!0}[] < length!5{N!0}[])
     max_len!2{N!0}[] = Φ(!10!0{N!0}[], max_len!4{N!0}[])  →  max_len!4{N!0}[] = MUX(!8!2{N!0}[], max_len!3{N!0}[], max_len!2{N!0}[])
-    max_len!2{N!0}[] = Φ(!10!0{N!0}[], max_len!4{N!0}[])  →  !18!0 = drop_dim(max_len!2{N!0}[])
     length!2{N!0}[] = Φ(!11!0{N!0}[], length!5{N!0}[])  →  length!3{N!0}[] = (length!2{N!0}[] + 1)
     !1!2{N!0}[] = (!12!0{N!0}[] == !13!0{N!0}[])  →  s1!2{N!0}[] = (s0!2{N!0}[] and !1!2{N!0}[])
     s1!2{N!0}[] = (s0!2{N!0}[] and !1!2{N!0}[])  →  !6!2{N!0}[] = (s1!2{N!0}[] or s0!3{N!0}[])
@@ -148,7 +147,8 @@ Forward edges:
     !7!2{N!0}[] = (max_len!2{N!0}[] < length!5{N!0}[])  →  !8!2{N!0}[] = (s1!2{N!0}[] and !7!2{N!0}[])
     !8!2{N!0}[] = (s1!2{N!0}[] and !7!2{N!0}[])  →  max_len!4{N!0}[] = MUX(!8!2{N!0}[], max_len!3{N!0}[], max_len!2{N!0}[])
     max_len!3{N!0}[] = length!5{N!0}[]  →  max_len!4{N!0}[] = MUX(!8!2{N!0}[], max_len!3{N!0}[], max_len!2{N!0}[])
-    !18!0 = drop_dim(max_len!2{N!0}[])  →  return !18!0
+    max_len!4{N!0}[] = MUX(!8!2{N!0}[], max_len!3{N!0}[], max_len!2{N!0}[])  →  !18!0 = drop_dim(max_len!4{N!0}[])
+    !18!0 = drop_dim(max_len!4{N!0}[])  →  return !18!0
 Back edges:
     s0!3{N!0}[] = (!2!2{N!0}[] or !5!2{N!0}[])  →  s0!2{N!0}[] = Φ(!9!0{N!0}[], s0!3{N!0}[])
     length!5{N!0}[] = MUX(!6!2{N!0}[], length!3{N!0}[], length!4)  →  length!2{N!0}[] = Φ(!11!0{N!0}[], length!5{N!0}[])

@@ -13,7 +13,7 @@ Nodes:
     sum!2{N!0}[] = Φ(!1!0{N!0}[], sum!3{N!0}[])
     temp!2{N!0}[] = (!2!0{N!0}[] * !3!0{N!0}[])
     sum!3{N!0}[] = (sum!2{N!0}[] + temp!2{N!0}[])
-    !4!0 = drop_dim(sum!2{N!0}[])
+    !4!0 = drop_dim(sum!3{N!0}[])
     return !4!0
 Forward edges:
     parameter A!0  →  parameter A!0
@@ -34,8 +34,8 @@ Forward edges:
     temp!2{N!0}[] = (!2!0{N!0}[] * !3!0{N!0}[])
     sum!3{N!0}[] = (sum!2{N!0}[] + temp!2{N!0}[])  →  !3!0{N!0}[] = lift(B!0[i!1], (i!1:N!0))
     sum!2{N!0}[] = Φ(!1!0{N!0}[], sum!3{N!0}[])  →  sum!3{N!0}[] = (sum!2{N!0}[] + temp!2{N!0}[])
-    sum!2{N!0}[] = Φ(!1!0{N!0}[], sum!3{N!0}[])  →  !4!0 = drop_dim(sum!2{N!0}[])
     temp!2{N!0}[] = (!2!0{N!0}[] * !3!0{N!0}[])  →  sum!3{N!0}[] = (sum!2{N!0}[] + temp!2{N!0}[])
-    !4!0 = drop_dim(sum!2{N!0}[])  →  return !4!0
+    sum!3{N!0}[] = (sum!2{N!0}[] + temp!2{N!0}[])  →  !4!0 = drop_dim(sum!3{N!0}[])
+    !4!0 = drop_dim(sum!3{N!0}[])  →  return !4!0
 Back edges:
     sum!3{N!0}[] = (sum!2{N!0}[] + temp!2{N!0}[])  →  sum!2{N!0}[] = Φ(!1!0{N!0}[], sum!3{N!0}[])

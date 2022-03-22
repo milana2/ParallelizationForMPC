@@ -26,14 +26,20 @@ namespace std {
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const std::vector<T> &vec)
 {
-    os << "{";
+    os << "[";
     for (auto it = vec.begin(); it != vec.end(); ++it) {
         if (it != vec.begin()) {
             os << ", ";
         }
         os << *it;
     }
-    os << "}";
+    os << "]";
+    return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const encrypto::motion::SecureUnsignedInteger &val)
+{
+    os << val.As<std::uint32_t>();
     return os;
 }
 } // namespace std
@@ -136,6 +142,24 @@ encrypto::motion::PartyPointer CreateParty(const program_options::variables_map 
     return party;
 }
 
+// Helper function for generating output
+template <typename T>
+T to_output(const T &out)
+{
+    return out.Out();
+}
+
+// Helper function for generating output
+template <typename T>
+std::vector<T> to_output(const std::vector<T> &out)
+{
+    std::vector<T> output;
+    for (const auto &v : out) {
+        output.push_back(to_output(v));
+    }
+    return output;
+}
+
 int main(const int argc, const char *const argv[])
 {
     auto user_options = parse_options(argc, argv);
@@ -167,10 +191,10 @@ int main(const int argc, const char *const argv[])
     auto circuit_gen_time = std::chrono::duration_cast<std::chrono::milliseconds>(circuit_gen_end - circuit_gen_start).count();
 
     {%- if (outputs|count) == 1 %}
-        auto out0 = output.Out();
+        auto out0 = to_output(output);
     {%- else %}
         {%- for idx in range(outputs | count) %}
-            auto out{{idx}} = std::get<{{idx}}>(output).Out();
+            auto out{{idx}} = to_output(std::get<{{idx}}>(output));
         {%- endfor -%}
     {%- endif %}
 
@@ -196,7 +220,7 @@ int main(const int argc, const char *const argv[])
         {%- if idx > 0 and (outputs|count) > 1 %}
             << ", "
         {%- endif %}
-        << out{{idx}}.As<{{outputs[idx]}}>()
+        << out{{idx}}
     {%- endfor %}
 
     {%- if(outputs|count) > 1 -%} << ")" {%- endif -%}

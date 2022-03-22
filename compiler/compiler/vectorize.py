@@ -928,13 +928,9 @@ def _basic_vectorization_phase_2(
                                 val.idx_vars, val.vectorized_dims
                             )
                         )
-                        setattr(
-                            stmt,
-                            field.name,
-                            dc.replace(val, vectorized_dims=new_vectorization),
-                        )
-                    else:
-                        unvectorize_loop_dim(val)
+                        val = dc.replace(val, vectorized_dims=new_vectorization)
+                        setattr(stmt, field.name, val)
+                    unvectorize_loop_dim(val)
 
         for orig_var, lifted in lifted_vars.items():
             monolithic_for = util.replace_pattern(monolithic_for, orig_var, lifted)
@@ -964,12 +960,18 @@ def _basic_vectorization_phase_2(
             return True
         elif isinstance(stmt, (list, tuple)):
             return any(uses_loop_counter(item) for item in stmt)
-        elif isinstance(stmt, (VectorizedAccess, llc.VectorizedUpdate)):
+        elif isinstance(stmt, VectorizedAccess):
             return any(
                 uses_loop_counter(item)
                 for item, vectorized in zip(stmt.idx_vars, stmt.vectorized_dims)
                 if not vectorized
             )
+        elif isinstance(stmt, llc.VectorizedUpdate):
+            return any(
+                uses_loop_counter(item)
+                for item, vectorized in zip(stmt.idx_vars, stmt.vectorized_dims)
+                if not vectorized
+            ) or uses_loop_counter(stmt.value)
         elif isinstance(stmt, llc.LiftExpr):
             # If the loop counter is bound in the lifted expression,
             # we can ignore it
