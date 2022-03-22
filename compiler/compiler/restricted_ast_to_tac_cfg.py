@@ -39,9 +39,6 @@ class _CFGBuilder:
         self._current_block = block
         assert self._current_block.terminator is None
 
-    def current_block_done(self) -> bool:
-        return self._current_block.terminator is not None
-
     def add_assignment(self, assignment: tac_cfg.Assign):
         assert self._current_block.terminator is None
         self._current_block.assignments.append(assignment)
@@ -212,13 +209,11 @@ def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
 
     builder.set_current_block(then_block)
     _build_statements(if_statement.then_body, builder)
-    if not builder.current_block_done():
-        builder.add_jump(after_block)
+    builder.add_jump(after_block)
 
     builder.set_current_block(else_block)
     _build_statements(if_statement.else_body, builder)
-    if not builder.current_block_done():
-        builder.add_jump(after_block)
+    builder.add_jump(after_block)
 
     builder.set_current_block(after_block)
     assert isinstance(condition_block.terminator, tac_cfg.ConditionalJump)
