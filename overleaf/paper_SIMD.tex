@@ -530,7 +530,68 @@ Our compiler performs the following semantic analysis steps:
         Ensure that the AST matches a restricted subset that our compiler supports.
         This step outputs an instance of the \texttt{restricted\_ast.Function} class, which represents our restricted subset of the Python AST.
   \item
-        \textbf{3-address CFG conversion}: TODO
+        \textbf{3-address CFG conversion}:
+        TODO: Is this a good amount of detail?
+
+        Convert the restricted-syntax AST to a three-address control-flow graph.
+        To do this, first,
+        add an empty basic block to the CFG and mark it as current.
+        Next, for each statement in the restricted AST's function body,
+        process the statement.
+        Statements can either be for-loops, if-statements, or assignments.
+        Rules for processing each kind of statement are given below:
+        \begin{enumerate}
+          \item
+                \textbf{For-loops}:
+                Create new basic blocks for
+                the loop condition
+                (the condition block),
+                the loop body
+                (the body block),
+                and the code after the loop
+                (the after-block).
+                Insert a jump from the end of the current block to the condition block.
+                Then, mark the condition block as the current block.
+                Insert a for-instruction at the end of the current block with the loop counter variable and bounds from the AST.
+                Next, add an edge from the current block to the after-block labeled ``FALSE'' and
+                an edge from the current block to the
+                body block labeled ``TRUE''.
+                Then, set the body block to be the current block
+                and process all statements in the AST's loop body.
+                Finally, insert a jump to the condition block and set the after-block as current.
+          \item
+                \textbf{If-statements}:
+                Create new basic blocks for
+                the ``then'' statements of the if-statement
+                (the then-block),
+                the ``else'' statements of the if-statement
+                (the else-block),
+                and the code after the if-statement
+                (the after-block).
+                At the end of the current block,
+                insert a conditional jump to the then-block or else-block
+                depending on the if-statement condition in the AST.
+                Next,
+                mark the then-block as current,
+                process all then-statements,
+                and add a jump to the after-block.
+                Similarly,
+                mark the else-block as current,
+                process all else-statements,
+                and add a jump to the after-block.
+                Finally, set the after-block to be the current block,
+                and give it a ``merge condition'' property equal to the condition of the if-statement.
+          \item
+                \textbf{Assignments}:
+                In the restricted-syntax AST,
+                the left-hand side of assignments
+                can be a variable or an array subscript.
+                If it is an array subscript such as \texttt{A[i] = x},
+                change the statement to \texttt{A = Update(A, i, x)}.
+                If the statement is not already three-address code,
+                for each sub-expression in the right-hand side of the assignment,
+                insert an assignment to a temporary variable.
+        \end{enumerate}
   \item
         \textbf{SSA conversion}:
         Convert the 3-address CFG to SSA with Cytron's algorithm.
