@@ -225,7 +225,13 @@ def rename_variables(result: ssa.Function) -> None:
             )
         else:
             assert not isinstance(
-                rhs, (tac_cfg.LiftExpr, tac_cfg.DropDim, VectorizedAccess)
+                rhs,
+                (
+                    tac_cfg.LiftExpr,
+                    tac_cfg.DropDim,
+                    VectorizedAccess,
+                    tac_cfg.VectorizedUpdate,
+                ),
             ), "These types are introduced in the vectorization phase"
             assert_never(rhs)
 
