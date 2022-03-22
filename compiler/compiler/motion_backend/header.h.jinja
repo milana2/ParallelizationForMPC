@@ -11,15 +11,15 @@
 /**
  * Maps @p expr to an array specified by the provided dimensions.
  *
- * @param expr       The expression which will be evaluated at every position of the generated array.
+ * @param expr       The expression which will be evaluated at every position of the generated
+ * array.
  * @param dim_sizes  The size of each dimension in the output array.
  *
  * @returns The lifted array.
  */
 template <typename T>
-std::vector<T>
-lift(const std::function<T(const std::vector<std::uint32_t> &)> &expr,
-     const std::vector<std::uint32_t> &dim_sizes)
+std::vector<T> lift(const std::function<T(const std::vector<std::uint32_t> &)> &expr,
+                    const std::vector<std::uint32_t> &dim_sizes)
 {
     std::uint32_t raised_size =
         std::accumulate(dim_sizes.begin(), dim_sizes.end(), 1, std::multiplies<std::uint32_t>());
@@ -30,8 +30,6 @@ lift(const std::function<T(const std::vector<std::uint32_t> &)> &expr,
         std::vector<std::uint32_t> dim_idxs(dim_sizes.size());
         std::uint32_t j = i;
         for (int k = dim_idxs.size() - 1; k >= 0; --k) {
-            // Although this will be assigned to an array with slots for phi values, the logic regarding
-            // handling those slots belongs to vectorized_assign() so we pretend like no phi slots exist here
             dim_idxs[k] = j % dim_sizes[k];
             j /= dim_sizes[k];
         }
@@ -40,6 +38,18 @@ lift(const std::function<T(const std::vector<std::uint32_t> &)> &expr,
     }
 
     return raised;
+}
+
+/**
+ * Special case of lift() for the case when we are lifting a full array.
+ *
+ * This translates to a no-op (we assume that the array being lifted is the correct size).
+ */
+template <typename T>
+std::vector<T> lift(const std::function<std::vector<T>(const std::vector<std::uint32_t> &)> &expr,
+                    const std::vector<std::uint32_t> &dim_sizes)
+{
+    return expr(dim_sizes);
 }
 
 /**
@@ -54,8 +64,8 @@ lift(const std::function<T(const std::vector<std::uint32_t> &)> &expr,
 template <typename T>
 std::vector<T> drop_dim(const std::vector<T> &arr, const std::vector<std::uint32_t> &dim_sizes)
 {
-    std::uint32_t dropped_size =
-        std::accumulate(dim_sizes.begin(), dim_sizes.end() - 1, 1, std::multiplies<std::uint32_t>());
+    std::uint32_t dropped_size = std::accumulate(dim_sizes.begin(), dim_sizes.end() - 1, 1,
+                                                 std::multiplies<std::uint32_t>());
     std::vector<T> dropped(dropped_size);
 
     for (std::uint32_t i = 0; i < dropped.size(); ++i) {
@@ -64,8 +74,6 @@ std::vector<T> drop_dim(const std::vector<T> &arr, const std::vector<std::uint32
         std::vector<std::uint32_t> dim_idxs(dim_sizes.size());
         std::uint32_t j = i;
         for (int k = dim_idxs.size() - 2; k >= 0; --k) {
-            // Since the returned array will only be used by vectorized_assign() which handles
-            // phi slots, we should ignore them when assigning to the returned array
             dim_idxs[k] = j % dim_sizes[k];
             j /= dim_sizes[k];
         }
@@ -73,15 +81,13 @@ std::vector<T> drop_dim(const std::vector<T> &arr, const std::vector<std::uint32
         // Now, reconstruct the original index
         std::uint32_t src_idx = 0;
         for (std::uint32_t dim = 0; dim < dim_idxs.size() - 1; ++dim) {
-            // Since we've been passed a raw, unvectorized representation of an array we must
-            // account for phi slots when indexing it
-            src_idx *= (dim_sizes[dim] + 1);
+            src_idx *= dim_sizes[dim];
             src_idx += dim_idxs[dim];
         }
 
         // Handle the final dimension manually
-        src_idx *= (dim_sizes.back() + 1);
-        src_idx += dim_sizes.back();
+        src_idx *= dim_sizes.back();
+        src_idx += dim_sizes.back() - 1;
 
         dropped[i] = arr[src_idx];
     }
@@ -99,10 +105,13 @@ T drop_dim_monoreturn(const std::vector<T> &arr, const std::vector<std::uint32_t
 
 /**
  * Provides a SIMD representation of a slice of an array.
- * 
+ *
  */
 template <typename T>
-T vectorized_access(const std::vector<T> &arr, const std::vector<std::uint32_t> &dim_sizes, const std::vector<bool> &vectorized_dims, const std::vector<std::uint32_t> &idxs) {
+T vectorized_access(const std::vector<T> &arr, const std::vector<std::uint32_t> &dim_sizes,
+                    const std::vector<bool> &vectorized_dims,
+                    const std::vector<std::uint32_t> &idxs)
+{
     std::vector<T> bucket;
 
     // Collect the elements of the selected slice.
@@ -112,60 +121,58 @@ T vectorized_access(const std::vector<T> &arr, const std::vector<std::uint32_t> 
         std::vector<std::uint32_t> dim_idxs(dim_sizes.size());
         std::uint32_t j = i;
         for (int k = dim_idxs.size() - 1; k >= 0; --k) {
-            // Add one to each dimension to account for the extra phi node slot
-            dim_idxs[k] = j % (dim_sizes[k] + 1);
-            j /= (dim_sizes[k] + 1);
+            dim_idxs[k] = j % dim_sizes[k];
+            j /= dim_sizes[k];
         }
 
         // Check that the indices match for all non-vectorized dimensions.
         bool match = true;
+        std::size_t which_idx = 0;
         for (std::uint32_t k = 0; k < dim_idxs.size(); ++k) {
             if (vectorized_dims[k]) {
-                // Because we have empty slots in our vectors for phi values, skip those slots here
-                if (dim_idxs[k] == dim_sizes[k]) {
+                continue;
+            } else {
+                if (dim_idxs[k] != idxs[which_idx]) {
                     match = false;
                     break;
-                } else {
-                    continue;
                 }
-            }
-
-            if (dim_idxs[k] != idxs[k]) {
-                match = false;
-                break;
+                ++which_idx;
             }
         }
-
         if (match) {
             bucket.push_back(arr[i]);
         }
     }
-    
+
     return T::Simdify(bucket);
 }
 
 template <typename T, typename V>
-void vectorized_assign(std::vector<T> &tgt, const std::vector<std::uint32_t> &dim_sizes, const std::vector<bool> &vectorized_dims, const std::vector<std::uint32_t> &idxs, const std::vector<V> unvectorized_repr) {
+void vectorized_assign(std::vector<T> &tgt, const std::vector<std::uint32_t> &dim_sizes,
+                       const std::vector<bool> &vectorized_dims,
+                       const std::vector<std::uint32_t> &idxs,
+                       const std::vector<V> unvectorized_repr)
+{
     // For each element in the unvectorized representation, find the corresponding index in the
     // target array and assign the value.
-    for (std::uint32_t i=0; i < unvectorized_repr.size(); i++) {
+    for (std::uint32_t i = 0; i < unvectorized_repr.size(); i++) {
         std::vector<std::uint32_t> tgt_dim_idxs(dim_sizes.size());
         std::uint32_t j = i;
+        std::size_t which_idx = 0;
         for (int dim_idx = dim_sizes.size() - 1; dim_idx >= 0; --dim_idx) {
             if (vectorized_dims[dim_idx]) {
-                // Vectorized representations don't hold the phi node slots, so we don't add one to each dimension
                 tgt_dim_idxs[dim_idx] = j % dim_sizes[dim_idx];
                 j /= dim_sizes[dim_idx];
             } else {
-                tgt_dim_idxs[dim_idx] = idxs[dim_idx];
+                tgt_dim_idxs[dim_idx] = idxs[which_idx];
+                ++which_idx;
             }
         }
 
         // Compute the index of the element in the target array.
         std::uint32_t tgt_idx = 0;
         for (std::uint32_t dim_idx = 0; dim_idx < dim_sizes.size(); ++dim_idx) {
-            // Unvectorized representations do have phi node slots, so we must account for them here
-            tgt_idx *= (dim_sizes[dim_idx] + 1);
+            tgt_idx *= dim_sizes[dim_idx];
             tgt_idx += tgt_dim_idxs[dim_idx];
         }
 
@@ -174,8 +181,34 @@ void vectorized_assign(std::vector<T> &tgt, const std::vector<std::uint32_t> &di
 }
 
 template <typename T, typename V>
-void vectorized_assign(std::vector<T> &tgt, const std::vector<std::uint32_t> &dim_sizes, const std::vector<bool> &vectorized_dims, const std::vector<std::uint32_t> &idxs, V vectorized_repr) {
+void vectorized_assign(std::vector<T> &tgt, const std::vector<std::uint32_t> &dim_sizes,
+                       const std::vector<bool> &vectorized_dims,
+                       const std::vector<std::uint32_t> &idxs, V vectorized_repr)
+{
     vectorized_assign(tgt, dim_sizes, vectorized_dims, idxs, vectorized_repr.Unsimdify());
+}
+
+template <typename T, typename V>
+std::vector<T> vectorized_update(std::vector<T> tgt, const std::vector<std::uint32_t> dim_sizes,
+                                 std::vector<std::uint32_t> idxs, const std::vector<V> &val)
+{
+    vectorized_assign(tgt, dim_sizes, std::vector<bool>(dim_sizes.size(), true), idxs, val);
+    return tgt;
+}
+
+template <typename T, typename V>
+std::vector<T> vectorized_update(const std::vector<T> &tgt,
+                                 const std::vector<std::uint32_t> dim_sizes,
+                                 std::vector<std::uint32_t> idxs, const V &val)
+{
+    return vectorized_update(tgt, dim_sizes, idxs, val.Unsimdify());
+}
+
+template <typename T, typename V>
+std::vector<T> vectorized_update(const T &tgt, const std::vector<std::uint32_t> dim_sizes,
+                                 std::vector<std::uint32_t> idxs, const V &val)
+{
+    return vectorized_update(tgt.Unsimdify(), dim_sizes, idxs, val);
 }
 
 // clang-format off

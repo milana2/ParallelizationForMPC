@@ -1,3 +1,4 @@
+from copy import copy
 import dataclasses as dc
 from textwrap import indent
 from typing import Optional, Union
@@ -27,12 +28,13 @@ from ..tac_cfg import (
     Tuple,
     UnaryOp,
     Update,
+    VectorizedUpdate,
     LiftExpr,
     DropDim,
 )
 from ..util import assert_never
 from ..loop_linear_code import For, Phi, Return
-from ..type_analysis import type_assign_expr
+from ..type_analysis import type_assign_expr, PLAINTEXT_INT
 
 
 @dc.dataclass(frozen=True)
@@ -130,7 +132,10 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
                 "{"
                 + ", ".join(
                     render_expr(var, dc.replace(ctx, plaintext=True))
-                    for var in stmt.lhs.idx_vars
+                    for var, vectorized in zip(
+                        stmt.lhs.idx_vars, stmt.lhs.vectorized_dims
+                    )
+                    if not vectorized
                 )
                 + "}"
             )
@@ -227,9 +232,6 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
             + "\n"
             + indent(body, "    ")
             + "\n}\n"
-            + "// Assign final phi values\n"
-            + phi_assignments
-            + "\n"
         )
 
     elif isinstance(stmt, Return):
@@ -388,11 +390,14 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
 
     elif isinstance(expr, LiftExpr):
         raw_idx_map = lambda idx: f"indices[{idx}]"
+        augmented_env = copy(ctx.type_env)
+        for idx_var, _dim_size in expr.dims:
+            augmented_env[idx_var] = PLAINTEXT_INT
         if (
             not ctx.plaintext
-            and type_assign_expr(expr.expr, ctx.type_env).is_plaintext()
+            and type_assign_expr(expr.expr, augmented_env).is_plaintext()
         ):
-            if type_assign_expr(expr.expr, ctx.type_env).datatype == DataType.INT:
+            if type_assign_expr(expr.expr, augmented_env).datatype == DataType.INT:
                 idx_type_conversion = (
                     lambda val: f"encrypto::motion::SecureUnsignedInteger({val})"
                 )
@@ -488,10 +493,51 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             "{"
             + ", ".join(
                 render_expr(var, dc.replace(ctx, plaintext=True))
-                for var in expr.idx_vars
+                for var, vectorized in zip(expr.idx_vars, expr.vectorized_dims)
+                if not vectorized
             )
             + "}"
         )
         return f"vectorized_access({render_expr(expr.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs})"
+
+    elif isinstance(expr, VectorizedUpdate):
+        # If this isn't a true vectorized access, just subscript normally
+        if all(vectorized == False for vectorized in expr.vectorized_dims):
+            subscript = " + ".join(
+                f"({render_expr(idx, dc.replace(ctx, plaintext=True))} * "
+                + "*".join(
+                    render_expr(bound, dc.replace(ctx, plaintext=True))
+                    for bound in expr.dim_sizes[dim + 1 :]
+                )
+                + ")"
+                # Skip the last dimension for now since it doesn't get multiplied
+                for dim, idx in enumerate(expr.idx_vars[:-1])
+            )
+
+            # Since the last dimension has no multiplicative factor, render it separately
+            if subscript:
+                subscript += " + "
+            subscript += render_expr(expr.idx_vars[-1], dc.replace(ctx, plaintext=True))
+            return f"{render_expr(expr.array, ctx)}[{subscript}]"
+
+        dim_sizes = (
+            "{"
+            + ", ".join(
+                render_expr(loop_bound, dc.replace(ctx, plaintext=True))
+                for loop_bound, vectorized in zip(expr.dim_sizes, expr.vectorized_dims)
+                if not vectorized
+            )
+            + "}"
+        )
+        idxs = (
+            "{"
+            + ", ".join(
+                render_expr(var, dc.replace(ctx, plaintext=True))
+                for var, vectorized in zip(expr.idx_vars, expr.vectorized_dims)
+                if not vectorized
+            )
+            + "}"
+        )
+        return f"vectorized_update({render_expr(expr.array, ctx)}, {dim_sizes}, {idxs}, {render_expr(expr.value, ctx)})"
 
     return assert_never(expr)

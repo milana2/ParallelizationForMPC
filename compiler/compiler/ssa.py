@@ -33,6 +33,7 @@ from .tac_cfg import (
     Atom,
     Operand,
     Update,
+    VectorizedUpdate,
     assign_rhs_accessed_vars,
 )
 from .tac_cfg import Block as _BaseBlock
@@ -44,6 +45,8 @@ class Phi:
     lhs: Union[Var, VectorizedAccess]
     rhs_false: Union[Var, VectorizedAccess]
     rhs_true: Union[Var, VectorizedAccess]
+    targetless: bool = False
+    removed: bool = False
 
     def rhs_vars(self) -> list[Var]:
         if isinstance(self.rhs_false, Var):
@@ -66,7 +69,11 @@ class Phi:
         return id(self)
 
     def __str__(self) -> str:
-        return f"{self.lhs} = Φ({self.rhs_false}, {self.rhs_true})"
+        return (
+            f"{self.lhs} = Φ({self.rhs_false}, {self.rhs_true})"
+            + (" (targetless)" if self.targetless else "")
+            + (" (removed)" if self.removed else "")
+        )
 
 
 @dataclass(eq=False)

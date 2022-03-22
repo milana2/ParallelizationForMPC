@@ -33,7 +33,11 @@ class OutputParams(TypedDict):
 
 def _render_prototype(func: Function, type_env: TypeEnv) -> str:
     assert isinstance(func.body[-1], Return)
-    return_type = render_type(type_env[func.body[-1].value], plaintext=False)
+    return_value = func.body[-1].value
+    if isinstance(return_value, VectorizedAccess):
+        return_value = return_value.array
+
+    return_type = render_type(type_env[return_value], plaintext=False)
     return (
         f"template <encrypto::motion::MpcProtocol Protocol>\n"
         f"{return_type} {func.name}(\n"
@@ -95,6 +99,10 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
             ]
         elif isinstance(expr, VectorizedAccess):
             return [const for size in expr.dim_sizes for const in expr_constants(size)]
+        elif isinstance(expr, tac_cfg.VectorizedUpdate):
+            return [
+                const for size in expr.dim_sizes for const in expr_constants(size)
+            ] + [const for const in expr_constants(expr.value)]
         else:
             assert_never(expr)
 
@@ -132,8 +140,8 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
                     # they end up getting an extra final value per dimension.  We account for
                     # this by allocating an extra slot per dimension here and working around
                     # that dimension inside the C++ helper functions
-                    render_expr(bound, dt.replace(render_ctx, plaintext=True)) + " + 1"
-                    for _, bound in var_type.dim_sizes
+                    render_expr(bound, dt.replace(render_ctx, plaintext=True))
+                    for bound in var_type.dim_sizes
                 )
                 + "))"
                 if var_type.dim_sizes
@@ -160,7 +168,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
                 "(("
                 + ") * (".join(
                     render_expr(bound, dt.replace(render_ctx, plaintext=True)) + " + 1"
-                    for _, bound in var_type.dim_sizes
+                    for bound in var_type.dim_sizes
                 )
                 + "))"
                 if var_type.dim_sizes
@@ -191,12 +199,23 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     plaintext_param_assignments = (
         "// Plaintext parameter assignments\n"
         + "\n".join(
+            # Initialize the shared version
             (
-                # Initialize the shared version
                 render_expr(param.var, render_ctx)
                 + " = party->In<Protocol>(encrypto::motion::ToInput("
                 + render_expr(param.var, dt.replace(render_ctx, plaintext=True))
                 + "), 0);"
+            )
+            if param.var_type.dims == 0
+            else (
+                f"{render_expr(param.var, render_ctx)}.clear();\n"
+                + "std::transform("
+                + render_expr(param.var, dt.replace(render_ctx, plaintext=True))
+                + ".begin(), "
+                + render_expr(param.var, dt.replace(render_ctx, plaintext=True))
+                + ".end(), "
+                + f"std::back_inserter({render_expr(param.var, render_ctx)}), "
+                + "[&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });"
             )
             for param in sorted(func.parameters, key=str)
             if param.var_type.is_plaintext()

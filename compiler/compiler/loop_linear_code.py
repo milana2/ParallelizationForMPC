@@ -21,6 +21,7 @@ from .ssa import (
     Tuple,
     Mux,
     Update,
+    VectorizedUpdate,
     assign_rhs_accessed_vars,
 )
 from .tac_cfg import LiftExpr, DropDim

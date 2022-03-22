@@ -4,7 +4,7 @@ import functools
 from .ast_shared import TypeEnv, Var, VectorizedAccess, Subscript, DataType
 from .tac_cfg import DropDim, LiftExpr, Assign, BinOp, BinOpKind
 from . import loop_linear_code as llc
-from .dep_graph import DepGraph, DepNode, EdgeKind
+from .dep_graph import DepGraph, DepNode, EdgeKind, DepParameter
 from . import util
 from .util import assert_never
 
@@ -26,15 +26,14 @@ class TempVarGenerator:
 
     def __init__(self, dep_graph: DepGraph) -> None:
         nodes: Iterable[DepNode] = dep_graph.def_use_graph.nodes
+        var_names = [
+            stmt.lhs.name if isinstance(stmt.lhs, llc.Var) else stmt.lhs.array.name
+            for stmt in nodes
+            # Return statements assign no variable
+            if not isinstance(stmt, llc.Return)
+        ]
         self._max_temp_var_num = max(
-            [
-                0 if isinstance(a.lhs.name, str) else a.lhs.name
-                for a in nodes
-                # Return statements assign no variable
-                if not isinstance(a, llc.Return)
-                # Skip vectorized assignments since every variable will be initially assigned
-                and not isinstance(a.lhs, (VectorizedAccess))
-            ]
+            [0 if isinstance(name, str) else name for name in var_names]
         )
 
     def get(self) -> llc.Var:
@@ -221,6 +220,11 @@ def _remove_back_edge(A_name: Union[str, int], dep_graph: DepGraph, j: llc.For) 
             and isinstance(A_use.lhs, llc.Var)  # needed for mypy
             and A_use.lhs.name == A_name
         ):
+            A_use.targetless = True
+            """
+            NOTE: because we want to keep the back edges for basic vectorization, the below
+            code to remove all back edges is commented out.
+
             assert dep_graph.enclosing_loops[A_use][-1] == j
             A_defs: list[DepNode] = list(dep_graph.def_use_graph.predecessors(A_use))
             for A_def in A_defs:
@@ -233,6 +237,7 @@ def _remove_back_edge(A_name: Union[str, int], dep_graph: DepGraph, j: llc.For) 
                 assert A_def.lhs.name == A_name
                 if dep_graph.is_back_edge(A_def, A_use):
                     dep_graph.def_use_graph.remove_edge(A_def, A_use)
+            """
 
 
 def _prune_edges_from_loop(i: list[llc.For], j: llc.For, dep_graph: DepGraph) -> None:
@@ -361,10 +366,12 @@ def refine_array_mux(
 def _basic_vectorization_phase_1(
     stmts: list[llc.Statement],
     dep_graph: DepGraph,
+    type_env: TypeEnv,
     tmp_var_gen: TempVarGenerator,
-) -> tuple[list[llc.Statement], list[llc.Statement]]:
+) -> tuple[list[llc.Statement], list[llc.Statement], list[llc.Statement]]:
     above_loop_result: list[llc.Statement] = []
     inside_loop_result: list[llc.Statement] = []
+    after_loop_result: list[llc.Statement] = []
 
     for stmt in stmts:
 
@@ -375,6 +382,9 @@ def _basic_vectorization_phase_1(
         ) -> llc.Var:
             def_var = dep_graph.var_to_assignment[var]
             edge_kind = dep_graph.edge_kind(def_var, stmt)
+
+            # def_var -> stmt
+
             if edge_kind is EdgeKind.SAME_LEVEL:
                 return var
             elif edge_kind is EdgeKind.OUTER_TO_INNER:
@@ -393,19 +403,38 @@ def _basic_vectorization_phase_1(
                 )
                 return var_prime
             elif edge_kind is EdgeKind.INNER_TO_OUTER:
+                canonical_dimensionality = type_env[var].dims
+                enclosure_dimensionality = len(dep_graph.enclosing_loops[def_var])
+                if enclosure_dimensionality <= canonical_dimensionality:
+                    return var
+
+                if isinstance(def_var, llc.Phi):
+                    assert isinstance(
+                        def_var.rhs_true, llc.Var
+                    ), "VectorizedAccesses are added after phase 1"
+                    drop_expr = def_var.rhs_true
+                else:
+                    drop_expr = var
+
                 var_prime = tmp_var_gen.get()
-                inside_loop_result.append(
-                    llc.Assign(
-                        lhs=var_prime,
-                        rhs=DropDim(
-                            var,
-                            tuple(
-                                loop.bound_high
-                                for loop in dep_graph.enclosing_loops[def_var]
-                            ),
+                drop_dim = llc.Assign(
+                    lhs=var_prime,
+                    rhs=DropDim(
+                        drop_expr,
+                        tuple(
+                            loop.bound_high
+                            for loop in dep_graph.enclosing_loops[def_var]
                         ),
-                    )
+                    ),
                 )
+                # If this is being used by a phi node, then the definition occurs after the
+                # phi node, so we should insert the drop dim at the end of the current loop
+                if isinstance(stmt, llc.Phi):
+                    after_loop_result.append(drop_dim)
+                # If this isn't a phi node, then the definition occurs before the use statement
+                # so we should insert the drop dim right before the use statement
+                else:
+                    inside_loop_result.append(drop_dim)
                 return var_prime
             else:
                 assert_never(edge_kind)
@@ -491,12 +520,28 @@ def _basic_vectorization_phase_1(
                 elif isinstance(stmt.rhs, llc.Mux):
                     stmt.rhs.false_value = replace_operand(stmt.rhs.false_value, stmt)
                     stmt.rhs.true_value = replace_operand(stmt.rhs.true_value, stmt)
+                elif isinstance(stmt.rhs, llc.Update):
+                    new_val = replace_atom(stmt.rhs.value, stmt)
+                    dim_sizes = tuple(
+                        loop.bound_high for loop in dep_graph.enclosing_loops[stmt]
+                    )
+                    vectorized_dims = tuple(
+                        True for _ in dep_graph.enclosing_loops[stmt]
+                    )
+                    idx_vars = tuple(
+                        loop.counter for loop in dep_graph.enclosing_loops[stmt]
+                    )
+                    stmt.rhs = llc.VectorizedUpdate(
+                        array=stmt.rhs.array,
+                        dim_sizes=dim_sizes,
+                        vectorized_dims=vectorized_dims,
+                        idx_vars=idx_vars,
+                        value=new_val,
+                    )
                 else:
                     assert not isinstance(
-                        stmt.rhs, llc.Update
-                    ), "Basic Vectorization does not support array writes for now"
-                    assert not isinstance(
-                        stmt.rhs, (LiftExpr, DropDim, VectorizedAccess)
+                        stmt.rhs,
+                        (LiftExpr, DropDim, VectorizedAccess, llc.VectorizedUpdate),
                     ), "These types are introduced in basic vectorization so they shouldn't exist here"
                     assert_never(stmt.rhs)
             else:
@@ -505,10 +550,15 @@ def _basic_vectorization_phase_1(
             inside_loop_result.append(stmt)
 
         elif isinstance(stmt, llc.For):
-            for_outside_stmts, for_inside_stmts = _basic_vectorization_phase_1(
-                stmt.body, dep_graph, tmp_var_gen
+            (
+                for_outside_stmts,
+                for_inside_stmts,
+                for_after_stmts,
+            ) = _basic_vectorization_phase_1(
+                stmt.body, dep_graph, type_env, tmp_var_gen
             )
             inside_loop_result += for_outside_stmts
+            for_inside_stmts += for_after_stmts
             new_loop = llc.For(
                 counter=stmt.counter,
                 bound_low=stmt.bound_low,
@@ -526,7 +576,184 @@ def _basic_vectorization_phase_1(
         else:
             assert_never(stmt)
 
-    return above_loop_result, inside_loop_result
+    return above_loop_result, inside_loop_result, after_loop_result
+
+
+def _merge_vectorized_accesses(
+    vectorized_accesses: list[Optional[VectorizedAccess]],
+) -> Optional[VectorizedAccess]:
+    if all(access is None for access in vectorized_accesses):
+        return None
+
+    all_dim_sizes = set(access.dim_sizes for access in vectorized_accesses if access)
+    all_vectorized_dims = set(
+        access.vectorized_dims
+        for access in vectorized_accesses
+        if access and not all(access.vectorized_dims)
+    )
+    all_idx_vars = set(
+        access.idx_vars
+        for access in vectorized_accesses
+        if access
+        # Ignore accesses which are BinOps (these come from phi nodes with backedges)
+        and not any(isinstance(var, llc.BinOp) for var in access.idx_vars)
+    )
+
+    if len(all_dim_sizes) != 1:
+        raise TypeError(
+            f"Expected all dim sizes to be the same but got {all_dim_sizes}"
+        )
+
+    # If all of the provided vectorized_dims are True, then we can synthesize this here
+    # We need to have separate handling for this case because lift expressions are added
+    if len(all_vectorized_dims) == 0:
+        num_dims = set(len(dim_sizes) for dim_sizes in all_dim_sizes)
+        assert len(num_dims) == 1
+        all_vectorized_dims = set(((True,) * num_dims.pop(),))
+
+    if len(all_vectorized_dims) != 1:
+        raise TypeError(
+            f"Expected all vectorized dims to be the same but got {all_vectorized_dims}"
+        )
+
+    if len(all_idx_vars) != 1:
+        raise TypeError(f"Expected all idx vars to be the same but got {all_idx_vars}")
+
+    return VectorizedAccess(
+        array=None,  # type: ignore - we only care about the vectorization, this will be set later
+        dim_sizes=all_dim_sizes.pop(),
+        vectorized_dims=all_vectorized_dims.pop(),
+        idx_vars=all_idx_vars.pop(),
+    )
+
+
+def _collect_vectorized_access(
+    expr: llc.AssignRHS,
+    vectorized_accesses: dict[llc.Var, VectorizedAccess],
+) -> Optional[VectorizedAccess]:
+    if isinstance(expr, llc.Var):
+        return vectorized_accesses.get(expr)
+
+    elif isinstance(expr, llc.LiftExpr):
+        return VectorizedAccess(
+            array=None,  # type: ignore - we only care about the vectorization, this will be set later
+            dim_sizes=tuple(dim_size for _idx_var, dim_size in expr.dims),
+            vectorized_dims=tuple(True for _ in expr.dims),
+            idx_vars=tuple(idx_var for idx_var, _dim_size in expr.dims),
+        )
+
+    elif isinstance(expr, (llc.DropDim, llc.Subscript)):
+        var = expr.array
+        if isinstance(var, VectorizedAccess):
+            var = var.array
+
+        if var not in vectorized_accesses:
+            return None
+        var_vectorized = vectorized_accesses[var]
+        return VectorizedAccess(
+            array=None,  # type: ignore - we only care about the vectorization, this will be set later
+            dim_sizes=var_vectorized.dim_sizes[:-1],
+            vectorized_dims=var_vectorized.vectorized_dims[:-1],
+            idx_vars=var_vectorized.idx_vars[:-1],
+        )
+
+    elif isinstance(expr, llc.BinOp):
+        return _merge_vectorized_accesses(
+            [
+                _collect_vectorized_access(expr.left, vectorized_accesses),
+                _collect_vectorized_access(expr.right, vectorized_accesses),
+            ]
+        )
+
+    elif isinstance(expr, llc.UnaryOp):
+        return _collect_vectorized_access(expr.operand, vectorized_accesses)
+
+    elif isinstance(expr, llc.Mux):
+        return _merge_vectorized_accesses(
+            [
+                _collect_vectorized_access(expr.false_value, vectorized_accesses),
+                _collect_vectorized_access(expr.true_value, vectorized_accesses),
+            ]
+        )
+
+    elif isinstance(expr, llc.VectorizedAccess):
+        return expr
+
+    elif isinstance(expr, (llc.Update, llc.VectorizedUpdate)):
+        return _collect_vectorized_access(expr.array, vectorized_accesses)
+
+    elif isinstance(expr, (llc.Constant, llc.List, llc.Tuple)):
+        return None
+
+    else:
+        assert_never(expr)
+
+
+def _update_vectorized_accesses(
+    expr: llc.AssignRHS, vectorized_accesses: dict[llc.Var, VectorizedAccess]
+) -> llc.AssignRHS:
+    if isinstance(expr, llc.Var):
+        if expr in vectorized_accesses:
+            return vectorized_accesses[expr]
+        else:
+            return expr
+    elif isinstance(expr, VectorizedAccess):
+        return expr
+    elif dc.is_dataclass(expr):
+        return dc.replace(
+            expr,
+            **{
+                field.name: _update_vectorized_accesses(
+                    getattr(expr, field.name), vectorized_accesses
+                )
+                for field in dc.fields(expr)
+            },
+        )
+    else:
+        return expr
+
+
+def _assign_vectorized_accesses(func: llc.Function, dep_graph: DepGraph):
+    worklist = list(dep_graph.def_use_graph.nodes)
+    vectorized_accesses: dict[llc.Var, VectorizedAccess] = {}
+
+    while worklist:
+        stmt = worklist.pop()
+
+        if isinstance(stmt, (DepParameter, llc.For, llc.Return)):
+            continue
+
+        elif isinstance(stmt, llc.Phi):
+            stmt.rhs_true = _update_vectorized_accesses(
+                stmt.rhs_true, vectorized_accesses
+            )
+            stmt.rhs_false = _update_vectorized_accesses(
+                stmt.rhs_false, vectorized_accesses
+            )
+            rhs_access = _merge_vectorized_accesses(
+                [
+                    _collect_vectorized_access(stmt.rhs_false, vectorized_accesses),
+                    _collect_vectorized_access(stmt.rhs_true, vectorized_accesses),
+                ]
+            )
+        elif isinstance(stmt, llc.Assign):
+            stmt.rhs = _update_vectorized_accesses(stmt.rhs, vectorized_accesses)
+            rhs_access = _collect_vectorized_access(stmt.rhs, vectorized_accesses)
+        else:
+            assert_never(stmt)
+
+        if (
+            rhs_access is None
+            or len(rhs_access.dim_sizes) == 0
+            or isinstance(stmt.lhs, llc.VectorizedAccess)
+        ):
+            continue
+
+        lhs_access = dc.replace(rhs_access, array=stmt.lhs)
+        vectorized_accesses[stmt.lhs] = lhs_access
+        stmt.lhs = lhs_access
+
+        worklist.extend([edge[1] for edge in dep_graph.def_use_graph.edges(stmt)])
 
 
 def _find_loop_depth(stmts: list[llc.Statement]) -> int:
@@ -538,46 +765,41 @@ def _find_loop_depth(stmts: list[llc.Statement]) -> int:
 
 def _basic_vectorization_phase_2(
     stmts: list[llc.Statement],
-    type_env: TypeEnv,
     dep_graph: DepGraph,
     tmp_var_gen: TempVarGenerator,
     tgt_depth: int,
     loop_stack: list[llc.For] = [],
-) -> list[llc.Statement]:
+) -> tuple[list[llc.Statement], dict[llc.Var, llc.Var]]:
     # If we're lower than the target depth, just recursively call this function
     if len(loop_stack) < tgt_depth:
         ret: list[llc.Statement] = []
+        phi_renames = {}
         for stmt in stmts:
             if isinstance(stmt, llc.For):
                 # If we're updating the next level, it will handle recreating loops
                 if len(loop_stack) == tgt_depth - 1:
-                    ret.extend(
-                        _basic_vectorization_phase_2(
-                            stmt.body,
-                            type_env,
-                            dep_graph,
-                            tmp_var_gen,
-                            tgt_depth,
-                            loop_stack + [stmt],
-                        ),
+                    new_loop, local_phi_renames = _basic_vectorization_phase_2(
+                        stmt.body,
+                        dep_graph,
+                        tmp_var_gen,
+                        tgt_depth,
+                        loop_stack + [stmt],
                     )
+                    ret.extend(new_loop)
+                    phi_renames.update(local_phi_renames)
                 else:
-                    ret.append(
-                        dc.replace(
-                            stmt,
-                            body=_basic_vectorization_phase_2(
-                                stmt.body,
-                                type_env,
-                                dep_graph,
-                                tmp_var_gen,
-                                tgt_depth,
-                                loop_stack + [stmt],
-                            ),
-                        )
+                    loop_body, local_phi_renames = _basic_vectorization_phase_2(
+                        stmt.body,
+                        dep_graph,
+                        tmp_var_gen,
+                        tgt_depth,
+                        loop_stack + [stmt],
                     )
+                    ret.append(dc.replace(stmt, body=loop_body))
+                    phi_renames.update(local_phi_renames)
             else:
                 ret.append(stmt)
-        return ret
+        return ret, phi_renames
 
     # Otherwise, we're modifying this layer of the loop nest
     # We assume that all deeper loops have been handled already.
@@ -600,6 +822,53 @@ def _basic_vectorization_phase_2(
         if not added_to_closure:
             vectorizeable.append(stmt)
 
+    def collect_updated_array_names(stmts: list[llc.Statement]) -> list[str]:
+        updated_arr_names = []
+        for stmt in stmts:
+            if isinstance(stmt, llc.Assign) and isinstance(
+                stmt.rhs, (llc.VectorizedUpdate, llc.Update)
+            ):
+                updated_arr_names.append(str(stmt.rhs.array.name))
+            elif isinstance(stmt, llc.For):
+                updated_arr_names.extend(collect_updated_array_names(stmt.body))
+        return updated_arr_names
+
+    def closures_intersect(
+        c1: list[tuple[int, llc.Statement]], c2: list[tuple[int, llc.Statement]]
+    ) -> bool:
+        # Check for shared statements
+        c1_stmt_idxs = set(idx for idx, _ in c1)
+        c2_stmt_idxs = set(idx for idx, _ in c2)
+        if len(c1_stmt_idxs & c2_stmt_idxs) > 0:
+            return True
+
+        # Check for shared updated arrays
+        c1_updated_arrs = set(collect_updated_array_names([stmt for _, stmt in c1]))
+        c2_updated_arrs = set(collect_updated_array_names([stmt for _, stmt in c2]))
+        if len(c1_updated_arrs & c2_updated_arrs) > 0:
+            return True
+
+        # Check for targetless phi nodes
+        c1_phi_arrs = set(
+            str(phi.lhs.name)
+            if isinstance(phi.lhs, llc.Var)
+            else str(phi.lhs.array.name)
+            for phi in [stmt for _, stmt in c1 if isinstance(stmt, llc.Phi)]
+        )
+        c2_phi_arrs = set(
+            str(phi.lhs.name)
+            if isinstance(phi.lhs, llc.Var)
+            else str(phi.lhs.array.name)
+            for phi in [stmt for _, stmt in c2 if isinstance(stmt, llc.Phi)]
+        )
+        if (
+            len(c1_updated_arrs & c2_phi_arrs) > 0
+            or len(c2_updated_arrs & c1_phi_arrs) > 0
+        ):
+            return True
+
+        return False
+
     # Merge closures
     closures = []
     used_phis = set()
@@ -615,20 +884,17 @@ def _basic_vectorization_phase_2(
             if other_phi in used_phis:
                 continue
 
-            if any(
-                stmt[0] == other_stmt[0]
-                for stmt, other_stmt in zip(closure_stmts, other_closure_stmts)
-            ):
+            if closures_intersect(closure_stmts, other_closure_stmts):
                 used_phis.add(other_phi)
-                raw_closures[phi].extend(other_closure_stmts)
+                closure_stmts.extend(other_closure_stmts)
 
         # Sort the statements in the closure by their index to retain def-use order
-        raw_closures[phi].sort(key=lambda x: x[0])
+        closure_stmts.sort(key=lambda x: x[0])
 
         # Drop any duplicate statements
         closure = []
         used_indices = set()
-        for idx, stmt in raw_closures[phi]:
+        for idx, stmt in closure_stmts:
             if idx not in used_indices:
                 closure.append(stmt)
                 used_indices.add(idx)
@@ -641,7 +907,6 @@ def _basic_vectorization_phase_2(
     ) -> llc.For:
         # Create new loop
         new_counter = tmp_var_gen.get()
-        type_env[new_counter] = type_env[loop_stack[-1].counter]
         monolithic_for = dc.replace(
             loop_stack[-1],
             counter=new_counter,
@@ -656,20 +921,16 @@ def _basic_vectorization_phase_2(
             elif dc.is_dataclass(stmt):
                 for field in dc.fields(stmt):
                     val = getattr(stmt, field.name)
-                    if isinstance(val, VectorizedAccess):
+                    if isinstance(val, (VectorizedAccess, llc.VectorizedUpdate)):
                         new_vectorization = tuple(
                             vectorization if dim != monolithic_for.counter else False
                             for dim, vectorization in zip(
                                 val.idx_vars, val.vectorized_dims
                             )
                         )
-                        setattr(
-                            stmt,
-                            field.name,
-                            dc.replace(val, vectorized_dims=new_vectorization),
-                        )
-                    else:
-                        unvectorize_loop_dim(val)
+                        val = dc.replace(val, vectorized_dims=new_vectorization)
+                        setattr(stmt, field.name, val)
+                    unvectorize_loop_dim(val)
 
         for orig_var, lifted in lifted_vars.items():
             monolithic_for = util.replace_pattern(monolithic_for, orig_var, lifted)
@@ -705,6 +966,12 @@ def _basic_vectorization_phase_2(
                 for item, vectorized in zip(stmt.idx_vars, stmt.vectorized_dims)
                 if not vectorized
             )
+        elif isinstance(stmt, llc.VectorizedUpdate):
+            return any(
+                uses_loop_counter(item)
+                for item, vectorized in zip(stmt.idx_vars, stmt.vectorized_dims)
+                if not vectorized
+            ) or uses_loop_counter(stmt.value)
         elif isinstance(stmt, llc.LiftExpr):
             # If the loop counter is bound in the lifted expression,
             # we can ignore it
@@ -736,29 +1003,23 @@ def _basic_vectorization_phase_2(
                     orig_var = stmt.lhs
                 else:
                     orig_var = stmt.lhs.array
-                new_var_type = type_env[orig_var].add_dim()
-                if new_var_type.dim_sizes is not None:
-                    new_var_type.dim_sizes.append(
-                        (
-                            loop_stack[-1].counter,
-                            loop_stack[-1].bound_high,
-                        )
-                    )
+
+                if isinstance(stmt.rhs, LiftExpr):
+                    rhs_dim_sizes = list(stmt.rhs.dim_sizes)
+                    rhs_vectorized_dims = list(stmt.rhs.vectorized_dims)
+                    rhs_idx_vars = list(stmt.rhs.idx_vars)
                 else:
-                    new_var_type.dim_sizes = [
-                        (loop_stack[-1].counter, loop_stack[-1].bound_high)
-                    ]
-                assert new_var_type.dim_sizes is not None
-                assert new_var_type.dims is not None
+                    rhs_dim_sizes = []
+                    rhs_vectorized_dims = []
+                    rhs_idx_vars = []
 
                 lifted_access = VectorizedAccess(
                     new_var,
-                    tuple(bound for _, bound in new_var_type.dim_sizes),
-                    tuple([True] * (new_var_type.dims - 1) + [False]),
-                    tuple(var for var, _ in new_var_type.dim_sizes),
+                    dim_sizes=tuple(rhs_dim_sizes + [loop_stack[-1].bound_high]),
+                    vectorized_dims=tuple(rhs_vectorized_dims + [False]),
+                    idx_vars=tuple(rhs_idx_vars + [loop_stack[-1].counter]),
                 )
 
-                type_env[new_var] = new_var_type
                 return {orig_var: (llc.Assign(new_var, new_rhs), lifted_access)}
             else:
                 return {}
@@ -841,34 +1102,104 @@ def _basic_vectorization_phase_2(
     output: list[llc.Statement] = []
     lifted_arrs: dict[llc.Var, VectorizedAccess] = {}
 
-    for stmt_or_closure in stmts_and_closures:
-        if isinstance(stmt_or_closure, list):
-            closure = stmt_or_closure
-            output.append(generate_monolithic_for(closure, lifted_arrs))
+    def lifted_stmt(stmt: llc.Statement) -> list[llc.Statement]:
+        if uses_loop_counter(stmt):
+            lifted = lift_vars(stmt)
+            assignments = []
+            for orig_var, val in lifted.items():
+                assignment, lifted_access = val
+                lifted_arrs[orig_var] = lifted_access
+                assignments.append(assignment)
+            return assignments
         else:
-            stmt = stmt_or_closure
-            # If the statement uses the loop counter, we need to lift it
-            if uses_loop_counter(stmt):
-                lifted = lift_vars(stmt)
-                for orig_var, val in lifted.items():
-                    assignment, lifted_access = val
-                    lifted_arrs[orig_var] = lifted_access
-                    output.append(assignment)
-            else:
-                output.append(stmt)
+            return [stmt]
 
-    return output
+    phi_renames = {}
+
+    for i in range(len(stmts_and_closures)):
+        if isinstance(stmts_and_closures[i], list):
+            closure = stmts_and_closures[i]
+            closure_phis = [phi for phi in closure if isinstance(phi, llc.Phi)]
+
+            # Update vectorizable statements before this point
+            for phi in closure_phis:
+                output = util.replace_pattern(output, phi.lhs, phi.rhs_false)
+
+            # If every phi node in this closure is targetless, then we can
+            # vectorize all statements in the closure
+            if all(phi.targetless for phi in closure_phis):
+                for stmt in closure:
+                    # Phi nodes aren't removed (yet) since we may need to rename
+                    # variables on other levels of the loop nest.  For now,
+                    # just keep track of the fact that they need to be renamed.
+                    if isinstance(stmt, llc.Phi):
+                        lhs_var = stmt.lhs
+                        if isinstance(lhs_var, llc.VectorizedAccess):
+                            lhs_var = lhs_var.array
+
+                        rhs_var = stmt.rhs_false
+                        if isinstance(rhs_var, llc.VectorizedAccess):
+                            rhs_var = rhs_var.array
+
+                        phi_renames[lhs_var] = rhs_var
+                        output.append(dc.replace(stmt, removed=True))
+                    else:
+                        output.extend(lifted_stmt(stmt))
+            else:
+                output.append(generate_monolithic_for(closure, lifted_arrs))
+        else:
+            statements = lifted_stmt(stmts_and_closures[i])
+            output.extend(statements)
+
+    return output, phi_renames
+
+
+def clean_phi_renames(
+    stmts: list[llc.Statement], phi_renames: dict[llc.Var, llc.Var]
+) -> list[llc.Statement]:
+    cleaned_stmts: list[llc.Statement] = []
+    for stmt in stmts:
+        # If this phi node is being removed, we must update what it's being renamed to
+        if isinstance(stmt, llc.Phi) and stmt.removed:
+            lhs_var = stmt.lhs
+            if isinstance(lhs_var, llc.VectorizedAccess):
+                lhs_var = lhs_var.array
+
+            rhs_var = stmt.rhs_true
+            if isinstance(rhs_var, llc.VectorizedAccess):
+                rhs_var = rhs_var.array
+
+            assert lhs_var in phi_renames
+            phi_renames[lhs_var] = rhs_var
+
+        # If this is a for loop, we must recurse into it to keep track of removed
+        # phi nodes inside the loop
+        elif isinstance(stmt, llc.For):
+            new_body = clean_phi_renames(stmt.body, phi_renames)
+            cleaned_stmts.append(dc.replace(stmt, body=new_body))
+
+        # Otherwise, add the statement to the cleaned output after replacing
+        # variables with their renamed versions
+        else:
+            clean_stmt = stmt
+            for orig_var, renamed_var in phi_renames.items():
+                clean_stmt = util.replace_pattern(clean_stmt, orig_var, renamed_var)
+            cleaned_stmts.append(clean_stmt)
+
+    return cleaned_stmts
 
 
 def basic_vectorization_phase_1(
-    function: llc.Function, dep_graph: DepGraph
+    function: llc.Function, type_env: TypeEnv
 ) -> tuple[llc.Function, DepGraph]:
+    dep_graph = DepGraph(function)
     tmp_var_gen = TempVarGenerator(dep_graph)
 
-    before_func, body = _basic_vectorization_phase_1(
-        function.body, dep_graph, tmp_var_gen
+    before_func, body, after_func = _basic_vectorization_phase_1(
+        function.body, dep_graph, type_env, tmp_var_gen
     )
     assert not before_func
+    assert not after_func
 
     function = llc.Function(
         name=function.name,
@@ -876,19 +1207,26 @@ def basic_vectorization_phase_1(
         body=body,
         return_type=function.return_type,
     )
+
+    # Optimistically vectorize all new arrays
+    _assign_vectorized_accesses(function, DepGraph(function))
+
     return function, DepGraph(function)
 
 
 def basic_vectorization_phase_2(
-    function: llc.Function, type_env: TypeEnv, dep_graph: DepGraph
+    function: llc.Function,
 ) -> tuple[llc.Function, TypeEnv, DepGraph]:
-    tmp_var_gen = TempVarGenerator(dep_graph)
-
     loop_depth = _find_loop_depth(function.body) + 1
-    for d in reversed(range(loop_depth)):
+
+    phi_renames = {}
+
+    for depth in reversed(range(loop_depth)):
         dep_graph = DepGraph(function)
-        body = _basic_vectorization_phase_2(
-            function.body, type_env, dep_graph, tmp_var_gen, d
+        tmp_var_gen = TempVarGenerator(dep_graph)
+
+        body, local_phi_renames = _basic_vectorization_phase_2(
+            function.body, dep_graph, tmp_var_gen, depth
         )
 
         function = llc.Function(
@@ -898,4 +1236,19 @@ def basic_vectorization_phase_2(
             return_type=function.return_type,
         )
 
-    return (function, type_env, DepGraph(function))
+        phi_renames.update(local_phi_renames)
+
+    # Now that we've restructured the fuction based on phi closures, we need to clean up
+    # the phi nodes which are marked for removal
+    final_body = clean_phi_renames(function.body, phi_renames)
+    function = llc.Function(
+        name=function.name,
+        parameters=function.parameters,
+        body=final_body,
+        return_type=function.return_type,
+    )
+
+    # Optimistically vectorize all new arrays
+    _assign_vectorized_accesses(function, DepGraph(function))
+
+    return (function, DepGraph(function))

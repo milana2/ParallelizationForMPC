@@ -10,9 +10,8 @@ SKIPPED_TESTS = [
     # These benchmarks will always be skipped (they're essentially pseudocode)
     "biometric_fast",
     "biometric_vectorized",
-    # These benchmarks fail because they involve array writes
+    # These benchmarks fail because they involve appending to arrays
     "convex_hull",
-    "histogram",
     "minimal_points",
     "psi",
     # TODO: figure out why these tests are failing:

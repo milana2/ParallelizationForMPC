@@ -4,136 +4,140 @@ Nodes:
     parameter Sym!0
     max_sum!1 = 0
     current_sum!1 = 0
-    !4!0{N!0} = lift(max_sum!1, (i!1:N!0))
-    !5!0{N!0} = lift(current_sum!1, (i!1:N!0))
-    !6!0{N!0} = lift(Seq!0[i!1], (i!1:N!0))
-    !7!0{N!0} = lift(Sym!0, (i!1:N!0))
-    !8!0{N!0} = lift(Seq!0[i!1], (i!1:N!0))
-    !1!2{N!0} = (!6!0{N!0} == !7!0{N!0})
-    !2!2{N!0} = not !1!2{N!0}
+    !4!0{N!0}[] = lift(max_sum!1, (i!1:N!0))
+    !5!0{N!0}[] = lift(current_sum!1, (i!1:N!0))
+    !6!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !7!0{N!0}[] = lift(Sym!0, (i!1:N!0))
+    !8!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !1!2{N!0}[] = (!6!0{N!0}[] == !7!0{N!0}[])
+    !2!2{N!0}[] = not !1!2{N!0}[]
     current_sum!4 = 0
     for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    max_sum!3{N!0} = current_sum!5{N!0}
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    max_sum!3{N!0}[] = current_sum!5{N!0}[]
     for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    !9!0 = drop_dim(max_sum!2{N!0})
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    !9!0 = drop_dim(max_sum!4{N!0}[])
     return !9!0
 Forward edges:
-    parameter Seq!0  →  !6!0{N!0} = lift(Seq!0[i!1], (i!1:N!0))
-    parameter Seq!0  →  !8!0{N!0} = lift(Seq!0[i!1], (i!1:N!0))
-    parameter Sym!0  →  !7!0{N!0} = lift(Sym!0, (i!1:N!0))
-    max_sum!1 = 0  →  !4!0{N!0} = lift(max_sum!1, (i!1:N!0))
-    current_sum!1 = 0  →  !5!0{N!0} = lift(current_sum!1, (i!1:N!0))
-    !4!0{N!0} = lift(max_sum!1, (i!1:N!0))  →  for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    !4!0{N!0} = lift(max_sum!1, (i!1:N!0))  →  max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !5!0{N!0} = lift(current_sum!1, (i!1:N!0))  →  for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    !5!0{N!0} = lift(current_sum!1, (i!1:N!0))  →  current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    !6!0{N!0} = lift(Seq!0[i!1], (i!1:N!0))  →  !1!2{N!0} = (!6!0{N!0} == !7!0{N!0})
-    !7!0{N!0} = lift(Sym!0, (i!1:N!0))  →  !1!2{N!0} = (!6!0{N!0} == !7!0{N!0})
-    !8!0{N!0} = lift(Seq!0[i!1], (i!1:N!0))  →  for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    !8!0{N!0} = lift(Seq!0[i!1], (i!1:N!0))  →  current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    !1!2{N!0} = (!6!0{N!0} == !7!0{N!0})  →  !2!2{N!0} = not !1!2{N!0}
-    !2!2{N!0} = not !1!2{N!0}  →  for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    !2!2{N!0} = not !1!2{N!0}  →  current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
+    parameter Seq!0  →  parameter Seq!0
+    parameter Seq!0  →  !6!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    parameter Seq!0  →  !8!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    parameter N!0  →  parameter N!0
+    parameter Sym!0  →  parameter Sym!0
+    parameter Sym!0  →  !7!0{N!0}[] = lift(Sym!0, (i!1:N!0))
+    max_sum!1 = 0  →  !4!0{N!0}[] = lift(max_sum!1, (i!1:N!0))
+    current_sum!1 = 0  →  !5!0{N!0}[] = lift(current_sum!1, (i!1:N!0))
+    !4!0{N!0}[] = lift(max_sum!1, (i!1:N!0))  →  for !11!0 in range(0, N!0):
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    !4!0{N!0}[] = lift(max_sum!1, (i!1:N!0))  →  max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !5!0{N!0}[] = lift(current_sum!1, (i!1:N!0))  →  for !10!0 in range(0, N!0):
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    !5!0{N!0}[] = lift(current_sum!1, (i!1:N!0))  →  current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    !6!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))  →  !1!2{N!0}[] = (!6!0{N!0}[] == !7!0{N!0}[])
+    !7!0{N!0}[] = lift(Sym!0, (i!1:N!0))  →  !1!2{N!0}[] = (!6!0{N!0}[] == !7!0{N!0}[])
+    !8!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))  →  for !10!0 in range(0, N!0):
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    !8!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))  →  current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    !1!2{N!0}[] = (!6!0{N!0}[] == !7!0{N!0}[])  →  !2!2{N!0}[] = not !1!2{N!0}[]
+    !2!2{N!0}[] = not !1!2{N!0}[]  →  for !10!0 in range(0, N!0):
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    !2!2{N!0}[] = not !1!2{N!0}[]  →  current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
     current_sum!4 = 0  →  for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    current_sum!4 = 0  →  current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    current_sum!4 = 0  →  current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
     for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)  →  for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)  →  for !10!0 in range(0, N!0):
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
     for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)  →  current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)  →  current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
     for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)  →  current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])  →  for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])  →  current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])  →  for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])  →  current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)  →  for !10!0 in range(0, N!0):
-    current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    current_sum!3[!10!0] = (current_sum!2[!10!0] + !8!0[!10!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)  →  max_sum!3{N!0} = current_sum!5{N!0}
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)  →  for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)  →  !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!3{N!0} = current_sum!5{N!0}  →  for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    max_sum!3{N!0} = current_sum!5{N!0}  →  max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)  →  current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])  →  for !10!0 in range(0, N!0):
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])  →  current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])  →  for !10!0 in range(0, N!0):
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])  →  current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)  →  for !10!0 in range(0, N!0):
+    current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)  →  max_sum!3{N!0}[] = current_sum!5{N!0}[]
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)  →  for !11!0 in range(0, N!0):
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)  →  !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!3{N!0}[] = current_sum!5{N!0}[]  →  for !11!0 in range(0, N!0):
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    max_sum!3{N!0}[] = current_sum!5{N!0}[]  →  max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
     for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])  →  for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])  →  for !11!0 in range(0, N!0):
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
     for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])  →  !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])  →  !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
     for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])  →  max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])  →  for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])  →  !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])  →  max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])  →  for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])  →  max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])  →  for !11!0 in range(0, N!0):
-    max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
-    !3!2[!11!0] = (current_sum!5[!11!0] > max_sum!2[!11!0])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])
-    !9!0 = drop_dim(max_sum!2{N!0})  →  return !9!0
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])  →  max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])  →  for !11!0 in range(0, N!0):
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])  →  !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])  →  max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])  →  for !11!0 in range(0, N!0):
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])  →  max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])  →  for !11!0 in range(0, N!0):
+    max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
+    !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])  →  !9!0 = drop_dim(max_sum!4{N!0}[])
+    !9!0 = drop_dim(max_sum!4{N!0}[])  →  return !9!0
 Back edges:
-    current_sum!5[!10!0] = MUX(!2!2[!10!0], current_sum!3[!10!0], current_sum!4)  →  current_sum!2[!10!0] = Φ(!5!0[!10!0], current_sum!5[(!10!0 - 1)])
-    max_sum!4[!11!0] = MUX(!3!2[!11!0], max_sum!3[!11!0], max_sum!2[!11!0])  →  max_sum!2[!11!0] = Φ(!4!0[!11!0], max_sum!4[(!11!0 - 1)])
+    current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)  →  current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
+    max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])  →  max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])

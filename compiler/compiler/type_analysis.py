@@ -1,3 +1,4 @@
+from copy import copy
 import dataclasses as dc
 from typing import Optional, Union, cast
 
@@ -19,7 +20,16 @@ from .ast_shared import (
     TypeEnv,
     VectorizedAccess,
 )
-from .tac_cfg import AssignRHS, List, Tuple, Mux, Update, LiftExpr, DropDim
+from .tac_cfg import (
+    AssignRHS,
+    List,
+    Tuple,
+    Mux,
+    Update,
+    VectorizedUpdate,
+    LiftExpr,
+    DropDim,
+)
 
 
 def type_assign_expr(
@@ -34,7 +44,7 @@ def type_assign_expr(
     # code in the original source code
 
     if isinstance(expr, Var):
-        return type_env[expr]
+        return type_env.get(expr, VarType())
 
     elif isinstance(expr, Constant):
         return VarType(VarVisibility.PLAINTEXT, 0, expr.datatype)
@@ -46,7 +56,10 @@ def type_assign_expr(
                 f"Array subscript index {expr.index} is not a plaintext int"
             )
 
-        arr_type = type_env[expr.array]
+        arr_type = type_env.get(expr.array, VarType())
+        if arr_type is None:
+            return None
+
         if arr_type.datatype == DataType.TUPLE:
             raise TypeError(f"Tuples cannot be indexed into")
 
@@ -131,11 +144,11 @@ def type_assign_expr(
 
     elif isinstance(expr, Update):
         val_type = type_assign_expr(expr.value, type_env)
-        arr_type = type_env[expr.array]
+        arr_type = type_env.get(expr.array, VarType())
         index_type = type_assign_expr(expr.index, type_env)
 
         if arr_type.datatype == DataType.TUPLE:
-            raise TypeError(f"Tuples cannot be updated")
+            raise TypeError("Tuples cannot be updated")
 
         if not index_type.could_become(PLAINTEXT_INT):
             raise TypeError(
@@ -145,13 +158,34 @@ def type_assign_expr(
         val_arr_type = val_type.add_dim()
         return VarType.merge(val_arr_type, arr_type)
 
+    elif isinstance(expr, VectorizedUpdate):
+        val_type = type_assign_expr(expr.value, type_env)
+        arr_type = type_env.get(expr.array, VarType())
+        index_types = [type_assign_expr(idx_var, type_env) for idx_var in expr.idx_vars]
+
+        if arr_type.datatype == DataType.TUPLE:
+            raise TypeError("Tuples cannot be updated")
+
+        if not all(
+            index_type.could_become(PLAINTEXT_INT) for index_type in index_types
+        ):
+            raise TypeError(
+                f"Array subscript indices {expr.idx_vars} are not plaintext ints"
+            )
+
+        return VarType.merge(val_type, arr_type)
+
     elif isinstance(expr, LiftExpr):
-        expr_type = type_assign_expr(expr.expr, type_env)
+        augmented_env = copy(type_env)
+        for var, _bound in expr.dims:
+            augmented_env[var] = PLAINTEXT_INT
+
+        expr_type = type_assign_expr(expr.expr, augmented_env)
 
         return dc.replace(
             expr_type,
-            _dims=len(expr.dims),
-            dim_sizes=expr.dims,
+            _dims=0,
+            dim_sizes=[loop_bound for _idx_var, loop_bound in expr.dims],
         )
 
     elif isinstance(expr, DropDim):
@@ -159,16 +193,16 @@ def type_assign_expr(
         return expr_type.drop_dim()
 
     elif isinstance(expr, VectorizedAccess):
-        arr_type = type_env[expr.array]
+        arr_type = type_env.get(expr.array, VarType())
+        dim_sizes = [
+            dim_size
+            for dim_size, vectorized in zip(expr.dim_sizes, expr.vectorized_dims)
+            if vectorized
+        ]
         return dc.replace(
             arr_type,
-            dim_sizes=[
-                (idx, dim_size)
-                for dim_size, idx, vectorized in zip(
-                    expr.dim_sizes, expr.idx_vars, expr.vectorized_dims
-                )
-                if vectorized
-            ],
+            _dims=0,
+            dim_sizes=dim_sizes if dim_sizes else None,
         )
 
     else:
@@ -214,22 +248,24 @@ def validate_type_requirements(
 
     for stmt in stmts:
         if isinstance(stmt, loop_linear_code.For):
-            if type_env[stmt.counter] != PLAINTEXT_INT:
+            if type_env.get(stmt.counter) != PLAINTEXT_INT:
                 raise TypeError(
                     f"Loop counter {stmt.counter.name} is not a plaintext integer"
                 )
             validate_type_requirements(stmt.body, type_env, return_stmt, None)
         elif isinstance(stmt, loop_linear_code.Assign):
             # The type assignment function checks for type errors internally
-            if not type_assign_expr(stmt.rhs, type_env).is_complete():
+            expr_type = type_assign_expr(stmt.rhs, type_env)
+            if not expr_type.is_complete():
                 raise TypeError(f"Unable to type expression {stmt.rhs}")
 
             if isinstance(stmt.lhs, VectorizedAccess):
-                lhs_type = type_env[stmt.lhs.array]
+                lhs_type = type_env.get(stmt.lhs.array)
+                expr_type = dc.replace(expr_type, dim_sizes=list(stmt.lhs.dim_sizes))
             else:
-                lhs_type = type_env[stmt.lhs]
+                lhs_type = type_env.get(stmt.lhs)
 
-            if lhs_type != type_assign_expr(stmt.rhs, type_env):
+            if lhs_type != expr_type:
                 raise TypeError(f"Type mismatch in assignment {stmt.lhs} = {stmt.rhs}")
         elif isinstance(stmt, loop_linear_code.Phi):
             elem_types = [type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
@@ -238,9 +274,10 @@ def validate_type_requirements(
                 raise TypeError(f"Unable to type phi expression {stmt}")
 
             if isinstance(stmt.lhs, VectorizedAccess):
-                lhs_type = type_env[stmt.lhs.array]
+                lhs_type = type_env.get(stmt.lhs.array)
+                phi_type = dc.replace(phi_type, dim_sizes=list(stmt.lhs.dim_sizes))
             else:
-                lhs_type = type_env[stmt.lhs]
+                lhs_type = type_env.get(stmt.lhs)
 
             if lhs_type != phi_type:
                 raise TypeError(f"Type mismatch in phi {stmt.lhs} = {stmt.rhs_vars()}")
@@ -279,36 +316,23 @@ def type_check(
             try:
                 expr_type = type_assign_expr(stmt.rhs, type_env)
             except (TypeError, AssertionError) as e:
-                raise TypeError(f"Unable to type statement {stmt}") from e
+                raise TypeError(
+                    f"Unable to type statement {stmt}\nType environment is:\n{type_env}"
+                ) from e
 
             if isinstance(stmt.lhs, Var):
                 orig_var = stmt.lhs
                 new_var_type = expr_type
             elif isinstance(stmt.lhs, VectorizedAccess):
                 orig_var = stmt.lhs.array
-                new_var_type = dc.replace(
-                    expr_type,
-                    dim_sizes=[
-                        (idx, dim_size)
-                        for idx, dim_size, vectorized in zip(
-                            stmt.lhs.idx_vars,
-                            stmt.lhs.dim_sizes,
-                            stmt.lhs.vectorized_dims,
-                        )
-                        if vectorized
-                    ],
-                )
+                new_var_type = dc.replace(expr_type, dim_sizes=list(stmt.lhs.dim_sizes))
             else:
                 assert_never(stmt.lhs)
 
-            if isinstance(stmt.lhs, Var):
-                if expr_type == type_env[stmt.lhs]:
-                    # No changes to this variable's type, don't extend the worklist
-                    continue
-                type_env[stmt.lhs] = expr_type
-            else:
-                # VectorizedAccesses are inserted after type analysis is complete
+            if new_var_type == type_env.get(orig_var):
+                # No changes to this variable's type, don't extend the worklist
                 continue
+            type_env[orig_var] = new_var_type
 
         elif isinstance(stmt, loop_linear_code.Phi):
             elem_types = [type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
@@ -318,21 +342,23 @@ def type_check(
                     mixed_shared_plaintext_allowed=True,
                 )
             except (TypeError, AssertionError) as e:
-                raise TypeError(f"Unable to type statement {stmt}") from e
+                raise TypeError(
+                    f"Unable to type statement {stmt}\nType environment is:\n{type_env}"
+                ) from e
 
-            if isinstance(stmt.lhs, Var):
-                if phi_type == type_env[stmt.lhs]:
-                    # No changes to this variable's type, don't extend the worklist
-                    continue
-                type_env[stmt.lhs] = phi_type
-            else:
-                # VectorizedAccesses are inserted after type analysis is complete
+            lhs_var = stmt.lhs
+            if isinstance(lhs_var, VectorizedAccess):
+                lhs_var = lhs_var.array
+
+            if phi_type == type_env.get(lhs_var):
+                # No changes to this variable's type, don't extend the worklist
                 continue
+            type_env[lhs_var] = phi_type
 
         elif isinstance(
             stmt, (DepParameter, loop_linear_code.For, loop_linear_code.Return)
         ):
-            pass
+            continue
         else:
             assert_never(stmt)
 
@@ -347,25 +373,6 @@ def type_check(
     for var_type in type_env.values():
         if var_type.visibility is None:
             var_type.visibility = VarVisibility.PLAINTEXT
-
-    # Once all typing is done, we can replace all usages of lifted variables with
-    # VectorizedAccesses
-    for var, var_type in type_env.items():
-        # A variable has been vectorized iff its dimensions are known
-        if not var_type.dim_sizes:
-            continue
-
-        func = replace_pattern(
-            func,
-            var,
-            VectorizedAccess(
-                var,
-                dim_sizes=tuple(bound for _, bound in var_type.dim_sizes),
-                vectorized_dims=tuple(True for _ in var_type.dim_sizes),
-                idx_vars=tuple(var for var, _ in var_type.dim_sizes),
-            ),
-            include_return=False,
-        )
 
     validate_type_requirements(func.body, type_env, func.body[-1], func.return_type)
 

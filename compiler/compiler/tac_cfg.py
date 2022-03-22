@@ -78,6 +78,24 @@ class Update:
         return f"Update({self.array}, {self.index}, {self.value})"
 
 
+@dataclass
+class VectorizedUpdate:
+    array: Var
+    dim_sizes: tuple[LoopBound, ...]
+    vectorized_dims: tuple[bool, ...]
+    idx_vars: tuple[Var, ...]
+    value: Atom
+
+    def __str__(self) -> str:
+        idxs = ", ".join(
+            [
+                str(idx).upper() if vectorized else str(idx).lower()
+                for idx, vectorized in zip(self.idx_vars, self.vectorized_dims)
+            ]
+        )
+        return f"VectorizedUpdate({self.array}, [{idxs}], {self.value})"
+
+
 AssignRHS = Union[
     Atom,
     Subscript,
@@ -87,6 +105,7 @@ AssignRHS = Union[
     Tuple,
     Mux,
     Update,
+    VectorizedUpdate,
     "LiftExpr",
     "DropDim",
 ]
@@ -142,10 +161,12 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
             + subscript_index_accessed_vars(rhs.index)
             + assign_rhs_accessed_vars(rhs.value)
         )
+    elif isinstance(rhs, VectorizedUpdate):
+        return [rhs.array] + list(rhs.idx_vars) + assign_rhs_accessed_vars(rhs.value)
     elif isinstance(rhs, LiftExpr):
         return assign_rhs_accessed_vars(rhs.expr)
     elif isinstance(rhs, DropDim):
-        return [rhs.array]
+        return assign_rhs_accessed_vars(rhs.array)
     else:
         assert_never(rhs)
 

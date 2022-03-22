@@ -39,7 +39,7 @@ class VarType:
     tuple_types: list["VarType"] = field(default_factory=list)
 
     # For vectorized accesses, we need to know the size of the dimensions
-    dim_sizes: Optional[list[tuple["Var", "LoopBound"]]] = None
+    dim_sizes: Optional[list["LoopBound"]] = None
 
     @property
     def dims(self) -> Optional[int]:
@@ -73,7 +73,7 @@ class VarType:
         return (
             self.visibility == o.visibility
             and self.datatype == o.datatype
-            and self.dims == o.dims
+            and self.unvectorized_dims == o.unvectorized_dims
             and all(
                 st.is_equivalent_to(ot)
                 for st, ot in zip(self.tuple_types, o.tuple_types)
@@ -83,14 +83,9 @@ class VarType:
     def drop_dim(self) -> "VarType":
         return dc.replace(
             self,
-            _dims=self._dims - 1 if self._dims is not None else None,
-            dim_sizes=self.dim_sizes[:-1] if self.dim_sizes is not None else None,
-        )
-
-    def drop_dims(self) -> "VarType":
-        return dc.replace(
-            self,
-            _dims=self._dims - 1 if self._dims is not None else None,
+            _dims=self.unvectorized_dims - 1
+            if self.unvectorized_dims is not None
+            else None,
             dim_sizes=self.dim_sizes[:-1] if self.dim_sizes is not None else None,
         )
 
@@ -157,7 +152,7 @@ class VarType:
             merged_type.visibility = VarVisibility.PLAINTEXT
 
         # Determine the dimensionality of the merged type
-        elem_dims = [t.dims for t in types if t.dims is not None]
+        elem_dims = [t._dims for t in types if t._dims is not None]
         if len(set(elem_dims)) > 1:
             raise TypeError(
                 "Cannot merge types with different dimensionality:\n{}".format(
@@ -226,8 +221,8 @@ class VarType:
         str_rep += f"{self.datatype}"
 
         if self.dim_sizes is not None:
-            for idx, bound in self.dim_sizes:
-                str_rep += f"; ({idx}:{bound})]"
+            for bound in self.dim_sizes:
+                str_rep += f"; ({bound})]"
         elif self._dims is not None:
             for _ in range(self._dims):
                 str_rep += "; ?]"
@@ -490,15 +485,13 @@ class VectorizedAccess:
             for size, vectorized in zip(self.dim_sizes, self.vectorized_dims)
             if vectorized
         )
-        if vectorized_idxs:
-            vectorized_idxs = "{" + vectorized_idxs + "}"
+        vectorized_idxs = "{" + vectorized_idxs + "}"
         unvectorized_idxs = ", ".join(
             str(var).lower()
             for var, vectorized in zip(self.idx_vars, self.vectorized_dims)
             if not vectorized
         )
-        if unvectorized_idxs:
-            unvectorized_idxs = "[" + unvectorized_idxs + "]"
+        unvectorized_idxs = "[" + unvectorized_idxs + "]"
         return f"{self.array}{vectorized_idxs}{unvectorized_idxs}"
 
     def __hash__(self) -> int:

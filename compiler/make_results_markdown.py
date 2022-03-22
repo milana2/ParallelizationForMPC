@@ -214,19 +214,12 @@ def main():
         md += "### Removal of infeasible edges\n"
         md += f"![]({filename})\n"
 
-        (loop_linear_code, dep_graph) = compiler.vectorize.refine_array_mux(
-            loop_linear_code, dep_graph
-        )
-        md += "### Array MUX refinement\n"
-        md += f"```python\n{loop_linear_code}\n```\n"
-        filename = f"images/{test_case_dir.name}_array_mux_refinement_dep_graph.png"
-        path = os.path.join(args.path, filename)
-        dep_graph_to_image(dep_graph, loop_linear_code, path)
-        md += "### Array MUX refinement (dependence graph)\n"
-        md += f"![]({filename})\n"
+        (loop_linear_code, type_env) = compiler.type_check(loop_linear_code, dep_graph)
+        md += "### Type Environment Before Vectorization\n"
+        md += f"{type_env_to_table(type_env)}\n"
 
         (loop_linear_code, dep_graph) = compiler.vectorize.basic_vectorization_phase_1(
-            loop_linear_code, dep_graph
+            loop_linear_code, type_env
         )
         md += "### Basic Vectorization Phase 1\n"
         md += f"```python\n{loop_linear_code}\n```\n"
@@ -236,28 +229,21 @@ def main():
         md += "### Basic Vectorization Phase 1 (dependence graph)\n"
         md += f"![]({filename})\n"
 
-        (loop_linear_code, type_env) = compiler.type_check(loop_linear_code, dep_graph)
-        md += "### Type Environment After Basic Vectorization Phase 1\n"
-        md += f"{type_env_to_table(type_env)}\n"
-        md += "### Typed Basic Vectorization Phase 1\n"
-        md += f"```python\n{loop_linear_code}\n```\n"
-
         (
             loop_linear_code,
-            type_env,
             dep_graph,
-        ) = compiler.vectorize.basic_vectorization_phase_2(
-            loop_linear_code, type_env, dep_graph
-        )
+        ) = compiler.vectorize.basic_vectorization_phase_2(loop_linear_code)
         md += "### Basic Vectorization Phase 2\n"
         md += f"```python\n{loop_linear_code}\n```\n"
-        md += "### Type Environment After Basic Vectorization Phase 2\n"
-        md += f"{type_env_to_table(type_env)}\n"
         filename = f"images/{test_case_dir.name}_bv_phase_2_dep_graph.png"
         path = os.path.join(args.path, filename)
         dep_graph_to_image(dep_graph, loop_linear_code, path)
         md += "### Basic Vectorization Phase 2 (dependence graph)\n"
         md += f"![]({filename})\n"
+
+        (loop_linear_code, type_env) = compiler.type_check(loop_linear_code, dep_graph)
+        md += "### Type Environment After Vectorization\n"
+        md += f"{type_env_to_table(type_env)}\n"
 
         motion_code = compiler.motion_backend.render_function(
             loop_linear_code, type_env

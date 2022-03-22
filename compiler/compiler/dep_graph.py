@@ -95,7 +95,7 @@ class DepGraph:
                 elif isinstance(stmt, llc.Assign):
                     return [stmt.rhs]
                 elif isinstance(stmt, DepParameter):
-                    return []
+                    return [stmt.var]
                 elif isinstance(stmt, llc.For):
                     if stmt.is_monolithic:
                         return [
@@ -117,12 +117,16 @@ class DepGraph:
             ]
 
             for lhs in lhss:
+                if isinstance(lhs, llc.VectorizedAccess):
+                    lhs = lhs.array
+
                 try:
-                    var_def = self.var_to_assignment[lhs]
+                    var_defs = self.var_to_assignment[lhs]
                 except KeyError:
                     pass
                 else:
-                    self.def_use_graph.add_edge(var_def, assignment)
+                    for var_def in [var_defs]:
+                        self.def_use_graph.add_edge(var_def, assignment)
 
         self.enclosing_loops = dict()
         for assignment, enclosing_loops in all_assignments:

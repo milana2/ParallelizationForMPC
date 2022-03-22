@@ -79,43 +79,29 @@ def compile(
         print(dep_graph)
         print()
 
-    (linear, dep_graph) = vectorize.refine_array_mux(linear, dep_graph)
-    if not quiet:
-        print("Array MUX refinement:")
-        print(linear)
-        print()
-        print("Array MUX refinement (dependence graph):")
-        print(dep_graph)
-        print()
-
-    if run_vectorization:
-        (linear, dep_graph) = vectorize.basic_vectorization_phase_1(linear, dep_graph)
-        if not quiet:
-            print("Basic Vectorization phase 1 (no typing):")
-            print(linear)
-            print()
-
     (linear, type_env) = type_check(linear, dep_graph)
     if not quiet:
-        print("Type environment after basic vectorization phase 1:")
+        print("Unvectorized type environment:")
         print(type_env)
         print()
 
-        print("Basic Vectorization phase 1 (with vectorized array knowledge):")
-        print(linear)
-        print()
-
     if run_vectorization:
-        (linear, type_env, dep_graph) = vectorize.basic_vectorization_phase_2(
-            linear, type_env, dep_graph
-        )
+        (linear, dep_graph) = vectorize.basic_vectorization_phase_1(linear, type_env)
         if not quiet:
-            print("Type environment after basic vectorization phase 2:")
-            print(type_env)
+            print("Basic Vectorization phase 1:")
+            print(linear)
             print()
 
+        (linear, dep_graph) = vectorize.basic_vectorization_phase_2(linear)
+        if not quiet:
             print("Basic Vectorization phase 2:")
             print(linear)
+            print()
+
+        (linear, type_env) = type_check(linear, dep_graph)
+        if not quiet:
+            print("Vectorized type environment:")
+            print(type_env)
             print()
 
     motion_code = motion_backend.render_function(linear, type_env)
@@ -127,9 +113,7 @@ def compile(
     if out_dir:
         if protocol not in motion_backend.VALID_PROTOCOLS:
             raise ValueError(
-                "Invalid protocol: {}. Valid protocols are: {}".format(
-                    protocol, motion_backend.VALID_PROTOCOLS
-                )
+                f"Invalid protocol: {protocol}. Valid protocols are: {motion_backend.VALID_PROTOCOLS}"
             )
 
         motion_backend.render_application(

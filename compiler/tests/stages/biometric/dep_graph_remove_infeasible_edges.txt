@@ -39,9 +39,13 @@ Nodes:
     !2!1 = (min_sum!2, min_index!2)
     return !2!1
 Forward edges:
+    parameter C!0  →  parameter C!0
     parameter C!0  →  d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
+    parameter D!0  →  parameter D!0
     parameter D!0  →  d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
+    parameter S!0  →  parameter S!0
     parameter S!0  →  d!3 = (S!0[((i!1 * D!0) + j!1)] - C!0[j!1])
+    parameter N!0  →  parameter N!0
     min_sum!1 = 10000  →  min_sum!2 = Φ(min_sum!1, min_sum!4)
     min_index!1 = 0  →  min_index!2 = Φ(min_index!1, min_index!4)
     for i!1 in range(0, N!0):
