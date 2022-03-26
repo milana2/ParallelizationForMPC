@@ -1,8 +1,8 @@
 from UTIL import shared
 
 # Array A contains linearization of a MxK matrix
-# Array B contains linearization of a K*N matrix
-# Array C of 0's is the result M*N matrix
+# Array B contains linearization of a KxN matrix
+# Array C of 0's is the result MxN matrix
 # A = [0,2,1,0,3,4,2,3,10] 3x3 matrix
 # B = [10,1,5,2,15,0,10,1000,1,1,2,3] 3x4 matrix
 # C = [0,0,0,0,0,0,0,0,0,0,0,0] 3x4 matrix of 0's
