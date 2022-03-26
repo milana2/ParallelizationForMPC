@@ -7,7 +7,10 @@ from UTIL import shared
 # len(OUTPUT_cluster_x) == len(OUTPUT_cluster_y) == num_clusters 
 # bestMap is an array of 0's
 # len(bestMap) = len
-def kmeans_iteration(data_x: shared[list[int]], data_y: shared[list[int]], cluster_x: shared[list[int]], cluster_y: shared[list[int]], OUTPUT_cluster_x: shared[list[int]], OUTPUT_cluster_y: shared[list[int]], len: int, num_cluster: int, bestMap: list[int]) -> (shared[list[int]], shared[list[int]]):
+# TODO: rewrite to allow for arbitrary number of features, not just two
+def kmeans_iteration(
+    data_x: shared[list[int]], data_y: shared[list[int]], cluster_x: shared[list[int]], cluster_y: shared[list[int]], OUTPUT_cluster_x: shared[list[int]], OUTPUT_cluster_y: shared[list[int]], len: int, num_cluster: int, bestMap: list[int]
+) -> (shared[list[int]], shared[list[int]]):
     
     # Compute nearest clusters for Data item i
     for i in range(len):

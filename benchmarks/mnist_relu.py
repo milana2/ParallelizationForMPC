@@ -6,7 +6,9 @@ from UTIL import shared
 
 # requires: len(input)==len(OUTPUT_res)==len_outer*len_inner
 # OUTPUT_res is array of 0's
-def mnist_decomposed_relu(input: shared[list[int]], OUTPUT_res: shared[list[int]], len_outer: int, len_inner: int) -> shared[list[int]]:
+def mnist_decomposed_relu(
+    input: shared[list[int]], OUTPUT_res: shared[list[int]], len_outer: int, len_inner: int
+) -> shared[list[int]]:
     for i in range(len_outer): 
         for j in range(len_inner):
             val = 0

@@ -27,7 +27,9 @@ size_t cross_join_trivial(DT *OUTPUT_db, DT *a, DT *b) {
 '''
 
 #requires len(A) == Len_A*2, len(B) == Len_B*2, len(res) == Len_A*Len_B*3
-def db_cross_join_trivial(A: shared[list[int]], Len_A: int, B: shared[list[int]], Len_B: int, res : shared[list[int]]) -> (shared[list[int]],int):
+def db_cross_join_trivial(
+    A: shared[list[int]], Len_A: int, B: shared[list[int]], Len_B: int, res : shared[list[int]]
+) -> (shared[list[int]],int):
     count = 0;
     for i in range(0, Len_A):
         for j in range(0, Len_B):

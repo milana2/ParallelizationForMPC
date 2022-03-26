@@ -31,7 +31,9 @@ void convolution_naive(DT *image, DT* kernel, DT* OUTPUT_layer, unsigned image_w
 }
 '''
 
-def cryptonets_convolution_naive(image: shared[list[int]], kernel: shared[list[int]], OUTPUT_layer: shared[list[int]], image_width: int, window_size: int, stride: int, conv_width: int) -> shared[list[int]]:
+def cryptonets_convolution_naive(
+    image: shared[list[int]], kernel: shared[list[int]], OUTPUT_layer: shared[list[int]], image_width: int, window_size: int, stride: int, conv_width: int
+) -> shared[list[int]]:
     # Need to assign each input pixel to the convolution matrix
     # unsigned x, y, wx=0, wy;
     for y in range(conv_width):  # Inner position in the image

@@ -27,7 +27,9 @@ void max_pooling(DT *vals, DT *OUTPUT_res, unsigned cols, unsigned rows) {
 # requires: len(vals) == cols*rows
 # len(OUTPUT_res) = cols*rows/4
 # cols%2 == 0, rows%2 == 0
-def cryptonets_max_pooling(vals: shared[list[int]], cols: int, rows: int, OUTPUT_res: shared[list[int]]) -> shared[list[int]]:
+def cryptonets_max_pooling(
+    vals: shared[list[int]], cols: int, rows: int, OUTPUT_res: shared[list[int]]
+) -> shared[list[int]]:
     rows_res = int(rows/2);
     cols_res = int(cols/2);
     for i in range(rows_res):

@@ -10,7 +10,9 @@ V = [0,0,0,0,0,0,0,0]
 len = 8
 # requires: len(A) == len(V) == len
 # V is an array of 0s
-def variance(A: shared[list[int]], V: shared[list[int]], len: int) -> shared[int]:
+def variance(
+    A: shared[list[int]], V: shared[list[int]], len: int
+) -> shared[int]:
     sum = 0
     for i in range(len):
         sum = sum + A[i]
