@@ -7,6 +7,8 @@ def convex_hull(
     hull_X: list[int] = []
     hull_Y: list[int] = []
 
+    dummy: int = 0
+
     for i in range(0, N):
         is_hull = True
         p1_X = X_coords[i]
@@ -19,9 +21,17 @@ def convex_hull(
 
                 if not (p1_X <= p2_X or p1_Y >= p2_Y):
                     is_hull = False
-
+        val_X: int = dummy
+        val_Y: int = dummy            
+        
         if is_hull:
-            hull_X = hull_X + [p1_X]
-            hull_Y = hull_Y + [p1_Y]
+            val_X = p1_X
+            val_Y = p1_Y
+        hull_X = hull_X + [val_X]
+        hull_Y = hull_Y + [val_Y]
 
     return (hull_X, hull_Y)
+
+X_coords = [1, 2, 3]
+Y_coords = [4, 5, 6]
+print(convex_hull(X_coords, Y_coords, 3))

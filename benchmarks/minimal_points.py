@@ -7,14 +7,19 @@ def minimal_points(
     min_X: list[int] = []
     min_Y: list[int] = []
 
+    dummy: int = 0
     for i in range(0, N):
         bx = False
         for j in range(0, N):
             bx = bx or (X_coords[j] < X_coords[i] and Y_coords[j] < Y_coords[i])
+        val_X: int = dummy
+        val_Y: int = dummy    
         if not bx:
-            min_X = min_X + [X_coords[i]]
-            min_Y = min_Y + [Y_coords[i]]
-
+            val_X = X_coords[i]
+            val_Y = Y_coords[i]
+        min_X = min_X + [val_X]
+        min_Y = min_Y + [val_Y]
+        
     return (min_X, min_Y)
 
 
