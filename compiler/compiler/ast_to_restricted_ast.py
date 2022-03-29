@@ -546,12 +546,14 @@ class _ModuleConverter(_StrictNodeVisitor):
 
     def visit_Module(self, node: ast.Module) -> restricted_ast.Function:
         # TODO: Support larger modules
+        raw_main_function = [
+            statement
+            for statement in node.body
+            if isinstance(statement, ast.FunctionDef)
+        ][0]
+
         main_function = _FunctionConverter(self.source_code_info).visit(
-            [
-                statement
-                for statement in node.body
-                if isinstance(statement, ast.FunctionDef)
-            ][0]
+            raw_main_function
         )
 
         def get_root_call(func: ast.Call) -> Optional[ast.Call]:
@@ -575,13 +577,18 @@ class _ModuleConverter(_StrictNodeVisitor):
                     expr, "Expected a constant integer or list of integers"
                 )
 
-        var_values = dict()
+        # Collect arguments for function
+        module_globals = {main_function.name: raw_main_function}
         for statement in node.body:
-            if isinstance(statement, ast.Assign):
-                target = statement.targets[0]
-                if not isinstance(target, ast.Name):
-                    self.raise_syntax_error(target, "Expected a variable")
-                var_values[target.id] = expr_to_constant(statement.value)
+            if (
+                isinstance(statement, ast.Assign)
+                and len(statement.targets) == 1
+                and isinstance(statement.targets[0], ast.Name)
+            ):
+                module_globals[statement.targets[0].id] = eval(
+                    ast.unparse(statement.value), module_globals
+                )
+
             elif isinstance(statement, ast.Expr) and isinstance(
                 statement.value, ast.Call
             ):
@@ -595,17 +602,19 @@ class _ModuleConverter(_StrictNodeVisitor):
                         f"Incorrect number of arguments to {main_function.name} (expected {len(main_function.parameters)}, got {len(call.args)})",
                     )
 
-                for i, arg in enumerate(call.args):
-                    if isinstance(arg, ast.Name):
-                        if arg.id not in var_values:
-                            self.raise_syntax_error(
-                                arg,
-                                f"Unknown variable {arg.id} passed to {main_function.name}",
-                            )
-                        value = var_values[arg.id]
-                    else:
-                        value = expr_to_constant(arg)
+                if not (
+                    isinstance(call.func, ast.Name)
+                    and call.func.id == main_function.name
+                ):
+                    self.raise_syntax_error(
+                        call,
+                        "Expected only calls to benchmark outside of function source",
+                    )
 
+                list_node = ast.List(call.args)
+                args = eval(ast.unparse(list_node), module_globals)
+
+                for i, value in enumerate(args):
                     main_function.parameters[i].default_values.append(value)
 
         return main_function
