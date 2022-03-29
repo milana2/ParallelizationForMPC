@@ -865,7 +865,10 @@ def _basic_vectorization_phase_2(
             if isinstance(stmt, llc.Assign) and isinstance(
                 stmt.rhs, (llc.VectorizedUpdate, llc.Update)
             ):
-                updated_arr_names.append(str(stmt.rhs.array.name))
+                arr = stmt.rhs.array
+                if isinstance(arr, llc.VectorizedAccess):
+                    arr = arr.array
+                updated_arr_names.append(str(arr.name))
             elif isinstance(stmt, llc.For):
                 updated_arr_names.extend(collect_updated_array_names(stmt.body))
         return updated_arr_names

@@ -1,0 +1,22 @@
+def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    for i!1 in range(0, N!0):
+        result_X!1 = Φ(result_X!0, result_X!2)
+        result_Y!1 = Φ(result_Y!0, result_Y!2)
+        bx!2 = False
+        for j!1 in range(0, N!0):
+            bx!3 = Φ(bx!2, bx!4)
+            !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+            !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+            !5!3 = (!3!3 and !4!3)
+            bx!4 = (bx!3 or !5!3)
+        val_X!2 = result_X!1[i!1]
+        val_Y!2 = result_Y!1[i!1]
+        !6!2 = not bx!3
+        val_X!3 = X_coords!0[i!1]
+        val_Y!3 = Y_coords!0[i!1]
+        val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+        val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+        result_X!2 = Update(result_X!1, i!1, val_X!4)
+        result_Y!2 = Update(result_Y!1, i!1, val_Y!4)
+    !7!1 = (result_X!1, result_Y!1)
+    return !7!1

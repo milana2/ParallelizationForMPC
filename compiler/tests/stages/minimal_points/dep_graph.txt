@@ -1,0 +1,251 @@
+Nodes:
+    parameter X_coords!0
+    parameter Y_coords!0
+    parameter N!0
+    parameter result_X!0
+    parameter result_Y!0
+    for i!1 in range(0, N!0):
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    bx!2 = False
+    for j!1 in range(0, N!0):
+        bx!3 = Φ(bx!2, bx!4)
+        !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+        !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+        !5!3 = (!3!3 and !4!3)
+        bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    !6!2 = not bx!3
+    val_X!3 = X_coords!0[i!1]
+    val_Y!3 = Y_coords!0[i!1]
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    bx!2 = False
+    for j!1 in range(0, N!0):
+    bx!3 = Φ(bx!2, bx!4)
+    !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+    !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+    !5!3 = (!3!3 and !4!3)
+    bx!4 = (bx!3 or !5!3)
+    bx!3 = Φ(bx!2, bx!4)
+    !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+    !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+    !5!3 = (!3!3 and !4!3)
+    bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    !6!2 = not bx!3
+    val_X!3 = X_coords!0[i!1]
+    val_Y!3 = Y_coords!0[i!1]
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)
+    !7!1 = (result_X!1, result_Y!1)
+    return !7!1
+Forward edges:
+    parameter X_coords!0  →  parameter X_coords!0
+    parameter X_coords!0  →  !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+    parameter X_coords!0  →  val_X!3 = X_coords!0[i!1]
+    parameter Y_coords!0  →  parameter Y_coords!0
+    parameter Y_coords!0  →  !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+    parameter Y_coords!0  →  val_Y!3 = Y_coords!0[i!1]
+    parameter N!0  →  parameter N!0
+    parameter result_X!0  →  parameter result_X!0
+    parameter result_X!0  →  result_X!1 = Φ(result_X!0, result_X!2)
+    parameter result_Y!0  →  parameter result_Y!0
+    parameter result_Y!0  →  result_Y!1 = Φ(result_Y!0, result_Y!2)
+    for i!1 in range(0, N!0):
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    bx!2 = False
+    for j!1 in range(0, N!0):
+        bx!3 = Φ(bx!2, bx!4)
+        !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+        !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+        !5!3 = (!3!3 and !4!3)
+        bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    !6!2 = not bx!3
+    val_X!3 = X_coords!0[i!1]
+    val_Y!3 = Y_coords!0[i!1]
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)  →  !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+    for i!1 in range(0, N!0):
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    bx!2 = False
+    for j!1 in range(0, N!0):
+        bx!3 = Φ(bx!2, bx!4)
+        !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+        !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+        !5!3 = (!3!3 and !4!3)
+        bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    !6!2 = not bx!3
+    val_X!3 = X_coords!0[i!1]
+    val_Y!3 = Y_coords!0[i!1]
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)  →  !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+    for i!1 in range(0, N!0):
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    bx!2 = False
+    for j!1 in range(0, N!0):
+        bx!3 = Φ(bx!2, bx!4)
+        !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+        !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+        !5!3 = (!3!3 and !4!3)
+        bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    !6!2 = not bx!3
+    val_X!3 = X_coords!0[i!1]
+    val_Y!3 = Y_coords!0[i!1]
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)  →  val_X!2 = result_X!1[i!1]
+    for i!1 in range(0, N!0):
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    bx!2 = False
+    for j!1 in range(0, N!0):
+        bx!3 = Φ(bx!2, bx!4)
+        !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+        !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+        !5!3 = (!3!3 and !4!3)
+        bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    !6!2 = not bx!3
+    val_X!3 = X_coords!0[i!1]
+    val_Y!3 = Y_coords!0[i!1]
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)  →  val_Y!2 = result_Y!1[i!1]
+    for i!1 in range(0, N!0):
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    bx!2 = False
+    for j!1 in range(0, N!0):
+        bx!3 = Φ(bx!2, bx!4)
+        !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+        !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+        !5!3 = (!3!3 and !4!3)
+        bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    !6!2 = not bx!3
+    val_X!3 = X_coords!0[i!1]
+    val_Y!3 = Y_coords!0[i!1]
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)  →  val_X!3 = X_coords!0[i!1]
+    for i!1 in range(0, N!0):
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    bx!2 = False
+    for j!1 in range(0, N!0):
+        bx!3 = Φ(bx!2, bx!4)
+        !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+        !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+        !5!3 = (!3!3 and !4!3)
+        bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    !6!2 = not bx!3
+    val_X!3 = X_coords!0[i!1]
+    val_Y!3 = Y_coords!0[i!1]
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)  →  val_Y!3 = Y_coords!0[i!1]
+    for i!1 in range(0, N!0):
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    bx!2 = False
+    for j!1 in range(0, N!0):
+        bx!3 = Φ(bx!2, bx!4)
+        !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+        !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+        !5!3 = (!3!3 and !4!3)
+        bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    !6!2 = not bx!3
+    val_X!3 = X_coords!0[i!1]
+    val_Y!3 = Y_coords!0[i!1]
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)  →  result_X!2 = Update(result_X!1, i!1, val_X!4)
+    for i!1 in range(0, N!0):
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    bx!2 = False
+    for j!1 in range(0, N!0):
+        bx!3 = Φ(bx!2, bx!4)
+        !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+        !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+        !5!3 = (!3!3 and !4!3)
+        bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    !6!2 = not bx!3
+    val_X!3 = X_coords!0[i!1]
+    val_Y!3 = Y_coords!0[i!1]
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)  →  result_Y!2 = Update(result_Y!1, i!1, val_Y!4)
+    result_X!1 = Φ(result_X!0, result_X!2)  →  val_X!2 = result_X!1[i!1]
+    result_X!1 = Φ(result_X!0, result_X!2)  →  result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_X!1 = Φ(result_X!0, result_X!2)  →  !7!1 = (result_X!1, result_Y!1)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)  →  val_Y!2 = result_Y!1[i!1]
+    result_Y!1 = Φ(result_Y!0, result_Y!2)  →  result_Y!2 = Update(result_Y!1, i!1, val_Y!4)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)  →  !7!1 = (result_X!1, result_Y!1)
+    bx!2 = False  →  bx!3 = Φ(bx!2, bx!4)
+    for j!1 in range(0, N!0):
+    bx!3 = Φ(bx!2, bx!4)
+    !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+    !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+    !5!3 = (!3!3 and !4!3)
+    bx!4 = (bx!3 or !5!3)  →  !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+    for j!1 in range(0, N!0):
+    bx!3 = Φ(bx!2, bx!4)
+    !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+    !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+    !5!3 = (!3!3 and !4!3)
+    bx!4 = (bx!3 or !5!3)  →  !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+    bx!3 = Φ(bx!2, bx!4)  →  bx!4 = (bx!3 or !5!3)
+    bx!3 = Φ(bx!2, bx!4)  →  !6!2 = not bx!3
+    !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])  →  !5!3 = (!3!3 and !4!3)
+    !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])  →  !5!3 = (!3!3 and !4!3)
+    !5!3 = (!3!3 and !4!3)  →  bx!4 = (bx!3 or !5!3)
+    val_X!2 = result_X!1[i!1]  →  val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!2 = result_Y!1[i!1]  →  val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    !6!2 = not bx!3  →  val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    !6!2 = not bx!3  →  val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    val_X!3 = X_coords!0[i!1]  →  val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+    val_Y!3 = Y_coords!0[i!1]  →  val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+    val_X!4 = MUX(!6!2, val_X!3, val_X!2)  →  result_X!2 = Update(result_X!1, i!1, val_X!4)
+    val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)  →  result_Y!2 = Update(result_Y!1, i!1, val_Y!4)
+    !7!1 = (result_X!1, result_Y!1)  →  return !7!1
+Back edges:
+    bx!4 = (bx!3 or !5!3)  →  bx!3 = Φ(bx!2, bx!4)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)  →  result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)  →  result_Y!1 = Φ(result_Y!0, result_Y!2)
