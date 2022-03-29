@@ -1,5 +1,6 @@
 import ast
 import os
+import sys
 import subprocess
 import unittest
 
@@ -94,7 +95,7 @@ class StagesTestCase(unittest.TestCase):
 
                 # Collect expected output
                 proc = subprocess.run(
-                    ["python3", input_fname],
+                    [sys.executable, input_fname],
                     check=True,
                     stdout=subprocess.PIPE,
                     text=True,
