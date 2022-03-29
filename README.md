@@ -4,48 +4,10 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5469|4518|911|4945|0.814 MiB |4945|0.814 MiB |2180.279 ms |451.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |11906.952 ms |4557.0 ms |
-|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |1814.063 ms |292.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2087.527 ms |414.0 ms |
-|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1315.761 ms |208.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1520.941 ms |286.0 ms |
-|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1334.183 ms |209.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1500.901 ms |286.0 ms |
-|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3687.44 ms |1257.0 ms |
-|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1188.973 ms |310.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2094.471 ms |777.0 ms |
-|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |2807.804 ms |477.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2531.63 ms |605.0 ms |
-|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2466.903 ms |370.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |2013.007 ms |398.0 ms |
-|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2232.389 ms |366.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |1969.9 ms |403.0 ms |
-|psi|131|61|42|472|0.063 MiB |472|0.063 MiB |159.407 ms |12.0 ms |
-|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |620.456 ms |159.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4492|3637|815|7865|4.528 MiB |7857|4.527 MiB |611.059 ms |600.0 ms |
-|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |6112.505 ms |5216.0 ms |
-|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |219.161 ms |206.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |304.874 ms |375.0 ms |
-|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |198.187 ms |151.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |247.335 ms |264.0 ms |
-|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |200.928 ms |152.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |208.13 ms |268.0 ms |
-|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |980.429 ms |980.0 ms |
-|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |386.757 ms |330.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |906.223 ms |911.0 ms |
-|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |465.925 ms |404.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |612.363 ms |577.0 ms |
-|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |369.035 ms |305.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |447.197 ms |350.0 ms |
-|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |411.327 ms |310.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |406.684 ms |374.0 ms |
-|psi|147|77|42|760|0.37 MiB |746|0.369 MiB |182.547 ms |26.0 ms |
-|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |206.957 ms |291.0 ms |
 
 ## Compiler stages with different benchmarks
 ## `biometric`
@@ -2650,6 +2612,329 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
 
     _9_0 = drop_dim_monoreturn(max_sum_4, {_MPC_PLAINTEXT_N_0});
     return _9_0;
+
+}
+```
+## `minimal_points`
+### Input
+```python
+from UTIL import shared
+
+# requires: result_Y and result_X are arrays of dummy values (0's)
+def minimal_points(
+    X_coords: shared[list[int]], Y_coords: shared[list[int]], N: int, result_X: shared[list[int]], result_Y: shared[list[int]]
+) -> tuple[shared[list[int]], shared[list[int]]]:
+    min_X: list[int] = []
+    min_Y: list[int] = []
+
+    # dummy: int = 0
+    for i in range(0, N):
+        bx = False
+        for j in range(0, N):
+            bx = bx or (X_coords[j] < X_coords[i] and Y_coords[j] < Y_coords[i])
+        val_X: int = result_X[i]
+        val_Y: int = result_Y[i]    
+        if not bx:
+            val_X = X_coords[i]
+            val_Y = Y_coords[i]
+        result_X[i] = val_X
+        result_Y[i] = val_Y
+        
+    return (result_X, result_Y)
+
+
+X_coords = [1, 2, 3]
+Y_coords = [4, 5, 6]
+result_X = [0 for i in range(len(X_coords))]
+result_Y = [0 for i in range(len(Y_coords))]
+print(minimal_points(X_coords, Y_coords, 3, result_X, result_Y))
+
+```
+### Restricted AST
+```python
+def minimal_points(X_coords: shared[list[int; ?]], Y_coords: shared[list[int; ?]], N: plaintext[int], result_X: shared[list[int; ?]], result_Y: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    min_X = []
+    min_Y = []
+    for i: plaintext[int] in range(0, N):
+        bx = False
+        for j: plaintext[int] in range(0, N):
+            bx = (bx or ((X_coords[j] < X_coords[i]) and (Y_coords[j] < Y_coords[i])))
+        val_X = result_X[i]
+        val_Y = result_Y[i]
+        if not bx:
+            val_X = X_coords[i]
+            val_Y = Y_coords[i]
+        result_X[i] = val_X
+        result_Y[i] = val_Y
+    return (result_X, result_Y)
+```
+### Three-address code CFG
+![](images/minimal_points_tac_cfg.png)
+### SSA
+![](images/minimal_points_ssa.png)
+### SSA ϕ→MUX
+![](images/minimal_points_ssa_mux.png)
+### Dead code elimination
+![](images/minimal_points_dead_code_elim.png)
+### Linear code with loops
+```python
+def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    for i!1 in range(0, N!0):
+        result_X!1 = Φ(result_X!0, result_X!2)
+        result_Y!1 = Φ(result_Y!0, result_Y!2)
+        bx!2 = False
+        for j!1 in range(0, N!0):
+            bx!3 = Φ(bx!2, bx!4)
+            !3!3 = (X_coords!0[j!1] < X_coords!0[i!1])
+            !4!3 = (Y_coords!0[j!1] < Y_coords!0[i!1])
+            !5!3 = (!3!3 and !4!3)
+            bx!4 = (bx!3 or !5!3)
+        val_X!2 = result_X!1[i!1]
+        val_Y!2 = result_Y!1[i!1]
+        !6!2 = not bx!3
+        val_X!3 = X_coords!0[i!1]
+        val_Y!3 = Y_coords!0[i!1]
+        val_X!4 = MUX(!6!2, val_X!3, val_X!2)
+        val_Y!4 = MUX(!6!2, val_Y!3, val_Y!2)
+        result_X!2 = Update(result_X!1, i!1, val_X!4)
+        result_Y!2 = Update(result_Y!1, i!1, val_Y!4)
+    !7!1 = (result_X!1, result_Y!1)
+    return !7!1
+```
+### Dependency graph
+![](images/minimal_points_dep_graph.png)
+### Removal of infeasible edges
+![](images/minimal_points_remove_infeasible_edges.png)
+### Type Environment Before Vectorization
+| Variable | Type |
+| - | - |
+| `X_coords!0` | `shared[list[int; ?]]` |
+| `Y_coords!0` | `shared[list[int; ?]]` |
+| `N!0` | `plaintext[int]` |
+| `result_X!0` | `shared[list[int; ?]]` |
+| `result_Y!0` | `shared[list[int; ?]]` |
+| `i!1` | `plaintext[int]` |
+| `j!1` | `plaintext[int]` |
+| `!7!1` | `tuple[shared[list[int; ?]], shared[list[int; ?]]]` |
+| `result_Y!2` | `shared[list[int; ?]]` |
+| `result_Y!1` | `shared[list[int; ?]]` |
+| `val_Y!2` | `shared[int]` |
+| `val_Y!4` | `shared[int]` |
+| `result_X!2` | `shared[list[int; ?]]` |
+| `result_X!1` | `shared[list[int; ?]]` |
+| `val_X!2` | `shared[int]` |
+| `val_X!4` | `shared[int]` |
+| `val_Y!3` | `shared[int]` |
+| `val_X!3` | `shared[int]` |
+| `!6!2` | `shared[bool]` |
+| `bx!4` | `shared[bool]` |
+| `bx!3` | `shared[bool]` |
+| `!5!3` | `shared[bool]` |
+| `!4!3` | `shared[bool]` |
+| `!3!3` | `shared[bool]` |
+| `bx!2` | `plaintext[bool]` |
+### Basic Vectorization Phase 1
+```python
+def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    !8!0{N!0}[] = lift(result_X!0, (i!1:N!0))
+    !9!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
+    !16!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
+    !17!0{N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))
+    for i!1 in range(0, N!0):
+        result_X!1{N!0}[] = Φ(!8!0{N!0}[], result_X!2{N!0}[]) (targetless)
+        result_Y!1{N!0}[] = Φ(!9!0{N!0}[], result_Y!2{N!0}[]) (targetless)
+        bx!2 = False
+        !10!0{N!0, N!0}[] = lift(bx!2, (i!1:N!0, j!1:N!0))
+        !11!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
+        !12!0{N!0, N!0}[] = lift(X_coords!0[i!1], (i!1:N!0, j!1:N!0))
+        !13!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
+        !14!0{N!0, N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0, j!1:N!0))
+        for j!1 in range(0, N!0):
+            bx!3{N!0, N!0}[] = Φ(!10!0{N!0, N!0}[], bx!4{N!0, N!0}[])
+            !3!3{N!0, N!0}[] = (!11!0{N!0, N!0}[] < !12!0{N!0, N!0}[])
+            !4!3{N!0, N!0}[] = (!13!0{N!0, N!0}[] < !14!0{N!0, N!0}[])
+            !5!3{N!0, N!0}[] = (!3!3{N!0, N!0}[] and !4!3{N!0, N!0}[])
+            bx!4{N!0, N!0}[] = (bx!3{N!0, N!0}[] or !5!3{N!0, N!0}[])
+        val_X!2{N!0}[] = result_X!1{N!0}[]
+        val_Y!2{N!0}[] = result_Y!1{N!0}[]
+        !15!0{N!0}[] = drop_dim(bx!4{N!0, N!0}[])
+        !6!2{N!0}[] = not !15!0{N!0}[]
+        val_X!3{N!0}[] = !16!0{N!0}[]
+        val_Y!3{N!0}[] = !17!0{N!0}[]
+        val_X!4{N!0}[] = MUX(!6!2{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
+        val_Y!4{N!0}[] = MUX(!6!2{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
+        result_X!2{N!0}[] = VectorizedUpdate(result_X!1{N!0}[], [I!1], val_X!4{N!0}[])
+        result_Y!2{N!0}[] = VectorizedUpdate(result_Y!1{N!0}[], [I!1], val_Y!4{N!0}[])
+    !7!1 = (result_X!1, result_Y!1)
+    return !7!1
+```
+### Basic Vectorization Phase 1 (dependence graph)
+![](images/minimal_points_bv_phase_1_dep_graph.png)
+### Basic Vectorization Phase 2
+```python
+def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    !8!0{N!0}[] = lift(result_X!0, (i!1:N!0))
+    !9!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
+    !16!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
+    !17!0{N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))
+    bx!2 = False
+    !10!0{N!0, N!0}[] = lift(bx!2, (i!1:N!0, j!1:N!0))
+    !11!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
+    !12!0{N!0, N!0}[] = lift(X_coords!0[i!1], (i!1:N!0, j!1:N!0))
+    !13!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
+    !14!0{N!0, N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0, j!1:N!0))
+    !3!3{N!0, N!0}[] = (!11!0{N!0, N!0}[] < !12!0{N!0, N!0}[])
+    !4!3{N!0, N!0}[] = (!13!0{N!0, N!0}[] < !14!0{N!0, N!0}[])
+    !5!3{N!0, N!0}[] = (!3!3{N!0, N!0}[] and !4!3{N!0, N!0}[])
+    for !18!0 in range(0, N!0):
+        bx!3{N!0}[!18!0] = Φ(!10!0{N!0}[!18!0], bx!4{N!0}[(!18!0 - 1)])
+        bx!4{N!0}[!18!0] = (bx!3{N!0}[!18!0] or !5!3{N!0}[!18!0])
+    !15!0{N!0}[] = drop_dim(bx!4{N!0, N!0}[])
+    !6!2{N!0}[] = not !15!0{N!0}[]
+    val_X!3{N!0}[] = !16!0{N!0}[]
+    val_Y!3{N!0}[] = !17!0{N!0}[]
+    val_X!2{N!0}[] = !8!0{N!0}[]
+    val_X!4{N!0}[] = MUX(!6!2{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
+    result_X!2{N!0}[] = VectorizedUpdate(!8!0{N!0}[], [I!1], val_X!4{N!0}[])
+    val_Y!2{N!0}[] = !9!0{N!0}[]
+    val_Y!4{N!0}[] = MUX(!6!2{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
+    result_Y!2{N!0}[] = VectorizedUpdate(!9!0{N!0}[], [I!1], val_Y!4{N!0}[])
+    !7!1 = (result_X!2, result_Y!2)
+    return !7!1
+```
+### Basic Vectorization Phase 2 (dependence graph)
+![](images/minimal_points_bv_phase_2_dep_graph.png)
+### Type Environment After Vectorization
+| Variable | Type |
+| - | - |
+| `X_coords!0` | `shared[list[int; ?]]` |
+| `Y_coords!0` | `shared[list[int; ?]]` |
+| `N!0` | `plaintext[int]` |
+| `result_X!0` | `shared[list[int; ?]]` |
+| `result_Y!0` | `shared[list[int; ?]]` |
+| `!18!0` | `plaintext[int]` |
+| `!7!1` | `tuple[shared[list[int; (N!0)]], shared[list[int; (N!0)]]]` |
+| `result_Y!2` | `shared[list[int; (N!0)]]` |
+| `val_Y!4` | `shared[list[int; (N!0)]]` |
+| `val_Y!2` | `shared[list[int; (N!0)]]` |
+| `result_X!2` | `shared[list[int; (N!0)]]` |
+| `val_X!4` | `shared[list[int; (N!0)]]` |
+| `val_X!2` | `shared[list[int; (N!0)]]` |
+| `val_Y!3` | `shared[list[int; (N!0)]]` |
+| `val_X!3` | `shared[list[int; (N!0)]]` |
+| `!6!2` | `shared[list[bool; (N!0)]]` |
+| `!15!0` | `shared[list[bool; (N!0)]]` |
+| `bx!4` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `bx!3` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `!5!3` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `!4!3` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `!3!3` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `!14!0` | `shared[list[list[int; (N!0)]; (N!0)]]` |
+| `!13!0` | `shared[list[list[int; (N!0)]; (N!0)]]` |
+| `!12!0` | `shared[list[list[int; (N!0)]; (N!0)]]` |
+| `!11!0` | `shared[list[list[int; (N!0)]; (N!0)]]` |
+| `!10!0` | `plaintext[list[list[bool; (N!0)]; (N!0)]]` |
+| `bx!2` | `plaintext[bool]` |
+| `!17!0` | `shared[list[int; (N!0)]]` |
+| `!16!0` | `shared[list[int; (N!0)]]` |
+| `!9!0` | `shared[list[int; (N!0)]]` |
+| `!8!0` | `shared[list[int; (N!0)]]` |
+### Motion code
+```cpp
+template <encrypto::motion::MpcProtocol Protocol>
+std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> minimal_points(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_X_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_Y_0
+) {
+    // Shared variable declarations
+    std::vector<encrypto::motion::ShareWrapper> _10_0((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _11_0((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _12_0((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _13_0((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _14_0((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _15_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _16_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _17_0((_MPC_PLAINTEXT_N_0));
+    encrypto::motion::SecureUnsignedInteger _18_0;
+    std::vector<encrypto::motion::ShareWrapper> _3_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _4_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _5_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _6_2((_MPC_PLAINTEXT_N_0));
+    std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> _7_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _8_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _9_0((_MPC_PLAINTEXT_N_0));
+    encrypto::motion::SecureUnsignedInteger N_0;
+    encrypto::motion::ShareWrapper bx_2;
+    std::vector<encrypto::motion::ShareWrapper> bx_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> bx_4((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_X_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_Y_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_X_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_X_3((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_X_4((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_Y_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_Y_3((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_Y_4((_MPC_PLAINTEXT_N_0));
+
+    // Plaintext variable declarations
+    std::vector<bool> _MPC_PLAINTEXT__10_0((_MPC_PLAINTEXT_N_0 + 1) * (_MPC_PLAINTEXT_N_0 + 1));
+    std::uint32_t _MPC_PLAINTEXT__18_0;
+    std::tuple<std::vector<std::uint32_t>, std::vector<std::uint32_t>> _MPC_PLAINTEXT__7_1;
+    bool _MPC_PLAINTEXT_bx_2;
+
+    // Constant initializations
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
+
+    // Plaintext parameter assignments
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+
+    // Function body
+    vectorized_assign(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return result_X_0;}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return result_Y_0;}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_16_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return X_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_17_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Y_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
+    bx_2 = _MPC_CONSTANT_false;
+    _MPC_PLAINTEXT_bx_2 = false;
+    vectorized_assign(_10_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return bx_2;}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_11_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return X_coords_0[indices[1]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return X_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Y_coords_0[indices[1]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_14_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Y_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_3_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, (vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}) > vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})));
+    vectorized_assign(_4_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, (vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}) > vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})));
+    vectorized_assign(_5_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, (encrypto::motion::ShareWrapper(vectorized_access(_3_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}).Get()) & encrypto::motion::ShareWrapper(vectorized_access(_4_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}).Get())));
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__18_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(bx_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__18_0}, vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__18_0}));
+    for (; _MPC_PLAINTEXT__18_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__18_0++) {
+        _18_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__18_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__18_0 != std::uint32_t(0)) {
+            vectorized_assign(bx_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__18_0}, vectorized_access(bx_4, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {(_MPC_PLAINTEXT__18_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(bx_4, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__18_0}, (encrypto::motion::ShareWrapper(vectorized_access(bx_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__18_0}).Get()) | encrypto::motion::ShareWrapper(vectorized_access(_5_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__18_0}).Get())));
+
+    }
+
+    vectorized_assign(_15_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, drop_dim(bx_4, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_6_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (~vectorized_access(_15_0, {_MPC_PLAINTEXT_N_0}, {true}, {})));
+    vectorized_assign(val_X_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_16_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(val_Y_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_17_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(val_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(val_X_4, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_6_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Mux(vectorized_access(val_X_3, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get(), vectorized_access(val_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get()));
+    vectorized_assign(result_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_update(vectorized_access(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {}), {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(val_X_4, {_MPC_PLAINTEXT_N_0}, {true}, {})));
+    vectorized_assign(val_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(val_Y_4, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_6_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Mux(vectorized_access(val_Y_3, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get(), vectorized_access(val_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get()));
+    vectorized_assign(result_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_update(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}), {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(val_Y_4, {_MPC_PLAINTEXT_N_0}, {true}, {})));
+    _7_1 = std::make_tuple(result_X_2, result_Y_2);
+    return _7_1;
 
 }
 ```
