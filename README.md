@@ -4,54 +4,58 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5469|4518|911|4945|0.814 MiB |4945|0.814 MiB |2465.317 ms |435.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |12637.267 ms |4523.0 ms |
-|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |1896.237 ms |286.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2552.924 ms |393.0 ms |
-|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1294.188 ms |206.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1508.409 ms |273.0 ms |
-|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1298.881 ms |211.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1440.087 ms |277.0 ms |
-|histogram|2688|2499|118|3016|0.396 MiB |3016|0.396 MiB |1486.348 ms |271.0 ms |
-|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3486.945 ms |1247.0 ms |
-|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1649.748 ms |310.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2188.848 ms |754.0 ms |
-|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |3596.014 ms |470.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2804.869 ms |585.0 ms |
-|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2889.924 ms |374.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1885.098 ms |394.0 ms |
-|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2460.012 ms |368.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2017.725 ms |390.0 ms |
-|minimal_points|531|478|36|763|0.097 MiB |763|0.097 MiB |242.929 ms |41.0 ms |
-|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |996.445 ms |318.0 ms |
-|psi|131|61|42|472|0.063 MiB |472|0.063 MiB |83.214 ms |12.0 ms |
-|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |612.584 ms |153.0 ms |
+|biometric|5469|4518|911|4945|0.814 MiB |4945|0.814 MiB |2210.801 ms |431.0 ms |
+|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |11665.823 ms |5523.0 ms |
+|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |2083.392 ms |282.0 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2171.854 ms |398.0 ms |
+|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1322.579 ms |204.0 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1523.604 ms |276.0 ms |
+|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1498.204 ms |206.0 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1515.013 ms |282.0 ms |
+|db_variance|16280|3307|12939|13644|1.49 MiB |13644|1.49 MiB |10043.317 ms |1276.0 ms |
+|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |10887.616 ms |3756.0 ms |
+|histogram|2688|2499|118|3016|0.396 MiB |3016|0.396 MiB |1677.721 ms |265.0 ms |
+|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3921.715 ms |1235.0 ms |
+|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1488.822 ms |306.0 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2247.271 ms |744.0 ms |
+|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |3183.089 ms |466.0 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |3311.946 ms |572.0 ms |
+|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2277.324 ms |369.0 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1975.07 ms |386.0 ms |
+|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2406.111 ms |355.0 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2334.012 ms |397.0 ms |
+|minimal_points|531|478|36|763|0.097 MiB |763|0.097 MiB |208.326 ms |42.0 ms |
+|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |1067.399 ms |313.0 ms |
+|psi|131|61|42|472|0.063 MiB |472|0.063 MiB |113.738 ms |12.0 ms |
+|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |621.391 ms |152.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4492|3637|815|7865|4.528 MiB |7857|4.527 MiB |550.404 ms |528.0 ms |
-|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5117.118 ms |5098.0 ms |
-|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |269.989 ms |202.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |404.641 ms |374.0 ms |
-|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |187.557 ms |150.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |249.368 ms |258.0 ms |
-|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |177.411 ms |148.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |225.552 ms |257.0 ms |
-|histogram|1528|1339|118|2953|1.11 MiB |2898|1.106 MiB |232.818 ms |216.0 ms |
-|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |961.892 ms |832.0 ms |
-|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |402.951 ms |322.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |905.222 ms |870.0 ms |
-|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |523.203 ms |396.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |528.943 ms |563.0 ms |
-|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |461.02 ms |299.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |361.686 ms |343.0 ms |
-|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |421.043 ms |297.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |363.002 ms |339.0 ms |
-|minimal_points|479|426|36|1019|0.269 MiB |1014|0.269 MiB |136.471 ms |45.0 ms |
-|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |422.766 ms |292.0 ms |
-|psi|147|77|42|760|0.37 MiB |746|0.369 MiB |72.992 ms |23.0 ms |
-|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |194.537 ms |261.0 ms |
+|biometric|4492|3637|815|7865|4.528 MiB |7857|4.527 MiB |654.404 ms |528.0 ms |
+|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5927.413 ms |6060.0 ms |
+|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |243.838 ms |202.0 ms |
+|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |304.874 ms |365.0 ms |
+|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |169.998 ms |144.0 ms |
+|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |217.469 ms |261.0 ms |
+|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |197.232 ms |148.0 ms |
+|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |299.14 ms |264.0 ms |
+|db_variance|13365|3014|10317|20728|4.017 MiB |20710|4.015 MiB |1741.9 ms |1299.0 ms |
+|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |3951.518 ms |3358.0 ms |
+|histogram|1528|1339|118|2953|1.11 MiB |2898|1.106 MiB |321.489 ms |217.0 ms |
+|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1263.812 ms |935.0 ms |
+|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |408.284 ms |322.0 ms |
+|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |879.926 ms |870.0 ms |
+|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |567.66 ms |393.0 ms |
+|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |567.702 ms |570.0 ms |
+|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |366.115 ms |293.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |400.677 ms |337.0 ms |
+|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |372.711 ms |295.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |417.296 ms |341.0 ms |
+|minimal_points|479|426|36|1019|0.269 MiB |1014|0.269 MiB |50.647 ms |49.0 ms |
+|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |452.831 ms |290.0 ms |
+|psi|147|77|42|760|0.37 MiB |746|0.369 MiB |142.218 ms |26.0 ms |
+|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |143.598 ms |264.0 ms |
 
 ## Compiler stages with different benchmarks
 ## `biometric`
@@ -1340,6 +1344,298 @@ encrypto::motion::SecureUnsignedInteger count_123(
 
     _15_0 = drop_dim_monoreturn(c_4, {_MPC_PLAINTEXT_N_0});
     return _15_0;
+
+}
+```
+## `db_variance`
+### Input
+```python
+from UTIL import shared
+
+# Array A is a the input array of integers i, merges the arrays of two parties
+# Array V is a same-size result array, contains variance
+# A = [0,2,1,0,3,4,2,3]
+# V = [0,0,0,0,0,0,0,0]
+
+A = [0, 2, 1, 0, 3, 4, 2, 3]
+V = [0, 0, 0, 0, 0, 0, 0, 0]
+len = 8
+# requires: len(A) == len(V) == len
+# V is an array of 0s
+def db_variance(A: shared[list[int]], V: shared[list[int]], len: int) -> shared[int]:
+    sum = 0
+    for i in range(len):
+        sum = sum + A[i]
+    # Does MOTION have integer division operation
+    exp = sum // len
+    for i in range(len):
+        dist = A[i] - exp
+        V[i] = dist * dist
+    res = 0
+    for i in range(len):
+        res = res + V[i]
+    variance = res // len
+    return variance
+
+
+A = [0, 2, 1, 0, 3, 4, 2, 3]
+V = [0, 0, 0, 0, 0, 0, 0, 0]
+len = 8
+print(db_variance(A, V, len))
+
+```
+### Restricted AST
+```python
+def db_variance(A: shared[list[int; ?]], V: shared[list[int; ?]], len: plaintext[int]) -> shared[int]:
+    sum = 0
+    for i: plaintext[int] in range(0, len):
+        sum = (sum + A[i])
+    exp = (sum / len)
+    for i: plaintext[int] in range(0, len):
+        dist = (A[i] - exp)
+        V[i] = (dist * dist)
+    res = 0
+    for i: plaintext[int] in range(0, len):
+        res = (res + V[i])
+    variance = (res / len)
+    return variance
+```
+### Three-address code CFG
+![](images/db_variance_tac_cfg.png)
+### SSA
+![](images/db_variance_ssa.png)
+### SSA ϕ→MUX
+![](images/db_variance_ssa_mux.png)
+### Dead code elimination
+![](images/db_variance_dead_code_elim.png)
+### Linear code with loops
+```python
+def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: plaintext[int]) -> shared[int]:
+    sum!1 = 0
+    for i!1 in range(0, len!0):
+        sum!2 = Φ(sum!1, sum!3)
+        sum!3 = (sum!2 + A!0[i!1])
+    exp!1 = (sum!2 / len!0)
+    for i!2 in range(0, len!0):
+        V!1 = Φ(V!0, V!2)
+        dist!2 = (A!0[i!2] - exp!1)
+        !1!2 = (dist!2 * dist!2)
+        V!2 = Update(V!1, i!2, !1!2)
+    res!1 = 0
+    for i!3 in range(0, len!0):
+        res!2 = Φ(res!1, res!3)
+        res!3 = (res!2 + V!1[i!3])
+    variance!1 = (res!2 / len!0)
+    return variance!1
+```
+### Dependency graph
+![](images/db_variance_dep_graph.png)
+### Removal of infeasible edges
+![](images/db_variance_remove_infeasible_edges.png)
+### Type Environment Before Vectorization
+| Variable | Type |
+| - | - |
+| `A!0` | `shared[list[int; ?]]` |
+| `V!0` | `shared[list[int; ?]]` |
+| `len!0` | `plaintext[int]` |
+| `i!1` | `plaintext[int]` |
+| `i!2` | `plaintext[int]` |
+| `i!3` | `plaintext[int]` |
+| `variance!1` | `shared[int]` |
+| `V!1` | `shared[list[int; ?]]` |
+| `res!3` | `shared[int]` |
+| `res!2` | `shared[int]` |
+| `res!1` | `plaintext[int]` |
+| `V!2` | `shared[list[int; ?]]` |
+| `!1!2` | `shared[int]` |
+| `dist!2` | `shared[int]` |
+| `exp!1` | `shared[int]` |
+| `sum!3` | `shared[int]` |
+| `sum!2` | `shared[int]` |
+| `sum!1` | `plaintext[int]` |
+### Basic Vectorization Phase 1
+```python
+def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: plaintext[int]) -> shared[int]:
+    sum!1 = 0
+    !2!0{LEN!0}[] = lift(sum!1, (i!1:len!0))
+    !3!0{LEN!0}[] = lift(A!0[i!1], (i!1:len!0))
+    for i!1 in range(0, len!0):
+        sum!2{LEN!0}[] = Φ(!2!0{LEN!0}[], sum!3{LEN!0}[])
+        sum!3{LEN!0}[] = (sum!2{LEN!0}[] + !3!0{LEN!0}[])
+    !4!0 = drop_dim(sum!3{LEN!0}[])
+    exp!1 = (!4!0 / len!0)
+    !5!0{LEN!0}[] = lift(V!0, (i!2:len!0))
+    !6!0{LEN!0}[] = lift(A!0[i!2], (i!2:len!0))
+    !7!0{LEN!0}[] = lift(exp!1, (i!2:len!0))
+    for i!2 in range(0, len!0):
+        V!1{LEN!0}[] = Φ(!5!0{LEN!0}[], V!2{LEN!0}[]) (targetless)
+        dist!2{LEN!0}[] = (!6!0{LEN!0}[] - !7!0{LEN!0}[])
+        !1!2{LEN!0}[] = (dist!2{LEN!0}[] * dist!2{LEN!0}[])
+        V!2{LEN!0}[] = VectorizedUpdate(V!1{LEN!0}[], [I!2], !1!2{LEN!0}[])
+    res!1 = 0
+    !8!0{LEN!0}[] = lift(res!1, (i!3:len!0))
+    for i!3 in range(0, len!0):
+        res!2{LEN!0}[] = Φ(!8!0{LEN!0}[], res!3{LEN!0}[])
+        res!3{LEN!0}[] = (res!2{LEN!0}[] + V!1{LEN!0}[])
+    !9!0 = drop_dim(res!3{LEN!0}[])
+    variance!1 = (!9!0 / len!0)
+    return variance!1
+```
+### Basic Vectorization Phase 1 (dependence graph)
+![](images/db_variance_bv_phase_1_dep_graph.png)
+### Basic Vectorization Phase 2
+```python
+def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: plaintext[int]) -> shared[int]:
+    sum!1 = 0
+    !2!0{LEN!0}[] = lift(sum!1, (i!1:len!0))
+    !3!0{LEN!0}[] = lift(A!0[i!1], (i!1:len!0))
+    for !10!0 in range(0, len!0):
+        sum!2{}[!10!0] = Φ(!2!0{}[!10!0], sum!3{}[(!10!0 - 1)])
+        sum!3{}[!10!0] = (sum!2{}[!10!0] + !3!0{}[!10!0])
+    !4!0 = drop_dim(sum!3{LEN!0}[])
+    exp!1 = (!4!0 / len!0)
+    !5!0{LEN!0}[] = lift(V!0, (i!2:len!0))
+    !6!0{LEN!0}[] = lift(A!0[i!2], (i!2:len!0))
+    !7!0{LEN!0}[] = lift(exp!1, (i!2:len!0))
+    dist!2{LEN!0}[] = (!6!0{LEN!0}[] - !7!0{LEN!0}[])
+    !1!2{LEN!0}[] = (dist!2{LEN!0}[] * dist!2{LEN!0}[])
+    V!2{LEN!0}[] = VectorizedUpdate(!5!0{LEN!0}[], [I!2], !1!2{LEN!0}[])
+    res!1 = 0
+    !8!0{LEN!0}[] = lift(res!1, (i!3:len!0))
+    for !11!0 in range(0, len!0):
+        res!2{}[!11!0] = Φ(!8!0{}[!11!0], res!3{}[(!11!0 - 1)])
+        res!3{}[!11!0] = (res!2{}[!11!0] + V!2{}[!11!0])
+    !9!0 = drop_dim(res!3{LEN!0}[])
+    variance!1 = (!9!0 / len!0)
+    return variance!1
+```
+### Basic Vectorization Phase 2 (dependence graph)
+![](images/db_variance_bv_phase_2_dep_graph.png)
+### Type Environment After Vectorization
+| Variable | Type |
+| - | - |
+| `A!0` | `shared[list[int; ?]]` |
+| `V!0` | `shared[list[int; ?]]` |
+| `len!0` | `plaintext[int]` |
+| `!10!0` | `plaintext[int]` |
+| `!11!0` | `plaintext[int]` |
+| `variance!1` | `shared[int]` |
+| `!9!0` | `shared[int]` |
+| `res!3` | `shared[list[int; (len!0)]]` |
+| `res!2` | `shared[list[int; (len!0)]]` |
+| `!8!0` | `plaintext[list[int; (len!0)]]` |
+| `res!1` | `plaintext[int]` |
+| `V!2` | `shared[list[int; (len!0)]]` |
+| `!1!2` | `shared[list[int; (len!0)]]` |
+| `dist!2` | `shared[list[int; (len!0)]]` |
+| `!7!0` | `shared[list[int; (len!0)]]` |
+| `!6!0` | `shared[list[int; (len!0)]]` |
+| `!5!0` | `shared[list[int; (len!0)]]` |
+| `exp!1` | `shared[int]` |
+| `!4!0` | `shared[int]` |
+| `sum!3` | `shared[list[int; (len!0)]]` |
+| `sum!2` | `shared[list[int; (len!0)]]` |
+| `!3!0` | `shared[list[int; (len!0)]]` |
+| `!2!0` | `plaintext[list[int; (len!0)]]` |
+| `sum!1` | `plaintext[int]` |
+### Motion code
+```cpp
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger db_variance(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> A_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> V_0,
+    std::uint32_t _MPC_PLAINTEXT_len_0
+) {
+    // Shared variable declarations
+    std::vector<encrypto::motion::SecureUnsignedInteger> _1_2((_MPC_PLAINTEXT_len_0));
+    encrypto::motion::SecureUnsignedInteger _10_0;
+    encrypto::motion::SecureUnsignedInteger _11_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _2_0((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _3_0((_MPC_PLAINTEXT_len_0));
+    encrypto::motion::SecureUnsignedInteger _4_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _5_0((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _6_0((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _7_0((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _8_0((_MPC_PLAINTEXT_len_0));
+    encrypto::motion::SecureUnsignedInteger _9_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> V_2((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> dist_2((_MPC_PLAINTEXT_len_0));
+    encrypto::motion::SecureUnsignedInteger exp_1;
+    encrypto::motion::SecureUnsignedInteger len_0;
+    encrypto::motion::SecureUnsignedInteger res_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> res_2((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> res_3((_MPC_PLAINTEXT_len_0));
+    encrypto::motion::SecureUnsignedInteger sum_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> sum_2((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> sum_3((_MPC_PLAINTEXT_len_0));
+    encrypto::motion::SecureUnsignedInteger variance_1;
+
+    // Plaintext variable declarations
+    std::uint32_t _MPC_PLAINTEXT__10_0;
+    std::uint32_t _MPC_PLAINTEXT__11_0;
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__2_0((_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__8_0((_MPC_PLAINTEXT_len_0 + 1));
+    std::uint32_t _MPC_PLAINTEXT_res_1;
+    std::uint32_t _MPC_PLAINTEXT_sum_1;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+
+    // Plaintext parameter assignments
+    len_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_len_0), 0);
+
+    // Function body
+    sum_1 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_sum_1 = std::uint32_t(0);
+    vectorized_assign(_2_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return sum_1;}), {_MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_3_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return A_0[indices[0]];}), {_MPC_PLAINTEXT_len_0}));
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__10_0 = std::uint32_t(0);
+    // Initialize phi values
+    sum_2[_MPC_PLAINTEXT__10_0] = _2_0[_MPC_PLAINTEXT__10_0];
+    for (; _MPC_PLAINTEXT__10_0 < _MPC_PLAINTEXT_len_0; _MPC_PLAINTEXT__10_0++) {
+        _10_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__10_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__10_0 != std::uint32_t(0)) {
+            sum_2[_MPC_PLAINTEXT__10_0] = sum_3[(_MPC_PLAINTEXT__10_0 - std::uint32_t(1))];
+        }
+
+        sum_3[_MPC_PLAINTEXT__10_0] = (sum_2[_MPC_PLAINTEXT__10_0] + _3_0[_MPC_PLAINTEXT__10_0]);
+
+    }
+
+    _4_0 = drop_dim_monoreturn(sum_3, {_MPC_PLAINTEXT_len_0});
+    exp_1 = (_4_0 / len_0);
+    vectorized_assign(_5_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return V_0;}), {_MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_6_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return A_0[indices[0]];}), {_MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_7_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return exp_1;}), {_MPC_PLAINTEXT_len_0}));
+    vectorized_assign(dist_2, {_MPC_PLAINTEXT_len_0}, {true}, {}, (vectorized_access(_6_0, {_MPC_PLAINTEXT_len_0}, {true}, {}) - vectorized_access(_7_0, {_MPC_PLAINTEXT_len_0}, {true}, {})));
+    vectorized_assign(_1_2, {_MPC_PLAINTEXT_len_0}, {true}, {}, (vectorized_access(dist_2, {_MPC_PLAINTEXT_len_0}, {true}, {}) * vectorized_access(dist_2, {_MPC_PLAINTEXT_len_0}, {true}, {})));
+    vectorized_assign(V_2, {_MPC_PLAINTEXT_len_0}, {true}, {}, vectorized_update(vectorized_access(_5_0, {_MPC_PLAINTEXT_len_0}, {true}, {}), {_MPC_PLAINTEXT_len_0}, {true}, {}, vectorized_access(_1_2, {_MPC_PLAINTEXT_len_0}, {true}, {})));
+    res_1 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_res_1 = std::uint32_t(0);
+    vectorized_assign(_8_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return res_1;}), {_MPC_PLAINTEXT_len_0}));
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__11_0 = std::uint32_t(0);
+    // Initialize phi values
+    res_2[_MPC_PLAINTEXT__11_0] = _8_0[_MPC_PLAINTEXT__11_0];
+    for (; _MPC_PLAINTEXT__11_0 < _MPC_PLAINTEXT_len_0; _MPC_PLAINTEXT__11_0++) {
+        _11_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__11_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__11_0 != std::uint32_t(0)) {
+            res_2[_MPC_PLAINTEXT__11_0] = res_3[(_MPC_PLAINTEXT__11_0 - std::uint32_t(1))];
+        }
+
+        res_3[_MPC_PLAINTEXT__11_0] = (res_2[_MPC_PLAINTEXT__11_0] + V_2[_MPC_PLAINTEXT__11_0]);
+
+    }
+
+    _9_0 = drop_dim_monoreturn(res_3, {_MPC_PLAINTEXT_len_0});
+    variance_1 = (_9_0 / len_0);
+    return variance_1;
 
 }
 ```
