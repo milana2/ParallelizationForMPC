@@ -529,6 +529,7 @@ def _basic_vectorization_phase_1(
                         ]
                     )
                 elif isinstance(stmt.rhs, llc.Mux):
+                    stmt.rhs.condition = replace_var(stmt.rhs.condition, stmt)
                     stmt.rhs.false_value = replace_operand(stmt.rhs.false_value, stmt)
                     stmt.rhs.true_value = replace_operand(stmt.rhs.true_value, stmt)
                 elif isinstance(stmt.rhs, llc.Update):
@@ -774,6 +775,29 @@ def _find_loop_depth(stmts: list[llc.Statement]) -> int:
         1 + _find_loop_depth(stmt.body) if isinstance(stmt, llc.For) else 0
         for stmt in stmts
     )
+
+
+def _replace_in_rhs(
+    stmt: llc.Statement, pattern: llc.AssignRHS, replacement: llc.AssignRHS
+) -> llc.Statement:
+    if isinstance(stmt, llc.Assign):
+        new_rhs = util.replace_pattern(stmt.rhs, pattern, replacement)
+        return dc.replace(stmt, rhs=new_rhs)
+    elif isinstance(stmt, llc.Phi):
+        rhs_vars = util.replace_pattern(stmt.rhs_vars, pattern, replacement)
+        return dc.replace(stmt, rhs_vars=rhs_vars)
+    elif isinstance(stmt, llc.For):
+        new_body = [
+            _replace_in_rhs(substmt, pattern, replacement) for substmt in stmt.body
+        ]
+        return dc.replace(stmt, body=new_body)
+    elif isinstance(stmt, llc.Return):
+        new_return = dc.replace(stmt)
+        return util.replace_pattern(
+            new_return, pattern, replacement, include_return=True
+        )
+    else:
+        assert_never(stmt)
 
 
 def _basic_vectorization_phase_2(
@@ -1132,7 +1156,9 @@ def _basic_vectorization_phase_2(
     for i in range(len(stmts_and_closures)):
         if isinstance(stmts_and_closures[i], list):
             closure = cast(list, stmts_and_closures[i])
-            closure_phis = [phi for phi in closure if isinstance(phi, llc.Phi)]
+            closure_phis = [
+                phi for phi in closure if isinstance(phi, llc.Phi) and not phi.removed
+            ]
 
             # Update vectorizable statements before this point
             for phi in closure_phis:
@@ -1150,13 +1176,23 @@ def _basic_vectorization_phase_2(
                         if isinstance(lhs_var, llc.VectorizedAccess):
                             lhs_var = lhs_var.array
 
-                        rhs_var = stmt.rhs_false
+                        rhs_var = stmt.rhs_true
                         if isinstance(rhs_var, llc.VectorizedAccess):
                             rhs_var = rhs_var.array
 
                         phi_renames[lhs_var] = rhs_var
                         output.append(dc.replace(stmt, removed=True))
                     else:
+                        for phi in closure_phis:
+                            lhs_var = phi.lhs
+                            if isinstance(lhs_var, llc.VectorizedAccess):
+                                lhs_var = lhs_var.array
+
+                            rhs_var = phi.rhs_false
+                            if isinstance(rhs_var, llc.VectorizedAccess):
+                                rhs_var = rhs_var.array
+
+                            stmt = _replace_in_rhs(stmt, lhs_var, rhs_var)
                         output.extend(lifted_stmt(stmt))
             else:
                 output.append(generate_monolithic_for(closure, lifted_arrs))

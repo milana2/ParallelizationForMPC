@@ -121,12 +121,11 @@ class DepGraph:
                     lhs = lhs.array
 
                 try:
-                    var_defs = self.var_to_assignment[lhs]
+                    var_def = self.var_to_assignment[lhs]
                 except KeyError:
                     pass
                 else:
-                    for var_def in [var_defs]:
-                        self.def_use_graph.add_edge(var_def, assignment)
+                    self.def_use_graph.add_edge(var_def, assignment)
 
         self.enclosing_loops = dict()
         for assignment, enclosing_loops in all_assignments:

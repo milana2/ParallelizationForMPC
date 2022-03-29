@@ -42,6 +42,16 @@ std::ostream &operator<<(std::ostream &os, const encrypto::motion::SecureUnsigne
     os << val.As<std::uint32_t>();
     return os;
 }
+
+std::ostream &operator<<(std::ostream &os, const encrypto::motion::ShareWrapper &val)
+{
+    if (val.As<bool>() == true) {
+        os << "True";
+    } else {
+        os << "False";
+    }
+    return os;
+}
 } // namespace std
 
 program_options::variables_map parse_options(const int argc, const char *const argv[])
@@ -176,10 +186,10 @@ int main(const int argc, const char *const argv[])
         {%- else %}
             {{param.cpp_type}} {{param.name}};
             {%- if param.dims == 0 %}
-                {{param.name}} = party->In<{{protocol}}>(encrypto::motion::ToInput(user_options["{{param.name}}"].as<{{param.plaintext_cpp_type}}>()), {{param.party_idx}});
+                {{param.name}} = party->In<{{protocol}}>(encrypto::motion::ToInput(user_options["{{param.name}}"].as<{{param.plaintext_cpp_type}}>()), {{param.party_idx}} % 2);
             {%- else %}
                 for (const std::uint32_t value : user_options["{{param.name}}"].as<std::vector<std::uint32_t>>()) {
-                    {{param.name}}.push_back(party->In<{{protocol}}>(encrypto::motion::ToInput(value), {{param.party_idx}}));
+                    {{param.name}}.push_back(party->In<{{protocol}}>(encrypto::motion::ToInput(value), {{param.party_idx}} % 2));
                 }
             {%-endif%}
         {%- endif %}

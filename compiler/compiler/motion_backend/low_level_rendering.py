@@ -383,10 +383,31 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
 
     elif isinstance(expr, Mux):
         cpp_cond = render_expr(expr.condition, ctx)
-        cpp_true_val = render_expr(expr.true_value, ctx) + ".Get()"
-        cpp_false_val = render_expr(expr.false_value, ctx) + ".Get()"
+        cond_dims = None
+        if isinstance(expr.condition, VectorizedAccess):
+            cond_dims = tuple(
+                (idx_var, dim_size)
+                for idx_var, dim_size, vectorized in zip(
+                    expr.condition.idx_vars,
+                    expr.condition.dim_sizes,
+                    expr.condition.vectorized_dims,
+                )
+                if vectorized
+            )
 
-        return f"{cpp_cond}.Mux({cpp_false_val}, {cpp_true_val})"
+        if cond_dims and not isinstance(expr.true_value, VectorizedAccess):
+            lift_expr = LiftExpr(expr.true_value, cond_dims)
+            cpp_true_val = f"decltype({render_expr(expr.true_value, ctx)})::Simdify({render_expr(lift_expr, ctx)})"
+        else:
+            cpp_true_val = render_expr(expr.true_value, ctx)
+
+        if cond_dims and not isinstance(expr.false_value, VectorizedAccess):
+            lift_expr = LiftExpr(expr.false_value, cond_dims)
+            cpp_false_val = f"decltype({render_expr(expr.false_value, ctx)})::Simdify({render_expr(lift_expr, ctx)})"
+        else:
+            cpp_false_val = render_expr(expr.false_value, ctx)
+
+        return f"{cpp_cond}.Mux({cpp_false_val}.Get(), {cpp_true_val}.Get())"
 
     elif isinstance(expr, LiftExpr):
         raw_idx_map = lambda idx: f"indices[{idx}]"
@@ -501,32 +522,17 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         return f"vectorized_access({render_expr(expr.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs})"
 
     elif isinstance(expr, VectorizedUpdate):
-        # If this isn't a true vectorized access, just subscript normally
-        if all(vectorized == False for vectorized in expr.vectorized_dims):
-            subscript = " + ".join(
-                f"({render_expr(idx, dc.replace(ctx, plaintext=True))} * "
-                + "*".join(
-                    render_expr(bound, dc.replace(ctx, plaintext=True))
-                    for bound in expr.dim_sizes[dim + 1 :]
-                )
-                + ")"
-                # Skip the last dimension for now since it doesn't get multiplied
-                for dim, idx in enumerate(expr.idx_vars[:-1])
-            )
-
-            # Since the last dimension has no multiplicative factor, render it separately
-            if subscript:
-                subscript += " + "
-            subscript += render_expr(expr.idx_vars[-1], dc.replace(ctx, plaintext=True))
-            return f"{render_expr(expr.array, ctx)}[{subscript}]"
-
         dim_sizes = (
             "{"
             + ", ".join(
                 render_expr(loop_bound, dc.replace(ctx, plaintext=True))
-                for loop_bound, vectorized in zip(expr.dim_sizes, expr.vectorized_dims)
-                if not vectorized
+                for loop_bound in expr.dim_sizes
             )
+            + "}"
+        )
+        vectorized_dims = (
+            "{"
+            + ", ".join(str(vectorized).lower() for vectorized in expr.vectorized_dims)
             + "}"
         )
         idxs = (
@@ -538,6 +544,6 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             )
             + "}"
         )
-        return f"vectorized_update({render_expr(expr.array, ctx)}, {dim_sizes}, {idxs}, {render_expr(expr.value, ctx)})"
+        return f"vectorized_update({render_expr(expr.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(expr.value, ctx)})"
 
     return assert_never(expr)
