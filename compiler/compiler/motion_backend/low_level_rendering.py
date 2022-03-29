@@ -526,24 +526,21 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             "{"
             + ", ".join(
                 render_expr(loop_bound, dc.replace(ctx, plaintext=True))
-                for loop_bound in expr.dim_sizes
+                for loop_bound, vectorized in zip(expr.dim_sizes, expr.vectorized_dims)
+                if vectorized
             )
             + "}"
         )
         vectorized_dims = (
             "{"
-            + ", ".join(str(vectorized).lower() for vectorized in expr.vectorized_dims)
-            + "}"
-        )
-        idxs = (
-            "{"
             + ", ".join(
-                render_expr(var, dc.replace(ctx, plaintext=True))
-                for var, vectorized in zip(expr.idx_vars, expr.vectorized_dims)
-                if not vectorized
+                str(vectorized).lower()
+                for vectorized in expr.vectorized_dims
+                if vectorized
             )
             + "}"
         )
+        idxs = "{}"
         return f"vectorized_update({render_expr(expr.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(expr.value, ctx)})"
 
     return assert_never(expr)
