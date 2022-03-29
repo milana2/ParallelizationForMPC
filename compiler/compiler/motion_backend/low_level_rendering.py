@@ -299,16 +299,50 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
                 + ")"
             )
 
+        operand_dims = None
+        if isinstance(expr.left, VectorizedAccess):
+            operand_dims = tuple(
+                (idx_var, dim_size)
+                for idx_var, dim_size, vectorized in zip(
+                    expr.left.idx_vars,
+                    expr.left.dim_sizes,
+                    expr.left.vectorized_dims,
+                )
+                if vectorized
+            )
+        elif isinstance(expr.right, VectorizedAccess):
+            operand_dims = tuple(
+                (idx_var, dim_size)
+                for idx_var, dim_size, vectorized in zip(
+                    expr.right.idx_vars,
+                    expr.right.dim_sizes,
+                    expr.right.vectorized_dims,
+                )
+                if vectorized
+            )
+
+        if operand_dims and isinstance(expr.left, (Constant, Var)):
+            lift_expr = LiftExpr(expr.left, operand_dims)
+            left_expr = f"decltype({render_expr(expr.left, ctx)})::Simdify({render_expr(lift_expr, ctx)})"
+        else:
+            left_expr = render_expr(expr.left, ctx)
+
+        if operand_dims and isinstance(expr.right, (Constant, Var)):
+            lift_expr = LiftExpr(expr.right, operand_dims)
+            right_expr = f"decltype({render_expr(expr.right, ctx)})::Simdify({render_expr(lift_expr, ctx)})"
+        else:
+            right_expr = render_expr(expr.right, ctx)
+
         # If we're using an arithmetic primitive operation or we're operating on plaintext values,
         # don't cast to a share wrapper
-        elif ctx.plaintext or expr.operator in (
+        if ctx.plaintext or expr.operator in (
             BinOpKind.ADD,
             BinOpKind.SUB,
             BinOpKind.MUL,
             BinOpKind.DIV,
             BinOpKind.GT,
         ):
-            return f"({render_expr(expr.left, ctx)} {expr.operator.value} {render_expr(expr.right, ctx)})"
+            return f"({left_expr} {expr.operator.value} {right_expr})"
 
         # Otherwise, convert to a ShareWrapper since they have more operators defined
         # TODO: go through the operators for ShareWrapper and make sure they're all valid
@@ -318,13 +352,13 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
                 "("
                 + (
                     "encrypto::motion::ShareWrapper("
-                    + render_expr(expr.left, ctx)
+                    + left_expr
                     + ".Get())"
                     + " "
                     + _render_operator(expr.operator)
                     + " "
                     + "encrypto::motion::ShareWrapper("
-                    + render_expr(expr.right, ctx)
+                    + right_expr
                     + ".Get())"
                 )
                 + ")"
@@ -395,13 +429,13 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
                 if vectorized
             )
 
-        if cond_dims and not isinstance(expr.true_value, VectorizedAccess):
+        if cond_dims and isinstance(expr.true_value, (Constant, Var)):
             lift_expr = LiftExpr(expr.true_value, cond_dims)
             cpp_true_val = f"decltype({render_expr(expr.true_value, ctx)})::Simdify({render_expr(lift_expr, ctx)})"
         else:
             cpp_true_val = render_expr(expr.true_value, ctx)
 
-        if cond_dims and not isinstance(expr.false_value, VectorizedAccess):
+        if cond_dims and isinstance(expr.false_value, (Constant, Var)):
             lift_expr = LiftExpr(expr.false_value, cond_dims)
             cpp_false_val = f"decltype({render_expr(expr.false_value, ctx)})::Simdify({render_expr(lift_expr, ctx)})"
         else:

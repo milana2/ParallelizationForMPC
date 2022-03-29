@@ -593,6 +593,7 @@ def _basic_vectorization_phase_1(
 
 def _merge_vectorized_accesses(
     vectorized_accesses: list[Optional[VectorizedAccess]],
+    enclosing_loops: list[llc.For],
 ) -> Optional[VectorizedAccess]:
     if all(access is None for access in vectorized_accesses):
         return None
@@ -629,7 +630,11 @@ def _merge_vectorized_accesses(
         )
 
     if len(all_idx_vars) != 1:
-        raise TypeError(f"Expected all idx vars to be the same but got {all_idx_vars}")
+        loop_enclosure_vars = tuple(loop.counter for loop in enclosing_loops)
+        assert (
+            loop_enclosure_vars in all_idx_vars
+        ), f"Expected all idx vars to be the same but got {all_idx_vars}"
+        all_idx_vars = set((loop_enclosure_vars,))
 
     return VectorizedAccess(
         array=None,  # type: ignore
@@ -642,6 +647,7 @@ def _merge_vectorized_accesses(
 def _collect_vectorized_access(
     expr: llc.AssignRHS,
     vectorized_accesses: dict[llc.Var, VectorizedAccess],
+    enclosing_loops: list[llc.For],
 ) -> Optional[VectorizedAccess]:
     if isinstance(expr, llc.Var):
         return vectorized_accesses.get(expr)
@@ -672,27 +678,41 @@ def _collect_vectorized_access(
     elif isinstance(expr, llc.BinOp):
         return _merge_vectorized_accesses(
             [
-                _collect_vectorized_access(expr.left, vectorized_accesses),
-                _collect_vectorized_access(expr.right, vectorized_accesses),
-            ]
+                _collect_vectorized_access(
+                    expr.left, vectorized_accesses, enclosing_loops
+                ),
+                _collect_vectorized_access(
+                    expr.right, vectorized_accesses, enclosing_loops
+                ),
+            ],
+            enclosing_loops,
         )
 
     elif isinstance(expr, llc.UnaryOp):
-        return _collect_vectorized_access(expr.operand, vectorized_accesses)
+        return _collect_vectorized_access(
+            expr.operand, vectorized_accesses, enclosing_loops
+        )
 
     elif isinstance(expr, llc.Mux):
         return _merge_vectorized_accesses(
             [
-                _collect_vectorized_access(expr.false_value, vectorized_accesses),
-                _collect_vectorized_access(expr.true_value, vectorized_accesses),
-            ]
+                _collect_vectorized_access(
+                    expr.false_value, vectorized_accesses, enclosing_loops
+                ),
+                _collect_vectorized_access(
+                    expr.true_value, vectorized_accesses, enclosing_loops
+                ),
+            ],
+            enclosing_loops,
         )
 
     elif isinstance(expr, llc.VectorizedAccess):
         return expr
 
     elif isinstance(expr, (llc.Update, llc.VectorizedUpdate)):
-        return _collect_vectorized_access(expr.array, vectorized_accesses)
+        return _collect_vectorized_access(
+            expr.array, vectorized_accesses, enclosing_loops
+        )
 
     elif isinstance(expr, (llc.Constant, llc.List, llc.Tuple)):
         return None
@@ -746,13 +766,24 @@ def _assign_vectorized_accesses(func: llc.Function, dep_graph: DepGraph):
 
             rhs_access = _merge_vectorized_accesses(
                 [
-                    _collect_vectorized_access(stmt.rhs_false, vectorized_accesses),
-                    _collect_vectorized_access(stmt.rhs_true, vectorized_accesses),
-                ]
+                    _collect_vectorized_access(
+                        stmt.rhs_false,
+                        vectorized_accesses,
+                        dep_graph.enclosing_loops[stmt],
+                    ),
+                    _collect_vectorized_access(
+                        stmt.rhs_true,
+                        vectorized_accesses,
+                        dep_graph.enclosing_loops[stmt],
+                    ),
+                ],
+                dep_graph.enclosing_loops[stmt],
             )
         elif isinstance(stmt, llc.Assign):
             stmt.rhs = _update_vectorized_accesses(stmt.rhs, vectorized_accesses)
-            rhs_access = _collect_vectorized_access(stmt.rhs, vectorized_accesses)
+            rhs_access = _collect_vectorized_access(
+                stmt.rhs, vectorized_accesses, dep_graph.enclosing_loops[stmt]
+            )
         else:
             assert_never(stmt)
 
@@ -962,13 +993,23 @@ def _basic_vectorization_phase_2(
                 for field in dc.fields(stmt):
                     val = getattr(stmt, field.name)
                     if isinstance(val, (VectorizedAccess, llc.VectorizedUpdate)):
+                        new_idx_vars = tuple(
+                            dim
+                            if dim.name != loop_stack[-1].counter.name
+                            else new_counter
+                            for dim in val.idx_vars
+                        )
                         new_vectorization = tuple(
                             vectorization if dim != monolithic_for.counter else False
                             for dim, vectorization in zip(
-                                val.idx_vars, val.vectorized_dims
+                                new_idx_vars, val.vectorized_dims
                             )
                         )
-                        val = dc.replace(val, vectorized_dims=new_vectorization)
+                        val = dc.replace(
+                            val,
+                            idx_vars=new_idx_vars,
+                            vectorized_dims=new_vectorization,
+                        )
                         setattr(stmt, field.name, val)
                     unvectorize_loop_dim(val)
 

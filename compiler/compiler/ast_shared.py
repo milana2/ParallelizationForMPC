@@ -152,7 +152,7 @@ class VarType:
             merged_type.visibility = VarVisibility.PLAINTEXT
 
         # Determine the dimensionality of the merged type
-        elem_dims = [t._dims for t in types if t._dims is not None]
+        elem_dims = [t.dims for t in types if t.dims is not None]
         if len(set(elem_dims)) > 1:
             raise TypeError(
                 "Cannot merge types with different dimensionality:\n{}".format(
@@ -304,7 +304,7 @@ class BinOpKind(Enum):
     ADD = "+"
     SUB = "-"
     MUL = "*"
-    DIV = "//"
+    DIV = "/"
     LT = "<"
     GT = ">"
     LT_E = "<="

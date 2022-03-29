@@ -1,0 +1,69 @@
+Nodes:
+    parameter A!0
+    parameter V!0
+    parameter len!0
+    sum!1 = 0
+    for i!1 in range(0, len!0):
+    sum!2 = Φ(sum!1, sum!3)
+    sum!3 = (sum!2 + A!0[i!1])
+    sum!2 = Φ(sum!1, sum!3)
+    sum!3 = (sum!2 + A!0[i!1])
+    exp!1 = (sum!2 / len!0)
+    for i!2 in range(0, len!0):
+    V!1 = Φ(V!0, V!2) (targetless)
+    dist!2 = (A!0[i!2] - exp!1)
+    !1!2 = (dist!2 * dist!2)
+    V!2 = Update(V!1, i!2, !1!2)
+    V!1 = Φ(V!0, V!2) (targetless)
+    dist!2 = (A!0[i!2] - exp!1)
+    !1!2 = (dist!2 * dist!2)
+    V!2 = Update(V!1, i!2, !1!2)
+    res!1 = 0
+    for i!3 in range(0, len!0):
+    res!2 = Φ(res!1, res!3)
+    res!3 = (res!2 + V!1[i!3])
+    res!2 = Φ(res!1, res!3)
+    res!3 = (res!2 + V!1[i!3])
+    variance!1 = (res!2 / len!0)
+    return variance!1
+Forward edges:
+    parameter A!0  →  parameter A!0
+    parameter A!0  →  sum!3 = (sum!2 + A!0[i!1])
+    parameter A!0  →  dist!2 = (A!0[i!2] - exp!1)
+    parameter V!0  →  parameter V!0
+    parameter V!0  →  V!1 = Φ(V!0, V!2) (targetless)
+    parameter len!0  →  parameter len!0
+    parameter len!0  →  exp!1 = (sum!2 / len!0)
+    parameter len!0  →  variance!1 = (res!2 / len!0)
+    sum!1 = 0  →  sum!2 = Φ(sum!1, sum!3)
+    for i!1 in range(0, len!0):
+    sum!2 = Φ(sum!1, sum!3)
+    sum!3 = (sum!2 + A!0[i!1])  →  sum!3 = (sum!2 + A!0[i!1])
+    sum!2 = Φ(sum!1, sum!3)  →  sum!3 = (sum!2 + A!0[i!1])
+    sum!2 = Φ(sum!1, sum!3)  →  exp!1 = (sum!2 / len!0)
+    exp!1 = (sum!2 / len!0)  →  dist!2 = (A!0[i!2] - exp!1)
+    for i!2 in range(0, len!0):
+    V!1 = Φ(V!0, V!2) (targetless)
+    dist!2 = (A!0[i!2] - exp!1)
+    !1!2 = (dist!2 * dist!2)
+    V!2 = Update(V!1, i!2, !1!2)  →  dist!2 = (A!0[i!2] - exp!1)
+    for i!2 in range(0, len!0):
+    V!1 = Φ(V!0, V!2) (targetless)
+    dist!2 = (A!0[i!2] - exp!1)
+    !1!2 = (dist!2 * dist!2)
+    V!2 = Update(V!1, i!2, !1!2)  →  V!2 = Update(V!1, i!2, !1!2)
+    V!1 = Φ(V!0, V!2) (targetless)  →  V!2 = Update(V!1, i!2, !1!2)
+    V!1 = Φ(V!0, V!2) (targetless)  →  res!3 = (res!2 + V!1[i!3])
+    dist!2 = (A!0[i!2] - exp!1)  →  !1!2 = (dist!2 * dist!2)
+    !1!2 = (dist!2 * dist!2)  →  V!2 = Update(V!1, i!2, !1!2)
+    res!1 = 0  →  res!2 = Φ(res!1, res!3)
+    for i!3 in range(0, len!0):
+    res!2 = Φ(res!1, res!3)
+    res!3 = (res!2 + V!1[i!3])  →  res!3 = (res!2 + V!1[i!3])
+    res!2 = Φ(res!1, res!3)  →  res!3 = (res!2 + V!1[i!3])
+    res!2 = Φ(res!1, res!3)  →  variance!1 = (res!2 / len!0)
+    variance!1 = (res!2 / len!0)  →  return variance!1
+Back edges:
+    sum!3 = (sum!2 + A!0[i!1])  →  sum!2 = Φ(sum!1, sum!3)
+    V!2 = Update(V!1, i!2, !1!2)  →  V!1 = Φ(V!0, V!2) (targetless)
+    res!3 = (res!2 + V!1[i!3])  →  res!2 = Φ(res!1, res!3)
