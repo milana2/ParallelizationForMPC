@@ -92,7 +92,7 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
                 const
                 for _, dim_bound in expr.dims
                 for const in expr_constants(dim_bound)
-            ]
+            ] + expr_constants(expr.expr)
         elif isinstance(expr, tac_cfg.DropDim):
             return [
                 const for dim_bound in expr.dims for const in expr_constants(dim_bound)

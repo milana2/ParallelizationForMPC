@@ -124,11 +124,7 @@ def type_assign_expr(
         )
 
     elif isinstance(expr, Mux):
-        cond_type = type_assign_expr(expr.condition, type_env)
-        if cond_type.is_plaintext():
-            raise AssertionError(
-                f"Condition {expr.condition} of Mux expression {expr} is not a shared variable."
-            )
+        _cond_type = type_assign_expr(expr.condition, type_env)
 
         true_type = type_assign_expr(expr.true_value, type_env)
         false_type = type_assign_expr(expr.false_value, type_env)

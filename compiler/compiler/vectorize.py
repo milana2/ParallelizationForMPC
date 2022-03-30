@@ -419,19 +419,15 @@ def _basic_vectorization_phase_1(
                 if enclosure_dimensionality <= canonical_dimensionality:
                     return var
 
-                if isinstance(def_var, llc.Phi):
-                    assert isinstance(
-                        def_var.rhs_true, llc.Var
-                    ), "VectorizedAccesses are added after phase 1"
-                    drop_expr = def_var.rhs_true
-                else:
-                    drop_expr = var
-
+                # Phi nodes should be dropping the rhs_true value instead of the lhs value,
+                # however there is an edge case where the rhs_true value gets updated after
+                # the drop_dim() is inserted.  For this reason, we update drop_dims() with
+                # phi node values after this phase.
                 var_prime = tmp_var_gen.get()
                 drop_dim = llc.Assign(
                     lhs=var_prime,
                     rhs=DropDim(
-                        drop_expr,
+                        var,
                         tuple(
                             loop.bound_high
                             for loop in dep_graph.enclosing_loops[def_var]
@@ -591,6 +587,21 @@ def _basic_vectorization_phase_1(
     return above_loop_result, inside_loop_result, after_loop_result
 
 
+def _finalize_phi_drop_dim(stmts: list[llc.Statement], dep_graph: DepGraph) -> None:
+    """
+    Replace the use of all drop_dim() calls to a pseudophi variable with the correct
+    value.  This is performed after the main loop of vectorization phase 1 in case the
+    rhs_true value of the phi node in question gets renamed.
+    """
+    for stmt in stmts:
+        if isinstance(stmt, llc.For):
+            _finalize_phi_drop_dim(stmt.body, dep_graph)
+        elif isinstance(stmt, llc.Assign) and isinstance(stmt.rhs, DropDim):
+            def_stmt = dep_graph.var_to_assignment[stmt.rhs.array]
+            if isinstance(def_stmt, llc.Phi):
+                stmt.rhs = dc.replace(stmt.rhs, array=def_stmt.rhs_true)
+
+
 def _merge_vectorized_accesses(
     vectorized_accesses: list[Optional[VectorizedAccess]],
     enclosing_loops: list[llc.For],
@@ -742,16 +753,17 @@ def _update_vectorized_accesses(
 
         new_arr = vectorized_accesses[expr.array]
         # Only earlier dimensions can be added, so we're free to prepend the new dims
-        new_vectorized_dims = [True] * (
-            len(new_arr.vectorized_dims) - len(expr.vectorized_dims)
-        ) + list(expr.vectorized_dims)
-        new_idx_vars = list(new_arr.idx_vars)[: -len(expr.vectorized_dims)] + list(
-            expr.idx_vars
+        new_vectorized_dims = tuple(
+            [True] * (len(new_arr.vectorized_dims) - len(expr.vectorized_dims))
+            + list(expr.vectorized_dims)
+        )
+        new_idx_vars = tuple(
+            list(new_arr.idx_vars)[: -len(expr.vectorized_dims)] + list(expr.idx_vars)
         )
         return dc.replace(
             new_arr,
-            vectorized_dims=tuple(new_vectorized_dims),
-            idx_vars=tuple(new_idx_vars),
+            vectorized_dims=new_vectorized_dims,
+            idx_vars=new_idx_vars,
         )
     elif isinstance(expr, llc.Subscript):
         if expr.array in vectorized_accesses:
@@ -1304,10 +1316,17 @@ def _basic_vectorization_phase_2(
                                 rhs_var = rhs_var.array
 
                             stmt = _replace_in_rhs(stmt, lhs_var, rhs_var)
+
+                        for orig_var, lifted in lifted_arrs.items():
+                            stmt = util.replace_pattern(stmt, orig_var, lifted.array)
                         output.extend(lifted_stmt(stmt))
             else:
                 output.append(generate_monolithic_for(closure, lifted_arrs))
         else:
+            for orig_var, lifted in lifted_arrs.items():
+                stmts_and_closures[i] = util.replace_pattern(
+                    stmts_and_closures[i], orig_var, lifted.array
+                )
             statements = lifted_stmt(cast(llc.Statement, stmts_and_closures[i]))
             output.extend(statements)
 
@@ -1367,6 +1386,8 @@ def basic_vectorization_phase_1(
         body=body,
         return_type=function.return_type,
     )
+
+    _finalize_phi_drop_dim(function.body, DepGraph(function))
 
     # Optimistically vectorize all new arrays
     _assign_vectorized_accesses(function, DepGraph(function))

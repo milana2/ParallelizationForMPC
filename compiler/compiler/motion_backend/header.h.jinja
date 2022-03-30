@@ -8,6 +8,19 @@
 #include "base/party.h"
 #include "secure_type/secure_unsigned_integer.h"
 
+template <typename T>
+encrypto::motion::ShareWrapper to_share_wrapper(const T &share)
+{
+    return encrypto::motion::ShareWrapper(share);
+}
+
+template <>
+encrypto::motion::ShareWrapper
+to_share_wrapper(const encrypto::motion::SecureUnsignedInteger &share)
+{
+    return encrypto::motion::ShareWrapper(share.Get());
+}
+
 /**
  * Maps @p expr to an array specified by the provided dimensions.
  *
