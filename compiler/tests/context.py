@@ -24,4 +24,6 @@ SKIPPED_TESTS = [
     "cross_join_trivial",
     "gauss_decomp",
     "infeasible_edges_example",
+    # The following benchmarks are disabled because they take too long to run
+    "kmeans_iteration",
 ]
