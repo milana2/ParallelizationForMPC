@@ -1,0 +1,252 @@
+template <encrypto::motion::MpcProtocol Protocol>
+std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> kmeans_iteration(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> data_x_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> data_y_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> cluster_x_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> cluster_y_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_cluster_x_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_cluster_y_0,
+    std::uint32_t _MPC_PLAINTEXT_len_0,
+    std::uint32_t _MPC_PLAINTEXT_num_cluster_0,
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_bestMap_0
+) {
+    // Shared variable declarations
+    std::vector<encrypto::motion::ShareWrapper> _1_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _10_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _11_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _12_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _13_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _14_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _15_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _16_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _17_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _18_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _19_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::ShareWrapper> _2_3((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _20_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _21_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _22_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _23_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _24_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _25_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _26_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _27_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _28_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _29_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::ShareWrapper> _3_2((_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger _30_0;
+    encrypto::motion::SecureUnsignedInteger _31_0;
+    encrypto::motion::SecureUnsignedInteger _32_0;
+    encrypto::motion::SecureUnsignedInteger _33_0;
+    encrypto::motion::SecureUnsignedInteger _34_0;
+    std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> _4_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _5_0((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _6_0((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _7_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _8_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _9_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_cluster_x_2((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_cluster_y_2((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> bestMap_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> bestMap_2((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> bestMap_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger best_dist_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> best_dist_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> best_dist_4((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> best_dist_5((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger count_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> count_3((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> count_4((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> count_5((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> dist_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger len_0;
+    encrypto::motion::SecureUnsignedInteger num_cluster_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_5((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger val_x_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_x_3((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_x_4((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_x_5((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_x_6((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_x_7((_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger val_y_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_y_3((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_y_4((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_y_5((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_y_6((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_y_7((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> x_dist_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> x_sq_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> y_dist_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> y_sq_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+
+    // Plaintext variable declarations
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__15_0((_MPC_PLAINTEXT_num_cluster_0 + 1) * (_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__16_0((_MPC_PLAINTEXT_num_cluster_0 + 1) * (_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__17_0((_MPC_PLAINTEXT_num_cluster_0 + 1) * (_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__18_0((_MPC_PLAINTEXT_num_cluster_0 + 1) * (_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__29_0((_MPC_PLAINTEXT_len_0 + 1) * (_MPC_PLAINTEXT_num_cluster_0 + 1));
+    std::uint32_t _MPC_PLAINTEXT__30_0;
+    std::uint32_t _MPC_PLAINTEXT__31_0;
+    std::uint32_t _MPC_PLAINTEXT__32_0;
+    std::uint32_t _MPC_PLAINTEXT__33_0;
+    std::uint32_t _MPC_PLAINTEXT__34_0;
+    std::tuple<std::vector<std::uint32_t>, std::vector<std::uint32_t>> _MPC_PLAINTEXT__4_1;
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__5_0((_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__7_0((_MPC_PLAINTEXT_len_0 + 1) * (_MPC_PLAINTEXT_num_cluster_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__8_0((_MPC_PLAINTEXT_len_0 + 1) * (_MPC_PLAINTEXT_num_cluster_0 + 1));
+    std::uint32_t _MPC_PLAINTEXT_best_dist_2;
+    std::uint32_t _MPC_PLAINTEXT_count_2;
+    std::uint32_t _MPC_PLAINTEXT_val_x_2;
+    std::uint32_t _MPC_PLAINTEXT_val_y_2;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10000 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(10000)), 0);
+
+    // Plaintext parameter assignments
+    bestMap_0.clear();
+    std::transform(_MPC_PLAINTEXT_bestMap_0.begin(), _MPC_PLAINTEXT_bestMap_0.end(), std::back_inserter(bestMap_0), [&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });
+    len_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_len_0), 0);
+    num_cluster_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_num_cluster_0), 0);
+
+    // Function body
+    vectorized_assign(_5_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return bestMap_0;}), {_MPC_PLAINTEXT_len_0}));
+    best_dist_2 = _MPC_CONSTANT_10000;
+    _MPC_PLAINTEXT_best_dist_2 = std::uint32_t(10000);
+    vectorized_assign(_7_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return best_dist_2;}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_8_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vectorized_access(_5_0, {_MPC_PLAINTEXT_len_0}, {true}, {});}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_9_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return cluster_x_0[indices[1]];}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_10_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return data_x_0[indices[0]];}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_11_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return cluster_y_0[indices[1]];}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_12_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return data_y_0[indices[0]];}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(x_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, (vectorized_access(_9_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}) - vectorized_access(_10_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {})));
+    vectorized_assign(x_sq_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, (vectorized_access(x_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}) * vectorized_access(x_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {})));
+    vectorized_assign(y_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, (vectorized_access(_11_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}) - vectorized_access(_12_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {})));
+    vectorized_assign(y_sq_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, (vectorized_access(y_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}) * vectorized_access(y_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {})));
+    vectorized_assign(dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, (vectorized_access(x_sq_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}) + vectorized_access(y_sq_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {})));
+    vectorized_assign(best_dist_4, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, vectorized_access(dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}));
+    vectorized_assign(_29_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return encrypto::motion::SecureUnsignedInteger(party->In<Protocol>(encrypto::motion::ToInput(indices[1]), 0));}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__30_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(best_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}, vectorized_access(_7_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}));
+    for (; _MPC_PLAINTEXT__30_0 < _MPC_PLAINTEXT_num_cluster_0; _MPC_PLAINTEXT__30_0++) {
+        _30_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__30_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__30_0 != std::uint32_t(0)) {
+            vectorized_assign(best_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}, vectorized_access(best_dist_5, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {(_MPC_PLAINTEXT__30_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(_1_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}, (vectorized_access(best_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}) > vectorized_access(dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0})));
+        vectorized_assign(best_dist_5, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}, vectorized_access(_1_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}).Mux(vectorized_access(best_dist_4, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}).Get(), vectorized_access(best_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}).Get()));
+
+    }
+
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__31_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(bestMap_2, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}, vectorized_access(_8_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}));
+    for (; _MPC_PLAINTEXT__31_0 < _MPC_PLAINTEXT_num_cluster_0; _MPC_PLAINTEXT__31_0++) {
+        _31_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__31_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__31_0 != std::uint32_t(0)) {
+            vectorized_assign(bestMap_2, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}, vectorized_access(bestMap_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {(_MPC_PLAINTEXT__31_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(val_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}, vectorized_access(bestMap_2, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}));
+        vectorized_assign(val_5, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}, vectorized_access(_1_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}).Mux(vectorized_access(_29_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}).Get(), vectorized_access(val_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}).Get()));
+        vectorized_assign(bestMap_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}, vectorized_update(vectorized_access(bestMap_2, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}), {_MPC_PLAINTEXT_len_0}, {true}, {}, vectorized_access(val_5, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0})));
+
+    }
+
+    vectorized_assign(_6_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, drop_dim(bestMap_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_13_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return OUTPUT_cluster_x_0;}), {_MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_14_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return OUTPUT_cluster_y_0;}), {_MPC_PLAINTEXT_num_cluster_0}));
+    val_x_2 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_val_x_2 = std::uint32_t(0);
+    val_y_2 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_val_y_2 = std::uint32_t(0);
+    count_2 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_count_2 = std::uint32_t(0);
+    vectorized_assign(_15_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return val_x_2;}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_16_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return val_y_2;}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_17_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return count_2;}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_18_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return encrypto::motion::SecureUnsignedInteger(party->In<Protocol>(encrypto::motion::ToInput(indices[0]), 0));}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_19_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return _6_0[indices[1]];}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_20_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return data_x_0[indices[1]];}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_21_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return data_y_0[indices[1]];}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_2_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, (encrypto::motion::ShareWrapper(vectorized_access(_18_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}).Get()) == encrypto::motion::ShareWrapper(vectorized_access(_19_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}).Get())));
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__32_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(val_x_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}, vectorized_access(_15_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}));
+    for (; _MPC_PLAINTEXT__32_0 < _MPC_PLAINTEXT_len_0; _MPC_PLAINTEXT__32_0++) {
+        _32_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__32_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__32_0 != std::uint32_t(0)) {
+            vectorized_assign(val_x_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}, vectorized_access(val_x_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {(_MPC_PLAINTEXT__32_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(val_x_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}, (vectorized_access(val_x_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}) + vectorized_access(_20_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0})));
+        vectorized_assign(val_x_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}, vectorized_access(_2_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}).Mux(vectorized_access(val_x_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}).Get(), vectorized_access(val_x_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}).Get()));
+
+    }
+
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__33_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(val_y_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}, vectorized_access(_16_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}));
+    for (; _MPC_PLAINTEXT__33_0 < _MPC_PLAINTEXT_len_0; _MPC_PLAINTEXT__33_0++) {
+        _33_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__33_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__33_0 != std::uint32_t(0)) {
+            vectorized_assign(val_y_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}, vectorized_access(val_y_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {(_MPC_PLAINTEXT__33_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(val_y_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}, (vectorized_access(val_y_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}) + vectorized_access(_21_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0})));
+        vectorized_assign(val_y_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}, vectorized_access(_2_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}).Mux(vectorized_access(val_y_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}).Get(), vectorized_access(val_y_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}).Get()));
+
+    }
+
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__34_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(count_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}, vectorized_access(_17_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}));
+    for (; _MPC_PLAINTEXT__34_0 < _MPC_PLAINTEXT_len_0; _MPC_PLAINTEXT__34_0++) {
+        _34_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__34_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__34_0 != std::uint32_t(0)) {
+            vectorized_assign(count_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}, vectorized_access(count_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {(_MPC_PLAINTEXT__34_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(count_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}, (vectorized_access(count_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}) + decltype(_MPC_CONSTANT_1)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_1;}), {_MPC_PLAINTEXT_num_cluster_0}))));
+        vectorized_assign(count_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}, vectorized_access(_2_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}).Mux(vectorized_access(count_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}).Get(), vectorized_access(count_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}).Get()));
+
+    }
+
+    vectorized_assign(_22_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(count_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_3_2, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, (vectorized_access(_22_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}) > decltype(_MPC_CONSTANT_0)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_0;}), {_MPC_PLAINTEXT_num_cluster_0}))));
+    vectorized_assign(_23_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(val_x_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_24_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(count_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(val_x_6, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, (vectorized_access(_23_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}) / vectorized_access(_24_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {})));
+    vectorized_assign(_25_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(val_y_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_26_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(count_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(val_y_6, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, (vectorized_access(_25_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}) / vectorized_access(_26_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {})));
+    vectorized_assign(_27_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(val_x_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(val_x_7, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_access(_3_2, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Mux(vectorized_access(val_x_6, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Get(), vectorized_access(_27_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Get()));
+    vectorized_assign(_28_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(val_y_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(val_y_7, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_access(_3_2, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Mux(vectorized_access(val_y_6, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Get(), vectorized_access(_28_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Get()));
+    vectorized_assign(OUTPUT_cluster_x_2, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_update(vectorized_access(_13_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}), {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_access(val_x_7, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {})));
+    vectorized_assign(OUTPUT_cluster_y_2, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_update(vectorized_access(_14_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}), {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_access(val_y_7, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {})));
+    _4_1 = std::make_tuple(OUTPUT_cluster_x_2, OUTPUT_cluster_y_2);
+    return _4_1;
+
+}

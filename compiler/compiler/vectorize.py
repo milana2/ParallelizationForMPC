@@ -707,7 +707,12 @@ def _collect_vectorized_access(
         )
 
     elif isinstance(expr, llc.VectorizedAccess):
-        return expr
+        # After phase 2 we might need to update vectorized accesses, so we should
+        # only return a vectorized access if its definition has been visited before
+        # (i.e. we've confirmed its correct dimensionality)
+        if expr.array in vectorized_accesses:
+            return expr
+        return None
 
     elif isinstance(expr, (llc.Update, llc.VectorizedUpdate)):
         return _collect_vectorized_access(
@@ -730,7 +735,55 @@ def _update_vectorized_accesses(
         else:
             return expr
     elif isinstance(expr, VectorizedAccess):
-        return expr
+        # In the case where a lift expression was lifted out of a loop in phase 2 of vectorization,
+        # we need to update the vectorized accesses to reflect the new array.
+        if expr.array not in vectorized_accesses:
+            return expr
+
+        new_arr = vectorized_accesses[expr.array]
+        # Only earlier dimensions can be added, so we're free to prepend the new dims
+        new_vectorized_dims = [True] * (
+            len(new_arr.vectorized_dims) - len(expr.vectorized_dims)
+        ) + list(expr.vectorized_dims)
+        new_idx_vars = list(new_arr.idx_vars)[: -len(expr.vectorized_dims)] + list(
+            expr.idx_vars
+        )
+        return dc.replace(
+            new_arr,
+            vectorized_dims=tuple(new_vectorized_dims),
+            idx_vars=tuple(new_idx_vars),
+        )
+    elif isinstance(expr, llc.Subscript):
+        if expr.array in vectorized_accesses:
+            vectorized_access = vectorized_accesses[expr.array]
+            # TODO: handle more complex indexing than just a single variable
+            new_vectorized_dims = tuple(
+                vectorized
+                if not (
+                    isinstance(expr.index, llc.Var) and idx_var.name == expr.index.name
+                )
+                else False
+                for vectorized, idx_var in zip(
+                    vectorized_access.vectorized_dims, vectorized_access.idx_vars
+                )
+            )
+
+            new_idx_vars = tuple(
+                idx_var
+                if not (
+                    isinstance(expr.index, llc.Var) and idx_var.name == expr.index.name
+                )
+                else expr.index
+                for idx_var in vectorized_access.idx_vars
+            )
+
+            return dc.replace(
+                vectorized_access,
+                vectorized_dims=new_vectorized_dims,
+                idx_vars=new_idx_vars,
+            )
+        else:
+            return expr
     elif dc.is_dataclass(expr):
         return dc.replace(
             expr,
@@ -1192,6 +1245,20 @@ def _basic_vectorization_phase_2(
                 lifted_arrs[orig_var] = lifted_access
                 assignments.append(assignment)
             return assignments
+        elif (
+            isinstance(stmt, llc.Assign)
+            and isinstance(stmt.rhs, LiftExpr)
+            and len(loop_stack) > 0
+            and (loop_stack[-1].counter, loop_stack[-1].bound_high) not in stmt.rhs.dims
+        ):
+            new_dims = [(loop_stack[-1].counter, loop_stack[-1].bound_high)] + list(
+                stmt.rhs.dims
+            )
+            new_rhs = LiftExpr(
+                stmt.rhs.expr,
+                tuple(new_dims),
+            )
+            return [dc.replace(stmt, rhs=new_rhs)]
         else:
             return [stmt]
 

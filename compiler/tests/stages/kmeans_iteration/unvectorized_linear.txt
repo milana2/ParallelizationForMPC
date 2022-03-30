@@ -1,0 +1,45 @@
+def kmeans_iteration(data_x!0: shared[list[int; ?]], data_y!0: shared[list[int; ?]], cluster_x!0: shared[list[int; ?]], cluster_y!0: shared[list[int; ?]], OUTPUT_cluster_x!0: shared[list[int; ?]], OUTPUT_cluster_y!0: shared[list[int; ?]], len!0: plaintext[int], num_cluster!0: plaintext[int], bestMap!0: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    for i!1 in range(0, len!0):
+        bestMap!1 = Φ(bestMap!0, bestMap!2) (targetless)
+        best_dist!2 = 10000
+        for c!1 in range(0, num_cluster!0):
+            best_dist!3 = Φ(best_dist!2, best_dist!5)
+            bestMap!2 = Φ(bestMap!1, bestMap!3)
+            x_dist!3 = (cluster_x!0[c!1] - data_x!0[i!1])
+            x_sq!3 = (x_dist!3 * x_dist!3)
+            y_dist!3 = (cluster_y!0[c!1] - data_y!0[i!1])
+            y_sq!3 = (y_dist!3 * y_dist!3)
+            dist!3 = (x_sq!3 + y_sq!3)
+            val!3 = bestMap!2[i!1]
+            !1!3 = (dist!3 < best_dist!3)
+            best_dist!4 = dist!3
+            val!4 = c!1
+            best_dist!5 = MUX(!1!3, best_dist!4, best_dist!3)
+            val!5 = MUX(!1!3, val!4, val!3)
+            bestMap!3 = Update(bestMap!2, i!1, val!5)
+    for c!2 in range(0, num_cluster!0):
+        OUTPUT_cluster_x!1 = Φ(OUTPUT_cluster_x!0, OUTPUT_cluster_x!2) (targetless)
+        OUTPUT_cluster_y!1 = Φ(OUTPUT_cluster_y!0, OUTPUT_cluster_y!2) (targetless)
+        val_x!2 = 0
+        val_y!2 = 0
+        count!2 = 0
+        for i!2 in range(0, len!0):
+            val_x!3 = Φ(val_x!2, val_x!5)
+            val_y!3 = Φ(val_y!2, val_y!5)
+            count!3 = Φ(count!2, count!5)
+            !2!3 = (c!2 == bestMap!1[i!2])
+            val_x!4 = (val_x!3 + data_x!0[i!2])
+            val_y!4 = (val_y!3 + data_y!0[i!2])
+            count!4 = (count!3 + 1)
+            val_x!5 = MUX(!2!3, val_x!4, val_x!3)
+            val_y!5 = MUX(!2!3, val_y!4, val_y!3)
+            count!5 = MUX(!2!3, count!4, count!3)
+        !3!2 = (count!3 > 0)
+        val_x!6 = (val_x!3 / count!3)
+        val_y!6 = (val_y!3 / count!3)
+        val_x!7 = MUX(!3!2, val_x!6, val_x!3)
+        val_y!7 = MUX(!3!2, val_y!6, val_y!3)
+        OUTPUT_cluster_x!2 = Update(OUTPUT_cluster_x!1, c!2, val_x!7)
+        OUTPUT_cluster_y!2 = Update(OUTPUT_cluster_y!1, c!2, val_y!7)
+    !4!1 = (OUTPUT_cluster_x!1, OUTPUT_cluster_y!1)
+    return !4!1

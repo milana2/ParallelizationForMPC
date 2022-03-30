@@ -1,21 +1,21 @@
 def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[int; ?]], N!0: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
     min_index!1 = 0
-    !3!0{N!0}[] = lift(min_sum!1, (i!1:N!0))
-    !4!0{N!0}[] = lift(min_index!1, (i!1:N!0))
+    !3!0{I!1:N!0}[] = lift(min_sum!1, (i!1:N!0))
+    !4!0{I!1:N!0}[] = lift(min_index!1, (i!1:N!0))
     sum!2 = 0
-    !5!0{N!0, D!0}[] = lift(sum!2, (i!1:N!0, j!1:D!0))
-    !6!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
-    !7!0{N!0, D!0}[] = lift(C!0[j!1], (i!1:N!0, j!1:D!0))
-    d!3{N!0, D!0}[] = (!6!0{N!0, D!0}[] - !7!0{N!0, D!0}[])
-    p!3{N!0, D!0}[] = (d!3{N!0, D!0}[] * d!3{N!0, D!0}[])
+    !5!0{I!1:N!0, J!1:D!0}[] = lift(sum!2, (i!1:N!0, j!1:D!0))
+    !6!0{I!1:N!0, J!1:D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    !7!0{I!1:N!0, J!1:D!0}[] = lift(C!0[j!1], (i!1:N!0, j!1:D!0))
+    d!3{I!1:N!0, J!1:D!0}[] = (!6!0{I!1:N!0, J!1:D!0}[] - !7!0{I!1:N!0, J!1:D!0}[])
+    p!3{I!1:N!0, J!1:D!0}[] = (d!3{I!1:N!0, J!1:D!0}[] * d!3{I!1:N!0, J!1:D!0}[])
     for !12!0 in range(0, D!0):
-        sum!3{N!0}[!12!0] = Φ(!5!0{N!0}[!12!0], sum!4{N!0}[(!12!0 - 1)])
-        sum!4{N!0}[!12!0] = (sum!3{N!0}[!12!0] + p!3{N!0}[!12!0])
-    !8!0{N!0}[] = drop_dim(sum!4{N!0, D!0}[])
-    !9!0{N!0}[] = drop_dim(sum!4{N!0, D!0}[])
-    min_sum!3{N!0}[] = !9!0{N!0}[]
-    !13!0{N!0}[] = lift(i!1, (i!1:N!0))
+        sum!3{I!1:N!0}[!12!0] = Φ(!5!0{I!1:N!0}[!12!0], sum!4{I!1:N!0}[(!12!0 - 1)])
+        sum!4{I!1:N!0}[!12!0] = (sum!3{I!1:N!0}[!12!0] + p!3{I!1:N!0}[!12!0])
+    !8!0{I!1:N!0}[] = drop_dim(sum!4{I!1:N!0, J!1:D!0}[])
+    !9!0{I!1:N!0}[] = drop_dim(sum!4{I!1:N!0, J!1:D!0}[])
+    min_sum!3{I!1:N!0}[] = !9!0{I!1:N!0}[]
+    !13!0{I!1:N!0}[] = lift(i!1, (i!1:N!0))
     for !14!0 in range(0, N!0):
         min_sum!2{}[!14!0] = Φ(!3!0{}[!14!0], min_sum!4{}[(!14!0 - 1)])
         !1!2{}[!14!0] = (!8!0{}[!14!0] < min_sum!2{}[!14!0])
@@ -23,7 +23,7 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
     for !15!0 in range(0, N!0):
         min_index!2{}[!15!0] = Φ(!4!0{}[!15!0], min_index!4{}[(!15!0 - 1)])
         min_index!4{}[!15!0] = MUX(!1!2{}[!15!0], !13!0{}[!15!0], min_index!2{}[!15!0])
-    !10!0 = drop_dim(min_sum!4{N!0}[])
-    !11!0 = drop_dim(min_index!4{N!0}[])
+    !10!0 = drop_dim(min_sum!4{I!1:N!0}[])
+    !11!0 = drop_dim(min_index!4{I!1:N!0}[])
     !2!1 = (!10!0, !11!0)
     return !2!1

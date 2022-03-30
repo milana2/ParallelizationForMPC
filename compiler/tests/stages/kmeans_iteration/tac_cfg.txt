@@ -1,0 +1,75 @@
+Function kmeans_iteration(data_x: shared[list[int; ?]], data_y: shared[list[int; ?]], cluster_x: shared[list[int; ?]], cluster_y: shared[list[int; ?]], OUTPUT_cluster_x: shared[list[int; ?]], OUTPUT_cluster_y: shared[list[int; ?]], len: plaintext[int], num_cluster: plaintext[int], bestMap: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+Entry block: 0
+Exit block: 12
+Block 0:
+    jump
+Block 1:
+    for i: plaintext[int] in range(0, len)
+Block 2:
+    best_dist = 10000
+    jump
+Block 3:
+    jump
+Block 4:
+    for c: plaintext[int] in range(0, num_cluster)
+Block 5:
+    x_dist = (cluster_x[c] - data_x[i])
+    x_sq = (x_dist * x_dist)
+    y_dist = (cluster_y[c] - data_y[i])
+    y_sq = (y_dist * y_dist)
+    dist = (x_sq + y_sq)
+    val = bestMap[i]
+    !1 = (dist < best_dist)
+    conditional jump !1
+Block 6:
+    jump
+Block 7:
+    best_dist = dist
+    val = c
+    jump
+Block 8:
+    jump
+Block 9:
+    (merge from conditional jump !1)
+    bestMap = Update(bestMap, i, val)
+    jump
+Block 10:
+    for c: plaintext[int] in range(0, num_cluster)
+Block 11:
+    val_x = 0
+    val_y = 0
+    count = 0
+    jump
+Block 12:
+    !4 = (OUTPUT_cluster_x, OUTPUT_cluster_y)
+    return !4
+Block 13:
+    for i: plaintext[int] in range(0, len)
+Block 14:
+    !2 = (c == bestMap[i])
+    conditional jump !2
+Block 15:
+    !3 = (count > 0)
+    conditional jump !3
+Block 16:
+    val_x = (val_x + data_x[i])
+    val_y = (val_y + data_y[i])
+    count = (count + 1)
+    jump
+Block 17:
+    jump
+Block 18:
+    (merge from conditional jump !2)
+    jump
+Block 19:
+    val_x = (val_x / count)
+    val_y = (val_y / count)
+    jump
+Block 20:
+    jump
+Block 21:
+    (merge from conditional jump !3)
+    OUTPUT_cluster_x = Update(OUTPUT_cluster_x, c, val_x)
+    OUTPUT_cluster_y = Update(OUTPUT_cluster_y, c, val_y)
+    jump
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (3, 10, *) (4, 6, F) (4, 5, T) (5, 8, F) (5, 7, T) (6, 1, *) (7, 9, *) (8, 9, *) (9, 4, *) (10, 12, F) (10, 11, T) (11, 13, *) (13, 15, F) (13, 14, T) (14, 17, F) (14, 16, T) (15, 20, F) (15, 19, T) (16, 18, *) (17, 18, *) (18, 13, *) (19, 21, *) (20, 21, *) (21, 10, *)

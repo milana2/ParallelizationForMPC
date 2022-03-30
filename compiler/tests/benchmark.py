@@ -81,8 +81,8 @@ def run_benchmark(
             text=True,
             cwd=party1_dir,
         ) as party1:
-            party0.wait(60)
-            party1.wait(60)
+            party0.wait(600)
+            party1.wait(600)
 
             assert party0.stdout is not None
             assert party0.stderr is not None

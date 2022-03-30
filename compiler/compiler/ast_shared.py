@@ -481,8 +481,10 @@ class VectorizedAccess:
 
     def __str__(self) -> str:
         vectorized_idxs = ", ".join(
-            str(size).upper()
-            for size, vectorized in zip(self.dim_sizes, self.vectorized_dims)
+            f"{idx_var}:{size}".upper()
+            for idx_var, size, vectorized in zip(
+                self.idx_vars, self.dim_sizes, self.vectorized_dims
+            )
             if vectorized
         )
         vectorized_idxs = "{" + vectorized_idxs + "}"
