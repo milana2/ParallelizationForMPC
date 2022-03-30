@@ -4,58 +4,58 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5469|4518|911|4945|0.814 MiB |4945|0.814 MiB |2210.801 ms |431.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |11665.823 ms |5523.0 ms |
-|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |2083.392 ms |282.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2171.854 ms |398.0 ms |
-|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1322.579 ms |204.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1523.604 ms |276.0 ms |
-|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1498.204 ms |206.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1515.013 ms |282.0 ms |
-|db_variance|16280|3307|12939|13644|1.49 MiB |13644|1.49 MiB |10043.317 ms |1276.0 ms |
-|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |10887.616 ms |3756.0 ms |
-|histogram|2688|2499|118|3016|0.396 MiB |3016|0.396 MiB |1677.721 ms |265.0 ms |
-|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3921.715 ms |1235.0 ms |
-|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1488.822 ms |306.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2247.271 ms |744.0 ms |
-|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |3183.089 ms |466.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |3311.946 ms |572.0 ms |
-|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2277.324 ms |369.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1975.07 ms |386.0 ms |
-|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2406.111 ms |355.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2334.012 ms |397.0 ms |
-|minimal_points|531|478|36|763|0.097 MiB |763|0.097 MiB |208.326 ms |42.0 ms |
-|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |1067.399 ms |313.0 ms |
-|psi|131|61|42|472|0.063 MiB |472|0.063 MiB |113.738 ms |12.0 ms |
-|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |621.391 ms |152.0 ms |
+|biometric|5469|4518|911|4945|0.814 MiB |4945|0.814 MiB |2190.34 ms |472.0 ms |
+|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |12486.211 ms |4205.0 ms |
+|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |1929.857 ms |340.0 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2344.578 ms |411.0 ms |
+|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1414.109 ms |218.0 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1431.939 ms |285.0 ms |
+|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1595.376 ms |212.0 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1471.035 ms |291.0 ms |
+|db_variance|16280|3307|12939|13644|1.49 MiB |13644|1.49 MiB |9525.779 ms |1183.0 ms |
+|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |11201.961 ms |3774.0 ms |
+|histogram|2688|2499|118|3016|0.396 MiB |3016|0.396 MiB |1583.254 ms |243.0 ms |
+|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3599.688 ms |1206.0 ms |
+|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1340.07 ms |314.0 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2336.274 ms |778.0 ms |
+|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |3191.53 ms |500.0 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2846.268 ms |538.0 ms |
+|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2184.232 ms |332.0 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |2052.3 ms |403.0 ms |
+|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2414.079 ms |322.0 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |1924.688 ms |347.0 ms |
+|minimal_points|531|478|36|763|0.097 MiB |763|0.097 MiB |227.898 ms |37.0 ms |
+|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |931.941 ms |280.0 ms |
+|psi|131|61|42|472|0.063 MiB |472|0.063 MiB |114.915 ms |12.0 ms |
+|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |606.161 ms |137.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4492|3637|815|7865|4.528 MiB |7857|4.527 MiB |654.404 ms |528.0 ms |
-|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5927.413 ms |6060.0 ms |
-|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |243.838 ms |202.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |304.874 ms |365.0 ms |
-|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |169.998 ms |144.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |217.469 ms |261.0 ms |
-|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |197.232 ms |148.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |299.14 ms |264.0 ms |
-|db_variance|13365|3014|10317|20728|4.017 MiB |20710|4.015 MiB |1741.9 ms |1299.0 ms |
-|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |3951.518 ms |3358.0 ms |
-|histogram|1528|1339|118|2953|1.11 MiB |2898|1.106 MiB |321.489 ms |217.0 ms |
-|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1263.812 ms |935.0 ms |
-|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |408.284 ms |322.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |879.926 ms |870.0 ms |
-|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |567.66 ms |393.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |567.702 ms |570.0 ms |
-|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |366.115 ms |293.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |400.677 ms |337.0 ms |
-|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |372.711 ms |295.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |417.296 ms |341.0 ms |
-|minimal_points|479|426|36|1019|0.269 MiB |1014|0.269 MiB |50.647 ms |49.0 ms |
-|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |452.831 ms |290.0 ms |
-|psi|147|77|42|760|0.37 MiB |746|0.369 MiB |142.218 ms |26.0 ms |
-|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |143.598 ms |264.0 ms |
+|biometric|4492|3637|815|7865|4.528 MiB |7857|4.527 MiB |517.391 ms |466.0 ms |
+|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |6518.657 ms |4561.0 ms |
+|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |290.371 ms |180.0 ms |
+|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |355.64 ms |327.0 ms |
+|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |157.204 ms |135.0 ms |
+|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |211.934 ms |233.0 ms |
+|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |147.157 ms |133.0 ms |
+|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |256.395 ms |232.0 ms |
+|db_variance|13365|3014|10317|20728|4.017 MiB |20710|4.015 MiB |1620.814 ms |1154.0 ms |
+|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |3919.89 ms |3014.0 ms |
+|histogram|1528|1339|118|2953|1.11 MiB |2898|1.106 MiB |249.251 ms |191.0 ms |
+|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |985.949 ms |828.0 ms |
+|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |295.698 ms |290.0 ms |
+|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |978.17 ms |783.0 ms |
+|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |568.598 ms |394.0 ms |
+|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |523.081 ms |566.0 ms |
+|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |405.041 ms |297.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |428.695 ms |346.0 ms |
+|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |373.395 ms |295.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |447.122 ms |341.0 ms |
+|minimal_points|479|426|36|1019|0.269 MiB |1014|0.269 MiB |101.153 ms |51.0 ms |
+|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |459.145 ms |303.0 ms |
+|psi|147|77|42|760|0.37 MiB |746|0.369 MiB |90.395 ms |26.0 ms |
+|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |229.707 ms |267.0 ms |
 
 ## Compiler stages with different benchmarks
 ## `biometric`
@@ -170,29 +170,29 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
 def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[int; ?]], N!0: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
     min_index!1 = 0
-    !3!0{N!0}[] = lift(min_sum!1, (i!1:N!0))
-    !4!0{N!0}[] = lift(min_index!1, (i!1:N!0))
+    !3!0{I!1:N!0}[] = lift(min_sum!1, (i!1:N!0))
+    !4!0{I!1:N!0}[] = lift(min_index!1, (i!1:N!0))
     for i!1 in range(0, N!0):
-        min_sum!2{N!0}[] = Φ(!3!0{N!0}[], min_sum!4{N!0}[])
-        min_index!2{N!0}[] = Φ(!4!0{N!0}[], min_index!4{N!0}[])
+        min_sum!2{I!1:N!0}[] = Φ(!3!0{I!1:N!0}[], min_sum!4{I!1:N!0}[])
+        min_index!2{I!1:N!0}[] = Φ(!4!0{I!1:N!0}[], min_index!4{I!1:N!0}[])
         sum!2 = 0
-        !5!0{N!0, D!0}[] = lift(sum!2, (i!1:N!0, j!1:D!0))
-        !6!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
-        !7!0{N!0, D!0}[] = lift(C!0[j!1], (i!1:N!0, j!1:D!0))
+        !5!0{I!1:N!0, J!1:D!0}[] = lift(sum!2, (i!1:N!0, j!1:D!0))
+        !6!0{I!1:N!0, J!1:D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+        !7!0{I!1:N!0, J!1:D!0}[] = lift(C!0[j!1], (i!1:N!0, j!1:D!0))
         for j!1 in range(0, D!0):
-            sum!3{N!0, D!0}[] = Φ(!5!0{N!0, D!0}[], sum!4{N!0, D!0}[])
-            d!3{N!0, D!0}[] = (!6!0{N!0, D!0}[] - !7!0{N!0, D!0}[])
-            p!3{N!0, D!0}[] = (d!3{N!0, D!0}[] * d!3{N!0, D!0}[])
-            sum!4{N!0, D!0}[] = (sum!3{N!0, D!0}[] + p!3{N!0, D!0}[])
-        !8!0{N!0}[] = drop_dim(sum!4{N!0, D!0}[])
-        !1!2{N!0}[] = (!8!0{N!0}[] < min_sum!2{N!0}[])
-        !9!0{N!0}[] = drop_dim(sum!4{N!0, D!0}[])
-        min_sum!3{N!0}[] = !9!0{N!0}[]
+            sum!3{I!1:N!0, J!1:D!0}[] = Φ(!5!0{I!1:N!0, J!1:D!0}[], sum!4{I!1:N!0, J!1:D!0}[])
+            d!3{I!1:N!0, J!1:D!0}[] = (!6!0{I!1:N!0, J!1:D!0}[] - !7!0{I!1:N!0, J!1:D!0}[])
+            p!3{I!1:N!0, J!1:D!0}[] = (d!3{I!1:N!0, J!1:D!0}[] * d!3{I!1:N!0, J!1:D!0}[])
+            sum!4{I!1:N!0, J!1:D!0}[] = (sum!3{I!1:N!0, J!1:D!0}[] + p!3{I!1:N!0, J!1:D!0}[])
+        !8!0{I!1:N!0}[] = drop_dim(sum!4{I!1:N!0, J!1:D!0}[])
+        !1!2{I!1:N!0}[] = (!8!0{I!1:N!0}[] < min_sum!2{I!1:N!0}[])
+        !9!0{I!1:N!0}[] = drop_dim(sum!4{I!1:N!0, J!1:D!0}[])
+        min_sum!3{I!1:N!0}[] = !9!0{I!1:N!0}[]
         min_index!3 = i!1
-        min_sum!4{N!0}[] = MUX(!1!2{N!0}[], min_sum!3{N!0}[], min_sum!2{N!0}[])
-        min_index!4{N!0}[] = MUX(!1!2{N!0}[], min_index!3, min_index!2{N!0}[])
-    !10!0 = drop_dim(min_sum!4{N!0}[])
-    !11!0 = drop_dim(min_index!4{N!0}[])
+        min_sum!4{I!1:N!0}[] = MUX(!1!2{I!1:N!0}[], min_sum!3{I!1:N!0}[], min_sum!2{I!1:N!0}[])
+        min_index!4{I!1:N!0}[] = MUX(!1!2{I!1:N!0}[], min_index!3, min_index!2{I!1:N!0}[])
+    !10!0 = drop_dim(min_sum!4{I!1:N!0}[])
+    !11!0 = drop_dim(min_index!4{I!1:N!0}[])
     !2!1 = (!10!0, !11!0)
     return !2!1
 ```
@@ -203,21 +203,21 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
 def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[int; ?]], N!0: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
     min_index!1 = 0
-    !3!0{N!0}[] = lift(min_sum!1, (i!1:N!0))
-    !4!0{N!0}[] = lift(min_index!1, (i!1:N!0))
+    !3!0{I!1:N!0}[] = lift(min_sum!1, (i!1:N!0))
+    !4!0{I!1:N!0}[] = lift(min_index!1, (i!1:N!0))
     sum!2 = 0
-    !5!0{N!0, D!0}[] = lift(sum!2, (i!1:N!0, j!1:D!0))
-    !6!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
-    !7!0{N!0, D!0}[] = lift(C!0[j!1], (i!1:N!0, j!1:D!0))
-    d!3{N!0, D!0}[] = (!6!0{N!0, D!0}[] - !7!0{N!0, D!0}[])
-    p!3{N!0, D!0}[] = (d!3{N!0, D!0}[] * d!3{N!0, D!0}[])
+    !5!0{I!1:N!0, J!1:D!0}[] = lift(sum!2, (i!1:N!0, j!1:D!0))
+    !6!0{I!1:N!0, J!1:D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    !7!0{I!1:N!0, J!1:D!0}[] = lift(C!0[j!1], (i!1:N!0, j!1:D!0))
+    d!3{I!1:N!0, J!1:D!0}[] = (!6!0{I!1:N!0, J!1:D!0}[] - !7!0{I!1:N!0, J!1:D!0}[])
+    p!3{I!1:N!0, J!1:D!0}[] = (d!3{I!1:N!0, J!1:D!0}[] * d!3{I!1:N!0, J!1:D!0}[])
     for !12!0 in range(0, D!0):
-        sum!3{N!0}[!12!0] = Φ(!5!0{N!0}[!12!0], sum!4{N!0}[(!12!0 - 1)])
-        sum!4{N!0}[!12!0] = (sum!3{N!0}[!12!0] + p!3{N!0}[!12!0])
-    !8!0{N!0}[] = drop_dim(sum!4{N!0, D!0}[])
-    !9!0{N!0}[] = drop_dim(sum!4{N!0, D!0}[])
-    min_sum!3{N!0}[] = !9!0{N!0}[]
-    !13!0{N!0}[] = lift(i!1, (i!1:N!0))
+        sum!3{I!1:N!0}[!12!0] = Φ(!5!0{I!1:N!0}[!12!0], sum!4{I!1:N!0}[(!12!0 - 1)])
+        sum!4{I!1:N!0}[!12!0] = (sum!3{I!1:N!0}[!12!0] + p!3{I!1:N!0}[!12!0])
+    !8!0{I!1:N!0}[] = drop_dim(sum!4{I!1:N!0, J!1:D!0}[])
+    !9!0{I!1:N!0}[] = drop_dim(sum!4{I!1:N!0, J!1:D!0}[])
+    min_sum!3{I!1:N!0}[] = !9!0{I!1:N!0}[]
+    !13!0{I!1:N!0}[] = lift(i!1, (i!1:N!0))
     for !14!0 in range(0, N!0):
         min_sum!2{}[!14!0] = Φ(!3!0{}[!14!0], min_sum!4{}[(!14!0 - 1)])
         !1!2{}[!14!0] = (!8!0{}[!14!0] < min_sum!2{}[!14!0])
@@ -225,8 +225,8 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
     for !15!0 in range(0, N!0):
         min_index!2{}[!15!0] = Φ(!4!0{}[!15!0], min_index!4{}[(!15!0 - 1)])
         min_index!4{}[!15!0] = MUX(!1!2{}[!15!0], !13!0{}[!15!0], min_index!2{}[!15!0])
-    !10!0 = drop_dim(min_sum!4{N!0}[])
-    !11!0 = drop_dim(min_index!4{N!0}[])
+    !10!0 = drop_dim(min_sum!4{I!1:N!0}[])
+    !11!0 = drop_dim(min_index!4{I!1:N!0}[])
     !2!1 = (!10!0, !11!0)
     return !2!1
 ```
@@ -494,26 +494,26 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
     c!1 = 0
-    !7!0{N!0}[] = lift(s0!1, (i!1:N!0))
-    !8!0{N!0}[] = lift(c!1, (i!1:N!0))
-    !9!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !10!0{N!0}[] = lift(Syms!0[2], (i!1:N!0))
-    !11!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !12!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
-    !13!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !14!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !7!0{I!1:N!0}[] = lift(s0!1, (i!1:N!0))
+    !8!0{I!1:N!0}[] = lift(c!1, (i!1:N!0))
+    !9!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !10!0{I!1:N!0}[] = lift(Syms!0[2], (i!1:N!0))
+    !11!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !12!0{I!1:N!0}[] = lift(Syms!0[1], (i!1:N!0))
+    !13!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !14!0{I!1:N!0}[] = lift(Syms!0[0], (i!1:N!0))
     for i!1 in range(0, N!0):
-        s0!2{N!0}[] = Φ(!7!0{N!0}[], s0!3{N!0}[])
-        c!2{N!0}[] = Φ(!8!0{N!0}[], c!4{N!0}[])
-        !1!2{N!0}[] = (!9!0{N!0}[] == !10!0{N!0}[])
-        !2!2{N!0}[] = (s0!2{N!0}[] and !1!2{N!0}[])
-        c!3{N!0}[] = (c!2{N!0}[] + 1)
-        c!4{N!0}[] = MUX(!2!2{N!0}[], c!3{N!0}[], c!2{N!0}[])
-        !3!2{N!0}[] = (!11!0{N!0}[] == !12!0{N!0}[])
-        !5!2{N!0}[] = (!13!0{N!0}[] == !14!0{N!0}[])
-        !6!2{N!0}[] = (s0!2{N!0}[] and !5!2{N!0}[])
-        s0!3{N!0}[] = (!3!2{N!0}[] or !6!2{N!0}[])
-    !15!0 = drop_dim(c!4{N!0}[])
+        s0!2{I!1:N!0}[] = Φ(!7!0{I!1:N!0}[], s0!3{I!1:N!0}[])
+        c!2{I!1:N!0}[] = Φ(!8!0{I!1:N!0}[], c!4{I!1:N!0}[])
+        !1!2{I!1:N!0}[] = (!9!0{I!1:N!0}[] == !10!0{I!1:N!0}[])
+        !2!2{I!1:N!0}[] = (s0!2{I!1:N!0}[] and !1!2{I!1:N!0}[])
+        c!3{I!1:N!0}[] = (c!2{I!1:N!0}[] + 1)
+        c!4{I!1:N!0}[] = MUX(!2!2{I!1:N!0}[], c!3{I!1:N!0}[], c!2{I!1:N!0}[])
+        !3!2{I!1:N!0}[] = (!11!0{I!1:N!0}[] == !12!0{I!1:N!0}[])
+        !5!2{I!1:N!0}[] = (!13!0{I!1:N!0}[] == !14!0{I!1:N!0}[])
+        !6!2{I!1:N!0}[] = (s0!2{I!1:N!0}[] and !5!2{I!1:N!0}[])
+        s0!3{I!1:N!0}[] = (!3!2{I!1:N!0}[] or !6!2{I!1:N!0}[])
+    !15!0 = drop_dim(c!4{I!1:N!0}[])
     return !15!0
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
@@ -523,27 +523,27 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
     c!1 = 0
-    !7!0{N!0}[] = lift(s0!1, (i!1:N!0))
-    !8!0{N!0}[] = lift(c!1, (i!1:N!0))
-    !9!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !10!0{N!0}[] = lift(Syms!0[2], (i!1:N!0))
-    !11!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !12!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
-    !13!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !14!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
-    !1!2{N!0}[] = (!9!0{N!0}[] == !10!0{N!0}[])
-    !3!2{N!0}[] = (!11!0{N!0}[] == !12!0{N!0}[])
-    !5!2{N!0}[] = (!13!0{N!0}[] == !14!0{N!0}[])
+    !7!0{I!1:N!0}[] = lift(s0!1, (i!1:N!0))
+    !8!0{I!1:N!0}[] = lift(c!1, (i!1:N!0))
+    !9!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !10!0{I!1:N!0}[] = lift(Syms!0[2], (i!1:N!0))
+    !11!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !12!0{I!1:N!0}[] = lift(Syms!0[1], (i!1:N!0))
+    !13!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !14!0{I!1:N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !1!2{I!1:N!0}[] = (!9!0{I!1:N!0}[] == !10!0{I!1:N!0}[])
+    !3!2{I!1:N!0}[] = (!11!0{I!1:N!0}[] == !12!0{I!1:N!0}[])
+    !5!2{I!1:N!0}[] = (!13!0{I!1:N!0}[] == !14!0{I!1:N!0}[])
     for !16!0 in range(0, N!0):
         s0!2{}[!16!0] = Φ(!7!0{}[!16!0], s0!3{}[(!16!0 - 1)])
         !6!2{}[!16!0] = (s0!2{}[!16!0] and !5!2{}[!16!0])
         s0!3{}[!16!0] = (!3!2{}[!16!0] or !6!2{}[!16!0])
-    !2!2{N!0}[] = (s0!2{N!0}[] and !1!2{N!0}[])
+    !2!2{I!1:N!0}[] = (s0!2{I!1:N!0}[] and !1!2{I!1:N!0}[])
     for !17!0 in range(0, N!0):
         c!2{}[!17!0] = Φ(!8!0{}[!17!0], c!4{}[(!17!0 - 1)])
         c!3{}[!17!0] = (c!2{}[!17!0] + 1)
         c!4{}[!17!0] = MUX(!2!2{}[!17!0], c!3{}[!17!0], c!2{}[!17!0])
-    !15!0 = drop_dim(c!4{N!0}[])
+    !15!0 = drop_dim(c!4{I!1:N!0}[])
     return !15!0
 ```
 ### Basic Vectorization Phase 2 (dependence graph)
@@ -785,28 +785,28 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     s0!1 = False
     s1!1 = False
     scount!1 = 0
-    !5!0{N!0}[] = lift(s0!1, (i!1:N!0))
-    !6!0{N!0}[] = lift(s1!1, (i!1:N!0))
-    !7!0{N!0}[] = lift(scount!1, (i!1:N!0))
-    !8!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !9!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
-    !10!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !11!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
-    !12!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !13!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
+    !5!0{I!1:N!0}[] = lift(s0!1, (i!1:N!0))
+    !6!0{I!1:N!0}[] = lift(s1!1, (i!1:N!0))
+    !7!0{I!1:N!0}[] = lift(scount!1, (i!1:N!0))
+    !8!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !9!0{I!1:N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !10!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !11!0{I!1:N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !12!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !13!0{I!1:N!0}[] = lift(Syms!0[1], (i!1:N!0))
     for i!1 in range(0, N!0):
-        s0!2{N!0}[] = Φ(!5!0{N!0}[], s0!3{N!0}[])
-        s1!2{N!0}[] = Φ(!6!0{N!0}[], s1!3{N!0}[])
-        scount!2{N!0}[] = Φ(!7!0{N!0}[], scount!4{N!0}[])
-        !1!2{N!0}[] = (!8!0{N!0}[] != !9!0{N!0}[])
-        !2!2{N!0}[] = (s1!2{N!0}[] and !1!2{N!0}[])
-        scount!3{N!0}[] = (scount!2{N!0}[] + 1)
-        scount!4{N!0}[] = MUX(!2!2{N!0}[], scount!3{N!0}[], scount!2{N!0}[])
-        !3!2{N!0}[] = (!10!0{N!0}[] == !11!0{N!0}[])
-        !4!2{N!0}[] = (s0!2{N!0}[] or s1!2{N!0}[])
-        s1!3{N!0}[] = (!3!2{N!0}[] and !4!2{N!0}[])
-        s0!3{N!0}[] = (!12!0{N!0}[] == !13!0{N!0}[])
-    !14!0 = drop_dim(scount!4{N!0}[])
+        s0!2{I!1:N!0}[] = Φ(!5!0{I!1:N!0}[], s0!3{I!1:N!0}[])
+        s1!2{I!1:N!0}[] = Φ(!6!0{I!1:N!0}[], s1!3{I!1:N!0}[])
+        scount!2{I!1:N!0}[] = Φ(!7!0{I!1:N!0}[], scount!4{I!1:N!0}[])
+        !1!2{I!1:N!0}[] = (!8!0{I!1:N!0}[] != !9!0{I!1:N!0}[])
+        !2!2{I!1:N!0}[] = (s1!2{I!1:N!0}[] and !1!2{I!1:N!0}[])
+        scount!3{I!1:N!0}[] = (scount!2{I!1:N!0}[] + 1)
+        scount!4{I!1:N!0}[] = MUX(!2!2{I!1:N!0}[], scount!3{I!1:N!0}[], scount!2{I!1:N!0}[])
+        !3!2{I!1:N!0}[] = (!10!0{I!1:N!0}[] == !11!0{I!1:N!0}[])
+        !4!2{I!1:N!0}[] = (s0!2{I!1:N!0}[] or s1!2{I!1:N!0}[])
+        s1!3{I!1:N!0}[] = (!3!2{I!1:N!0}[] and !4!2{I!1:N!0}[])
+        s0!3{I!1:N!0}[] = (!12!0{I!1:N!0}[] == !13!0{I!1:N!0}[])
+    !14!0 = drop_dim(scount!4{I!1:N!0}[])
     return !14!0
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
@@ -817,30 +817,30 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     s0!1 = False
     s1!1 = False
     scount!1 = 0
-    !5!0{N!0}[] = lift(s0!1, (i!1:N!0))
-    !6!0{N!0}[] = lift(s1!1, (i!1:N!0))
-    !7!0{N!0}[] = lift(scount!1, (i!1:N!0))
-    !8!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !9!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
-    !10!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !11!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
-    !12!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !13!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
-    !1!2{N!0}[] = (!8!0{N!0}[] != !9!0{N!0}[])
-    !3!2{N!0}[] = (!10!0{N!0}[] == !11!0{N!0}[])
-    s0!3{N!0}[] = (!12!0{N!0}[] == !13!0{N!0}[])
+    !5!0{I!1:N!0}[] = lift(s0!1, (i!1:N!0))
+    !6!0{I!1:N!0}[] = lift(s1!1, (i!1:N!0))
+    !7!0{I!1:N!0}[] = lift(scount!1, (i!1:N!0))
+    !8!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !9!0{I!1:N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !10!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !11!0{I!1:N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !12!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !13!0{I!1:N!0}[] = lift(Syms!0[1], (i!1:N!0))
+    !1!2{I!1:N!0}[] = (!8!0{I!1:N!0}[] != !9!0{I!1:N!0}[])
+    !3!2{I!1:N!0}[] = (!10!0{I!1:N!0}[] == !11!0{I!1:N!0}[])
+    s0!3{I!1:N!0}[] = (!12!0{I!1:N!0}[] == !13!0{I!1:N!0}[])
     for !15!0 in range(0, N!0):
         s0!2{}[!15!0] = Φ(!5!0{}[!15!0], s0!3{}[(!15!0 - 1)])
     for !16!0 in range(0, N!0):
         s1!2{}[!16!0] = Φ(!6!0{}[!16!0], s1!3{}[(!16!0 - 1)])
         !4!2{}[!16!0] = (s0!2{}[!16!0] or s1!2{}[!16!0])
         s1!3{}[!16!0] = (!3!2{}[!16!0] and !4!2{}[!16!0])
-    !2!2{N!0}[] = (s1!2{N!0}[] and !1!2{N!0}[])
+    !2!2{I!1:N!0}[] = (s1!2{I!1:N!0}[] and !1!2{I!1:N!0}[])
     for !17!0 in range(0, N!0):
         scount!2{}[!17!0] = Φ(!7!0{}[!17!0], scount!4{}[(!17!0 - 1)])
         scount!3{}[!17!0] = (scount!2{}[!17!0] + 1)
         scount!4{}[!17!0] = MUX(!2!2{}[!17!0], scount!3{}[!17!0], scount!2{}[!17!0])
-    !14!0 = drop_dim(scount!4{N!0}[])
+    !14!0 = drop_dim(scount!4{I!1:N!0}[])
     return !14!0
 ```
 ### Basic Vectorization Phase 2 (dependence graph)
@@ -1116,29 +1116,29 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     s1!1 = False
     s2!1 = False
     c!1 = 0
-    !6!0{N!0}[] = lift(s1!1, (i!1:N!0))
-    !7!0{N!0}[] = lift(s2!1, (i!1:N!0))
-    !8!0{N!0}[] = lift(c!1, (i!1:N!0))
-    !9!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !10!0{N!0}[] = lift(Syms!0[2], (i!1:N!0))
-    !11!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !12!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
-    !13!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !14!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !6!0{I!1:N!0}[] = lift(s1!1, (i!1:N!0))
+    !7!0{I!1:N!0}[] = lift(s2!1, (i!1:N!0))
+    !8!0{I!1:N!0}[] = lift(c!1, (i!1:N!0))
+    !9!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !10!0{I!1:N!0}[] = lift(Syms!0[2], (i!1:N!0))
+    !11!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !12!0{I!1:N!0}[] = lift(Syms!0[1], (i!1:N!0))
+    !13!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !14!0{I!1:N!0}[] = lift(Syms!0[0], (i!1:N!0))
     for i!1 in range(0, N!0):
-        s1!2{N!0}[] = Φ(!6!0{N!0}[], s1!3{N!0}[])
-        s2!2{N!0}[] = Φ(!7!0{N!0}[], s2!3{N!0}[])
-        c!2{N!0}[] = Φ(!8!0{N!0}[], c!4{N!0}[])
-        !1!2{N!0}[] = (!9!0{N!0}[] == !10!0{N!0}[])
-        !2!2{N!0}[] = (s2!2{N!0}[] or s1!2{N!0}[])
-        !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
-        c!3{N!0}[] = (c!2{N!0}[] + 1)
-        c!4{N!0}[] = MUX(!3!2{N!0}[], c!3{N!0}[], c!2{N!0}[])
-        !4!2{N!0}[] = (!11!0{N!0}[] == !12!0{N!0}[])
-        !5!2{N!0}[] = (s1!2{N!0}[] or s2!2{N!0}[])
-        s2!3{N!0}[] = (!4!2{N!0}[] and !5!2{N!0}[])
-        s1!3{N!0}[] = (!13!0{N!0}[] == !14!0{N!0}[])
-    !15!0 = drop_dim(c!4{N!0}[])
+        s1!2{I!1:N!0}[] = Φ(!6!0{I!1:N!0}[], s1!3{I!1:N!0}[])
+        s2!2{I!1:N!0}[] = Φ(!7!0{I!1:N!0}[], s2!3{I!1:N!0}[])
+        c!2{I!1:N!0}[] = Φ(!8!0{I!1:N!0}[], c!4{I!1:N!0}[])
+        !1!2{I!1:N!0}[] = (!9!0{I!1:N!0}[] == !10!0{I!1:N!0}[])
+        !2!2{I!1:N!0}[] = (s2!2{I!1:N!0}[] or s1!2{I!1:N!0}[])
+        !3!2{I!1:N!0}[] = (!1!2{I!1:N!0}[] and !2!2{I!1:N!0}[])
+        c!3{I!1:N!0}[] = (c!2{I!1:N!0}[] + 1)
+        c!4{I!1:N!0}[] = MUX(!3!2{I!1:N!0}[], c!3{I!1:N!0}[], c!2{I!1:N!0}[])
+        !4!2{I!1:N!0}[] = (!11!0{I!1:N!0}[] == !12!0{I!1:N!0}[])
+        !5!2{I!1:N!0}[] = (s1!2{I!1:N!0}[] or s2!2{I!1:N!0}[])
+        s2!3{I!1:N!0}[] = (!4!2{I!1:N!0}[] and !5!2{I!1:N!0}[])
+        s1!3{I!1:N!0}[] = (!13!0{I!1:N!0}[] == !14!0{I!1:N!0}[])
+    !15!0 = drop_dim(c!4{I!1:N!0}[])
     return !15!0
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
@@ -1149,31 +1149,31 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     s1!1 = False
     s2!1 = False
     c!1 = 0
-    !6!0{N!0}[] = lift(s1!1, (i!1:N!0))
-    !7!0{N!0}[] = lift(s2!1, (i!1:N!0))
-    !8!0{N!0}[] = lift(c!1, (i!1:N!0))
-    !9!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !10!0{N!0}[] = lift(Syms!0[2], (i!1:N!0))
-    !11!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !12!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
-    !13!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !14!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
-    !1!2{N!0}[] = (!9!0{N!0}[] == !10!0{N!0}[])
-    !4!2{N!0}[] = (!11!0{N!0}[] == !12!0{N!0}[])
-    s1!3{N!0}[] = (!13!0{N!0}[] == !14!0{N!0}[])
+    !6!0{I!1:N!0}[] = lift(s1!1, (i!1:N!0))
+    !7!0{I!1:N!0}[] = lift(s2!1, (i!1:N!0))
+    !8!0{I!1:N!0}[] = lift(c!1, (i!1:N!0))
+    !9!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !10!0{I!1:N!0}[] = lift(Syms!0[2], (i!1:N!0))
+    !11!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !12!0{I!1:N!0}[] = lift(Syms!0[1], (i!1:N!0))
+    !13!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !14!0{I!1:N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !1!2{I!1:N!0}[] = (!9!0{I!1:N!0}[] == !10!0{I!1:N!0}[])
+    !4!2{I!1:N!0}[] = (!11!0{I!1:N!0}[] == !12!0{I!1:N!0}[])
+    s1!3{I!1:N!0}[] = (!13!0{I!1:N!0}[] == !14!0{I!1:N!0}[])
     for !16!0 in range(0, N!0):
         s1!2{}[!16!0] = Φ(!6!0{}[!16!0], s1!3{}[(!16!0 - 1)])
     for !17!0 in range(0, N!0):
         s2!2{}[!17!0] = Φ(!7!0{}[!17!0], s2!3{}[(!17!0 - 1)])
         !5!2{}[!17!0] = (s1!2{}[!17!0] or s2!2{}[!17!0])
         s2!3{}[!17!0] = (!4!2{}[!17!0] and !5!2{}[!17!0])
-    !2!2{N!0}[] = (s2!2{N!0}[] or s1!2{N!0}[])
-    !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
+    !2!2{I!1:N!0}[] = (s2!2{I!1:N!0}[] or s1!2{I!1:N!0}[])
+    !3!2{I!1:N!0}[] = (!1!2{I!1:N!0}[] and !2!2{I!1:N!0}[])
     for !18!0 in range(0, N!0):
         c!2{}[!18!0] = Φ(!8!0{}[!18!0], c!4{}[(!18!0 - 1)])
         c!3{}[!18!0] = (c!2{}[!18!0] + 1)
         c!4{}[!18!0] = MUX(!3!2{}[!18!0], c!3{}[!18!0], c!2{}[!18!0])
-    !15!0 = drop_dim(c!4{N!0}[])
+    !15!0 = drop_dim(c!4{I!1:N!0}[])
     return !15!0
 ```
 ### Basic Vectorization Phase 2 (dependence graph)
@@ -1457,27 +1457,27 @@ def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: pla
 ```python
 def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
-    !2!0{LEN!0}[] = lift(sum!1, (i!1:len!0))
-    !3!0{LEN!0}[] = lift(A!0[i!1], (i!1:len!0))
+    !2!0{I!1:LEN!0}[] = lift(sum!1, (i!1:len!0))
+    !3!0{I!1:LEN!0}[] = lift(A!0[i!1], (i!1:len!0))
     for i!1 in range(0, len!0):
-        sum!2{LEN!0}[] = Φ(!2!0{LEN!0}[], sum!3{LEN!0}[])
-        sum!3{LEN!0}[] = (sum!2{LEN!0}[] + !3!0{LEN!0}[])
-    !4!0 = drop_dim(sum!3{LEN!0}[])
+        sum!2{I!1:LEN!0}[] = Φ(!2!0{I!1:LEN!0}[], sum!3{I!1:LEN!0}[])
+        sum!3{I!1:LEN!0}[] = (sum!2{I!1:LEN!0}[] + !3!0{I!1:LEN!0}[])
+    !4!0 = drop_dim(sum!3{I!1:LEN!0}[])
     exp!1 = (!4!0 / len!0)
-    !5!0{LEN!0}[] = lift(V!0, (i!2:len!0))
-    !6!0{LEN!0}[] = lift(A!0[i!2], (i!2:len!0))
-    !7!0{LEN!0}[] = lift(exp!1, (i!2:len!0))
+    !5!0{I!2:LEN!0}[] = lift(V!0, (i!2:len!0))
+    !6!0{I!2:LEN!0}[] = lift(A!0[i!2], (i!2:len!0))
+    !7!0{I!2:LEN!0}[] = lift(exp!1, (i!2:len!0))
     for i!2 in range(0, len!0):
-        V!1{LEN!0}[] = Φ(!5!0{LEN!0}[], V!2{LEN!0}[]) (targetless)
-        dist!2{LEN!0}[] = (!6!0{LEN!0}[] - !7!0{LEN!0}[])
-        !1!2{LEN!0}[] = (dist!2{LEN!0}[] * dist!2{LEN!0}[])
-        V!2{LEN!0}[] = VectorizedUpdate(V!1{LEN!0}[], [I!2], !1!2{LEN!0}[])
+        V!1{I!2:LEN!0}[] = Φ(!5!0{I!2:LEN!0}[], V!2{I!2:LEN!0}[]) (targetless)
+        dist!2{I!2:LEN!0}[] = (!6!0{I!2:LEN!0}[] - !7!0{I!2:LEN!0}[])
+        !1!2{I!2:LEN!0}[] = (dist!2{I!2:LEN!0}[] * dist!2{I!2:LEN!0}[])
+        V!2{I!2:LEN!0}[] = VectorizedUpdate(V!1{I!2:LEN!0}[], [I!2], !1!2{I!2:LEN!0}[])
     res!1 = 0
-    !8!0{LEN!0}[] = lift(res!1, (i!3:len!0))
+    !8!0{I!3:LEN!0}[] = lift(res!1, (i!3:len!0))
     for i!3 in range(0, len!0):
-        res!2{LEN!0}[] = Φ(!8!0{LEN!0}[], res!3{LEN!0}[])
-        res!3{LEN!0}[] = (res!2{LEN!0}[] + V!1{LEN!0}[])
-    !9!0 = drop_dim(res!3{LEN!0}[])
+        res!2{I!3:LEN!0}[] = Φ(!8!0{I!3:LEN!0}[], res!3{I!3:LEN!0}[])
+        res!3{I!3:LEN!0}[] = (res!2{I!3:LEN!0}[] + V!1{I!2:LEN!0}[])
+    !9!0 = drop_dim(res!3{I!3:LEN!0}[])
     variance!1 = (!9!0 / len!0)
     return variance!1
 ```
@@ -1487,25 +1487,25 @@ def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: pla
 ```python
 def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
-    !2!0{LEN!0}[] = lift(sum!1, (i!1:len!0))
-    !3!0{LEN!0}[] = lift(A!0[i!1], (i!1:len!0))
+    !2!0{I!1:LEN!0}[] = lift(sum!1, (i!1:len!0))
+    !3!0{I!1:LEN!0}[] = lift(A!0[i!1], (i!1:len!0))
     for !10!0 in range(0, len!0):
         sum!2{}[!10!0] = Φ(!2!0{}[!10!0], sum!3{}[(!10!0 - 1)])
         sum!3{}[!10!0] = (sum!2{}[!10!0] + !3!0{}[!10!0])
-    !4!0 = drop_dim(sum!3{LEN!0}[])
+    !4!0 = drop_dim(sum!3{I!1:LEN!0}[])
     exp!1 = (!4!0 / len!0)
-    !5!0{LEN!0}[] = lift(V!0, (i!2:len!0))
-    !6!0{LEN!0}[] = lift(A!0[i!2], (i!2:len!0))
-    !7!0{LEN!0}[] = lift(exp!1, (i!2:len!0))
-    dist!2{LEN!0}[] = (!6!0{LEN!0}[] - !7!0{LEN!0}[])
-    !1!2{LEN!0}[] = (dist!2{LEN!0}[] * dist!2{LEN!0}[])
-    V!2{LEN!0}[] = VectorizedUpdate(!5!0{LEN!0}[], [I!2], !1!2{LEN!0}[])
+    !5!0{I!2:LEN!0}[] = lift(V!0, (i!2:len!0))
+    !6!0{I!2:LEN!0}[] = lift(A!0[i!2], (i!2:len!0))
+    !7!0{I!2:LEN!0}[] = lift(exp!1, (i!2:len!0))
+    dist!2{I!2:LEN!0}[] = (!6!0{I!2:LEN!0}[] - !7!0{I!2:LEN!0}[])
+    !1!2{I!2:LEN!0}[] = (dist!2{I!2:LEN!0}[] * dist!2{I!2:LEN!0}[])
+    V!2{I!2:LEN!0}[] = VectorizedUpdate(!5!0{I!2:LEN!0}[], [I!2], !1!2{I!2:LEN!0}[])
     res!1 = 0
-    !8!0{LEN!0}[] = lift(res!1, (i!3:len!0))
+    !8!0{I!3:LEN!0}[] = lift(res!1, (i!3:len!0))
     for !11!0 in range(0, len!0):
         res!2{}[!11!0] = Φ(!8!0{}[!11!0], res!3{}[(!11!0 - 1)])
         res!3{}[!11!0] = (res!2{}[!11!0] + V!2{}[!11!0])
-    !9!0 = drop_dim(res!3{LEN!0}[])
+    !9!0 = drop_dim(res!3{I!3:LEN!0}[])
     variance!1 = (!9!0 / len!0)
     return variance!1
 ```
@@ -1738,21 +1738,21 @@ def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plainte
 ### Basic Vectorization Phase 1
 ```python
 def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int], num_bins!0: plaintext[int], result!0: plaintext[list[int; ?]]) -> shared[list[int; ?]]:
-    !2!0{NUM_BINS!0}[] = lift(result!0, (i!1:num_bins!0))
+    !2!0{I!1:NUM_BINS!0}[] = lift(result!0, (i!1:num_bins!0))
     for i!1 in range(0, num_bins!0):
-        result!1{NUM_BINS!0}[] = Φ(!2!0{NUM_BINS!0}[], !3!0{NUM_BINS!0}[]) (targetless)
-        !4!0{NUM_BINS!0, N!0}[] = lift(result!1{NUM_BINS!0}[], (i!1:num_bins!0, j!1:N!0))
-        !5!0{NUM_BINS!0, N!0}[] = lift(A!0[j!1], (i!1:num_bins!0, j!1:N!0))
-        !6!0{NUM_BINS!0, N!0}[] = lift(i!1, (i!1:num_bins!0, j!1:N!0))
-        !7!0{NUM_BINS!0, N!0}[] = lift(B!0[j!1], (i!1:num_bins!0, j!1:N!0))
+        result!1{I!1:NUM_BINS!0}[] = Φ(!2!0{I!1:NUM_BINS!0}[], !3!0{I!1:NUM_BINS!0}[]) (targetless)
+        !4!0{I!1:NUM_BINS!0, J!1:N!0}[] = lift(result!1{I!1:NUM_BINS!0}[], (i!1:num_bins!0, j!1:N!0))
+        !5!0{I!1:NUM_BINS!0, J!1:N!0}[] = lift(A!0[j!1], (i!1:num_bins!0, j!1:N!0))
+        !6!0{I!1:NUM_BINS!0, J!1:N!0}[] = lift(i!1, (i!1:num_bins!0, j!1:N!0))
+        !7!0{I!1:NUM_BINS!0, J!1:N!0}[] = lift(B!0[j!1], (i!1:num_bins!0, j!1:N!0))
         for j!1 in range(0, N!0):
-            result!2{NUM_BINS!0, N!0}[] = Φ(!4!0{NUM_BINS!0, N!0}[], result!3{NUM_BINS!0, N!0}[])
-            !1!3{NUM_BINS!0, N!0}[] = (!5!0{NUM_BINS!0, N!0}[] == !6!0{NUM_BINS!0, N!0}[])
-            val!4{NUM_BINS!0, N!0}[] = result!2{NUM_BINS!0, N!0}[]
-            val!3{NUM_BINS!0, N!0}[] = (result!2{NUM_BINS!0, N!0}[] + !7!0{NUM_BINS!0, N!0}[])
-            val!5{NUM_BINS!0, N!0}[] = MUX(!1!3{NUM_BINS!0, N!0}[], val!3{NUM_BINS!0, N!0}[], val!4{NUM_BINS!0, N!0}[])
-            result!3{NUM_BINS!0, N!0}[] = VectorizedUpdate(result!2{NUM_BINS!0, N!0}[], [I!1, J!1], val!5{NUM_BINS!0, N!0}[])
-        !3!0{NUM_BINS!0}[] = drop_dim(result!3{NUM_BINS!0, N!0}[])
+            result!2{I!1:NUM_BINS!0, J!1:N!0}[] = Φ(!4!0{I!1:NUM_BINS!0, J!1:N!0}[], result!3{I!1:NUM_BINS!0, J!1:N!0}[])
+            !1!3{I!1:NUM_BINS!0, J!1:N!0}[] = (!5!0{I!1:NUM_BINS!0, J!1:N!0}[] == !6!0{I!1:NUM_BINS!0, J!1:N!0}[])
+            val!4{I!1:NUM_BINS!0, J!1:N!0}[] = result!2{I!1:NUM_BINS!0, J!1:N!0}[]
+            val!3{I!1:NUM_BINS!0, J!1:N!0}[] = (result!2{I!1:NUM_BINS!0, J!1:N!0}[] + !7!0{I!1:NUM_BINS!0, J!1:N!0}[])
+            val!5{I!1:NUM_BINS!0, J!1:N!0}[] = MUX(!1!3{I!1:NUM_BINS!0, J!1:N!0}[], val!3{I!1:NUM_BINS!0, J!1:N!0}[], val!4{I!1:NUM_BINS!0, J!1:N!0}[])
+            result!3{I!1:NUM_BINS!0, J!1:N!0}[] = VectorizedUpdate(result!2{I!1:NUM_BINS!0, J!1:N!0}[], [I!1, J!1], val!5{I!1:NUM_BINS!0, J!1:N!0}[])
+        !3!0{I!1:NUM_BINS!0}[] = drop_dim(result!3{I!1:NUM_BINS!0, J!1:N!0}[])
     return result!1
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
@@ -1760,19 +1760,19 @@ def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plainte
 ### Basic Vectorization Phase 2
 ```python
 def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int], num_bins!0: plaintext[int], result!0: plaintext[list[int; ?]]) -> shared[list[int; ?]]:
-    !2!0{NUM_BINS!0}[] = lift(result!0, (i!1:num_bins!0))
-    !4!0{NUM_BINS!0, N!0}[] = lift(!2!0{NUM_BINS!0}[], (i!1:num_bins!0, j!1:N!0))
-    !5!0{NUM_BINS!0, N!0}[] = lift(A!0[j!1], (i!1:num_bins!0, j!1:N!0))
-    !6!0{NUM_BINS!0, N!0}[] = lift(i!1, (i!1:num_bins!0, j!1:N!0))
-    !7!0{NUM_BINS!0, N!0}[] = lift(B!0[j!1], (i!1:num_bins!0, j!1:N!0))
-    !1!3{NUM_BINS!0, N!0}[] = (!5!0{NUM_BINS!0, N!0}[] == !6!0{NUM_BINS!0, N!0}[])
+    !2!0{I!1:NUM_BINS!0}[] = lift(result!0, (i!1:num_bins!0))
+    !4!0{I!1:NUM_BINS!0, J!1:N!0}[] = lift(!2!0{I!1:NUM_BINS!0}[], (i!1:num_bins!0, j!1:N!0))
+    !5!0{I!1:NUM_BINS!0, J!1:N!0}[] = lift(A!0[j!1], (i!1:num_bins!0, j!1:N!0))
+    !6!0{I!1:NUM_BINS!0, J!1:N!0}[] = lift(i!1, (i!1:num_bins!0, j!1:N!0))
+    !7!0{I!1:NUM_BINS!0, J!1:N!0}[] = lift(B!0[j!1], (i!1:num_bins!0, j!1:N!0))
+    !1!3{I!1:NUM_BINS!0, J!1:N!0}[] = (!5!0{I!1:NUM_BINS!0, J!1:N!0}[] == !6!0{I!1:NUM_BINS!0, J!1:N!0}[])
     for !8!0 in range(0, N!0):
-        result!2{NUM_BINS!0}[!8!0] = Φ(!4!0{NUM_BINS!0}[!8!0], result!3{NUM_BINS!0}[(!8!0 - 1)])
-        val!4{NUM_BINS!0}[!8!0] = result!2{NUM_BINS!0}[!8!0]
-        val!3{NUM_BINS!0}[!8!0] = (result!2{NUM_BINS!0}[!8!0] + !7!0{NUM_BINS!0}[!8!0])
-        val!5{NUM_BINS!0}[!8!0] = MUX(!1!3{NUM_BINS!0}[!8!0], val!3{NUM_BINS!0}[!8!0], val!4{NUM_BINS!0}[!8!0])
-        result!3{NUM_BINS!0}[!8!0] = VectorizedUpdate(result!2{NUM_BINS!0}[!8!0], [I!1, !8!0], val!5{NUM_BINS!0}[!8!0])
-    !3!0{NUM_BINS!0}[] = drop_dim(result!3{NUM_BINS!0, N!0}[])
+        result!2{I!1:NUM_BINS!0}[!8!0] = Φ(!4!0{I!1:NUM_BINS!0}[!8!0], result!3{I!1:NUM_BINS!0}[(!8!0 - 1)])
+        val!4{I!1:NUM_BINS!0}[!8!0] = result!2{I!1:NUM_BINS!0}[!8!0]
+        val!3{I!1:NUM_BINS!0}[!8!0] = (result!2{I!1:NUM_BINS!0}[!8!0] + !7!0{I!1:NUM_BINS!0}[!8!0])
+        val!5{I!1:NUM_BINS!0}[!8!0] = MUX(!1!3{I!1:NUM_BINS!0}[!8!0], val!3{I!1:NUM_BINS!0}[!8!0], val!4{I!1:NUM_BINS!0}[!8!0])
+        result!3{I!1:NUM_BINS!0}[!8!0] = VectorizedUpdate(result!2{I!1:NUM_BINS!0}[!8!0], [I!1, !8!0], val!5{I!1:NUM_BINS!0}[!8!0])
+    !3!0{I!1:NUM_BINS!0}[] = drop_dim(result!3{I!1:NUM_BINS!0, J!1:N!0}[])
     return !3!0
 ```
 ### Basic Vectorization Phase 2 (dependence graph)
@@ -1938,14 +1938,14 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
 ```python
 def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
-    !1!0{N!0}[] = lift(sum!1, (i!1:N!0))
-    !2!0{N!0}[] = lift(A!0[i!1], (i!1:N!0))
-    !3!0{N!0}[] = lift(B!0[i!1], (i!1:N!0))
+    !1!0{I!1:N!0}[] = lift(sum!1, (i!1:N!0))
+    !2!0{I!1:N!0}[] = lift(A!0[i!1], (i!1:N!0))
+    !3!0{I!1:N!0}[] = lift(B!0[i!1], (i!1:N!0))
     for i!1 in range(0, N!0):
-        sum!2{N!0}[] = Φ(!1!0{N!0}[], sum!3{N!0}[])
-        temp!2{N!0}[] = (!2!0{N!0}[] * !3!0{N!0}[])
-        sum!3{N!0}[] = (sum!2{N!0}[] + temp!2{N!0}[])
-    !4!0 = drop_dim(sum!3{N!0}[])
+        sum!2{I!1:N!0}[] = Φ(!1!0{I!1:N!0}[], sum!3{I!1:N!0}[])
+        temp!2{I!1:N!0}[] = (!2!0{I!1:N!0}[] * !3!0{I!1:N!0}[])
+        sum!3{I!1:N!0}[] = (sum!2{I!1:N!0}[] + temp!2{I!1:N!0}[])
+    !4!0 = drop_dim(sum!3{I!1:N!0}[])
     return !4!0
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
@@ -1954,14 +1954,14 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
 ```python
 def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
-    !1!0{N!0}[] = lift(sum!1, (i!1:N!0))
-    !2!0{N!0}[] = lift(A!0[i!1], (i!1:N!0))
-    !3!0{N!0}[] = lift(B!0[i!1], (i!1:N!0))
-    temp!2{N!0}[] = (!2!0{N!0}[] * !3!0{N!0}[])
+    !1!0{I!1:N!0}[] = lift(sum!1, (i!1:N!0))
+    !2!0{I!1:N!0}[] = lift(A!0[i!1], (i!1:N!0))
+    !3!0{I!1:N!0}[] = lift(B!0[i!1], (i!1:N!0))
+    temp!2{I!1:N!0}[] = (!2!0{I!1:N!0}[] * !3!0{I!1:N!0}[])
     for !5!0 in range(0, N!0):
         sum!2{}[!5!0] = Φ(!1!0{}[!5!0], sum!3{}[(!5!0 - 1)])
         sum!3{}[!5!0] = (sum!2{}[!5!0] + temp!2{}[!5!0])
-    !4!0 = drop_dim(sum!3{N!0}[])
+    !4!0 = drop_dim(sum!3{I!1:N!0}[])
     return !4!0
 ```
 ### Basic Vectorization Phase 2 (dependence graph)
@@ -2038,6 +2038,715 @@ encrypto::motion::SecureUnsignedInteger inner_product(
 
     _4_0 = drop_dim_monoreturn(sum_3, {_MPC_PLAINTEXT_N_0});
     return _4_0;
+
+}
+```
+## `kmeans_iteration`
+### Input
+```python
+from UTIL import shared
+
+# kmeans iteration: data and clusters are 2-dimensional points (x,y). First computes closest cluster per data point, then recomputes clusters.
+#
+# requires: len(data_x) == len(data_y) == len, len(cluster_x) == len(cluster_y) == num_cluster
+# OUTPUT_cluster_x and OUTPUT_cluster_y are arrays of 0's
+# len(OUTPUT_cluster_x) == len(OUTPUT_cluster_y) == num_clusters
+# bestMap is an array of 0's
+# len(bestMap) = len
+# TODO: rewrite to allow for arbitrary number of features, not just two
+def kmeans_iteration(
+    data_x: shared[list[int]],
+    data_y: shared[list[int]],
+    cluster_x: shared[list[int]],
+    cluster_y: shared[list[int]],
+    OUTPUT_cluster_x: shared[list[int]],
+    OUTPUT_cluster_y: shared[list[int]],
+    len: int,
+    num_cluster: int,
+    bestMap: list[int],
+) -> tuple[shared[list[int]], shared[list[int]]]:
+
+    # Compute nearest clusters for Data item i
+    for i in range(len):
+        best_dist = 10000  # dist2(cluster[0], cluster[1], dx, dy);
+        for c in range(num_cluster):
+            x_dist = cluster_x[c] - data_x[i]
+            x_sq = x_dist * x_dist
+            y_dist = cluster_y[c] - data_y[i]
+            y_sq = y_dist * y_dist
+            dist = x_sq + y_sq
+            val = bestMap[i]
+            if dist < best_dist:
+                best_dist = dist
+                val = c
+            bestMap[i] = val
+
+    # Recompute cluster Pos
+    for c in range(num_cluster):
+        val_x = 0
+        val_y = 0
+        count = 0
+        for i in range(len):
+            if c == bestMap[i]:
+                val_x = val_x + data_x[i]
+                val_y = val_y + data_y[i]
+                count = count + 1
+        if count > 0:
+            val_x = val_x // count
+            val_y = val_y // count
+        OUTPUT_cluster_x[c] = val_x
+        OUTPUT_cluster_y[c] = val_y
+
+    return (OUTPUT_cluster_x, OUTPUT_cluster_y)
+
+
+# Data is two-dimensional, 200 datapoints, 100 from Party A and 100 from Party B
+len = 200
+data_x = [i for i in range(len)]
+data_y = [len - i for i in range(len)]
+num_cluster = 5
+cluster_x = [i for i in range(5)]
+cluster_y = [i + 1 for i in range(5)]
+OUTPUT_cluster_x = [0 for i in range(num_cluster)]
+OUTPUT_cluster_y = [0 for i in range(num_cluster)]
+bestMap = [0 for i in range(len)]
+print(
+    kmeans_iteration(
+        data_x,
+        data_y,
+        cluster_x,
+        cluster_y,
+        OUTPUT_cluster_x,
+        OUTPUT_cluster_y,
+        len,
+        num_cluster,
+        bestMap,
+    )
+)
+
+```
+### Restricted AST
+```python
+def kmeans_iteration(data_x: shared[list[int; ?]], data_y: shared[list[int; ?]], cluster_x: shared[list[int; ?]], cluster_y: shared[list[int; ?]], OUTPUT_cluster_x: shared[list[int; ?]], OUTPUT_cluster_y: shared[list[int; ?]], len: plaintext[int], num_cluster: plaintext[int], bestMap: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    for i: plaintext[int] in range(0, len):
+        best_dist = 10000
+        for c: plaintext[int] in range(0, num_cluster):
+            x_dist = (cluster_x[c] - data_x[i])
+            x_sq = (x_dist * x_dist)
+            y_dist = (cluster_y[c] - data_y[i])
+            y_sq = (y_dist * y_dist)
+            dist = (x_sq + y_sq)
+            val = bestMap[i]
+            if (dist < best_dist):
+                best_dist = dist
+                val = c
+            bestMap[i] = val
+    for c: plaintext[int] in range(0, num_cluster):
+        val_x = 0
+        val_y = 0
+        count = 0
+        for i: plaintext[int] in range(0, len):
+            if (c == bestMap[i]):
+                val_x = (val_x + data_x[i])
+                val_y = (val_y + data_y[i])
+                count = (count + 1)
+        if (count > 0):
+            val_x = (val_x / count)
+            val_y = (val_y / count)
+        OUTPUT_cluster_x[c] = val_x
+        OUTPUT_cluster_y[c] = val_y
+    return (OUTPUT_cluster_x, OUTPUT_cluster_y)
+```
+### Three-address code CFG
+![](images/kmeans_iteration_tac_cfg.png)
+### SSA
+![](images/kmeans_iteration_ssa.png)
+### SSA ϕ→MUX
+![](images/kmeans_iteration_ssa_mux.png)
+### Dead code elimination
+![](images/kmeans_iteration_dead_code_elim.png)
+### Linear code with loops
+```python
+def kmeans_iteration(data_x!0: shared[list[int; ?]], data_y!0: shared[list[int; ?]], cluster_x!0: shared[list[int; ?]], cluster_y!0: shared[list[int; ?]], OUTPUT_cluster_x!0: shared[list[int; ?]], OUTPUT_cluster_y!0: shared[list[int; ?]], len!0: plaintext[int], num_cluster!0: plaintext[int], bestMap!0: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    for i!1 in range(0, len!0):
+        bestMap!1 = Φ(bestMap!0, bestMap!2)
+        best_dist!2 = 10000
+        for c!1 in range(0, num_cluster!0):
+            best_dist!3 = Φ(best_dist!2, best_dist!5)
+            bestMap!2 = Φ(bestMap!1, bestMap!3)
+            x_dist!3 = (cluster_x!0[c!1] - data_x!0[i!1])
+            x_sq!3 = (x_dist!3 * x_dist!3)
+            y_dist!3 = (cluster_y!0[c!1] - data_y!0[i!1])
+            y_sq!3 = (y_dist!3 * y_dist!3)
+            dist!3 = (x_sq!3 + y_sq!3)
+            val!3 = bestMap!2[i!1]
+            !1!3 = (dist!3 < best_dist!3)
+            best_dist!4 = dist!3
+            val!4 = c!1
+            best_dist!5 = MUX(!1!3, best_dist!4, best_dist!3)
+            val!5 = MUX(!1!3, val!4, val!3)
+            bestMap!3 = Update(bestMap!2, i!1, val!5)
+    for c!2 in range(0, num_cluster!0):
+        OUTPUT_cluster_x!1 = Φ(OUTPUT_cluster_x!0, OUTPUT_cluster_x!2)
+        OUTPUT_cluster_y!1 = Φ(OUTPUT_cluster_y!0, OUTPUT_cluster_y!2)
+        val_x!2 = 0
+        val_y!2 = 0
+        count!2 = 0
+        for i!2 in range(0, len!0):
+            val_x!3 = Φ(val_x!2, val_x!5)
+            val_y!3 = Φ(val_y!2, val_y!5)
+            count!3 = Φ(count!2, count!5)
+            !2!3 = (c!2 == bestMap!1[i!2])
+            val_x!4 = (val_x!3 + data_x!0[i!2])
+            val_y!4 = (val_y!3 + data_y!0[i!2])
+            count!4 = (count!3 + 1)
+            val_x!5 = MUX(!2!3, val_x!4, val_x!3)
+            val_y!5 = MUX(!2!3, val_y!4, val_y!3)
+            count!5 = MUX(!2!3, count!4, count!3)
+        !3!2 = (count!3 > 0)
+        val_x!6 = (val_x!3 / count!3)
+        val_y!6 = (val_y!3 / count!3)
+        val_x!7 = MUX(!3!2, val_x!6, val_x!3)
+        val_y!7 = MUX(!3!2, val_y!6, val_y!3)
+        OUTPUT_cluster_x!2 = Update(OUTPUT_cluster_x!1, c!2, val_x!7)
+        OUTPUT_cluster_y!2 = Update(OUTPUT_cluster_y!1, c!2, val_y!7)
+    !4!1 = (OUTPUT_cluster_x!1, OUTPUT_cluster_y!1)
+    return !4!1
+```
+### Dependency graph
+![](images/kmeans_iteration_dep_graph.png)
+### Removal of infeasible edges
+![](images/kmeans_iteration_remove_infeasible_edges.png)
+### Type Environment Before Vectorization
+| Variable | Type |
+| - | - |
+| `data_x!0` | `shared[list[int; ?]]` |
+| `data_y!0` | `shared[list[int; ?]]` |
+| `cluster_x!0` | `shared[list[int; ?]]` |
+| `cluster_y!0` | `shared[list[int; ?]]` |
+| `OUTPUT_cluster_x!0` | `shared[list[int; ?]]` |
+| `OUTPUT_cluster_y!0` | `shared[list[int; ?]]` |
+| `len!0` | `plaintext[int]` |
+| `num_cluster!0` | `plaintext[int]` |
+| `bestMap!0` | `plaintext[list[int; ?]]` |
+| `i!1` | `plaintext[int]` |
+| `c!1` | `plaintext[int]` |
+| `c!2` | `plaintext[int]` |
+| `i!2` | `plaintext[int]` |
+| `!4!1` | `tuple[shared[list[int; ?]], shared[list[int; ?]]]` |
+| `OUTPUT_cluster_y!2` | `shared[list[int; ?]]` |
+| `OUTPUT_cluster_y!1` | `shared[list[int; ?]]` |
+| `OUTPUT_cluster_x!2` | `shared[list[int; ?]]` |
+| `OUTPUT_cluster_x!1` | `shared[list[int; ?]]` |
+| `val_y!7` | `shared[int]` |
+| `val_x!7` | `shared[int]` |
+| `val_y!6` | `shared[int]` |
+| `val_x!6` | `shared[int]` |
+| `!3!2` | `shared[bool]` |
+| `count!5` | `shared[int]` |
+| `count!3` | `shared[int]` |
+| `count!4` | `shared[int]` |
+| `val_y!5` | `shared[int]` |
+| `val_y!3` | `shared[int]` |
+| `val_y!4` | `shared[int]` |
+| `val_x!5` | `shared[int]` |
+| `val_x!3` | `shared[int]` |
+| `val_x!4` | `shared[int]` |
+| `bestMap!1` | `shared[list[int; ?]]` |
+| `!2!3` | `shared[bool]` |
+| `count!2` | `plaintext[int]` |
+| `val_y!2` | `plaintext[int]` |
+| `val_x!2` | `plaintext[int]` |
+| `bestMap!3` | `shared[list[int; ?]]` |
+| `bestMap!2` | `shared[list[int; ?]]` |
+| `val!3` | `shared[int]` |
+| `val!5` | `shared[int]` |
+| `best_dist!5` | `shared[int]` |
+| `best_dist!3` | `shared[int]` |
+| `!1!3` | `shared[bool]` |
+| `val!4` | `plaintext[int]` |
+| `best_dist!4` | `shared[int]` |
+| `dist!3` | `shared[int]` |
+| `y_sq!3` | `shared[int]` |
+| `y_dist!3` | `shared[int]` |
+| `x_sq!3` | `shared[int]` |
+| `x_dist!3` | `shared[int]` |
+| `best_dist!2` | `plaintext[int]` |
+### Basic Vectorization Phase 1
+```python
+def kmeans_iteration(data_x!0: shared[list[int; ?]], data_y!0: shared[list[int; ?]], cluster_x!0: shared[list[int; ?]], cluster_y!0: shared[list[int; ?]], OUTPUT_cluster_x!0: shared[list[int; ?]], OUTPUT_cluster_y!0: shared[list[int; ?]], len!0: plaintext[int], num_cluster!0: plaintext[int], bestMap!0: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    !5!0{I!1:LEN!0}[] = lift(bestMap!0, (i!1:len!0))
+    for i!1 in range(0, len!0):
+        bestMap!1{I!1:LEN!0}[] = Φ(!5!0{I!1:LEN!0}[], !6!0{I!1:LEN!0}[]) (targetless)
+        best_dist!2 = 10000
+        !7!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(best_dist!2, (i!1:len!0, c!1:num_cluster!0))
+        !8!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(bestMap!1{I!1:LEN!0}[], (i!1:len!0, c!1:num_cluster!0))
+        !9!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(cluster_x!0[c!1], (i!1:len!0, c!1:num_cluster!0))
+        !10!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(data_x!0[i!1], (i!1:len!0, c!1:num_cluster!0))
+        !11!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(cluster_y!0[c!1], (i!1:len!0, c!1:num_cluster!0))
+        !12!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(data_y!0[i!1], (i!1:len!0, c!1:num_cluster!0))
+        for c!1 in range(0, num_cluster!0):
+            best_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = Φ(!7!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[], best_dist!5{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+            bestMap!2{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = Φ(!8!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[], bestMap!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+            x_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (!9!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] - !10!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+            x_sq!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (x_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] * x_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+            y_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (!11!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] - !12!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+            y_sq!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (y_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] * y_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+            dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (x_sq!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] + y_sq!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+            val!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = bestMap!2{I!1:LEN!0, C!1:NUM_CLUSTER!0}[]
+            !1!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] < best_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+            best_dist!4{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[]
+            val!4 = c!1
+            best_dist!5{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = MUX(!1!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[], best_dist!4{I!1:LEN!0, C!1:NUM_CLUSTER!0}[], best_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+            val!5{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = MUX(!1!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[], val!4, val!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+            bestMap!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = VectorizedUpdate(bestMap!2{I!1:LEN!0, C!1:NUM_CLUSTER!0}[], [I!1, C!1], val!5{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+        !6!0{I!1:LEN!0}[] = drop_dim(bestMap!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+    !13!0{C!2:NUM_CLUSTER!0}[] = lift(OUTPUT_cluster_x!0, (c!2:num_cluster!0))
+    !14!0{C!2:NUM_CLUSTER!0}[] = lift(OUTPUT_cluster_y!0, (c!2:num_cluster!0))
+    for c!2 in range(0, num_cluster!0):
+        OUTPUT_cluster_x!1{C!2:NUM_CLUSTER!0}[] = Φ(!13!0{C!2:NUM_CLUSTER!0}[], OUTPUT_cluster_x!2{C!2:NUM_CLUSTER!0}[]) (targetless)
+        OUTPUT_cluster_y!1{C!2:NUM_CLUSTER!0}[] = Φ(!14!0{C!2:NUM_CLUSTER!0}[], OUTPUT_cluster_y!2{C!2:NUM_CLUSTER!0}[]) (targetless)
+        val_x!2 = 0
+        val_y!2 = 0
+        count!2 = 0
+        !15!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(val_x!2, (c!2:num_cluster!0, i!2:len!0))
+        !16!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(val_y!2, (c!2:num_cluster!0, i!2:len!0))
+        !17!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(count!2, (c!2:num_cluster!0, i!2:len!0))
+        !18!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(c!2, (c!2:num_cluster!0, i!2:len!0))
+        !19!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(bestMap!1{}[i!2], (c!2:num_cluster!0, i!2:len!0))
+        !20!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(data_x!0[i!2], (c!2:num_cluster!0, i!2:len!0))
+        !21!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(data_y!0[i!2], (c!2:num_cluster!0, i!2:len!0))
+        for i!2 in range(0, len!0):
+            val_x!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = Φ(!15!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[], val_x!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+            val_y!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = Φ(!16!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[], val_y!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+            count!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = Φ(!17!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[], count!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+            !2!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = (!18!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] == !19!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+            val_x!4{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = (val_x!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] + !20!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+            val_y!4{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = (val_y!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] + !21!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+            count!4{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = (count!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] + 1)
+            val_x!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = MUX(!2!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[], val_x!4{C!2:NUM_CLUSTER!0, I!2:LEN!0}[], val_x!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+            val_y!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = MUX(!2!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[], val_y!4{C!2:NUM_CLUSTER!0, I!2:LEN!0}[], val_y!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+            count!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = MUX(!2!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[], count!4{C!2:NUM_CLUSTER!0, I!2:LEN!0}[], count!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+        !22!0{C!2:NUM_CLUSTER!0}[] = drop_dim(count!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+        !3!2{C!2:NUM_CLUSTER!0}[] = (!22!0{C!2:NUM_CLUSTER!0}[] > 0)
+        !23!0{C!2:NUM_CLUSTER!0}[] = drop_dim(val_x!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+        !24!0{C!2:NUM_CLUSTER!0}[] = drop_dim(count!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+        val_x!6{C!2:NUM_CLUSTER!0}[] = (!23!0{C!2:NUM_CLUSTER!0}[] / !24!0{C!2:NUM_CLUSTER!0}[])
+        !25!0{C!2:NUM_CLUSTER!0}[] = drop_dim(val_y!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+        !26!0{C!2:NUM_CLUSTER!0}[] = drop_dim(count!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+        val_y!6{C!2:NUM_CLUSTER!0}[] = (!25!0{C!2:NUM_CLUSTER!0}[] / !26!0{C!2:NUM_CLUSTER!0}[])
+        !27!0{C!2:NUM_CLUSTER!0}[] = drop_dim(val_x!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+        val_x!7{C!2:NUM_CLUSTER!0}[] = MUX(!3!2{C!2:NUM_CLUSTER!0}[], val_x!6{C!2:NUM_CLUSTER!0}[], !27!0{C!2:NUM_CLUSTER!0}[])
+        !28!0{C!2:NUM_CLUSTER!0}[] = drop_dim(val_y!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+        val_y!7{C!2:NUM_CLUSTER!0}[] = MUX(!3!2{C!2:NUM_CLUSTER!0}[], val_y!6{C!2:NUM_CLUSTER!0}[], !28!0{C!2:NUM_CLUSTER!0}[])
+        OUTPUT_cluster_x!2{C!2:NUM_CLUSTER!0}[] = VectorizedUpdate(OUTPUT_cluster_x!1{C!2:NUM_CLUSTER!0}[], [C!2], val_x!7{C!2:NUM_CLUSTER!0}[])
+        OUTPUT_cluster_y!2{C!2:NUM_CLUSTER!0}[] = VectorizedUpdate(OUTPUT_cluster_y!1{C!2:NUM_CLUSTER!0}[], [C!2], val_y!7{C!2:NUM_CLUSTER!0}[])
+    !4!1 = (OUTPUT_cluster_x!1, OUTPUT_cluster_y!1)
+    return !4!1
+```
+### Basic Vectorization Phase 1 (dependence graph)
+![](images/kmeans_iteration_bv_phase_1_dep_graph.png)
+### Basic Vectorization Phase 2
+```python
+def kmeans_iteration(data_x!0: shared[list[int; ?]], data_y!0: shared[list[int; ?]], cluster_x!0: shared[list[int; ?]], cluster_y!0: shared[list[int; ?]], OUTPUT_cluster_x!0: shared[list[int; ?]], OUTPUT_cluster_y!0: shared[list[int; ?]], len!0: plaintext[int], num_cluster!0: plaintext[int], bestMap!0: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    !5!0{I!1:LEN!0}[] = lift(bestMap!0, (i!1:len!0))
+    best_dist!2 = 10000
+    !7!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(best_dist!2, (i!1:len!0, c!1:num_cluster!0))
+    !8!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(!5!0{I!1:LEN!0}[], (i!1:len!0, c!1:num_cluster!0))
+    !9!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(cluster_x!0[c!1], (i!1:len!0, c!1:num_cluster!0))
+    !10!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(data_x!0[i!1], (i!1:len!0, c!1:num_cluster!0))
+    !11!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(cluster_y!0[c!1], (i!1:len!0, c!1:num_cluster!0))
+    !12!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(data_y!0[i!1], (i!1:len!0, c!1:num_cluster!0))
+    x_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (!9!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] - !10!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+    x_sq!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (x_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] * x_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+    y_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (!11!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] - !12!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+    y_sq!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (y_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] * y_dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+    dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = (x_sq!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] + y_sq!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+    best_dist!4{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = dist!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[]
+    !29!0{I!1:LEN!0, C!1:NUM_CLUSTER!0}[] = lift(c!1, (i!1:len!0, c!1:num_cluster!0))
+    for !30!0 in range(0, num_cluster!0):
+        best_dist!3{I!1:LEN!0}[!30!0] = Φ(!7!0{I!1:LEN!0}[!30!0], best_dist!5{I!1:LEN!0}[(!30!0 - 1)])
+        !1!3{I!1:LEN!0}[!30!0] = (dist!3{I!1:LEN!0}[!30!0] < best_dist!3{I!1:LEN!0}[!30!0])
+        best_dist!5{I!1:LEN!0}[!30!0] = MUX(!1!3{I!1:LEN!0}[!30!0], best_dist!4{I!1:LEN!0}[!30!0], best_dist!3{I!1:LEN!0}[!30!0])
+    for !31!0 in range(0, num_cluster!0):
+        bestMap!2{I!1:LEN!0}[!31!0] = Φ(!8!0{I!1:LEN!0}[!31!0], bestMap!3{I!1:LEN!0}[(!31!0 - 1)])
+        val!3{I!1:LEN!0}[!31!0] = bestMap!2{I!1:LEN!0}[!31!0]
+        val!5{I!1:LEN!0}[!31!0] = MUX(!1!3{I!1:LEN!0}[!31!0], !29!0{I!1:LEN!0}[!31!0], val!3{I!1:LEN!0}[!31!0])
+        bestMap!3{I!1:LEN!0}[!31!0] = VectorizedUpdate(bestMap!2{I!1:LEN!0}[!31!0], [I!1, !31!0], val!5{I!1:LEN!0}[!31!0])
+    !6!0{I!1:LEN!0}[] = drop_dim(bestMap!3{I!1:LEN!0, C!1:NUM_CLUSTER!0}[])
+    !13!0{C!2:NUM_CLUSTER!0}[] = lift(OUTPUT_cluster_x!0, (c!2:num_cluster!0))
+    !14!0{C!2:NUM_CLUSTER!0}[] = lift(OUTPUT_cluster_y!0, (c!2:num_cluster!0))
+    val_x!2 = 0
+    val_y!2 = 0
+    count!2 = 0
+    !15!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(val_x!2, (c!2:num_cluster!0, i!2:len!0))
+    !16!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(val_y!2, (c!2:num_cluster!0, i!2:len!0))
+    !17!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(count!2, (c!2:num_cluster!0, i!2:len!0))
+    !18!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(c!2, (c!2:num_cluster!0, i!2:len!0))
+    !19!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(!6!0{}[i!2], (c!2:num_cluster!0, i!2:len!0))
+    !20!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(data_x!0[i!2], (c!2:num_cluster!0, i!2:len!0))
+    !21!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = lift(data_y!0[i!2], (c!2:num_cluster!0, i!2:len!0))
+    !2!3{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] = (!18!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[] == !19!0{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+    for !32!0 in range(0, len!0):
+        val_x!3{C!2:NUM_CLUSTER!0}[!32!0] = Φ(!15!0{C!2:NUM_CLUSTER!0}[!32!0], val_x!5{C!2:NUM_CLUSTER!0}[(!32!0 - 1)])
+        val_x!4{C!2:NUM_CLUSTER!0}[!32!0] = (val_x!3{C!2:NUM_CLUSTER!0}[!32!0] + !20!0{C!2:NUM_CLUSTER!0}[!32!0])
+        val_x!5{C!2:NUM_CLUSTER!0}[!32!0] = MUX(!2!3{C!2:NUM_CLUSTER!0}[!32!0], val_x!4{C!2:NUM_CLUSTER!0}[!32!0], val_x!3{C!2:NUM_CLUSTER!0}[!32!0])
+    for !33!0 in range(0, len!0):
+        val_y!3{C!2:NUM_CLUSTER!0}[!33!0] = Φ(!16!0{C!2:NUM_CLUSTER!0}[!33!0], val_y!5{C!2:NUM_CLUSTER!0}[(!33!0 - 1)])
+        val_y!4{C!2:NUM_CLUSTER!0}[!33!0] = (val_y!3{C!2:NUM_CLUSTER!0}[!33!0] + !21!0{C!2:NUM_CLUSTER!0}[!33!0])
+        val_y!5{C!2:NUM_CLUSTER!0}[!33!0] = MUX(!2!3{C!2:NUM_CLUSTER!0}[!33!0], val_y!4{C!2:NUM_CLUSTER!0}[!33!0], val_y!3{C!2:NUM_CLUSTER!0}[!33!0])
+    for !34!0 in range(0, len!0):
+        count!3{C!2:NUM_CLUSTER!0}[!34!0] = Φ(!17!0{C!2:NUM_CLUSTER!0}[!34!0], count!5{C!2:NUM_CLUSTER!0}[(!34!0 - 1)])
+        count!4{C!2:NUM_CLUSTER!0}[!34!0] = (count!3{C!2:NUM_CLUSTER!0}[!34!0] + 1)
+        count!5{C!2:NUM_CLUSTER!0}[!34!0] = MUX(!2!3{C!2:NUM_CLUSTER!0}[!34!0], count!4{C!2:NUM_CLUSTER!0}[!34!0], count!3{C!2:NUM_CLUSTER!0}[!34!0])
+    !22!0{C!2:NUM_CLUSTER!0}[] = drop_dim(count!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+    !3!2{C!2:NUM_CLUSTER!0}[] = (!22!0{C!2:NUM_CLUSTER!0}[] > 0)
+    !23!0{C!2:NUM_CLUSTER!0}[] = drop_dim(val_x!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+    !24!0{C!2:NUM_CLUSTER!0}[] = drop_dim(count!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+    val_x!6{C!2:NUM_CLUSTER!0}[] = (!23!0{C!2:NUM_CLUSTER!0}[] / !24!0{C!2:NUM_CLUSTER!0}[])
+    !25!0{C!2:NUM_CLUSTER!0}[] = drop_dim(val_y!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+    !26!0{C!2:NUM_CLUSTER!0}[] = drop_dim(count!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+    val_y!6{C!2:NUM_CLUSTER!0}[] = (!25!0{C!2:NUM_CLUSTER!0}[] / !26!0{C!2:NUM_CLUSTER!0}[])
+    !27!0{C!2:NUM_CLUSTER!0}[] = drop_dim(val_x!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+    val_x!7{C!2:NUM_CLUSTER!0}[] = MUX(!3!2{C!2:NUM_CLUSTER!0}[], val_x!6{C!2:NUM_CLUSTER!0}[], !27!0{C!2:NUM_CLUSTER!0}[])
+    !28!0{C!2:NUM_CLUSTER!0}[] = drop_dim(val_y!5{C!2:NUM_CLUSTER!0, I!2:LEN!0}[])
+    val_y!7{C!2:NUM_CLUSTER!0}[] = MUX(!3!2{C!2:NUM_CLUSTER!0}[], val_y!6{C!2:NUM_CLUSTER!0}[], !28!0{C!2:NUM_CLUSTER!0}[])
+    OUTPUT_cluster_x!2{C!2:NUM_CLUSTER!0}[] = VectorizedUpdate(!13!0{C!2:NUM_CLUSTER!0}[], [C!2], val_x!7{C!2:NUM_CLUSTER!0}[])
+    OUTPUT_cluster_y!2{C!2:NUM_CLUSTER!0}[] = VectorizedUpdate(!14!0{C!2:NUM_CLUSTER!0}[], [C!2], val_y!7{C!2:NUM_CLUSTER!0}[])
+    !4!1 = (OUTPUT_cluster_x!2, OUTPUT_cluster_y!2)
+    return !4!1
+```
+### Basic Vectorization Phase 2 (dependence graph)
+![](images/kmeans_iteration_bv_phase_2_dep_graph.png)
+### Type Environment After Vectorization
+| Variable | Type |
+| - | - |
+| `data_x!0` | `shared[list[int; ?]]` |
+| `data_y!0` | `shared[list[int; ?]]` |
+| `cluster_x!0` | `shared[list[int; ?]]` |
+| `cluster_y!0` | `shared[list[int; ?]]` |
+| `OUTPUT_cluster_x!0` | `shared[list[int; ?]]` |
+| `OUTPUT_cluster_y!0` | `shared[list[int; ?]]` |
+| `len!0` | `plaintext[int]` |
+| `num_cluster!0` | `plaintext[int]` |
+| `bestMap!0` | `plaintext[list[int; ?]]` |
+| `!30!0` | `plaintext[int]` |
+| `!31!0` | `plaintext[int]` |
+| `!32!0` | `plaintext[int]` |
+| `!33!0` | `plaintext[int]` |
+| `!34!0` | `plaintext[int]` |
+| `!4!1` | `tuple[shared[list[int; (num_cluster!0)]], shared[list[int; (num_cluster!0)]]]` |
+| `OUTPUT_cluster_y!2` | `shared[list[int; (num_cluster!0)]]` |
+| `OUTPUT_cluster_x!2` | `shared[list[int; (num_cluster!0)]]` |
+| `val_y!7` | `shared[list[int; (num_cluster!0)]]` |
+| `!28!0` | `shared[list[int; (num_cluster!0)]]` |
+| `val_x!7` | `shared[list[int; (num_cluster!0)]]` |
+| `!27!0` | `shared[list[int; (num_cluster!0)]]` |
+| `val_y!6` | `shared[list[int; (num_cluster!0)]]` |
+| `!26!0` | `shared[list[int; (num_cluster!0)]]` |
+| `!25!0` | `shared[list[int; (num_cluster!0)]]` |
+| `val_x!6` | `shared[list[int; (num_cluster!0)]]` |
+| `!24!0` | `shared[list[int; (num_cluster!0)]]` |
+| `!23!0` | `shared[list[int; (num_cluster!0)]]` |
+| `!3!2` | `shared[list[bool; (num_cluster!0)]]` |
+| `!22!0` | `shared[list[int; (num_cluster!0)]]` |
+| `count!5` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `count!3` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `count!4` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `val_y!5` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `val_y!3` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `val_y!4` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `val_x!5` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `val_x!3` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `val_x!4` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `!2!3` | `shared[list[list[bool; (num_cluster!0)]; (len!0)]]` |
+| `!21!0` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `!20!0` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `!19!0` | `shared[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `!18!0` | `plaintext[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `!17!0` | `plaintext[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `!16!0` | `plaintext[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `!15!0` | `plaintext[list[list[int; (num_cluster!0)]; (len!0)]]` |
+| `count!2` | `plaintext[int]` |
+| `val_y!2` | `plaintext[int]` |
+| `val_x!2` | `plaintext[int]` |
+| `!14!0` | `shared[list[int; (num_cluster!0)]]` |
+| `!13!0` | `shared[list[int; (num_cluster!0)]]` |
+| `!6!0` | `shared[list[int; (len!0)]]` |
+| `bestMap!3` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `bestMap!2` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `val!3` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `val!5` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `best_dist!5` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `best_dist!3` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `!1!3` | `shared[list[list[bool; (len!0)]; (num_cluster!0)]]` |
+| `!29!0` | `plaintext[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `best_dist!4` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `dist!3` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `y_sq!3` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `y_dist!3` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `x_sq!3` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `x_dist!3` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `!12!0` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `!11!0` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `!10!0` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `!9!0` | `shared[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `!8!0` | `plaintext[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `!7!0` | `plaintext[list[list[int; (len!0)]; (num_cluster!0)]]` |
+| `best_dist!2` | `plaintext[int]` |
+| `!5!0` | `plaintext[list[int; (len!0)]]` |
+### Motion code
+```cpp
+template <encrypto::motion::MpcProtocol Protocol>
+std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> kmeans_iteration(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> data_x_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> data_y_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> cluster_x_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> cluster_y_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_cluster_x_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_cluster_y_0,
+    std::uint32_t _MPC_PLAINTEXT_len_0,
+    std::uint32_t _MPC_PLAINTEXT_num_cluster_0,
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_bestMap_0
+) {
+    // Shared variable declarations
+    std::vector<encrypto::motion::ShareWrapper> _1_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _10_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _11_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _12_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _13_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _14_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _15_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _16_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _17_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _18_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _19_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::ShareWrapper> _2_3((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _20_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _21_0((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _22_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _23_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _24_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _25_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _26_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _27_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _28_0((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _29_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::ShareWrapper> _3_2((_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger _30_0;
+    encrypto::motion::SecureUnsignedInteger _31_0;
+    encrypto::motion::SecureUnsignedInteger _32_0;
+    encrypto::motion::SecureUnsignedInteger _33_0;
+    encrypto::motion::SecureUnsignedInteger _34_0;
+    std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> _4_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _5_0((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _6_0((_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _7_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _8_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _9_0((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_cluster_x_2((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_cluster_y_2((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> bestMap_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> bestMap_2((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> bestMap_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger best_dist_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> best_dist_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> best_dist_4((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> best_dist_5((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger count_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> count_3((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> count_4((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> count_5((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> dist_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger len_0;
+    encrypto::motion::SecureUnsignedInteger num_cluster_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_5((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger val_x_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_x_3((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_x_4((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_x_5((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_x_6((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_x_7((_MPC_PLAINTEXT_num_cluster_0));
+    encrypto::motion::SecureUnsignedInteger val_y_2;
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_y_3((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_y_4((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_y_5((_MPC_PLAINTEXT_num_cluster_0) * (_MPC_PLAINTEXT_len_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_y_6((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_y_7((_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> x_dist_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> x_sq_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> y_dist_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> y_sq_3((_MPC_PLAINTEXT_len_0) * (_MPC_PLAINTEXT_num_cluster_0));
+
+    // Plaintext variable declarations
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__15_0((_MPC_PLAINTEXT_num_cluster_0 + 1) * (_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__16_0((_MPC_PLAINTEXT_num_cluster_0 + 1) * (_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__17_0((_MPC_PLAINTEXT_num_cluster_0 + 1) * (_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__18_0((_MPC_PLAINTEXT_num_cluster_0 + 1) * (_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__29_0((_MPC_PLAINTEXT_len_0 + 1) * (_MPC_PLAINTEXT_num_cluster_0 + 1));
+    std::uint32_t _MPC_PLAINTEXT__30_0;
+    std::uint32_t _MPC_PLAINTEXT__31_0;
+    std::uint32_t _MPC_PLAINTEXT__32_0;
+    std::uint32_t _MPC_PLAINTEXT__33_0;
+    std::uint32_t _MPC_PLAINTEXT__34_0;
+    std::tuple<std::vector<std::uint32_t>, std::vector<std::uint32_t>> _MPC_PLAINTEXT__4_1;
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__5_0((_MPC_PLAINTEXT_len_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__7_0((_MPC_PLAINTEXT_len_0 + 1) * (_MPC_PLAINTEXT_num_cluster_0 + 1));
+    std::vector<std::uint32_t> _MPC_PLAINTEXT__8_0((_MPC_PLAINTEXT_len_0 + 1) * (_MPC_PLAINTEXT_num_cluster_0 + 1));
+    std::uint32_t _MPC_PLAINTEXT_best_dist_2;
+    std::uint32_t _MPC_PLAINTEXT_count_2;
+    std::uint32_t _MPC_PLAINTEXT_val_x_2;
+    std::uint32_t _MPC_PLAINTEXT_val_y_2;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_10000 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(10000)), 0);
+
+    // Plaintext parameter assignments
+    bestMap_0.clear();
+    std::transform(_MPC_PLAINTEXT_bestMap_0.begin(), _MPC_PLAINTEXT_bestMap_0.end(), std::back_inserter(bestMap_0), [&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });
+    len_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_len_0), 0);
+    num_cluster_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_num_cluster_0), 0);
+
+    // Function body
+    vectorized_assign(_5_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return bestMap_0;}), {_MPC_PLAINTEXT_len_0}));
+    best_dist_2 = _MPC_CONSTANT_10000;
+    _MPC_PLAINTEXT_best_dist_2 = std::uint32_t(10000);
+    vectorized_assign(_7_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return best_dist_2;}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_8_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vectorized_access(_5_0, {_MPC_PLAINTEXT_len_0}, {true}, {});}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_9_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return cluster_x_0[indices[1]];}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_10_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return data_x_0[indices[0]];}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_11_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return cluster_y_0[indices[1]];}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_12_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return data_y_0[indices[0]];}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(x_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, (vectorized_access(_9_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}) - vectorized_access(_10_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {})));
+    vectorized_assign(x_sq_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, (vectorized_access(x_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}) * vectorized_access(x_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {})));
+    vectorized_assign(y_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, (vectorized_access(_11_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}) - vectorized_access(_12_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {})));
+    vectorized_assign(y_sq_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, (vectorized_access(y_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}) * vectorized_access(y_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {})));
+    vectorized_assign(dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, (vectorized_access(x_sq_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}) + vectorized_access(y_sq_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {})));
+    vectorized_assign(best_dist_4, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, vectorized_access(dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}));
+    vectorized_assign(_29_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return encrypto::motion::SecureUnsignedInteger(party->In<Protocol>(encrypto::motion::ToInput(indices[1]), 0));}), {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__30_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(best_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}, vectorized_access(_7_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}));
+    for (; _MPC_PLAINTEXT__30_0 < _MPC_PLAINTEXT_num_cluster_0; _MPC_PLAINTEXT__30_0++) {
+        _30_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__30_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__30_0 != std::uint32_t(0)) {
+            vectorized_assign(best_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}, vectorized_access(best_dist_5, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {(_MPC_PLAINTEXT__30_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(_1_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}, (vectorized_access(best_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}) > vectorized_access(dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0})));
+        vectorized_assign(best_dist_5, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}, vectorized_access(_1_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}).Mux(vectorized_access(best_dist_4, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}).Get(), vectorized_access(best_dist_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__30_0}).Get()));
+
+    }
+
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__31_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(bestMap_2, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}, vectorized_access(_8_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}));
+    for (; _MPC_PLAINTEXT__31_0 < _MPC_PLAINTEXT_num_cluster_0; _MPC_PLAINTEXT__31_0++) {
+        _31_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__31_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__31_0 != std::uint32_t(0)) {
+            vectorized_assign(bestMap_2, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}, vectorized_access(bestMap_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {(_MPC_PLAINTEXT__31_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(val_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}, vectorized_access(bestMap_2, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}));
+        vectorized_assign(val_5, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}, vectorized_access(_1_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}).Mux(vectorized_access(_29_0, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}).Get(), vectorized_access(val_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}).Get()));
+        vectorized_assign(bestMap_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}, vectorized_update(vectorized_access(bestMap_2, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0}), {_MPC_PLAINTEXT_len_0}, {true}, {}, vectorized_access(val_5, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}, {true, false}, {_MPC_PLAINTEXT__31_0})));
+
+    }
+
+    vectorized_assign(_6_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, drop_dim(bestMap_3, {_MPC_PLAINTEXT_len_0, _MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_13_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return OUTPUT_cluster_x_0;}), {_MPC_PLAINTEXT_num_cluster_0}));
+    vectorized_assign(_14_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return OUTPUT_cluster_y_0;}), {_MPC_PLAINTEXT_num_cluster_0}));
+    val_x_2 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_val_x_2 = std::uint32_t(0);
+    val_y_2 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_val_y_2 = std::uint32_t(0);
+    count_2 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_count_2 = std::uint32_t(0);
+    vectorized_assign(_15_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return val_x_2;}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_16_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return val_y_2;}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_17_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return count_2;}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_18_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return encrypto::motion::SecureUnsignedInteger(party->In<Protocol>(encrypto::motion::ToInput(indices[0]), 0));}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_19_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return _6_0[indices[1]];}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_20_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return data_x_0[indices[1]];}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_21_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return data_y_0[indices[1]];}), {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_2_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}, (encrypto::motion::ShareWrapper(vectorized_access(_18_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}).Get()) == encrypto::motion::ShareWrapper(vectorized_access(_19_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, true}, {}).Get())));
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__32_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(val_x_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}, vectorized_access(_15_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}));
+    for (; _MPC_PLAINTEXT__32_0 < _MPC_PLAINTEXT_len_0; _MPC_PLAINTEXT__32_0++) {
+        _32_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__32_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__32_0 != std::uint32_t(0)) {
+            vectorized_assign(val_x_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}, vectorized_access(val_x_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {(_MPC_PLAINTEXT__32_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(val_x_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}, (vectorized_access(val_x_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}) + vectorized_access(_20_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0})));
+        vectorized_assign(val_x_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}, vectorized_access(_2_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}).Mux(vectorized_access(val_x_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}).Get(), vectorized_access(val_x_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__32_0}).Get()));
+
+    }
+
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__33_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(val_y_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}, vectorized_access(_16_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}));
+    for (; _MPC_PLAINTEXT__33_0 < _MPC_PLAINTEXT_len_0; _MPC_PLAINTEXT__33_0++) {
+        _33_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__33_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__33_0 != std::uint32_t(0)) {
+            vectorized_assign(val_y_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}, vectorized_access(val_y_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {(_MPC_PLAINTEXT__33_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(val_y_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}, (vectorized_access(val_y_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}) + vectorized_access(_21_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0})));
+        vectorized_assign(val_y_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}, vectorized_access(_2_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}).Mux(vectorized_access(val_y_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}).Get(), vectorized_access(val_y_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__33_0}).Get()));
+
+    }
+
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__34_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(count_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}, vectorized_access(_17_0, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}));
+    for (; _MPC_PLAINTEXT__34_0 < _MPC_PLAINTEXT_len_0; _MPC_PLAINTEXT__34_0++) {
+        _34_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__34_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__34_0 != std::uint32_t(0)) {
+            vectorized_assign(count_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}, vectorized_access(count_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {(_MPC_PLAINTEXT__34_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(count_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}, (vectorized_access(count_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}) + decltype(_MPC_CONSTANT_1)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_1;}), {_MPC_PLAINTEXT_num_cluster_0}))));
+        vectorized_assign(count_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}, vectorized_access(_2_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}).Mux(vectorized_access(count_4, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}).Get(), vectorized_access(count_3, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}, {true, false}, {_MPC_PLAINTEXT__34_0}).Get()));
+
+    }
+
+    vectorized_assign(_22_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(count_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_3_2, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, (vectorized_access(_22_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}) > decltype(_MPC_CONSTANT_0)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_0;}), {_MPC_PLAINTEXT_num_cluster_0}))));
+    vectorized_assign(_23_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(val_x_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_24_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(count_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(val_x_6, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, (vectorized_access(_23_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}) / vectorized_access(_24_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {})));
+    vectorized_assign(_25_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(val_y_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(_26_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(count_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(val_y_6, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, (vectorized_access(_25_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}) / vectorized_access(_26_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {})));
+    vectorized_assign(_27_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(val_x_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(val_x_7, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_access(_3_2, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Mux(vectorized_access(val_x_6, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Get(), vectorized_access(_27_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Get()));
+    vectorized_assign(_28_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, drop_dim(val_y_5, {_MPC_PLAINTEXT_num_cluster_0, _MPC_PLAINTEXT_len_0}));
+    vectorized_assign(val_y_7, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_access(_3_2, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Mux(vectorized_access(val_y_6, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Get(), vectorized_access(_28_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}).Get()));
+    vectorized_assign(OUTPUT_cluster_x_2, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_update(vectorized_access(_13_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}), {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_access(val_x_7, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {})));
+    vectorized_assign(OUTPUT_cluster_y_2, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_update(vectorized_access(_14_0, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}), {_MPC_PLAINTEXT_num_cluster_0}, {true}, {}, vectorized_access(val_y_7, {_MPC_PLAINTEXT_num_cluster_0}, {true}, {})));
+    _4_1 = std::make_tuple(OUTPUT_cluster_x_2, OUTPUT_cluster_y_2);
+    return _4_1;
 
 }
 ```
@@ -2164,34 +2873,34 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
     s0!1 = False
     max_len!1 = 0
     length!1 = 0
-    !9!0{N!0}[] = lift(s0!1, (i!1:N!0))
-    !10!0{N!0}[] = lift(max_len!1, (i!1:N!0))
-    !11!0{N!0}[] = lift(length!1, (i!1:N!0))
-    !12!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !13!0{N!0}[] = lift(Syms!0[2], (i!1:N!0))
-    !14!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !15!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
-    !16!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !17!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !9!0{I!1:N!0}[] = lift(s0!1, (i!1:N!0))
+    !10!0{I!1:N!0}[] = lift(max_len!1, (i!1:N!0))
+    !11!0{I!1:N!0}[] = lift(length!1, (i!1:N!0))
+    !12!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !13!0{I!1:N!0}[] = lift(Syms!0[2], (i!1:N!0))
+    !14!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !15!0{I!1:N!0}[] = lift(Syms!0[1], (i!1:N!0))
+    !16!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !17!0{I!1:N!0}[] = lift(Syms!0[0], (i!1:N!0))
     for i!1 in range(0, N!0):
-        s0!2{N!0}[] = Φ(!9!0{N!0}[], s0!3{N!0}[])
-        max_len!2{N!0}[] = Φ(!10!0{N!0}[], max_len!4{N!0}[])
-        length!2{N!0}[] = Φ(!11!0{N!0}[], length!5{N!0}[])
-        !1!2{N!0}[] = (!12!0{N!0}[] == !13!0{N!0}[])
-        s1!2{N!0}[] = (s0!2{N!0}[] and !1!2{N!0}[])
-        !2!2{N!0}[] = (!14!0{N!0}[] == !15!0{N!0}[])
-        !4!2{N!0}[] = (!16!0{N!0}[] == !17!0{N!0}[])
-        !5!2{N!0}[] = (s0!2{N!0}[] and !4!2{N!0}[])
-        s0!3{N!0}[] = (!2!2{N!0}[] or !5!2{N!0}[])
-        !6!2{N!0}[] = (s1!2{N!0}[] or s0!3{N!0}[])
+        s0!2{I!1:N!0}[] = Φ(!9!0{I!1:N!0}[], s0!3{I!1:N!0}[])
+        max_len!2{I!1:N!0}[] = Φ(!10!0{I!1:N!0}[], max_len!4{I!1:N!0}[])
+        length!2{I!1:N!0}[] = Φ(!11!0{I!1:N!0}[], length!5{I!1:N!0}[])
+        !1!2{I!1:N!0}[] = (!12!0{I!1:N!0}[] == !13!0{I!1:N!0}[])
+        s1!2{I!1:N!0}[] = (s0!2{I!1:N!0}[] and !1!2{I!1:N!0}[])
+        !2!2{I!1:N!0}[] = (!14!0{I!1:N!0}[] == !15!0{I!1:N!0}[])
+        !4!2{I!1:N!0}[] = (!16!0{I!1:N!0}[] == !17!0{I!1:N!0}[])
+        !5!2{I!1:N!0}[] = (s0!2{I!1:N!0}[] and !4!2{I!1:N!0}[])
+        s0!3{I!1:N!0}[] = (!2!2{I!1:N!0}[] or !5!2{I!1:N!0}[])
+        !6!2{I!1:N!0}[] = (s1!2{I!1:N!0}[] or s0!3{I!1:N!0}[])
         length!4 = 0
-        length!3{N!0}[] = (length!2{N!0}[] + 1)
-        length!5{N!0}[] = MUX(!6!2{N!0}[], length!3{N!0}[], length!4)
-        !7!2{N!0}[] = (max_len!2{N!0}[] < length!5{N!0}[])
-        !8!2{N!0}[] = (s1!2{N!0}[] and !7!2{N!0}[])
-        max_len!3{N!0}[] = length!5{N!0}[]
-        max_len!4{N!0}[] = MUX(!8!2{N!0}[], max_len!3{N!0}[], max_len!2{N!0}[])
-    !18!0 = drop_dim(max_len!4{N!0}[])
+        length!3{I!1:N!0}[] = (length!2{I!1:N!0}[] + 1)
+        length!5{I!1:N!0}[] = MUX(!6!2{I!1:N!0}[], length!3{I!1:N!0}[], length!4)
+        !7!2{I!1:N!0}[] = (max_len!2{I!1:N!0}[] < length!5{I!1:N!0}[])
+        !8!2{I!1:N!0}[] = (s1!2{I!1:N!0}[] and !7!2{I!1:N!0}[])
+        max_len!3{I!1:N!0}[] = length!5{I!1:N!0}[]
+        max_len!4{I!1:N!0}[] = MUX(!8!2{I!1:N!0}[], max_len!3{I!1:N!0}[], max_len!2{I!1:N!0}[])
+    !18!0 = drop_dim(max_len!4{I!1:N!0}[])
     return !18!0
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
@@ -2202,36 +2911,36 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
     s0!1 = False
     max_len!1 = 0
     length!1 = 0
-    !9!0{N!0}[] = lift(s0!1, (i!1:N!0))
-    !10!0{N!0}[] = lift(max_len!1, (i!1:N!0))
-    !11!0{N!0}[] = lift(length!1, (i!1:N!0))
-    !12!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !13!0{N!0}[] = lift(Syms!0[2], (i!1:N!0))
-    !14!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !15!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
-    !16!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !17!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
-    !1!2{N!0}[] = (!12!0{N!0}[] == !13!0{N!0}[])
-    !2!2{N!0}[] = (!14!0{N!0}[] == !15!0{N!0}[])
-    !4!2{N!0}[] = (!16!0{N!0}[] == !17!0{N!0}[])
+    !9!0{I!1:N!0}[] = lift(s0!1, (i!1:N!0))
+    !10!0{I!1:N!0}[] = lift(max_len!1, (i!1:N!0))
+    !11!0{I!1:N!0}[] = lift(length!1, (i!1:N!0))
+    !12!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !13!0{I!1:N!0}[] = lift(Syms!0[2], (i!1:N!0))
+    !14!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !15!0{I!1:N!0}[] = lift(Syms!0[1], (i!1:N!0))
+    !16!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !17!0{I!1:N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !1!2{I!1:N!0}[] = (!12!0{I!1:N!0}[] == !13!0{I!1:N!0}[])
+    !2!2{I!1:N!0}[] = (!14!0{I!1:N!0}[] == !15!0{I!1:N!0}[])
+    !4!2{I!1:N!0}[] = (!16!0{I!1:N!0}[] == !17!0{I!1:N!0}[])
     for !19!0 in range(0, N!0):
         s0!2{}[!19!0] = Φ(!9!0{}[!19!0], s0!3{}[(!19!0 - 1)])
         !5!2{}[!19!0] = (s0!2{}[!19!0] and !4!2{}[!19!0])
         s0!3{}[!19!0] = (!2!2{}[!19!0] or !5!2{}[!19!0])
-    s1!2{N!0}[] = (s0!2{N!0}[] and !1!2{N!0}[])
-    !6!2{N!0}[] = (s1!2{N!0}[] or s0!3{N!0}[])
+    s1!2{I!1:N!0}[] = (s0!2{I!1:N!0}[] and !1!2{I!1:N!0}[])
+    !6!2{I!1:N!0}[] = (s1!2{I!1:N!0}[] or s0!3{I!1:N!0}[])
     length!4 = 0
     for !20!0 in range(0, N!0):
         length!2{}[!20!0] = Φ(!11!0{}[!20!0], length!5{}[(!20!0 - 1)])
         length!3{}[!20!0] = (length!2{}[!20!0] + 1)
         length!5{}[!20!0] = MUX(!6!2{}[!20!0], length!3{}[!20!0], length!4)
-    max_len!3{N!0}[] = length!5{N!0}[]
+    max_len!3{I!1:N!0}[] = length!5{I!1:N!0}[]
     for !21!0 in range(0, N!0):
         max_len!2{}[!21!0] = Φ(!10!0{}[!21!0], max_len!4{}[(!21!0 - 1)])
         !7!2{}[!21!0] = (max_len!2{}[!21!0] < length!5{}[!21!0])
         !8!2{}[!21!0] = (s1!2{}[!21!0] and !7!2{}[!21!0])
         max_len!4{}[!21!0] = MUX(!8!2{}[!21!0], max_len!3{}[!21!0], max_len!2{}[!21!0])
-    !18!0 = drop_dim(max_len!4{N!0}[])
+    !18!0 = drop_dim(max_len!4{I!1:N!0}[])
     return !18!0
 ```
 ### Basic Vectorization Phase 2 (dependence graph)
@@ -2515,22 +3224,22 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
 def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_dist!1 = 0
     current_dist!1 = 0
-    !4!0{N!0}[] = lift(max_dist!1, (i!1:N!0))
-    !5!0{N!0}[] = lift(current_dist!1, (i!1:N!0))
-    !6!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !7!0{N!0}[] = lift(Sym!0, (i!1:N!0))
+    !4!0{I!1:N!0}[] = lift(max_dist!1, (i!1:N!0))
+    !5!0{I!1:N!0}[] = lift(current_dist!1, (i!1:N!0))
+    !6!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !7!0{I!1:N!0}[] = lift(Sym!0, (i!1:N!0))
     for i!1 in range(0, N!0):
-        max_dist!2{N!0}[] = Φ(!4!0{N!0}[], max_dist!4{N!0}[])
-        current_dist!2{N!0}[] = Φ(!5!0{N!0}[], current_dist!5{N!0}[])
-        !1!2{N!0}[] = (!6!0{N!0}[] == !7!0{N!0}[])
-        !2!2{N!0}[] = not !1!2{N!0}[]
+        max_dist!2{I!1:N!0}[] = Φ(!4!0{I!1:N!0}[], max_dist!4{I!1:N!0}[])
+        current_dist!2{I!1:N!0}[] = Φ(!5!0{I!1:N!0}[], current_dist!5{I!1:N!0}[])
+        !1!2{I!1:N!0}[] = (!6!0{I!1:N!0}[] == !7!0{I!1:N!0}[])
+        !2!2{I!1:N!0}[] = not !1!2{I!1:N!0}[]
         current_dist!4 = 0
-        current_dist!3{N!0}[] = (current_dist!2{N!0}[] + 1)
-        current_dist!5{N!0}[] = MUX(!2!2{N!0}[], current_dist!3{N!0}[], current_dist!4)
-        !3!2{N!0}[] = (current_dist!5{N!0}[] > max_dist!2{N!0}[])
-        max_dist!3{N!0}[] = current_dist!5{N!0}[]
-        max_dist!4{N!0}[] = MUX(!3!2{N!0}[], max_dist!3{N!0}[], max_dist!2{N!0}[])
-    !8!0 = drop_dim(max_dist!4{N!0}[])
+        current_dist!3{I!1:N!0}[] = (current_dist!2{I!1:N!0}[] + 1)
+        current_dist!5{I!1:N!0}[] = MUX(!2!2{I!1:N!0}[], current_dist!3{I!1:N!0}[], current_dist!4)
+        !3!2{I!1:N!0}[] = (current_dist!5{I!1:N!0}[] > max_dist!2{I!1:N!0}[])
+        max_dist!3{I!1:N!0}[] = current_dist!5{I!1:N!0}[]
+        max_dist!4{I!1:N!0}[] = MUX(!3!2{I!1:N!0}[], max_dist!3{I!1:N!0}[], max_dist!2{I!1:N!0}[])
+    !8!0 = drop_dim(max_dist!4{I!1:N!0}[])
     return !8!0
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
@@ -2540,23 +3249,23 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
 def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_dist!1 = 0
     current_dist!1 = 0
-    !4!0{N!0}[] = lift(max_dist!1, (i!1:N!0))
-    !5!0{N!0}[] = lift(current_dist!1, (i!1:N!0))
-    !6!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !7!0{N!0}[] = lift(Sym!0, (i!1:N!0))
-    !1!2{N!0}[] = (!6!0{N!0}[] == !7!0{N!0}[])
-    !2!2{N!0}[] = not !1!2{N!0}[]
+    !4!0{I!1:N!0}[] = lift(max_dist!1, (i!1:N!0))
+    !5!0{I!1:N!0}[] = lift(current_dist!1, (i!1:N!0))
+    !6!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !7!0{I!1:N!0}[] = lift(Sym!0, (i!1:N!0))
+    !1!2{I!1:N!0}[] = (!6!0{I!1:N!0}[] == !7!0{I!1:N!0}[])
+    !2!2{I!1:N!0}[] = not !1!2{I!1:N!0}[]
     current_dist!4 = 0
     for !9!0 in range(0, N!0):
         current_dist!2{}[!9!0] = Φ(!5!0{}[!9!0], current_dist!5{}[(!9!0 - 1)])
         current_dist!3{}[!9!0] = (current_dist!2{}[!9!0] + 1)
         current_dist!5{}[!9!0] = MUX(!2!2{}[!9!0], current_dist!3{}[!9!0], current_dist!4)
-    max_dist!3{N!0}[] = current_dist!5{N!0}[]
+    max_dist!3{I!1:N!0}[] = current_dist!5{I!1:N!0}[]
     for !10!0 in range(0, N!0):
         max_dist!2{}[!10!0] = Φ(!4!0{}[!10!0], max_dist!4{}[(!10!0 - 1)])
         !3!2{}[!10!0] = (current_dist!5{}[!10!0] > max_dist!2{}[!10!0])
         max_dist!4{}[!10!0] = MUX(!3!2{}[!10!0], max_dist!3{}[!10!0], max_dist!2{}[!10!0])
-    !8!0 = drop_dim(max_dist!4{N!0}[])
+    !8!0 = drop_dim(max_dist!4{I!1:N!0}[])
     return !8!0
 ```
 ### Basic Vectorization Phase 2 (dependence graph)
@@ -2780,23 +3489,23 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
 def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_sum!1 = 0
     current_sum!1 = 0
-    !4!0{N!0}[] = lift(max_sum!1, (i!1:N!0))
-    !5!0{N!0}[] = lift(current_sum!1, (i!1:N!0))
-    !6!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !7!0{N!0}[] = lift(Sym!0, (i!1:N!0))
-    !8!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !4!0{I!1:N!0}[] = lift(max_sum!1, (i!1:N!0))
+    !5!0{I!1:N!0}[] = lift(current_sum!1, (i!1:N!0))
+    !6!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !7!0{I!1:N!0}[] = lift(Sym!0, (i!1:N!0))
+    !8!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
     for i!1 in range(0, N!0):
-        max_sum!2{N!0}[] = Φ(!4!0{N!0}[], max_sum!4{N!0}[])
-        current_sum!2{N!0}[] = Φ(!5!0{N!0}[], current_sum!5{N!0}[])
-        !1!2{N!0}[] = (!6!0{N!0}[] == !7!0{N!0}[])
-        !2!2{N!0}[] = not !1!2{N!0}[]
+        max_sum!2{I!1:N!0}[] = Φ(!4!0{I!1:N!0}[], max_sum!4{I!1:N!0}[])
+        current_sum!2{I!1:N!0}[] = Φ(!5!0{I!1:N!0}[], current_sum!5{I!1:N!0}[])
+        !1!2{I!1:N!0}[] = (!6!0{I!1:N!0}[] == !7!0{I!1:N!0}[])
+        !2!2{I!1:N!0}[] = not !1!2{I!1:N!0}[]
         current_sum!4 = 0
-        current_sum!3{N!0}[] = (current_sum!2{N!0}[] + !8!0{N!0}[])
-        current_sum!5{N!0}[] = MUX(!2!2{N!0}[], current_sum!3{N!0}[], current_sum!4)
-        !3!2{N!0}[] = (current_sum!5{N!0}[] > max_sum!2{N!0}[])
-        max_sum!3{N!0}[] = current_sum!5{N!0}[]
-        max_sum!4{N!0}[] = MUX(!3!2{N!0}[], max_sum!3{N!0}[], max_sum!2{N!0}[])
-    !9!0 = drop_dim(max_sum!4{N!0}[])
+        current_sum!3{I!1:N!0}[] = (current_sum!2{I!1:N!0}[] + !8!0{I!1:N!0}[])
+        current_sum!5{I!1:N!0}[] = MUX(!2!2{I!1:N!0}[], current_sum!3{I!1:N!0}[], current_sum!4)
+        !3!2{I!1:N!0}[] = (current_sum!5{I!1:N!0}[] > max_sum!2{I!1:N!0}[])
+        max_sum!3{I!1:N!0}[] = current_sum!5{I!1:N!0}[]
+        max_sum!4{I!1:N!0}[] = MUX(!3!2{I!1:N!0}[], max_sum!3{I!1:N!0}[], max_sum!2{I!1:N!0}[])
+    !9!0 = drop_dim(max_sum!4{I!1:N!0}[])
     return !9!0
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
@@ -2806,24 +3515,24 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
 def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_sum!1 = 0
     current_sum!1 = 0
-    !4!0{N!0}[] = lift(max_sum!1, (i!1:N!0))
-    !5!0{N!0}[] = lift(current_sum!1, (i!1:N!0))
-    !6!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !7!0{N!0}[] = lift(Sym!0, (i!1:N!0))
-    !8!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !1!2{N!0}[] = (!6!0{N!0}[] == !7!0{N!0}[])
-    !2!2{N!0}[] = not !1!2{N!0}[]
+    !4!0{I!1:N!0}[] = lift(max_sum!1, (i!1:N!0))
+    !5!0{I!1:N!0}[] = lift(current_sum!1, (i!1:N!0))
+    !6!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !7!0{I!1:N!0}[] = lift(Sym!0, (i!1:N!0))
+    !8!0{I!1:N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !1!2{I!1:N!0}[] = (!6!0{I!1:N!0}[] == !7!0{I!1:N!0}[])
+    !2!2{I!1:N!0}[] = not !1!2{I!1:N!0}[]
     current_sum!4 = 0
     for !10!0 in range(0, N!0):
         current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
         current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
         current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
-    max_sum!3{N!0}[] = current_sum!5{N!0}[]
+    max_sum!3{I!1:N!0}[] = current_sum!5{I!1:N!0}[]
     for !11!0 in range(0, N!0):
         max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
         !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
         max_sum!4{}[!11!0] = MUX(!3!2{}[!11!0], max_sum!3{}[!11!0], max_sum!2{}[!11!0])
-    !9!0 = drop_dim(max_sum!4{N!0}[])
+    !9!0 = drop_dim(max_sum!4{I!1:N!0}[])
     return !9!0
 ```
 ### Basic Vectorization Phase 2 (dependence graph)
@@ -3076,35 +3785,35 @@ def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int
 ### Basic Vectorization Phase 1
 ```python
 def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
-    !8!0{N!0}[] = lift(result_X!0, (i!1:N!0))
-    !9!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
-    !16!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
-    !17!0{N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))
+    !8!0{I!1:N!0}[] = lift(result_X!0, (i!1:N!0))
+    !9!0{I!1:N!0}[] = lift(result_Y!0, (i!1:N!0))
+    !16!0{I!1:N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
+    !17!0{I!1:N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))
     for i!1 in range(0, N!0):
-        result_X!1{N!0}[] = Φ(!8!0{N!0}[], result_X!2{N!0}[]) (targetless)
-        result_Y!1{N!0}[] = Φ(!9!0{N!0}[], result_Y!2{N!0}[]) (targetless)
+        result_X!1{I!1:N!0}[] = Φ(!8!0{I!1:N!0}[], result_X!2{I!1:N!0}[]) (targetless)
+        result_Y!1{I!1:N!0}[] = Φ(!9!0{I!1:N!0}[], result_Y!2{I!1:N!0}[]) (targetless)
         bx!2 = False
-        !10!0{N!0, N!0}[] = lift(bx!2, (i!1:N!0, j!1:N!0))
-        !11!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
-        !12!0{N!0, N!0}[] = lift(X_coords!0[i!1], (i!1:N!0, j!1:N!0))
-        !13!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
-        !14!0{N!0, N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0, j!1:N!0))
+        !10!0{I!1:N!0, J!1:N!0}[] = lift(bx!2, (i!1:N!0, j!1:N!0))
+        !11!0{I!1:N!0, J!1:N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
+        !12!0{I!1:N!0, J!1:N!0}[] = lift(X_coords!0[i!1], (i!1:N!0, j!1:N!0))
+        !13!0{I!1:N!0, J!1:N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
+        !14!0{I!1:N!0, J!1:N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0, j!1:N!0))
         for j!1 in range(0, N!0):
-            bx!3{N!0, N!0}[] = Φ(!10!0{N!0, N!0}[], bx!4{N!0, N!0}[])
-            !3!3{N!0, N!0}[] = (!11!0{N!0, N!0}[] < !12!0{N!0, N!0}[])
-            !4!3{N!0, N!0}[] = (!13!0{N!0, N!0}[] < !14!0{N!0, N!0}[])
-            !5!3{N!0, N!0}[] = (!3!3{N!0, N!0}[] and !4!3{N!0, N!0}[])
-            bx!4{N!0, N!0}[] = (bx!3{N!0, N!0}[] or !5!3{N!0, N!0}[])
-        val_X!2{N!0}[] = result_X!1{N!0}[]
-        val_Y!2{N!0}[] = result_Y!1{N!0}[]
-        !15!0{N!0}[] = drop_dim(bx!4{N!0, N!0}[])
-        !6!2{N!0}[] = not !15!0{N!0}[]
-        val_X!3{N!0}[] = !16!0{N!0}[]
-        val_Y!3{N!0}[] = !17!0{N!0}[]
-        val_X!4{N!0}[] = MUX(!6!2{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
-        val_Y!4{N!0}[] = MUX(!6!2{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
-        result_X!2{N!0}[] = VectorizedUpdate(result_X!1{N!0}[], [I!1], val_X!4{N!0}[])
-        result_Y!2{N!0}[] = VectorizedUpdate(result_Y!1{N!0}[], [I!1], val_Y!4{N!0}[])
+            bx!3{I!1:N!0, J!1:N!0}[] = Φ(!10!0{I!1:N!0, J!1:N!0}[], bx!4{I!1:N!0, J!1:N!0}[])
+            !3!3{I!1:N!0, J!1:N!0}[] = (!11!0{I!1:N!0, J!1:N!0}[] < !12!0{I!1:N!0, J!1:N!0}[])
+            !4!3{I!1:N!0, J!1:N!0}[] = (!13!0{I!1:N!0, J!1:N!0}[] < !14!0{I!1:N!0, J!1:N!0}[])
+            !5!3{I!1:N!0, J!1:N!0}[] = (!3!3{I!1:N!0, J!1:N!0}[] and !4!3{I!1:N!0, J!1:N!0}[])
+            bx!4{I!1:N!0, J!1:N!0}[] = (bx!3{I!1:N!0, J!1:N!0}[] or !5!3{I!1:N!0, J!1:N!0}[])
+        val_X!2{I!1:N!0}[] = result_X!1{I!1:N!0}[]
+        val_Y!2{I!1:N!0}[] = result_Y!1{I!1:N!0}[]
+        !15!0{I!1:N!0}[] = drop_dim(bx!4{I!1:N!0, J!1:N!0}[])
+        !6!2{I!1:N!0}[] = not !15!0{I!1:N!0}[]
+        val_X!3{I!1:N!0}[] = !16!0{I!1:N!0}[]
+        val_Y!3{I!1:N!0}[] = !17!0{I!1:N!0}[]
+        val_X!4{I!1:N!0}[] = MUX(!6!2{I!1:N!0}[], val_X!3{I!1:N!0}[], val_X!2{I!1:N!0}[])
+        val_Y!4{I!1:N!0}[] = MUX(!6!2{I!1:N!0}[], val_Y!3{I!1:N!0}[], val_Y!2{I!1:N!0}[])
+        result_X!2{I!1:N!0}[] = VectorizedUpdate(result_X!1{I!1:N!0}[], [I!1], val_X!4{I!1:N!0}[])
+        result_Y!2{I!1:N!0}[] = VectorizedUpdate(result_Y!1{I!1:N!0}[], [I!1], val_Y!4{I!1:N!0}[])
     !7!1 = (result_X!1, result_Y!1)
     return !7!1
 ```
@@ -3113,32 +3822,32 @@ def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int
 ### Basic Vectorization Phase 2
 ```python
 def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
-    !8!0{N!0}[] = lift(result_X!0, (i!1:N!0))
-    !9!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
-    !16!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
-    !17!0{N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))
+    !8!0{I!1:N!0}[] = lift(result_X!0, (i!1:N!0))
+    !9!0{I!1:N!0}[] = lift(result_Y!0, (i!1:N!0))
+    !16!0{I!1:N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
+    !17!0{I!1:N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))
     bx!2 = False
-    !10!0{N!0, N!0}[] = lift(bx!2, (i!1:N!0, j!1:N!0))
-    !11!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
-    !12!0{N!0, N!0}[] = lift(X_coords!0[i!1], (i!1:N!0, j!1:N!0))
-    !13!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
-    !14!0{N!0, N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0, j!1:N!0))
-    !3!3{N!0, N!0}[] = (!11!0{N!0, N!0}[] < !12!0{N!0, N!0}[])
-    !4!3{N!0, N!0}[] = (!13!0{N!0, N!0}[] < !14!0{N!0, N!0}[])
-    !5!3{N!0, N!0}[] = (!3!3{N!0, N!0}[] and !4!3{N!0, N!0}[])
+    !10!0{I!1:N!0, J!1:N!0}[] = lift(bx!2, (i!1:N!0, j!1:N!0))
+    !11!0{I!1:N!0, J!1:N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
+    !12!0{I!1:N!0, J!1:N!0}[] = lift(X_coords!0[i!1], (i!1:N!0, j!1:N!0))
+    !13!0{I!1:N!0, J!1:N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
+    !14!0{I!1:N!0, J!1:N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0, j!1:N!0))
+    !3!3{I!1:N!0, J!1:N!0}[] = (!11!0{I!1:N!0, J!1:N!0}[] < !12!0{I!1:N!0, J!1:N!0}[])
+    !4!3{I!1:N!0, J!1:N!0}[] = (!13!0{I!1:N!0, J!1:N!0}[] < !14!0{I!1:N!0, J!1:N!0}[])
+    !5!3{I!1:N!0, J!1:N!0}[] = (!3!3{I!1:N!0, J!1:N!0}[] and !4!3{I!1:N!0, J!1:N!0}[])
     for !18!0 in range(0, N!0):
-        bx!3{N!0}[!18!0] = Φ(!10!0{N!0}[!18!0], bx!4{N!0}[(!18!0 - 1)])
-        bx!4{N!0}[!18!0] = (bx!3{N!0}[!18!0] or !5!3{N!0}[!18!0])
-    !15!0{N!0}[] = drop_dim(bx!4{N!0, N!0}[])
-    !6!2{N!0}[] = not !15!0{N!0}[]
-    val_X!3{N!0}[] = !16!0{N!0}[]
-    val_Y!3{N!0}[] = !17!0{N!0}[]
-    val_X!2{N!0}[] = !8!0{N!0}[]
-    val_X!4{N!0}[] = MUX(!6!2{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
-    result_X!2{N!0}[] = VectorizedUpdate(!8!0{N!0}[], [I!1], val_X!4{N!0}[])
-    val_Y!2{N!0}[] = !9!0{N!0}[]
-    val_Y!4{N!0}[] = MUX(!6!2{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
-    result_Y!2{N!0}[] = VectorizedUpdate(!9!0{N!0}[], [I!1], val_Y!4{N!0}[])
+        bx!3{I!1:N!0}[!18!0] = Φ(!10!0{I!1:N!0}[!18!0], bx!4{I!1:N!0}[(!18!0 - 1)])
+        bx!4{I!1:N!0}[!18!0] = (bx!3{I!1:N!0}[!18!0] or !5!3{I!1:N!0}[!18!0])
+    !15!0{I!1:N!0}[] = drop_dim(bx!4{I!1:N!0, J!1:N!0}[])
+    !6!2{I!1:N!0}[] = not !15!0{I!1:N!0}[]
+    val_X!3{I!1:N!0}[] = !16!0{I!1:N!0}[]
+    val_Y!3{I!1:N!0}[] = !17!0{I!1:N!0}[]
+    val_X!2{I!1:N!0}[] = !8!0{I!1:N!0}[]
+    val_X!4{I!1:N!0}[] = MUX(!6!2{I!1:N!0}[], val_X!3{I!1:N!0}[], val_X!2{I!1:N!0}[])
+    result_X!2{I!1:N!0}[] = VectorizedUpdate(!8!0{I!1:N!0}[], [I!1], val_X!4{I!1:N!0}[])
+    val_Y!2{I!1:N!0}[] = !9!0{I!1:N!0}[]
+    val_Y!4{I!1:N!0}[] = MUX(!6!2{I!1:N!0}[], val_Y!3{I!1:N!0}[], val_Y!2{I!1:N!0}[])
+    result_Y!2{I!1:N!0}[] = VectorizedUpdate(!9!0{I!1:N!0}[], [I!1], val_Y!4{I!1:N!0}[])
     !7!1 = (result_X!2, result_Y!2)
     return !7!1
 ```
@@ -3377,24 +4086,24 @@ def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?
 ### Basic Vectorization Phase 1
 ```python
 def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?]], SB!0: plaintext[int], result!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
-    !2!0{SA!0}[] = lift(result!0, (i!1:SA!0))
-    !6!0{SA!0}[] = lift(A!0[i!1], (i!1:SA!0))
+    !2!0{I!1:SA!0}[] = lift(result!0, (i!1:SA!0))
+    !6!0{I!1:SA!0}[] = lift(A!0[i!1], (i!1:SA!0))
     for i!1 in range(0, SA!0):
-        result!1{SA!0}[] = Φ(!2!0{SA!0}[], result!2{SA!0}[]) (targetless)
+        result!1{I!1:SA!0}[] = Φ(!2!0{I!1:SA!0}[], result!2{I!1:SA!0}[]) (targetless)
         flag!2 = False
-        !3!0{SA!0, SB!0}[] = lift(flag!2, (i!1:SA!0, j!1:SB!0))
-        !4!0{SA!0, SB!0}[] = lift(A!0[i!1], (i!1:SA!0, j!1:SB!0))
-        !5!0{SA!0, SB!0}[] = lift(B!0[j!1], (i!1:SA!0, j!1:SB!0))
+        !3!0{I!1:SA!0, J!1:SB!0}[] = lift(flag!2, (i!1:SA!0, j!1:SB!0))
+        !4!0{I!1:SA!0, J!1:SB!0}[] = lift(A!0[i!1], (i!1:SA!0, j!1:SB!0))
+        !5!0{I!1:SA!0, J!1:SB!0}[] = lift(B!0[j!1], (i!1:SA!0, j!1:SB!0))
         for j!1 in range(0, SB!0):
-            flag!3{SA!0, SB!0}[] = Φ(!3!0{SA!0, SB!0}[], flag!5{SA!0, SB!0}[])
-            !1!3{SA!0, SB!0}[] = (!4!0{SA!0, SB!0}[] == !5!0{SA!0, SB!0}[])
+            flag!3{I!1:SA!0, J!1:SB!0}[] = Φ(!3!0{I!1:SA!0, J!1:SB!0}[], flag!5{I!1:SA!0, J!1:SB!0}[])
+            !1!3{I!1:SA!0, J!1:SB!0}[] = (!4!0{I!1:SA!0, J!1:SB!0}[] == !5!0{I!1:SA!0, J!1:SB!0}[])
             flag!4 = True
-            flag!5{SA!0, SB!0}[] = MUX(!1!3{SA!0, SB!0}[], flag!4, flag!3{SA!0, SB!0}[])
-        val!2{SA!0}[] = result!1{SA!0}[]
-        val!3{SA!0}[] = !6!0{SA!0}[]
-        !7!0{SA!0}[] = drop_dim(flag!5{SA!0, SB!0}[])
-        val!4{SA!0}[] = MUX(!7!0{SA!0}[], val!3{SA!0}[], val!2{SA!0}[])
-        result!2{SA!0}[] = VectorizedUpdate(result!1{SA!0}[], [I!1], val!4{SA!0}[])
+            flag!5{I!1:SA!0, J!1:SB!0}[] = MUX(!1!3{I!1:SA!0, J!1:SB!0}[], flag!4, flag!3{I!1:SA!0, J!1:SB!0}[])
+        val!2{I!1:SA!0}[] = result!1{I!1:SA!0}[]
+        val!3{I!1:SA!0}[] = !6!0{I!1:SA!0}[]
+        !7!0{I!1:SA!0}[] = drop_dim(flag!5{I!1:SA!0, J!1:SB!0}[])
+        val!4{I!1:SA!0}[] = MUX(!7!0{I!1:SA!0}[], val!3{I!1:SA!0}[], val!2{I!1:SA!0}[])
+        result!2{I!1:SA!0}[] = VectorizedUpdate(result!1{I!1:SA!0}[], [I!1], val!4{I!1:SA!0}[])
     return result!1
 ```
 ### Basic Vectorization Phase 1 (dependence graph)
@@ -3402,22 +4111,22 @@ def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?
 ### Basic Vectorization Phase 2
 ```python
 def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?]], SB!0: plaintext[int], result!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
-    !2!0{SA!0}[] = lift(result!0, (i!1:SA!0))
-    !6!0{SA!0}[] = lift(A!0[i!1], (i!1:SA!0))
+    !2!0{I!1:SA!0}[] = lift(result!0, (i!1:SA!0))
+    !6!0{I!1:SA!0}[] = lift(A!0[i!1], (i!1:SA!0))
     flag!2 = False
-    !3!0{SA!0, SB!0}[] = lift(flag!2, (i!1:SA!0, j!1:SB!0))
-    !4!0{SA!0, SB!0}[] = lift(A!0[i!1], (i!1:SA!0, j!1:SB!0))
-    !5!0{SA!0, SB!0}[] = lift(B!0[j!1], (i!1:SA!0, j!1:SB!0))
-    !1!3{SA!0, SB!0}[] = (!4!0{SA!0, SB!0}[] == !5!0{SA!0, SB!0}[])
+    !3!0{I!1:SA!0, J!1:SB!0}[] = lift(flag!2, (i!1:SA!0, j!1:SB!0))
+    !4!0{I!1:SA!0, J!1:SB!0}[] = lift(A!0[i!1], (i!1:SA!0, j!1:SB!0))
+    !5!0{I!1:SA!0, J!1:SB!0}[] = lift(B!0[j!1], (i!1:SA!0, j!1:SB!0))
+    !1!3{I!1:SA!0, J!1:SB!0}[] = (!4!0{I!1:SA!0, J!1:SB!0}[] == !5!0{I!1:SA!0, J!1:SB!0}[])
     flag!4 = True
     for !8!0 in range(0, SB!0):
-        flag!3{SA!0}[!8!0] = Φ(!3!0{SA!0}[!8!0], flag!5{SA!0}[(!8!0 - 1)])
-        flag!5{SA!0}[!8!0] = MUX(!1!3{SA!0}[!8!0], flag!4, flag!3{SA!0}[!8!0])
-    val!3{SA!0}[] = !6!0{SA!0}[]
-    !7!0{SA!0}[] = drop_dim(flag!5{SA!0, SB!0}[])
-    val!2{SA!0}[] = !2!0{SA!0}[]
-    val!4{SA!0}[] = MUX(!7!0{SA!0}[], val!3{SA!0}[], val!2{SA!0}[])
-    result!2{SA!0}[] = VectorizedUpdate(!2!0{SA!0}[], [I!1], val!4{SA!0}[])
+        flag!3{I!1:SA!0}[!8!0] = Φ(!3!0{I!1:SA!0}[!8!0], flag!5{I!1:SA!0}[(!8!0 - 1)])
+        flag!5{I!1:SA!0}[!8!0] = MUX(!1!3{I!1:SA!0}[!8!0], flag!4, flag!3{I!1:SA!0}[!8!0])
+    val!3{I!1:SA!0}[] = !6!0{I!1:SA!0}[]
+    !7!0{I!1:SA!0}[] = drop_dim(flag!5{I!1:SA!0, J!1:SB!0}[])
+    val!2{I!1:SA!0}[] = !2!0{I!1:SA!0}[]
+    val!4{I!1:SA!0}[] = MUX(!7!0{I!1:SA!0}[], val!3{I!1:SA!0}[], val!2{I!1:SA!0}[])
+    result!2{I!1:SA!0}[] = VectorizedUpdate(!2!0{I!1:SA!0}[], [I!1], val!4{I!1:SA!0}[])
     return result!2
 ```
 ### Basic Vectorization Phase 2 (dependence graph)
