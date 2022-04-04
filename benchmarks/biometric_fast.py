@@ -72,7 +72,7 @@ def test_biometric_matching_fast(D, N, C, S):
         for j in range(D):
             S_sqr_sum[i] = S_sqr_sum[i] + (S[i * D + j] * S[i * D + j])
 
-    print(biometric_matching__fast(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum))
+    print(biometric_matching_fast(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum))
 
 
 C = [1, 2, 3, 4]
