@@ -16,7 +16,8 @@ class BenchmarkOutput:
 
 
 def run_benchmark(
-    benchmark_name: str, benchmark_path: str, protocol: str, vectorized=True
+    benchmark_name: str, benchmark_path: str, protocol: str, vectorized=True, 
+    cmd_args = [], compile=True
 ) -> tuple[BenchmarkOutput, BenchmarkOutput]:
     input_fname = os.path.join(benchmark_path, "input.py")
 
@@ -26,19 +27,21 @@ def run_benchmark(
     app_path = os.path.join(
         benchmark_path, "motion_app" + ("-vectorized" if vectorized else "")
     )
-    compiler.compile(
-        f"{benchmark_name}.py", input_py, True, vectorized, app_path, True, protocol
-    )
+    
+    if compile:
+        compiler.compile(
+            f"{benchmark_name}.py", input_py, True, vectorized, app_path, True, protocol
+        )
 
-    subprocess.run(
-        ["cmake", "-S", app_path, "-B", os.path.join(app_path, "build")],
-        check=True,
-    )
+        subprocess.run(
+            ["cmake", "-S", app_path, "-B", os.path.join(app_path, "build")],
+            check=True,
+        )
 
-    subprocess.run(
-        ["cmake", "--build", os.path.join(app_path, "build")],
-        check=True,
-    )
+        subprocess.run(
+            ["cmake", "--build", os.path.join(app_path, "build")],
+            check=True,
+        )
 
     # Create directories for output and MOTION logs
     party0_dir = os.path.join(app_path, "party0")
@@ -61,7 +64,7 @@ def run_benchmark(
             "1,127.0.0.1,2301",
             "--my-id",
             "0",
-        ],
+        ] + cmd_args,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
@@ -75,7 +78,7 @@ def run_benchmark(
                 "1,127.0.0.1,2301",
                 "--my-id",
                 "1",
-            ],
+            ] + cmd_args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
