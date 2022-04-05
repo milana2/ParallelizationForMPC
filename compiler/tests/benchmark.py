@@ -25,9 +25,9 @@ def run_benchmark(
         input_py = f.read().strip()
 
     app_path = os.path.join(
-        benchmark_path, "motion_app" + ("-vectorized" if vectorized else "")
+        benchmark_path, "motion_app" + "-" + protocol + ("-vectorized" if vectorized else "")
     )
-    
+
     if compile:
         compiler.compile(
             f"{benchmark_name}.py", input_py, True, vectorized, app_path, True, protocol
