@@ -16,7 +16,7 @@ class BenchmarkOutput:
 
 
 def run_benchmark(
-    benchmark_name: str, benchmark_path: str, protocol: str, vectorized=True, 
+    benchmark_name: str, benchmark_path: str, protocol: str, vectorized=True, timeout=600,
     cmd_args = [], compile=True
 ) -> tuple[BenchmarkOutput, BenchmarkOutput]:
     input_fname = os.path.join(benchmark_path, "input.py")
@@ -84,9 +84,8 @@ def run_benchmark(
             text=True,
             cwd=party1_dir,
         ) as party1:
-            # TODO: wait's Timeout is 600 for both parties
-            party0.wait()
-            party1.wait()
+            party0.wait(timeout)
+            party1.wait(timeout)
 
             assert party0.stdout is not None
             assert party0.stderr is not None

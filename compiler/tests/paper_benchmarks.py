@@ -79,6 +79,32 @@ def get_biometric_inputs()-> list[InputArgs]:
         all_args.append(InputArgs(label, args))
     return all_args
 
+def get_psi_inputs()-> list[InputArgs]:
+    all_args = []
+    for config in [[4, 16], [16, 32]]:#, [16, 64], [16, 128], [16, 256], [16, 512]]:# [8, 64], [4, 256]]:
+        SA = config[0]
+        SB = config[1]
+        args = [
+        "--SA", "{}".format(SA),
+        "--SB", "{}".format(SB),
+        ]
+        A = get_rand_ints(SA)
+        B = get_rand_ints(SB)
+        args.append("--A")
+        args.extend(list(map(str, A)))
+        args.append("--B")
+        args.extend(list(map(str, B)))
+        label = "SA: {}, SB: {}".format(SA, SB)
+        all_args.append(InputArgs(label, args))
+    return all_args
+
+def get_inputs(name: str) -> list[InputArgs]:
+    # if name == "biometric":
+    #     return get_biometric_inputs()
+    if name == "psi":
+        return get_psi_inputs()
+    return []
+
 def print_benchmark_data():
     with open("benchmarks.pickle", "rb") as f:
         all_stats = pickle.load(f)
@@ -121,13 +147,12 @@ def run_paper_benchmarks():
     all_stats = []
     for protocol in compiler.motion_backend.VALID_PROTOCOLS:
             for test_case_dir in os.scandir(test_context.STAGES_DIR):
-                if test_case_dir.name != "biometric":
+                all_args = get_inputs(test_case_dir.name)
+                if len(all_args) == 0:
                     continue;
 
                 bench_stats = StatsForBenchmark("{} {}".format(protocol, test_case_dir.name), [])
                 input_fname = os.path.join(test_case_dir.path, "input.py")
-
-                all_args = get_biometric_inputs()
                 
                 compile = True
                 for args in all_args:
@@ -136,16 +161,14 @@ def run_paper_benchmarks():
                         test_case_dir.path, protocol, args.label));
                 
                     party0, party1 = run_benchmark(
-                        test_case_dir.name, test_case_dir.path, protocol,
-                        False, args.args, compile
+                        test_case_dir.name, test_case_dir.path, protocol, False, None, args.args, compile
                     )
 
                     log.info("output is {}".format(party0.output.strip()))
                     assert party0.output.strip() == party1.output.strip(), (party0.output.strip(), party1.output.strip())
 
                     party0_vectorized, party1_vectorized = run_benchmark(
-                        test_case_dir.name, test_case_dir.path, protocol,
-                        True, args.args, compile
+                        test_case_dir.name, test_case_dir.path, protocol, True, None, args.args, compile
                     )
                     
                     compile = False
