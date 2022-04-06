@@ -158,7 +158,7 @@ def run_paper_benchmarks():
                 compile = True
                 for args in all_args:
                     #log.debug("args: {}".format(args.args))
-                    log.info("Running {} {} {} with input_args: {}\n".format(test_case_dir.name, 
+                    log.info("Running {} {} {} with input_args: {} (Non Vectorized)\n".format(test_case_dir.name, 
                         test_case_dir.path, protocol, args.label));
                 
                     party0, party1 = run_benchmark(
@@ -168,6 +168,8 @@ def run_paper_benchmarks():
                     log.info("output is {}".format(party0.output.strip()))
                     assert party0.output.strip() == party1.output.strip(), (party0.output.strip(), party1.output.strip())
 
+                    log.info("Running {} {} {} with input_args: {} (Vectorized)\n".format(test_case_dir.name, 
+                        test_case_dir.path, protocol, args.label));
                     party0_vectorized, party1_vectorized = run_benchmark(
                         test_case_dir.name, test_case_dir.path, protocol, True, None, args.args, compile
                     )
