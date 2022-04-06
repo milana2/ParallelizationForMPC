@@ -172,7 +172,7 @@ def run_paper_benchmarks(filename):
         compile = True
         i = 0
         for args in all_args:
-            log.info("\narguments: {}".format(test_case_dir.name, args.args));
+            log.info("\n{} - arguments: {}".format(test_case_dir.name, args.args));
 
             if( i < non_vec_up_to):
                 log.info("Running GMW Non Vectorized {} {}".format(test_case_dir.name, args.label));           
