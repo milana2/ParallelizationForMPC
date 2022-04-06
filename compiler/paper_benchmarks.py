@@ -16,6 +16,9 @@ from tests import context as test_context
 from tests.benchmark import run_benchmark
 from tests.benchmark import BenchmarkOutput
 
+GMW_PROTOCOL = "BooleanGmw"
+BMR_PROTOCOL = "Bmr"
+
 logging.basicConfig(
     level=logging.DEBUG,
     format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
@@ -40,16 +43,21 @@ log.addHandler(console);
 @dataclass
 class StatsForInputConfig:
     label: str
-    p0: BenchmarkOutput
-    p1: BenchmarkOutput
-    p0_vectorized: BenchmarkOutput
-    p1_vectorized: BenchmarkOutput
+    gmw_p0: BenchmarkOutput
+    gmw_p1: BenchmarkOutput
+    gmw_vec_p0: BenchmarkOutput
+    gmw_vec_p1: BenchmarkOutput
+    bmr_p0: BenchmarkOutput
+    bmr_p1: BenchmarkOutput
+    bmr_vec_p0: BenchmarkOutput
+    bmr_vec_p1: BenchmarkOutput
 
 
 @dataclass
-class StatsForBenchmark:
+class StatsForTask:
     label: str
-    variations: list[StatsForInputConfig]
+    input_configs: list[StatsForInputConfig]
+
 
 @dataclass
 class InputArgs:
@@ -61,8 +69,9 @@ random.seed(0) # Intentionally seeding with a known value, for reproducibility
 def get_rand_ints(n):
     return [random.randint(1, 100) for i in range(n)]
 
-def get_biometric_inputs()-> list[InputArgs]:
+def get_biometric_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
+    non_vec_up_to = 6 # We don't want to run non-vectorized benchmark after this many input variations
     for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128]]:# [8, 64], [4, 256]]:
         D = config[0]
         N = config[1]
@@ -78,10 +87,11 @@ def get_biometric_inputs()-> list[InputArgs]:
         args.extend(list(map(str, S)))
         label = "D: {}, N: {}".format(D, N)
         all_args.append(InputArgs(label, args))
-    return all_args
+    return (all_args, non_vec_up_to)
 
-def get_psi_inputs()-> list[InputArgs]:
+def get_psi_inputs()-> tuple[list[InputArgs], int]:
     all_args = []
+    non_vec_up_to = 6
     for config in [[4, 16], [16, 32]]:#, [16, 64], [16, 128], [16, 256], [16, 512]]:# [8, 64], [4, 256]]:
         SA = config[0]
         SB = config[1]
@@ -97,95 +107,119 @@ def get_psi_inputs()-> list[InputArgs]:
         args.extend(list(map(str, B)))
         label = "SA: {}, SB: {}".format(SA, SB)
         all_args.append(InputArgs(label, args))
-    return all_args
+    return (all_args, non_vec_up_to)
 
-def get_inputs(name: str) -> list[InputArgs]:
+def get_inputs(name: str) -> tuple[list[InputArgs], int]:
     if name == "biometric":
          return get_biometric_inputs()
     # if name == "psi":
     #     return get_psi_inputs()
-    return []
+    return [[], 0]
+
+
+def print_protocol_stats(ts0, ts0v, cs0, cs0v, ts1, ts1v, cs1, cs1v):
+    log.info("Timing/Communication")
+    for i in [ts0, ts0v, ts1, ts1v]:
+        log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, i.preprocess_total.mean,
+            i.gates_setup.datapoint_name, i.gates_setup.mean,
+            i.gates_online.datapoint_name, i.gates_online.mean))
+        comm = i.communication
+        log.info("Send: {} MiB ({} Msgs) - Recv: {} MiB ({} Msgs)".format(
+            comm.send_size, comm.send_num_msgs, comm.recv_size, comm.recv_num_msgs))
+
+    log.info("Circuit (Non-Vectorized vs Vectorized)")
+    for i in [cs0, cs0v]:#, cs1, cs1v]: # circuit information should be identical for all parties
+        log.info("Num Gates: {} In: {}, Out: {}, SIMD: {}, Non-SIMD: {}, Circ-Gen-Time: {} ms".format(
+            i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, i.circuit_gen_time))
 
 def print_benchmark_data(filename):
     with open(filename, "rb") as f:
         all_stats = pickle.load(f)
 
     log.info("Listing All Benchmark Stats")
-    for bench_stat in all_stats:
+    for task_stats in all_stats:
         log.info("="*80)
-        log.info(bench_stat.label)
+        log.info(task_stats.label)
         log.info("="*80);
-        for v in bench_stat.variations:
-            log.info("-"*80)
-            log.info("{}".format(v.label))
-            log.info("-"*80)
-            ts0  = v.p0.timing_stats
-            ts0v = v.p0_vectorized.timing_stats
-            cs0  = v.p0.circuit_stats
-            cs0v = v.p0_vectorized.circuit_stats
-            ts1  = v.p1.timing_stats
-            ts1v = v.p1_vectorized.timing_stats
-            cs1  = v.p1.circuit_stats
-            cs1v = v.p1_vectorized.circuit_stats
+        for v in task_stats.input_configs:
+            log.info("-"*40)
+            log.info("{} - GMW".format(v.label))
+            log.info("-"*40)
+            print_protocol_stats(v.gmw_p0.timing_stats, v.gmw_vec_p0.timing_stats, v.gmw_p0.circuit_stats,
+                v.gmw_vec_p0.circuit_stats, v.gmw_p1.timing_stats, v.gmw_vec_p1.timing_stats, 
+                v.gmw_p1.circuit_stats, v.gmw_vec_p1.circuit_stats)
 
-            log.info("Timing/Communication")
-            for i in [ts0, ts0v, ts1, ts1v]:
-                log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, i.preprocess_total.mean,
-                    i.gates_setup.datapoint_name, i.gates_setup.mean,
-                    i.gates_online.datapoint_name, i.gates_online.mean))
-                comm = i.communication
-                log.info("Send: {} MiB ({} Msgs) - Recv: {} MiB ({} Msgs)".format(
-                    comm.send_size, comm.send_num_msgs, comm.recv_size, comm.recv_num_msgs))
-
-
-            log.info("Circuit (Non-Vectorized vs Vectorized)")
-            for i in [cs0, cs0v]:#, cs1, cs1v]: # circuit information should be identical for all parties
-                log.info("Num Gates: {} In: {}, Out: {}, SIMD: {}, Non-SIMD: {}, Circ-Gen-Time: {} ms".format(
-                    i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, i.circuit_gen_time))
+            log.info("-"*40)
+            log.info("{} - BMR".format(v.label))
+            log.info("-"*40)
+            print_protocol_stats(v.gmw_p0.timing_stats, v.gmw_vec_p0.timing_stats, v.gmw_p0.circuit_stats,
+                v.gmw_vec_p0.circuit_stats, v.gmw_p1.timing_stats, v.gmw_vec_p1.timing_stats, 
+                v.gmw_p1.circuit_stats, v.gmw_vec_p1.circuit_stats)
 
 
 def run_paper_benchmarks(filename):
     all_stats = []
-    for protocol in compiler.motion_backend.VALID_PROTOCOLS:
-            for test_case_dir in os.scandir(test_context.STAGES_DIR):
-                all_args = get_inputs(test_case_dir.name)
-                if len(all_args) == 0:
-                    continue;
+    for test_case_dir in os.scandir(test_context.STAGES_DIR):
+        all_args, non_vec_up_to = get_inputs(test_case_dir.name)
+        if len(all_args) == 0:
+            continue;
 
-                bench_stats = StatsForBenchmark("{} {}".format(protocol, test_case_dir.name), [])
-                input_fname = os.path.join(test_case_dir.path, "input.py")
-                
-                compile = True
-                for args in all_args:
-                    #log.debug("args: {}".format(args.args))
-                    log.info("Running {}-{} with label {}. (Non-Vectorized first, Vectorized second)".format(test_case_dir.name, 
-                        protocol, args.label));
-                    log.info("Arguments are: {}".format(args.args));
-                
-                    party0, party1 = run_benchmark(
-                        test_case_dir.name, test_case_dir.path, protocol, False, None, args.args, compile
-                    )
+        task_stats = StatsForTask(test_case_dir.name, [])
+        input_fname = os.path.join(test_case_dir.path, "input.py")
 
-                    log.info("Non Vectorized output is {}".format(party0.output.strip()))
-                    assert party0.output.strip() == party1.output.strip(), (party0.output.strip(), party1.output.strip())
-                    party0_vectorized, party1_vectorized = run_benchmark(
-                        test_case_dir.name, test_case_dir.path, protocol, True, None, args.args, compile
-                    )
-                    
-                    compile = False
+        compile = True
+        i = 0
+        for args in all_args:
+            log.info("\narguments: {}".format(test_case_dir.name, args.args));
 
-                    log.info("Vectorized output is {}".format(party0_vectorized.output.strip()))
-                    assert party0_vectorized.output.strip() == party1_vectorized.output.strip(), \
-                        (party0_vectorized.output.strip(), party1_vectorized.output.strip())
-                    input_stats = StatsForInputConfig(args.label, party0, party1, party0_vectorized, party1_vectorized)
+            if( i < non_vec_up_to):
+                log.info("Running GMW Non Vectorized {} {}".format(test_case_dir.name, args.label));           
+                gmw_p0, gmw_p1 = run_benchmark(
+                    test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, False, None, args.args, compile
+                )
+                log.info("GMW Non Vectorized output is {}".format(gmw_p0.output.strip()))
+                assert gmw_p0.output.strip() == gmw_p1.output.strip(), \
+                    (gmw_p0.output.strip(), gmw_p1.output.strip())
+            
+            log.info("Running GMW Vectorized {} {}".format(test_case_dir.name, args.label));
+            gmw_vec_p0, gmw_vec_p1 = run_benchmark(
+                test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True, None, args.args, compile
+            )
+            log.info("GMW Vectorized output is {}".format(party0_vectorized.output.strip()))
+            assert gmw_vec_p0.output.strip() == gmw_vec_p1.output.strip(), \
+                (gmw_vec_p0.output.strip(), gmw_vec_p1.output.strip())
 
-                    bench_stats.variations.append(input_stats)
+            if( i < non_vec_up_to):
+                log.info("Running BMR Non Vectorized {} {}".format(test_case_dir.name, args.label));
+                bmr_p0, bmr_p1 = run_benchmark(
+                    test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, False, None, args.args, compile
+                )
+                log.info("BMR Non Vectorized output is {}".format(bmr_p0.output.strip()))
+                assert bmr_p0.output.strip() == bmr_p1.output.strip(), \
+                    (bmr_p0.output.strip(), bmr_p1.output.strip())
+            
+            log.info("Running BMR Vectorized {} {}".format(test_case_dir.name, args.label));
+            bmr_vec_p0, bmr_vec_p1 = run_benchmark(
+                test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, True, None, args.args, compile
+            )
+            log.info("BMR Vectorized output is {}".format(bmr_vec_p0.output.strip()))
+            assert bmr_vec_p0.output.strip() == bmr_vec_p1.output.strip(), \
+                (bmr_vec_p0.output.strip(), bmr_vec_p1.output.strip())
+            
+            compile = False
 
-                all_stats.append(bench_stats)
+            
+            input_stats = StatsForInputConfig(args.label, gmw_p0, gmw_p1, gmw_vec_p0, gmw_vec_p1,
+                bmr_p0, bmr_p1, bmr_vec_p0, bmr_vec_p1)
+            task_stats.input_configs.append(input_stats)
+            i += 1
+
+        all_stats.append(bench_stats)
     with open(filename, "wb") as f:
         pickle.dump(all_stats, f)
 
     print_benchmark_data(filename)
+    generate_graphs(filename)
 
 def generate_graphs(source_data_file):
     with open(source_data_file, "rb") as f:
@@ -194,45 +228,54 @@ def generate_graphs(source_data_file):
     FILE_DIR = os.path.dirname(__file__)
     GRAPHS_DIR = os.path.join(FILE_DIR, "graphs")
     os.makedirs(GRAPHS_DIR, exist_ok=True)
-    fname = 'g1.txt'
-    file_path = os.path.join(GRAPHS_DIR, fname)
-    with open(file_path, mode='w', encoding='utf-8') as f:
-        log.info("Listing All Benchmark Stats")
-        x = 1
-        for bench_stat in all_stats:
-            log.info("="*80)
-            log.info(bench_stat.label)
-            log.info("="*80);
-            for v in bench_stat.variations:
-                log.info("-"*80)
-                log.info("{}".format(v.label))
-                log.info("-"*80)
-                ts0  = v.p0.timing_stats
-                ts0v = v.p0_vectorized.timing_stats
-                cs0  = v.p0.circuit_stats
-                cs0v = v.p0_vectorized.circuit_stats
-                ts1  = v.p1.timing_stats
-                ts1v = v.p1_vectorized.timing_stats
-                cs1  = v.p1.circuit_stats
-                cs1v = v.p1_vectorized.circuit_stats
 
-                log.info("Timing/Communication")
-                for i in [ts0, ts0v, ts1, ts1v]:
-                    log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, i.preprocess_total.mean,
-                        i.gates_setup.datapoint_name, i.gates_setup.mean,
-                        i.gates_online.datapoint_name, i.gates_online.mean))
-                    comm = i.communication
-                    log.info("Send: {} MiB ({} Msgs) - Recv: {} MiB ({} Msgs)".format(
-                        comm.send_size, comm.send_num_msgs, comm.recv_size, comm.recv_num_msgs))
+    # Total Gates
+    for task_stat in all_stats:
+        fname = "{}-total-gates.txt".format(task_stat.label)
+        file_path = os.path.join(GRAPHS_DIR, fname)
+        with open(file_path, mode='w', encoding='utf-8') as f:
+            f.write("x\tInput\tNonVec(GMW)\tVec(GMW)\tNonVec(BMR)\tVec(BMR)\tRatio(GMW)\tRatio(BMR)\n")
+            log.info("Listing All Benchmark Stats")
+            x = 1
+            for i in task_stat.input_configs:
+                label = i.label
 
+                nv_gmw = i.gmw_p0.circuit_stats.num_gates
+                v_gmw  = i.gmw_vec_p0.circuit_stats.num_gates
+                r_gmw  = nv_gmw/v_gmw
 
-                log.info("Circuit (Non-Vectorized vs Vectorized)")
-                for i in [cs0, cs0v]:#, cs1, cs1v]: # circuit information should be identical for all parties
-                    log.info("Num Gates: {} In: {}, Out: {}, SIMD: {}, Non-SIMD: {}, Circ-Gen-Time: {} ms".format(
-                        i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, i.circuit_gen_time))
+                nv_bmr = i.bmr_p0.circuit_stats.num_gates
+                v_bmr  = i.bmr_vec_p0.circuit_stats.num_gates
+                r_bmr  = nv_bmr/v_bmr
+
+                f.write("{x}\t\"{label}\"\t{nv_gmw}\t{v_gmw}\t{nv_bmr}\t{v_bmr}\t{r_gmw}\t{r_bmr}\n".format(
+                    x=x, label=label, nv_gmw=nv_gmw, v_gmw=v_gmw, r_gmw=r_gmw, nv_bmr=nv_bmr, v_bmr=v_bmr, 
+                    r_bmr=r_bmr))
                 x += 1
 
-    
+    # Circ Gen Time
+    for task_stat in all_stats:
+        fname = "{}-circ-gen.txt".format(task_stat.label)
+        file_path = os.path.join(GRAPHS_DIR, fname)
+        with open(file_path, mode='w', encoding='utf-8') as f:
+            f.write("x\tInput\tNonVec(GMW)\tVec(GMW)\tNonVec(BMR)\tVec(BMR)\tRatio(GMW)\tRatio(BMR)\n")
+            log.info("Listing All Benchmark Stats")
+            x = 1
+            for i in task_stat.input_configs:
+                label = i.label
+
+                nv_gmw = i.gmw_p0.circuit_stats.circuit_gen_time
+                v_gmw  = i.gmw_vec_p0.circuit_stats.circuit_gen_time
+                r_gmw  = nv_gmw/v_gmw
+
+                nv_bmr = i.bmr_p0.circuit_stats.circuit_gen_time
+                v_bmr  = i.bmr_vec_p0.circuit_stats.circuit_gen_time
+                r_bmr  = nv_bmr/v_bmr
+
+                f.write("{x}\t\"{label}\"\t{nv_gmw}\t{v_gmw}\t{nv_bmr}\t{v_bmr}\t{r_gmw}\t{r_bmr}\n".format(
+                    x=x, label=label, nv_gmw=nv_gmw, v_gmw=v_gmw, r_gmw=r_gmw, nv_bmr=nv_bmr, v_bmr=v_bmr, 
+                    r_bmr=r_bmr))
+                x += 1
     
     # with subprocess.Popen(
     #     [
