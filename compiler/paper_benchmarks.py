@@ -119,20 +119,22 @@ def get_inputs(name: str) -> tuple[list[InputArgs], int]:
 
 def print_protocol_stats(ts0, ts0v, cs0, cs0v, ts1, ts1v, cs1, cs1v):
     log.info("Timing/Communication")
-    tags = ["Party 0 NonVec", "Party 0 Vectorized", "Party 1 NonVec", "Party 1 Vectorized"]
+    labels = ["Party 0 NonVec", "Party 0 Vectorized", "Party 1 NonVec", "Party 1 Vectorized"]
+    j = 0
     for i in [ts0, ts0v, ts1, ts1v]:
-        log.info(tags[i])
-        log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, i.preprocess_total.mean,
-            i.gates_setup.datapoint_name, i.gates_setup.mean,
+        log.info(labels[j])
+        log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, 
+            i.preprocess_total.mean, i.gates_setup.datapoint_name, i.gates_setup.mean,
             i.gates_online.datapoint_name, i.gates_online.mean))
         comm = i.communication
         log.info("Send: {} MiB ({} Msgs) - Recv: {} MiB ({} Msgs)".format(
             comm.send_size, comm.send_num_msgs, comm.recv_size, comm.recv_num_msgs))
-
+        j += 1
     log.info("Circuit (Non-Vectorized vs Vectorized)")
     for i in [cs0, cs0v]:#, cs1, cs1v]: # circuit information should be identical for all parties
         log.info("Num Gates: {} In: {}, Out: {}, SIMD: {}, Non-SIMD: {}, Circ-Gen-Time: {} ms".format(
-            i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, i.circuit_gen_time))
+            i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, 
+            i.circuit_gen_time))
 
 def print_benchmark_data(filename):
     with open(filename, "rb") as f:
@@ -154,9 +156,9 @@ def print_benchmark_data(filename):
             log.info("-"*40)
             log.info("{} - BMR".format(v.label))
             log.info("-"*40)
-            print_protocol_stats(v.gmw_p0.timing_stats, v.gmw_vec_p0.timing_stats, v.gmw_p0.circuit_stats,
-                v.gmw_vec_p0.circuit_stats, v.gmw_p1.timing_stats, v.gmw_vec_p1.timing_stats, 
-                v.gmw_p1.circuit_stats, v.gmw_vec_p1.circuit_stats)
+            print_protocol_stats(v.bmr_p0.timing_stats, v.bmr_vec_p0.timing_stats, v.bmr_p0.circuit_stats,
+                v.bmr_vec_p0.circuit_stats, v.bmr_p1.timing_stats, v.bmr_vec_p1.timing_stats, 
+                v.bmr_p1.circuit_stats, v.bmr_vec_p1.circuit_stats)
 
 
 def run_paper_benchmarks(filename):
@@ -214,11 +216,17 @@ def run_paper_benchmarks(filename):
             input_stats = StatsForInputConfig(args.label, gmw_p0, gmw_p1, gmw_vec_p0, gmw_vec_p1,
                 bmr_p0, bmr_p1, bmr_vec_p0, bmr_vec_p1)
             task_stats.input_configs.append(input_stats)
+            log.info("task {} input config {} DONE".format(task_stats.label, input_stats.label))
+
+            with open("{}.pickle".format(task_stats.label), "wb") as f:
+                pickle.dump(all_stats, f)
+            
             i += 1
 
         all_stats.append(task_stats)
-    with open(filename, "wb") as f:
-        pickle.dump(all_stats, f)
+        log.info("task {} DONE".format(task_stats.label))
+        with open(filename, "wb") as f:
+            pickle.dump(all_stats, f)
 
     print_benchmark_data(filename)
     generate_graphs(filename)
