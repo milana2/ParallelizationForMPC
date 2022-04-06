@@ -72,7 +72,7 @@ def get_rand_ints(n):
 def get_biometric_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
     non_vec_up_to = 6 # We don't want to run non-vectorized benchmark after this many input variations
-    for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128]]:# [8, 64], [4, 256]]:
+    for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024]]:
         D = config[0]
         N = config[1]
         args = [
@@ -214,7 +214,7 @@ def run_paper_benchmarks(filename):
             task_stats.input_configs.append(input_stats)
             i += 1
 
-        all_stats.append(bench_stats)
+        all_stats.append(task_stats)
     with open(filename, "wb") as f:
         pickle.dump(all_stats, f)
 
@@ -235,7 +235,6 @@ def generate_graphs(source_data_file):
         file_path = os.path.join(GRAPHS_DIR, fname)
         with open(file_path, mode='w', encoding='utf-8') as f:
             f.write("x\tInput\tNonVec(GMW)\tVec(GMW)\tNonVec(BMR)\tVec(BMR)\tRatio(GMW)\tRatio(BMR)\n")
-            log.info("Listing All Benchmark Stats")
             x = 1
             for i in task_stat.input_configs:
                 label = i.label
@@ -259,7 +258,6 @@ def generate_graphs(source_data_file):
         file_path = os.path.join(GRAPHS_DIR, fname)
         with open(file_path, mode='w', encoding='utf-8') as f:
             f.write("x\tInput\tNonVec(GMW)\tVec(GMW)\tNonVec(BMR)\tVec(BMR)\tRatio(GMW)\tRatio(BMR)\n")
-            log.info("Listing All Benchmark Stats")
             x = 1
             for i in task_stat.input_configs:
                 label = i.label
