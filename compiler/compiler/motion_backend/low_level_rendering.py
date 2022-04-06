@@ -101,7 +101,7 @@ def render_param(param: Parameter, type_env: TypeEnv) -> str:
     )
 
 
-def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
+def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv, ran_vectorization: bool) -> str:
     if isinstance(stmt, Assign):
         # If we're assigning to a vectorized value, use a specialized function for this.
         if isinstance(stmt.lhs, VectorizedAccess):
@@ -193,7 +193,7 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
         )
 
         phi_initializations = "// Initialize phi values\n" + "\n".join(
-            render_stmt(Assign(phi.lhs, phi.rhs_false), type_env)
+            render_stmt(Assign(phi.lhs, phi.rhs_false), type_env, ran_vectorization)
             for phi in stmt.body
             if isinstance(phi, Phi)
         )
@@ -209,7 +209,7 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
         )
 
         phi_assignments = "\n".join(
-            render_stmt(Assign(phi.lhs, phi.rhs_true), type_env)
+            render_stmt(Assign(phi.lhs, phi.rhs_true), type_env, ran_vectorization)
             for phi in stmt.body
             if isinstance(phi, Phi)
         )
@@ -230,12 +230,17 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
 
         body = (
             "\n".join(
-                render_stmt(stmt, type_env)
+                render_stmt(stmt, type_env, ran_vectorization)
                 for stmt in stmt.body
                 if not isinstance(stmt, Phi)
             )
             + "\n"
         )
+
+        if not ran_vectorization:
+            phi_finalizations = "// Assign final phi values\n" + phi_assignments + "\n"
+        else:
+            phi_finalizations = ""
 
         return (
             "\n"
@@ -252,6 +257,7 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
             + "\n"
             + indent(body, "    ")
             + "\n}\n"
+            + phi_finalizations
         )
 
     elif isinstance(stmt, Return):

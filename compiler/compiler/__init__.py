@@ -104,7 +104,7 @@ def compile(
             print(type_env)
             print()
 
-    motion_code = motion_backend.render_function(linear, type_env)
+    motion_code = motion_backend.render_function(linear, type_env, run_vectorization)
     if not quiet:
         print("Motion code:")
         print(motion_code)
@@ -120,4 +120,5 @@ def compile(
             linear,
             type_env,
             {"out_dir": out_dir, "overwrite": overwrite_out_dir, "protocol": protocol},
+            run_vectorization,
         )
