@@ -106,8 +106,8 @@ def get_inputs(name: str) -> list[InputArgs]:
     #     return get_psi_inputs()
     return []
 
-def print_benchmark_data():
-    with open("benchmarks.pickle", "rb") as f:
+def print_benchmark_data(filename):
+    with open(filename, "rb") as f:
         all_stats = pickle.load(f)
 
     log.info("Listing All Benchmark Stats")
@@ -144,7 +144,7 @@ def print_benchmark_data():
                     i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, i.circuit_gen_time))
 
 
-def run_paper_benchmarks():
+def run_paper_benchmarks(filename):
     all_stats = []
     for protocol in compiler.motion_backend.VALID_PROTOCOLS:
             for test_case_dir in os.scandir(test_context.STAGES_DIR):
@@ -182,61 +182,85 @@ def run_paper_benchmarks():
                     bench_stats.variations.append(input_stats)
 
                 all_stats.append(bench_stats)
-    with open("benchmarks.pickle", "wb") as f:
+    with open(filename, "wb") as f:
         pickle.dump(all_stats, f)
 
-    print_benchmark_data()
+    print_benchmark_data(filename)
 
-def generate_graphs():
-    with open("benchmarks.pickle", "rb") as f:
+def generate_graphs(source_data_file):
+    with open(source_data_file, "rb") as f:
         all_stats = pickle.load(f)
 
-    log.info("Listing All Benchmark Stats")
-    for bench_stat in all_stats:
-        log.info("="*80)
-        log.info(bench_stat.label)
-        log.info("="*80);
-        for v in bench_stat.variations:
-            log.info("-"*80)
-            log.info("{}".format(v.label))
-            log.info("-"*80)
-            ts0  = v.p0.timing_stats
-            ts0v = v.p0_vectorized.timing_stats
-            cs0  = v.p0.circuit_stats
-            cs0v = v.p0_vectorized.circuit_stats
-            ts1  = v.p1.timing_stats
-            ts1v = v.p1_vectorized.timing_stats
-            cs1  = v.p1.circuit_stats
-            cs1v = v.p1_vectorized.circuit_stats
+    FILE_DIR = os.path.dirname(__file__)
+    GRAPHS_DIR = os.path.join(FILE_DIR, "graphs")
+    os.makedirs(GRAPHS_DIR, exist_ok=True)
+    fname = 'g1.txt'
+    file_path = os.path.join(GRAPHS_DIR, fname)
+    with open(file_path, mode='w', encoding='utf-8') as f:
+        log.info("Listing All Benchmark Stats")
+        x = 1
+        for bench_stat in all_stats:
+            log.info("="*80)
+            log.info(bench_stat.label)
+            log.info("="*80);
+            for v in bench_stat.variations:
+                log.info("-"*80)
+                log.info("{}".format(v.label))
+                log.info("-"*80)
+                ts0  = v.p0.timing_stats
+                ts0v = v.p0_vectorized.timing_stats
+                cs0  = v.p0.circuit_stats
+                cs0v = v.p0_vectorized.circuit_stats
+                ts1  = v.p1.timing_stats
+                ts1v = v.p1_vectorized.timing_stats
+                cs1  = v.p1.circuit_stats
+                cs1v = v.p1_vectorized.circuit_stats
 
-            log.info("Timing/Communication")
-            for i in [ts0, ts0v, ts1, ts1v]:
-                log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, i.preprocess_total.mean,
-                    i.gates_setup.datapoint_name, i.gates_setup.mean,
-                    i.gates_online.datapoint_name, i.gates_online.mean))
-                comm = i.communication
-                log.info("Send: {} MiB ({} Msgs) - Recv: {} MiB ({} Msgs)".format(
-                    comm.send_size, comm.send_num_msgs, comm.recv_size, comm.recv_num_msgs))
+                log.info("Timing/Communication")
+                for i in [ts0, ts0v, ts1, ts1v]:
+                    log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, i.preprocess_total.mean,
+                        i.gates_setup.datapoint_name, i.gates_setup.mean,
+                        i.gates_online.datapoint_name, i.gates_online.mean))
+                    comm = i.communication
+                    log.info("Send: {} MiB ({} Msgs) - Recv: {} MiB ({} Msgs)".format(
+                        comm.send_size, comm.send_num_msgs, comm.recv_size, comm.recv_num_msgs))
 
 
-            log.info("Circuit (Non-Vectorized vs Vectorized)")
-            for i in [cs0, cs0v]:#, cs1, cs1v]: # circuit information should be identical for all parties
-                log.info("Num Gates: {} In: {}, Out: {}, SIMD: {}, Non-SIMD: {}, Circ-Gen-Time: {} ms".format(
-                    i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, i.circuit_gen_time))
+                log.info("Circuit (Non-Vectorized vs Vectorized)")
+                for i in [cs0, cs0v]:#, cs1, cs1v]: # circuit information should be identical for all parties
+                    log.info("Num Gates: {} In: {}, Out: {}, SIMD: {}, Non-SIMD: {}, Circ-Gen-Time: {} ms".format(
+                        i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, i.circuit_gen_time))
+                x += 1
 
+    
+    
+    # with subprocess.Popen(
+    #     [
+    #         "gnuplot",
+    #         "g1.gnu",
+    #     ],
+    #     stdout=subprocess.PIPE,
+    #     stderr=subprocess.PIPE,
+    #     text=True,
+    #     cwd=GRAPHS_DIR
+    # ) as gnuplot:
+    #     gnuplot.wait()
 
 if __name__ == "__main__":
     parser = ArgumentParser(
         description="runs and collects benchmarks statistics for the paper. (assumes correct network config)")
-    parser.add_argument(
-        "--graphs",
+    parser.add_argument('-g', "--graphs",
         action="store_true",
         help="generates graphs from benchmarks",
+    )
+    parser.add_argument('-f', '--file', nargs='?', 
+    help="file containing benchmark data", 
+    default="benchmarks.pickle",
     )
     args = parser.parse_args()
 
     if args.graphs:
-        generate_graphs()
+        generate_graphs(args.file)
     else:
-        run_paper_benchmarks()
+        run_paper_benchmarks(args.file)
 
