@@ -121,7 +121,7 @@ def _collect_constants(stmts: list[Statement]) -> list[Constant]:
     return [const for stmt in stmts for const in stmt_constants(stmt)]
 
 
-def render_function(func: Function, type_env: TypeEnv) -> str:
+def render_function(func: Function, type_env: TypeEnv, ran_vectorization: bool) -> str:
     render_ctx = RenderContext(type_env)
 
     func_header = f"{_render_prototype(func, type_env)} {{"
@@ -226,7 +226,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     func_body = (
         "// Function body\n"
         + "\n".join(
-            render_stmt(stmt, type_env)
+            render_stmt(stmt, type_env, ran_vectorization)
             for stmt in func.body
             if not isinstance(stmt, Phi)
         )
@@ -249,7 +249,7 @@ def render_function(func: Function, type_env: TypeEnv) -> str:
     )
 
 
-def render_application(func: Function, type_env: TypeEnv, params: OutputParams) -> None:
+def render_application(func: Function, type_env: TypeEnv, params: OutputParams, ran_vectorization: bool) -> None:
     template_dir = os.path.abspath(os.path.dirname(__file__))
     project_root = os.path.abspath(os.path.join(template_dir, "..", "..", ".."))
 
@@ -291,7 +291,7 @@ def render_application(func: Function, type_env: TypeEnv, params: OutputParams) 
     )
 
     rendered_header = header_template.render(
-        circuit_generator=render_function(func, type_env)
+        circuit_generator=render_function(func, type_env, ran_vectorization)
     )
 
     rendered_cmakelists = cmakelists_template.render(
