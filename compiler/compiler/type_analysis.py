@@ -11,9 +11,12 @@ from .ast_shared import (
     Constant,
     Subscript,
     BinOp,
+    BinOpKind,
     UnaryOp,
     VarType,
     SubscriptIndex,
+    SubscriptIndexBinOp,
+    SubscriptIndexUnaryOp,
     VarVisibility,
     PLAINTEXT_INT,
     DataType,
@@ -32,8 +35,26 @@ from .tac_cfg import (
 )
 
 
+def collect_idx_vars(idx: SubscriptIndex) -> list[Union[Var, Constant]]:
+    if isinstance(idx, (Var, Constant)):
+        return [idx]
+    elif isinstance(idx, SubscriptIndexBinOp):
+        if idx.operator == BinOpKind.ADD:
+            return collect_idx_vars(idx.left) + collect_idx_vars(idx.right)
+        elif idx.operator == BinOpKind.MUL:
+            return collect_idx_vars(idx.left)
+        else:
+            raise SyntaxError(
+                f"Unsupported binary operator '{idx.operator}' in subscript index.  Allowed operators are '+' and '*'"
+            )
+    elif isinstance(idx, SubscriptIndexUnaryOp):
+        return collect_idx_vars(idx.operand)
+    else:
+        assert_never(idx)
+
+
 def type_assign_expr(
-    expr: Union[AssignRHS, SubscriptIndex, VectorizedAccess], type_env: TypeEnv
+    expr: Union[AssignRHS, SubscriptIndex, VectorizedAccess], type_env: TypeEnv, source_stmt: loop_linear_code.Statement, dep_graph: DepGraph
 ) -> VarType:
     """
     Determines the type of an expression in a given type environment.  If an expression
@@ -50,7 +71,7 @@ def type_assign_expr(
         return VarType(VarVisibility.PLAINTEXT, 0, expr.datatype)
 
     elif isinstance(expr, Subscript):
-        index_type = type_assign_expr(expr.index, type_env)
+        index_type = type_assign_expr(expr.index, type_env, source_stmt, dep_graph)
         if not index_type.could_become(PLAINTEXT_INT):
             raise TypeError(
                 f"Array subscript index {expr.index} is not a plaintext int"
@@ -58,7 +79,7 @@ def type_assign_expr(
 
         arr_type = type_env.get(expr.array, VarType())
         if arr_type is None:
-            return None
+            return VarType()
 
         if arr_type.datatype == DataType.TUPLE:
             raise TypeError(f"Tuples cannot be indexed into")
@@ -66,8 +87,8 @@ def type_assign_expr(
         return type_env[expr.array].drop_dim()
 
     elif isinstance(expr, BinOp):
-        lhs_type = type_assign_expr(expr.left, type_env)
-        rhs_type = type_assign_expr(expr.right, type_env)
+        lhs_type = type_assign_expr(expr.left, type_env, source_stmt, dep_graph)
+        rhs_type = type_assign_expr(expr.right, type_env, source_stmt, dep_graph)
 
         expr_type = VarType.merge(lhs_type, rhs_type)
 
@@ -88,7 +109,7 @@ def type_assign_expr(
 
     elif isinstance(expr, UnaryOp):
         op_datatype = expr.operator.get_ret_datatype()
-        expr_type = type_assign_expr(expr.operand, type_env)
+        expr_type = type_assign_expr(expr.operand, type_env, source_stmt, dep_graph)
 
         if expr_type.datatype not in [*expr.operator.get_operand_datatypes(), None]:
             raise TypeError(
@@ -108,14 +129,14 @@ def type_assign_expr(
             return VarType(VarVisibility.PLAINTEXT, 1, DataType.INT)
 
         elem_type = VarType.merge(
-            *[type_assign_expr(item, type_env) for item in expr.items],
+            *[type_assign_expr(item, type_env, source_stmt, dep_graph) for item in expr.items],
             mixed_shared_plaintext_allowed=True,
         )
 
         return elem_type.add_dim()
 
     elif isinstance(expr, Tuple):
-        elem_types = [type_assign_expr(item, type_env) for item in expr.items]
+        elem_types = [type_assign_expr(item, type_env, source_stmt, dep_graph) for item in expr.items]
         return VarType(
             VarVisibility.PLAINTEXT,  # Tuples are always plaintext
             1,  # tuples are always 1-dimensional
@@ -124,14 +145,14 @@ def type_assign_expr(
         )
 
     elif isinstance(expr, Mux):
-        cond_type = type_assign_expr(expr.condition, type_env)
-        if cond_type.is_plaintext():
+        cond_type = type_assign_expr(expr.condition, type_env, source_stmt, dep_graph)
+        if cond_type.datatype not in (None, DataType.BOOL):
             raise AssertionError(
-                f"Condition {expr.condition} of Mux expression {expr} is not a shared variable."
+                f"Condition {expr.condition} of Mux expression {expr} is not a boolean value."
             )
 
-        true_type = type_assign_expr(expr.true_value, type_env)
-        false_type = type_assign_expr(expr.false_value, type_env)
+        true_type = type_assign_expr(expr.true_value, type_env, source_stmt, dep_graph)
+        false_type = type_assign_expr(expr.false_value, type_env, source_stmt, dep_graph)
 
         expr_type = VarType.merge(
             true_type,
@@ -143,9 +164,9 @@ def type_assign_expr(
         return expr_type
 
     elif isinstance(expr, Update):
-        val_type = type_assign_expr(expr.value, type_env)
+        val_type = type_assign_expr(expr.value, type_env, source_stmt, dep_graph)
         arr_type = type_env.get(expr.array, VarType())
-        index_type = type_assign_expr(expr.index, type_env)
+        index_type = type_assign_expr(expr.index, type_env, source_stmt, dep_graph)
 
         if arr_type.datatype == DataType.TUPLE:
             raise TypeError("Tuples cannot be updated")
@@ -155,13 +176,23 @@ def type_assign_expr(
                 f"Array subscript index {expr.index} is not a plaintext int"
             )
 
-        val_arr_type = val_type.add_dim()
-        return VarType.merge(val_arr_type, arr_type)
+        # Erase the _dims value from the val_type to prevent conflict (_dims is manually overridden later)
+        val_type_no_dims = dc.replace(val_type, _dims=None)
+        merged_type = VarType.merge(arr_type, val_type_no_dims)
+
+        idx_vars = collect_idx_vars(expr.index)
+        idx_var_to_dim_size = {}
+        for loop in dep_graph.enclosing_loops[source_stmt]:
+            idx_var_to_dim_size[loop.counter] = loop.bound_high
+        
+        dim_sizes = [idx_var_to_dim_size[idx_var] for idx_var in idx_vars]
+
+        return dc.replace(merged_type, _dims=len(idx_vars), dim_sizes = dim_sizes)
 
     elif isinstance(expr, VectorizedUpdate):
-        val_type = type_assign_expr(expr.value, type_env)
+        val_type = type_assign_expr(expr.value, type_env, source_stmt, dep_graph)
         arr_type = type_env.get(expr.array, VarType())
-        index_types = [type_assign_expr(idx_var, type_env) for idx_var in expr.idx_vars]
+        index_types = [type_assign_expr(idx_var, type_env, source_stmt, dep_graph) for idx_var in expr.idx_vars]
 
         if arr_type.datatype == DataType.TUPLE:
             raise TypeError("Tuples cannot be updated")
@@ -180,7 +211,7 @@ def type_assign_expr(
         for var, _bound in expr.dims:
             augmented_env[var] = PLAINTEXT_INT
 
-        expr_type = type_assign_expr(expr.expr, augmented_env)
+        expr_type = type_assign_expr(expr.expr, augmented_env, source_stmt, dep_graph)
 
         return dc.replace(
             expr_type,
@@ -189,7 +220,7 @@ def type_assign_expr(
         )
 
     elif isinstance(expr, DropDim):
-        expr_type = type_assign_expr(expr.array, type_env)
+        expr_type = type_assign_expr(expr.array, type_env, source_stmt, dep_graph)
         return expr_type.drop_dim()
 
     elif isinstance(expr, VectorizedAccess):
@@ -224,6 +255,7 @@ def _add_loop_counter_types(
 def validate_type_requirements(
     stmts: list[loop_linear_code.Statement],
     type_env: TypeEnv,
+    dep_graph: DepGraph,
     return_stmt: loop_linear_code.Statement,
     return_type: Optional[VarType],
 ) -> None:
@@ -252,10 +284,10 @@ def validate_type_requirements(
                 raise TypeError(
                     f"Loop counter {stmt.counter.name} is not a plaintext integer"
                 )
-            validate_type_requirements(stmt.body, type_env, return_stmt, None)
+            validate_type_requirements(stmt.body, type_env, dep_graph, return_stmt, None)
         elif isinstance(stmt, loop_linear_code.Assign):
             # The type assignment function checks for type errors internally
-            expr_type = type_assign_expr(stmt.rhs, type_env)
+            expr_type = type_assign_expr(stmt.rhs, type_env, stmt, dep_graph)
             if not expr_type.is_complete():
                 raise TypeError(f"Unable to type expression {stmt.rhs}")
 
@@ -268,8 +300,10 @@ def validate_type_requirements(
             if lhs_type != expr_type:
                 raise TypeError(f"Type mismatch in assignment {stmt.lhs} = {stmt.rhs}")
         elif isinstance(stmt, loop_linear_code.Phi):
-            elem_types = [type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
-            phi_type = VarType.merge(*elem_types, mixed_shared_plaintext_allowed=True)
+            elem_types = [type_assign_expr(elem, type_env, stmt, dep_graph) for elem in stmt.rhs_vars()]
+            phi_type = VarType.merge(
+                *elem_types, mixed_shared_plaintext_allowed=True, use_max_dim_size=True
+            )
             if not phi_type.is_complete():
                 raise TypeError(f"Unable to type phi expression {stmt}")
 
@@ -312,9 +346,11 @@ def type_check(
 
     while len(worklist) > 0:
         stmt = worklist.pop()
+        updated_lhs = False
+
         if isinstance(stmt, loop_linear_code.Assign):
             try:
-                expr_type = type_assign_expr(stmt.rhs, type_env)
+                expr_type = type_assign_expr(stmt.rhs, type_env, stmt, dep_graph)
             except (TypeError, AssertionError) as e:
                 raise TypeError(
                     f"Unable to type statement {stmt}\nType environment is:\n{type_env}"
@@ -329,17 +365,17 @@ def type_check(
             else:
                 assert_never(stmt.lhs)
 
-            if new_var_type == type_env.get(orig_var):
-                # No changes to this variable's type, don't extend the worklist
-                continue
-            type_env[orig_var] = new_var_type
+            if new_var_type != type_env.get(orig_var):
+                type_env[orig_var] = new_var_type
+                updated_lhs = True
 
         elif isinstance(stmt, loop_linear_code.Phi):
-            elem_types = [type_assign_expr(elem, type_env) for elem in stmt.rhs_vars()]
+            elem_types = [type_assign_expr(elem, type_env, stmt, dep_graph) for elem in stmt.rhs_vars()]
             try:
                 phi_type = VarType.merge(
                     *elem_types,
                     mixed_shared_plaintext_allowed=True,
+                    use_max_dim_size=True,
                 )
             except (TypeError, AssertionError) as e:
                 raise TypeError(
@@ -350,10 +386,9 @@ def type_check(
             if isinstance(lhs_var, VectorizedAccess):
                 lhs_var = lhs_var.array
 
-            if phi_type == type_env.get(lhs_var):
-                # No changes to this variable's type, don't extend the worklist
-                continue
-            type_env[lhs_var] = phi_type
+            if phi_type != type_env.get(lhs_var):
+                type_env[lhs_var] = phi_type
+                updated_lhs = True
 
         elif isinstance(
             stmt, (DepParameter, loop_linear_code.For, loop_linear_code.Return)
@@ -362,9 +397,8 @@ def type_check(
         else:
             assert_never(stmt)
 
-        # If we get to this point, the lhs has been reassigned so we must add dependencies
-        # to the worklist
-        worklist.extend([edge[1] for edge in dep_graph.def_use_graph.edges(stmt)])
+        if updated_lhs:
+            worklist.extend([edge[1] for edge in dep_graph.def_use_graph.edges(stmt)])
 
     # At this point, all variables should be typed with their datatype and dimensions
     # Additionally, all shared variables should be marked as such
@@ -374,6 +408,6 @@ def type_check(
         if var_type.visibility is None:
             var_type.visibility = VarVisibility.PLAINTEXT
 
-    validate_type_requirements(func.body, type_env, func.body[-1], func.return_type)
+    validate_type_requirements(func.body, type_env, dep_graph, func.body[-1], func.return_type)
 
     return func, type_env

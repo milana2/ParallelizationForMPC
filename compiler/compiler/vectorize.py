@@ -7,6 +7,7 @@ from . import loop_linear_code as llc
 from .dep_graph import DepGraph, DepNode, EdgeKind, DepParameter
 from . import util
 from .util import assert_never
+from .type_analysis import collect_idx_vars
 
 import dataclasses as dc
 from dataclasses import dataclass
@@ -389,6 +390,7 @@ def _basic_vectorization_phase_1(
             var: llc.Var,
             stmt: DepNode,
             access_pattern: Optional[llc.SubscriptIndex] = None,
+            lhs_dims: Optional[list[llc.LoopBound]] = None
         ) -> llc.Var:
             def_var = dep_graph.var_to_assignment[var]
             edge_kind = dep_graph.edge_kind(def_var, stmt)
@@ -399,39 +401,40 @@ def _basic_vectorization_phase_1(
                 return var
             elif edge_kind is EdgeKind.OUTER_TO_INNER:
                 var_prime = tmp_var_gen.get()
+                var_dims = type_env[var].dim_sizes
+                if var_dims is None:
+                    if lhs_dims is not None:
+                        dims = tuple((Var("_"), dim_size) for dim_size in lhs_dims)
+                    else:
+                        dims = tuple(
+                            (loop.counter, loop.bound_high)
+                            for loop in dep_graph.enclosing_loops[stmt]
+                        )
+                else:
+                    dims = tuple((Var("_"), dim_size) for dim_size in var_dims)
+
                 above_loop_result.append(
                     llc.Assign(
                         lhs=var_prime,
                         rhs=LiftExpr(
                             Subscript(var, access_pattern) if access_pattern else var,
-                            tuple(
-                                (loop.counter, loop.bound_high)
-                                for loop in dep_graph.enclosing_loops[stmt]
-                            ),
+                            dims,
                         ),
                     )
                 )
                 return var_prime
             elif edge_kind is EdgeKind.INNER_TO_OUTER:
-                canonical_dimensionality = type_env[var].dims
+                canonical_dimensionality = type_env[var].unvectorized_dims
                 assert canonical_dimensionality is not None
                 enclosure_dimensionality = len(dep_graph.enclosing_loops[def_var])
                 if enclosure_dimensionality <= canonical_dimensionality:
                     return var
 
-                if isinstance(def_var, llc.Phi):
-                    assert isinstance(
-                        def_var.rhs_true, llc.Var
-                    ), "VectorizedAccesses are added after phase 1"
-                    drop_expr = def_var.rhs_true
-                else:
-                    drop_expr = var
-
                 var_prime = tmp_var_gen.get()
                 drop_dim = llc.Assign(
                     lhs=var_prime,
                     rhs=DropDim(
-                        drop_expr,
+                        var,
                         tuple(
                             loop.bound_high
                             for loop in dep_graph.enclosing_loops[def_var]
@@ -492,14 +495,16 @@ def _basic_vectorization_phase_1(
         if isinstance(stmt, (llc.Phi, llc.Assign)):
 
             if isinstance(stmt, llc.Phi):
+                assert isinstance(stmt.lhs, llc.Var), "VectorizedAccesses are not added until after this phase"
+                lhs_dims = type_env[stmt.lhs].dim_sizes
                 assert isinstance(
                     stmt.rhs_false, llc.Var
                 ), "VectorizedAccesses are not added until after this phase"
-                stmt.rhs_false = replace_var(stmt.rhs_false, stmt)
+                stmt.rhs_false = replace_var(stmt.rhs_false, stmt, lhs_dims=lhs_dims)
                 assert isinstance(
                     stmt.rhs_true, llc.Var
                 ), "VectorizedAccesses are not added until after this phase"
-                stmt.rhs_true = replace_var(stmt.rhs_true, stmt)
+                stmt.rhs_true = replace_var(stmt.rhs_true, stmt, lhs_dims=lhs_dims)
             elif isinstance(stmt, llc.Assign):
                 if isinstance(stmt.rhs, llc.Var):
                     stmt.rhs = replace_var(stmt.rhs, stmt)
@@ -590,10 +595,33 @@ def _basic_vectorization_phase_1(
 
     return above_loop_result, inside_loop_result, after_loop_result
 
+def _finalize_drop_dims(stmts: list[llc.Statement], dep_graph: DepGraph):
+    """
+    Replace all drop_dim() expressions targetting a variable assigned by a phi node
+    with the rhs_true value of the phi node.  This cannot be done during the initial
+    pass of vectorization phase 1 as the rhs_true value may be replaced.
+    """
+    for stmt in stmts:
+        if isinstance(stmt, llc.Assign) and isinstance(stmt.rhs, DropDim):
+            drop_expr = stmt.rhs.array
+            if isinstance(drop_expr, VectorizedAccess):
+                drop_expr = drop_expr.array
+
+            drop_expr_assignment = dep_graph.var_to_assignment[drop_expr]
+
+            if isinstance(drop_expr_assignment, llc.Phi):
+                corrected_drop_expr = drop_expr_assignment.rhs_true
+                if isinstance(corrected_drop_expr, VectorizedAccess):
+                    corrected_drop_expr = corrected_drop_expr.array
+                stmt.rhs = dc.replace(stmt.rhs, array=corrected_drop_expr)
+        elif isinstance(stmt, llc.For):
+            _finalize_drop_dims(stmt.body, dep_graph)
+
 
 def _merge_vectorized_accesses(
     vectorized_accesses: list[Optional[VectorizedAccess]],
     enclosing_loops: list[llc.For],
+    take_longest_access=False,
 ) -> Optional[VectorizedAccess]:
     if all(access is None for access in vectorized_accesses):
         return None
@@ -613,9 +641,12 @@ def _merge_vectorized_accesses(
     )
 
     if len(all_dim_sizes) != 1:
-        raise TypeError(
-            f"Expected all dim sizes to be the same but got {all_dim_sizes}"
-        )
+        if take_longest_access:
+            all_dim_sizes = set([max(all_dim_sizes, key=len)])
+        else:
+            raise TypeError(
+                f"Expected all dim sizes to be the same but got {all_dim_sizes}"
+            )
 
     # If all of the provided vectorized_dims are True, then we can synthesize this here
     # We need to have separate handling for this case because lift expressions are added
@@ -625,16 +656,22 @@ def _merge_vectorized_accesses(
         all_vectorized_dims = set(((True,) * num_dims.pop(),))
 
     if len(all_vectorized_dims) != 1:
-        raise TypeError(
-            f"Expected all vectorized dims to be the same but got {all_vectorized_dims}"
-        )
+        if take_longest_access:
+            all_dim_sizes = set([max(all_dim_sizes, key=len)])
+        else:
+            raise TypeError(
+                f"Expected all vectorized dims to be the same but got {all_vectorized_dims}"
+            )
 
     if len(all_idx_vars) != 1:
-        loop_enclosure_vars = tuple(loop.counter for loop in enclosing_loops)
-        assert (
-            loop_enclosure_vars in all_idx_vars
-        ), f"Expected all idx vars to be the same but got {all_idx_vars}"
-        all_idx_vars = set((loop_enclosure_vars,))
+        if take_longest_access:
+            all_idx_vars = set([max(all_idx_vars, key=len)])
+        else:
+            loop_enclosure_vars = tuple(loop.counter for loop in enclosing_loops)
+            assert (
+                loop_enclosure_vars in all_idx_vars
+            ), f"Expected all idx vars to be the same but got {all_idx_vars}"
+            all_idx_vars = set((loop_enclosure_vars,))
 
     return VectorizedAccess(
         array=None,  # type: ignore
@@ -831,6 +868,7 @@ def _assign_vectorized_accesses(func: llc.Function, dep_graph: DepGraph):
                     ),
                 ],
                 dep_graph.enclosing_loops[stmt],
+                take_longest_access=True,
             )
         elif isinstance(stmt, llc.Assign):
             stmt.rhs = _update_vectorized_accesses(stmt.rhs, vectorized_accesses)
@@ -1048,7 +1086,7 @@ def _basic_vectorization_phase_2(
                     if isinstance(val, (VectorizedAccess, llc.VectorizedUpdate)):
                         new_idx_vars = tuple(
                             dim
-                            if dim.name != loop_stack[-1].counter.name
+                            if not isinstance(dim, Var) or dim.name != loop_stack[-1].counter.name
                             else new_counter
                             for dim in val.idx_vars
                         )
@@ -1150,7 +1188,7 @@ def _basic_vectorization_phase_2(
                 lifted_access = VectorizedAccess(
                     new_var,
                     dim_sizes=tuple(rhs_dim_sizes + [loop_stack[-1].bound_high]),
-                    vectorized_dims=tuple(rhs_vectorized_dims + [False]),
+                    vectorized_dims=tuple(rhs_vectorized_dims + [True]),
                     idx_vars=tuple(rhs_idx_vars + [loop_stack[-1].counter]),
                 )
 
@@ -1309,7 +1347,10 @@ def _basic_vectorization_phase_2(
                 output.append(generate_monolithic_for(closure, lifted_arrs))
         else:
             statements = lifted_stmt(cast(llc.Statement, stmts_and_closures[i]))
-            output.extend(statements)
+            for statement in statements:
+                for orig_var, lifted in lifted_arrs.items():
+                    statement = util.replace_pattern(statement, orig_var, lifted)
+                output.append(statement)
 
     return output, phi_renames
 
@@ -1319,18 +1360,9 @@ def clean_phi_renames(
 ) -> list[llc.Statement]:
     cleaned_stmts: list[llc.Statement] = []
     for stmt in stmts:
-        # If this phi node is being removed, we must update what it's being renamed to
+        # If this phi node is being marked for removal, do not add it to the clean statements
         if isinstance(stmt, llc.Phi) and stmt.removed:
-            lhs_var = stmt.lhs
-            if isinstance(lhs_var, llc.VectorizedAccess):
-                lhs_var = lhs_var.array
-
-            rhs_var = stmt.rhs_true
-            if isinstance(rhs_var, llc.VectorizedAccess):
-                rhs_var = rhs_var.array
-
-            assert lhs_var in phi_renames
-            phi_renames[lhs_var] = rhs_var
+            pass
 
         # If this is a for loop, we must recurse into it to keep track of removed
         # phi nodes inside the loop
@@ -1368,6 +1400,8 @@ def basic_vectorization_phase_1(
         return_type=function.return_type,
     )
 
+    _finalize_drop_dims(function.body, DepGraph(function))
+
     # Optimistically vectorize all new arrays
     _assign_vectorized_accesses(function, DepGraph(function))
 
@@ -1397,6 +1431,10 @@ def basic_vectorization_phase_2(
         )
 
         phi_renames.update(local_phi_renames)
+
+        for orig_var, new_var in phi_renames.items():
+            if new_var in phi_renames:
+                phi_renames[orig_var] = phi_renames[new_var]
 
     # Now that we've restructured the fuction based on phi closures, we need to clean up
     # the phi nodes which are marked for removal

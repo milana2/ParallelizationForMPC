@@ -397,17 +397,20 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             )
             + "}"
         )
+
+        specialization = ""
         # Since we want to manipulate the array, we don't want the input to drop_dim()
         # to be vectorized
         if isinstance(expr.array, VectorizedAccess):
             array = render_expr(expr.array.array, ctx)
+            # TODO: move this operation into the vectorization phase
+            vectorized_dims = tuple(dim_size for dim_size, vectorized in zip(expr.dims, expr.array.vectorized_dims) if vectorized)
+            if len(vectorized_dims) == 1:
+                specialization = "_monoreturn"
         else:
             array = render_expr(expr.array, ctx)
-
-        specialization = ""
-        # If the returned array will be of size 1, then we need to use a specialized form of drop_dim()
-        if len(expr.dims) == 1:
-            specialization = "_monoreturn"
+            if len(expr.dims) == 1:
+                specialization = "_monoreturn"
 
         return f"drop_dim{specialization}({array}, {dims})"
 
@@ -450,29 +453,28 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             augmented_env[idx_var] = PLAINTEXT_INT
         if (
             not ctx.plaintext
-            and type_assign_expr(expr.expr, augmented_env).is_plaintext()
+            and type_assign_expr(expr.expr, augmented_env, None, None).is_plaintext()
         ):
-            if type_assign_expr(expr.expr, augmented_env).datatype == DataType.INT:
-                idx_type_conversion = (
-                    lambda val: f"encrypto::motion::SecureUnsignedInteger({val})"
-                )
-            else:
-                idx_type_conversion = lambda val: val
-
             to_shared = (
-                lambda val: f"party->In<Protocol>(encrypto::motion::ToInput({val}), 0)"
+                lambda val: f"encrypto::motion::SecureUnsignedInteger(party->In<Protocol>(encrypto::motion::ToInput({val}), 0))"
             )
 
-            idx_map = lambda idx: idx_type_conversion(to_shared(raw_idx_map(idx)))
+            idx_map = lambda idx: to_shared(raw_idx_map(idx))
         else:
             idx_map = raw_idx_map
+
+        # If we're lifting a vectorized array, don't render a vectorized access or else the lifted array
+        # will hold too many values
+        expr_to_render = expr.expr
+        if isinstance(expr_to_render, VectorizedAccess):
+            expr_to_render = expr_to_render.array
 
         inner_ctx = dc.replace(
             ctx,
             int_type="std::uint32_t",
             var_mappings={var: idx_map(i) for i, (var, _) in enumerate(expr.dims)},
         )
-        inner_expr = f"std::function([&](const std::vector<std::uint32_t> &indices){{return {render_expr(expr.expr, inner_ctx)};}})"
+        inner_expr = f"std::function([&](const std::vector<std::uint32_t> &indices){{return {render_expr(expr_to_render, inner_ctx)};}})"
 
         dims = (
             "{"

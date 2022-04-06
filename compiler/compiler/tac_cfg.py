@@ -111,7 +111,7 @@ AssignRHS = Union[
 ]
 
 
-@dataclass(frozen=True)
+@dataclass
 class DropDim:
     array: Var
     dims: tuple[LoopBound, ...]
@@ -120,7 +120,7 @@ class DropDim:
         return f"drop_dim({self.array})"
 
 
-@dataclass(frozen=True)
+@dataclass
 class LiftExpr:
     expr: AssignRHS
     dims: tuple[tuple[Var, LoopBound], ...]
