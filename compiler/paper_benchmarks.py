@@ -100,10 +100,10 @@ def get_psi_inputs()-> list[InputArgs]:
     return all_args
 
 def get_inputs(name: str) -> list[InputArgs]:
-    # if name == "biometric":
-    #     return get_biometric_inputs()
-    if name == "psi":
-        return get_psi_inputs()
+    if name == "biometric":
+         return get_biometric_inputs()
+    # if name == "psi":
+    #     return get_psi_inputs()
     return []
 
 def print_benchmark_data():
@@ -158,25 +158,23 @@ def run_paper_benchmarks():
                 compile = True
                 for args in all_args:
                     #log.debug("args: {}".format(args.args))
-                    log.info("Running {} {} {} with input_args: {} (Non Vectorized)\n".format(test_case_dir.name, 
-                        test_case_dir.path, protocol, args.label));
+                    log.info("Running {}-{} with label {}. (Non-Vectorized first, Vectorized second)".format(test_case_dir.name, 
+                        protocol, args.label));
+                    log.info("Arguments are: {}".format(args.args));
                 
                     party0, party1 = run_benchmark(
                         test_case_dir.name, test_case_dir.path, protocol, False, None, args.args, compile
                     )
 
-                    log.info("output is {}".format(party0.output.strip()))
+                    log.info("Non Vectorized output is {}".format(party0.output.strip()))
                     assert party0.output.strip() == party1.output.strip(), (party0.output.strip(), party1.output.strip())
-
-                    log.info("Running {} {} {} with input_args: {} (Vectorized)\n".format(test_case_dir.name, 
-                        test_case_dir.path, protocol, args.label));
                     party0_vectorized, party1_vectorized = run_benchmark(
                         test_case_dir.name, test_case_dir.path, protocol, True, None, args.args, compile
                     )
                     
                     compile = False
 
-                    log.info("output is {}".format(party0_vectorized.output.strip()))
+                    log.info("Vectorized output is {}".format(party0_vectorized.output.strip()))
                     assert party0_vectorized.output.strip() == party1_vectorized.output.strip(), \
                         (party0_vectorized.output.strip(), party1_vectorized.output.strip())
                     input_stats = StatsForInputConfig(args.label, party0, party1, party0_vectorized, party1_vectorized)
