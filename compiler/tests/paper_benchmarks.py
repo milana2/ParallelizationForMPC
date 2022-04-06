@@ -62,7 +62,7 @@ def get_rand_ints(n):
 
 def get_biometric_inputs()-> list[InputArgs]:
     all_args = []
-    for config in [[4, 4], [8, 8], [8, 128], [4, 256]]:
+    for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128]]:# [8, 64], [4, 256]]:
         D = config[0]
         N = config[1]
         args = [

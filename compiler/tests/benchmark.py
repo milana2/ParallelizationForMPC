@@ -84,8 +84,9 @@ def run_benchmark(
             text=True,
             cwd=party1_dir,
         ) as party1:
-            party0.wait(600)
-            party1.wait(600)
+            # TODO: wait's Timeout is 600 for both parties
+            party0.wait()
+            party1.wait()
 
             assert party0.stdout is not None
             assert party0.stderr is not None
