@@ -185,7 +185,7 @@ def run_paper_benchmarks(filename):
             gmw_vec_p0, gmw_vec_p1 = run_benchmark(
                 test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True, None, args.args, compile
             )
-            log.info("GMW Vectorized output is {}".format(party0_vectorized.output.strip()))
+            log.info("GMW Vectorized output is {}".format(gmw_vec_p0.output.strip()))
             assert gmw_vec_p0.output.strip() == gmw_vec_p1.output.strip(), \
                 (gmw_vec_p0.output.strip(), gmw_vec_p1.output.strip())
 
