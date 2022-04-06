@@ -119,7 +119,9 @@ def get_inputs(name: str) -> tuple[list[InputArgs], int]:
 
 def print_protocol_stats(ts0, ts0v, cs0, cs0v, ts1, ts1v, cs1, cs1v):
     log.info("Timing/Communication")
+    tags = ["Party 0 NonVec", "Party 0 Vectorized", "Party 1 NonVec", "Party 1 Vectorized"]
     for i in [ts0, ts0v, ts1, ts1v]:
+        log.info(tags[i])
         log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, i.preprocess_total.mean,
             i.gates_setup.datapoint_name, i.gates_setup.mean,
             i.gates_online.datapoint_name, i.gates_online.mean))
