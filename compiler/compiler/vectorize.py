@@ -324,7 +324,7 @@ def _refine_array_mux_statement(
                 return [
                     llc.Assign(
                         lhs=temp,
-                        rhs=llc.Mux(c, Ak_i1, Al_i1),
+                        rhs=llc.Mux(c, false_value=Ak_i1, true_value=Al_i1),
                     ),
                     llc.Assign(
                         lhs=Aj, rhs=llc.Update(llc.Var(f"{name}!{max(k,l)}"), i1, temp)

@@ -33,14 +33,14 @@ Block 6:
     !1!2 = (sum!3 < min_sum!2)
     conditional jump !1!2
 Block 7:
+    jump
+Block 8:
     min_sum!3 = sum!3
     min_index!3 = i!1
     jump
-Block 8:
-    jump
 Block 9:
-    min_sum!4 = Φ(min_sum!3, min_sum!2)
-    min_index!4 = Φ(min_index!3, min_index!2)
+    min_sum!4 = Φ(min_sum!2, min_sum!3)
+    min_index!4 = Φ(min_index!2, min_index!3)
     (merge from conditional jump !1!2)
     jump
-Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 4, *) (6, 8, F) (6, 7, T) (7, 9, *) (8, 9, *) (9, 1, *)
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 4, *) (6, 7, F) (6, 8, T) (7, 9, *) (8, 9, *) (9, 1, *)

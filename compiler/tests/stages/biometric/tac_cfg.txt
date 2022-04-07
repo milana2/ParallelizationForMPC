@@ -24,12 +24,12 @@ Block 6:
     !1 = (sum < min_sum)
     conditional jump !1
 Block 7:
-    min_sum = sum
-    min_index = i
     jump
 Block 8:
+    min_sum = sum
+    min_index = i
     jump
 Block 9:
     (merge from conditional jump !1)
     jump
-Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 4, *) (6, 8, F) (6, 7, T) (7, 9, *) (8, 9, *) (9, 1, *)
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 4, *) (6, 7, F) (6, 8, T) (7, 9, *) (8, 9, *) (9, 1, *)
