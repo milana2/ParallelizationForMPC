@@ -22,9 +22,9 @@ class TimingDatapoint:
         stddev = params['stddev']
         return cls(
             datapoint_name=datapoint_name,
-            mean=mean_data,
-            median=median_data,
-            stddev=stddev_data
+            mean=mean,
+            median=median,
+            stddev=stddev
             )
 
     def to_dictionary(self):
