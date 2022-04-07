@@ -72,7 +72,7 @@ def get_rand_ints(n):
 def get_biometric_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
     non_vec_up_to = 6 # We don't want to run non-vectorized benchmark after this many input variations
-    for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024]]:
+    for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 4096]]:
         D = config[0]
         N = config[1]
         args = [
@@ -109,11 +109,30 @@ def get_psi_inputs()-> tuple[list[InputArgs], int]:
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
+def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
+    all_args = []
+    non_vec_up_to = 11
+    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+        args = [
+        "--N", "{}".format(N),
+        ]
+        A = get_rand_ints(N)
+        B = get_rand_ints(N)
+        args.append("--A")
+        args.extend(list(map(str, A)))
+        args.append("--B")
+        args.extend(list(map(str, B)))
+        label = "N: ".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
-    if name == "biometric":
-         return get_biometric_inputs()
+    # if name == "biometric":
+    #      return get_biometric_inputs()
     # if name == "psi":
     #     return get_psi_inputs()
+    if name == "inner_product":
+        return get_inner_product_inputs()
     return [[], 0]
 
 
@@ -292,11 +311,11 @@ def generate_graphs(source_data_file):
             for i in task_stat.input_configs:
                 label = i.label
 
-                nv_gmw = i.gmw_p0.circuit_stats.circuit_gen_time if gmw_p0 is not None else 0
+                nv_gmw = i.gmw_p0.circuit_stats.circuit_gen_time if i.gmw_p0 is not None else 0
                 v_gmw  = i.gmw_vec_p0.circuit_stats.circuit_gen_time
                 r_gmw  = nv_gmw/v_gmw
 
-                nv_bmr = i.bmr_p0.circuit_stats.circuit_gen_time if bmr_p0 is not None else 0
+                nv_bmr = i.bmr_p0.circuit_stats.circuit_gen_time if i.bmr_p0 is not None else 0
                 v_bmr  = i.bmr_vec_p0.circuit_stats.circuit_gen_time
                 r_bmr  = nv_bmr/v_bmr
 
