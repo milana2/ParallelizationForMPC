@@ -13,6 +13,26 @@ class BenchmarkOutput:
     output: str
     timing_stats: statistics.TimingStatistics
     circuit_stats: statistics.CircuitStatistics
+    @classmethod
+    def from_dictionary(cls, params):
+        name = params['name']
+        output = params['output']
+        timing_stats = params['timing_stats']
+        circuit_stats = params['circuit_stats']
+
+        return cls(
+            name=name,
+            output=output,
+            timing_stats=timing_stats,
+            circuit_stats=circuit_stats
+            )
+
+    def to_dictionary(self):
+        return {'name': self.name,
+                'output': self.output,
+                'timing_stats': self.timing_stats,
+                'circuit_stats': self.circuit_stats,
+                }
 
 
 def run_benchmark(

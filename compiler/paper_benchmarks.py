@@ -8,13 +8,14 @@ import subprocess
 import logging
 import logging.handlers
 import random
-import pickle
+import json
 
 import compiler
 
 from tests import context as test_context
 from tests.benchmark import run_benchmark
-from tests.benchmark import BenchmarkOutput
+
+from utils import json_serialize, json_deserialize, StatsForInputConfig, StatsForTask
 
 GMW_PROTOCOL = "BooleanGmw"
 BMR_PROTOCOL = "Bmr"
@@ -38,27 +39,6 @@ console.setFormatter(formatter)
 log = logging.getLogger(__name__)
 log.addHandler(console);
 
-
-
-@dataclass
-class StatsForInputConfig:
-    label: str
-    gmw_p0: BenchmarkOutput
-    gmw_p1: BenchmarkOutput
-    gmw_vec_p0: BenchmarkOutput
-    gmw_vec_p1: BenchmarkOutput
-    bmr_p0: BenchmarkOutput
-    bmr_p1: BenchmarkOutput
-    bmr_vec_p0: BenchmarkOutput
-    bmr_vec_p1: BenchmarkOutput
-
-
-@dataclass
-class StatsForTask:
-    label: str
-    input_configs: list[StatsForInputConfig]
-
-
 @dataclass
 class InputArgs:
     label: str
@@ -71,7 +51,7 @@ def get_rand_ints(n):
 
 def get_biometric_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
-    non_vec_up_to = 6 # We don't want to run non-vectorized benchmark after this many input variations
+    non_vec_up_to = 6 # Only run non-vectorized benchmark upto this index
     for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 4096]]:
         D = config[0]
         N = config[1]
@@ -111,7 +91,7 @@ def get_psi_inputs()-> tuple[list[InputArgs], int]:
 
 def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
     all_args = []
-    non_vec_up_to = 11
+    non_vec_up_to = 8
     for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
         args = [
         "--N", "{}".format(N),
@@ -122,7 +102,7 @@ def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
         args.extend(list(map(str, A)))
         args.append("--B")
         args.extend(list(map(str, B)))
-        label = "N: ".format(N)
+        label = "N: {}".format(N)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
@@ -177,8 +157,9 @@ def print_protocol_stats(p0, vec_p0, p1, vec_p1,):
             i.circuit_gen_time))
 
 def print_benchmark_data(filename):
-    with open(filename, "rb") as f:
-        all_stats = pickle.load(f)
+    with open(filename, "r", encoding='utf-8') as f:
+        json_str = f.read()
+        all_stats = json_deserialize(json_str)
 
     log.info("Listing All Benchmark Stats")
     for task_stats in all_stats:
@@ -257,22 +238,25 @@ def run_paper_benchmarks(filename):
             task_stats.input_configs.append(input_stats)
             log.info("task {} input config {} DONE".format(task_stats.label, input_stats.label))
 
-            with open("{}.pickle".format(task_stats.label), "wb") as f:
-                pickle.dump(all_stats, f)
+            with open("{}.json".format(task_stats.label), "w", encoding='utf-8') as f:
+                json_str = json_serialize(all_stats)
+                f.write(json_str)
             
             i += 1
 
         all_stats.append(task_stats)
         log.info("task {} DONE".format(task_stats.label))
-        with open(filename, "wb") as f:
-            pickle.dump(all_stats, f)
+        with open(filename, "w", encoding='utf-8') as f:
+            json_str = json_serialize(all_stats)
+            f.write(json_str)
 
     print_benchmark_data(filename)
     generate_graphs(filename)
 
 def generate_graphs(source_data_file):
-    with open(source_data_file, "rb") as f:
-        all_stats = pickle.load(f)
+    with open(source_data_file, "r", encoding='utf-8') as f:
+        json_str = f.read()
+        all_stats = json_deserialize(json_str)
 
     FILE_DIR = os.path.dirname(__file__)
     GRAPHS_DIR = os.path.join(FILE_DIR, "graphs")
@@ -344,9 +328,10 @@ if __name__ == "__main__":
         help="generates graphs from benchmarks",
     )
     parser.add_argument('-f', '--file', nargs='?', 
-    help="file containing benchmark data", 
-    default="benchmarks.pickle",
+        help="file containing benchmark data", 
+        default="benchmarks.json",
     )
+
     args = parser.parse_args()
 
     if args.graphs:
