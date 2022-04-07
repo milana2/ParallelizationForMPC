@@ -117,11 +117,30 @@ def get_inputs(name: str) -> tuple[list[InputArgs], int]:
     return [[], 0]
 
 
-def print_protocol_stats(ts0, ts0v, cs0, cs0v, ts1, ts1v, cs1, cs1v):
+def print_protocol_stats(p0, vec_p0, p1, vec_p1,):
+    ts0 = cs0 = None
+    if p0 is not None:
+        ts0 = p0.timing_stats
+        cs0 = p0.circuit_stats
+        
+    ts1 = None
+    if p1 is not None:
+        ts1 = p1.timing_stats
+
+    ts0v = vec_p0.timing_stats
+    cs0v = vec_p0.circuit_stats
+    ts1v = vec_p1.timing_stats
+
+
+
     log.info("Timing/Communication")
     labels = ["Party 0 NonVec", "Party 0 Vectorized", "Party 1 NonVec", "Party 1 Vectorized"]
     j = 0
     for i in [ts0, ts0v, ts1, ts1v]:
+        if i is None:
+            j += 1
+            continue
+
         log.info(labels[j])
         log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, 
             i.preprocess_total.mean, i.gates_setup.datapoint_name, i.gates_setup.mean,
@@ -132,6 +151,8 @@ def print_protocol_stats(ts0, ts0v, cs0, cs0v, ts1, ts1v, cs1, cs1v):
         j += 1
     log.info("Circuit (Non-Vectorized vs Vectorized)")
     for i in [cs0, cs0v]:#, cs1, cs1v]: # circuit information should be identical for all parties
+        if i is None:
+            continue
         log.info("Num Gates: {} In: {}, Out: {}, SIMD: {}, Non-SIMD: {}, Circ-Gen-Time: {} ms".format(
             i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, 
             i.circuit_gen_time))
@@ -143,22 +164,19 @@ def print_benchmark_data(filename):
     log.info("Listing All Benchmark Stats")
     for task_stats in all_stats:
         log.info("="*80)
-        log.info(task_stats.label)
+        
         log.info("="*80);
         for v in task_stats.input_configs:
             log.info("-"*40)
             log.info("{} - GMW".format(v.label))
             log.info("-"*40)
-            print_protocol_stats(v.gmw_p0.timing_stats, v.gmw_vec_p0.timing_stats, v.gmw_p0.circuit_stats,
-                v.gmw_vec_p0.circuit_stats, v.gmw_p1.timing_stats, v.gmw_vec_p1.timing_stats, 
-                v.gmw_p1.circuit_stats, v.gmw_vec_p1.circuit_stats)
+            
+            print_protocol_stats(v.gmw_p0, v.gmw_vec_p0,v.gmw_p1, v.gmw_vec_p1)
 
             log.info("-"*40)
             log.info("{} - BMR".format(v.label))
             log.info("-"*40)
-            print_protocol_stats(v.bmr_p0.timing_stats, v.bmr_vec_p0.timing_stats, v.bmr_p0.circuit_stats,
-                v.bmr_vec_p0.circuit_stats, v.bmr_p1.timing_stats, v.bmr_vec_p1.timing_stats, 
-                v.bmr_p1.circuit_stats, v.bmr_vec_p1.circuit_stats)
+            print_protocol_stats(v.bmr_p0, v.bmr_vec_p0, v.bmr_p1, v.bmr_vec_p1)
 
 
 def run_paper_benchmarks(filename):
@@ -176,6 +194,7 @@ def run_paper_benchmarks(filename):
         for args in all_args:
             log.info("\n{} - arguments: {}".format(test_case_dir.name, args.args));
 
+            gmw_p0 = gmw_p1 = None
             if( i < non_vec_up_to):
                 log.info("Running GMW Non Vectorized {} {}".format(test_case_dir.name, args.label));           
                 gmw_p0, gmw_p1 = run_benchmark(
@@ -193,6 +212,7 @@ def run_paper_benchmarks(filename):
             assert gmw_vec_p0.output.strip() == gmw_vec_p1.output.strip(), \
                 (gmw_vec_p0.output.strip(), gmw_vec_p1.output.strip())
 
+            bmr_p0 = bmr_p1 = None
             if( i < non_vec_up_to):
                 log.info("Running BMR Non Vectorized {} {}".format(test_case_dir.name, args.label));
                 bmr_p0, bmr_p1 = run_benchmark(
@@ -249,11 +269,11 @@ def generate_graphs(source_data_file):
             for i in task_stat.input_configs:
                 label = i.label
 
-                nv_gmw = i.gmw_p0.circuit_stats.num_gates
+                nv_gmw = i.gmw_p0.circuit_stats.num_gates if i.gmw_p0 is not None else 0
                 v_gmw  = i.gmw_vec_p0.circuit_stats.num_gates
                 r_gmw  = nv_gmw/v_gmw
 
-                nv_bmr = i.bmr_p0.circuit_stats.num_gates
+                nv_bmr = i.bmr_p0.circuit_stats.num_gates if i.bmr_p0 is not None else 0
                 v_bmr  = i.bmr_vec_p0.circuit_stats.num_gates
                 r_bmr  = nv_bmr/v_bmr
 
@@ -272,11 +292,11 @@ def generate_graphs(source_data_file):
             for i in task_stat.input_configs:
                 label = i.label
 
-                nv_gmw = i.gmw_p0.circuit_stats.circuit_gen_time
+                nv_gmw = i.gmw_p0.circuit_stats.circuit_gen_time if gmw_p0 is not None else 0
                 v_gmw  = i.gmw_vec_p0.circuit_stats.circuit_gen_time
                 r_gmw  = nv_gmw/v_gmw
 
-                nv_bmr = i.bmr_p0.circuit_stats.circuit_gen_time
+                nv_bmr = i.bmr_p0.circuit_stats.circuit_gen_time if bmr_p0 is not None else 0
                 v_bmr  = i.bmr_vec_p0.circuit_stats.circuit_gen_time
                 r_bmr  = nv_bmr/v_bmr
 
