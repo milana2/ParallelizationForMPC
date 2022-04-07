@@ -79,7 +79,9 @@ class StagesTestCase(unittest.TestCase):
             self.assertEqual(str(loop_linear), stages["vectorized_linear.txt"])
             self.assertEqual(str(type_env), stages["vectorized_type_env.txt"])
 
-            motion_code = compiler.motion_backend.render_function(loop_linear, type_env)
+            motion_code = compiler.motion_backend.render_function(
+                loop_linear, type_env, True
+            )
             self.assertEqual(str(motion_code), stages["motion_code.txt"])
 
     def test_example_apps(self):
@@ -185,6 +187,8 @@ def regenerate_stages():
         with open(os.path.join(test_case_dir, "vectorized_type_env.txt"), "w") as f:
             f.write(f"{type_env}\n")
 
-        motion_code = compiler.motion_backend.render_function(loop_linear, type_env)
+        motion_code = compiler.motion_backend.render_function(
+            loop_linear, type_env, True
+        )
         with open(os.path.join(test_case_dir, "motion_code.txt"), "w") as f:
             f.write(f"{motion_code}\n")
