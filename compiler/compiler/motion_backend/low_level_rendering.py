@@ -467,7 +467,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         else:
             cpp_false_val = render_expr(expr.false_value, ctx)
 
-        return f"{cpp_cond}.Mux({cpp_false_val}.Get(), {cpp_true_val}.Get())"
+        return f"{cpp_cond}.Mux({cpp_true_val}.Get(), {cpp_false_val}.Get())"
 
     elif isinstance(expr, LiftExpr):
         raw_idx_map = lambda idx: f"indices[{idx}]"
