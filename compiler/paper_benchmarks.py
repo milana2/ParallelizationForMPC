@@ -106,13 +106,62 @@ def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
+def get_convex_hull_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+        args = [
+        "--N", "{}".format(N),
+        ]
+        X_coords = get_rand_ints(N)
+        Y_coords = get_rand_ints(N)
+        result_X = get_rand_ints(N)
+        result_Y = get_rand_ints(N)
+        args.append("--X_coords")
+        args.extend(list(map(str, X_coords)))
+        args.append("--Y_coords")
+        args.extend(list(map(str, Y_coords)))
+        args.append("--result_X")
+        args.extend(list(map(str, result_X)))
+        args.append("--result_Y")
+        args.extend(list(map(str, result_Y)))
+        label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+def get_cryptonets_convolution_naive_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+        args = [
+        "--N", "{}".format(N),
+        ]
+        X_coords = get_rand_ints(N)
+        Y_coords = get_rand_ints(N)
+        result_X = get_rand_ints(N)
+        result_Y = get_rand_ints(N)
+        args.append("--X_coords")
+        args.extend(list(map(str, X_coords)))
+        args.append("--Y_coords")
+        args.extend(list(map(str, Y_coords)))
+        args.append("--result_X")
+        args.extend(list(map(str, result_X)))
+        args.append("--result_Y")
+        args.extend(list(map(str, result_Y)))
+        label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
-    # if name == "biometric":
-    #      return get_biometric_inputs()
-    # if name == "psi":
-    #     return get_psi_inputs()
+    if name == "biometric" or name == "biometric_fast":
+         return get_biometric_inputs()
+    if name == "psi":
+        return get_psi_inputs()
     if name == "inner_product":
         return get_inner_product_inputs()
+    if name == "convex_hull":
+        return get_convex_hull_inputs()
+    if name == "cryptonets_convolution_naive":
+        return get_cryptonets_convolution_naive_inputs()
     return [[], 0]
 
 
@@ -262,7 +311,7 @@ def run_paper_benchmarks(filename):
             f.write(json_str)
 
     print_benchmark_data(filename)
-    generate_graphs(filename)
+    generate_graphs([filename])
 
 
 def run_gnuplot(plot_script, data_file, graph_file, title, y_label, other_args = []):
