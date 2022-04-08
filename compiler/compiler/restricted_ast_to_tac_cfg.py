@@ -197,8 +197,8 @@ def _build_assignment(assignment: restricted_ast.Assign, builder: _CFGBuilder):
 
 def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
     condition_block = builder.get_current_block()
-    then_block = builder.make_empty_block()
     else_block = builder.make_empty_block()
+    then_block = builder.make_empty_block()
     after_block = builder.make_empty_block()
 
     builder.add_conditional_jump(
@@ -207,12 +207,12 @@ def _build_if(if_statement: restricted_ast.If, builder: _CFGBuilder):
         true_block=then_block,
     )
 
-    builder.set_current_block(then_block)
-    _build_statements(if_statement.then_body, builder)
-    builder.add_jump(after_block)
-
     builder.set_current_block(else_block)
     _build_statements(if_statement.else_body, builder)
+    builder.add_jump(after_block)
+
+    builder.set_current_block(then_block)
+    _build_statements(if_statement.then_body, builder)
     builder.add_jump(after_block)
 
     builder.set_current_block(after_block)
