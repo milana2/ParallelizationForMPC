@@ -314,7 +314,7 @@ def print_benchmark_data(filename):
     log.info("Listing All Benchmark Stats")
     for task_stats in all_stats:
         log.info("="*80)
-        
+        log.info(task_stats.label)
         log.info("="*80);
         for v in task_stats.input_configs:
             log.info("-"*40)
@@ -429,15 +429,16 @@ def run_paper_benchmarks(filename):
             json_str = json_serialize(all_stats)
             f.write(json_str)
 
-    print_benchmark_data(filename)
-    generate_graphs([filename])
+    file_path = os.path.join(GRAPHS_DIR, filename)
+    print_benchmark_data(file_path)
+    generate_graphs([file_path])
 
 
 def run_gnuplot(plot_script, data_file, graph_file, title, y_label, other_args = []):
     log.info("gnuplot -c {} {} {} \"{}\" \"{}\" {}".format(plot_script, 
         data_file, graph_file, title, y_label, other_args)
     )
-    
+
     with subprocess.Popen(
         [
             "gnuplot",
@@ -525,7 +526,7 @@ def generate_graphs(source_files):
 
                 nv_bmr = i.bmr_p0.circuit_stats.circuit_gen_time if i.bmr_p0 is not None else 0
                 v_bmr  = i.bmr_vec_p0.circuit_stats.circuit_gen_time if i.bmr_vec_p0 is not None else 0
-                r_bmr  = ratio(nv_bmr. v_bmr)
+                r_bmr  = ratio(nv_bmr, v_bmr)
 
                 f.write("{x}\t\"{label}\"\t{nv_gmw}\t{v_gmw}\t{nv_bmr}\t{v_bmr}\t{r_gmw}\t{r_bmr}\n".format(
                     x=x, label=label, nv_gmw=nv_gmw, v_gmw=v_gmw, r_gmw=r_gmw, nv_bmr=nv_bmr, v_bmr=v_bmr, 
