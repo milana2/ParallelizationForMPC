@@ -76,7 +76,7 @@ def get_biometric_inputs() -> tuple[list[InputArgs], int]:
 def get_psi_inputs()-> tuple[list[InputArgs], int]:
     all_args = []
     non_vec_up_to = 6
-    for config in [[16, 16], [32, 32], [64, 64], [128, 128], [256, 256], [512, 512] [1024, 1024], [4096, 4096]]:
+    for config in [[16, 16], [32, 32], [64, 64], [128, 128], [256, 256], [512, 512], [1024, 1024], [4096, 4096]]:
         SA = config[0]
         SB = config[1]
         args = [
