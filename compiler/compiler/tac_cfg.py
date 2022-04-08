@@ -61,11 +61,11 @@ class Tuple:
 @dataclass
 class Mux:
     condition: Var
-    false_value: Operand
     true_value: Operand
+    false_value: Operand
 
     def __str__(self) -> str:
-        return f"MUX({self.condition}, {self.false_value}, {self.true_value})"
+        return f"MUX({self.condition}, {self.true_value}, {self.false_value})"
 
 
 @dataclass

@@ -1,4 +1,7 @@
-def foo(
+from UTIL import shared
+
+
+def infeasible_edges_example(
     A: shared[list[int]],
     B: shared[list[int]],
     C: shared[list[int]],

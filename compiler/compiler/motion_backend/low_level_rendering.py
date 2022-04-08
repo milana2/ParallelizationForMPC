@@ -101,7 +101,9 @@ def render_param(param: Parameter, type_env: TypeEnv) -> str:
     )
 
 
-def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
+def render_stmt(
+    stmt: Union[Assign, For, Return], type_env: TypeEnv, ran_vectorization: bool
+) -> str:
     if isinstance(stmt, Assign):
         # If we're assigning to a vectorized value, use a specialized function for this.
         if isinstance(stmt.lhs, VectorizedAccess):
@@ -141,6 +143,26 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
             )
 
             return f"vectorized_assign({render_expr(stmt.lhs.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {val_expr});"
+
+        if isinstance(stmt.rhs, Update):
+            shared_assignment = (
+                (
+                    render_expr(stmt.rhs, RenderContext(type_env, plaintext=False))
+                    + ";\n"
+                )
+                + render_expr(stmt.lhs, RenderContext(type_env, plaintext=False))
+                + " = "
+                + render_expr(stmt.rhs.array, RenderContext(type_env, plaintext=False))
+                + ";"
+            )
+            plaintext_assignment = (
+                (render_expr(stmt.rhs, RenderContext(type_env, plaintext=True)) + ";\n")
+                + render_expr(stmt.lhs, RenderContext(type_env, plaintext=True))
+                + " = "
+                + render_expr(stmt.rhs.array, RenderContext(type_env, plaintext=True))
+                + ";"
+            )
+
         else:
             shared_assignment = (
                 render_expr(stmt.lhs, RenderContext(type_env, plaintext=False))
@@ -155,13 +177,13 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
                 + ";"
             )
 
-            if (
-                type_env[stmt.lhs].is_shared()
-                or type_env[stmt.lhs].datatype == DataType.TUPLE
-            ):
-                return shared_assignment
-            else:
-                return shared_assignment + "\n" + plaintext_assignment
+        if (
+            type_env[stmt.lhs].is_shared()
+            or type_env[stmt.lhs].datatype == DataType.TUPLE
+        ):
+            return shared_assignment
+        else:
+            return shared_assignment + "\n" + plaintext_assignment
 
     elif isinstance(stmt, For):
         ctr_initializer = (
@@ -173,7 +195,7 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
         )
 
         phi_initializations = "// Initialize phi values\n" + "\n".join(
-            render_stmt(Assign(phi.lhs, phi.rhs_false), type_env)
+            render_stmt(Assign(phi.lhs, phi.rhs_false), type_env, ran_vectorization)
             for phi in stmt.body
             if isinstance(phi, Phi)
         )
@@ -189,7 +211,7 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
         )
 
         phi_assignments = "\n".join(
-            render_stmt(Assign(phi.lhs, phi.rhs_true), type_env)
+            render_stmt(Assign(phi.lhs, phi.rhs_true), type_env, ran_vectorization)
             for phi in stmt.body
             if isinstance(phi, Phi)
         )
@@ -210,12 +232,17 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
 
         body = (
             "\n".join(
-                render_stmt(stmt, type_env)
+                render_stmt(stmt, type_env, ran_vectorization)
                 for stmt in stmt.body
                 if not isinstance(stmt, Phi)
             )
             + "\n"
         )
+
+        if not ran_vectorization:
+            phi_finalizations = "// Assign final phi values\n" + phi_assignments + "\n"
+        else:
+            phi_finalizations = ""
 
         return (
             "\n"
@@ -232,6 +259,7 @@ def render_stmt(stmt: Union[Assign, For, Return], type_env: TypeEnv) -> str:
             + "\n"
             + indent(body, "    ")
             + "\n}\n"
+            + phi_finalizations
         )
 
     elif isinstance(stmt, Return):
@@ -351,15 +379,15 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             return (
                 "("
                 + (
-                    "encrypto::motion::ShareWrapper("
+                    "to_share_wrapper("
                     + left_expr
-                    + ".Get())"
+                    + ")"
                     + " "
                     + _render_operator(expr.operator)
                     + " "
-                    + "encrypto::motion::ShareWrapper("
+                    + "to_share_wrapper("
                     + right_expr
-                    + ".Get())"
+                    + ")"
                 )
                 + ")"
             )
@@ -404,7 +432,11 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         if isinstance(expr.array, VectorizedAccess):
             array = render_expr(expr.array.array, ctx)
             # TODO: move this operation into the vectorization phase
-            vectorized_dims = tuple(dim_size for dim_size, vectorized in zip(expr.dims, expr.array.vectorized_dims) if vectorized)
+            vectorized_dims = tuple(
+                dim_size
+                for dim_size, vectorized in zip(expr.dims, expr.array.vectorized_dims)
+                if vectorized
+            )
             if len(vectorized_dims) == 1:
                 specialization = "_monoreturn"
         else:
@@ -444,7 +476,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         else:
             cpp_false_val = render_expr(expr.false_value, ctx)
 
-        return f"{cpp_cond}.Mux({cpp_false_val}.Get(), {cpp_true_val}.Get())"
+        return f"{cpp_cond}.Mux({cpp_true_val}.Get(), {cpp_false_val}.Get())"
 
     elif isinstance(expr, LiftExpr):
         raw_idx_map = lambda idx: f"indices[{idx}]"
@@ -498,10 +530,9 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         return f"({_render_operator(expr.operator)}{render_expr(expr.operand, ctx)})"
 
     elif isinstance(expr, Update):
-        cpp_arr = render_expr(expr.array, ctx)
         cpp_arr_access = render_expr(Subscript(expr.array, expr.index), ctx)
         cpp_val = render_expr(expr.value, ctx)
-        return f"{cpp_arr};\n{cpp_arr_access} = {cpp_val}"
+        return f"{cpp_arr_access} = {cpp_val}"
 
     elif isinstance(expr, Var):
         if expr in ctx.var_mappings:

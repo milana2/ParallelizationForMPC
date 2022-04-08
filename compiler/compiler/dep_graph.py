@@ -159,8 +159,12 @@ class DepGraph:
 
     def edge_kind(self, def_stmt: DepNode, use_stmt: DepNode) -> EdgeKind:
         assert self.def_use_graph.has_edge(def_stmt, use_stmt)
-        def_level = len([loop for loop in self.enclosing_loops[def_stmt] if not loop.is_monolithic])
-        use_level = len([loop for loop in self.enclosing_loops[use_stmt] if not loop.is_monolithic])
+        def_level = len(
+            [loop for loop in self.enclosing_loops[def_stmt] if not loop.is_monolithic]
+        )
+        use_level = len(
+            [loop for loop in self.enclosing_loops[use_stmt] if not loop.is_monolithic]
+        )
         if def_level == use_level:
             return EdgeKind.SAME_LEVEL
         elif def_level < use_level:

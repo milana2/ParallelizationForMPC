@@ -246,7 +246,7 @@ def main():
         md += f"{type_env_to_table(type_env)}\n"
 
         motion_code = compiler.motion_backend.render_function(
-            loop_linear_code, type_env
+            loop_linear_code, type_env, True
         )
         md += "### Motion code\n"
         md += f"```cpp\n{motion_code}\n```\n"

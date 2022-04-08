@@ -54,7 +54,10 @@ def collect_idx_vars(idx: SubscriptIndex) -> list[Union[Var, Constant]]:
 
 
 def type_assign_expr(
-    expr: Union[AssignRHS, SubscriptIndex, VectorizedAccess], type_env: TypeEnv, source_stmt: loop_linear_code.Statement, dep_graph: DepGraph
+    expr: Union[AssignRHS, SubscriptIndex, VectorizedAccess],
+    type_env: TypeEnv,
+    source_stmt: loop_linear_code.Statement,
+    dep_graph: DepGraph,
 ) -> VarType:
     """
     Determines the type of an expression in a given type environment.  If an expression
@@ -129,14 +132,20 @@ def type_assign_expr(
             return VarType(VarVisibility.PLAINTEXT, 1, DataType.INT)
 
         elem_type = VarType.merge(
-            *[type_assign_expr(item, type_env, source_stmt, dep_graph) for item in expr.items],
+            *[
+                type_assign_expr(item, type_env, source_stmt, dep_graph)
+                for item in expr.items
+            ],
             mixed_shared_plaintext_allowed=True,
         )
 
         return elem_type.add_dim()
 
     elif isinstance(expr, Tuple):
-        elem_types = [type_assign_expr(item, type_env, source_stmt, dep_graph) for item in expr.items]
+        elem_types = [
+            type_assign_expr(item, type_env, source_stmt, dep_graph)
+            for item in expr.items
+        ]
         return VarType(
             VarVisibility.PLAINTEXT,  # Tuples are always plaintext
             1,  # tuples are always 1-dimensional
@@ -145,14 +154,12 @@ def type_assign_expr(
         )
 
     elif isinstance(expr, Mux):
-        cond_type = type_assign_expr(expr.condition, type_env, source_stmt, dep_graph)
-        if cond_type.datatype not in (None, DataType.BOOL):
-            raise AssertionError(
-                f"Condition {expr.condition} of Mux expression {expr} is not a boolean value."
-            )
+        _cond_type = type_assign_expr(expr.condition, type_env, source_stmt, dep_graph)
 
         true_type = type_assign_expr(expr.true_value, type_env, source_stmt, dep_graph)
-        false_type = type_assign_expr(expr.false_value, type_env, source_stmt, dep_graph)
+        false_type = type_assign_expr(
+            expr.false_value, type_env, source_stmt, dep_graph
+        )
 
         expr_type = VarType.merge(
             true_type,
@@ -184,15 +191,18 @@ def type_assign_expr(
         idx_var_to_dim_size = {}
         for loop in dep_graph.enclosing_loops[source_stmt]:
             idx_var_to_dim_size[loop.counter] = loop.bound_high
-        
+
         dim_sizes = [idx_var_to_dim_size[idx_var] for idx_var in idx_vars]
 
-        return dc.replace(merged_type, _dims=len(idx_vars), dim_sizes = dim_sizes)
+        return dc.replace(merged_type, _dims=len(idx_vars), dim_sizes=dim_sizes)
 
     elif isinstance(expr, VectorizedUpdate):
         val_type = type_assign_expr(expr.value, type_env, source_stmt, dep_graph)
         arr_type = type_env.get(expr.array, VarType())
-        index_types = [type_assign_expr(idx_var, type_env, source_stmt, dep_graph) for idx_var in expr.idx_vars]
+        index_types = [
+            type_assign_expr(idx_var, type_env, source_stmt, dep_graph)
+            for idx_var in expr.idx_vars
+        ]
 
         if arr_type.datatype == DataType.TUPLE:
             raise TypeError("Tuples cannot be updated")
@@ -284,7 +294,9 @@ def validate_type_requirements(
                 raise TypeError(
                     f"Loop counter {stmt.counter.name} is not a plaintext integer"
                 )
-            validate_type_requirements(stmt.body, type_env, dep_graph, return_stmt, None)
+            validate_type_requirements(
+                stmt.body, type_env, dep_graph, return_stmt, None
+            )
         elif isinstance(stmt, loop_linear_code.Assign):
             # The type assignment function checks for type errors internally
             expr_type = type_assign_expr(stmt.rhs, type_env, stmt, dep_graph)
@@ -300,7 +312,10 @@ def validate_type_requirements(
             if lhs_type != expr_type:
                 raise TypeError(f"Type mismatch in assignment {stmt.lhs} = {stmt.rhs}")
         elif isinstance(stmt, loop_linear_code.Phi):
-            elem_types = [type_assign_expr(elem, type_env, stmt, dep_graph) for elem in stmt.rhs_vars()]
+            elem_types = [
+                type_assign_expr(elem, type_env, stmt, dep_graph)
+                for elem in stmt.rhs_vars()
+            ]
             phi_type = VarType.merge(
                 *elem_types, mixed_shared_plaintext_allowed=True, use_max_dim_size=True
             )
@@ -370,7 +385,10 @@ def type_check(
                 updated_lhs = True
 
         elif isinstance(stmt, loop_linear_code.Phi):
-            elem_types = [type_assign_expr(elem, type_env, stmt, dep_graph) for elem in stmt.rhs_vars()]
+            elem_types = [
+                type_assign_expr(elem, type_env, stmt, dep_graph)
+                for elem in stmt.rhs_vars()
+            ]
             try:
                 phi_type = VarType.merge(
                     *elem_types,
@@ -408,6 +426,8 @@ def type_check(
         if var_type.visibility is None:
             var_type.visibility = VarVisibility.PLAINTEXT
 
-    validate_type_requirements(func.body, type_env, dep_graph, func.body[-1], func.return_type)
+    validate_type_requirements(
+        func.body, type_env, dep_graph, func.body[-1], func.return_type
+    )
 
     return func, type_env

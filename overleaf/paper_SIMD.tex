@@ -601,6 +601,18 @@ Our compiler performs the following semantic analysis steps:
 
 \ana{Benjamin?}
 
+Once the compiler converts the code to SSA,
+it transforms $\phi$-nodes that correspond to if-statements into MUX nodes.
+From the 3-address CFG conversion step,
+$\phi$-nodes corresponding to if-statements will be in a basic block
+with the ``merge condition'' property.
+For example, if $X_3 = \phi(X_1,X_2)$ is in a block with merge condition $C$,
+the compiler transforms it into $X_3 = \mathit{MUX}(C, X_1, X_2)$.
+Next, the compiler runs the dead code elimination algorithm from Cytron's SSA paper.
+Then, the control-flow graph is \emph{linearized} into MPC source,
+which has loops but no if-statements.
+\benjamin{TODO: Add more here}
+
 \ana{I think we need to add more here. Conversion from SSA to MPC Source is not so trivial.}
 
 A pseudo $\phi$-node $X_1 = \phi(X_0,X_2)$ in a loop header is evaluated during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to $X_0$, otherwise, it evaluates to $X_2$.

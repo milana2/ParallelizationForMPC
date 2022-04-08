@@ -325,7 +325,7 @@ def _refine_array_mux_statement(
                 return [
                     llc.Assign(
                         lhs=temp,
-                        rhs=llc.Mux(c, Ak_i1, Al_i1),
+                        rhs=llc.Mux(c, false_value=Ak_i1, true_value=Al_i1),
                     ),
                     llc.Assign(
                         lhs=Aj, rhs=llc.Update(llc.Var(f"{name}!{max(k,l)}"), i1, temp)
@@ -390,7 +390,7 @@ def _basic_vectorization_phase_1(
             var: llc.Var,
             stmt: DepNode,
             access_pattern: Optional[llc.SubscriptIndex] = None,
-            lhs_dims: Optional[list[llc.LoopBound]] = None
+            lhs_dims: Optional[list[llc.LoopBound]] = None,
         ) -> llc.Var:
             def_var = dep_graph.var_to_assignment[var]
             edge_kind = dep_graph.edge_kind(def_var, stmt)
@@ -430,6 +430,10 @@ def _basic_vectorization_phase_1(
                 if enclosure_dimensionality <= canonical_dimensionality:
                     return var
 
+                # Phi nodes should be dropping the rhs_true value instead of the lhs value,
+                # however there is an edge case where the rhs_true value gets updated after
+                # the drop_dim() is inserted.  For this reason, we update drop_dims() with
+                # phi node values after this phase.
                 var_prime = tmp_var_gen.get()
                 drop_dim = llc.Assign(
                     lhs=var_prime,
@@ -495,7 +499,9 @@ def _basic_vectorization_phase_1(
         if isinstance(stmt, (llc.Phi, llc.Assign)):
 
             if isinstance(stmt, llc.Phi):
-                assert isinstance(stmt.lhs, llc.Var), "VectorizedAccesses are not added until after this phase"
+                assert isinstance(
+                    stmt.lhs, llc.Var
+                ), "VectorizedAccesses are not added until after this phase"
                 lhs_dims = type_env[stmt.lhs].dim_sizes
                 assert isinstance(
                     stmt.rhs_false, llc.Var
@@ -594,6 +600,7 @@ def _basic_vectorization_phase_1(
             assert_never(stmt)
 
     return above_loop_result, inside_loop_result, after_loop_result
+
 
 def _finalize_drop_dims(stmts: list[llc.Statement], dep_graph: DepGraph):
     """
@@ -779,16 +786,17 @@ def _update_vectorized_accesses(
 
         new_arr = vectorized_accesses[expr.array]
         # Only earlier dimensions can be added, so we're free to prepend the new dims
-        new_vectorized_dims = [True] * (
-            len(new_arr.vectorized_dims) - len(expr.vectorized_dims)
-        ) + list(expr.vectorized_dims)
-        new_idx_vars = list(new_arr.idx_vars)[: -len(expr.vectorized_dims)] + list(
-            expr.idx_vars
+        new_vectorized_dims = tuple(
+            [True] * (len(new_arr.vectorized_dims) - len(expr.vectorized_dims))
+            + list(expr.vectorized_dims)
+        )
+        new_idx_vars = tuple(
+            list(new_arr.idx_vars)[: -len(expr.vectorized_dims)] + list(expr.idx_vars)
         )
         return dc.replace(
             new_arr,
-            vectorized_dims=tuple(new_vectorized_dims),
-            idx_vars=tuple(new_idx_vars),
+            vectorized_dims=new_vectorized_dims,
+            idx_vars=new_idx_vars,
         )
     elif isinstance(expr, llc.Subscript):
         if expr.array in vectorized_accesses:
@@ -1086,7 +1094,8 @@ def _basic_vectorization_phase_2(
                     if isinstance(val, (VectorizedAccess, llc.VectorizedUpdate)):
                         new_idx_vars = tuple(
                             dim
-                            if not isinstance(dim, Var) or dim.name != loop_stack[-1].counter.name
+                            if not isinstance(dim, Var)
+                            or dim.name != loop_stack[-1].counter.name
                             else new_counter
                             for dim in val.idx_vars
                         )
@@ -1342,10 +1351,17 @@ def _basic_vectorization_phase_2(
                                 rhs_var = rhs_var.array
 
                             stmt = _replace_in_rhs(stmt, lhs_var, rhs_var)
+
+                        for orig_var, lifted in lifted_arrs.items():
+                            stmt = util.replace_pattern(stmt, orig_var, lifted.array)
                         output.extend(lifted_stmt(stmt))
             else:
                 output.append(generate_monolithic_for(closure, lifted_arrs))
         else:
+            for orig_var, lifted in lifted_arrs.items():
+                stmts_and_closures[i] = util.replace_pattern(
+                    stmts_and_closures[i], orig_var, lifted.array
+                )
             statements = lifted_stmt(cast(llc.Statement, stmts_and_closures[i]))
             for statement in statements:
                 for orig_var, lifted in lifted_arrs.items():

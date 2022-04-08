@@ -19,20 +19,20 @@ Block 6:
     val = result[i]
     conditional jump flag
 Block 7:
-    flag = True
     jump
 Block 8:
+    flag = True
     jump
 Block 9:
     (merge from conditional jump !1)
     jump
 Block 10:
-    val = A[i]
     jump
 Block 11:
+    val = A[i]
     jump
 Block 12:
     (merge from conditional jump flag)
     result = Update(result, i, val)
     jump
-Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 8, F) (5, 7, T) (6, 11, F) (6, 10, T) (7, 9, *) (8, 9, *) (9, 4, *) (10, 12, *) (11, 12, *) (12, 1, *)
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 7, F) (5, 8, T) (6, 10, F) (6, 11, T) (7, 9, *) (8, 9, *) (9, 4, *) (10, 12, *) (11, 12, *) (12, 1, *)
