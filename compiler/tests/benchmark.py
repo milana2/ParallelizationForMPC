@@ -13,10 +13,31 @@ class BenchmarkOutput:
     output: str
     timing_stats: statistics.TimingStatistics
     circuit_stats: statistics.CircuitStatistics
+    @classmethod
+    def from_dictionary(cls, params):
+        name = params['name']
+        output = params['output']
+        timing_stats = params['timing_stats']
+        circuit_stats = params['circuit_stats']
+
+        return cls(
+            name=name,
+            output=output,
+            timing_stats=timing_stats,
+            circuit_stats=circuit_stats
+            )
+
+    def to_dictionary(self):
+        return {'name': self.name,
+                'output': self.output,
+                'timing_stats': self.timing_stats,
+                'circuit_stats': self.circuit_stats,
+                }
 
 
 def run_benchmark(
-    benchmark_name: str, benchmark_path: str, protocol: str, vectorized=True
+    benchmark_name: str, benchmark_path: str, protocol: str, vectorized=True, timeout=600,
+    cmd_args = [], compile=True, continue_on_error = False
 ) -> tuple[BenchmarkOutput, BenchmarkOutput]:
     input_fname = os.path.join(benchmark_path, "input.py")
 
@@ -24,21 +45,23 @@ def run_benchmark(
         input_py = f.read().strip()
 
     app_path = os.path.join(
-        benchmark_path, "motion_app" + ("-vectorized" if vectorized else "")
-    )
-    compiler.compile(
-        f"{benchmark_name}.py", input_py, True, vectorized, app_path, True, protocol
+        benchmark_path, "motion_app" + "-" + protocol + ("-vectorized" if vectorized else "")
     )
 
-    subprocess.run(
-        ["cmake", "-S", app_path, "-B", os.path.join(app_path, "build")],
-        check=True,
-    )
+    if compile:
+        compiler.compile(
+            f"{benchmark_name}.py", input_py, True, vectorized, app_path, True, protocol
+        )
 
-    subprocess.run(
-        ["cmake", "--build", os.path.join(app_path, "build")],
-        check=True,
-    )
+        subprocess.run(
+            ["cmake", "-S", app_path, "-B", os.path.join(app_path, "build")],
+            check=True,
+        )
+
+        subprocess.run(
+            ["cmake", "--build", os.path.join(app_path, "build")],
+            check=True,
+        )
 
     # Create directories for output and MOTION logs
     party0_dir = os.path.join(app_path, "party0")
@@ -61,7 +84,7 @@ def run_benchmark(
             "1,127.0.0.1,2301",
             "--my-id",
             "0",
-        ],
+        ] + cmd_args,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
@@ -75,14 +98,14 @@ def run_benchmark(
                 "1,127.0.0.1,2301",
                 "--my-id",
                 "1",
-            ],
+            ] + cmd_args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
             cwd=party1_dir,
         ) as party1:
-            party0.wait(600)
-            party1.wait(600)
+            party0.wait(timeout)
+            party1.wait(timeout)
 
             assert party0.stdout is not None
             assert party0.stderr is not None
@@ -93,6 +116,10 @@ def run_benchmark(
             with open(os.path.join(party0_dir, "stderr"), "w") as f:
                 f.write(party0_stderr)
 
+            if(party0.returncode != 0 and party1.returncode != 0 and continue_on_error):
+                return (
+                    None, None
+                )
             assert party1.stdout is not None
             assert party1.stderr is not None
             party1_stdout_raw = party1.stdout.read()
