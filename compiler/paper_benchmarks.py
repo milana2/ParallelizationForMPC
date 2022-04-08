@@ -191,18 +191,24 @@ def run_paper_benchmarks(filename):
 
         compile = True
         i = 0
+        non_vec_failed = False
         for args in all_args:
             log.info("\n{} - arguments: {}".format(test_case_dir.name, args.args));
 
             gmw_p0 = gmw_p1 = None
-            if( i < non_vec_up_to):
+            if (i < non_vec_up_to) and not non_vec_failed:
                 log.info("Running GMW Non Vectorized {} {}".format(test_case_dir.name, args.label));           
                 gmw_p0, gmw_p1 = run_benchmark(
-                    test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, False, None, args.args, compile
+                    test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, False, None, args.args, compile,
+                    continue_on_error=True
                 )
-                log.info("GMW Non Vectorized output is {}".format(gmw_p0.output.strip()))
-                assert gmw_p0.output.strip() == gmw_p1.output.strip(), \
-                    (gmw_p0.output.strip(), gmw_p1.output.strip())
+                if gmw_p0 is not None and gmw_p1 is not None:
+                    log.info("GMW Non Vectorized output is {}".format(gmw_p0.output.strip()))
+                    assert gmw_p0.output.strip() == gmw_p1.output.strip(), \
+                        (gmw_p0.output.strip(), gmw_p1.output.strip())
+                else:
+                    log.info("GMW Non Vectorized FAILED! Will not run Non-Vectorized from now.")
+                    non_vec_failed = True
             
             log.info("Running GMW Vectorized {} {}".format(test_case_dir.name, args.label));
             gmw_vec_p0, gmw_vec_p1 = run_benchmark(
@@ -213,14 +219,19 @@ def run_paper_benchmarks(filename):
                 (gmw_vec_p0.output.strip(), gmw_vec_p1.output.strip())
 
             bmr_p0 = bmr_p1 = None
-            if( i < non_vec_up_to):
+            if (i < non_vec_up_to) and not non_vec_failed:
                 log.info("Running BMR Non Vectorized {} {}".format(test_case_dir.name, args.label));
                 bmr_p0, bmr_p1 = run_benchmark(
-                    test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, False, None, args.args, compile
+                    test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, False, None, args.args, compile,
+                    continue_on_error=True
                 )
-                log.info("BMR Non Vectorized output is {}".format(bmr_p0.output.strip()))
-                assert bmr_p0.output.strip() == bmr_p1.output.strip(), \
-                    (bmr_p0.output.strip(), bmr_p1.output.strip())
+                if bmr_p0 is not None and bmr_p1 is not None:
+                    log.info("BMR Non Vectorized output is {}".format(bmr_p0.output.strip()))
+                    assert bmr_p0.output.strip() == bmr_p1.output.strip(), \
+                        (bmr_p0.output.strip(), bmr_p1.output.strip())
+                else:
+                    log.info("BMR Non Vectorized FAILED! Will not run Non-Vectorized from now.")
+                    non_vec_failed = True
             
             log.info("Running BMR Vectorized {} {}".format(test_case_dir.name, args.label));
             bmr_vec_p0, bmr_vec_p1 = run_benchmark(
@@ -253,10 +264,53 @@ def run_paper_benchmarks(filename):
     print_benchmark_data(filename)
     generate_graphs(filename)
 
-def generate_graphs(source_data_file):
-    with open(source_data_file, "r", encoding='utf-8') as f:
-        json_str = f.read()
-        all_stats = json_deserialize(json_str)
+
+def run_gnuplot(plot_script, data_file, graph_file, title, y_label, other_args = []):
+    log.info("gnuplot -c {} {} {} \"{}\" \"{}\" {}".format(plot_script, 
+        data_file, graph_file, title, y_label, other_args)
+    )
+    with subprocess.Popen(
+        [
+            "gnuplot",
+            "-c", plot_script,
+            data_file, graph_file,
+            "\"{}\"".format(title), "\"{}\"".format(y_label)
+        ] + other_args,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        cwd=GRAPHS_DIR
+    ) as gnuplot:
+        gnuplot.wait()
+        if(gnuplot.returncode != 0):
+            log.error("gnuplot exited with returncode: {0}".format(gnuplot.returncode))
+            log.error("stderr: \n{0}".format(gnuplot.stderr.read()))
+            log.debug("stdout: \n{0}".format(gnuplot.stdout.read()))
+            exit(1)
+
+    # gnuplot -c histogram.gnu data_file.txt graph.png "Graph Title" "Y Axis Label"
+    # gnuplot -c linegraph.gnu data_file.txt graph.png "Graph Title" "Y Axis Label"
+    # with subprocess.Popen(
+    #     [
+    #         "gnuplot",
+    #         "g1.gnu",
+    #     ],
+    #     stdout=subprocess.PIPE,
+    #     stderr=subprocess.PIPE,
+    #     text=True,
+    #     cwd=GRAPHS_DIR
+    # ) as gnuplot:
+    #     gnuplot.wait()
+
+    pass
+
+def generate_graphs(source_files):
+    all_stats = []
+    for sf in source_files:
+        with open(sf, "r", encoding='utf-8') as f:
+            json_str = f.read()
+            file_stats = json_deserialize(json_str)
+            all_stats.extend(file_stats)
 
     FILE_DIR = os.path.dirname(__file__)
     GRAPHS_DIR = os.path.join(FILE_DIR, "graphs")
@@ -308,6 +362,8 @@ def generate_graphs(source_data_file):
                     r_bmr=r_bmr))
                 x += 1
     
+    # gnuplot -c histogram.gnu data_file.txt graph.png "Graph Title" "Y Axis Label"
+    # gnuplot -c linegraph.gnu data_file.txt graph.png "Graph Title" "Y Axis Label"
     # with subprocess.Popen(
     #     [
     #         "gnuplot",
@@ -327,15 +383,15 @@ if __name__ == "__main__":
         action="store_true",
         help="generates graphs from benchmarks",
     )
-    parser.add_argument('-f', '--file', nargs='?', 
-        help="file containing benchmark data", 
-        default="benchmarks.json",
+    parser.add_argument('-f', '--files', nargs='+', 
+        help="files load/store benchmark data, only the first is used when storing", 
+        default=["benchmarks.json"],
     )
 
     args = parser.parse_args()
 
     if args.graphs:
-        generate_graphs(args.file)
+        generate_graphs(args.files)
     else:
-        run_paper_benchmarks(args.file)
+        run_paper_benchmarks(args.files[0])
 

@@ -37,7 +37,7 @@ class BenchmarkOutput:
 
 def run_benchmark(
     benchmark_name: str, benchmark_path: str, protocol: str, vectorized=True, timeout=600,
-    cmd_args = [], compile=True
+    cmd_args = [], compile=True, continue_on_error = False
 ) -> tuple[BenchmarkOutput, BenchmarkOutput]:
     input_fname = os.path.join(benchmark_path, "input.py")
 
@@ -117,6 +117,10 @@ def run_benchmark(
             with open(os.path.join(party0_dir, "stderr"), "w") as f:
                 f.write(party0_stderr)
 
+            if(party0.returncode != 0 and party1.returncode != 0 and continue_on_error):
+                return (
+                    None, None
+                )
             assert party1.stdout is not None
             assert party1.stderr is not None
             party1_stdout_raw = party1.stdout.read()
