@@ -25,22 +25,22 @@ Block 6:
     val!2 = result!1[i!1]
     conditional jump flag!3
 Block 7:
-    flag!4 = True
     jump
 Block 8:
+    flag!4 = True
     jump
 Block 9:
-    flag!5 = Φ(flag!4, flag!3)
+    flag!5 = Φ(flag!3, flag!4)
     (merge from conditional jump !1!3)
     jump
 Block 10:
-    val!3 = A!0[i!1]
     jump
 Block 11:
+    val!3 = A!0[i!1]
     jump
 Block 12:
-    val!4 = Φ(val!3, val!2)
+    val!4 = Φ(val!2, val!3)
     (merge from conditional jump flag!3)
     result!2 = Update(result!1, i!1, val!4)
     jump
-Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 8, F) (5, 7, T) (6, 11, F) (6, 10, T) (7, 9, *) (8, 9, *) (9, 4, *) (10, 12, *) (11, 12, *) (12, 1, *)
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 7, F) (5, 8, T) (6, 10, F) (6, 11, T) (7, 9, *) (8, 9, *) (9, 4, *) (10, 12, *) (11, 12, *) (12, 1, *)

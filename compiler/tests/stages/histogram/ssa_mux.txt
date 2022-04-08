@@ -23,14 +23,14 @@ Block 5:
 Block 6:
     jump
 Block 7:
-    val!3 = (result!2[i!1] + B!0[j!1])
+    val!4 = result!2[i!1]
     jump
 Block 8:
-    val!4 = result!2[i!1]
+    val!3 = (result!2[i!1] + B!0[j!1])
     jump
 Block 9:
     (merge from conditional jump !1!3)
     val!5 = MUX(!1!3, val!3, val!4)
     result!3 = Update(result!2, i!1, val!5)
     jump
-Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 8, F) (5, 7, T) (6, 1, *) (7, 9, *) (8, 9, *) (9, 4, *)
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 7, F) (5, 8, T) (6, 1, *) (7, 9, *) (8, 9, *) (9, 4, *)

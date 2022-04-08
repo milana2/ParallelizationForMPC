@@ -29,14 +29,14 @@ Block 6:
     !6 = not bx
     conditional jump !6
 Block 7:
-    val_X = X_coords[i]
-    val_Y = Y_coords[i]
     jump
 Block 8:
+    val_X = X_coords[i]
+    val_Y = Y_coords[i]
     jump
 Block 9:
     (merge from conditional jump !6)
     result_X = Update(result_X, i, val_X)
     result_Y = Update(result_Y, i, val_Y)
     jump
-Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 4, *) (6, 8, F) (6, 7, T) (7, 9, *) (8, 9, *) (9, 1, *)
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, *) (4, 6, F) (4, 5, T) (5, 4, *) (6, 7, F) (6, 8, T) (7, 9, *) (8, 9, *) (9, 1, *)
