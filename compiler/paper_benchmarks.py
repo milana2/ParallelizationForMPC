@@ -20,6 +20,10 @@ from utils import json_serialize, json_deserialize, StatsForInputConfig, StatsFo
 GMW_PROTOCOL = "BooleanGmw"
 BMR_PROTOCOL = "Bmr"
 
+FILE_DIR = os.path.dirname(__file__)
+GRAPHS_DIR = os.path.join(FILE_DIR, "graphs")
+os.makedirs(GRAPHS_DIR, exist_ok=True)
+
 logging.basicConfig(
     level=logging.DEBUG,
     format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
@@ -46,8 +50,8 @@ class InputArgs:
 
 
 random.seed(0) # Intentionally seeding with a known value, for reproducibility
-def get_rand_ints(n):
-    return [random.randint(1, 100) for i in range(n)]
+def get_rand_ints(n, min=1, max=100):
+    return [random.randint(min, max) for i in range(n)]
 
 def get_biometric_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
@@ -72,7 +76,7 @@ def get_biometric_inputs() -> tuple[list[InputArgs], int]:
 def get_psi_inputs()-> tuple[list[InputArgs], int]:
     all_args = []
     non_vec_up_to = 6
-    for config in [[4, 16], [16, 32]]:#, [16, 64], [16, 128], [16, 256], [16, 512]]:# [8, 64], [4, 256]]:
+    for config in [[16, 16], [32, 32], [64, 64], [128, 128], [256, 256], [512, 512] [1024, 1024], [4096, 4096]]:
         SA = config[0]
         SB = config[1]
         args = [
@@ -128,25 +132,111 @@ def get_convex_hull_inputs():
         label = "N: {}".format(N)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
-def get_cryptonets_convolution_naive_inputs():
+
+def get_count_102_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
-        X_coords = get_rand_ints(N)
-        Y_coords = get_rand_ints(N)
-        result_X = get_rand_ints(N)
-        result_Y = get_rand_ints(N)
-        args.append("--X_coords")
-        args.extend(list(map(str, X_coords)))
-        args.append("--Y_coords")
-        args.extend(list(map(str, Y_coords)))
-        args.append("--result_X")
-        args.extend(list(map(str, result_X)))
-        args.append("--result_Y")
-        args.extend(list(map(str, result_Y)))
+        Seq = get_rand_ints(N, min=0, max=2)
+        Syms = [1, 0, 2]
+        args.append("--Seq")
+        args.extend(list(map(str, Seq)))
+        args.append("--Syms")
+        args.extend(list(map(str, Syms)))
+        label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_count_10s_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+        args = [
+        "--N", "{}".format(N),
+        ]
+        Seq = get_rand_ints(N, min=0, max=2)
+        Syms = [0, 1]
+        args.append("--Seq")
+        args.extend(list(map(str, Seq)))
+        args.append("--Syms")
+        args.extend(list(map(str, Syms)))
+        label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_count_123_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+        args = [
+        "--N", "{}".format(N),
+        ]
+        Seq = get_rand_ints(N, min=1, max=4)
+        Syms = [1, 2, 3]
+        args.append("--Seq")
+        args.extend(list(map(str, Seq)))
+        args.append("--Syms")
+        args.extend(list(map(str, Syms)))
+        label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_db_variance_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+        args = [
+        "--len", "{}".format(N),
+        ]
+        A = get_rand_ints(N)
+        V = [0 for i in range(N)]
+        args.append("--A")
+        args.extend(list(map(str, A)))
+        args.append("--V")
+        args.extend(list(map(str, V)))
+        label = "len: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_histogram_inputs():
+    all_args = []
+    num_bins = 5
+    non_vec_up_to = 100
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+        args = [
+        "--num_bins", "{}".format(num_bins),
+        "--N", "{}".format(N),
+        ]
+        A = get_rand_ints(N, min=0, max=num_bins-1)
+        B = get_rand_ints(N)
+        R = [0 for i in range(N)]
+        args.append("--A")
+        args.extend(list(map(str, A)))
+        args.append("--B")
+        args.extend(list(map(str, B)))
+        args.append("--R")
+        args.extend(list(map(str, R)))
+        label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_max_dist_between_syms_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+        args = [
+        "--N", "{}".format(N),
+        ]
+        Seq = get_rand_ints(N)
+        some_i = random.randint(0, len(Seq)-1)
+        Sym = Seq[some_i]
+        args.append("--Seq")
+        args.extend(list(map(str, Seq)))
+        args.append("--Sym")
+        args.append(str(Sym))
         label = "N: {}".format(N)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
@@ -154,14 +244,24 @@ def get_cryptonets_convolution_naive_inputs():
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
     if name == "biometric" or name == "biometric_fast":
          return get_biometric_inputs()
-    if name == "psi":
-        return get_psi_inputs()
+    if name == "convex_hull" or name == "minimal_points":
+        return get_convex_hull_inputs()
+    if name == "count_102" or name == "longest_102":
+        return get_count_102_inputs()
+    if name == "count_10s":
+        return get_count_10s_inputs()
+    if name == "count_123":
+        return get_count_123_inputs()
+    if name == "db_variance":
+        return get_db_variance_inputs()
+    if name == "histogram":
+        return get_histogram_inputs()
     if name == "inner_product":
         return get_inner_product_inputs()
-    if name == "convex_hull":
-        return get_convex_hull_inputs()
-    if name == "cryptonets_convolution_naive":
-        return get_cryptonets_convolution_naive_inputs()
+    if name == "max_dist_between_syms" or name == "max_sum_between_syms":
+        return get_max_dist_between_syms_inputs()
+    # if name == "psi": # segfaults right now
+    #     return get_psi_inputs()
     return [[], 0]
 
 
@@ -170,16 +270,17 @@ def print_protocol_stats(p0, vec_p0, p1, vec_p1,):
     if p0 is not None:
         ts0 = p0.timing_stats
         cs0 = p0.circuit_stats
+
+    ts0v = cs0v = None
+    if vec_p0 is not None:
+        ts0v = vec_p0.timing_stats
+        cs0v = vec_p0.circuit_stats
         
     ts1 = None
     if p1 is not None:
         ts1 = p1.timing_stats
-
-    ts0v = vec_p0.timing_stats
-    cs0v = vec_p0.circuit_stats
-    ts1v = vec_p1.timing_stats
-
-
+    
+    ts1v = vec_p1.timing_stats if vec_p1 is not None else None
 
     log.info("Timing/Communication")
     labels = ["Party 0 NonVec", "Party 0 Vectorized", "Party 1 NonVec", "Party 1 Vectorized"]
@@ -231,6 +332,9 @@ def print_benchmark_data(filename):
 def run_paper_benchmarks(filename):
     all_stats = []
     for test_case_dir in os.scandir(test_context.STAGES_DIR):
+        if test_case_dir.name in test_context.SKIPPED_TESTS:
+                continue
+
         all_args, non_vec_up_to = get_inputs(test_case_dir.name)
         if len(all_args) == 0:
             continue;
@@ -256,16 +360,21 @@ def run_paper_benchmarks(filename):
                     assert gmw_p0.output.strip() == gmw_p1.output.strip(), \
                         (gmw_p0.output.strip(), gmw_p1.output.strip())
                 else:
-                    log.info("GMW Non Vectorized FAILED! Will not run Non-Vectorized from now.")
+                    log.warning("GMW Non Vectorized FAILED! Will not run Non-Vectorized from now.")
                     non_vec_failed = True
             
             log.info("Running GMW Vectorized {} {}".format(test_case_dir.name, args.label));
             gmw_vec_p0, gmw_vec_p1 = run_benchmark(
-                test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True, None, args.args, compile
+                test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True, None, args.args, compile,
+                continue_on_error=True
             )
-            log.info("GMW Vectorized output is {}".format(gmw_vec_p0.output.strip()))
-            assert gmw_vec_p0.output.strip() == gmw_vec_p1.output.strip(), \
-                (gmw_vec_p0.output.strip(), gmw_vec_p1.output.strip())
+
+            if(gmw_vec_p0 is not None and gmw_vec_p1 is not None):
+                log.info("GMW Vectorized output is {}".format(gmw_vec_p0.output.strip()))
+                assert gmw_vec_p0.output.strip() == gmw_vec_p1.output.strip(), \
+                    (gmw_vec_p0.output.strip(), gmw_vec_p1.output.strip())
+            else:
+                log.warning("GMW Vectorized FAILED!")
 
             bmr_p0 = bmr_p1 = None
             if (i < non_vec_up_to) and not non_vec_failed:
@@ -279,34 +388,44 @@ def run_paper_benchmarks(filename):
                     assert bmr_p0.output.strip() == bmr_p1.output.strip(), \
                         (bmr_p0.output.strip(), bmr_p1.output.strip())
                 else:
-                    log.info("BMR Non Vectorized FAILED! Will not run Non-Vectorized from now.")
+                    log.warning("BMR Non Vectorized FAILED! Will not run Non-Vectorized from now.")
                     non_vec_failed = True
             
             log.info("Running BMR Vectorized {} {}".format(test_case_dir.name, args.label));
             bmr_vec_p0, bmr_vec_p1 = run_benchmark(
-                test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, True, None, args.args, compile
+                test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, True, None, args.args, compile,
+                continue_on_error=True
             )
-            log.info("BMR Vectorized output is {}".format(bmr_vec_p0.output.strip()))
-            assert bmr_vec_p0.output.strip() == bmr_vec_p1.output.strip(), \
-                (bmr_vec_p0.output.strip(), bmr_vec_p1.output.strip())
+
+            if bmr_vec_p0 is not None and bmr_vec_p1 is not None:
+                log.info("BMR Vectorized output is {}".format(bmr_vec_p0.output.strip()))
+                assert bmr_vec_p0.output.strip() == bmr_vec_p1.output.strip(), \
+                    (bmr_vec_p0.output.strip(), bmr_vec_p1.output.strip())
+            else:
+                log.warning("BMR Vectorized FAILED!")
             
             compile = False
 
-            
-            input_stats = StatsForInputConfig(args.label, gmw_p0, gmw_p1, gmw_vec_p0, gmw_vec_p1,
-                bmr_p0, bmr_p1, bmr_vec_p0, bmr_vec_p1)
-            task_stats.input_configs.append(input_stats)
-            log.info("task {} input config {} DONE".format(task_stats.label, input_stats.label))
+            if gmw_p0 is None and gmw_vec_p0 is None and bmr_p0 is None and bmr_vec_p0 is None:
+                log.warning("{}, {} No version ran on this iteration.".format(test_case_dir.name, 
+                    args.label))
+            else:
+                input_stats = StatsForInputConfig(args.label, gmw_p0, gmw_p1, gmw_vec_p0, gmw_vec_p1,
+                    bmr_p0, bmr_p1, bmr_vec_p0, bmr_vec_p1)
+                task_stats.input_configs.append(input_stats)
+                log.info("task {} input config {} DONE".format(task_stats.label, input_stats.label))
 
-            with open("{}.json".format(task_stats.label), "w", encoding='utf-8') as f:
-                json_str = json_serialize(all_stats)
-                f.write(json_str)
+                file_path = os.path.join(GRAPHS_DIR, "{}.json".format(task_stats.label))
+                with open(file_path, "w", encoding='utf-8') as f:
+                    json_str = json_serialize(task_stats)
+                    f.write(json_str)
             
             i += 1
 
         all_stats.append(task_stats)
         log.info("task {} DONE".format(task_stats.label))
-        with open(filename, "w", encoding='utf-8') as f:
+        file_path = os.path.join(GRAPHS_DIR, filename)
+        with open(file_path, "w", encoding='utf-8') as f:
             json_str = json_serialize(all_stats)
             f.write(json_str)
 
@@ -318,6 +437,7 @@ def run_gnuplot(plot_script, data_file, graph_file, title, y_label, other_args =
     log.info("gnuplot -c {} {} {} \"{}\" \"{}\" {}".format(plot_script, 
         data_file, graph_file, title, y_label, other_args)
     )
+    
     with subprocess.Popen(
         [
             "gnuplot",
@@ -353,6 +473,11 @@ def run_gnuplot(plot_script, data_file, graph_file, title, y_label, other_args =
 
     pass
 
+def ratio(a, b):
+    if b != 0:
+        return a/b
+    return 0
+
 def generate_graphs(source_files):
     all_stats = []
     for sf in source_files:
@@ -360,10 +485,6 @@ def generate_graphs(source_files):
             json_str = f.read()
             file_stats = json_deserialize(json_str)
             all_stats.extend(file_stats)
-
-    FILE_DIR = os.path.dirname(__file__)
-    GRAPHS_DIR = os.path.join(FILE_DIR, "graphs")
-    os.makedirs(GRAPHS_DIR, exist_ok=True)
 
     # Total Gates
     for task_stat in all_stats:
@@ -376,12 +497,12 @@ def generate_graphs(source_files):
                 label = i.label
 
                 nv_gmw = i.gmw_p0.circuit_stats.num_gates if i.gmw_p0 is not None else 0
-                v_gmw  = i.gmw_vec_p0.circuit_stats.num_gates
-                r_gmw  = nv_gmw/v_gmw
+                v_gmw  = i.gmw_vec_p0.circuit_stats.num_gates if i.gmw_vec_p0 is not None else 0
+                r_gmw  = ratio(nv_gmw, v_gmw)
 
                 nv_bmr = i.bmr_p0.circuit_stats.num_gates if i.bmr_p0 is not None else 0
-                v_bmr  = i.bmr_vec_p0.circuit_stats.num_gates
-                r_bmr  = nv_bmr/v_bmr
+                v_bmr  = i.bmr_vec_p0.circuit_stats.num_gates if i.bmr_vec_p0 is not None else 0
+                r_bmr  = ratio(nv_bmr, v_bmr)
 
                 f.write("{x}\t\"{label}\"\t{nv_gmw}\t{v_gmw}\t{nv_bmr}\t{v_bmr}\t{r_gmw}\t{r_bmr}\n".format(
                     x=x, label=label, nv_gmw=nv_gmw, v_gmw=v_gmw, r_gmw=r_gmw, nv_bmr=nv_bmr, v_bmr=v_bmr, 
@@ -399,12 +520,12 @@ def generate_graphs(source_files):
                 label = i.label
 
                 nv_gmw = i.gmw_p0.circuit_stats.circuit_gen_time if i.gmw_p0 is not None else 0
-                v_gmw  = i.gmw_vec_p0.circuit_stats.circuit_gen_time
-                r_gmw  = nv_gmw/v_gmw
+                v_gmw  = i.gmw_vec_p0.circuit_stats.circuit_gen_time  if i.gmw_vec_p0 is not None else 0
+                r_gmw  = ratio(nv_gmw, v_gmw)
 
                 nv_bmr = i.bmr_p0.circuit_stats.circuit_gen_time if i.bmr_p0 is not None else 0
-                v_bmr  = i.bmr_vec_p0.circuit_stats.circuit_gen_time
-                r_bmr  = nv_bmr/v_bmr
+                v_bmr  = i.bmr_vec_p0.circuit_stats.circuit_gen_time if i.bmr_vec_p0 is not None else 0
+                r_bmr  = ratio(nv_bmr. v_bmr)
 
                 f.write("{x}\t\"{label}\"\t{nv_gmw}\t{v_gmw}\t{nv_bmr}\t{v_bmr}\t{r_gmw}\t{r_bmr}\n".format(
                     x=x, label=label, nv_gmw=nv_gmw, v_gmw=v_gmw, r_gmw=r_gmw, nv_bmr=nv_bmr, v_bmr=v_bmr, 
