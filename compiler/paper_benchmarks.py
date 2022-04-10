@@ -242,24 +242,24 @@ def get_max_dist_between_syms_inputs():
     return (all_args, non_vec_up_to)
 
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
-    if name == "biometric" or name == "biometric_fast":
-         return get_biometric_inputs()
+    # if name == "biometric" or name == "biometric_fast":
+    #      return get_biometric_inputs()
     if name == "convex_hull" or name == "minimal_points":
         return get_convex_hull_inputs()
     if name == "count_102" or name == "longest_102":
         return get_count_102_inputs()
-    if name == "count_10s":
-        return get_count_10s_inputs()
-    if name == "count_123":
-        return get_count_123_inputs()
-    if name == "db_variance":
-        return get_db_variance_inputs()
+    # if name == "count_10s":
+    #     return get_count_10s_inputs()
+    # if name == "count_123":
+    #     return get_count_123_inputs()
+    # if name == "db_variance":
+    #     return get_db_variance_inputs()
     if name == "histogram":
         return get_histogram_inputs()
-    if name == "inner_product":
-        return get_inner_product_inputs()
-    if name == "max_dist_between_syms" or name == "max_sum_between_syms":
-        return get_max_dist_between_syms_inputs()
+    # if name == "inner_product":
+    #     return get_inner_product_inputs()
+    # if name == "max_dist_between_syms" or name == "max_sum_between_syms":
+    #     return get_max_dist_between_syms_inputs()
     # if name == "psi": # segfaults right now
     #     return get_psi_inputs()
     return [[], 0]
@@ -431,7 +431,7 @@ def run_paper_benchmarks(filename):
 
     file_path = os.path.join(GRAPHS_DIR, filename)
     print_benchmark_data(file_path)
-    generate_graphs([file_path])
+    # generate_graphs([file_path])
 
 
 def run_gnuplot(plot_script, data_file, graph_file, title, y_label, other_args = []):
@@ -444,7 +444,7 @@ def run_gnuplot(plot_script, data_file, graph_file, title, y_label, other_args =
             "gnuplot",
             "-c", plot_script,
             data_file, graph_file,
-            "\"{}\"".format(title), "\"{}\"".format(y_label)
+            title, y_label
         ] + other_args,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -479,73 +479,81 @@ def ratio(a, b):
         return a/b
     return 0
 
+
+def generate_graph_for_attr(all_stats, get_val, y_label='Total Gates'):
+
+    graph_ext = ".png"
+
+    for task_stat in all_stats:
+        fname = "{}-{}.txt".format(task_stat.label, y_label)
+        hist_graph_file = "{}-hist {}{}".format(task_stat.label, y_label, graph_ext)
+        line_graph_file = "{}-line {}{}".format(task_stat.label, y_label, graph_ext)
+        file_path = os.path.join(GRAPHS_DIR, fname)
+        with open(file_path, mode='w', encoding='utf-8') as f:
+            f.write("x\tInput\t\"GMW\"\t\"GMW (Vectorized)\"\t\"BMR\"" \
+                "\t\"BMR (Vectorized)\"\t\"GMW Improvement\"\t\"BMR Improvement\"\n")
+            x = 1
+            for i in task_stat.input_configs:
+                label = i.label
+                if task_stat.label.startswith('biometric'):
+                    parts = label.split(", ")
+                    label = parts[1]
+
+
+                nv_gmw = get_val(i.gmw_p0)
+                v_gmw  = get_val(i.gmw_vec_p0)
+                r_gmw  = ratio(nv_gmw, v_gmw)
+
+                nv_bmr = get_val(i.bmr_p0)
+                v_bmr  = get_val(i.bmr_vec_p0)
+                r_bmr  = ratio(nv_bmr, v_bmr)
+
+                f.write("{x}\t\"{label}\"\t{nv_gmw}\t{v_gmw}\t{nv_bmr}\t{v_bmr}\t{r_gmw}\t{r_bmr}\n".format(
+                    x=x, label=label, nv_gmw=nv_gmw, v_gmw=v_gmw, r_gmw=r_gmw, nv_bmr=nv_bmr, v_bmr=v_bmr, 
+                    r_bmr=r_bmr))
+                x += 1
+
+        title = task_stat.label
+        run_gnuplot('plt_histogram.gnu', file_path, hist_graph_file, task_stat.label, 
+            y_label, other_args = [])
+        run_gnuplot('plt_linegraph.gnu', file_path, line_graph_file, task_stat.label, 
+            y_label, other_args = [])
+
 def generate_graphs(source_files):
     all_stats = []
     for sf in source_files:
         with open(sf, "r", encoding='utf-8') as f:
             json_str = f.read()
             file_stats = json_deserialize(json_str)
-            all_stats.extend(file_stats)
+            all_stats.append(file_stats)
 
-    # Total Gates
-    for task_stat in all_stats:
-        fname = "{}-total-gates.txt".format(task_stat.label)
-        file_path = os.path.join(GRAPHS_DIR, fname)
-        with open(file_path, mode='w', encoding='utf-8') as f:
-            f.write("x\tInput\tNonVec(GMW)\tVec(GMW)\tNonVec(BMR)\tVec(BMR)\tRatio(GMW)\tRatio(BMR)\n")
-            x = 1
-            for i in task_stat.input_configs:
-                label = i.label
+    # get_num_gates = lambda x: x.circuit_stats.num_gates if x is not None else 0
+    # generate_graph_for_attr(all_stats, get_num_gates, 'Total Gates')
+    # get_circ_gen_time = lambda x: x.circuit_stats.circuit_gen_time if x is not None else 0
+    # generate_graph_for_attr(all_stats, get_circ_gen_time, 'Circuit Generation Time (ms)')
+    get_online_time = lambda x: x.timing_stats.gates_online.mean if x is not None else 0
+    generate_graph_for_attr(all_stats, get_online_time, 'Online Time (ms)')  
+    get_setup_time = lambda x: x.timing_stats.gates_setup.mean if x is not None else 0
+    generate_graph_for_attr(all_stats, get_setup_time, 'Setup Time (ms)')    
+    get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
+    generate_graph_for_attr(all_stats, get_send_size, 'Sent Data (MiB)')
+    get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
+    generate_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)')  
 
-                nv_gmw = i.gmw_p0.circuit_stats.num_gates if i.gmw_p0 is not None else 0
-                v_gmw  = i.gmw_vec_p0.circuit_stats.num_gates if i.gmw_vec_p0 is not None else 0
-                r_gmw  = ratio(nv_gmw, v_gmw)
-
-                nv_bmr = i.bmr_p0.circuit_stats.num_gates if i.bmr_p0 is not None else 0
-                v_bmr  = i.bmr_vec_p0.circuit_stats.num_gates if i.bmr_vec_p0 is not None else 0
-                r_bmr  = ratio(nv_bmr, v_bmr)
-
-                f.write("{x}\t\"{label}\"\t{nv_gmw}\t{v_gmw}\t{nv_bmr}\t{v_bmr}\t{r_gmw}\t{r_bmr}\n".format(
-                    x=x, label=label, nv_gmw=nv_gmw, v_gmw=v_gmw, r_gmw=r_gmw, nv_bmr=nv_bmr, v_bmr=v_bmr, 
-                    r_bmr=r_bmr))
-                x += 1
-
-    # Circ Gen Time
-    for task_stat in all_stats:
-        fname = "{}-circ-gen.txt".format(task_stat.label)
-        file_path = os.path.join(GRAPHS_DIR, fname)
-        with open(file_path, mode='w', encoding='utf-8') as f:
-            f.write("x\tInput\tNonVec(GMW)\tVec(GMW)\tNonVec(BMR)\tVec(BMR)\tRatio(GMW)\tRatio(BMR)\n")
-            x = 1
-            for i in task_stat.input_configs:
-                label = i.label
-
-                nv_gmw = i.gmw_p0.circuit_stats.circuit_gen_time if i.gmw_p0 is not None else 0
-                v_gmw  = i.gmw_vec_p0.circuit_stats.circuit_gen_time  if i.gmw_vec_p0 is not None else 0
-                r_gmw  = ratio(nv_gmw, v_gmw)
-
-                nv_bmr = i.bmr_p0.circuit_stats.circuit_gen_time if i.bmr_p0 is not None else 0
-                v_bmr  = i.bmr_vec_p0.circuit_stats.circuit_gen_time if i.bmr_vec_p0 is not None else 0
-                r_bmr  = ratio(nv_bmr, v_bmr)
-
-                f.write("{x}\t\"{label}\"\t{nv_gmw}\t{v_gmw}\t{nv_bmr}\t{v_bmr}\t{r_gmw}\t{r_bmr}\n".format(
-                    x=x, label=label, nv_gmw=nv_gmw, v_gmw=v_gmw, r_gmw=r_gmw, nv_bmr=nv_bmr, v_bmr=v_bmr, 
-                    r_bmr=r_bmr))
-                x += 1
-    
-    # gnuplot -c histogram.gnu data_file.txt graph.png "Graph Title" "Y Axis Label"
-    # gnuplot -c linegraph.gnu data_file.txt graph.png "Graph Title" "Y Axis Label"
-    # with subprocess.Popen(
-    #     [
-    #         "gnuplot",
-    #         "g1.gnu",
-    #     ],
-    #     stdout=subprocess.PIPE,
-    #     stderr=subprocess.PIPE,
-    #     text=True,
-    #     cwd=GRAPHS_DIR
-    # ) as gnuplot:
-    #     gnuplot.wait()
+    # log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, 
+    #         i.preprocess_total.mean, i.gates_setup.datapoint_name, i.gates_setup.mean,
+    #         i.gates_online.datapoint_name, i.gates_online.mean))
+    #     comm = i.communication
+    #     log.info("Send: {} MiB ({} Msgs) - Recv: {} MiB ({} Msgs)".format(
+    #         comm.send_size, comm.send_num_msgs, comm.recv_size, comm.recv_num_msgs))
+    #     j += 1
+    # log.info("Circuit (Non-Vectorized vs Vectorized)")
+    # for i in [cs0, cs0v]:#, cs1, cs1v]: # circuit information should be identical for all parties
+    #     if i is None:
+    #         continue
+    #     log.info("Num Gates: {} In: {}, Out: {}, SIMD: {}, Non-SIMD: {}, Circ-Gen-Time: {} ms".format(
+    #         i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, 
+    #         i.circuit_gen_time))
 
 if __name__ == "__main__":
     parser = ArgumentParser(
