@@ -33,12 +33,15 @@ def db_cross_join_trivial(
     B: shared[list[int]],
     Len_B: int,
     res: shared[list[int]],
+    # ) -> tuple[shared[list[int]], shared[int]]:
 ) -> shared[list[int]]:
+    # count = 0
     for i in range(0, Len_A):
         for j in range(0, Len_B):
             for k in range(0, 3):
                 v = 0
                 if A[i * 2] == B[j * 2]:
+                    # count = count + 1
                     if k == 0:
                         v = A[i * 2]
                     if k == 1:
@@ -46,7 +49,7 @@ def db_cross_join_trivial(
                     if k == 2:
                         v = B[j * 2 + 1]
                 res[i * Len_B * 3 + j * 3 + k] = v
-    return res
+    return res  # , count
 
 
 # Ana: DOUNBLE CHECK! I don't quite understand this

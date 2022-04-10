@@ -417,32 +417,36 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             return "_MPC_CONSTANT_" + str(expr).lower()
 
     elif isinstance(expr, DropDim):
-        dims = (
-            "{"
-            + ", ".join(
-                render_expr(loop_bound, dc.replace(ctx, plaintext=True))
-                for loop_bound in expr.dims
-            )
-            + "}"
-        )
-
         specialization = ""
         # Since we want to manipulate the array, we don't want the input to drop_dim()
         # to be vectorized
         if isinstance(expr.array, VectorizedAccess):
             array = render_expr(expr.array.array, ctx)
             # TODO: move this operation into the vectorization phase
-            vectorized_dims = tuple(
+            # Essentially, we may have modified which dimensions are actually getting dropped
+            # by lifting this statement out of a loop in phase 2 of vectorization.  The below
+            # check makes sure that we're only considering the dimensions which are actually
+            # vectorized.
+            droppable_dims = tuple(
                 dim_size
                 for dim_size, vectorized in zip(expr.dims, expr.array.vectorized_dims)
                 if vectorized
             )
-            if len(vectorized_dims) == 1:
-                specialization = "_monoreturn"
         else:
             array = render_expr(expr.array, ctx)
-            if len(expr.dims) == 1:
-                specialization = "_monoreturn"
+            droppable_dims = expr.dims
+
+        if len(droppable_dims) == 1:
+            specialization = "_monoreturn"
+
+        dims = (
+            "{"
+            + ", ".join(
+                render_expr(dim_size, dc.replace(ctx, plaintext=True))
+                for dim_size in droppable_dims
+            )
+            + "}"
+        )
 
         return f"drop_dim{specialization}({array}, {dims})"
 
@@ -498,8 +502,6 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         # If we're lifting a vectorized array, don't render a vectorized access or else the lifted array
         # will hold too many values
         expr_to_render = expr.expr
-        if isinstance(expr_to_render, VectorizedAccess):
-            expr_to_render = expr_to_render.array
 
         inner_ctx = dc.replace(
             ctx,

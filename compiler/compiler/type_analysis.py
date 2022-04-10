@@ -188,11 +188,20 @@ def type_assign_expr(
         merged_type = VarType.merge(arr_type, val_type_no_dims)
 
         idx_vars = collect_idx_vars(expr.index)
+        if not all(isinstance(var, Var) for var in idx_vars):
+            raise SyntaxError(f"Array {expr.array} is indexed by a constant")
+
         idx_var_to_dim_size = {}
         for loop in dep_graph.enclosing_loops[source_stmt]:
             idx_var_to_dim_size[loop.counter] = loop.bound_high
 
-        dim_sizes = [idx_var_to_dim_size[idx_var] for idx_var in idx_vars]
+        dim_sizes = [
+            idx_var_to_dim_size[idx_var]
+            for idx_var in idx_vars
+            if isinstance(
+                idx_var, Var
+            )  # this is always true (checked above) but mypy doesn't know that
+        ]
 
         return dc.replace(merged_type, _dims=len(idx_vars), dim_sizes=dim_sizes)
 
