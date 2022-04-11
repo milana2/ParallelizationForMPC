@@ -401,17 +401,10 @@ def _basic_vectorization_phase_1(
                 return var
             elif edge_kind is EdgeKind.OUTER_TO_INNER:
                 var_prime = tmp_var_gen.get()
-                var_dims = None #type_env[var].dim_sizes
-                if var_dims is None:
-                    if False and lhs_dims is not None:
-                        dims = tuple((Var("_"), dim_size) for dim_size in lhs_dims)
-                    else:
-                        dims = tuple(
-                            (loop.counter, loop.bound_high)
-                            for loop in dep_graph.enclosing_loops[stmt]
-                        )
-                else:
-                    dims = tuple((Var("_"), dim_size) for dim_size in var_dims)
+                dims = tuple(
+                    (loop.counter, loop.bound_high)
+                    for loop in dep_graph.enclosing_loops[stmt]
+                )
 
                 above_loop_result.append(
                     llc.Assign(

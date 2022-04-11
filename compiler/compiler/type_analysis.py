@@ -56,8 +56,8 @@ def collect_idx_vars(idx: SubscriptIndex) -> list[Union[Var, Constant]]:
 def type_assign_expr(
     expr: Union[AssignRHS, SubscriptIndex, VectorizedAccess],
     type_env: TypeEnv,
-    source_stmt: loop_linear_code.Statement,
-    dep_graph: DepGraph,
+    source_stmt: Optional[loop_linear_code.Statement],
+    dep_graph: Optional[DepGraph],
 ) -> VarType:
     """
     Determines the type of an expression in a given type environment.  If an expression
@@ -192,6 +192,8 @@ def type_assign_expr(
             raise SyntaxError(f"Array {expr.array} is indexed by a constant")
 
         idx_var_to_dim_size = {}
+        assert source_stmt is not None
+        assert dep_graph is not None
         for loop in dep_graph.enclosing_loops[source_stmt]:
             idx_var_to_dim_size[loop.counter] = loop.bound_high
 
