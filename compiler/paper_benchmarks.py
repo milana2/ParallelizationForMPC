@@ -21,8 +21,20 @@ GMW_PROTOCOL = "BooleanGmw"
 BMR_PROTOCOL = "Bmr"
 
 FILE_DIR = os.path.dirname(__file__)
-GRAPHS_DIR = os.path.join(FILE_DIR, "graphs")
-os.makedirs(GRAPHS_DIR, exist_ok=True)
+BENCHDATA_DIR = os.path.join(FILE_DIR, "benchdata")
+LAN_DIR = os.path.join(BENCHDATA_DIR, "lan")
+LAN_GRAPHS_DIR = os.path.join(LAN_DIR, "graphs")
+WAN_DIR = os.path.join(BENCHDATA_DIR, "wan")
+WAN_GRAPHS_DIR = os.path.join(WAN_DIR, "graphs")
+COMPARISON_GRAPHS_DIR = os.path.join(BENCHDATA_DIR, "comparison-graphs")
+GRAPH_EXT = ".png"
+
+os.makedirs(BENCHDATA_DIR, exist_ok=True)
+os.makedirs(LAN_DIR, exist_ok=True)
+os.makedirs(LAN_GRAPHS_DIR, exist_ok=True)
+os.makedirs(WAN_DIR, exist_ok=True)
+os.makedirs(WAN_GRAPHS_DIR, exist_ok=True)
+os.makedirs(COMPARISON_GRAPHS_DIR, exist_ok=True)
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -346,11 +358,7 @@ def print_protocol_stats(p0, vec_p0, p1, vec_p1,):
             i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, 
             i.circuit_gen_time))
 
-def print_benchmark_data(filename):
-    with open(filename, "r", encoding='utf-8') as f:
-        json_str = f.read()
-        all_stats = json_deserialize(json_str)
-
+def print_benchmark_data(all_stats):
     log.info("Listing All Benchmark Stats")
     for task_stats in all_stats:
         log.info("="*80)
@@ -369,7 +377,7 @@ def print_benchmark_data(filename):
             print_protocol_stats(v.bmr_p0, v.bmr_vec_p0, v.bmr_p1, v.bmr_vec_p1)
 
 
-def run_paper_benchmarks(filename):
+def run_paper_benchmarks():
     all_stats = []
     for test_case_dir in os.scandir(test_context.STAGES_DIR):
         if test_case_dir.name in test_context.SKIPPED_TESTS:
@@ -464,18 +472,45 @@ def run_paper_benchmarks(filename):
 
         all_stats.append(task_stats)
         log.info("task {} DONE".format(task_stats.label))
-        file_path = os.path.join(GRAPHS_DIR, filename)
-        with open(file_path, "w", encoding='utf-8') as f:
-            json_str = json_serialize(all_stats)
-            f.write(json_str)
-
-    file_path = os.path.join(GRAPHS_DIR, filename)
-    print_benchmark_data(file_path)
-    # generate_graphs([file_path])
+    print_benchmark_data(all_stats)
 
 
-def run_gnuplot(plot_script, data_file, graph_file, title, y_label, other_args = []):
-    log.info("gnuplot -c {} {} {} \"{}\" \"{}\" {}".format(plot_script, 
+def get_x_label_for_benchmark(name):
+    if name == "biometric":
+        return "BioDist"
+    if name == "biometric_fast":
+        return "BioDistFast"
+    if name == "convex_hull":
+        return "ConvH"
+    if name == "count_102":
+        return "Count102"
+    if name == "count_123":
+        return "Count123"
+    if name == "count_10s":
+        return "Count10s"
+    if name == "db_variance":
+        return "DBVar"
+    if name == "histogram":
+        return "Hist"
+    if name == "inner_product":
+        return "InnerProd"
+    if name == "kmeans_iteration":
+        return "k-means"
+    if name == "longest_102":
+        return "Longest102"
+    if name == "max_dist_between_syms":
+        return "Dist/Syms"
+    if name == "max_sum_between_syms":
+        return "Sum/Syms"
+    if name == "minimal_points":
+        return "Min Points"
+    if name == "psi":
+        return "PSI"
+
+    return name
+
+def run_gnuplot(plot_script, data_file, graph_file, title, y_label, dir, other_args = []):
+    log.info("gnuplot -c '{}' '{}' '{}' \"{}\" \"{}\" {}".format(plot_script, 
         data_file, graph_file, title, y_label, other_args)
     )
 
@@ -489,7 +524,7 @@ def run_gnuplot(plot_script, data_file, graph_file, title, y_label, other_args =
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        cwd=GRAPHS_DIR
+        cwd=dir
     ) as gnuplot:
         gnuplot.wait()
         if(gnuplot.returncode != 0):
@@ -498,37 +533,18 @@ def run_gnuplot(plot_script, data_file, graph_file, title, y_label, other_args =
             log.debug("stdout: \n{0}".format(gnuplot.stdout.read()))
             exit(1)
 
-    # gnuplot -c histogram.gnu data_file.txt graph.png "Graph Title" "Y Axis Label"
-    # gnuplot -c linegraph.gnu data_file.txt graph.png "Graph Title" "Y Axis Label"
-    # with subprocess.Popen(
-    #     [
-    #         "gnuplot",
-    #         "g1.gnu",
-    #     ],
-    #     stdout=subprocess.PIPE,
-    #     stderr=subprocess.PIPE,
-    #     text=True,
-    #     cwd=GRAPHS_DIR
-    # ) as gnuplot:
-    #     gnuplot.wait()
-
-    pass
-
 def ratio(a, b):
     if b != 0:
         return a/b
     return 0
 
 
-def generate_graph_for_attr(all_stats, get_val, y_label='Total Gates'):
-
-    graph_ext = ".png"
-
+def generate_graph_for_attr(all_stats, get_val, y_label, dir):
     for task_stat in all_stats:
         fname = "{}-{}.txt".format(task_stat.label, y_label)
-        hist_graph_file = "{}-hist {}{}".format(task_stat.label, y_label, graph_ext)
-        line_graph_file = "{}-line {}{}".format(task_stat.label, y_label, graph_ext)
-        file_path = os.path.join(GRAPHS_DIR, fname)
+        hist_graph_file = "{}-hist {}{}".format(task_stat.label, y_label, GRAPH_EXT)
+        line_graph_file = "{}-line {}{}".format(task_stat.label, y_label, GRAPH_EXT)
+        file_path = os.path.join(dir, fname)
         with open(file_path, mode='w', encoding='utf-8') as f:
             f.write("x\tInput\t\"GMW\"\t\"GMW (Vectorized)\"\t\"BMR\"" \
                 "\t\"BMR (Vectorized)\"\t\"GMW Improvement\"\t\"BMR Improvement\"\n")
@@ -554,46 +570,201 @@ def generate_graph_for_attr(all_stats, get_val, y_label='Total Gates'):
                 x += 1
 
         title = task_stat.label
-        run_gnuplot('plt_histogram.gnu', file_path, hist_graph_file, task_stat.label, 
-            y_label, other_args = [])
-        run_gnuplot('plt_linegraph.gnu', file_path, line_graph_file, task_stat.label, 
-            y_label, other_args = [])
+        hist_script = os.path.join(FILE_DIR, 'plt_histogram.gnu')
+        line_script = os.path.join(FILE_DIR, 'plt_linegraph.gnu')
+        run_gnuplot(hist_script, file_path, hist_graph_file, task_stat.label, 
+            y_label, dir, other_args = [])
+        # run_gnuplot(line_script, file_path, line_graph_file, task_stat.label, 
+        #     y_label, dir, other_args = [])
 
-def generate_graphs(source_files):
-    all_stats = []
-    for sf in source_files:
-        with open(sf, "r", encoding='utf-8') as f:
+def generate_cumulative_graph_for_attr(all_stats, get_val, y_label, dir):
+    fname = "all-{}.txt".format(y_label)
+    hist_graph_file = "all-hist {}{}".format(y_label, GRAPH_EXT)
+    line_graph_file = "all-line {}{}".format(y_label, GRAPH_EXT)
+    file_path = os.path.join(dir, fname)
+    with open(file_path, mode='w', encoding='utf-8') as f:
+        f.write("x\tBenchmark\t\"GMW\"\t\"GMW (Vectorized)\"\t\"BMR\"" \
+                "\t\"BMR (Vectorized)\"\t\"GMW Improvement\"\t\"BMR Improvement\"\n")
+        x = 1
+        for task_stat in all_stats:
+            label = get_x_label_for_benchmark(task_stat.label)
+            for i in range(len(task_stat.input_configs)-1, 0, -1):
+                input = task_stat.input_configs[i]
+                if input.gmw_p0 is not None and input.gmw_vec_p0 is not None and \
+                    input.bmr_p0 is not None and input.bmr_vec_p0 is not None:
+                    nv_gmw = get_val(input.gmw_p0)
+                    v_gmw  = get_val(input.gmw_vec_p0)
+                    r_gmw  = ratio(nv_gmw, v_gmw)
+
+                    nv_bmr = get_val(input.bmr_p0)
+                    v_bmr  = get_val(input.bmr_vec_p0)
+                    r_bmr  = ratio(nv_bmr, v_bmr)
+                    f.write("{x}\t\"{label}\"\t{nv_gmw}\t{v_gmw}\t{nv_bmr}\t{v_bmr}\t{r_gmw}\t{r_bmr}\n".format(
+                        x=x, label=label, nv_gmw=nv_gmw, v_gmw=v_gmw, r_gmw=r_gmw, nv_bmr=nv_bmr, v_bmr=v_bmr, 
+                        r_bmr=r_bmr))
+                    x += 1
+                    break
+
+    title = "{} - All Benchmarks".format(y_label)            
+    hist_script = os.path.join(FILE_DIR, 'plt_all_histogram.gnu')
+    # line_script = os.path.join(FILE_DIR, 'plt_linegraph.gnu')
+    run_gnuplot(hist_script, file_path, hist_graph_file, title, y_label, dir, other_args = [])
+    # run_gnuplot(line_script, file_path, line_graph_file, title, y_label, dir, other_args = [])
+
+
+def generate_single_network_graphs(all_stats, dir):
+    log.info("generating graphs for {} benchmarks in {}".format(len(all_stats), dir))
+
+    get_num_gates = lambda x: x.circuit_stats.num_gates if x is not None else 0
+    generate_graph_for_attr(all_stats, get_num_gates, 'Total Gates', dir)
+    generate_cumulative_graph_for_attr(all_stats, get_num_gates, 'Total Gates', dir)
+    
+    get_circ_gen_time = lambda x: x.circuit_stats.circuit_gen_time if x is not None else 0
+    generate_graph_for_attr(all_stats, get_circ_gen_time, 'Circuit Generation Time (ms)', dir)
+    generate_cumulative_graph_for_attr(all_stats, get_circ_gen_time, 'Circuit Generation Time (ms)', dir)
+    
+    get_online_time = lambda x: x.timing_stats.gates_online.mean if x is not None else 0
+    generate_graph_for_attr(all_stats, get_online_time, 'Online Time (ms)', dir)  
+    generate_cumulative_graph_for_attr(all_stats, get_online_time, 'Online Time (ms)', dir)
+
+    get_setup_time = lambda x: x.timing_stats.gates_setup.mean if x is not None else 0
+    generate_graph_for_attr(all_stats, get_setup_time, 'Setup Time (ms)', dir)    
+    generate_cumulative_graph_for_attr(all_stats, get_setup_time, 'Setup Time (ms)', dir)
+
+    get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
+    generate_graph_for_attr(all_stats, get_send_size, 'Sent Data (MiB)', dir)
+    generate_cumulative_graph_for_attr(all_stats, get_send_size, 'Sent Data (MiB)', dir)
+
+    get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
+    generate_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)  
+    generate_cumulative_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)
+
+
+def get_benchmark_stats(all_stats, benchmark_name, input_label, need_gmw_vec = True):
+    for task_stat in all_stats:
+        if task_stat.label == benchmark_name:
+            for i in range(len(task_stat.input_configs)-1, 0, -1):
+                input = task_stat.input_configs[i]
+                if input.label == input_label:
+                    if need_gmw_vec is True and input.gmw_vec_p0 is not None:
+                        return input
+                    elif need_gmw_vec is False and input.bmr_vec_p0 is not None:
+                        return input 
+    return None
+
+def generate_comparison_graphs(lan_stats, wan_stats, get_val, y_label, dir):
+    gmwfile = "comparison-gmw-{}.txt".format(y_label)
+    bmrfile = "comparison-bmr-{}.txt".format(y_label)
+    gmw_hist_graph_file = "comparison-gmw-hist {}{}".format(y_label, GRAPH_EXT)
+    bmr_hist_graph_file = "comparison-bmr-hist {}{}".format(y_label, GRAPH_EXT)
+    # line_graph_file = "all-line {}{}".format(y_label, GRAPH_EXT)
+    gmwfile_path = os.path.join(dir, gmwfile)
+    bmrfile_path = os.path.join(dir, bmrfile)
+    with open(bmrfile_path, mode='w', encoding='utf-8') as bmrf:
+        with open(gmwfile_path, mode='w', encoding='utf-8') as gmwf:
+            bmrf.write("x\tBenchmark\t\"LAN\"\t\"WAN\"\tWAN/LAN\tInputLabel\n")
+            gmwf.write("x\tBenchmark\t\"LAN\"\t\"WAN\"\tWAN/LAN\tInputLabel\n")
+            x = 1
+            for lan_task_stat in lan_stats:
+                label = get_x_label_for_benchmark(lan_task_stat.label)
+
+                for i in range(len(lan_task_stat.input_configs)-1, 0, -1):
+                    lan_input = lan_task_stat.input_configs[i]
+
+                    if lan_input.gmw_vec_p0 is not None:
+                        wan_input = get_benchmark_stats(wan_stats, lan_task_stat.label, 
+                            lan_input.label, True)
+                        if wan_input is not None:
+                            lan = get_val(lan_input.gmw_vec_p0)
+                            wan  = get_val(wan_input.gmw_vec_p0)
+                            r_wan_lan  = ratio(wan, lan)
+                            
+                            gmwf.write("{x}\t\"{label}\"\t{lan}\t{wan}\t{r_wan_lan}\t\"{input_label}\"\n".format(
+                                x=x, label=label, lan=lan, wan=wan, r_wan_lan=r_wan_lan, 
+                                input_label=lan_input.label))
+                            break
+
+                for i in range(len(lan_task_stat.input_configs)-1, 0, -1):
+                    lan_input = lan_task_stat.input_configs[i]
+
+                    if lan_input.bmr_vec_p0 is not None:
+                        wan_input = get_benchmark_stats(wan_stats, lan_task_stat.label, 
+                            lan_input.label, False)
+                        if wan_input is not None:
+                            lan = get_val(lan_input.bmr_vec_p0)
+                            wan  = get_val(wan_input.bmr_vec_p0)
+                            r_wan_lan  = ratio(wan, lan)
+                            
+                            bmrf.write("{x}\t\"{label}\"\t{lan}\t{wan}\t{r_wan_lan}\t\"{input_label}\"\n".format(
+                                x=x, label=label, lan=lan, wan=wan, r_wan_lan=r_wan_lan, 
+                                input_label=lan_input.label))
+                            break
+
+    gmw_title = "{} - GMW - All Benchmarks".format(y_label)
+    bmr_title = "{} - BMR - All Benchmarks".format(y_label)            
+    hist_script = os.path.join(FILE_DIR, 'plt_comparison_histogram.gnu')
+    # line_script = os.path.join(FILE_DIR, 'plt_linegraph.gnu')
+    run_gnuplot(hist_script, gmwfile_path, gmw_hist_graph_file, gmw_title, y_label, dir, other_args = [])
+    run_gnuplot(hist_script, bmrfile_path, bmr_hist_graph_file, bmr_title, y_label, dir, other_args = [])
+    # run_gnuplot(line_script, file_path, line_graph_file, title, y_label, dir, other_args = [])
+
+def generate_graphs(lan, wan):
+    if lan is not True and wan is not True:
+        log.error("Need to specify at least one of LAN or WAN directories for source data")
+        return
+
+    log.info("LAN dir: {}".format(LAN_DIR))
+    log.info("WAN dir: {}".format(WAN_DIR))
+
+    lan_files = [os.path.join(LAN_DIR, f) for f in os.listdir(LAN_DIR) if \
+        os.path.isfile(os.path.join(LAN_DIR, f)) and f.endswith('.json')]
+    wan_files = [os.path.join(WAN_DIR, f) for f in os.listdir(WAN_DIR) if \
+        os.path.isfile(os.path.join(WAN_DIR, f)) and f.endswith('.json')]
+    
+    lan_stats = []
+    for f in lan_files:
+        with open(f, "r", encoding='utf-8') as f:
             json_str = f.read()
             file_stats = json_deserialize(json_str)
-            all_stats.append(file_stats)
+            lan_stats.append(file_stats)
 
-    # get_num_gates = lambda x: x.circuit_stats.num_gates if x is not None else 0
-    # generate_graph_for_attr(all_stats, get_num_gates, 'Total Gates')
-    # get_circ_gen_time = lambda x: x.circuit_stats.circuit_gen_time if x is not None else 0
-    # generate_graph_for_attr(all_stats, get_circ_gen_time, 'Circuit Generation Time (ms)')
-    get_online_time = lambda x: x.timing_stats.gates_online.mean if x is not None else 0
-    generate_graph_for_attr(all_stats, get_online_time, 'Online Time (ms)')  
-    get_setup_time = lambda x: x.timing_stats.gates_setup.mean if x is not None else 0
-    generate_graph_for_attr(all_stats, get_setup_time, 'Setup Time (ms)')    
-    get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
-    generate_graph_for_attr(all_stats, get_send_size, 'Sent Data (MiB)')
-    get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
-    generate_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)')  
+    wan_stats = []
+    for f in wan_files:
+        with open(f, "r", encoding='utf-8') as f:
+            json_str = f.read()
+            file_stats = json_deserialize(json_str)
+            wan_stats.append(file_stats)
 
-    # log.info("{} {} ms, {} {} ms, {} {} ms".format(i.preprocess_total.datapoint_name, 
-    #         i.preprocess_total.mean, i.gates_setup.datapoint_name, i.gates_setup.mean,
-    #         i.gates_online.datapoint_name, i.gates_online.mean))
-    #     comm = i.communication
-    #     log.info("Send: {} MiB ({} Msgs) - Recv: {} MiB ({} Msgs)".format(
-    #         comm.send_size, comm.send_num_msgs, comm.recv_size, comm.recv_num_msgs))
-    #     j += 1
-    # log.info("Circuit (Non-Vectorized vs Vectorized)")
-    # for i in [cs0, cs0v]:#, cs1, cs1v]: # circuit information should be identical for all parties
-    #     if i is None:
-    #         continue
-    #     log.info("Num Gates: {} In: {}, Out: {}, SIMD: {}, Non-SIMD: {}, Circ-Gen-Time: {} ms".format(
-    #         i.num_gates, i.num_inputs, i.num_outputs, i.num_simd_gates, i.num_nonsimd_gates, 
-    #         i.circuit_gen_time))
+    if lan is True:
+        generate_single_network_graphs(lan_stats, LAN_GRAPHS_DIR)
+    if wan is True:
+        generate_single_network_graphs(wan_stats, WAN_GRAPHS_DIR)
+
+    if lan is True and wan is True:
+        get_num_gates = lambda x: x.circuit_stats.num_gates if x is not None else 0
+        generate_comparison_graphs(lan_stats, wan_stats, get_num_gates, 'Total Gates',
+            COMPARISON_GRAPHS_DIR)
+
+        get_circ_gen_time = lambda x: x.circuit_stats.circuit_gen_time if x is not None else 0
+        generate_comparison_graphs(lan_stats, wan_stats, get_circ_gen_time, 
+            'Circuit Generation Time (ms)', COMPARISON_GRAPHS_DIR)
+
+        get_online_time = lambda x: x.timing_stats.gates_online.mean if x is not None else 0
+        generate_comparison_graphs(lan_stats, wan_stats, get_online_time, 'Online Time (ms)',
+            COMPARISON_GRAPHS_DIR)
+
+        get_setup_time = lambda x: x.timing_stats.gates_setup.mean if x is not None else 0
+        generate_comparison_graphs(lan_stats, wan_stats, get_setup_time, 'Setup Time (ms)',
+            COMPARISON_GRAPHS_DIR)
+
+        get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
+        generate_comparison_graphs(lan_stats, wan_stats, get_send_size, 'Sent Data (MiB)',
+            COMPARISON_GRAPHS_DIR)
+
+        get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
+        generate_comparison_graphs(lan_stats, wan_stats, get_recv_size, 'Received Data (MiB)',
+            COMPARISON_GRAPHS_DIR)
+  
 
 if __name__ == "__main__":
     parser = ArgumentParser(
@@ -602,15 +773,19 @@ if __name__ == "__main__":
         action="store_true",
         help="generates graphs from benchmarks",
     )
-    parser.add_argument('-f', '--files', nargs='+', 
-        help="files load/store benchmark data, only the first is used when storing", 
-        default=["benchmarks.json"],
+    parser.add_argument('-l', '--lan', 
+        action="store_true",
+        help="only used when generating graphs, uses LAN data", 
+    )
+    parser.add_argument('-w', '--wan', 
+        action="store_true",
+        help="only used when generating graphs, uses WAN data", 
     )
 
     args = parser.parse_args()
 
     if args.graphs:
-        generate_graphs(args.files)
+        generate_graphs(args.lan, args.wan)
     else:
-        run_paper_benchmarks(args.files[0])
+        run_paper_benchmarks()
 
