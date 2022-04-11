@@ -23,7 +23,7 @@ def compile(
     run_vectorization: bool = True,
     out_dir: Optional[str] = None,
     overwrite_out_dir: bool = False,
-    protocol: Optional[str] = None,
+    protocol="",
 ):
     try:
         ast_module = ast.parse(text, filename=filename)

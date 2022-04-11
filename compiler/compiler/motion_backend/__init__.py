@@ -249,7 +249,9 @@ def render_function(func: Function, type_env: TypeEnv, ran_vectorization: bool) 
     )
 
 
-def render_application(func: Function, type_env: TypeEnv, params: OutputParams, ran_vectorization: bool) -> None:
+def render_application(
+    func: Function, type_env: TypeEnv, params: OutputParams, ran_vectorization: bool
+) -> None:
     template_dir = os.path.abspath(os.path.dirname(__file__))
     project_root = os.path.abspath(os.path.join(template_dir, "..", "..", ".."))
 

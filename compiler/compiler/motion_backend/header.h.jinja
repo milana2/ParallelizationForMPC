@@ -56,13 +56,25 @@ std::vector<T> lift(const std::function<T(const std::vector<std::uint32_t> &)> &
 /**
  * Special case of lift() for the case when we are lifting a full array.
  *
- * This translates to a no-op (we assume that the array being lifted is the correct size).
+ * If the array is incorrectly sized, resize it to be correct.  We assume that the incorrectly-sized
+ * case only occurs when type analysis fails to propagate all of the dimensions of an array access backwards,
+ * so this transformation is correct.
  */
 template <typename T>
 std::vector<T> lift(const std::function<std::vector<T>(const std::vector<std::uint32_t> &)> &expr,
                     const std::vector<std::uint32_t> &dim_sizes)
 {
-    return expr(dim_sizes);
+    auto source_array = expr(dim_sizes);
+
+    decltype(source_array) raised_array;
+    std::uint32_t raised_size =
+        std::accumulate(dim_sizes.begin(), dim_sizes.end(), 1, std::multiplies<std::uint32_t>());
+
+    while (raised_array.size() < raised_size) {
+        raised_array.insert(raised_array.end(), source_array.begin(), source_array.end());
+    }
+
+    return raised_array;
 }
 
 /**

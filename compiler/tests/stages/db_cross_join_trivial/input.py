@@ -1,0 +1,1 @@
+../../../../benchmarks/db_cross_join_trivial.py
