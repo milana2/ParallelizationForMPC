@@ -1,0 +1,315 @@
+Nodes:
+    parameter vals!0
+    parameter cols!0
+    parameter rows!0
+    parameter OUTPUT_res!0
+    rows_res!1 = (rows!0 / 2)
+    cols_res!1 = (cols!0 / 2)
+    for i!1 in range(0, rows_res!1):
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    for j!1 in range(0, cols_res!1):
+        OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+        max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+        !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+        max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+        max!5 = MUX(!1!3, max!4, max!3)
+        !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+        max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+        max!7 = MUX(!2!3, max!6, max!5)
+        !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+        max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+        max!9 = MUX(!3!3, max!8, max!7)
+        OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    for j!1 in range(0, cols_res!1):
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    max!5 = MUX(!1!3, max!4, max!3)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    max!7 = MUX(!2!3, max!6, max!5)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    max!9 = MUX(!3!3, max!8, max!7)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    max!5 = MUX(!1!3, max!4, max!3)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    max!7 = MUX(!2!3, max!6, max!5)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    max!9 = MUX(!3!3, max!8, max!7)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)
+    return OUTPUT_res!1
+Forward edges:
+    parameter vals!0  →  parameter vals!0
+    parameter vals!0  →  max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    parameter vals!0  →  !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    parameter vals!0  →  max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    parameter vals!0  →  !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    parameter vals!0  →  max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    parameter vals!0  →  !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    parameter vals!0  →  max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    parameter cols!0  →  parameter cols!0
+    parameter cols!0  →  cols_res!1 = (cols!0 / 2)
+    parameter cols!0  →  max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    parameter cols!0  →  !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    parameter cols!0  →  max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    parameter cols!0  →  !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    parameter cols!0  →  max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    parameter cols!0  →  !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    parameter cols!0  →  max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    parameter rows!0  →  parameter rows!0
+    parameter rows!0  →  rows_res!1 = (rows!0 / 2)
+    parameter OUTPUT_res!0  →  parameter OUTPUT_res!0
+    parameter OUTPUT_res!0  →  OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    cols_res!1 = (cols!0 / 2)  →  OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)
+    for i!1 in range(0, rows_res!1):
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    for j!1 in range(0, cols_res!1):
+        OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+        max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+        !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+        max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+        max!5 = MUX(!1!3, max!4, max!3)
+        !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+        max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+        max!7 = MUX(!2!3, max!6, max!5)
+        !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+        max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+        max!9 = MUX(!3!3, max!8, max!7)
+        OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    for i!1 in range(0, rows_res!1):
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    for j!1 in range(0, cols_res!1):
+        OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+        max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+        !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+        max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+        max!5 = MUX(!1!3, max!4, max!3)
+        !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+        max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+        max!7 = MUX(!2!3, max!6, max!5)
+        !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+        max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+        max!9 = MUX(!3!3, max!8, max!7)
+        OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    for i!1 in range(0, rows_res!1):
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    for j!1 in range(0, cols_res!1):
+        OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+        max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+        !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+        max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+        max!5 = MUX(!1!3, max!4, max!3)
+        !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+        max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+        max!7 = MUX(!2!3, max!6, max!5)
+        !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+        max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+        max!9 = MUX(!3!3, max!8, max!7)
+        OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    for i!1 in range(0, rows_res!1):
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    for j!1 in range(0, cols_res!1):
+        OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+        max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+        !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+        max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+        max!5 = MUX(!1!3, max!4, max!3)
+        !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+        max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+        max!7 = MUX(!2!3, max!6, max!5)
+        !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+        max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+        max!9 = MUX(!3!3, max!8, max!7)
+        OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    for i!1 in range(0, rows_res!1):
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    for j!1 in range(0, cols_res!1):
+        OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+        max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+        !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+        max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+        max!5 = MUX(!1!3, max!4, max!3)
+        !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+        max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+        max!7 = MUX(!2!3, max!6, max!5)
+        !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+        max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+        max!9 = MUX(!3!3, max!8, max!7)
+        OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    for i!1 in range(0, rows_res!1):
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    for j!1 in range(0, cols_res!1):
+        OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+        max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+        !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+        max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+        max!5 = MUX(!1!3, max!4, max!3)
+        !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+        max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+        max!7 = MUX(!2!3, max!6, max!5)
+        !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+        max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+        max!9 = MUX(!3!3, max!8, max!7)
+        OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    for i!1 in range(0, rows_res!1):
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    for j!1 in range(0, cols_res!1):
+        OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+        max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+        !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+        max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+        max!5 = MUX(!1!3, max!4, max!3)
+        !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+        max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+        max!7 = MUX(!2!3, max!6, max!5)
+        !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+        max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+        max!9 = MUX(!3!3, max!8, max!7)
+        OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    for i!1 in range(0, rows_res!1):
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    for j!1 in range(0, cols_res!1):
+        OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+        max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+        !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+        max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+        max!5 = MUX(!1!3, max!4, max!3)
+        !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+        max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+        max!7 = MUX(!2!3, max!6, max!5)
+        !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+        max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+        max!9 = MUX(!3!3, max!8, max!7)
+        OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)  →  OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)  →  return OUTPUT_res!1
+    for j!1 in range(0, cols_res!1):
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    max!5 = MUX(!1!3, max!4, max!3)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    max!7 = MUX(!2!3, max!6, max!5)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    max!9 = MUX(!3!3, max!8, max!7)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    for j!1 in range(0, cols_res!1):
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    max!5 = MUX(!1!3, max!4, max!3)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    max!7 = MUX(!2!3, max!6, max!5)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    max!9 = MUX(!3!3, max!8, max!7)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    for j!1 in range(0, cols_res!1):
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    max!5 = MUX(!1!3, max!4, max!3)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    max!7 = MUX(!2!3, max!6, max!5)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    max!9 = MUX(!3!3, max!8, max!7)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    for j!1 in range(0, cols_res!1):
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    max!5 = MUX(!1!3, max!4, max!3)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    max!7 = MUX(!2!3, max!6, max!5)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    max!9 = MUX(!3!3, max!8, max!7)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    for j!1 in range(0, cols_res!1):
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    max!5 = MUX(!1!3, max!4, max!3)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    max!7 = MUX(!2!3, max!6, max!5)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    max!9 = MUX(!3!3, max!8, max!7)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    for j!1 in range(0, cols_res!1):
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    max!5 = MUX(!1!3, max!4, max!3)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    max!7 = MUX(!2!3, max!6, max!5)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    max!9 = MUX(!3!3, max!8, max!7)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    for j!1 in range(0, cols_res!1):
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    max!5 = MUX(!1!3, max!4, max!3)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    max!7 = MUX(!2!3, max!6, max!5)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    max!9 = MUX(!3!3, max!8, max!7)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    for j!1 in range(0, cols_res!1):
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+    max!5 = MUX(!1!3, max!4, max!3)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+    max!7 = MUX(!2!3, max!6, max!5)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+    max!9 = MUX(!3!3, max!8, max!7)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)  →  OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]  →  !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+    max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]  →  max!5 = MUX(!1!3, max!4, max!3)
+    !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)  →  max!5 = MUX(!1!3, max!4, max!3)
+    max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]  →  max!5 = MUX(!1!3, max!4, max!3)
+    max!5 = MUX(!1!3, max!4, max!3)  →  !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+    max!5 = MUX(!1!3, max!4, max!3)  →  max!7 = MUX(!2!3, max!6, max!5)
+    !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)  →  max!7 = MUX(!2!3, max!6, max!5)
+    max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]  →  max!7 = MUX(!2!3, max!6, max!5)
+    max!7 = MUX(!2!3, max!6, max!5)  →  !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+    max!7 = MUX(!2!3, max!6, max!5)  →  max!9 = MUX(!3!3, max!8, max!7)
+    !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)  →  max!9 = MUX(!3!3, max!8, max!7)
+    max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]  →  max!9 = MUX(!3!3, max!8, max!7)
+    max!9 = MUX(!3!3, max!8, max!7)  →  OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)
+Back edges:
+    OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)  →  OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+    OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!1) + j!1), max!9)  →  OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
