@@ -1,24 +1,22 @@
-def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
-    rows_res!1 = (rows!0 / 2)
-    cols_res!1 = (cols!0 / 2)
-    !4!0{ROWS_RES!1}[] = lift(OUTPUT_res!0, (i!1:rows_res!1))
-    !6!0{ROWS_RES!1, COLS_RES!1}[] = lift(vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))], (i!1:rows_res!1, j!1:cols_res!1))
-    !7!0{ROWS_RES!1, COLS_RES!1}[] = lift(vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!1, j!1:cols_res!1))
-    !8!0{ROWS_RES!1, COLS_RES!1}[] = lift(vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!1, j!1:cols_res!1))
-    !9!0{ROWS_RES!1, COLS_RES!1}[] = lift(vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))], (i!1:rows_res!1, j!1:cols_res!1))
-    !10!0{ROWS_RES!1, COLS_RES!1}[] = lift(vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))], (i!1:rows_res!1, j!1:cols_res!1))
-    !11!0{ROWS_RES!1, COLS_RES!1}[] = lift(vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!1, j!1:cols_res!1))
-    !12!0{ROWS_RES!1, COLS_RES!1}[] = lift(vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!1, j!1:cols_res!1))
-    max!3{ROWS_RES!1, COLS_RES!1}[] = !6!0{ROWS_RES!1, COLS_RES!1}[]
-    !1!3{ROWS_RES!1, COLS_RES!1}[] = (!7!0{ROWS_RES!1, COLS_RES!1}[] > max!3{ROWS_RES!1, COLS_RES!1}[])
-    max!4{ROWS_RES!1, COLS_RES!1}[] = !8!0{ROWS_RES!1, COLS_RES!1}[]
-    max!5{ROWS_RES!1, COLS_RES!1}[] = MUX(!1!3{ROWS_RES!1, COLS_RES!1}[], max!4{ROWS_RES!1, COLS_RES!1}[], max!3{ROWS_RES!1, COLS_RES!1}[])
-    !2!3{ROWS_RES!1, COLS_RES!1}[] = (!9!0{ROWS_RES!1, COLS_RES!1}[] > max!5{ROWS_RES!1, COLS_RES!1}[])
-    max!6{ROWS_RES!1, COLS_RES!1}[] = !10!0{ROWS_RES!1, COLS_RES!1}[]
-    max!7{ROWS_RES!1, COLS_RES!1}[] = MUX(!2!3{ROWS_RES!1, COLS_RES!1}[], max!6{ROWS_RES!1, COLS_RES!1}[], max!5{ROWS_RES!1, COLS_RES!1}[])
-    !3!3{ROWS_RES!1, COLS_RES!1}[] = (!11!0{ROWS_RES!1, COLS_RES!1}[] > max!7{ROWS_RES!1, COLS_RES!1}[])
-    max!8{ROWS_RES!1, COLS_RES!1}[] = !12!0{ROWS_RES!1, COLS_RES!1}[]
-    max!9{ROWS_RES!1, COLS_RES!1}[] = MUX(!3!3{ROWS_RES!1, COLS_RES!1}[], max!8{ROWS_RES!1, COLS_RES!1}[], max!7{ROWS_RES!1, COLS_RES!1}[])
-    !5!0{ROWS_RES!1, COLS_RES!1}[] = lift(!4!0{ROWS_RES!1, COLS_RES!1}[], (i!1:rows_res!1, j!1:cols_res!1))
-    OUTPUT_res!3{ROWS_RES!1, COLS_RES!1}[] = VectorizedUpdate(!5!0{ROWS_RES!1, COLS_RES!1}[], [I!1, J!1], max!9{ROWS_RES!1, COLS_RES!1}[])
+def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
+    !4!0{ROWS_RES!0}[] = lift(OUTPUT_res!0, (i!1:rows_res!0))
+    !6!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))], (i!1:rows_res!0, j!1:cols_res!0))
+    !7!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+    !8!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+    !9!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))], (i!1:rows_res!0, j!1:cols_res!0))
+    !10!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))], (i!1:rows_res!0, j!1:cols_res!0))
+    !11!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+    !12!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+    max!3{ROWS_RES!0, COLS_RES!0}[] = !6!0{ROWS_RES!0, COLS_RES!0}[]
+    !1!3{ROWS_RES!0, COLS_RES!0}[] = (!7!0{ROWS_RES!0, COLS_RES!0}[] > max!3{ROWS_RES!0, COLS_RES!0}[])
+    max!4{ROWS_RES!0, COLS_RES!0}[] = !8!0{ROWS_RES!0, COLS_RES!0}[]
+    max!5{ROWS_RES!0, COLS_RES!0}[] = MUX(!1!3{ROWS_RES!0, COLS_RES!0}[], max!4{ROWS_RES!0, COLS_RES!0}[], max!3{ROWS_RES!0, COLS_RES!0}[])
+    !2!3{ROWS_RES!0, COLS_RES!0}[] = (!9!0{ROWS_RES!0, COLS_RES!0}[] > max!5{ROWS_RES!0, COLS_RES!0}[])
+    max!6{ROWS_RES!0, COLS_RES!0}[] = !10!0{ROWS_RES!0, COLS_RES!0}[]
+    max!7{ROWS_RES!0, COLS_RES!0}[] = MUX(!2!3{ROWS_RES!0, COLS_RES!0}[], max!6{ROWS_RES!0, COLS_RES!0}[], max!5{ROWS_RES!0, COLS_RES!0}[])
+    !3!3{ROWS_RES!0, COLS_RES!0}[] = (!11!0{ROWS_RES!0, COLS_RES!0}[] > max!7{ROWS_RES!0, COLS_RES!0}[])
+    max!8{ROWS_RES!0, COLS_RES!0}[] = !12!0{ROWS_RES!0, COLS_RES!0}[]
+    max!9{ROWS_RES!0, COLS_RES!0}[] = MUX(!3!3{ROWS_RES!0, COLS_RES!0}[], max!8{ROWS_RES!0, COLS_RES!0}[], max!7{ROWS_RES!0, COLS_RES!0}[])
+    !5!0{ROWS_RES!0, COLS_RES!0}[] = lift(!4!0{ROWS_RES!0, COLS_RES!0}[], (i!1:rows_res!0, j!1:cols_res!0))
+    OUTPUT_res!3{ROWS_RES!0, COLS_RES!0}[] = VectorizedUpdate(!5!0{ROWS_RES!0, COLS_RES!0}[], [I!1, J!1], max!9{ROWS_RES!0, COLS_RES!0}[])
     return OUTPUT_res!3

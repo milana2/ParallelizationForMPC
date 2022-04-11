@@ -1,6 +1,4 @@
-def cryptonets_max_pooling(vals: shared[list[int; ?]], cols: plaintext[int], rows: plaintext[int], OUTPUT_res: shared[list[int; ?]]) -> shared[list[int; ?]]:
-    rows_res = (rows / 2)
-    cols_res = (cols / 2)
+def cryptonets_max_pooling(vals: shared[list[int; ?]], cols: plaintext[int], rows: plaintext[int], cols_res: plaintext[int], rows_res: plaintext[int], OUTPUT_res: shared[list[int; ?]]) -> shared[list[int; ?]]:
     for i: plaintext[int] in range(0, rows_res):
         for j: plaintext[int] in range(0, cols_res):
             max = vals[(((i * 2) * cols) + (j * 2))]
