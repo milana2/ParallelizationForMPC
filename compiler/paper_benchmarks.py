@@ -223,6 +223,44 @@ def get_histogram_inputs():
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
+def get_kmeans_iteration_inputs():
+    all_args = []
+    num_bins = 5
+    non_vec_up_to = 100
+    for config in [[32, 5], [32, 8], [64, 8], [128, 8], [200, 5], [256, 8]]:
+        len = config[0]
+        num_cluster = config[1]
+        data_x = [i for i in range(len)]
+        data_y = [len - i for i in range(len)]
+        cluster_x = [i for i in range(num_cluster)]
+        cluster_y = [i + 1 for i in range(num_cluster)]
+        OUTPUT_cluster_x = [0 for i in range(num_cluster)]
+        OUTPUT_cluster_y = [0 for i in range(num_cluster)]
+        bestMap = [0 for i in range(len)]
+        
+        args = [
+        "--len", str(len),
+        "--num_cluster", str(num_cluster),
+        ]
+        args.append("--data_x")
+        args.extend(list(map(str, data_x)))
+        args.append("--data_y")
+        args.extend(list(map(str, data_y)))
+        args.append("--cluster_x")
+        args.extend(list(map(str, cluster_x)))
+        args.append("--cluster_y")
+        args.extend(list(map(str, cluster_y)))
+        args.append("--OUTPUT_cluster_x")
+        args.extend(list(map(str, OUTPUT_cluster_x)))
+        args.append("--OUTPUT_cluster_y")
+        args.extend(list(map(str, OUTPUT_cluster_y)))
+        args.append("--bestMap")
+        args.extend(list(map(str, bestMap)))
+
+        label = "len1: {}, len2: {}".format(len, num_cluster)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
 def get_max_dist_between_syms_inputs():
     all_args = []
     non_vec_up_to = 100
@@ -244,20 +282,22 @@ def get_max_dist_between_syms_inputs():
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
     # if name == "biometric" or name == "biometric_fast":
     #      return get_biometric_inputs()
-    if name == "convex_hull" or name == "minimal_points":
-        return get_convex_hull_inputs()
-    if name == "count_102" or name == "longest_102":
-        return get_count_102_inputs()
+    # if name == "convex_hull" or name == "minimal_points":
+    #     return get_convex_hull_inputs()
+    # if name == "count_102" or name == "longest_102":
+    #     return get_count_102_inputs()
     # if name == "count_10s":
     #     return get_count_10s_inputs()
     # if name == "count_123":
     #     return get_count_123_inputs()
     # if name == "db_variance":
     #     return get_db_variance_inputs()
-    if name == "histogram":
-        return get_histogram_inputs()
+    # if name == "histogram":
+    #     return get_histogram_inputs()
     # if name == "inner_product":
     #     return get_inner_product_inputs()
+    if name == "kmeans_iteration":
+        return get_kmeans_iteration_inputs()
     # if name == "max_dist_between_syms" or name == "max_sum_between_syms":
     #     return get_max_dist_between_syms_inputs()
     # if name == "psi": # segfaults right now
