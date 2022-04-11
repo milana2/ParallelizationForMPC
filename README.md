@@ -4,62 +4,66 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5469|4518|911|4945|0.814 MiB |4945|0.814 MiB |2106.967 ms |455.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |11938.407 ms |4680.0 ms |
-|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |2090.709 ms |298.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2027.018 ms |421.0 ms |
-|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1331.501 ms |215.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1546.512 ms |294.0 ms |
-|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1255.331 ms |216.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1418.73 ms |287.0 ms |
-|db_cross_join_trivial|7892|47|7519|14484|1.519 MiB |14484|1.519 MiB |3130.202 ms |1037.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |4082.024 ms |1372.0 ms |
-|db_variance|16280|3307|12939|13644|1.49 MiB |13644|1.49 MiB |8385.526 ms |1302.0 ms |
-|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |11259.234 ms |3675.0 ms |
-|histogram|2648|2498|79|3016|0.396 MiB |3016|0.396 MiB |1531.455 ms |261.0 ms |
-|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |4575.598 ms |1293.0 ms |
-|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1098.557 ms |314.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2093.662 ms |772.0 ms |
-|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |2794.766 ms |486.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2943.58 ms |593.0 ms |
-|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2406.373 ms |372.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1680.935 ms |399.0 ms |
-|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2194.868 ms |371.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |1917.215 ms |402.0 ms |
-|minimal_points|531|478|36|763|0.097 MiB |763|0.097 MiB |262.579 ms |43.0 ms |
-|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |911.122 ms |322.0 ms |
-|psi|131|61|42|472|0.063 MiB |472|0.063 MiB |166.259 ms |12.0 ms |
-|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |638.319 ms |157.0 ms |
+|biometric|5469|4518|911|4945|0.814 MiB |4945|0.814 MiB |1944.059 ms |441.0 ms |
+|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |10573.036 ms |4617.0 ms |
+|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |1753.236 ms |290.0 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2115.922 ms |408.0 ms |
+|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1356.448 ms |209.0 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1401.678 ms |284.0 ms |
+|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1419.964 ms |211.0 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1400.518 ms |285.0 ms |
+|cryptonets_max_pooling|823|678|41|949|0.181 MiB |949|0.181 MiB |543.136 ms |74.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |2781.981 ms |1077.0 ms |
+|db_cross_join_trivial|7892|47|7519|14484|1.519 MiB |14484|1.519 MiB |3187.564 ms |1030.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |3955.851 ms |1335.0 ms |
+|db_variance|16280|3307|12939|13644|1.49 MiB |13644|1.49 MiB |8372.451 ms |1286.0 ms |
+|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |10802.275 ms |3063.0 ms |
+|histogram|2648|2498|79|3016|0.396 MiB |3016|0.396 MiB |1519.039 ms |258.0 ms |
+|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3791.416 ms |1262.0 ms |
+|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1233.881 ms |310.0 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2119.689 ms |757.0 ms |
+|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |3001.232 ms |476.0 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2777.559 ms |584.0 ms |
+|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2356.565 ms |368.0 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1944.332 ms |416.0 ms |
+|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2261.542 ms |368.0 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |1997.417 ms |392.0 ms |
+|minimal_points|531|478|36|763|0.097 MiB |763|0.097 MiB |273.567 ms |42.0 ms |
+|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |948.407 ms |321.0 ms |
+|psi|131|61|42|472|0.063 MiB |472|0.063 MiB |161.702 ms |12.0 ms |
+|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |694.961 ms |155.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4492|3637|815|7865|4.528 MiB |7857|4.527 MiB |649.833 ms |523.0 ms |
-|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5351.733 ms |5225.0 ms |
-|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |248.988 ms |210.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |341.003 ms |376.0 ms |
-|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |165.222 ms |150.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |206.159 ms |264.0 ms |
-|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |150.801 ms |154.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |276.016 ms |266.0 ms |
-|db_cross_join_trivial|7900|55|7519|36650|7.062 MiB |36344|7.041 MiB |1124.04 ms |1647.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1138.153 ms |3454.0 ms |
-|db_variance|13365|3014|10317|20728|4.017 MiB |20710|4.015 MiB |1539.443 ms |1318.0 ms |
-|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |3492.953 ms |3443.0 ms |
-|histogram|1488|1338|79|2953|1.11 MiB |2898|1.106 MiB |290.797 ms |204.0 ms |
-|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |984.325 ms |956.0 ms |
-|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |449.16 ms |348.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |885.913 ms |912.0 ms |
-|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |549.359 ms |402.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |518.904 ms |575.0 ms |
-|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |370.384 ms |303.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |360.207 ms |349.0 ms |
-|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |417.698 ms |306.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |428.095 ms |351.0 ms |
-|minimal_points|479|426|36|1019|0.269 MiB |1014|0.269 MiB |113.822 ms |65.0 ms |
-|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |424.798 ms |294.0 ms |
-|psi|147|77|42|760|0.37 MiB |746|0.369 MiB |36.186 ms |28.0 ms |
-|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |199.756 ms |268.0 ms |
+|biometric|4492|3637|815|7865|4.528 MiB |7857|4.527 MiB |656.24 ms |519.0 ms |
+|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5173.389 ms |5100.0 ms |
+|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |275.642 ms |205.0 ms |
+|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |237.082 ms |371.0 ms |
+|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |154.674 ms |151.0 ms |
+|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |216.294 ms |261.0 ms |
+|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |160.808 ms |151.0 ms |
+|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |216.711 ms |263.0 ms |
+|cryptonets_max_pooling|745|600|41|1462|1.051 MiB |1398|1.047 MiB |153.831 ms |99.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1537.663 ms |1158.0 ms |
+|db_cross_join_trivial|7900|55|7519|36650|7.062 MiB |36344|7.041 MiB |1038.098 ms |1640.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1023.568 ms |3388.0 ms |
+|db_variance|13365|3014|10317|20728|4.017 MiB |20710|4.015 MiB |1698.074 ms |1289.0 ms |
+|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |4249.891 ms |3419.0 ms |
+|histogram|1488|1338|79|2953|1.11 MiB |2898|1.106 MiB |227.68 ms |202.0 ms |
+|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |969.557 ms |947.0 ms |
+|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |450.867 ms |325.0 ms |
+|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |821.132 ms |901.0 ms |
+|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |480.901 ms |399.0 ms |
+|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |533.321 ms |578.0 ms |
+|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |352.88 ms |302.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |339.161 ms |342.0 ms |
+|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |416.109 ms |300.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |369.236 ms |345.0 ms |
+|minimal_points|479|426|36|1019|0.269 MiB |1014|0.269 MiB |185.68 ms |50.0 ms |
+|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |494.36 ms |293.0 ms |
+|psi|147|77|42|760|0.37 MiB |746|0.369 MiB |78.019 ms |26.0 ms |
+|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |209.085 ms |268.0 ms |
 
 ## Compiler stages with different benchmarks
 ## `biometric`
@@ -1348,6 +1352,302 @@ encrypto::motion::SecureUnsignedInteger count_123(
 
     _15_0 = drop_dim_monoreturn(c_4, {_MPC_PLAINTEXT_N_0});
     return _15_0;
+
+}
+```
+## `cryptonets_max_pooling`
+### Input
+```python
+from UTIL import shared
+
+"""
+void max_pooling(DT *vals, DT *OUTPUT_res, unsigned cols, unsigned rows) {
+    unsigned rows_res = rows / 2;
+    unsigned cols_res = cols / 2;
+    for(unsigned i = 0; i < rows_res; i++) {
+        for(unsigned j = 0; j < cols_res; j++) {
+            unsigned x = j * 2;
+            unsigned y = i * 2;
+            DT max = vals[y*cols + x];
+            if(vals[y*cols + x + 1] > max) {
+                max = vals[y*cols + x + 1];
+                }
+            if(vals[(y + 1) *cols + x] > max) {
+                max = vals[(y + 1) * cols + x];
+                } 
+            if(vals[(y + 1) *cols + x + 1] > max) {
+                max = vals[(y + 1) * cols + x + 1];
+                } 
+            OUTPUT_res[i * cols_res + j] = max;
+            }
+        }
+}
+"""
+
+# requires: len(vals) == cols*rows
+# len(OUTPUT_res) = cols*rows/4
+# cols%2 == 0, rows%2 == 0
+def cryptonets_max_pooling(
+    vals: shared[list[int]],
+    cols: int,
+    rows: int,
+    cols_res: int,
+    rows_res: int,
+    OUTPUT_res: shared[list[int]],
+) -> shared[list[int]]:
+    for i in range(rows_res):
+        for j in range(cols_res):
+            max = vals[i * 2 * cols + j * 2]
+            if vals[i * 2 * cols + j * 2 + 1] > max:
+                max = vals[i * 2 * cols + j * 2 + 1]
+            if vals[(i * 2 + 1) * cols + j * 2] > max:
+                max = vals[(i * 2 + 1) * cols + j * 2]
+            if vals[(i * 2 + 1) * cols + j * 2 + 1] > max:
+                max = vals[(i * 2 + 1) * cols + j * 2 + 1]
+            OUTPUT_res[i * cols_res + j] = max
+    return OUTPUT_res
+
+
+cols = 10
+cols_res = cols // 2
+rows = 8
+rows_res = rows // 2
+vals = [i + 2 for i in range(rows * cols)]
+output_size = int(cols * rows / 4)
+OUTPUT_res = [0] * output_size
+print(cryptonets_max_pooling(vals, cols, rows, cols_res, rows_res, OUTPUT_res))
+
+```
+### Restricted AST
+```python
+def cryptonets_max_pooling(vals: shared[list[int; ?]], cols: plaintext[int], rows: plaintext[int], cols_res: plaintext[int], rows_res: plaintext[int], OUTPUT_res: shared[list[int; ?]]) -> shared[list[int; ?]]:
+    for i: plaintext[int] in range(0, rows_res):
+        for j: plaintext[int] in range(0, cols_res):
+            max = vals[(((i * 2) * cols) + (j * 2))]
+            if (vals[((((i * 2) * cols) + (j * 2)) + 1)] > max):
+                max = vals[((((i * 2) * cols) + (j * 2)) + 1)]
+            if (vals[((((i * 2) + 1) * cols) + (j * 2))] > max):
+                max = vals[((((i * 2) + 1) * cols) + (j * 2))]
+            if (vals[(((((i * 2) + 1) * cols) + (j * 2)) + 1)] > max):
+                max = vals[(((((i * 2) + 1) * cols) + (j * 2)) + 1)]
+            OUTPUT_res[((i * cols_res) + j)] = max
+    return OUTPUT_res
+```
+### Three-address code CFG
+![](images/cryptonets_max_pooling_tac_cfg.png)
+### SSA
+![](images/cryptonets_max_pooling_ssa.png)
+### SSA ϕ→MUX
+![](images/cryptonets_max_pooling_ssa_mux.png)
+### Dead code elimination
+![](images/cryptonets_max_pooling_dead_code_elim.png)
+### Linear code with loops
+```python
+def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
+    for i!1 in range(0, rows_res!0):
+        OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+        for j!1 in range(0, cols_res!0):
+            OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+            max!3 = vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))]
+            !1!3 = (vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)] > max!3)
+            max!4 = vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)]
+            max!5 = MUX(!1!3, max!4, max!3)
+            !2!3 = (vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))] > max!5)
+            max!6 = vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))]
+            max!7 = MUX(!2!3, max!6, max!5)
+            !3!3 = (vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)] > max!7)
+            max!8 = vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)]
+            max!9 = MUX(!3!3, max!8, max!7)
+            OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!0) + j!1), max!9)
+    return OUTPUT_res!1
+```
+### Dependency graph
+![](images/cryptonets_max_pooling_dep_graph.png)
+### Removal of infeasible edges
+![](images/cryptonets_max_pooling_remove_infeasible_edges.png)
+### Type Environment Before Vectorization
+| Variable | Type |
+| - | - |
+| `vals!0` | `shared[list[int; ?]]` |
+| `cols!0` | `plaintext[int]` |
+| `rows!0` | `plaintext[int]` |
+| `cols_res!0` | `plaintext[int]` |
+| `rows_res!0` | `plaintext[int]` |
+| `OUTPUT_res!0` | `shared[list[int; ?]]` |
+| `i!1` | `plaintext[int]` |
+| `j!1` | `plaintext[int]` |
+| `OUTPUT_res!3` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `OUTPUT_res!2` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `OUTPUT_res!1` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `max!9` | `shared[int]` |
+| `max!8` | `shared[int]` |
+| `!3!3` | `shared[bool]` |
+| `max!7` | `shared[int]` |
+| `max!6` | `shared[int]` |
+| `!2!3` | `shared[bool]` |
+| `max!5` | `shared[int]` |
+| `max!4` | `shared[int]` |
+| `!1!3` | `shared[bool]` |
+| `max!3` | `shared[int]` |
+### Basic Vectorization Phase 1
+```python
+def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
+    !4!0{ROWS_RES!0}[] = lift(OUTPUT_res!0, (i!1:rows_res!0))
+    for i!1 in range(0, rows_res!0):
+        OUTPUT_res!1{ROWS_RES!0, COLS_RES!0}[] = Φ(!4!0{ROWS_RES!0}[], OUTPUT_res!2{ROWS_RES!0, COLS_RES!0}[]) (targetless)
+        !5!0{ROWS_RES!0, COLS_RES!0}[] = lift(OUTPUT_res!1{ROWS_RES!0, COLS_RES!0}[], (i!1:rows_res!0, j!1:cols_res!0))
+        !6!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))], (i!1:rows_res!0, j!1:cols_res!0))
+        !7!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+        !8!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+        !9!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))], (i!1:rows_res!0, j!1:cols_res!0))
+        !10!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))], (i!1:rows_res!0, j!1:cols_res!0))
+        !11!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+        !12!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+        for j!1 in range(0, cols_res!0):
+            OUTPUT_res!2{ROWS_RES!0, COLS_RES!0}[] = Φ(!5!0{ROWS_RES!0, COLS_RES!0}[], OUTPUT_res!3{ROWS_RES!0, COLS_RES!0}[]) (targetless)
+            max!3{ROWS_RES!0, COLS_RES!0}[] = !6!0{ROWS_RES!0, COLS_RES!0}[]
+            !1!3{ROWS_RES!0, COLS_RES!0}[] = (!7!0{ROWS_RES!0, COLS_RES!0}[] > max!3{ROWS_RES!0, COLS_RES!0}[])
+            max!4{ROWS_RES!0, COLS_RES!0}[] = !8!0{ROWS_RES!0, COLS_RES!0}[]
+            max!5{ROWS_RES!0, COLS_RES!0}[] = MUX(!1!3{ROWS_RES!0, COLS_RES!0}[], max!4{ROWS_RES!0, COLS_RES!0}[], max!3{ROWS_RES!0, COLS_RES!0}[])
+            !2!3{ROWS_RES!0, COLS_RES!0}[] = (!9!0{ROWS_RES!0, COLS_RES!0}[] > max!5{ROWS_RES!0, COLS_RES!0}[])
+            max!6{ROWS_RES!0, COLS_RES!0}[] = !10!0{ROWS_RES!0, COLS_RES!0}[]
+            max!7{ROWS_RES!0, COLS_RES!0}[] = MUX(!2!3{ROWS_RES!0, COLS_RES!0}[], max!6{ROWS_RES!0, COLS_RES!0}[], max!5{ROWS_RES!0, COLS_RES!0}[])
+            !3!3{ROWS_RES!0, COLS_RES!0}[] = (!11!0{ROWS_RES!0, COLS_RES!0}[] > max!7{ROWS_RES!0, COLS_RES!0}[])
+            max!8{ROWS_RES!0, COLS_RES!0}[] = !12!0{ROWS_RES!0, COLS_RES!0}[]
+            max!9{ROWS_RES!0, COLS_RES!0}[] = MUX(!3!3{ROWS_RES!0, COLS_RES!0}[], max!8{ROWS_RES!0, COLS_RES!0}[], max!7{ROWS_RES!0, COLS_RES!0}[])
+            OUTPUT_res!3{ROWS_RES!0, COLS_RES!0}[] = VectorizedUpdate(OUTPUT_res!2{ROWS_RES!0, COLS_RES!0}[], [I!1, J!1], max!9{ROWS_RES!0, COLS_RES!0}[])
+    return OUTPUT_res!1
+```
+### Basic Vectorization Phase 1 (dependence graph)
+![](images/cryptonets_max_pooling_bv_phase_1_dep_graph.png)
+### Basic Vectorization Phase 2
+```python
+def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
+    !4!0{ROWS_RES!0}[] = lift(OUTPUT_res!0, (i!1:rows_res!0))
+    !6!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))], (i!1:rows_res!0, j!1:cols_res!0))
+    !7!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+    !8!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+    !9!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))], (i!1:rows_res!0, j!1:cols_res!0))
+    !10!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) + 1) * cols!0) + (j!1 * 2))], (i!1:rows_res!0, j!1:cols_res!0))
+    !11!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+    !12!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[(((((i!1 * 2) + 1) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
+    max!3{ROWS_RES!0, COLS_RES!0}[] = !6!0{ROWS_RES!0, COLS_RES!0}[]
+    !1!3{ROWS_RES!0, COLS_RES!0}[] = (!7!0{ROWS_RES!0, COLS_RES!0}[] > max!3{ROWS_RES!0, COLS_RES!0}[])
+    max!4{ROWS_RES!0, COLS_RES!0}[] = !8!0{ROWS_RES!0, COLS_RES!0}[]
+    max!5{ROWS_RES!0, COLS_RES!0}[] = MUX(!1!3{ROWS_RES!0, COLS_RES!0}[], max!4{ROWS_RES!0, COLS_RES!0}[], max!3{ROWS_RES!0, COLS_RES!0}[])
+    !2!3{ROWS_RES!0, COLS_RES!0}[] = (!9!0{ROWS_RES!0, COLS_RES!0}[] > max!5{ROWS_RES!0, COLS_RES!0}[])
+    max!6{ROWS_RES!0, COLS_RES!0}[] = !10!0{ROWS_RES!0, COLS_RES!0}[]
+    max!7{ROWS_RES!0, COLS_RES!0}[] = MUX(!2!3{ROWS_RES!0, COLS_RES!0}[], max!6{ROWS_RES!0, COLS_RES!0}[], max!5{ROWS_RES!0, COLS_RES!0}[])
+    !3!3{ROWS_RES!0, COLS_RES!0}[] = (!11!0{ROWS_RES!0, COLS_RES!0}[] > max!7{ROWS_RES!0, COLS_RES!0}[])
+    max!8{ROWS_RES!0, COLS_RES!0}[] = !12!0{ROWS_RES!0, COLS_RES!0}[]
+    max!9{ROWS_RES!0, COLS_RES!0}[] = MUX(!3!3{ROWS_RES!0, COLS_RES!0}[], max!8{ROWS_RES!0, COLS_RES!0}[], max!7{ROWS_RES!0, COLS_RES!0}[])
+    !5!0{ROWS_RES!0, COLS_RES!0}[] = lift(!4!0{ROWS_RES!0, COLS_RES!0}[], (i!1:rows_res!0, j!1:cols_res!0))
+    OUTPUT_res!3{ROWS_RES!0, COLS_RES!0}[] = VectorizedUpdate(!5!0{ROWS_RES!0, COLS_RES!0}[], [I!1, J!1], max!9{ROWS_RES!0, COLS_RES!0}[])
+    return OUTPUT_res!3
+```
+### Basic Vectorization Phase 2 (dependence graph)
+![](images/cryptonets_max_pooling_bv_phase_2_dep_graph.png)
+### Type Environment After Vectorization
+| Variable | Type |
+| - | - |
+| `vals!0` | `shared[list[int; ?]]` |
+| `cols!0` | `plaintext[int]` |
+| `rows!0` | `plaintext[int]` |
+| `cols_res!0` | `plaintext[int]` |
+| `rows_res!0` | `plaintext[int]` |
+| `OUTPUT_res!0` | `shared[list[int; ?]]` |
+| `OUTPUT_res!3` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!5!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `max!9` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `max!8` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!3!3` | `shared[list[list[bool; (rows_res!0)]; (cols_res!0)]]` |
+| `max!7` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `max!6` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!2!3` | `shared[list[list[bool; (rows_res!0)]; (cols_res!0)]]` |
+| `max!5` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `max!4` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!1!3` | `shared[list[list[bool; (rows_res!0)]; (cols_res!0)]]` |
+| `max!3` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!12!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!11!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!10!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!9!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!8!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!7!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!6!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
+| `!4!0` | `shared[list[int; (rows_res!0)]]` |
+### Motion code
+```cpp
+template <encrypto::motion::MpcProtocol Protocol>
+std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> vals_0,
+    std::uint32_t _MPC_PLAINTEXT_cols_0,
+    std::uint32_t _MPC_PLAINTEXT_rows_0,
+    std::uint32_t _MPC_PLAINTEXT_cols_res_0,
+    std::uint32_t _MPC_PLAINTEXT_rows_res_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_0
+) {
+    // Shared variable declarations
+    std::vector<encrypto::motion::ShareWrapper> _1_3((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _10_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _11_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _12_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::ShareWrapper> _2_3((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::ShareWrapper> _3_3((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _4_0((_MPC_PLAINTEXT_rows_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _5_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _6_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _7_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _8_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _9_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_3((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    encrypto::motion::SecureUnsignedInteger cols_0;
+    encrypto::motion::SecureUnsignedInteger cols_res_0;
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_3((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_4((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_5((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_6((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_7((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_8((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> max_9((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    encrypto::motion::SecureUnsignedInteger rows_0;
+    encrypto::motion::SecureUnsignedInteger rows_res_0;
+
+    // Plaintext variable declarations
+
+
+    // Constant initializations
+
+
+    // Plaintext parameter assignments
+    cols_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_cols_0), 0);
+    cols_res_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_cols_res_0), 0);
+    rows_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_rows_0), 0);
+    rows_res_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_rows_res_0), 0);
+
+    // Function body
+    vectorized_assign(_4_0, {_MPC_PLAINTEXT_rows_res_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return OUTPUT_res_0;}), {_MPC_PLAINTEXT_rows_res_0}));
+    vectorized_assign(_6_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vals_0[(((indices[0] * std::uint32_t(2)) * _MPC_PLAINTEXT_cols_0) + (indices[1] * std::uint32_t(2)))];}), {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}));
+    vectorized_assign(_7_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vals_0[((((indices[0] * std::uint32_t(2)) * _MPC_PLAINTEXT_cols_0) + (indices[1] * std::uint32_t(2))) + std::uint32_t(1))];}), {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}));
+    vectorized_assign(_8_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vals_0[((((indices[0] * std::uint32_t(2)) * _MPC_PLAINTEXT_cols_0) + (indices[1] * std::uint32_t(2))) + std::uint32_t(1))];}), {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}));
+    vectorized_assign(_9_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vals_0[((((indices[0] * std::uint32_t(2)) + std::uint32_t(1)) * _MPC_PLAINTEXT_cols_0) + (indices[1] * std::uint32_t(2)))];}), {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}));
+    vectorized_assign(_10_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vals_0[((((indices[0] * std::uint32_t(2)) + std::uint32_t(1)) * _MPC_PLAINTEXT_cols_0) + (indices[1] * std::uint32_t(2)))];}), {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}));
+    vectorized_assign(_11_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vals_0[(((((indices[0] * std::uint32_t(2)) + std::uint32_t(1)) * _MPC_PLAINTEXT_cols_0) + (indices[1] * std::uint32_t(2))) + std::uint32_t(1))];}), {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}));
+    vectorized_assign(_12_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vals_0[(((((indices[0] * std::uint32_t(2)) + std::uint32_t(1)) * _MPC_PLAINTEXT_cols_0) + (indices[1] * std::uint32_t(2))) + std::uint32_t(1))];}), {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}));
+    vectorized_assign(max_3, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, vectorized_access(_6_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}));
+    vectorized_assign(_1_3, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, (vectorized_access(_7_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}) > vectorized_access(max_3, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {})));
+    vectorized_assign(max_4, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, vectorized_access(_8_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}));
+    vectorized_assign(max_5, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, vectorized_access(_1_3, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}).Mux(vectorized_access(max_4, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}).Get(), vectorized_access(max_3, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}).Get()));
+    vectorized_assign(_2_3, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, (vectorized_access(_9_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}) > vectorized_access(max_5, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {})));
+    vectorized_assign(max_6, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, vectorized_access(_10_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}));
+    vectorized_assign(max_7, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, vectorized_access(_2_3, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}).Mux(vectorized_access(max_6, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}).Get(), vectorized_access(max_5, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}).Get()));
+    vectorized_assign(_3_3, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, (vectorized_access(_11_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}) > vectorized_access(max_7, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {})));
+    vectorized_assign(max_8, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, vectorized_access(_12_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}));
+    vectorized_assign(max_9, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, vectorized_access(_3_3, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}).Mux(vectorized_access(max_8, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}).Get(), vectorized_access(max_7, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}).Get()));
+    vectorized_assign(_5_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return _4_0;}), {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}));
+    vectorized_assign(OUTPUT_res_3, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, vectorized_update(vectorized_access(_5_0, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}), {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {}, vectorized_access(max_9, {_MPC_PLAINTEXT_rows_res_0, _MPC_PLAINTEXT_cols_res_0}, {true, true}, {})));
+    return OUTPUT_res_3;
 
 }
 ```
@@ -3595,6 +3895,189 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     vectorized_assign(result_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_update(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}), {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(val_Y_4, {_MPC_PLAINTEXT_N_0}, {true}, {})));
     _7_1 = std::make_tuple(result_X_2, result_Y_2);
     return _7_1;
+
+}
+```
+## `mnist_relu`
+### Input
+```python
+from UTIL import shared
+
+# input is a 2-d matrix of shared integer values and 
+# OUTPUT_res is the result 2-d matrix of non-negative values
+# It turns all negative values in input matrix into 0s
+
+# requires: len(input)==len(OUTPUT_res)==len_outer*len_inner
+# OUTPUT_res is array of 0's
+def mnist_decomposed_relu(
+    input: shared[list[int]], OUTPUT_res: shared[list[int]], len_outer: int, len_inner: int
+) -> shared[list[int]]:
+    for i in range(len_outer): 
+        for j in range(len_inner):
+            val = 0
+            if input[i*len_inner+j] > 0:
+              val = input[i*len_inner+j]
+            OUTPUT_res[i*len_inner+j] = val
+    return OUTPUT_res
+
+len_inner = 10
+len_outer = 20
+input = [i if i%2 == 0 else -2*i for i in range(len_inner*len_outer)]
+OUTPUT_res = [0 for i in range(len_inner*len_outer)]
+print(mnist_decomposed_relu(input, OUTPUT_res, len_outer, len_inner))
+
+
+```
+### Restricted AST
+```python
+def mnist_decomposed_relu(input: shared[list[int; ?]], OUTPUT_res: shared[list[int; ?]], len_outer: plaintext[int], len_inner: plaintext[int]) -> shared[list[int; ?]]:
+    for i: plaintext[int] in range(0, len_outer):
+        for j: plaintext[int] in range(0, len_inner):
+            val = 0
+            if (input[((i * len_inner) + j)] > 0):
+                val = input[((i * len_inner) + j)]
+            OUTPUT_res[((i * len_inner) + j)] = val
+    return OUTPUT_res
+```
+### Three-address code CFG
+![](images/mnist_relu_tac_cfg.png)
+### SSA
+![](images/mnist_relu_ssa.png)
+### SSA ϕ→MUX
+![](images/mnist_relu_ssa_mux.png)
+### Dead code elimination
+![](images/mnist_relu_dead_code_elim.png)
+### Linear code with loops
+```python
+def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
+    for i!1 in range(0, len_outer!0):
+        OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
+        for j!1 in range(0, len_inner!0):
+            OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
+            val!3 = 0
+            !1!3 = (input!0[((i!1 * len_inner!0) + j!1)] > 0)
+            val!4 = input!0[((i!1 * len_inner!0) + j!1)]
+            val!5 = MUX(!1!3, val!4, val!3)
+            OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * len_inner!0) + j!1), val!5)
+    return OUTPUT_res!1
+```
+### Dependency graph
+![](images/mnist_relu_dep_graph.png)
+### Removal of infeasible edges
+![](images/mnist_relu_remove_infeasible_edges.png)
+### Type Environment Before Vectorization
+| Variable | Type |
+| - | - |
+| `input!0` | `shared[list[int; ?]]` |
+| `OUTPUT_res!0` | `shared[list[int; ?]]` |
+| `len_outer!0` | `plaintext[int]` |
+| `len_inner!0` | `plaintext[int]` |
+| `i!1` | `plaintext[int]` |
+| `j!1` | `plaintext[int]` |
+| `OUTPUT_res!3` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
+| `OUTPUT_res!2` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
+| `OUTPUT_res!1` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
+| `val!5` | `shared[int]` |
+| `val!4` | `shared[int]` |
+| `!1!3` | `shared[bool]` |
+| `val!3` | `plaintext[int]` |
+### Basic Vectorization Phase 1
+```python
+def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
+    !2!0{LEN_OUTER!0}[] = lift(OUTPUT_res!0, (i!1:len_outer!0))
+    for i!1 in range(0, len_outer!0):
+        OUTPUT_res!1{LEN_OUTER!0, LEN_INNER!0}[] = Φ(!2!0{LEN_OUTER!0}[], OUTPUT_res!2{LEN_OUTER!0, LEN_INNER!0}[]) (targetless)
+        !3!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(OUTPUT_res!1{LEN_OUTER!0, LEN_INNER!0}[], (i!1:len_outer!0, j!1:len_inner!0))
+        !4!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(input!0[((i!1 * len_inner!0) + j!1)], (i!1:len_outer!0, j!1:len_inner!0))
+        !5!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(input!0[((i!1 * len_inner!0) + j!1)], (i!1:len_outer!0, j!1:len_inner!0))
+        for j!1 in range(0, len_inner!0):
+            OUTPUT_res!2{LEN_OUTER!0, LEN_INNER!0}[] = Φ(!3!0{LEN_OUTER!0, LEN_INNER!0}[], OUTPUT_res!3{LEN_OUTER!0, LEN_INNER!0}[]) (targetless)
+            val!3 = 0
+            !1!3{LEN_OUTER!0, LEN_INNER!0}[] = (!4!0{LEN_OUTER!0, LEN_INNER!0}[] > 0)
+            val!4{LEN_OUTER!0, LEN_INNER!0}[] = !5!0{LEN_OUTER!0, LEN_INNER!0}[]
+            val!5{LEN_OUTER!0, LEN_INNER!0}[] = MUX(!1!3{LEN_OUTER!0, LEN_INNER!0}[], val!4{LEN_OUTER!0, LEN_INNER!0}[], val!3)
+            OUTPUT_res!3{LEN_OUTER!0, LEN_INNER!0}[] = VectorizedUpdate(OUTPUT_res!2{LEN_OUTER!0, LEN_INNER!0}[], [I!1, J!1], val!5{LEN_OUTER!0, LEN_INNER!0}[])
+    return OUTPUT_res!1
+```
+### Basic Vectorization Phase 1 (dependence graph)
+![](images/mnist_relu_bv_phase_1_dep_graph.png)
+### Basic Vectorization Phase 2
+```python
+def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
+    !2!0{LEN_OUTER!0}[] = lift(OUTPUT_res!0, (i!1:len_outer!0))
+    !4!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(input!0[((i!1 * len_inner!0) + j!1)], (i!1:len_outer!0, j!1:len_inner!0))
+    !5!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(input!0[((i!1 * len_inner!0) + j!1)], (i!1:len_outer!0, j!1:len_inner!0))
+    val!3 = 0
+    !1!3{LEN_OUTER!0, LEN_INNER!0}[] = (!4!0{LEN_OUTER!0, LEN_INNER!0}[] > 0)
+    val!4{LEN_OUTER!0, LEN_INNER!0}[] = !5!0{LEN_OUTER!0, LEN_INNER!0}[]
+    val!5{LEN_OUTER!0, LEN_INNER!0}[] = MUX(!1!3{LEN_OUTER!0, LEN_INNER!0}[], val!4{LEN_OUTER!0, LEN_INNER!0}[], val!3)
+    !3!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(!2!0{LEN_OUTER!0, LEN_INNER!0}[], (i!1:len_outer!0, j!1:len_inner!0))
+    OUTPUT_res!3{LEN_OUTER!0, LEN_INNER!0}[] = VectorizedUpdate(!3!0{LEN_OUTER!0, LEN_INNER!0}[], [I!1, J!1], val!5{LEN_OUTER!0, LEN_INNER!0}[])
+    return OUTPUT_res!3
+```
+### Basic Vectorization Phase 2 (dependence graph)
+![](images/mnist_relu_bv_phase_2_dep_graph.png)
+### Type Environment After Vectorization
+| Variable | Type |
+| - | - |
+| `input!0` | `shared[list[int; ?]]` |
+| `OUTPUT_res!0` | `shared[list[int; ?]]` |
+| `len_outer!0` | `plaintext[int]` |
+| `len_inner!0` | `plaintext[int]` |
+| `OUTPUT_res!3` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
+| `!3!0` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
+| `val!5` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
+| `val!4` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
+| `!1!3` | `shared[list[list[bool; (len_outer!0)]; (len_inner!0)]]` |
+| `val!3` | `plaintext[int]` |
+| `!5!0` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
+| `!4!0` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
+| `!2!0` | `shared[list[int; (len_outer!0)]]` |
+### Motion code
+```cpp
+template <encrypto::motion::MpcProtocol Protocol>
+std::vector<encrypto::motion::SecureUnsignedInteger> mnist_decomposed_relu(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> input_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_0,
+    std::uint32_t _MPC_PLAINTEXT_len_outer_0,
+    std::uint32_t _MPC_PLAINTEXT_len_inner_0
+) {
+    // Shared variable declarations
+    std::vector<encrypto::motion::ShareWrapper> _1_3((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _2_0((_MPC_PLAINTEXT_len_outer_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _3_0((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _4_0((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _5_0((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_3((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
+    encrypto::motion::SecureUnsignedInteger len_inner_0;
+    encrypto::motion::SecureUnsignedInteger len_outer_0;
+    encrypto::motion::SecureUnsignedInteger val_3;
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_4((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_5((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
+
+    // Plaintext variable declarations
+    std::uint32_t _MPC_PLAINTEXT_val_3;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+
+    // Plaintext parameter assignments
+    len_inner_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_len_inner_0), 0);
+    len_outer_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_len_outer_0), 0);
+
+    // Function body
+    vectorized_assign(_2_0, {_MPC_PLAINTEXT_len_outer_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return OUTPUT_res_0;}), {_MPC_PLAINTEXT_len_outer_0}));
+    vectorized_assign(_4_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return input_0[((indices[0] * _MPC_PLAINTEXT_len_inner_0) + indices[1])];}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}));
+    vectorized_assign(_5_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return input_0[((indices[0] * _MPC_PLAINTEXT_len_inner_0) + indices[1])];}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}));
+    val_3 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_val_3 = std::uint32_t(0);
+    vectorized_assign(_1_3, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, (vectorized_access(_4_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}) > decltype(_MPC_CONSTANT_0)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_0;}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}))));
+    vectorized_assign(val_4, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_access(_5_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}));
+    vectorized_assign(val_5, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_access(_1_3, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}).Mux(vectorized_access(val_4, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}).Get(), decltype(val_3)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return val_3;}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0})).Get()));
+    vectorized_assign(_3_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return _2_0;}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}));
+    vectorized_assign(OUTPUT_res_3, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_update(vectorized_access(_3_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_access(val_5, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {})));
+    return OUTPUT_res_3;
 
 }
 ```
