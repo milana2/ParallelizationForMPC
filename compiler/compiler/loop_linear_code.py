@@ -50,7 +50,10 @@ class For:
         return id(self)
 
     def heading_str(self) -> str:
-        return f"for {self.counter} in range({self.bound_low}, {self.bound_high}):"
+        return (
+            f"for {self.counter} in range({self.bound_low}, {self.bound_high}):"
+            + " (monolithic)" * self.is_monolithic
+        )
 
     def __str__(self) -> str:
         body = "\n".join([str(statement) for statement in self.body])

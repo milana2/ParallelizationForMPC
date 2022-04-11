@@ -87,6 +87,10 @@ class DepGraph:
         for assignment, _ in all_assignments:
             self.def_use_graph.add_node(assignment)
 
+        self.enclosing_loops = dict()
+        for assignment, enclosing_loops in all_assignments:
+            self.enclosing_loops[assignment] = enclosing_loops
+
         for assignment, _ in all_assignments:
 
             def collect_rhs(stmt: DepNode) -> list[llc.AssignRHS]:
@@ -127,10 +131,6 @@ class DepGraph:
                 else:
                     self.def_use_graph.add_edge(var_def, assignment)
 
-        self.enclosing_loops = dict()
-        for assignment, enclosing_loops in all_assignments:
-            self.enclosing_loops[assignment] = enclosing_loops
-
     def __str__(self) -> str:
         nodes = "\n".join([f"    {node}" for node in self.def_use_graph.nodes])
         edges = [(f"    {u}  →  {v}", u, v) for u, v in self.def_use_graph.edges]
@@ -159,8 +159,12 @@ class DepGraph:
 
     def edge_kind(self, def_stmt: DepNode, use_stmt: DepNode) -> EdgeKind:
         assert self.def_use_graph.has_edge(def_stmt, use_stmt)
-        def_level = len(self.enclosing_loops[def_stmt])
-        use_level = len(self.enclosing_loops[use_stmt])
+        def_level = len(
+            [loop for loop in self.enclosing_loops[def_stmt] if not loop.is_monolithic]
+        )
+        use_level = len(
+            [loop for loop in self.enclosing_loops[use_stmt] if not loop.is_monolithic]
+        )
         if def_level == use_level:
             return EdgeKind.SAME_LEVEL
         elif def_level < use_level:

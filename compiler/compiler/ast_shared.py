@@ -70,15 +70,38 @@ class VarType:
 
     # Determines if two types are equivalent if vectorized values are considered scalar.
     def is_equivalent_to(self, o: "VarType") -> bool:
-        return (
-            self.visibility == o.visibility
-            and self.datatype == o.datatype
-            and self.unvectorized_dims == o.unvectorized_dims
-            and all(
-                st.is_equivalent_to(ot)
-                for st, ot in zip(self.tuple_types, o.tuple_types)
-            )
-        )
+        if self.visibility != o.visibility:
+            return False
+
+        if self.datatype != o.datatype:
+            return False
+
+        if not all(
+            st.is_equivalent_to(ot) for st, ot in zip(self.tuple_types, o.tuple_types)
+        ):
+            return False
+
+        # If at least one of the types is unvectorized
+        if self.dim_sizes is None or o.dim_sizes is None:
+            # If we don't know the number of dimensions of either type
+            if self._dims is None and o._dims is None:
+                return True
+
+            # If we only know the dimensions of one type
+            elif self._dims is None or o._dims is None:
+                return False
+
+            # When we have unvectorized arrays, the _dims is only used to
+            # determine the canonical dimensionality of the array.  All
+            # non-vectorized arrays are implemented as single-dimension arrays,
+            # so that's all we check here.
+            assert self.unvectorized_dims is not None
+            assert o.unvectorized_dims is not None
+            return (self.unvectorized_dims > 0) == (o.unvectorized_dims > 0)
+
+        # If both types are vectorized, compare the number of dimensions they have
+        else:
+            return self.unvectorized_dims == o.unvectorized_dims
 
     def drop_dim(self) -> "VarType":
         return dc.replace(
@@ -127,6 +150,7 @@ class VarType:
         *types: "VarType",
         mixed_shared_plaintext_allowed=True,
         mixed_datatypes_allowed=False,
+        use_max_dim_size=False,
     ) -> "VarType":
         assert len(types) > 0
 
@@ -153,6 +177,9 @@ class VarType:
 
         # Determine the dimensionality of the merged type
         elem_dims = [t.dims for t in types if t.dims is not None]
+        if len(set(elem_dims)) > 0 and use_max_dim_size:
+            elem_dims = [max(elem_dims)]
+
         if len(set(elem_dims)) > 1:
             raise TypeError(
                 "Cannot merge types with different dimensionality:\n{}".format(
@@ -195,6 +222,9 @@ class VarType:
                 merged_type.tuple_types[i] = elem_tuple_types[i][0]
 
         dim_sizes = [tuple(t.dim_sizes) for t in types if t.dim_sizes is not None]
+        if len(set(dim_sizes)) > 0 and use_max_dim_size:
+            dim_sizes = [max(dim_sizes, key=len)]
+
         if len(set(dim_sizes)) > 1:
             raise TypeError(
                 "Cannot merge types with different dimension sizes:\n{}".format(
