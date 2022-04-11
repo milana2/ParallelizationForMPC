@@ -502,6 +502,8 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         # If we're lifting a vectorized array, don't render a vectorized access or else the lifted array
         # will hold too many values
         expr_to_render = expr.expr
+        if isinstance(expr_to_render, VectorizedAccess):
+            expr_to_render = expr_to_render.array
 
         inner_ctx = dc.replace(
             ctx,

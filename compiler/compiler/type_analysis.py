@@ -184,7 +184,7 @@ def type_assign_expr(
             )
 
         # Erase the _dims value from the val_type to prevent conflict (_dims is manually overridden later)
-        val_type_no_dims = dc.replace(val_type, _dims=None)
+        val_type_no_dims = dc.replace(val_type, _dims=None, dim_sizes=None)
         merged_type = VarType.merge(arr_type, val_type_no_dims)
 
         idx_vars = collect_idx_vars(expr.index)

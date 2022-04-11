@@ -401,9 +401,9 @@ def _basic_vectorization_phase_1(
                 return var
             elif edge_kind is EdgeKind.OUTER_TO_INNER:
                 var_prime = tmp_var_gen.get()
-                var_dims = type_env[var].dim_sizes
+                var_dims = None #type_env[var].dim_sizes
                 if var_dims is None:
-                    if lhs_dims is not None:
+                    if False and lhs_dims is not None:
                         dims = tuple((Var("_"), dim_size) for dim_size in lhs_dims)
                     else:
                         dims = tuple(
@@ -914,8 +914,9 @@ def _replace_in_rhs(
         new_rhs = util.replace_pattern(stmt.rhs, pattern, replacement)
         return dc.replace(stmt, rhs=new_rhs)
     elif isinstance(stmt, llc.Phi):
-        rhs_vars = util.replace_pattern(stmt.rhs_vars, pattern, replacement)
-        return dc.replace(stmt, rhs_vars=rhs_vars)
+        rhs_false = util.replace_pattern(stmt.rhs_false, pattern, replacement)
+        rhs_true = util.replace_pattern(stmt.rhs_true, pattern, replacement)
+        return dc.replace(stmt, rhs_false=rhs_false, rhs_true=rhs_true)
     elif isinstance(stmt, llc.For):
         new_body = [
             _replace_in_rhs(substmt, pattern, replacement) for substmt in stmt.body
