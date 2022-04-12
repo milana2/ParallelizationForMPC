@@ -20,6 +20,7 @@ set style data histogram
 set style histogram cluster gap 1
 set style fill solid border -1
 set boxwidth 0.9
+set xtic rotate by -45 scale 0
 plot DATA_FILE using 3:xtic(2), DATA_FILE using 4:xtic(2), DATA_FILE using 5:xtic(2), DATA_FILE using 6:xtic(2), DATA_FILE using 7:xtic(2) axes x1y2 lw 2 with lines, DATA_FILE using 8:xtic(2) axes x1y2 lw 2 with lines
 
 #pause -1
