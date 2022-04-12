@@ -103,12 +103,17 @@ def render_param(param: Parameter, type_env: TypeEnv) -> str:
 
 
 def render_stmt(
-    stmt: Union[Assign, For, Return], type_env: TypeEnv, ran_vectorization: bool, enclosing_loops=[]
+    stmt: Union[Assign, For, Return],
+    type_env: TypeEnv,
+    ran_vectorization: bool,
+    enclosing_loops=[],
 ) -> str:
     if isinstance(stmt, Assign):
         # If we're assigning to a vectorized value, use a specialized function for this.
         if isinstance(stmt.lhs, VectorizedAccess):
-            ctx = RenderContext(type_env, plaintext=False, enclosing_loops=enclosing_loops)
+            ctx = RenderContext(
+                type_env, plaintext=False, enclosing_loops=enclosing_loops
+            )
             val_expr = render_expr(stmt.rhs, ctx)
 
             # If this isn't a true vectorized access, just subscript normally
@@ -148,33 +153,86 @@ def render_stmt(
         if isinstance(stmt.rhs, Update):
             shared_assignment = (
                 (
-                    render_expr(stmt.rhs, RenderContext(type_env, plaintext=False, enclosing_loops=enclosing_loops))
+                    render_expr(
+                        stmt.rhs,
+                        RenderContext(
+                            type_env, plaintext=False, enclosing_loops=enclosing_loops
+                        ),
+                    )
                     + ";\n"
                 )
-                + render_expr(stmt.lhs, RenderContext(type_env, plaintext=False, enclosing_loops=enclosing_loops))
+                + render_expr(
+                    stmt.lhs,
+                    RenderContext(
+                        type_env, plaintext=False, enclosing_loops=enclosing_loops
+                    ),
+                )
                 + " = "
-                + render_expr(stmt.rhs.array, RenderContext(type_env, plaintext=False, enclosing_loops=enclosing_loops))
+                + render_expr(
+                    stmt.rhs.array,
+                    RenderContext(
+                        type_env, plaintext=False, enclosing_loops=enclosing_loops
+                    ),
+                )
                 + ";"
             )
             plaintext_assignment = (
-                (render_expr(stmt.rhs, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops)) + ";\n")
-                + render_expr(stmt.lhs, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+                (
+                    render_expr(
+                        stmt.rhs,
+                        RenderContext(
+                            type_env, plaintext=True, enclosing_loops=enclosing_loops
+                        ),
+                    )
+                    + ";\n"
+                )
+                + render_expr(
+                    stmt.lhs,
+                    RenderContext(
+                        type_env, plaintext=True, enclosing_loops=enclosing_loops
+                    ),
+                )
                 + " = "
-                + render_expr(stmt.rhs.array, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+                + render_expr(
+                    stmt.rhs.array,
+                    RenderContext(
+                        type_env, plaintext=True, enclosing_loops=enclosing_loops
+                    ),
+                )
                 + ";"
             )
 
         else:
             shared_assignment = (
-                render_expr(stmt.lhs, RenderContext(type_env, plaintext=False, enclosing_loops=enclosing_loops))
+                render_expr(
+                    stmt.lhs,
+                    RenderContext(
+                        type_env, plaintext=False, enclosing_loops=enclosing_loops
+                    ),
+                )
                 + " = "
-                + render_expr(stmt.rhs, RenderContext(type_env, plaintext=False, enclosing_loops=enclosing_loops))
+                + render_expr(
+                    stmt.rhs,
+                    RenderContext(
+                        type_env, plaintext=False, enclosing_loops=enclosing_loops
+                    ),
+                )
                 + ";"
             )
             plaintext_assignment = (
-                render_expr(stmt.lhs, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+                render_expr(
+                    stmt.lhs,
+                    RenderContext(
+                        type_env, plaintext=True, enclosing_loops=enclosing_loops
+                    ),
+                )
                 + " = "
-                + render_expr(stmt.rhs, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+                + render_expr(
+                    stmt.rhs,
+                    RenderContext(
+                        type_env, plaintext=True, enclosing_loops=enclosing_loops
+                    ),
+                )
                 + ";"
             )
 
@@ -189,9 +247,19 @@ def render_stmt(
     elif isinstance(stmt, For):
         ctr_initializer = (
             "// Initialize loop counter\n"
-            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+            + render_expr(
+                stmt.counter,
+                RenderContext(
+                    type_env, plaintext=True, enclosing_loops=enclosing_loops
+                ),
+            )
             + " = "
-            + render_expr(stmt.bound_low, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+            + render_expr(
+                stmt.bound_low,
+                RenderContext(
+                    type_env, plaintext=True, enclosing_loops=enclosing_loops
+                ),
+            )
             + ";"
         )
 
@@ -203,11 +271,26 @@ def render_stmt(
 
         header = (
             "for (; "
-            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+            + render_expr(
+                stmt.counter,
+                RenderContext(
+                    type_env, plaintext=True, enclosing_loops=enclosing_loops
+                ),
+            )
             + " < "
-            + render_expr(stmt.bound_high, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+            + render_expr(
+                stmt.bound_high,
+                RenderContext(
+                    type_env, plaintext=True, enclosing_loops=enclosing_loops
+                ),
+            )
             + "; "
-            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+            + render_expr(
+                stmt.counter,
+                RenderContext(
+                    type_env, plaintext=True, enclosing_loops=enclosing_loops
+                ),
+            )
             + "++) {"
         )
 
@@ -220,9 +303,19 @@ def render_stmt(
         phi_updates = (
             "// Update phi values\n"
             + "if ("
-            + render_expr(stmt.counter, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+            + render_expr(
+                stmt.counter,
+                RenderContext(
+                    type_env, plaintext=True, enclosing_loops=enclosing_loops
+                ),
+            )
             + " != "
-            + render_expr(stmt.bound_low, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))
+            + render_expr(
+                stmt.bound_low,
+                RenderContext(
+                    type_env, plaintext=True, enclosing_loops=enclosing_loops
+                ),
+            )
             + ") {\n"
             + indent(
                 phi_assignments,
@@ -233,7 +326,9 @@ def render_stmt(
 
         body = (
             "\n".join(
-                render_stmt(substmt, type_env, ran_vectorization, enclosing_loops + [stmt])
+                render_stmt(
+                    substmt, type_env, ran_vectorization, enclosing_loops + [stmt]
+                )
                 for substmt in stmt.body
                 if not isinstance(substmt, Phi)
             )
@@ -266,7 +361,12 @@ def render_stmt(
     elif isinstance(stmt, Return):
         return (
             "return "
-            + render_expr(stmt.value, RenderContext(type_env, plaintext=False, enclosing_loops=enclosing_loops))
+            + render_expr(
+                stmt.value,
+                RenderContext(
+                    type_env, plaintext=False, enclosing_loops=enclosing_loops
+                ),
+            )
             + ";"
         )
 
@@ -511,7 +611,11 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         inner_ctx = dc.replace(
             ctx,
             int_type="std::uint32_t",
-            var_mappings={var: idx_map(i) for i, (var, _) in enumerate(expr.dims) if not any(var == loop.counter for loop in ctx.enclosing_loops)},
+            var_mappings={
+                var: idx_map(i)
+                for i, (var, _) in enumerate(expr.dims)
+                if not any(var == loop.counter for loop in ctx.enclosing_loops)
+            },
         )
         inner_expr = f"std::function([&](const std::vector<std::uint32_t> &indices){{return {render_expr(expr_to_render, inner_ctx)}{post_expr};}})"
 

@@ -479,10 +479,10 @@ def _basic_vectorization_phase_1(
                 return var
             elif edge_kind is EdgeKind.OUTER_TO_INNER:
                 var_prime = tmp_var_gen.get()
-                if lhs_dims is not None and len(lhs_dims) > len(dep_graph.enclosing_loops[stmt]):
-                    dims = tuple(
-                        (Var("_"), dim_size) for dim_size in lhs_dims
-                    )
+                if lhs_dims is not None and len(lhs_dims) > len(
+                    dep_graph.enclosing_loops[stmt]
+                ):
+                    dims = tuple((Var("_"), dim_size) for dim_size in lhs_dims)
                 else:
                     dims = tuple(
                         (loop.counter, loop.bound_high)
@@ -1191,8 +1191,20 @@ def _basic_vectorization_phase_2(
                     unvectorize_loop_dim(val)
 
                 # In case the left side of this assignment was updated above, update the right side
-                if isinstance(stmt, llc.Assign) and isinstance(stmt.lhs, llc.VectorizedAccess) and isinstance(stmt.rhs, llc.LiftExpr):
-                    new_dims = tuple((var, dim_size) for var, dim_size, vectorized in zip(stmt.lhs.idx_vars, stmt.lhs.dim_sizes, stmt.lhs.vectorized_dims) if vectorized)
+                if (
+                    isinstance(stmt, llc.Assign)
+                    and isinstance(stmt.lhs, llc.VectorizedAccess)
+                    and isinstance(stmt.rhs, llc.LiftExpr)
+                ):
+                    new_dims = tuple(
+                        (var, dim_size)
+                        for var, dim_size, vectorized in zip(
+                            stmt.lhs.idx_vars,
+                            stmt.lhs.dim_sizes,
+                            stmt.lhs.vectorized_dims,
+                        )
+                        if vectorized
+                    )
                     stmt.rhs.dims = new_dims
 
         for orig_var, lifted in lifted_vars.items():
