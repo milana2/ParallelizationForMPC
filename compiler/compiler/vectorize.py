@@ -180,6 +180,47 @@ def _z3_subscript_index(
         assert_never(index)
 
 
+def _z3_make_var_map(
+    i_loops: list[llc.For],
+    j_loop: llc.For,
+    k_loops: list[llc.For],
+    i_z3_upper_bounds: list[z3.ArithRef],
+    j_z3_upper_bound: z3.ArithRef,
+    k_z3_upper_bounds: list[z3.ArithRef],
+    i_z3_counters: list[z3.ArithRef],
+    j_z3_counter: z3.ArithRef,
+    k_z3_counters: list[z3.ArithRef],
+) -> dict[llc.Var, z3.ArithRef]:
+    return (
+        # Loop upper bounds
+        {
+            i_loop.bound_high: i_z3_upper_bound
+            for i_loop, i_z3_upper_bound in zip(i_loops, i_z3_upper_bounds)
+            if isinstance(i_loop.bound_high, llc.Var)
+        }
+        | (
+            {j_loop.bound_high: j_z3_upper_bound}
+            if isinstance(j_loop.bound_high, llc.Var)
+            else {}
+        )
+        | {
+            k_loop.bound_high: k_z3_upper_bound
+            for k_loop, k_z3_upper_bound in zip(k_loops, k_z3_upper_bounds)
+            if isinstance(k_loop.bound_high, llc.Var)
+        }
+        # Loop counters
+        | {
+            i_loop.counter: i_z3_counter
+            for i_loop, i_z3_counter in zip(i_loops, i_z3_counters)
+        }
+        | {j_loop.counter: j_z3_counter}
+        | {
+            k_loop.counter: k_z3_counter
+            for k_loop, k_z3_counter in zip(k_loops, k_z3_counters)
+        }
+    )
+
+
 def _check_dep(
     A_def: llc.Update,
     A_use: llc.Subscript,
@@ -187,31 +228,68 @@ def _check_dep(
     j: llc.For,
     k: list[llc.For],
 ) -> bool:
+    # Loop bounds
+    I = [z3.Int(f"I[{n}]") for n in range(len(i))]
+    J = z3.Int("J")
+    K = [z3.Int(f"K[{n}]") for n in range(len(k))]
+
+    # Loop counters
     i_ = [z3.Int(f"i_[{n}]") for n in range(len(i))]
     j_ = z3.Int("j_")
     j__ = z3.Int("j__")
     k_ = [z3.Int(f"k_[{n}]") for n in range(len(k))]
     k__ = [z3.Int(f"k__[{n}]") for n in range(len(k))]
+
+    # Index expressions
     f = A_def.index
     f_ = A_use.index
     f_ijk = _z3_subscript_index(
         f,
-        {ii.counter: ii_ for ii, ii_ in zip(i, i_)}
-        | {j.counter: j_}
-        | {kk.counter: kk_ for kk, kk_ in zip(k, k_)},
+        _z3_make_var_map(
+            i_loops=i,
+            j_loop=j,
+            k_loops=k,
+            i_z3_upper_bounds=I,
+            j_z3_upper_bound=J,
+            k_z3_upper_bounds=K,
+            i_z3_counters=i_,
+            j_z3_counter=j_,
+            k_z3_counters=k_,
+        ),
     )
     f__ijk = _z3_subscript_index(
         f_,
-        {ii.counter: ii_ for ii, ii_ in zip(i, i_)}
-        | {j.counter: j__}
-        | {kk.counter: kk_ for kk, kk_ in zip(k, k__)},
+        _z3_make_var_map(
+            i_loops=i,
+            j_loop=j,
+            k_loops=k,
+            i_z3_upper_bounds=I,
+            j_z3_upper_bound=J,
+            k_z3_upper_bounds=K,
+            i_z3_counters=i_,
+            j_z3_counter=j__,
+            k_z3_counters=k__,
+        ),
     )
+
+    # Add constraints
     solver = z3.Solver()
+    # Counters at least zero
     solver.add([0 <= ii for ii in i_])
     solver.add(0 <= j_)
-    solver.add(j_ < j__)
+    solver.add(0 <= j__)
     solver.add([0 <= kk for kk in k_])
+    # Counters less than upper bound
+    solver.add([ii < II for ii, II in zip(i_, I)])
+    solver.add(j_ < J)
+    solver.add(j__ < J)
+    solver.add([kk < KK for kk, KK in zip(k_, K)])
+    # One j less than other
+    solver.add(j_ < j__)
+    # Index expressions equal
     solver.add(f_ijk == f__ijk)
+
+    # Try to solve.
     # This check is allowed to have false positives, but not false negatives,
     # so we treat `z3.unknown` the same as `z3.sat`.
     return solver.check() in (z3.sat, z3.unknown)
