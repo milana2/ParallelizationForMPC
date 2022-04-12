@@ -4,70 +4,70 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5469|4518|911|4945|0.814 MiB |4945|0.814 MiB |1997.451 ms |441.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |10925.904 ms |4608.0 ms |
-|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |1841.666 ms |291.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |1923.426 ms |405.0 ms |
-|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1262.167 ms |211.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1365.842 ms |281.0 ms |
-|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1169.258 ms |210.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1407.538 ms |287.0 ms |
-|cryptonets_max_pooling|823|678|41|949|0.181 MiB |949|0.181 MiB |504.454 ms |74.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |2622.395 ms |1072.0 ms |
-|db_cross_join_trivial|7892|47|7519|14484|1.519 MiB |14484|1.519 MiB |3014.383 ms |1027.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |3867.632 ms |1338.0 ms |
-|db_variance|16280|3307|12939|13644|1.49 MiB |13644|1.49 MiB |7757.666 ms |1283.0 ms |
-|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |11178.624 ms |3038.0 ms |
-|histogram|2648|2498|79|3016|0.396 MiB |3016|0.396 MiB |1423.345 ms |258.0 ms |
-|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3975.587 ms |1259.0 ms |
-|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1291.204 ms |306.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2307.363 ms |757.0 ms |
-|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |2662.868 ms |483.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2649.191 ms |582.0 ms |
-|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2105.916 ms |365.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1866.234 ms |388.0 ms |
-|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2216.413 ms |372.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |1710.675 ms |394.0 ms |
-|minimal_points|531|478|36|763|0.097 MiB |763|0.097 MiB |265.017 ms |42.0 ms |
-|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |931.518 ms |320.0 ms |
-|psi|131|61|42|472|0.063 MiB |472|0.063 MiB |121.524 ms |12.0 ms |
-|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |583.845 ms |154.0 ms |
+|biometric|5469|4518|911|4945|0.814 MiB |4945|0.814 MiB |2095.17 ms |435.0 ms |
+|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |12673.256 ms |4520.0 ms |
+|count_102|3220|104|3079|3818|0.388 MiB |3818|0.388 MiB |1979.312 ms |285.0 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2789.08 ms |398.0 ms |
+|count_10s|2297|105|2158|2846|0.287 MiB |2846|0.287 MiB |1458.539 ms |205.0 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1531.119 ms |278.0 ms |
+|count_123|2304|109|2160|2848|0.288 MiB |2848|0.288 MiB |1362.953 ms |222.0 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1418.732 ms |282.0 ms |
+|cryptonets_max_pooling|823|678|41|949|0.181 MiB |949|0.181 MiB |485.707 ms |75.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |3081.149 ms |1057.0 ms |
+|db_cross_join_trivial|7892|47|7519|14484|1.519 MiB |14484|1.519 MiB |3532.997 ms |1235.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |4545.916 ms |1337.0 ms |
+|db_variance|16280|3307|12939|13644|1.49 MiB |13644|1.49 MiB |9394.044 ms |1271.0 ms |
+|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |12907.235 ms |3005.0 ms |
+|histogram|2648|2498|79|3016|0.396 MiB |3016|0.396 MiB |1603.18 ms |256.0 ms |
+|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |4607.055 ms |1260.0 ms |
+|inner_product|3886|2969|906|3580|0.387 MiB |3580|0.387 MiB |1304.334 ms |305.0 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2339.331 ms |770.0 ms |
+|longest_102|5469|110|5312|5640|0.568 MiB |5640|0.568 MiB |3262.822 ms |480.0 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |3088.623 ms |576.0 ms |
+|max_dist_between_syms|4262|37|4197|4452|0.441 MiB |4452|0.441 MiB |2274.719 ms |363.0 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |2161.946 ms |391.0 ms |
+|max_sum_between_syms|4261|37|4197|4452|0.441 MiB |4452|0.441 MiB |2379.272 ms |369.0 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2130.657 ms |392.0 ms |
+|minimal_points|531|478|36|763|0.097 MiB |763|0.097 MiB |266.39 ms |41.0 ms |
+|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |1041.946 ms |320.0 ms |
+|psi|131|61|42|472|0.063 MiB |472|0.063 MiB |68.848 ms |11.0 ms |
+|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |607.938 ms |153.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4492|3637|815|7865|4.528 MiB |7857|4.527 MiB |511.272 ms |514.0 ms |
-|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5231.394 ms |5085.0 ms |
-|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |255.886 ms |204.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |279.028 ms |398.0 ms |
-|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |147.657 ms |161.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |211.673 ms |261.0 ms |
-|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |199.886 ms |150.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |197.921 ms |261.0 ms |
-|cryptonets_max_pooling|745|600|41|1462|1.051 MiB |1398|1.047 MiB |149.448 ms |98.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1589.602 ms |1159.0 ms |
-|db_cross_join_trivial|7900|55|7519|36650|7.062 MiB |36344|7.041 MiB |1226.809 ms |1628.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1406.232 ms |3389.0 ms |
-|db_variance|13365|3014|10317|20728|4.017 MiB |20710|4.015 MiB |1456.98 ms |1289.0 ms |
-|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |3584.415 ms |3349.0 ms |
-|histogram|1488|1338|79|2953|1.11 MiB |2898|1.106 MiB |280.005 ms |201.0 ms |
-|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |994.764 ms |947.0 ms |
-|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |398.35 ms |326.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |962.389 ms |898.0 ms |
-|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |487.593 ms |395.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |563.162 ms |569.0 ms |
-|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |393.865 ms |302.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |349.789 ms |346.0 ms |
-|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |355.229 ms |302.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |356.336 ms |350.0 ms |
-|minimal_points|479|426|36|1019|0.269 MiB |1014|0.269 MiB |187.207 ms |50.0 ms |
-|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |577.657 ms |293.0 ms |
-|psi|147|77|42|760|0.37 MiB |746|0.369 MiB |62.211 ms |26.0 ms |
-|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |169.995 ms |266.0 ms |
+|biometric|4492|3637|815|7865|4.528 MiB |7857|4.527 MiB |656.616 ms |514.0 ms |
+|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5497.406 ms |5061.0 ms |
+|count_102|1770|104|1629|3869|0.655 MiB |3838|0.653 MiB |280.627 ms |201.0 ms |
+|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |382.262 ms |363.0 ms |
+|count_10s|1282|105|1143|2982|0.484 MiB |2952|0.482 MiB |137.03 ms |148.0 ms |
+|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |238.765 ms |260.0 ms |
+|count_123|1289|109|1145|2988|0.486 MiB |2959|0.484 MiB |219.653 ms |146.0 ms |
+|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |199.961 ms |259.0 ms |
+|cryptonets_max_pooling|745|600|41|1462|1.051 MiB |1398|1.047 MiB |214.738 ms |100.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1426.799 ms |1124.0 ms |
+|db_cross_join_trivial|7900|55|7519|36650|7.062 MiB |36344|7.041 MiB |1000.659 ms |1583.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1484.47 ms |3343.0 ms |
+|db_variance|13365|3014|10317|20728|4.017 MiB |20710|4.015 MiB |1735.681 ms |1267.0 ms |
+|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |3884.012 ms |3292.0 ms |
+|histogram|1488|1338|79|2953|1.11 MiB |2898|1.106 MiB |273.353 ms |201.0 ms |
+|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1061.992 ms |959.0 ms |
+|inner_product|3301|2825|465|5837|1.118 MiB |5832|1.117 MiB |451.481 ms |322.0 ms |
+|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |881.052 ms |878.0 ms |
+|longest_102|3759|110|3602|6834|1.015 MiB |6793|1.013 MiB |612.41 ms |398.0 ms |
+|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |596.122 ms |571.0 ms |
+|max_dist_between_syms|2894|37|2829|5182|0.667 MiB |5156|0.665 MiB |418.323 ms |295.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |415.749 ms |335.0 ms |
+|max_sum_between_syms|2893|37|2829|5180|0.666 MiB |5155|0.665 MiB |424.961 ms |293.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |371.187 ms |384.0 ms |
+|minimal_points|479|426|36|1019|0.269 MiB |1014|0.269 MiB |101.055 ms |55.0 ms |
+|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |507.042 ms |286.0 ms |
+|psi|147|77|42|760|0.37 MiB |746|0.369 MiB |75.658 ms |27.0 ms |
+|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |215.393 ms |264.0 ms |
 
 ## Compiler stages with different benchmarks
-## `biometric`
-### Input
+### `biometric`
+#### Input
 ```python
 from UTIL import shared
 
@@ -99,7 +99,7 @@ S = [4, 5, 2, 10, 2, 120, 4, 10, 99, 88, 77, 66, 55, 44, 33, 22]
 print(biometric(C, 4, S, 4))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def biometric(C: shared[list[int; ?]], D: plaintext[int], S: shared[list[int; ?]], N: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum = 10000
@@ -115,15 +115,15 @@ def biometric(C: shared[list[int; ?]], D: plaintext[int], S: shared[list[int; ?]
             min_index = i
     return (min_sum, min_index)
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/biometric_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/biometric_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/biometric_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/biometric_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[int; ?]], N!0: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
@@ -145,11 +145,11 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
     !2!1 = (min_sum!2, min_index!2)
     return !2!1
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/biometric_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/biometric_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `C!0` | `shared[list[int; ?]]` |
@@ -173,7 +173,7 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
 | `sum!2` | `plaintext[int]` |
 | `min_index!1` | `plaintext[int]` |
 | `min_sum!1` | `plaintext[int]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[int; ?]], N!0: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
@@ -204,9 +204,9 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
     !2!1 = (!10!0, !11!0)
     return !2!1
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/biometric_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[int; ?]], N!0: plaintext[int]) -> tuple[shared[int], shared[int]]:
     min_sum!1 = 10000
@@ -238,9 +238,9 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
     !2!1 = (!10!0, !11!0)
     return !2!1
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/biometric_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `C!0` | `shared[list[int; ?]]` |
@@ -274,7 +274,7 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
 | `!3!0` | `plaintext[list[int; (N!0)]]` |
 | `min_index!1` | `plaintext[int]` |
 | `min_sum!1` | `plaintext[int]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric(
@@ -410,8 +410,8 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
 
 }
 ```
-## `count_102`
-### Input
+### `count_102`
+#### Input
 ```python
 from UTIL import shared
 
@@ -437,7 +437,7 @@ seq = [1, 0, 2, 1, 0, 0, 2, 1, 2, 2]
 print(count_102(seq, 10, [1, 0, 2]))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def count_102(Seq: shared[list[int; ?]], N: plaintext[int], Syms: shared[list[int; ?]]) -> shared[int]:
     s0 = False
@@ -448,15 +448,15 @@ def count_102(Seq: shared[list[int; ?]], N: plaintext[int], Syms: shared[list[in
         s0 = ((Seq[i] == Syms[1]) or (s0 and (Seq[i] == Syms[0])))
     return c
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/count_102_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/count_102_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/count_102_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/count_102_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
@@ -474,11 +474,11 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s0!3 = (!3!2 or !6!2)
     return c!2
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/count_102_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/count_102_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -497,7 +497,7 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `!1!2` | `shared[bool]` |
 | `c!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[bool]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
@@ -524,9 +524,9 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     !15!0 = drop_dim(c!4{N!0}[])
     return !15!0
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/count_102_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
@@ -554,9 +554,9 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     !15!0 = drop_dim(c!4{N!0}[])
     return !15!0
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/count_102_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -585,7 +585,7 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `!7!0` | `plaintext[list[bool; (N!0)]]` |
 | `c!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[bool]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_102(
@@ -692,8 +692,8 @@ encrypto::motion::SecureUnsignedInteger count_102(
 
 }
 ```
-## `count_10s`
-### Input
+### `count_10s`
+#### Input
 ```python
 from UTIL import shared
 
@@ -721,7 +721,7 @@ seq = [1, 0, 0, 1, 1, 0, 2]
 print(count_10s(seq, 7, [0, 1]))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def count_10s(Seq: shared[list[int; ?]], N: plaintext[int], Syms: shared[list[int; ?]]) -> shared[int]:
     s0 = False
@@ -734,15 +734,15 @@ def count_10s(Seq: shared[list[int; ?]], N: plaintext[int], Syms: shared[list[in
         s0 = (Seq[i] == Syms[1])
     return scount
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/count_10s_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/count_10s_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/count_10s_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/count_10s_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
@@ -762,11 +762,11 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s0!3 = (Seq!0[i!1] == Syms!0[1])
     return scount!2
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/count_10s_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/count_10s_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -787,7 +787,7 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `scount!1` | `plaintext[int]` |
 | `s1!1` | `plaintext[bool]` |
 | `s0!1` | `plaintext[bool]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
@@ -817,9 +817,9 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     !14!0 = drop_dim(scount!4{N!0}[])
     return !14!0
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/count_10s_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
@@ -851,9 +851,9 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     !14!0 = drop_dim(scount!4{N!0}[])
     return !14!0
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/count_10s_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -886,7 +886,7 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `scount!1` | `plaintext[int]` |
 | `s1!1` | `plaintext[bool]` |
 | `s0!1` | `plaintext[bool]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_10s(
@@ -1019,8 +1019,8 @@ encrypto::motion::SecureUnsignedInteger count_10s(
 
 }
 ```
-## `count_123`
-### Input
+### `count_123`
+#### Input
 ```python
 from UTIL import shared
 
@@ -1049,7 +1049,7 @@ seq = [1, 2, 3, 1, 3, 3, 4]
 print(count_123(seq, 7, [1, 2, 3]))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def count_123(Seq: shared[list[int; ?]], N: plaintext[int], Syms: shared[list[int; ?]]) -> shared[int]:
     s1 = False
@@ -1063,15 +1063,15 @@ def count_123(Seq: shared[list[int; ?]], N: plaintext[int], Syms: shared[list[in
         s1 = (Seq[i] == Syms[0])
     return c
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/count_123_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/count_123_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/count_123_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/count_123_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s1!1 = False
@@ -1092,11 +1092,11 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
         s1!3 = (Seq!0[i!1] == Syms!0[0])
     return c!2
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/count_123_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/count_123_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -1118,7 +1118,7 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `c!1` | `plaintext[int]` |
 | `s2!1` | `plaintext[bool]` |
 | `s1!1` | `plaintext[bool]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s1!1 = False
@@ -1149,9 +1149,9 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     !15!0 = drop_dim(c!4{N!0}[])
     return !15!0
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/count_123_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s1!1 = False
@@ -1184,9 +1184,9 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     !15!0 = drop_dim(c!4{N!0}[])
     return !15!0
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/count_123_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -1220,7 +1220,7 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `c!1` | `plaintext[int]` |
 | `s2!1` | `plaintext[bool]` |
 | `s1!1` | `plaintext[bool]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_123(
@@ -1355,8 +1355,8 @@ encrypto::motion::SecureUnsignedInteger count_123(
 
 }
 ```
-## `cryptonets_max_pooling`
-### Input
+### `cryptonets_max_pooling`
+#### Input
 ```python
 from UTIL import shared
 
@@ -1418,7 +1418,7 @@ OUTPUT_res = [0] * output_size
 print(cryptonets_max_pooling(vals, cols, rows, cols_res, rows_res, OUTPUT_res))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def cryptonets_max_pooling(vals: shared[list[int; ?]], cols: plaintext[int], rows: plaintext[int], cols_res: plaintext[int], rows_res: plaintext[int], OUTPUT_res: shared[list[int; ?]]) -> shared[list[int; ?]]:
     for i: plaintext[int] in range(0, rows_res):
@@ -1433,15 +1433,15 @@ def cryptonets_max_pooling(vals: shared[list[int; ?]], cols: plaintext[int], row
             OUTPUT_res[((i * cols_res) + j)] = max
     return OUTPUT_res
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/cryptonets_max_pooling_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/cryptonets_max_pooling_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/cryptonets_max_pooling_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/cryptonets_max_pooling_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
     for i!1 in range(0, rows_res!0):
@@ -1461,11 +1461,11 @@ def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int],
             OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * cols_res!0) + j!1), max!9)
     return OUTPUT_res!1
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/cryptonets_max_pooling_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/cryptonets_max_pooling_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `vals!0` | `shared[list[int; ?]]` |
@@ -1489,7 +1489,7 @@ def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int],
 | `max!4` | `shared[int]` |
 | `!1!3` | `shared[bool]` |
 | `max!3` | `shared[int]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
     !4!0{ROWS_RES!0}[] = lift(OUTPUT_res!0, (i!1:rows_res!0))
@@ -1518,9 +1518,9 @@ def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int],
             OUTPUT_res!3{ROWS_RES!0, COLS_RES!0}[] = VectorizedUpdate(OUTPUT_res!2{ROWS_RES!0, COLS_RES!0}[], [I!1, J!1], max!9{ROWS_RES!0, COLS_RES!0}[])
     return OUTPUT_res!1
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/cryptonets_max_pooling_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
     !4!0{ROWS_RES!0}[] = lift(OUTPUT_res!0, (i!1:rows_res!0))
@@ -1545,9 +1545,9 @@ def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int],
     OUTPUT_res!3{ROWS_RES!0, COLS_RES!0}[] = VectorizedUpdate(!5!0{ROWS_RES!0, COLS_RES!0}[], [I!1, J!1], max!9{ROWS_RES!0, COLS_RES!0}[])
     return OUTPUT_res!3
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/cryptonets_max_pooling_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `vals!0` | `shared[list[int; ?]]` |
@@ -1576,7 +1576,7 @@ def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int],
 | `!7!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
 | `!6!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
 | `!4!0` | `shared[list[int; (rows_res!0)]]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
@@ -1651,8 +1651,8 @@ std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
 
 }
 ```
-## `db_cross_join_trivial`
-### Input
+### `db_cross_join_trivial`
+#### Input
 ```python
 from UTIL import shared
 
@@ -1717,7 +1717,7 @@ res = [0] * (Len_A * Len_B * 3)
 print(db_cross_join_trivial(A, Len_A, B, Len_B, res))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def db_cross_join_trivial(A: shared[list[int; ?]], Len_A: plaintext[int], B: shared[list[int; ?]], Len_B: plaintext[int], res: shared[list[int; ?]]) -> shared[list[int; ?]]:
     for i: plaintext[int] in range(0, Len_A):
@@ -1734,15 +1734,15 @@ def db_cross_join_trivial(A: shared[list[int; ?]], Len_A: plaintext[int], B: sha
                 res[((((i * Len_B) * 3) + (j * 3)) + k)] = v
     return res
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/db_cross_join_trivial_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/db_cross_join_trivial_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/db_cross_join_trivial_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/db_cross_join_trivial_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def db_cross_join_trivial(A!0: shared[list[int; ?]], Len_A!0: plaintext[int], B!0: shared[list[int; ?]], Len_B!0: plaintext[int], res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
     for i!1 in range(0, Len_A!0):
@@ -1766,11 +1766,11 @@ def db_cross_join_trivial(A!0: shared[list[int; ?]], Len_A!0: plaintext[int], B!
                 res!4 = Update(res!3, ((((i!1 * Len_B!0) * 3) + (j!1 * 3)) + k!1), v!11)
     return res!1
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/db_cross_join_trivial_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/db_cross_join_trivial_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `A!0` | `shared[list[int; ?]]` |
@@ -1797,7 +1797,7 @@ def db_cross_join_trivial(A!0: shared[list[int; ?]], Len_A!0: plaintext[int], B!
 | `!2!4` | `plaintext[bool]` |
 | `!1!4` | `shared[bool]` |
 | `v!4` | `plaintext[int]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def db_cross_join_trivial(A!0: shared[list[int; ?]], Len_A!0: plaintext[int], B!0: shared[list[int; ?]], Len_B!0: plaintext[int], res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
     !5!0{LEN_A!0}[] = lift(res!0, (i!1:Len_A!0))
@@ -1829,9 +1829,9 @@ def db_cross_join_trivial(A!0: shared[list[int; ?]], Len_A!0: plaintext[int], B!
                 res!4{LEN_A!0, LEN_B!0, 3}[] = VectorizedUpdate(res!3{LEN_A!0, LEN_B!0, 3}[], [I!1, J!1, K!1], v!11{LEN_A!0, LEN_B!0, 3}[])
     return res!1
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/db_cross_join_trivial_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def db_cross_join_trivial(A!0: shared[list[int; ?]], Len_A!0: plaintext[int], B!0: shared[list[int; ?]], Len_B!0: plaintext[int], res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
     !5!0{LEN_A!0}[] = lift(res!0, (i!1:Len_A!0))
@@ -1857,9 +1857,9 @@ def db_cross_join_trivial(A!0: shared[list[int; ?]], Len_A!0: plaintext[int], B!
     res!4{LEN_A!0, LEN_B!0, 3}[] = VectorizedUpdate(!7!0{LEN_A!0, LEN_B!0, 3}[], [I!1, J!1, K!1], v!11{LEN_A!0, LEN_B!0, 3}[])
     return res!4
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/db_cross_join_trivial_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `A!0` | `shared[list[int; ?]]` |
@@ -1888,7 +1888,7 @@ def db_cross_join_trivial(A!0: shared[list[int; ?]], Len_A!0: plaintext[int], B!
 | `!9!0` | `shared[list[list[list[int; (Len_A!0)]; (Len_B!0)]; (3)]]` |
 | `!8!0` | `shared[list[list[list[int; (Len_A!0)]; (Len_B!0)]; (3)]]` |
 | `!5!0` | `shared[list[int; (Len_A!0)]]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> db_cross_join_trivial(
@@ -1967,8 +1967,8 @@ std::vector<encrypto::motion::SecureUnsignedInteger> db_cross_join_trivial(
 
 }
 ```
-## `db_variance`
-### Input
+### `db_variance`
+#### Input
 ```python
 from UTIL import shared
 
@@ -2004,7 +2004,7 @@ len = 8
 print(db_variance(A, V, len))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def db_variance(A: shared[list[int; ?]], V: shared[list[int; ?]], len: plaintext[int]) -> shared[int]:
     sum = 0
@@ -2020,15 +2020,15 @@ def db_variance(A: shared[list[int; ?]], V: shared[list[int; ?]], len: plaintext
     variance = (res / len)
     return variance
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/db_variance_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/db_variance_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/db_variance_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/db_variance_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
@@ -2048,11 +2048,11 @@ def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: pla
     variance!1 = (res!2 / len!0)
     return variance!1
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/db_variance_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/db_variance_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `A!0` | `shared[list[int; ?]]` |
@@ -2073,7 +2073,7 @@ def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: pla
 | `sum!3` | `shared[int]` |
 | `sum!2` | `shared[int]` |
 | `sum!1` | `plaintext[int]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
@@ -2101,9 +2101,9 @@ def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: pla
     variance!1 = (!9!0 / len!0)
     return variance!1
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/db_variance_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
@@ -2129,9 +2129,9 @@ def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: pla
     variance!1 = (!9!0 / len!0)
     return variance!1
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/db_variance_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `A!0` | `shared[list[int; ?]]` |
@@ -2158,7 +2158,7 @@ def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: pla
 | `!3!0` | `shared[list[int; (len!0)]]` |
 | `!2!0` | `plaintext[list[int; (len!0)]]` |
 | `sum!1` | `plaintext[int]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger db_variance(
@@ -2259,8 +2259,8 @@ encrypto::motion::SecureUnsignedInteger db_variance(
 
 }
 ```
-## `histogram`
-### Input
+### `histogram`
+#### Input
 ```python
 from UTIL import shared
 
@@ -2300,7 +2300,7 @@ R = [0, 0, 0, 0, 0]
 print(histogram(A, B, N, 5, R))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def histogram(A: shared[list[int; ?]], B: shared[list[int; ?]], N: plaintext[int], num_bins: plaintext[int], result: plaintext[list[int; ?]]) -> shared[list[int; ?]]:
     for i: plaintext[int] in range(0, num_bins):
@@ -2312,15 +2312,15 @@ def histogram(A: shared[list[int; ?]], B: shared[list[int; ?]], N: plaintext[int
             result[i] = val
     return result
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/histogram_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/histogram_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/histogram_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/histogram_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int], num_bins!0: plaintext[int], result!0: plaintext[list[int; ?]]) -> shared[list[int; ?]]:
     for i!1 in range(0, num_bins!0):
@@ -2334,11 +2334,11 @@ def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plainte
             result!3 = Update(result!2, i!1, val!5)
     return result!1
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/histogram_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/histogram_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `A!0` | `shared[list[int; ?]]` |
@@ -2355,7 +2355,7 @@ def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plainte
 | `val!4` | `shared[int]` |
 | `result!1` | `shared[list[int; (num_bins!0)]]` |
 | `!1!3` | `shared[bool]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int], num_bins!0: plaintext[int], result!0: plaintext[list[int; ?]]) -> shared[list[int; ?]]:
     !2!0{NUM_BINS!0}[] = lift(result!0, (i!1:num_bins!0))
@@ -2375,9 +2375,9 @@ def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plainte
         !3!0{NUM_BINS!0}[] = drop_dim(result!3{NUM_BINS!0, N!0}[])
     return result!1
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/histogram_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int], num_bins!0: plaintext[int], result!0: plaintext[list[int; ?]]) -> shared[list[int; ?]]:
     !2!0{NUM_BINS!0}[] = lift(result!0, (i!1:num_bins!0))
@@ -2395,9 +2395,9 @@ def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plainte
     !3!0{NUM_BINS!0}[] = drop_dim(result!3{NUM_BINS!0, N!0}[])
     return !3!0
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/histogram_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `A!0` | `shared[list[int; ?]]` |
@@ -2418,7 +2418,7 @@ def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plainte
 | `!6!0` | `plaintext[list[list[int; (num_bins!0)]; (N!0)]]` |
 | `!5!0` | `shared[list[list[int; (num_bins!0)]; (N!0)]]` |
 | `!2!0` | `plaintext[list[int; (num_bins!0)]]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
@@ -2493,8 +2493,8 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
 
 }
 ```
-## `inner_product`
-### Input
+### `inner_product`
+#### Input
 ```python
 from UTIL import shared
 
@@ -2512,7 +2512,7 @@ B = [4, 5, 6]
 print(inner_product(A, B, 3))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def inner_product(A: shared[list[int; ?]], B: shared[list[int; ?]], N: plaintext[int]) -> shared[int]:
     sum = 0
@@ -2521,15 +2521,15 @@ def inner_product(A: shared[list[int; ?]], B: shared[list[int; ?]], N: plaintext
         sum = (sum + temp)
     return sum
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/inner_product_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/inner_product_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/inner_product_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/inner_product_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
@@ -2539,11 +2539,11 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
         sum!3 = (sum!2 + temp!2)
     return sum!2
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/inner_product_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/inner_product_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `A!0` | `shared[list[int; ?]]` |
@@ -2554,7 +2554,7 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
 | `sum!2` | `shared[int]` |
 | `temp!2` | `shared[int]` |
 | `sum!1` | `plaintext[int]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
@@ -2568,9 +2568,9 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
     !4!0 = drop_dim(sum!3{N!0}[])
     return !4!0
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/inner_product_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int]) -> shared[int]:
     sum!1 = 0
@@ -2584,9 +2584,9 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
     !4!0 = drop_dim(sum!3{N!0}[])
     return !4!0
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/inner_product_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `A!0` | `shared[list[int; ?]]` |
@@ -2601,7 +2601,7 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
 | `!2!0` | `shared[list[int; (N!0)]]` |
 | `!1!0` | `plaintext[list[int; (N!0)]]` |
 | `sum!1` | `plaintext[int]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger inner_product(
@@ -2661,8 +2661,8 @@ encrypto::motion::SecureUnsignedInteger inner_product(
 
 }
 ```
-## `longest_102`
-### Input
+### `longest_102`
+#### Input
 ```python
 from UTIL import shared
 
@@ -2696,7 +2696,7 @@ seq = [1, 0, 2, 1, 0, 0, 2, 1, 2, 2]
 print(longest_102(seq, 10, [1, 0, 2]))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def longest_102(Seq: shared[list[int; ?]], N: plaintext[int], Syms: shared[list[int; ?]]) -> shared[int]:
     s0 = False
@@ -2713,15 +2713,15 @@ def longest_102(Seq: shared[list[int; ?]], N: plaintext[int], Syms: shared[list[
             max_len = length
     return max_len
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/longest_102_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/longest_102_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/longest_102_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/longest_102_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
@@ -2747,11 +2747,11 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
         max_len!4 = MUX(!8!2, max_len!3, max_len!2)
     return max_len!2
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/longest_102_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/longest_102_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -2778,7 +2778,7 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
 | `length!1` | `plaintext[int]` |
 | `max_len!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[bool]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
@@ -2814,9 +2814,9 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
     !18!0 = drop_dim(max_len!4{N!0}[])
     return !18!0
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/longest_102_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
     s0!1 = False
@@ -2854,9 +2854,9 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
     !18!0 = drop_dim(max_len!4{N!0}[])
     return !18!0
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/longest_102_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -2895,7 +2895,7 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
 | `length!1` | `plaintext[int]` |
 | `max_len!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[bool]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_102(
@@ -3041,8 +3041,8 @@ encrypto::motion::SecureUnsignedInteger longest_102(
 
 }
 ```
-## `max_dist_between_syms`
-### Input
+### `max_dist_between_syms`
+#### Input
 ```python
 from UTIL import shared
 
@@ -3067,7 +3067,7 @@ seq = [1, 2, 1, 1, 2, 3, 4, 1]
 print(max_dist_between_syms(seq, 8, 1))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def max_dist_between_syms(Seq: shared[list[int; ?]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_dist = 0
@@ -3081,15 +3081,15 @@ def max_dist_between_syms(Seq: shared[list[int; ?]], N: plaintext[int], Sym: sha
             max_dist = current_dist
     return max_dist
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/max_dist_between_syms_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/max_dist_between_syms_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/max_dist_between_syms_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/max_dist_between_syms_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_dist!1 = 0
@@ -3107,11 +3107,11 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
         max_dist!4 = MUX(!3!2, max_dist!3, max_dist!2)
     return max_dist!2
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/max_dist_between_syms_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/max_dist_between_syms_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -3130,7 +3130,7 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
 | `!1!2` | `shared[bool]` |
 | `current_dist!1` | `plaintext[int]` |
 | `max_dist!1` | `plaintext[int]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_dist!1 = 0
@@ -3153,9 +3153,9 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
     !8!0 = drop_dim(max_dist!4{N!0}[])
     return !8!0
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/max_dist_between_syms_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_dist!1 = 0
@@ -3179,9 +3179,9 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
     !8!0 = drop_dim(max_dist!4{N!0}[])
     return !8!0
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/max_dist_between_syms_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -3206,7 +3206,7 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
 | `!4!0` | `plaintext[list[int; (N!0)]]` |
 | `current_dist!1` | `plaintext[int]` |
 | `max_dist!1` | `plaintext[int]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
@@ -3306,8 +3306,8 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
 
 }
 ```
-## `max_sum_between_syms`
-### Input
+### `max_sum_between_syms`
+#### Input
 ```python
 from UTIL import shared
 
@@ -3332,7 +3332,7 @@ seq = [1, 2, 1, 1, 2, 3, 4, 1]
 print(max_sum_between_syms(seq, 8, 1))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def max_sum_between_syms(Seq: shared[list[int; ?]], N: plaintext[int], Sym: shared[int]) -> shared[int]:
     max_sum = 0
@@ -3346,15 +3346,15 @@ def max_sum_between_syms(Seq: shared[list[int; ?]], N: plaintext[int], Sym: shar
             max_sum = current_sum
     return max_sum
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/max_sum_between_syms_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/max_sum_between_syms_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/max_sum_between_syms_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/max_sum_between_syms_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_sum!1 = 0
@@ -3372,11 +3372,11 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
         max_sum!4 = MUX(!3!2, max_sum!3, max_sum!2)
     return max_sum!2
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/max_sum_between_syms_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/max_sum_between_syms_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -3395,7 +3395,7 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
 | `!1!2` | `shared[bool]` |
 | `current_sum!1` | `plaintext[int]` |
 | `max_sum!1` | `plaintext[int]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_sum!1 = 0
@@ -3419,9 +3419,9 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
     !9!0 = drop_dim(max_sum!4{N!0}[])
     return !9!0
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/max_sum_between_syms_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0: shared[int]) -> shared[int]:
     max_sum!1 = 0
@@ -3446,9 +3446,9 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
     !9!0 = drop_dim(max_sum!4{N!0}[])
     return !9!0
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/max_sum_between_syms_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `Seq!0` | `shared[list[int; ?]]` |
@@ -3474,7 +3474,7 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
 | `!4!0` | `plaintext[list[int; (N!0)]]` |
 | `current_sum!1` | `plaintext[int]` |
 | `max_sum!1` | `plaintext[int]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
@@ -3575,8 +3575,8 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
 
 }
 ```
-## `minimal_points`
-### Input
+### `minimal_points`
+#### Input
 ```python
 from UTIL import shared
 
@@ -3610,7 +3610,7 @@ result_Y = [0 for i in range(len(Y_coords))]
 print(minimal_points(X_coords, Y_coords, 3, result_X, result_Y))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def minimal_points(X_coords: shared[list[int; ?]], Y_coords: shared[list[int; ?]], N: plaintext[int], result_X: shared[list[int; ?]], result_Y: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
     min_X = []
@@ -3628,15 +3628,15 @@ def minimal_points(X_coords: shared[list[int; ?]], Y_coords: shared[list[int; ?]
         result_Y[i] = val_Y
     return (result_X, result_Y)
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/minimal_points_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/minimal_points_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/minimal_points_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/minimal_points_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
     for i!1 in range(0, N!0):
@@ -3661,11 +3661,11 @@ def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int
     !7!1 = (result_X!1, result_Y!1)
     return !7!1
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/minimal_points_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/minimal_points_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `X_coords!0` | `shared[list[int; ?]]` |
@@ -3693,7 +3693,7 @@ def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int
 | `!4!3` | `shared[bool]` |
 | `!3!3` | `shared[bool]` |
 | `bx!2` | `plaintext[bool]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
     !8!0{N!0}[] = lift(result_X!0, (i!1:N!0))
@@ -3728,9 +3728,9 @@ def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int
     !7!1 = (result_X!1, result_Y!1)
     return !7!1
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/minimal_points_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
     !8!0{N!0}[] = lift(result_X!0, (i!1:N!0))
@@ -3762,9 +3762,9 @@ def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int
     !7!1 = (result_X!2, result_Y!2)
     return !7!1
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/minimal_points_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `X_coords!0` | `shared[list[int; ?]]` |
@@ -3799,7 +3799,7 @@ def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int
 | `!16!0` | `shared[list[int; (N!0)]]` |
 | `!9!0` | `shared[list[int; (N!0)]]` |
 | `!8!0` | `shared[list[int; (N!0)]]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> minimal_points(
@@ -3898,8 +3898,8 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
 
 }
 ```
-## `mnist_relu`
-### Input
+### `mnist_relu`
+#### Input
 ```python
 from UTIL import shared
 
@@ -3928,7 +3928,7 @@ print(mnist_decomposed_relu(input, OUTPUT_res, len_outer, len_inner))
 
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def mnist_decomposed_relu(input: shared[list[int; ?]], OUTPUT_res: shared[list[int; ?]], len_outer: plaintext[int], len_inner: plaintext[int]) -> shared[list[int; ?]]:
     for i: plaintext[int] in range(0, len_outer):
@@ -3939,15 +3939,15 @@ def mnist_decomposed_relu(input: shared[list[int; ?]], OUTPUT_res: shared[list[i
             OUTPUT_res[((i * len_inner) + j)] = val
     return OUTPUT_res
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/mnist_relu_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/mnist_relu_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/mnist_relu_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/mnist_relu_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
     for i!1 in range(0, len_outer!0):
@@ -3961,11 +3961,11 @@ def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[li
             OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * len_inner!0) + j!1), val!5)
     return OUTPUT_res!1
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/mnist_relu_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/mnist_relu_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `input!0` | `shared[list[int; ?]]` |
@@ -3981,7 +3981,7 @@ def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[li
 | `val!4` | `shared[int]` |
 | `!1!3` | `shared[bool]` |
 | `val!3` | `plaintext[int]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
     !2!0{LEN_OUTER!0}[] = lift(OUTPUT_res!0, (i!1:len_outer!0))
@@ -3999,9 +3999,9 @@ def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[li
             OUTPUT_res!3{LEN_OUTER!0, LEN_INNER!0}[] = VectorizedUpdate(OUTPUT_res!2{LEN_OUTER!0, LEN_INNER!0}[], [I!1, J!1], val!5{LEN_OUTER!0, LEN_INNER!0}[])
     return OUTPUT_res!1
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/mnist_relu_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
     !2!0{LEN_OUTER!0}[] = lift(OUTPUT_res!0, (i!1:len_outer!0))
@@ -4015,9 +4015,9 @@ def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[li
     OUTPUT_res!3{LEN_OUTER!0, LEN_INNER!0}[] = VectorizedUpdate(!3!0{LEN_OUTER!0, LEN_INNER!0}[], [I!1, J!1], val!5{LEN_OUTER!0, LEN_INNER!0}[])
     return OUTPUT_res!3
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/mnist_relu_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `input!0` | `shared[list[int; ?]]` |
@@ -4033,7 +4033,7 @@ def mnist_decomposed_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[li
 | `!5!0` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
 | `!4!0` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
 | `!2!0` | `shared[list[int; (len_outer!0)]]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> mnist_decomposed_relu(
@@ -4081,8 +4081,8 @@ std::vector<encrypto::motion::SecureUnsignedInteger> mnist_decomposed_relu(
 
 }
 ```
-## `psi`
-### Input
+### `psi`
+#### Input
 ```python
 from UTIL import shared
 
@@ -4114,7 +4114,7 @@ result = [0 for i in range(len(A))]
 print(psi(A, 5, B, 7, result))
 
 ```
-### Restricted AST
+#### Restricted AST
 ```python
 def psi(A: shared[list[int; ?]], SA: plaintext[int], B: shared[list[int; ?]], SB: plaintext[int], result: shared[list[int; ?]]) -> shared[list[int; ?]]:
     for i: plaintext[int] in range(0, SA):
@@ -4128,15 +4128,15 @@ def psi(A: shared[list[int; ?]], SA: plaintext[int], B: shared[list[int; ?]], SB
         result[i] = val
     return result
 ```
-### Three-address code CFG
+#### Three-address code CFG
 ![](images/psi_tac_cfg.png)
-### SSA
+#### SSA
 ![](images/psi_ssa.png)
-### SSA ϕ→MUX
+#### SSA ϕ→MUX
 ![](images/psi_ssa_mux.png)
-### Dead code elimination
+#### Dead code elimination
 ![](images/psi_dead_code_elim.png)
-### Linear code with loops
+#### Linear code with loops
 ```python
 def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?]], SB!0: plaintext[int], result!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
     for i!1 in range(0, SA!0):
@@ -4153,11 +4153,11 @@ def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?
         result!2 = Update(result!1, i!1, val!4)
     return result!1
 ```
-### Dependency graph
+#### Dependency graph
 ![](images/psi_dep_graph.png)
-### Removal of infeasible edges
+#### Removal of infeasible edges
 ![](images/psi_remove_infeasible_edges.png)
-### Type Environment Before Vectorization
+#### Type Environment Before Vectorization
 | Variable | Type |
 | - | - |
 | `A!0` | `shared[list[int; ?]]` |
@@ -4177,7 +4177,7 @@ def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?
 | `flag!4` | `plaintext[bool]` |
 | `!1!3` | `shared[bool]` |
 | `flag!2` | `plaintext[bool]` |
-### Basic Vectorization Phase 1
+#### Basic Vectorization Phase 1
 ```python
 def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?]], SB!0: plaintext[int], result!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
     !2!0{SA!0}[] = lift(result!0, (i!1:SA!0))
@@ -4200,9 +4200,9 @@ def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?
         result!2{SA!0}[] = VectorizedUpdate(result!1{SA!0}[], [I!1], val!4{SA!0}[])
     return result!1
 ```
-### Basic Vectorization Phase 1 (dependence graph)
+#### Basic Vectorization Phase 1 (dependence graph)
 ![](images/psi_bv_phase_1_dep_graph.png)
-### Basic Vectorization Phase 2
+#### Basic Vectorization Phase 2
 ```python
 def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?]], SB!0: plaintext[int], result!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
     !2!0{SA!0}[] = lift(result!0, (i!1:SA!0))
@@ -4223,9 +4223,9 @@ def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?
     result!2{SA!0}[] = VectorizedUpdate(!2!0{SA!0}[], [I!1], val!4{SA!0}[])
     return result!2
 ```
-### Basic Vectorization Phase 2 (dependence graph)
+#### Basic Vectorization Phase 2 (dependence graph)
 ![](images/psi_bv_phase_2_dep_graph.png)
-### Type Environment After Vectorization
+#### Type Environment After Vectorization
 | Variable | Type |
 | - | - |
 | `A!0` | `shared[list[int; ?]]` |
@@ -4249,7 +4249,7 @@ def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?
 | `flag!2` | `plaintext[bool]` |
 | `!6!0` | `shared[list[int; (SA!0)]]` |
 | `!2!0` | `shared[list[int; (SA!0)]]` |
-### Motion code
+#### Motion code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> psi(
