@@ -124,7 +124,7 @@ encrypto::motion::SecureUnsignedInteger count_10s(
 
     }
 
-    _14_0 = drop_dim_monoreturn(scount_4, {_MPC_PLAINTEXT_N_0});
+    _14_0 = drop_dim_monoreturn(vectorized_access(scount_4, {_MPC_PLAINTEXT_N_0}, {true}, {}).Unsimdify(), {_MPC_PLAINTEXT_N_0});
     return _14_0;
 
 }

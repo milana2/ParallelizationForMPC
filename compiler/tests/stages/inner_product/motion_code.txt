@@ -51,7 +51,7 @@ encrypto::motion::SecureUnsignedInteger inner_product(
 
     }
 
-    _4_0 = drop_dim_monoreturn(sum_3, {_MPC_PLAINTEXT_N_0});
+    _4_0 = drop_dim_monoreturn(vectorized_access(sum_3, {_MPC_PLAINTEXT_N_0}, {true}, {}).Unsimdify(), {_MPC_PLAINTEXT_N_0});
     return _4_0;
 
 }

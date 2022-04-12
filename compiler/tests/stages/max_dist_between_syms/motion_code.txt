@@ -91,7 +91,7 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
 
     }
 
-    _8_0 = drop_dim_monoreturn(max_dist_4, {_MPC_PLAINTEXT_N_0});
+    _8_0 = drop_dim_monoreturn(vectorized_access(max_dist_4, {_MPC_PLAINTEXT_N_0}, {true}, {}).Unsimdify(), {_MPC_PLAINTEXT_N_0});
     return _8_0;
 
 }

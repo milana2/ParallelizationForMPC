@@ -137,7 +137,7 @@ encrypto::motion::SecureUnsignedInteger longest_102(
 
     }
 
-    _18_0 = drop_dim_monoreturn(max_len_4, {_MPC_PLAINTEXT_N_0});
+    _18_0 = drop_dim_monoreturn(vectorized_access(max_len_4, {_MPC_PLAINTEXT_N_0}, {true}, {}).Unsimdify(), {_MPC_PLAINTEXT_N_0});
     return _18_0;
 
 }

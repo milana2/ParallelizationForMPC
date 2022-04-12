@@ -1185,6 +1185,11 @@ def _basic_vectorization_phase_2(
                         setattr(stmt, field.name, val)
                     unvectorize_loop_dim(val)
 
+                # In case the left side of this assignment was updated above, update the right side
+                if isinstance(stmt, llc.Assign) and isinstance(stmt.lhs, llc.VectorizedAccess) and isinstance(stmt.rhs, llc.LiftExpr):
+                    new_dims = tuple((var, dim_size) for var, dim_size, vectorized in zip(stmt.lhs.idx_vars, stmt.lhs.dim_sizes, stmt.lhs.vectorized_dims) if vectorized)
+                    stmt.rhs.dims = new_dims
+
         for orig_var, lifted in lifted_vars.items():
             monolithic_for = util.replace_pattern(monolithic_for, orig_var, lifted)
         monolithic_for = util.replace_pattern(

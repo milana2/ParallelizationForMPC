@@ -92,7 +92,7 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
 
     }
 
-    _9_0 = drop_dim_monoreturn(max_sum_4, {_MPC_PLAINTEXT_N_0});
+    _9_0 = drop_dim_monoreturn(vectorized_access(max_sum_4, {_MPC_PLAINTEXT_N_0}, {true}, {}).Unsimdify(), {_MPC_PLAINTEXT_N_0});
     return _9_0;
 
 }
