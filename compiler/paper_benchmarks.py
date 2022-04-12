@@ -85,43 +85,6 @@ def get_biometric_inputs() -> tuple[list[InputArgs], int]:
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
-def get_psi_inputs()-> tuple[list[InputArgs], int]:
-    all_args = []
-    non_vec_up_to = 6
-    for config in [[16, 16], [32, 32], [64, 64], [128, 128], [256, 256], [512, 512], [1024, 1024], [4096, 4096]]:
-        SA = config[0]
-        SB = config[1]
-        args = [
-        "--SA", "{}".format(SA),
-        "--SB", "{}".format(SB),
-        ]
-        A = get_rand_ints(SA)
-        B = get_rand_ints(SB)
-        args.append("--A")
-        args.extend(list(map(str, A)))
-        args.append("--B")
-        args.extend(list(map(str, B)))
-        label = "SA: {}, SB: {}".format(SA, SB)
-        all_args.append(InputArgs(label, args))
-    return (all_args, non_vec_up_to)
-
-def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
-    all_args = []
-    non_vec_up_to = 8
-    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
-        args = [
-        "--N", "{}".format(N),
-        ]
-        A = get_rand_ints(N)
-        B = get_rand_ints(N)
-        args.append("--A")
-        args.extend(list(map(str, A)))
-        args.append("--B")
-        args.extend(list(map(str, B)))
-        label = "N: {}".format(N)
-        all_args.append(InputArgs(label, args))
-    return (all_args, non_vec_up_to)
-
 def get_convex_hull_inputs():
     all_args = []
     non_vec_up_to = 100
@@ -229,8 +192,25 @@ def get_histogram_inputs():
         args.extend(list(map(str, A)))
         args.append("--B")
         args.extend(list(map(str, B)))
-        args.append("--R")
+        args.append("--result")
         args.extend(list(map(str, R)))
+        label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
+    all_args = []
+    non_vec_up_to = 8
+    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+        args = [
+        "--N", "{}".format(N),
+        ]
+        A = get_rand_ints(N)
+        B = get_rand_ints(N)
+        args.append("--A")
+        args.extend(list(map(str, A)))
+        args.append("--B")
+        args.extend(list(map(str, B)))
         label = "N: {}".format(N)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
@@ -291,6 +271,26 @@ def get_max_dist_between_syms_inputs():
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
+def get_psi_inputs()-> tuple[list[InputArgs], int]:
+    all_args = []
+    non_vec_up_to = 6
+    for config in [[16, 16], [32, 32], [64, 64], [128, 128], [256, 256], [512, 512], [1024, 1024]]:#[2048, 2084], [4096, 4096]]:
+        SA = config[0]
+        SB = config[1]
+        args = [
+        "--SA", "{}".format(SA),
+        "--SB", "{}".format(SB),
+        ]
+        A = get_rand_ints(SA)
+        B = get_rand_ints(SB)
+        args.append("--A")
+        args.extend(list(map(str, A)))
+        args.append("--B")
+        args.extend(list(map(str, B)))
+        label = "SA: {}, SB: {}".format(SA, SB)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
     # if name == "biometric" or name == "biometric_fast":
     #      return get_biometric_inputs()
@@ -304,12 +304,12 @@ def get_inputs(name: str) -> tuple[list[InputArgs], int]:
     #     return get_count_123_inputs()
     # if name == "db_variance":
     #     return get_db_variance_inputs()
-    # if name == "histogram":
-    #     return get_histogram_inputs()
+    if name == "histogram":
+        return get_histogram_inputs()
     # if name == "inner_product":
     #     return get_inner_product_inputs()
-    if name == "kmeans_iteration":
-        return get_kmeans_iteration_inputs()
+    # if name == "kmeans_iteration":
+    #     return get_kmeans_iteration_inputs()
     # if name == "max_dist_between_syms" or name == "max_sum_between_syms":
     #     return get_max_dist_between_syms_inputs()
     # if name == "psi": # segfaults right now
