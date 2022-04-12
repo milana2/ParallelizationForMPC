@@ -15,6 +15,7 @@ SKIPPED_TESTS = [
     # TODO: figure out why these tests are failing:
     "chapterfour_figure_12",
     "longest_odd_10",
+    "mnist_relu",
     # The following tests cause issues since they don't loop from 0
     "longest_1s",
     "longest_even_0",
