@@ -153,102 +153,102 @@ def main():
         if test_case_dir.name in SKIPPED_TESTS:
             continue
 
-        md += f"## `{test_case_dir.name}`\n"
+        md += f"### `{test_case_dir.name}`\n"
         input_path = os.path.join(test_case_dir, "input.py")
         with open(input_path, "r") as f:
             input_text = f.read()
 
-        md += "### Input\n"
+        md += "#### Input\n"
         md += f"```python\n{input_text}\n```\n"
 
         ast = python_ast.parse(input_text, filename=input_path)
         restricted_ast = compiler.ast_to_restricted_ast(
             node=ast, filename=input_path, text=input_text
         )
-        md += "### Restricted AST\n"
+        md += "#### Restricted AST\n"
         md += f"```python\n{restricted_ast}\n```\n"
 
         tac_cfg = compiler.restricted_ast_to_tac_cfg(restricted_ast)
         filename = f"images/{test_case_dir.name}_tac_cfg.png"
         path = os.path.join(args.path, filename)
         cfg_to_image(tac_cfg.body, path)
-        md += "### Three-address code CFG\n"
+        md += "#### Three-address code CFG\n"
         md += f"![]({filename})\n"
 
         ssa = compiler.tac_cfg_to_ssa(tac_cfg)
         filename = f"images/{test_case_dir.name}_ssa.png"
         path = os.path.join(args.path, filename)
         cfg_to_image(ssa.body, path)
-        md += "### SSA\n"
+        md += "#### SSA\n"
         md += f"![]({filename})\n"
 
         compiler.replace_phi_with_mux(ssa)
         filename = f"images/{test_case_dir.name}_ssa_mux.png"
         path = os.path.join(args.path, filename)
         cfg_to_image(ssa.body, path)
-        md += "### SSA ϕ→MUX\n"
+        md += "#### SSA ϕ→MUX\n"
         md += f"![]({filename})\n"
 
         compiler.dead_code_elim(ssa)
         filename = f"images/{test_case_dir.name}_dead_code_elim.png"
         path = os.path.join(args.path, filename)
         cfg_to_image(ssa.body, path)
-        md += "### Dead code elimination\n"
+        md += "#### Dead code elimination\n"
         md += f"![]({filename})\n"
 
         loop_linear_code = compiler.ssa_to_loop_linear_code(ssa)
-        md += "### Linear code with loops\n"
+        md += "#### Linear code with loops\n"
         md += f"```python\n{loop_linear_code}\n```\n"
 
         dep_graph = compiler.DepGraph(loop_linear_code)
         filename = f"images/{test_case_dir.name}_dep_graph.png"
         path = os.path.join(args.path, filename)
         dep_graph_to_image(dep_graph, loop_linear_code, path)
-        md += "### Dependency graph\n"
+        md += "#### Dependency graph\n"
         md += f"![]({filename})\n"
 
         compiler.vectorize.remove_infeasible_edges(loop_linear_code, dep_graph)
         filename = f"images/{test_case_dir.name}_remove_infeasible_edges.png"
         path = os.path.join(args.path, filename)
         dep_graph_to_image(dep_graph, loop_linear_code, path)
-        md += "### Removal of infeasible edges\n"
+        md += "#### Removal of infeasible edges\n"
         md += f"![]({filename})\n"
 
         (loop_linear_code, type_env) = compiler.type_check(loop_linear_code, dep_graph)
-        md += "### Type Environment Before Vectorization\n"
+        md += "#### Type Environment Before Vectorization\n"
         md += f"{type_env_to_table(type_env)}\n"
 
         (loop_linear_code, dep_graph) = compiler.vectorize.basic_vectorization_phase_1(
             loop_linear_code, type_env
         )
-        md += "### Basic Vectorization Phase 1\n"
+        md += "#### Basic Vectorization Phase 1\n"
         md += f"```python\n{loop_linear_code}\n```\n"
         filename = f"images/{test_case_dir.name}_bv_phase_1_dep_graph.png"
         path = os.path.join(args.path, filename)
         dep_graph_to_image(dep_graph, loop_linear_code, path)
-        md += "### Basic Vectorization Phase 1 (dependence graph)\n"
+        md += "#### Basic Vectorization Phase 1 (dependence graph)\n"
         md += f"![]({filename})\n"
 
         (
             loop_linear_code,
             dep_graph,
         ) = compiler.vectorize.basic_vectorization_phase_2(loop_linear_code)
-        md += "### Basic Vectorization Phase 2\n"
+        md += "#### Basic Vectorization Phase 2\n"
         md += f"```python\n{loop_linear_code}\n```\n"
         filename = f"images/{test_case_dir.name}_bv_phase_2_dep_graph.png"
         path = os.path.join(args.path, filename)
         dep_graph_to_image(dep_graph, loop_linear_code, path)
-        md += "### Basic Vectorization Phase 2 (dependence graph)\n"
+        md += "#### Basic Vectorization Phase 2 (dependence graph)\n"
         md += f"![]({filename})\n"
 
         (loop_linear_code, type_env) = compiler.type_check(loop_linear_code, dep_graph)
-        md += "### Type Environment After Vectorization\n"
+        md += "#### Type Environment After Vectorization\n"
         md += f"{type_env_to_table(type_env)}\n"
 
         motion_code = compiler.motion_backend.render_function(
             loop_linear_code, type_env, True
         )
-        md += "### Motion code\n"
+        md += "#### Motion code\n"
         md += f"```cpp\n{motion_code}\n```\n"
 
     md_path = os.path.join(args.path, "README.md")
