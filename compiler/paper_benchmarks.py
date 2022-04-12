@@ -463,7 +463,7 @@ def run_paper_benchmarks():
                 task_stats.input_configs.append(input_stats)
                 log.info("task {} input config {} DONE".format(task_stats.label, input_stats.label))
 
-                file_path = os.path.join(GRAPHS_DIR, "{}.json".format(task_stats.label))
+                file_path = os.path.join(FILE_DIR, "{}.json".format(task_stats.label))
                 with open(file_path, "w", encoding='utf-8') as f:
                     json_str = json_serialize(task_stats)
                     f.write(json_str)
