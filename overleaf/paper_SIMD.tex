@@ -1209,7 +1209,7 @@ respectively, i.e., the arrays before the loop.
 
 Next, the algorithm refines array MUX statements.
 MPC-source after Cytron's SSA may result in statements $\texttt{A}_j = \emph{MUX}(..., \texttt{A}_k, \texttt{A}_l)$, which imply that any index
-of A can be written at this point and therefore there is a loop-carried dependency. In some cases the MUX can be refined to just a single
+of $A$ can be written at this point and therefore there is a loop-carried dependency. In some cases the MUX can be refined to just a single
 index or a pair of indices, e.g., $\texttt{A}_j[i] = \emph{MUX}(c, \texttt{A}_k[i], \texttt{A}_l[i])$.
 
 %\ana{Clarify why this helps. Still work in progress.}
