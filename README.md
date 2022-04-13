@@ -4,66 +4,70 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5477|4522|915|4945|0.814 MiB |4945|0.814 MiB |2139.111 ms |440.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |12346.843 ms |4560.0 ms |
-|count_102|3222|105|3080|3818|0.388 MiB |3818|0.388 MiB |2083.024 ms |285.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2121.135 ms |394.0 ms |
-|count_10s|2299|106|2159|2846|0.287 MiB |2846|0.287 MiB |1424.94 ms |208.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1522.03 ms |280.0 ms |
-|count_123|2306|110|2161|2848|0.288 MiB |2848|0.288 MiB |1432.052 ms |206.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1435.41 ms |279.0 ms |
-|cryptonets_max_pooling|825|679|42|949|0.181 MiB |949|0.181 MiB |486.592 ms |78.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |3189.12 ms |1065.0 ms |
-|db_cross_join_trivial|7896|49|7521|14484|1.519 MiB |14484|1.519 MiB |3361.25 ms |1034.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |4766.154 ms |1336.0 ms |
-|db_variance|16284|3309|12941|13644|1.49 MiB |13644|1.49 MiB |9538.929 ms |1297.0 ms |
-|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |12259.146 ms |3037.0 ms |
-|histogram|2652|2500|81|3016|0.396 MiB |3016|0.396 MiB |1507.187 ms |260.0 ms |
-|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |4262.828 ms |1240.0 ms |
-|inner_product|3888|2970|907|3580|0.387 MiB |3580|0.387 MiB |1404.3 ms |309.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2107.746 ms |763.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2916.335 ms |591.0 ms |
-|longest_odd_10 (Non-Vectorized)|5047|0|5025|5942|0.598 MiB |5942|0.598 MiB |2625.564 ms |464.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1995.317 ms |390.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2379.94 ms |386.0 ms |
-|minimal_points|533|479|37|763|0.097 MiB |763|0.097 MiB |267.598 ms |41.0 ms |
-|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |1024.288 ms |314.0 ms |
-|mnist_relu|840|228|209|769|0.47 MiB |769|0.47 MiB |383.623 ms |110.0 ms |
-|mnist_relu (Non-Vectorized)|45223|0|44600|36589|3.736 MiB |36589|3.736 MiB |9048.306 ms |3502.0 ms |
-|psi|133|62|43|472|0.063 MiB |472|0.063 MiB |118.886 ms |12.0 ms |
-|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |660.193 ms |153.0 ms |
+|biometric|5477|4522|915|4945|0.814 MiB |4945|0.814 MiB |2130.535 ms |444.0 ms |
+|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |10592.549 ms |4583.0 ms |
+|chapterfour_figure_12|449|0|445|750|0.071 MiB |750|0.071 MiB |262.162 ms |36.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|449|0|445|750|0.071 MiB |750|0.071 MiB |170.704 ms |36.0 ms |
+|count_102|3222|105|3080|3818|0.388 MiB |3818|0.388 MiB |1824.733 ms |291.0 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |1969.045 ms |405.0 ms |
+|count_10s|2299|106|2159|2846|0.287 MiB |2846|0.287 MiB |1148.125 ms |208.0 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1585.738 ms |281.0 ms |
+|count_123|2306|110|2161|2848|0.288 MiB |2848|0.288 MiB |1306.449 ms |210.0 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1524.708 ms |284.0 ms |
+|cryptonets_max_pooling|825|679|42|949|0.181 MiB |949|0.181 MiB |405.576 ms |76.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |2926.015 ms |1077.0 ms |
+|db_cross_join_trivial|7896|49|7521|14484|1.519 MiB |14484|1.519 MiB |2982.792 ms |1042.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |4020.11 ms |1329.0 ms |
+|db_variance|16284|3309|12941|13644|1.49 MiB |13644|1.49 MiB |8161.04 ms |1284.0 ms |
+|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |11425.863 ms |3074.0 ms |
+|histogram|2652|2500|81|3016|0.396 MiB |3016|0.396 MiB |1499.445 ms |258.0 ms |
+|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3652.941 ms |1262.0 ms |
+|inner_product|3888|2970|907|3580|0.387 MiB |3580|0.387 MiB |1180.742 ms |306.0 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2245.987 ms |758.0 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2674.496 ms |580.0 ms |
+|longest_odd_10 (Non-Vectorized)|5047|0|5025|5942|0.598 MiB |5942|0.598 MiB |1975.216 ms |479.0 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1909.488 ms |394.0 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2027.385 ms |394.0 ms |
+|minimal_points|533|479|37|763|0.097 MiB |763|0.097 MiB |268.636 ms |42.0 ms |
+|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |892.393 ms |318.0 ms |
+|mnist_relu|840|228|209|769|0.47 MiB |769|0.47 MiB |393.496 ms |106.0 ms |
+|mnist_relu (Non-Vectorized)|45223|0|44600|36589|3.736 MiB |36589|3.736 MiB |7959.264 ms |3569.0 ms |
+|psi|133|62|43|472|0.063 MiB |472|0.063 MiB |67.716 ms |12.0 ms |
+|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |670.132 ms |163.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4500|3641|819|7865|4.528 MiB |7857|4.527 MiB |593.746 ms |516.0 ms |
-|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5456.21 ms |5059.0 ms |
-|count_102|1772|105|1630|3869|0.655 MiB |3838|0.653 MiB |247.841 ms |201.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |318.387 ms |360.0 ms |
-|count_10s|1284|106|1144|2982|0.484 MiB |2952|0.482 MiB |162.102 ms |147.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |199.29 ms |257.0 ms |
-|count_123|1291|110|1146|2988|0.486 MiB |2959|0.484 MiB |256.69 ms |147.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |229.88 ms |257.0 ms |
-|cryptonets_max_pooling|747|601|42|1462|1.051 MiB |1398|1.047 MiB |214.728 ms |103.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1440.711 ms |1127.0 ms |
-|db_cross_join_trivial|7904|57|7521|36650|7.062 MiB |36344|7.041 MiB |1268.821 ms |1632.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1609.248 ms |3348.0 ms |
-|db_variance|13369|3016|10319|20728|4.017 MiB |20710|4.015 MiB |1767.936 ms |1269.0 ms |
-|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |4016.144 ms |3286.0 ms |
-|histogram|1492|1340|81|2953|1.11 MiB |2898|1.106 MiB |240.468 ms |209.0 ms |
-|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1185.702 ms |924.0 ms |
-|inner_product|3303|2826|466|5837|1.118 MiB |5832|1.117 MiB |414.303 ms |324.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |1038.863 ms |873.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |586.535 ms |564.0 ms |
-|longest_odd_10 (Non-Vectorized)|3695|0|3673|10878|1.289 MiB |10860|1.288 MiB |568.524 ms |519.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |406.584 ms |336.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |488.06 ms |335.0 ms |
-|minimal_points|481|427|37|1019|0.269 MiB |1014|0.269 MiB |127.186 ms |48.0 ms |
-|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |493.704 ms |285.0 ms |
-|mnist_relu|814|202|209|1482|3.365 MiB |1479|3.365 MiB |448.565 ms |189.0 ms |
-|mnist_relu (Non-Vectorized)|40023|0|39400|59433|7.445 MiB |59210|7.429 MiB |5793.754 ms |4570.0 ms |
-|psi|149|78|43|760|0.37 MiB |746|0.369 MiB |109.271 ms |26.0 ms |
-|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |220.468 ms |260.0 ms |
+|biometric|4500|3641|819|7865|4.528 MiB |7857|4.527 MiB |551.373 ms |523.0 ms |
+|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5212.43 ms |5132.0 ms |
+|chapterfour_figure_12|397|0|393|973|0.106 MiB |971|0.106 MiB |49.598 ms |39.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|397|0|393|973|0.106 MiB |971|0.106 MiB |97.242 ms |39.0 ms |
+|count_102|1772|105|1630|3869|0.655 MiB |3838|0.653 MiB |226.976 ms |205.0 ms |
+|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |374.984 ms |373.0 ms |
+|count_10s|1284|106|1144|2982|0.484 MiB |2952|0.482 MiB |249.049 ms |151.0 ms |
+|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |235.244 ms |265.0 ms |
+|count_123|1291|110|1146|2988|0.486 MiB |2959|0.484 MiB |183.551 ms |151.0 ms |
+|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |222.012 ms |266.0 ms |
+|cryptonets_max_pooling|747|601|42|1462|1.051 MiB |1398|1.047 MiB |155.768 ms |100.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1360.278 ms |1150.0 ms |
+|db_cross_join_trivial|7904|57|7521|36650|7.062 MiB |36344|7.041 MiB |1133.89 ms |1651.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1055.216 ms |3372.0 ms |
+|db_variance|13369|3016|10319|20728|4.017 MiB |20710|4.015 MiB |1375.073 ms |1292.0 ms |
+|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |4097.391 ms |3352.0 ms |
+|histogram|1492|1340|81|2953|1.11 MiB |2898|1.106 MiB |285.778 ms |208.0 ms |
+|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1019.705 ms |949.0 ms |
+|inner_product|3303|2826|466|5837|1.118 MiB |5832|1.117 MiB |409.425 ms |331.0 ms |
+|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |834.923 ms |897.0 ms |
+|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |549.939 ms |574.0 ms |
+|longest_odd_10 (Non-Vectorized)|3695|0|3673|10878|1.289 MiB |10860|1.288 MiB |441.251 ms |521.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |380.449 ms |344.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |415.47 ms |344.0 ms |
+|minimal_points|481|427|37|1019|0.269 MiB |1014|0.269 MiB |183.781 ms |49.0 ms |
+|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |419.343 ms |295.0 ms |
+|mnist_relu|814|202|209|1482|3.365 MiB |1479|3.365 MiB |442.752 ms |176.0 ms |
+|mnist_relu (Non-Vectorized)|40023|0|39400|59433|7.445 MiB |59210|7.429 MiB |4934.301 ms |3880.0 ms |
+|psi|149|78|43|760|0.37 MiB |746|0.369 MiB |66.748 ms |26.0 ms |
+|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |221.764 ms |267.0 ms |
 
 ## Compiler stages with different benchmarks
 ### `biometric`
@@ -407,6 +411,156 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     _11_0 = drop_dim_monoreturn(vectorized_access(min_index_4, {_MPC_PLAINTEXT_N_0}, {true}, {}).Unsimdify(), {_MPC_PLAINTEXT_N_0});
     _2_1 = std::make_tuple(_10_0, _11_0);
     return _2_1;
+
+}
+```
+### `chapterfour_figure_12`
+#### Input
+```python
+from UTIL import shared
+
+
+def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
+    z = 0
+    if x > 0:
+        if y > 0:
+            z = 1
+        else:
+            z = 0
+    return z
+
+
+print(chapterfour_figure_12(1, 1))
+
+```
+#### Restricted AST
+```python
+def chapterfour_figure_12(x: shared[int], y: shared[int]) -> shared[int]:
+    z = 0
+    if (x > 0):
+        if (y > 0):
+            z = 1
+        else:
+            z = 0
+    return z
+```
+#### Three-address code CFG
+![](images/chapterfour_figure_12_tac_cfg.png)
+#### SSA
+![](images/chapterfour_figure_12_ssa.png)
+#### SSA ϕ→MUX
+![](images/chapterfour_figure_12_ssa_mux.png)
+#### Dead code elimination
+![](images/chapterfour_figure_12_dead_code_elim.png)
+#### Linear code with loops
+```python
+def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
+    z!1 = 0
+    !1!1 = (x!0 > 0)
+    !2!1 = (y!0 > 0)
+    z!3 = 0
+    z!2 = 1
+    z!4 = MUX(!2!1, z!2, z!3)
+    z!5 = MUX(!1!1, z!4, z!1)
+    return z!5
+```
+#### Dependency graph
+![](images/chapterfour_figure_12_dep_graph.png)
+#### Removal of infeasible edges
+![](images/chapterfour_figure_12_remove_infeasible_edges.png)
+#### Type Environment Before Vectorization
+| Variable | Type |
+| - | - |
+| `x!0` | `shared[int]` |
+| `y!0` | `shared[int]` |
+| `z!5` | `shared[int]` |
+| `z!4` | `shared[int]` |
+| `z!2` | `plaintext[int]` |
+| `z!3` | `plaintext[int]` |
+| `!2!1` | `shared[bool]` |
+| `!1!1` | `shared[bool]` |
+| `z!1` | `plaintext[int]` |
+#### Basic Vectorization Phase 1
+```python
+def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
+    z!1 = 0
+    !1!1 = (x!0 > 0)
+    !2!1 = (y!0 > 0)
+    z!3 = 0
+    z!2 = 1
+    z!4 = MUX(!2!1, z!2, z!3)
+    z!5 = MUX(!1!1, z!4, z!1)
+    return z!5
+```
+#### Basic Vectorization Phase 1 (dependence graph)
+![](images/chapterfour_figure_12_bv_phase_1_dep_graph.png)
+#### Basic Vectorization Phase 2
+```python
+def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
+    z!1 = 0
+    !1!1 = (x!0 > 0)
+    !2!1 = (y!0 > 0)
+    z!3 = 0
+    z!2 = 1
+    z!4 = MUX(!2!1, z!2, z!3)
+    z!5 = MUX(!1!1, z!4, z!1)
+    return z!5
+```
+#### Basic Vectorization Phase 2 (dependence graph)
+![](images/chapterfour_figure_12_bv_phase_2_dep_graph.png)
+#### Type Environment After Vectorization
+| Variable | Type |
+| - | - |
+| `x!0` | `shared[int]` |
+| `y!0` | `shared[int]` |
+| `z!5` | `shared[int]` |
+| `z!4` | `shared[int]` |
+| `z!2` | `plaintext[int]` |
+| `z!3` | `plaintext[int]` |
+| `!2!1` | `shared[bool]` |
+| `!1!1` | `shared[bool]` |
+| `z!1` | `plaintext[int]` |
+#### Motion code
+```cpp
+template <encrypto::motion::MpcProtocol Protocol>
+encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
+    encrypto::motion::PartyPointer &party,
+    encrypto::motion::SecureUnsignedInteger x_0,
+    encrypto::motion::SecureUnsignedInteger y_0
+) {
+    // Shared variable declarations
+    encrypto::motion::ShareWrapper _1_1;
+    encrypto::motion::ShareWrapper _2_1;
+    encrypto::motion::SecureUnsignedInteger z_1;
+    encrypto::motion::SecureUnsignedInteger z_2;
+    encrypto::motion::SecureUnsignedInteger z_3;
+    encrypto::motion::SecureUnsignedInteger z_4;
+    encrypto::motion::SecureUnsignedInteger z_5;
+
+    // Plaintext variable declarations
+    std::uint32_t _MPC_PLAINTEXT_z_1;
+    std::uint32_t _MPC_PLAINTEXT_z_2;
+    std::uint32_t _MPC_PLAINTEXT_z_3;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
+
+    // Plaintext parameter assignments
+
+
+    // Function body
+    z_1 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_z_1 = std::uint32_t(0);
+    _1_1 = (x_0 > _MPC_CONSTANT_0);
+    _2_1 = (y_0 > _MPC_CONSTANT_0);
+    z_3 = _MPC_CONSTANT_0;
+    _MPC_PLAINTEXT_z_3 = std::uint32_t(0);
+    z_2 = _MPC_CONSTANT_1;
+    _MPC_PLAINTEXT_z_2 = std::uint32_t(1);
+    z_4 = _2_1.Mux(z_2.Get(), z_3.Get());
+    z_5 = _1_1.Mux(z_4.Get(), z_1.Get());
+    return z_5;
 
 }
 ```
