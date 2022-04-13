@@ -1,5 +1,6 @@
 import dataclasses as dc
-from typing import NoReturn, cast, TypeVar
+from typing import NoReturn, cast, TypeVar, Callable
+import networkx
 
 
 # https://github.com/python/mypy/issues/5818#issue-372451340
@@ -38,3 +39,18 @@ def replace_pattern(expr: E, pattern: P, replacement: P, include_return=True) ->
             for field in dc.fields(expr)
         }
         return dc.replace(expr, **new_params)
+
+
+def partially_ordered_sort(elems: list[E], ordering: Callable[[E, E], int]) -> list[E]:
+    graph = networkx.DiGraph()
+    for elem in elems:
+        graph.add_node(elem)
+
+    for i, e1 in enumerate(elems):
+        for e2 in elems[i + 1 :]:
+            if ordering(e1, e2) < 0:
+                graph.add_edge(e1, e2)
+            elif ordering(e2, e1) > 0:
+                graph.add_edge(e2, e1)
+
+    return list(networkx.topological_sort(graph))

@@ -1310,13 +1310,19 @@ def _basic_vectorization_phase_2(
             assert_never(stmt)
 
     def ordering(
-        s1: Union[llc.Statement, list[llc.Statement]],
-        s2: Union[llc.Statement, list[llc.Statement]],
+        s1: Union[llc.Statement, tuple[llc.Statement]],
+        s2: Union[llc.Statement, tuple[llc.Statement]],
     ) -> int:
+        if isinstance(s1, llc.For):
+            s1 = tuple(s1.body)
+
+        if isinstance(s2, llc.For):
+            s2 = tuple(s2.body)
+
         # If s1 is a closure
-        if isinstance(s1, list):
+        if isinstance(s1, tuple):
             # If s2 is a closure
-            if isinstance(s2, list):
+            if isinstance(s2, tuple):
                 orderings = set(ordering(ss1, s2) for ss1 in s1)
                 orderings.discard(0)
                 if len(orderings) == 2:
@@ -1341,7 +1347,7 @@ def _basic_vectorization_phase_2(
         # If s1 is a statement
         else:
             # If s2 is a closure
-            if isinstance(s2, list):
+            if isinstance(s2, tuple):
                 # If there is a dependency from s1 to s2, s1 must be placed first
                 if any(dep_graph.has_same_level_path(s1, ss2) for ss2 in s2):
                     return -1
@@ -1364,14 +1370,14 @@ def _basic_vectorization_phase_2(
                     return 0
 
     stmts_and_closures: list[
-        Union[llc.Statement, list[llc.Statement]]
+        Union[llc.Statement, tuple[llc.Statement]]
     ] = vectorizeable + [
-        closure for _, closure in closures  # type: ignore
+        tuple(closure) for _, closure in closures  # type: ignore
     ]  # type: ignore
 
-    stmts_and_closures = sorted(
-        stmts_and_closures, key=functools.cmp_to_key(ordering)
-    )  # Sort by index to retain def-use order
+    stmts_and_closures = util.partially_ordered_sort(
+        stmts_and_closures, ordering
+    )  # Sort to retain def-use order
 
     # Generate output
     output: list[llc.Statement] = []
@@ -1406,8 +1412,8 @@ def _basic_vectorization_phase_2(
     phi_renames = {}
 
     for i in range(len(stmts_and_closures)):
-        if isinstance(stmts_and_closures[i], list):
-            closure = cast(list, stmts_and_closures[i])
+        if isinstance(stmts_and_closures[i], tuple):
+            closure = list(cast(tuple, stmts_and_closures[i]))
             closure_phis = [
                 phi for phi in closure if isinstance(phi, llc.Phi) and not phi.removed
             ]
