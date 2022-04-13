@@ -599,8 +599,6 @@ Our compiler performs the following semantic analysis steps:
 
 \subsection{MUX Nodes and Pseudo $\phi$-nodes}
 
-\ana{Benjamin?}
-
 Once the compiler converts the code to SSA,
 it transforms $\phi$-nodes that correspond to if-statements into MUX nodes.
 From the 3-address CFG conversion step,
@@ -609,12 +607,25 @@ with the ``merge condition'' property.
 For example, if $X_3 = \phi(X_1,X_2)$ is in a block with merge condition $C$,
 the compiler transforms it into $X_3 = \mathit{MUX}(C, X_1, X_2)$.
 Next, the compiler runs the dead code elimination algorithm from Cytron's SSA paper.
+
 Then, the control-flow graph is \emph{linearized} into MPC source,
 which has loops but no if-statements.
-\benjamin{TODO: Add more here}
+This means that both branches of all if-statements are executed,
+and the MUX nodes determine whether to use results from the then-block or from the else-block.
+The compiler linearizes the control-flow graph with a variation of breadth-first search.
+Blocks with the ``merge condition'' property are only considered
+the second time they are visited,
+since that will be after both branches of the if-statement are visited.
+Each time the compiler visits a block,
+it adds the block's statements to the MPC source.
+If the block ends in a for-instruction,
+the compiler recursively converts the body and code after the loop to MPC source
+and adds the for-loop and code after the loop to the main MPC source.
+If the block does not end in a for-instruction,
+the compiler recursively converts all successor branches to MPC source and
+appends these to the main MPC source.
 
-\ana{I think we need to add more here. Conversion from SSA to MPC Source is not so trivial.}
-
+Now, the remaining $\phi$-nodes in MPC source are \emph{pseudo} $\phi$-nodes.
 A pseudo $\phi$-node $X_1 = \phi(X_0,X_2)$ in a loop header is evaluated during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to $X_0$, otherwise, it evaluates to $X_2$.
 
 %\ana{We need to double check that the following captures all cases of def-use edges.}
