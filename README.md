@@ -4,70 +4,70 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5477|4522|915|4945|0.814 MiB |4945|0.814 MiB |2026.054 ms |463.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |11298.483 ms |4773.0 ms |
-|count_102|3222|105|3080|3818|0.388 MiB |3818|0.388 MiB |1867.551 ms |302.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2085.605 ms |444.0 ms |
-|count_10s|2299|106|2159|2846|0.287 MiB |2846|0.287 MiB |1258.299 ms |221.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1545.889 ms |297.0 ms |
-|count_123|2306|110|2161|2848|0.288 MiB |2848|0.288 MiB |1285.05 ms |220.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1436.069 ms |298.0 ms |
-|cryptonets_max_pooling|825|679|42|949|0.181 MiB |949|0.181 MiB |460.57 ms |86.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |2987.582 ms |1116.0 ms |
-|db_cross_join_trivial|7896|49|7521|14484|1.519 MiB |14484|1.519 MiB |3168.535 ms |1087.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |4017.649 ms |1394.0 ms |
-|db_variance|16284|3309|12941|13644|1.49 MiB |13644|1.49 MiB |8695.466 ms |1353.0 ms |
-|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |11879.542 ms |3234.0 ms |
-|histogram|2652|2500|81|3016|0.396 MiB |3016|0.396 MiB |1486.695 ms |266.0 ms |
-|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3900.766 ms |1314.0 ms |
-|inner_product|3888|2970|907|3580|0.387 MiB |3580|0.387 MiB |1309.182 ms |318.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2202.612 ms |797.0 ms |
-|longest_102|5471|111|5313|5640|0.568 MiB |5640|0.568 MiB |3163.946 ms |497.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2811.141 ms |629.0 ms |
-|max_dist_between_syms|4264|38|4198|4452|0.441 MiB |4452|0.441 MiB |2365.664 ms |386.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |2169.353 ms |407.0 ms |
-|max_sum_between_syms|4263|38|4198|4452|0.441 MiB |4452|0.441 MiB |2407.926 ms |392.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |1977.018 ms |411.0 ms |
-|minimal_points|533|479|37|763|0.097 MiB |763|0.097 MiB |245.383 ms |43.0 ms |
-|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |995.132 ms |335.0 ms |
-|mnist_relu|840|228|209|769|0.47 MiB |769|0.47 MiB |421.271 ms |105.0 ms |
-|mnist_relu (Non-Vectorized)|45223|0|44600|36589|3.736 MiB |36589|3.736 MiB |8607.631 ms |3748.0 ms |
-|psi|133|62|43|472|0.063 MiB |472|0.063 MiB |116.851 ms |12.0 ms |
-|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |740.75 ms |162.0 ms |
+|biometric|5477|4522|915|4945|0.814 MiB |4945|0.814 MiB |2113.681 ms |446.0 ms |
+|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |12252.403 ms |4515.0 ms |
+|count_102|3222|105|3080|3818|0.388 MiB |3818|0.388 MiB |2024.284 ms |285.0 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2228.3 ms |388.0 ms |
+|count_10s|2299|106|2159|2846|0.287 MiB |2846|0.287 MiB |1365.969 ms |205.0 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1403.833 ms |273.0 ms |
+|count_123|2306|110|2161|2848|0.288 MiB |2848|0.288 MiB |1406.646 ms |205.0 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1391.982 ms |274.0 ms |
+|cryptonets_max_pooling|825|679|42|949|0.181 MiB |949|0.181 MiB |461.96 ms |75.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |3236.37 ms |1057.0 ms |
+|db_cross_join_trivial|7896|49|7521|14484|1.519 MiB |14484|1.519 MiB |3080.023 ms |1023.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |4362.743 ms |1304.0 ms |
+|db_variance|16284|3309|12941|13644|1.49 MiB |13644|1.49 MiB |8846.383 ms |1265.0 ms |
+|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |12269.666 ms |2993.0 ms |
+|histogram|2652|2500|81|3016|0.396 MiB |3016|0.396 MiB |1563.05 ms |256.0 ms |
+|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3895.076 ms |1244.0 ms |
+|inner_product|3888|2970|907|3580|0.387 MiB |3580|0.387 MiB |1214.092 ms |299.0 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2075.452 ms |742.0 ms |
+|longest_102|5471|111|5313|5640|0.568 MiB |5640|0.568 MiB |3178.299 ms |476.0 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2609.505 ms |585.0 ms |
+|max_dist_between_syms|4264|38|4198|4452|0.441 MiB |4452|0.441 MiB |2695.501 ms |359.0 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |2159.349 ms |383.0 ms |
+|max_sum_between_syms|4263|38|4198|4452|0.441 MiB |4452|0.441 MiB |2237.169 ms |361.0 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2224.814 ms |382.0 ms |
+|minimal_points|533|479|37|763|0.097 MiB |763|0.097 MiB |298.155 ms |41.0 ms |
+|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |983.308 ms |312.0 ms |
+|mnist_relu|840|228|209|769|0.47 MiB |769|0.47 MiB |321.554 ms |108.0 ms |
+|mnist_relu (Non-Vectorized)|45223|0|44600|36589|3.736 MiB |36589|3.736 MiB |8374.367 ms |4460.0 ms |
+|psi|133|62|43|472|0.063 MiB |472|0.063 MiB |130.384 ms |12.0 ms |
+|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |606.838 ms |153.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4500|3641|819|7865|4.528 MiB |7857|4.527 MiB |715.041 ms |549.0 ms |
-|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5181.595 ms |5314.0 ms |
-|count_102|1772|105|1630|3869|0.655 MiB |3838|0.653 MiB |237.648 ms |216.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |327.847 ms |393.0 ms |
-|count_10s|1284|106|1144|2982|0.484 MiB |2952|0.482 MiB |163.063 ms |155.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |294.991 ms |271.0 ms |
-|count_123|1291|110|1146|2988|0.486 MiB |2959|0.484 MiB |177.097 ms |162.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |262.866 ms |277.0 ms |
-|cryptonets_max_pooling|747|601|42|1462|1.051 MiB |1398|1.047 MiB |211.533 ms |106.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1693.279 ms |1233.0 ms |
-|db_cross_join_trivial|7904|57|7521|36650|7.062 MiB |36344|7.041 MiB |1200.421 ms |1688.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1201.194 ms |3511.0 ms |
-|db_variance|13369|3016|10319|20728|4.017 MiB |20710|4.015 MiB |1494.071 ms |1392.0 ms |
-|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |3446.094 ms |3489.0 ms |
-|histogram|1492|1340|81|2953|1.11 MiB |2898|1.106 MiB |286.004 ms |214.0 ms |
-|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1164.648 ms |988.0 ms |
-|inner_product|3303|2826|466|5837|1.118 MiB |5832|1.117 MiB |425.535 ms |361.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |1049.252 ms |934.0 ms |
-|longest_102|3761|111|3603|6834|1.015 MiB |6793|1.013 MiB |532.805 ms |416.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |568.106 ms |595.0 ms |
-|max_dist_between_syms|2896|38|2830|5182|0.667 MiB |5156|0.665 MiB |373.277 ms |310.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |367.945 ms |369.0 ms |
-|max_sum_between_syms|2895|38|2830|5180|0.666 MiB |5155|0.665 MiB |440.64 ms |318.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |412.836 ms |361.0 ms |
-|minimal_points|481|427|37|1019|0.269 MiB |1014|0.269 MiB |123.686 ms |51.0 ms |
-|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |456.944 ms |315.0 ms |
-|mnist_relu|814|202|209|1482|3.365 MiB |1479|3.365 MiB |451.406 ms |185.0 ms |
-|mnist_relu (Non-Vectorized)|40023|0|39400|59433|7.445 MiB |59210|7.429 MiB |5623.727 ms |4131.0 ms |
-|psi|149|78|43|760|0.37 MiB |746|0.369 MiB |101.697 ms |27.0 ms |
-|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |255.463 ms |280.0 ms |
+|biometric|4500|3641|819|7865|4.528 MiB |7857|4.527 MiB |626.296 ms |512.0 ms |
+|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5669.848 ms |4970.0 ms |
+|count_102|1772|105|1630|3869|0.655 MiB |3838|0.653 MiB |244.035 ms |201.0 ms |
+|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |330.909 ms |362.0 ms |
+|count_10s|1284|106|1144|2982|0.484 MiB |2952|0.482 MiB |191.504 ms |147.0 ms |
+|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |229.761 ms |259.0 ms |
+|count_123|1291|110|1146|2988|0.486 MiB |2959|0.484 MiB |175.469 ms |146.0 ms |
+|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |232.296 ms |256.0 ms |
+|cryptonets_max_pooling|747|601|42|1462|1.051 MiB |1398|1.047 MiB |126.153 ms |102.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1553.964 ms |1122.0 ms |
+|db_cross_join_trivial|7904|57|7521|36650|7.062 MiB |36344|7.041 MiB |1265.116 ms |1832.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1775.527 ms |3307.0 ms |
+|db_variance|13369|3016|10319|20728|4.017 MiB |20710|4.015 MiB |1802.426 ms |1256.0 ms |
+|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |3799.555 ms |3235.0 ms |
+|histogram|1492|1340|81|2953|1.11 MiB |2898|1.106 MiB |278.189 ms |206.0 ms |
+|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1060.483 ms |972.0 ms |
+|inner_product|3303|2826|466|5837|1.118 MiB |5832|1.117 MiB |502.208 ms |318.0 ms |
+|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |856.623 ms |865.0 ms |
+|longest_102|3761|111|3603|6834|1.015 MiB |6793|1.013 MiB |558.518 ms |394.0 ms |
+|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |495.172 ms |554.0 ms |
+|max_dist_between_syms|2896|38|2830|5182|0.667 MiB |5156|0.665 MiB |381.931 ms |297.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |352.632 ms |335.0 ms |
+|max_sum_between_syms|2895|38|2830|5180|0.666 MiB |5155|0.665 MiB |404.203 ms |294.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |375.088 ms |336.0 ms |
+|minimal_points|481|427|37|1019|0.269 MiB |1014|0.269 MiB |97.085 ms |48.0 ms |
+|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |525.201 ms |283.0 ms |
+|mnist_relu|814|202|209|1482|3.365 MiB |1479|3.365 MiB |572.856 ms |185.0 ms |
+|mnist_relu (Non-Vectorized)|40023|0|39400|59433|7.445 MiB |59210|7.429 MiB |5646.378 ms |3783.0 ms |
+|psi|149|78|43|760|0.37 MiB |746|0.369 MiB |63.054 ms |26.0 ms |
+|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |250.882 ms |255.0 ms |
 
 ## Compiler stages with different benchmarks
 ### `biometric`
