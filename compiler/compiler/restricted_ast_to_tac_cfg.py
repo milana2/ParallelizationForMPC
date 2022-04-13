@@ -17,6 +17,7 @@ class _CFGBuilder:
     _entry_block: tac_cfg.Block
     _current_block: tac_cfg.Block
     _tmp_name_counter: int = 0
+    _edge_id_counter: int = 0
 
     def __init__(self):
         self._cfg = networkx.DiGraph()
@@ -47,25 +48,22 @@ class _CFGBuilder:
         assert self._current_block.terminator is None
         self._current_block.terminator = terminator
 
-    def add_jump(self, target_block: tac_cfg.Block):
-        self._add_terminator(tac_cfg.Jump())
+    def _add_branch(self, target_block: tac_cfg.Block, branch_kind: tac_cfg.BranchKind):
+        self._edge_id_counter += 1
         self._cfg.add_edge(
             u_of_edge=self._current_block,
             v_of_edge=target_block,
-            label=tac_cfg.BranchKind.UNCONDITIONAL,
+            label=branch_kind,
+            ident=self._edge_id_counter,
         )
 
+    def add_jump(self, target_block: tac_cfg.Block):
+        self._add_terminator(tac_cfg.Jump())
+        self._add_branch(target_block, tac_cfg.BranchKind.UNCONDITIONAL)
+
     def _add_conditional_jump_edges(self, false_block, true_block):
-        self._cfg.add_edge(
-            u_of_edge=self._current_block,
-            v_of_edge=false_block,
-            label=tac_cfg.BranchKind.FALSE,
-        )
-        self._cfg.add_edge(
-            u_of_edge=self._current_block,
-            v_of_edge=true_block,
-            label=tac_cfg.BranchKind.TRUE,
-        )
+        self._add_branch(false_block, tac_cfg.BranchKind.FALSE)
+        self._add_branch(true_block, tac_cfg.BranchKind.TRUE)
 
     def add_conditional_jump(
         self,
