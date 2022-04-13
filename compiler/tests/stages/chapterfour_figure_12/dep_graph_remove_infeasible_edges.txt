@@ -1,0 +1,24 @@
+Nodes:
+    parameter x!0
+    parameter y!0
+    z!1 = 0
+    !1!1 = (x!0 > 0)
+    !2!1 = (y!0 > 0)
+    z!3 = 0
+    z!2 = 1
+    z!4 = MUX(!2!1, z!2, z!3)
+    z!5 = MUX(!1!1, z!4, z!1)
+    return z!5
+Forward edges:
+    parameter x!0  →  parameter x!0
+    parameter x!0  →  !1!1 = (x!0 > 0)
+    parameter y!0  →  parameter y!0
+    parameter y!0  →  !2!1 = (y!0 > 0)
+    z!1 = 0  →  z!5 = MUX(!1!1, z!4, z!1)
+    !1!1 = (x!0 > 0)  →  z!5 = MUX(!1!1, z!4, z!1)
+    !2!1 = (y!0 > 0)  →  z!4 = MUX(!2!1, z!2, z!3)
+    z!3 = 0  →  z!4 = MUX(!2!1, z!2, z!3)
+    z!2 = 1  →  z!4 = MUX(!2!1, z!2, z!3)
+    z!4 = MUX(!2!1, z!2, z!3)  →  z!5 = MUX(!1!1, z!4, z!1)
+    z!5 = MUX(!1!1, z!4, z!1)  →  return z!5
+Back edges:

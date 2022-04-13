@@ -12,8 +12,6 @@ SKIPPED_TESTS = [
     "biometric_vectorized",
     # These benchmarks fail because they involve appending to arrays
     "convex_hull",
-    # TODO: figure out why these tests are failing:
-    "chapterfour_figure_12",
     # The following tests cause issues since they don't loop from 0
     "longest_1s",
     "longest_even_0",
