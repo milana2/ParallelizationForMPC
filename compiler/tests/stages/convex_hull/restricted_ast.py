@@ -1,6 +1,4 @@
-def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: plaintext[int]) -> tuple[shared[list[int]], shared[list[int]]]:
-    hull_X = []
-    hull_Y = []
+def convex_hull(X_coords: shared[list[int; ?]], Y_coords: shared[list[int; ?]], N: plaintext[int], result_X: shared[list[int; ?]], result_Y: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
     for i: plaintext[int] in range(0, N):
         is_hull = True
         p1_X = X_coords[i]
@@ -11,7 +9,11 @@ def convex_hull(X_coords: shared[list[int]], Y_coords: shared[list[int]], N: pla
                 p2_Y = Y_coords[j]
                 if not ((p1_X <= p2_X) or (p1_Y >= p2_Y)):
                     is_hull = False
+        val_X = result_X[i]
+        val_Y = result_Y[i]
         if is_hull:
-            hull_X = (hull_X + [p1_X])
-            hull_Y = (hull_Y + [p1_Y])
-    return (hull_X, hull_Y)
+            val_X = p1_X
+            val_Y = p1_Y
+        result_X[i] = val_X
+        result_Y[i] = val_Y
+    return (result_X, result_Y)
