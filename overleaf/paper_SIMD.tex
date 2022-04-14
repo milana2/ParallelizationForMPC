@@ -108,10 +108,10 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage[american]{babel}
-\usepackage[backend=biber,style=ACM-Reference-Format]{biblatex}
-\addbibresource{./library.bib}
-\addbibresource{./cryptobib/abbrev2.bib}
-\addbibresource{./cryptobib/crypto_crossref.bib}
+%\usepackage[backend=biber,style=ACM-Reference-Format]{biblatex}
+%\addbibresource{./library.bib}
+%\addbibresource{./cryptobib/abbrev2.bib}
+%\addbibresource{./cryptobib/crypto_crossref.bib}
 
 % Used for Theorems and Definitions
 \usepackage{amsthm}
@@ -176,6 +176,20 @@
     %\country{Iceland}
 }
 
+\author{Muhammad Ishaq}
+\authornote{This work was done in part while the author was at RPI.}
+\email{m.ishaq@ed.ac.uk}
+%\orcid{1234-5678-9012}
+%\author{G.K.M. Tobin}
+%\authornotemark[1]
+%\email{webmaster@marysville-ohio.com}
+\affiliation{%
+    \institution{University of Edinburgh}
+    %\streetaddress{P.O. Box 1212}
+    \city{Edinburgh}
+    \state{Scotland}
+%    \postcode{43017-6221}
+}
 
 \author{Lindsey Kennard}
 \email{kennal@rpi.edu}
@@ -195,21 +209,6 @@
     \city{Troy}
     \state{New York}
     %\country{Iceland}
-}
-
-\author{Muhammad Ishaq}
-\authornote{This work was done in part while the author was at RPI.}
-\email{m.ishaq@ed.ac.uk}
-%\orcid{1234-5678-9012}
-%\author{G.K.M. Tobin}
-%\authornotemark[1]
-%\email{webmaster@marysville-ohio.com}
-\affiliation{%
-    \institution{University of Edinburgh}
-    %\streetaddress{P.O. Box 1212}
-    \city{Edinburgh}
-    \state{Scotland}
-%    \postcode{43017-6221}
 }
 
 \author{Vassilis Zikas}
@@ -302,6 +301,66 @@
 \section{Introduction}
 \label{sec:introduction}
 
+Multi-party computation (MPC) allows $N$ parties $p_1,\dots, p_N$ to perform a computation on their private inputs securely. Informally, security means that the secure computation protocol computes the correct output (correctness) and it does not leak any information about the individual party inputs, other than what can be deduced from the output (privacy).
+
+% The first results from the early 80's~\cite{FOCS:Yao82b,STOC:GolMicWig87,STOC:BenGolWig88,STOC:ChaCreDam88} introduced the problem and formally defined its security, and investigate feasibility in different models---e.g., passive or malicious adversaries, unconditional or computational security, with or without a broadcast channel. This spawned a rich theoretical literature of beautiful works improving and extending in various manners the original ideas. 
+
+MPC theory dates back to the early 1980-ies~\cite{FOCS:Yao82b,STOC:GolMicWig87,STOC:BenGolWig88,STOC:ChaCreDam88}. 
+Long the realm of theoretical cryptography, MPC has seen significant advances in programming technology in recent years. 
+These advances bring MPC closer to practice and wider applicability --- 
+MPC technology has been employed in real-world scenarios such as auctions~\cite{FC:BCDGJK09}, biometric identification~\cite{ESORICS:BlaGas11}, and privacy-preserving machine learning~\cite{SP:MohZha17,CCS:MohRin18}. 
+The goal is to bring the technology to a level where programmers can write \emph{secure} and \emph{efficient} programs without 
+commanding extensive knowledge of cryptographic primitives. 
+
+The problem, therefore, is to build a high-level programming language and a compiler, and there has been significant advance in 
+this space, e.g., ~\cite{CCS:BenNisPin08,ESORICS:BogLauWil08,CCS:ZhaSteBla13,Hastings:2019,Keller:2020,Acay:2021,Braun:2022} among other work. 
+Current research largely falls at the two ends 
+of the classical compiler: (1) work on \emph{front-end} language design and (2) work on \emph{back-end} protocol implementation. Work on language design 
+focuses on high-level constructs necessary to express multiple parties, computation by different parties, and information flow from one party 
+to another~\cite{SP:RasHamHic14, Acay:2021}. On the other end, work on protocol implementation focuses on cryptographic foundations and their efficient circuit-level
+implementation~\cite{NDSS:DemSchZoh15, CCS:ABFKLO18, Braun:2022}, e.g., implementation of operations (e.g., MUL, ADD) using different sharing protocols 
+(Boolean or Arithmetic GMW~\cite{STOC:GolMicWig87} or Yao's garbled circuits~\cite{FOCS:Yao82b}), as well as efficient share conversion from one representation 
+to another.
+
+Earlier compilers did both back-end and front-end translation without a specific focus on either, as their aim was to demonstrate applicability of MPC on real-world
+programming problems. As the field advanced, works have focused more closely on front-end language design (e.g., Wysteria~\cite{SP:RasHamHic14} and Viaduct~\cite{Acay:2021}) 
+or back-end ``circuit-level'' design and implementation (e.g., MOTION~\cite{Braun:2022}). 
+
+In this work we focus on an intermediate language and what we call \emph{circuit-independent optimizations}, in a close analogy to \emph{machine-independent} optimizations
+in the classical compiler. The following figure summarizes our key idea: 
+
+{\begin{center}
+\includegraphics[width=0.8\linewidth]{figs_paper_SIMD/focus.png}
+\end{center}
+}
+
+We emphasize the MPC Source intermediate representation and optimization over MPC Source. As in classical compilers, we envision different front ends (e.g., Wysteria,
+our front end IMP-MPC) compiling into MPC Source. MPC Source is particularly suitable for optimizations such as protocol mixing~\cite{Ishaq:2019, Fang:2022} and SIMD-vectorization, 
+which takes advantage of amortization at the circuit level. The MPC Source IR exposes the linear structure of MPC programs, which simplifies program analysis; this is
+in contrast to source, which has if-then-else constructs. In the same time, MPC Source is sufficiently ``high-level''  to support analyses and optimizations that take into account 
+control and data flow in a specific program. MPC Source is small in size and analysis is tractable, as opposed to analysis over an unrolled circuit~\cite{Ishaq:2019}. Again as
+in classical compilers, we envision translation of MPC Source (optimized or unoptimized) into MOTION, SPDZ, or other back-end code.
+
+
+%In contrast, the high-level program contains if-then-else and array writes, or the low-level circuit . 
+%The compilation problem, i.e., translation from a high-level language to circuits, is difficult and therefore, breaking the problem into sub-problems can  tractable. 
+  
+
+\subsection{Our contribution} In this paper, we develop a compiler framework that takes a Python-like routine and produces MOTION code: we describe (a) the IMP-MPC language, its syntax and semantic restrictions, (b) translation from IMP-MPC into MPC Source, (c) a specific circuit-independent optimization: novel SIMD-vectorization on MPC Source, and (d) translation from MPC Source into MOTION code. \ana{I think we have to add more on MOTION, specifically mixing and amortization.}
+
+Our second contribution is an analytical model for cost estimation of amortized schedules. Originally, we hoped that optimal scheduling (under our model) was tractable, as the problem
+appeared simpler than the classical scheduling problem. Unfortunately, we show that optimal scheduling is NP-hard via a reduction to the Shortest Common Supersequence (SCS) problem. 
+Cost estimation is important as it drives scheduling and protocol mixing optimizations~\cite{Ishaq:2019, Fang:2022}. 
+
+Our most important contribution is the implementation and evaluation of the compiler framework. We demonstrate expressivity of the source language by running the compiler on \ana{X} programs; these include classical MPC benchmarks such as PSI and Biometric matching, as well as kMeans, Histogram, and others. Vectorization leads to \ana{X}x improvement in number of gates on average, \ana{Y}x speedup in circuit generation time, \ana{Z}x speedup in the LAN setting, and \ana{Z}x speedup in the WAN setting using the Boolean GMW protocol. Results form BMR are similar. 
+
+Our results emphasize the importance of ``circuit-independent'' optimizations --- vectorization (described in this work) and protocol mixing (tackled in previous works~\cite{CCS:BDKKS18,Ishaq:2019, Fang:2022}) are two optimizations readily available at the level of MPC Source. We believe that our work can lead to future work on ``circuit-independent'' compilation and optimization, bringing in new MPC optimizations and combinations of optimizations, much in the vein of standard compilers, and bring MPC programming technology closer to practice and wider applicability.
+
+\subsection{Outline} 
+
+The rest of the paper is organized as follows. \secref{sec:overview} presents an overview of the compiler. \secref{sec:model} describes our model for cost estimation and argues NP-hardness of optimal scheduling and \secref{sec:compiler} describes the compiler. \secref{sec:experiments} presents implementation and evaluation. \secref{sec:related} discusses related work and \secref{sec:conclusion} concludes. 
+
+\begin{comment}
 \begin{itemize}
 \item We define the scheduling problem for MPC. 
 We present an analytical model to reason about cost of schedules
@@ -319,8 +378,8 @@ infeasible loop-carried dependences introduced by standard SSA to improve vector
 \item We present an implementation and evaluation in the MOTION framework. 
 \ana{Fill in with final results. Mention benchmarks (standard + new ones + HyCC). }
 
-
 \end{itemize}
+\end{comment}
 
 \section{Overview}
 \label{sec:overview}
@@ -1214,6 +1273,7 @@ respectively, i.e., the arrays before the loop.
 \end{algorithmic}
 \end{comment}
 
+\begin{comment}
 \subsubsection{Array MUX refinement}
 
 \ana{TODO: WIP, get to BV without MUX refinement for now? For now, skip MUX refinement.}
@@ -1246,7 +1306,7 @@ the size of those vectors. Note that this is a heuristic that handles a common c
 \ENDIF
 \ENDFOR
 \end{algorithmic}
-
+\end{comment}
 
 \subsubsection{Restricting Array Writes}
 
@@ -1513,22 +1573,23 @@ After Phase 2 and Phase 3. The EQ operation is vectorizable across both dimensio
 \end{algorithmic}
 \end{comment}
 
-
-\section{Divide-and-Conquer}
-\label{sec:div_and_conq}
-
-\ana{TODO: Now that we have broken FOR loops into smaller chunks, we can add Divide-and-conquer reasoning with Z3 and implement this additional transform.}
+%\section{Divide-and-Conquer}
+%\label{sec:div_and_conq}
+%\ana{TODO: Now that we have broken FOR loops into smaller chunks, we can add Divide-and-conquer reasoning with Z3 and implement this additional transform.}
 
 \section{Implementation and Evaluation}
 \label{sec:implementation}
 
+\section{Related Work}
+\label{sec:related}
 
-\section{Future Work}
-\label{sec:implementation_and_benchmarks}
+
+%\section{Future Work}
+%\label{sec:implementation_and_benchmarks}
 %\input{../sections/implementation_and_benchmarks.tex}
 %\input{../sections/evaluation.tex}
 
-\section{Conclusions}
+\section{Conclusion and Future Work}
 \label{sec:conclusion}
 %\input{../sections/conclusion.tex}
 
@@ -1536,7 +1597,13 @@ After Phase 2 and Phase 3. The EQ operation is vectorizable across both dimensio
 %    \ishaq{TODO}
 %\end{acks}
 
-\printbibliography
+%\printbibliography
+
+\bibliographystyle{plain}
+%\bibliography{c:/trink/Doc/MyTexFiles/texrefs}
+%\bibliography{mybib,library,library1,library2,library3,library_ana}
+\bibliography{library_ana,crypto_crossref}
+
 
 % that's all folks
 \end{document}
