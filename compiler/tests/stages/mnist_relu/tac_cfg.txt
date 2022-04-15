@@ -1,4 +1,4 @@
-Function mnist_decomposed_relu(input: shared[list[int; ?]], OUTPUT_res: shared[list[int; ?]], len_outer: plaintext[int], len_inner: plaintext[int]) -> shared[list[int; ?]]:
+Function mnist_relu(input: shared[list[int; ?]], OUTPUT_res: shared[list[int; ?]], len_outer: plaintext[int], len_inner: plaintext[int]) -> shared[list[int; ?]]:
 Entry block: 0
 Exit block: 3
 Block 0:
@@ -12,8 +12,8 @@ Block 3:
 Block 4:
     for j: plaintext[int] in range(0, len_inner)
 Block 5:
-    val = 0
-    !1 = (input[((i * len_inner) + j)] > 0)
+    val = 1
+    !1 = (input[((i * len_inner) + j)] > 1)
     conditional jump !1
 Block 6:
     jump

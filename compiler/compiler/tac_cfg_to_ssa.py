@@ -67,11 +67,12 @@ def _tac_cfg_to_ssa_struct(tac_cfg_function: tac_cfg.Function) -> ssa.Function:
     source_block: tac_cfg.Block
     dest_block: tac_cfg.Block
     label: ssa.BranchKind
-    for source_block, dest_block, label in tac_cfg_function.body.edges(data="label"):
+    for source_block, dest_block, edge_data in tac_cfg_function.body.edges(data=True):
         cfg.add_edge(
             u_of_edge=mapping[source_block],
             v_of_edge=mapping[dest_block],
-            label=label,
+            label=edge_data["label"],
+            ident=edge_data["ident"],
         )
 
     return ssa.Function(
@@ -292,7 +293,12 @@ def rename_variables(result: ssa.Function) -> None:
             assert len(list(result.body.predecessors(Y))) in (1, 2)
             j = [
                 i
-                for i, predecessor in enumerate(result.body.predecessors(Y))
+                for i, predecessor in enumerate(
+                    sorted(
+                        result.body.predecessors(Y),
+                        key=lambda X_: result.body.edges[X_, Y]["ident"],
+                    )
+                )
                 if predecessor == X
             ][0]
             for F in Y.phi_functions:

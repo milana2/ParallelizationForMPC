@@ -2,15 +2,16 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
     s0!1 = False
     max_len!1 = 0
     length!1 = 0
-    !9!0{N!0}[] = lift(s0!1, (i!1:N!0))
-    !10!0{N!0}[] = lift(max_len!1, (i!1:N!0))
-    !11!0{N!0}[] = lift(length!1, (i!1:N!0))
     !12!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
     !13!0{N!0}[] = lift(Syms!0[2], (i!1:N!0))
     !14!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
     !15!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
     !16!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
     !17!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    length!4 = 0
+    !9!0{N!0}[] = lift(s0!1, (i!1:N!0))
+    !10!0{N!0}[] = lift(max_len!1, (i!1:N!0))
+    !11!0{N!0}[] = lift(length!1, (i!1:N!0))
     !1!2{N!0}[] = (!12!0{N!0}[] == !13!0{N!0}[])
     !2!2{N!0}[] = (!14!0{N!0}[] == !15!0{N!0}[])
     !4!2{N!0}[] = (!16!0{N!0}[] == !17!0{N!0}[])
@@ -20,7 +21,6 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
         s0!3{}[!19!0] = (!2!2{}[!19!0] or !5!2{}[!19!0])
     s1!2{N!0}[] = (s0!2{N!0}[] and !1!2{N!0}[])
     !6!2{N!0}[] = (s1!2{N!0}[] or s0!3{N!0}[])
-    length!4 = 0
     for !20!0 in range(0, N!0): (monolithic)
         length!2{}[!20!0] = Φ(!11!0{}[!20!0], length!5{}[(!20!0 - 1)])
         length!3{}[!20!0] = (length!2{}[!20!0] + 1)

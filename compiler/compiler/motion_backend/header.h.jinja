@@ -66,12 +66,34 @@ std::vector<T> lift(const std::function<std::vector<T>(const std::vector<std::ui
 {
     auto source_array = expr(dim_sizes);
 
-    decltype(source_array) raised_array;
-    std::uint32_t raised_size =
+    std::size_t raised_size =
         std::accumulate(dim_sizes.begin(), dim_sizes.end(), 1, std::multiplies<std::uint32_t>());
+    decltype(source_array) raised_array(raised_size);
 
-    while (raised_array.size() < raised_size) {
-        raised_array.insert(raised_array.end(), source_array.begin(), source_array.end());
+    std::size_t num_source_dims = 0;
+    do {
+        num_source_dims += 1;
+    } while (
+        source_array.size() < std::accumulate(dim_sizes.begin(), dim_sizes.begin() + num_source_dims, 1, std::multiplies<std::uint32_t>())
+    );
+
+    for (std::size_t i = 0; i < raised_size; ++i) {
+        // Extract the per-dimension index of the current element.
+        std::vector<std::uint32_t> dim_idxs(dim_sizes.size());
+        std::uint32_t j = i;
+        for (int k = dim_idxs.size() - 1; k >= 0; --k) {
+            dim_idxs[k] = j % dim_sizes[k];
+            j /= dim_sizes[k];
+        }
+
+        // Compute which index in the source array this corresponds to
+        std::size_t src_idx = 0;
+        for (std::uint32_t dim = 0; dim < num_source_dims; ++dim) {
+            src_idx *= dim_sizes[dim];
+            src_idx += dim_idxs[dim];
+        }
+
+        raised_array[i] = source_array[src_idx];
     }
 
     return raised_array;
@@ -183,14 +205,14 @@ void vectorized_assign(std::vector<T> &tgt, const std::vector<std::uint32_t> &di
     for (std::uint32_t i = 0; i < unvectorized_repr.size(); i++) {
         std::vector<std::uint32_t> tgt_dim_idxs(dim_sizes.size());
         std::uint32_t j = i;
-        std::size_t which_idx = 0;
+        std::size_t which_idx = idxs.size() - 1;
         for (int dim_idx = dim_sizes.size() - 1; dim_idx >= 0; --dim_idx) {
             if (vectorized_dims[dim_idx]) {
                 tgt_dim_idxs[dim_idx] = j % dim_sizes[dim_idx];
                 j /= dim_sizes[dim_idx];
             } else {
                 tgt_dim_idxs[dim_idx] = idxs[which_idx];
-                ++which_idx;
+                --which_idx;
             }
         }
 

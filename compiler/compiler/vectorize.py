@@ -180,6 +180,47 @@ def _z3_subscript_index(
         assert_never(index)
 
 
+def _z3_make_var_map(
+    i_loops: list[llc.For],
+    j_loop: llc.For,
+    k_loops: list[llc.For],
+    i_z3_upper_bounds: list[z3.ArithRef],
+    j_z3_upper_bound: z3.ArithRef,
+    k_z3_upper_bounds: list[z3.ArithRef],
+    i_z3_counters: list[z3.ArithRef],
+    j_z3_counter: z3.ArithRef,
+    k_z3_counters: list[z3.ArithRef],
+) -> dict[llc.Var, z3.ArithRef]:
+    return (
+        # Loop upper bounds
+        {
+            i_loop.bound_high: i_z3_upper_bound
+            for i_loop, i_z3_upper_bound in zip(i_loops, i_z3_upper_bounds)
+            if isinstance(i_loop.bound_high, llc.Var)
+        }
+        | (
+            {j_loop.bound_high: j_z3_upper_bound}
+            if isinstance(j_loop.bound_high, llc.Var)
+            else {}
+        )
+        | {
+            k_loop.bound_high: k_z3_upper_bound
+            for k_loop, k_z3_upper_bound in zip(k_loops, k_z3_upper_bounds)
+            if isinstance(k_loop.bound_high, llc.Var)
+        }
+        # Loop counters
+        | {
+            i_loop.counter: i_z3_counter
+            for i_loop, i_z3_counter in zip(i_loops, i_z3_counters)
+        }
+        | {j_loop.counter: j_z3_counter}
+        | {
+            k_loop.counter: k_z3_counter
+            for k_loop, k_z3_counter in zip(k_loops, k_z3_counters)
+        }
+    )
+
+
 def _check_dep(
     A_def: llc.Update,
     A_use: llc.Subscript,
@@ -187,31 +228,68 @@ def _check_dep(
     j: llc.For,
     k: list[llc.For],
 ) -> bool:
+    # Loop bounds
+    I = [z3.Int(f"I[{n}]") for n in range(len(i))]
+    J = z3.Int("J")
+    K = [z3.Int(f"K[{n}]") for n in range(len(k))]
+
+    # Loop counters
     i_ = [z3.Int(f"i_[{n}]") for n in range(len(i))]
     j_ = z3.Int("j_")
     j__ = z3.Int("j__")
     k_ = [z3.Int(f"k_[{n}]") for n in range(len(k))]
     k__ = [z3.Int(f"k__[{n}]") for n in range(len(k))]
+
+    # Index expressions
     f = A_def.index
     f_ = A_use.index
     f_ijk = _z3_subscript_index(
         f,
-        {ii.counter: ii_ for ii, ii_ in zip(i, i_)}
-        | {j.counter: j_}
-        | {kk.counter: kk_ for kk, kk_ in zip(k, k_)},
+        _z3_make_var_map(
+            i_loops=i,
+            j_loop=j,
+            k_loops=k,
+            i_z3_upper_bounds=I,
+            j_z3_upper_bound=J,
+            k_z3_upper_bounds=K,
+            i_z3_counters=i_,
+            j_z3_counter=j_,
+            k_z3_counters=k_,
+        ),
     )
     f__ijk = _z3_subscript_index(
         f_,
-        {ii.counter: ii_ for ii, ii_ in zip(i, i_)}
-        | {j.counter: j__}
-        | {kk.counter: kk_ for kk, kk_ in zip(k, k__)},
+        _z3_make_var_map(
+            i_loops=i,
+            j_loop=j,
+            k_loops=k,
+            i_z3_upper_bounds=I,
+            j_z3_upper_bound=J,
+            k_z3_upper_bounds=K,
+            i_z3_counters=i_,
+            j_z3_counter=j__,
+            k_z3_counters=k__,
+        ),
     )
+
+    # Add constraints
     solver = z3.Solver()
+    # Counters at least zero
     solver.add([0 <= ii for ii in i_])
     solver.add(0 <= j_)
-    solver.add(j_ < j__)
+    solver.add(0 <= j__)
     solver.add([0 <= kk for kk in k_])
+    # Counters less than upper bound
+    solver.add([ii < II for ii, II in zip(i_, I)])
+    solver.add(j_ < J)
+    solver.add(j__ < J)
+    solver.add([kk < KK for kk, KK in zip(k_, K)])
+    # One j less than other
+    solver.add(j_ < j__)
+    # Index expressions equal
     solver.add(f_ijk == f__ijk)
+
+    # Try to solve.
     # This check is allowed to have false positives, but not false negatives,
     # so we treat `z3.unknown` the same as `z3.sat`.
     return solver.check() in (z3.sat, z3.unknown)
@@ -401,10 +479,15 @@ def _basic_vectorization_phase_1(
                 return var
             elif edge_kind is EdgeKind.OUTER_TO_INNER:
                 var_prime = tmp_var_gen.get()
-                dims = tuple(
-                    (loop.counter, loop.bound_high)
-                    for loop in dep_graph.enclosing_loops[stmt]
-                )
+                if lhs_dims is not None and len(lhs_dims) > len(
+                    dep_graph.enclosing_loops[stmt]
+                ):
+                    dims = tuple((Var("_"), dim_size) for dim_size in lhs_dims)
+                else:
+                    dims = tuple(
+                        (loop.counter, loop.bound_high)
+                        for loop in dep_graph.enclosing_loops[stmt]
+                    )
 
                 above_loop_result.append(
                     llc.Assign(
@@ -1107,6 +1190,23 @@ def _basic_vectorization_phase_2(
                         setattr(stmt, field.name, val)
                     unvectorize_loop_dim(val)
 
+                # In case the left side of this assignment was updated above, update the right side
+                if (
+                    isinstance(stmt, llc.Assign)
+                    and isinstance(stmt.lhs, llc.VectorizedAccess)
+                    and isinstance(stmt.rhs, llc.LiftExpr)
+                ):
+                    new_dims = tuple(
+                        (var, dim_size)
+                        for var, dim_size, vectorized in zip(
+                            stmt.lhs.idx_vars,
+                            stmt.lhs.dim_sizes,
+                            stmt.lhs.vectorized_dims,
+                        )
+                        if vectorized
+                    )
+                    stmt.rhs.dims = new_dims
+
         for orig_var, lifted in lifted_vars.items():
             monolithic_for = util.replace_pattern(monolithic_for, orig_var, lifted)
         monolithic_for = util.replace_pattern(
@@ -1210,68 +1310,90 @@ def _basic_vectorization_phase_2(
             assert_never(stmt)
 
     def ordering(
-        s1: Union[llc.Statement, list[llc.Statement]],
-        s2: Union[llc.Statement, list[llc.Statement]],
+        s1: Union[llc.Statement, tuple[llc.Statement]],
+        s2: Union[llc.Statement, tuple[llc.Statement]],
     ) -> int:
+        if isinstance(s1, llc.For):
+            s1 = tuple(s1.body)
+
+        if isinstance(s2, llc.For):
+            s2 = tuple(s2.body)
+
         # If s1 is a closure
-        if isinstance(s1, list):
-            # If s2 is a closure
-            if isinstance(s2, list):
-                orderings = set(ordering(ss1, s2) for ss1 in s1)
-                orderings.discard(0)
-                if len(orderings) == 2:
-                    raise AssertionError(
-                        "Two closures have been detected with circular dependencies"
-                    )
-                elif len(orderings) == 1:
-                    return orderings.pop()
-                else:
-                    return 0
-            # If s2 is a statement
+        if isinstance(s1, tuple):
+            orderings = set(ordering(ss1, s2) for ss1 in s1)
+            orderings.discard(0)
+            if len(orderings) == 2:
+                raise AssertionError(
+                    "Two closures have been detected with circular dependencies"
+                )
+            elif len(orderings) == 1:
+                return orderings.pop()
             else:
-                # If there is a dependency from s1 to s2, s1 must be placed first
-                if any(dep_graph.has_same_level_path(ss1, s2) for ss1 in s1):
-                    return -1
-                # If there is a dependency from s2 to s1, then s2 must be placed first
-                elif any(dep_graph.has_same_level_path(s2, ss1) for ss1 in s1):
-                    return 1
-                # Otherwise, they can be placed in any order
-                else:
-                    return 0
-        # If s1 is a statement
+                return 0
+
+        # At this point, s1 is a statement
+        # If s2 is a closure, flip the order of the arguments and recurse
+        if isinstance(s2, tuple):
+            return -ordering(s2, s1)
+
+        # At this point, both s1 and s2 are statements
+        # If either of them is a return, place that one second
+        if isinstance(s1, llc.Return):
+            return 1
+        elif isinstance(s2, llc.Return):
+            return -1
+
+        # Order statements based on def-use edges.  These are re-computed here instead
+        # of using the dependency graph to be more robust against modifying statements
+        # before regenerating the dependency graph.
+
+        s1_lhs = s1.lhs
+        if isinstance(s1_lhs, llc.VectorizedAccess):
+            s1_lhs = s1_lhs.array
+
+        if isinstance(s1, llc.Phi):
+            s1_rhs = [
+                s1.rhs_true if isinstance(s1.rhs_true, Var) else s1.rhs_true.array,
+                s1.rhs_false if isinstance(s1.rhs_false, Var) else s1.rhs_false.array,
+            ]
         else:
-            # If s2 is a closure
-            if isinstance(s2, list):
-                # If there is a dependency from s1 to s2, s1 must be placed first
-                if any(dep_graph.has_same_level_path(s1, ss2) for ss2 in s2):
-                    return -1
-                # If there is a dependency from s2 to s1, then s2 must be placed first
-                elif any(dep_graph.has_same_level_path(ss2, s1) for ss2 in s2):
-                    return 1
-                # Otherwise, they can be placed in any order
-                else:
-                    return 0
-            # If s2 is a statement
-            else:
-                # If there is a dependency from s1 to s2, s1 must be placed first
-                if dep_graph.has_same_level_path(s1, s2):
-                    return -1
-                # If there is a dependency from s2 to s1, then s2 must be placed first
-                elif dep_graph.has_same_level_path(s2, s1):
-                    return 1
-                # Otherwise, they can be placed in any order
-                else:
-                    return 0
+            assert not isinstance(s1, llc.For)  # handled at the start of the function
+            s1_rhs = llc.assign_rhs_accessed_vars(s1.rhs)
+
+        s2_lhs = s2.lhs
+        if isinstance(s2_lhs, llc.VectorizedAccess):
+            s2_lhs = s2_lhs.array
+
+        if isinstance(s2, llc.Phi):
+            s2_rhs = [
+                s2.rhs_true if isinstance(s2.rhs_true, Var) else s2.rhs_true.array,
+                s2.rhs_false if isinstance(s2.rhs_false, Var) else s2.rhs_false.array,
+            ]
+        else:
+            assert not isinstance(s2, llc.For)  # handled at the start of the function
+            s2_rhs = llc.assign_rhs_accessed_vars(s2.rhs)
+
+        if s1_lhs in s2_rhs and s2_lhs in s1_rhs:
+            raise AssertionError(
+                "Two statements have been detected with circular dependencies"
+            )
+        elif s1_lhs in s2_rhs:
+            return -1
+        elif s2_lhs in s1_rhs:
+            return 1
+
+        return 0
 
     stmts_and_closures: list[
-        Union[llc.Statement, list[llc.Statement]]
+        Union[llc.Statement, tuple[llc.Statement]]
     ] = vectorizeable + [
-        closure for _, closure in closures  # type: ignore
+        tuple(closure) for _, closure in closures  # type: ignore
     ]  # type: ignore
 
-    stmts_and_closures = sorted(
-        stmts_and_closures, key=functools.cmp_to_key(ordering)
-    )  # Sort by index to retain def-use order
+    stmts_and_closures = util.partially_ordered_sort(
+        stmts_and_closures, ordering
+    )  # Sort to retain def-use order
 
     # Generate output
     output: list[llc.Statement] = []
@@ -1306,8 +1428,8 @@ def _basic_vectorization_phase_2(
     phi_renames = {}
 
     for i in range(len(stmts_and_closures)):
-        if isinstance(stmts_and_closures[i], list):
-            closure = cast(list, stmts_and_closures[i])
+        if isinstance(stmts_and_closures[i], tuple):
+            closure = list(cast(tuple, stmts_and_closures[i]))
             closure_phis = [
                 phi for phi in closure if isinstance(phi, llc.Phi) and not phi.removed
             ]
