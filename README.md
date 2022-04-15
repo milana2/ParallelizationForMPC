@@ -4,70 +4,78 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5477|4522|915|4945|0.814 MiB |4945|0.814 MiB |2119.405 ms |453.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |10714.658 ms |5475.0 ms |
-|chapterfour_figure_12|449|0|445|750|0.071 MiB |750|0.071 MiB |186.77 ms |36.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|449|0|445|750|0.071 MiB |750|0.071 MiB |184.449 ms |37.0 ms |
-|count_102|3222|105|3080|3818|0.388 MiB |3818|0.388 MiB |1756.274 ms |294.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2364.609 ms |409.0 ms |
-|count_10s|2299|106|2159|2846|0.287 MiB |2846|0.287 MiB |1333.807 ms |212.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1329.62 ms |282.0 ms |
-|count_123|2306|110|2161|2848|0.288 MiB |2848|0.288 MiB |1342.724 ms |210.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1470.463 ms |285.0 ms |
-|cryptonets_max_pooling|825|679|42|949|0.181 MiB |949|0.181 MiB |423.249 ms |76.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |3046.688 ms |1084.0 ms |
-|db_cross_join_trivial|7896|49|7521|14484|1.519 MiB |14484|1.519 MiB |3394.899 ms |1047.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |4660.818 ms |1455.0 ms |
-|db_variance|16284|3309|12941|13644|1.49 MiB |13644|1.49 MiB |8875.036 ms |1290.0 ms |
-|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |11987.789 ms |3066.0 ms |
-|histogram|2652|2500|81|3016|0.396 MiB |3016|0.396 MiB |1544.772 ms |257.0 ms |
-|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3597.673 ms |1260.0 ms |
-|inner_product|3888|2970|907|3580|0.387 MiB |3580|0.387 MiB |1111.795 ms |309.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2235.167 ms |766.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2689.663 ms |584.0 ms |
-|longest_odd_10 (Non-Vectorized)|5047|0|5025|5942|0.598 MiB |5942|0.598 MiB |2266.35 ms |479.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1988.175 ms |392.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |1759.059 ms |396.0 ms |
-|minimal_points|533|479|37|763|0.097 MiB |763|0.097 MiB |268.162 ms |46.0 ms |
-|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |893.46 ms |319.0 ms |
-|mnist_relu|840|228|209|769|0.47 MiB |769|0.47 MiB |338.083 ms |103.0 ms |
-|mnist_relu (Non-Vectorized)|45223|0|44600|36589|3.736 MiB |36589|3.736 MiB |8998.793 ms |3550.0 ms |
-|psi|133|62|43|472|0.063 MiB |472|0.063 MiB |166.03 ms |11.0 ms |
-|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |584.383 ms |196.0 ms |
+|biometric|5477|4522|915|4945|0.814 MiB |4945|0.814 MiB |1967.399 ms |434.0 ms |
+|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |11466.996 ms |4411.0 ms |
+|chapterfour_figure_12|449|0|445|750|0.071 MiB |750|0.071 MiB |214.283 ms |35.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|449|0|445|750|0.071 MiB |750|0.071 MiB |204.518 ms |35.0 ms |
+|count_102|3222|105|3080|3818|0.388 MiB |3818|0.388 MiB |1885.332 ms |281.0 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2230.725 ms |392.0 ms |
+|count_10s|2299|106|2159|2846|0.287 MiB |2846|0.287 MiB |1428.903 ms |203.0 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1385.214 ms |272.0 ms |
+|count_123|2306|110|2161|2848|0.288 MiB |2848|0.288 MiB |1357.475 ms |202.0 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1347.524 ms |272.0 ms |
+|cryptonets_max_pooling|825|679|42|949|0.181 MiB |949|0.181 MiB |469.589 ms |76.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |3133.358 ms |1037.0 ms |
+|db_cross_join_trivial|7896|49|7521|14484|1.519 MiB |14484|1.519 MiB |3161.337 ms |1018.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |4186.569 ms |1300.0 ms |
+|db_variance|16284|3309|12941|13644|1.49 MiB |13644|1.49 MiB |8767.936 ms |1253.0 ms |
+|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |12373.668 ms |2981.0 ms |
+|histogram|2652|2500|81|3016|0.396 MiB |3016|0.396 MiB |1418.906 ms |254.0 ms |
+|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |4751.928 ms |1212.0 ms |
+|inner_product|3888|2970|907|3580|0.387 MiB |3580|0.387 MiB |1304.8 ms |302.0 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2035.9 ms |735.0 ms |
+|longest_102|5471|111|5313|5640|0.568 MiB |5640|0.568 MiB |3177.473 ms |460.0 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2546.576 ms |570.0 ms |
+|longest_odd_10|4370|110|4222|4612|0.468 MiB |4612|0.468 MiB |2401.345 ms |373.0 ms |
+|longest_odd_10 (Non-Vectorized)|5047|0|5025|5942|0.598 MiB |5942|0.598 MiB |2347.891 ms |451.0 ms |
+|max_dist_between_syms|4264|38|4198|4452|0.441 MiB |4452|0.441 MiB |2572.349 ms |354.0 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |2007.904 ms |378.0 ms |
+|max_sum_between_syms|4263|38|4198|4452|0.441 MiB |4452|0.441 MiB |2384.97 ms |354.0 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |1982.583 ms |379.0 ms |
+|minimal_points|533|479|37|763|0.097 MiB |763|0.097 MiB |255.671 ms |41.0 ms |
+|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |980.254 ms |309.0 ms |
+|mnist_relu|840|228|209|769|0.47 MiB |769|0.47 MiB |342.391 ms |107.0 ms |
+|mnist_relu (Non-Vectorized)|45223|0|44600|36589|3.736 MiB |36589|3.736 MiB |8043.5 ms |4362.0 ms |
+|psi|133|62|43|472|0.063 MiB |472|0.063 MiB |152.396 ms |12.0 ms |
+|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |666.004 ms |151.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4500|3641|819|7865|4.528 MiB |7857|4.527 MiB |735.081 ms |522.0 ms |
-|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5957.218 ms |6119.0 ms |
-|chapterfour_figure_12|397|0|393|973|0.106 MiB |971|0.106 MiB |32.204 ms |39.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|397|0|393|973|0.106 MiB |971|0.106 MiB |29.803 ms |39.0 ms |
-|count_102|1772|105|1630|3869|0.655 MiB |3838|0.653 MiB |286.863 ms |207.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |304.614 ms |376.0 ms |
-|count_10s|1284|106|1144|2982|0.484 MiB |2952|0.482 MiB |276.004 ms |151.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |222.65 ms |262.0 ms |
-|count_123|1291|110|1146|2988|0.486 MiB |2959|0.484 MiB |202.956 ms |152.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |232.116 ms |265.0 ms |
-|cryptonets_max_pooling|747|601|42|1462|1.051 MiB |1398|1.047 MiB |201.075 ms |100.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1459.32 ms |1151.0 ms |
-|db_cross_join_trivial|7904|57|7521|36650|7.062 MiB |36344|7.041 MiB |1016.12 ms |1657.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1151.857 ms |3373.0 ms |
-|db_variance|13369|3016|10319|20728|4.017 MiB |20710|4.015 MiB |1752.37 ms |1305.0 ms |
-|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |3942.05 ms |4243.0 ms |
-|histogram|1492|1340|81|2953|1.11 MiB |2898|1.106 MiB |208.174 ms |210.0 ms |
-|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1119.024 ms |944.0 ms |
-|inner_product|3303|2826|466|5837|1.118 MiB |5832|1.117 MiB |318.914 ms |328.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |860.703 ms |903.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |554.854 ms |569.0 ms |
-|longest_odd_10 (Non-Vectorized)|3695|0|3673|10878|1.289 MiB |10860|1.288 MiB |382.157 ms |525.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |385.503 ms |352.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |343.599 ms |344.0 ms |
-|minimal_points|481|427|37|1019|0.269 MiB |1014|0.269 MiB |106.587 ms |49.0 ms |
-|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |452.451 ms |293.0 ms |
-|mnist_relu|814|202|209|1482|3.365 MiB |1479|3.365 MiB |543.841 ms |176.0 ms |
-|mnist_relu (Non-Vectorized)|40023|0|39400|59433|7.445 MiB |59210|7.429 MiB |5381.577 ms |4771.0 ms |
-|psi|149|78|43|760|0.37 MiB |746|0.369 MiB |151.218 ms |26.0 ms |
-|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |201.022 ms |270.0 ms |
+|biometric|4500|3641|819|7865|4.528 MiB |7857|4.527 MiB |650.619 ms |515.0 ms |
+|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |6245.433 ms |4858.0 ms |
+|chapterfour_figure_12|397|0|393|973|0.106 MiB |971|0.106 MiB |68.55 ms |37.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|397|0|393|973|0.106 MiB |971|0.106 MiB |64.85 ms |37.0 ms |
+|count_102|1772|105|1630|3869|0.655 MiB |3838|0.653 MiB |214.237 ms |199.0 ms |
+|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |298.704 ms |358.0 ms |
+|count_10s|1284|106|1144|2982|0.484 MiB |2952|0.482 MiB |173.944 ms |144.0 ms |
+|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |242.679 ms |254.0 ms |
+|count_123|1291|110|1146|2988|0.486 MiB |2959|0.484 MiB |187.046 ms |145.0 ms |
+|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |308.858 ms |255.0 ms |
+|cryptonets_max_pooling|747|601|42|1462|1.051 MiB |1398|1.047 MiB |201.551 ms |101.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1545.58 ms |1127.0 ms |
+|db_cross_join_trivial|7904|57|7521|36650|7.062 MiB |36344|7.041 MiB |929.855 ms |1595.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1202.965 ms |3287.0 ms |
+|db_variance|13369|3016|10319|20728|4.017 MiB |20710|4.015 MiB |1859.901 ms |1277.0 ms |
+|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |4494.11 ms |3242.0 ms |
+|histogram|1492|1340|81|2953|1.11 MiB |2898|1.106 MiB |268.776 ms |204.0 ms |
+|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1231.883 ms |950.0 ms |
+|inner_product|3303|2826|466|5837|1.118 MiB |5832|1.117 MiB |355.349 ms |316.0 ms |
+|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |1009.762 ms |853.0 ms |
+|longest_102|3761|111|3603|6834|1.015 MiB |6793|1.013 MiB |498.175 ms |387.0 ms |
+|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |541.253 ms |551.0 ms |
+|longest_odd_10|3018|110|2870|6717|1.011 MiB |6683|1.009 MiB |413.131 ms |352.0 ms |
+|longest_odd_10 (Non-Vectorized)|3695|0|3673|10878|1.289 MiB |10860|1.288 MiB |422.909 ms |508.0 ms |
+|max_dist_between_syms|2896|38|2830|5182|0.667 MiB |5156|0.665 MiB |397.495 ms |290.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |405.865 ms |333.0 ms |
+|max_sum_between_syms|2895|38|2830|5180|0.666 MiB |5155|0.665 MiB |408.375 ms |290.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |351.101 ms |331.0 ms |
+|minimal_points|481|427|37|1019|0.269 MiB |1014|0.269 MiB |105.157 ms |48.0 ms |
+|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |446.309 ms |283.0 ms |
+|mnist_relu|814|202|209|1482|3.365 MiB |1479|3.365 MiB |616.333 ms |185.0 ms |
+|mnist_relu (Non-Vectorized)|40023|0|39400|59433|7.445 MiB |59210|7.429 MiB |5485.433 ms |3750.0 ms |
+|psi|149|78|43|760|0.37 MiB |746|0.369 MiB |67.915 ms |26.0 ms |
+|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |216.779 ms |254.0 ms |
 
 ## Compiler stages with different benchmarks
 ### `biometric`
@@ -696,11 +704,11 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     !1!2{N!0}[] = (!9!0{N!0}[] == !10!0{N!0}[])
     !3!2{N!0}[] = (!11!0{N!0}[] == !12!0{N!0}[])
     !5!2{N!0}[] = (!13!0{N!0}[] == !14!0{N!0}[])
-    !2!2{N!0}[] = (!7!0{N!0}[] and !1!2{N!0}[])
     for !16!0 in range(0, N!0): (monolithic)
         s0!2{}[!16!0] = Φ(!7!0{}[!16!0], s0!3{}[(!16!0 - 1)])
         !6!2{}[!16!0] = (s0!2{}[!16!0] and !5!2{}[!16!0])
         s0!3{}[!16!0] = (!3!2{}[!16!0] or !6!2{}[!16!0])
+    !2!2{N!0}[] = (s0!2{N!0}[] and !1!2{N!0}[])
     for !17!0 in range(0, N!0): (monolithic)
         c!2{}[!17!0] = Φ(!8!0{}[!17!0], c!4{}[(!17!0 - 1)])
         c!3{}[!17!0] = (c!2{}[!17!0] + 1)
@@ -722,10 +730,10 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `c!4` | `shared[list[int; (N!0)]]` |
 | `c!2` | `shared[list[int; (N!0)]]` |
 | `c!3` | `shared[list[int; (N!0)]]` |
+| `!2!2` | `shared[list[bool; (N!0)]]` |
 | `s0!3` | `shared[list[bool; (N!0)]]` |
 | `s0!2` | `shared[list[bool; (N!0)]]` |
 | `!6!2` | `shared[list[bool; (N!0)]]` |
-| `!2!2` | `shared[list[bool; (N!0)]]` |
 | `!5!2` | `shared[list[bool; (N!0)]]` |
 | `!3!2` | `shared[list[bool; (N!0)]]` |
 | `!1!2` | `shared[list[bool; (N!0)]]` |
@@ -806,7 +814,6 @@ encrypto::motion::SecureUnsignedInteger count_102(
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_5_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
-    vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__16_0 = std::uint32_t(0);
@@ -824,6 +831,7 @@ encrypto::motion::SecureUnsignedInteger count_102(
 
     }
 
+    vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(s0_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__17_0 = std::uint32_t(0);
@@ -991,17 +999,17 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     !1!2{N!0}[] = (!8!0{N!0}[] != !9!0{N!0}[])
     !3!2{N!0}[] = (!10!0{N!0}[] == !11!0{N!0}[])
     s0!3{N!0}[] = (!12!0{N!0}[] == !13!0{N!0}[])
-    !2!2{N!0}[] = (!6!0{N!0}[] and !1!2{N!0}[])
     for !15!0 in range(0, N!0): (monolithic)
         s0!2{}[!15!0] = Φ(!5!0{}[!15!0], s0!3{}[(!15!0 - 1)])
-    for !17!0 in range(0, N!0): (monolithic)
-        scount!2{}[!17!0] = Φ(!7!0{}[!17!0], scount!4{}[(!17!0 - 1)])
-        scount!3{}[!17!0] = (scount!2{}[!17!0] + 1)
-        scount!4{}[!17!0] = MUX(!2!2{}[!17!0], scount!3{}[!17!0], scount!2{}[!17!0])
     for !16!0 in range(0, N!0): (monolithic)
         s1!2{}[!16!0] = Φ(!6!0{}[!16!0], s1!3{}[(!16!0 - 1)])
         !4!2{}[!16!0] = (s0!2{}[!16!0] or s1!2{}[!16!0])
         s1!3{}[!16!0] = (!3!2{}[!16!0] and !4!2{}[!16!0])
+    !2!2{N!0}[] = (s1!2{N!0}[] and !1!2{N!0}[])
+    for !17!0 in range(0, N!0): (monolithic)
+        scount!2{}[!17!0] = Φ(!7!0{}[!17!0], scount!4{}[(!17!0 - 1)])
+        scount!3{}[!17!0] = (scount!2{}[!17!0] + 1)
+        scount!4{}[!17!0] = MUX(!2!2{}[!17!0], scount!3{}[!17!0], scount!2{}[!17!0])
     !14!0 = drop_dim(scount!4{N!0}[])
     return !14!0
 ```
@@ -1014,17 +1022,17 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `N!0` | `plaintext[int]` |
 | `Syms!0` | `shared[list[int; ?]]` |
 | `!15!0` | `plaintext[int]` |
-| `!17!0` | `plaintext[int]` |
 | `!16!0` | `plaintext[int]` |
+| `!17!0` | `plaintext[int]` |
 | `!14!0` | `shared[int]` |
-| `s1!3` | `shared[list[bool; (N!0)]]` |
-| `s1!2` | `shared[list[bool; (N!0)]]` |
-| `!4!2` | `shared[list[bool; (N!0)]]` |
 | `scount!4` | `shared[list[int; (N!0)]]` |
 | `scount!2` | `shared[list[int; (N!0)]]` |
 | `scount!3` | `shared[list[int; (N!0)]]` |
-| `s0!2` | `shared[list[bool; (N!0)]]` |
 | `!2!2` | `shared[list[bool; (N!0)]]` |
+| `s1!3` | `shared[list[bool; (N!0)]]` |
+| `s1!2` | `shared[list[bool; (N!0)]]` |
+| `!4!2` | `shared[list[bool; (N!0)]]` |
+| `s0!2` | `shared[list[bool; (N!0)]]` |
 | `s0!3` | `shared[list[bool; (N!0)]]` |
 | `!3!2` | `shared[list[bool; (N!0)]]` |
 | `!1!2` | `shared[list[bool; (N!0)]]` |
@@ -1117,7 +1125,6 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (~(to_share_wrapper(vectorized_access(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {})))));
     vectorized_assign(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(s0_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
-    vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__15_0 = std::uint32_t(0);
@@ -1136,23 +1143,6 @@ encrypto::motion::SecureUnsignedInteger count_10s(
 
 
     // Initialize loop counter
-    _MPC_PLAINTEXT__17_0 = std::uint32_t(0);
-    // Initialize phi values
-    scount_2[_MPC_PLAINTEXT__17_0] = _7_0[_MPC_PLAINTEXT__17_0];
-    for (; _MPC_PLAINTEXT__17_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__17_0++) {
-        _17_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__17_0), 0);
-        // Update phi values
-        if (_MPC_PLAINTEXT__17_0 != std::uint32_t(0)) {
-            scount_2[_MPC_PLAINTEXT__17_0] = scount_4[(_MPC_PLAINTEXT__17_0 - std::uint32_t(1))];
-        }
-
-        scount_3[_MPC_PLAINTEXT__17_0] = (scount_2[_MPC_PLAINTEXT__17_0] + _MPC_CONSTANT_1);
-        scount_4[_MPC_PLAINTEXT__17_0] = _2_2[_MPC_PLAINTEXT__17_0].Mux(scount_3[_MPC_PLAINTEXT__17_0].Get(), scount_2[_MPC_PLAINTEXT__17_0].Get());
-
-    }
-
-
-    // Initialize loop counter
     _MPC_PLAINTEXT__16_0 = std::uint32_t(0);
     // Initialize phi values
     s1_2[_MPC_PLAINTEXT__16_0] = _6_0[_MPC_PLAINTEXT__16_0];
@@ -1165,6 +1155,24 @@ encrypto::motion::SecureUnsignedInteger count_10s(
 
         _4_2[_MPC_PLAINTEXT__16_0] = (to_share_wrapper(s0_2[_MPC_PLAINTEXT__16_0]) | to_share_wrapper(s1_2[_MPC_PLAINTEXT__16_0]));
         s1_3[_MPC_PLAINTEXT__16_0] = (to_share_wrapper(_3_2[_MPC_PLAINTEXT__16_0]) & to_share_wrapper(_4_2[_MPC_PLAINTEXT__16_0]));
+
+    }
+
+    vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(s1_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__17_0 = std::uint32_t(0);
+    // Initialize phi values
+    scount_2[_MPC_PLAINTEXT__17_0] = _7_0[_MPC_PLAINTEXT__17_0];
+    for (; _MPC_PLAINTEXT__17_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__17_0++) {
+        _17_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__17_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__17_0 != std::uint32_t(0)) {
+            scount_2[_MPC_PLAINTEXT__17_0] = scount_4[(_MPC_PLAINTEXT__17_0 - std::uint32_t(1))];
+        }
+
+        scount_3[_MPC_PLAINTEXT__17_0] = (scount_2[_MPC_PLAINTEXT__17_0] + _MPC_CONSTANT_1);
+        scount_4[_MPC_PLAINTEXT__17_0] = _2_2[_MPC_PLAINTEXT__17_0].Mux(scount_3[_MPC_PLAINTEXT__17_0].Get(), scount_2[_MPC_PLAINTEXT__17_0].Get());
 
     }
 
@@ -1323,14 +1331,14 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
     !1!2{N!0}[] = (!9!0{N!0}[] == !10!0{N!0}[])
     !4!2{N!0}[] = (!11!0{N!0}[] == !12!0{N!0}[])
     s1!3{N!0}[] = (!13!0{N!0}[] == !14!0{N!0}[])
-    !2!2{N!0}[] = (!7!0{N!0}[] or !6!0{N!0}[])
     for !16!0 in range(0, N!0): (monolithic)
         s1!2{}[!16!0] = Φ(!6!0{}[!16!0], s1!3{}[(!16!0 - 1)])
-    !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
     for !17!0 in range(0, N!0): (monolithic)
         s2!2{}[!17!0] = Φ(!7!0{}[!17!0], s2!3{}[(!17!0 - 1)])
         !5!2{}[!17!0] = (s1!2{}[!17!0] or s2!2{}[!17!0])
         s2!3{}[!17!0] = (!4!2{}[!17!0] and !5!2{}[!17!0])
+    !2!2{N!0}[] = (s2!2{N!0}[] or s1!2{N!0}[])
+    !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
     for !18!0 in range(0, N!0): (monolithic)
         c!2{}[!18!0] = Φ(!8!0{}[!18!0], c!4{}[(!18!0 - 1)])
         c!3{}[!18!0] = (c!2{}[!18!0] + 1)
@@ -1353,12 +1361,12 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `c!4` | `shared[list[int; (N!0)]]` |
 | `c!2` | `shared[list[int; (N!0)]]` |
 | `c!3` | `shared[list[int; (N!0)]]` |
+| `!3!2` | `shared[list[bool; (N!0)]]` |
+| `!2!2` | `shared[list[bool; (N!0)]]` |
 | `s2!3` | `shared[list[bool; (N!0)]]` |
 | `s2!2` | `shared[list[bool; (N!0)]]` |
 | `!5!2` | `shared[list[bool; (N!0)]]` |
-| `!3!2` | `shared[list[bool; (N!0)]]` |
 | `s1!2` | `shared[list[bool; (N!0)]]` |
-| `!2!2` | `plaintext[list[bool; (N!0)]]` |
 | `s1!3` | `shared[list[bool; (N!0)]]` |
 | `!4!2` | `shared[list[bool; (N!0)]]` |
 | `!1!2` | `shared[list[bool; (N!0)]]` |
@@ -1418,7 +1426,6 @@ encrypto::motion::SecureUnsignedInteger count_123(
     std::uint32_t _MPC_PLAINTEXT__16_0;
     std::uint32_t _MPC_PLAINTEXT__17_0;
     std::uint32_t _MPC_PLAINTEXT__18_0;
-    std::vector<bool> _MPC_PLAINTEXT__2_2((_MPC_PLAINTEXT_N_0 + 1));
     std::vector<bool> _MPC_PLAINTEXT__6_0((_MPC_PLAINTEXT_N_0 + 1));
     std::vector<bool> _MPC_PLAINTEXT__7_0((_MPC_PLAINTEXT_N_0 + 1));
     std::vector<std::uint32_t> _MPC_PLAINTEXT__8_0((_MPC_PLAINTEXT_N_0 + 1));
@@ -1453,7 +1460,6 @@ encrypto::motion::SecureUnsignedInteger count_123(
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_4_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(s1_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
-    vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) | to_share_wrapper(vectorized_access(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__16_0 = std::uint32_t(0);
@@ -1470,7 +1476,6 @@ encrypto::motion::SecureUnsignedInteger count_123(
 
     }
 
-    vectorized_assign(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__17_0 = std::uint32_t(0);
@@ -1488,6 +1493,8 @@ encrypto::motion::SecureUnsignedInteger count_123(
 
     }
 
+    vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(s2_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) | to_share_wrapper(vectorized_access(s1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
+    vectorized_assign(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__18_0 = std::uint32_t(0);
@@ -2990,17 +2997,17 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
     !1!2{N!0}[] = (!12!0{N!0}[] == !13!0{N!0}[])
     !2!2{N!0}[] = (!14!0{N!0}[] == !15!0{N!0}[])
     !4!2{N!0}[] = (!16!0{N!0}[] == !17!0{N!0}[])
-    s1!2{N!0}[] = (!9!0{N!0}[] and !1!2{N!0}[])
     for !19!0 in range(0, N!0): (monolithic)
         s0!2{}[!19!0] = Φ(!9!0{}[!19!0], s0!3{}[(!19!0 - 1)])
         !5!2{}[!19!0] = (s0!2{}[!19!0] and !4!2{}[!19!0])
         s0!3{}[!19!0] = (!2!2{}[!19!0] or !5!2{}[!19!0])
+    s1!2{N!0}[] = (s0!2{N!0}[] and !1!2{N!0}[])
     !6!2{N!0}[] = (s1!2{N!0}[] or s0!3{N!0}[])
-    max_len!3{N!0}[] = length!5{N!0}[]
     for !20!0 in range(0, N!0): (monolithic)
         length!2{}[!20!0] = Φ(!11!0{}[!20!0], length!5{}[(!20!0 - 1)])
         length!3{}[!20!0] = (length!2{}[!20!0] + 1)
         length!5{}[!20!0] = MUX(!6!2{}[!20!0], length!3{}[!20!0], length!4)
+    max_len!3{N!0}[] = length!5{N!0}[]
     for !21!0 in range(0, N!0): (monolithic)
         max_len!2{}[!21!0] = Φ(!10!0{}[!21!0], max_len!4{}[(!21!0 - 1)])
         !7!2{}[!21!0] = (max_len!2{}[!21!0] < length!5{}[!21!0])
@@ -3025,15 +3032,15 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
 | `max_len!2` | `shared[list[int; (N!0)]]` |
 | `!7!2` | `shared[list[bool; (N!0)]]` |
 | `!8!2` | `shared[list[bool; (N!0)]]` |
+| `max_len!3` | `shared[list[int; (N!0)]]` |
 | `length!5` | `shared[list[int; (N!0)]]` |
 | `length!2` | `shared[list[int; (N!0)]]` |
 | `length!3` | `shared[list[int; (N!0)]]` |
-| `max_len!3` | `shared[list[int; (N!0)]]` |
 | `!6!2` | `shared[list[bool; (N!0)]]` |
+| `s1!2` | `shared[list[bool; (N!0)]]` |
 | `s0!3` | `shared[list[bool; (N!0)]]` |
 | `s0!2` | `shared[list[bool; (N!0)]]` |
 | `!5!2` | `shared[list[bool; (N!0)]]` |
-| `s1!2` | `shared[list[bool; (N!0)]]` |
 | `!4!2` | `shared[list[bool; (N!0)]]` |
 | `!2!2` | `shared[list[bool; (N!0)]]` |
 | `!1!2` | `shared[list[bool; (N!0)]]` |
@@ -3136,7 +3143,6 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_15_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_4_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_16_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_17_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
-    vectorized_assign(s1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__19_0 = std::uint32_t(0);
@@ -3154,8 +3160,8 @@ encrypto::motion::SecureUnsignedInteger longest_102(
 
     }
 
+    vectorized_assign(s1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(s0_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_6_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(s1_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) | to_share_wrapper(vectorized_access(s0_3, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
-    vectorized_assign(max_len_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(length_5, {_MPC_PLAINTEXT_N_0}, {true}, {}));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__20_0 = std::uint32_t(0);
@@ -3173,6 +3179,7 @@ encrypto::motion::SecureUnsignedInteger longest_102(
 
     }
 
+    vectorized_assign(max_len_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(length_5, {_MPC_PLAINTEXT_N_0}, {true}, {}));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__21_0 = std::uint32_t(0);
@@ -3369,17 +3376,17 @@ def longest_odd_10(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: sha
     !10!0{N!0}[] = lift(s2!1, (i!1:N!0))
     !1!2{N!0}[] = (!11!0{N!0}[] == !12!0{N!0}[])
     s2!3{N!0}[] = (!13!0{N!0}[] == !14!0{N!0}[])
-    !2!2{N!0}[] = not !10!0{N!0}[]
-    s1!2{N!0}[] = (!10!0{N!0}[] and !1!2{N!0}[])
     for !16!0 in range(0, N!0): (monolithic)
         s2!2{}[!16!0] = Φ(!10!0{}[!16!0], s2!3{}[(!16!0 - 1)])
-    !4!2{N!0}[] = (current_length!6{N!0}[] & 1)
-    max_length!3{N!0}[] = current_length!6{N!0}[]
+    s1!2{N!0}[] = (s2!2{N!0}[] and !1!2{N!0}[])
+    !2!2{N!0}[] = not s2!2{N!0}[]
     for !17!0 in range(0, N!0): (monolithic)
         current_length!2{}[!17!0] = Φ(!8!0{}[!17!0], current_length!6{}[(!17!0 - 1)])
         current_length!5{}[!17!0] = MUX(!2!2{}[!17!0], current_length!4, current_length!2{}[!17!0])
         current_length!3{}[!17!0] = (current_length!2{}[!17!0] + 1)
         current_length!6{}[!17!0] = MUX(s1!2{}[!17!0], current_length!3{}[!17!0], current_length!5{}[!17!0])
+    !4!2{N!0}[] = (current_length!6{N!0}[] & 1)
+    max_length!3{N!0}[] = current_length!6{N!0}[]
     !5!2{N!0}[] = (!4!2{N!0}[] == 1)
     for !18!0 in range(0, N!0): (monolithic)
         max_length!2{}[!18!0] = Φ(!9!0{}[!18!0], max_length!4{}[(!18!0 - 1)])
@@ -3406,15 +3413,15 @@ def longest_odd_10(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: sha
 | `!6!2` | `shared[list[bool; (N!0)]]` |
 | `!7!2` | `shared[list[bool; (N!0)]]` |
 | `!5!2` | `shared[list[bool; (N!0)]]` |
+| `max_length!3` | `shared[list[int; (N!0)]]` |
+| `!4!2` | `shared[list[int; (N!0)]]` |
 | `current_length!6` | `shared[list[int; (N!0)]]` |
 | `current_length!2` | `shared[list[int; (N!0)]]` |
 | `current_length!3` | `shared[list[int; (N!0)]]` |
 | `current_length!5` | `shared[list[int; (N!0)]]` |
-| `max_length!3` | `shared[list[int; (N!0)]]` |
-| `!4!2` | `shared[list[int; (N!0)]]` |
-| `s2!2` | `shared[list[bool; (N!0)]]` |
+| `!2!2` | `shared[list[bool; (N!0)]]` |
 | `s1!2` | `shared[list[bool; (N!0)]]` |
-| `!2!2` | `plaintext[list[bool; (N!0)]]` |
+| `s2!2` | `shared[list[bool; (N!0)]]` |
 | `s2!3` | `shared[list[bool; (N!0)]]` |
 | `!1!2` | `shared[list[bool; (N!0)]]` |
 | `!10!0` | `plaintext[list[bool; (N!0)]]` |
@@ -3476,7 +3483,6 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     std::uint32_t _MPC_PLAINTEXT__16_0;
     std::uint32_t _MPC_PLAINTEXT__17_0;
     std::uint32_t _MPC_PLAINTEXT__18_0;
-    std::vector<bool> _MPC_PLAINTEXT__2_2((_MPC_PLAINTEXT_N_0 + 1));
     std::vector<std::uint32_t> _MPC_PLAINTEXT__8_0((_MPC_PLAINTEXT_N_0 + 1));
     std::vector<std::uint32_t> _MPC_PLAINTEXT__9_0((_MPC_PLAINTEXT_N_0 + 1));
     std::uint32_t _MPC_PLAINTEXT_current_length_1;
@@ -3510,8 +3516,6 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     vectorized_assign(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s2_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(s2_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
-    vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (~vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {})));
-    vectorized_assign(s1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__16_0 = std::uint32_t(0);
@@ -3528,8 +3532,8 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
 
     }
 
-    vectorized_assign(_4_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(current_length_6, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(decltype(_MPC_CONSTANT_1)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_1;}), {_MPC_PLAINTEXT_N_0})))));
-    vectorized_assign(max_length_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(current_length_6, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(s1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(s2_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
+    vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (~vectorized_access(s2_2, {_MPC_PLAINTEXT_N_0}, {true}, {})));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__17_0 = std::uint32_t(0);
@@ -3548,6 +3552,8 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
 
     }
 
+    vectorized_assign(_4_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(current_length_6, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(decltype(_MPC_CONSTANT_1)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_1;}), {_MPC_PLAINTEXT_N_0})))));
+    vectorized_assign(max_length_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(current_length_6, {_MPC_PLAINTEXT_N_0}, {true}, {}));
     vectorized_assign(_5_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_4_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(decltype(_MPC_CONSTANT_1)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_1;}), {_MPC_PLAINTEXT_N_0})))));
 
     // Initialize loop counter
@@ -3698,11 +3704,11 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
     !5!0{N!0}[] = lift(current_dist!1, (i!1:N!0))
     !1!2{N!0}[] = (!6!0{N!0}[] == !7!0{N!0}[])
     !2!2{N!0}[] = not !1!2{N!0}[]
-    max_dist!3{N!0}[] = current_dist!5{N!0}[]
     for !9!0 in range(0, N!0): (monolithic)
         current_dist!2{}[!9!0] = Φ(!5!0{}[!9!0], current_dist!5{}[(!9!0 - 1)])
         current_dist!3{}[!9!0] = (current_dist!2{}[!9!0] + 1)
         current_dist!5{}[!9!0] = MUX(!2!2{}[!9!0], current_dist!3{}[!9!0], current_dist!4)
+    max_dist!3{N!0}[] = current_dist!5{N!0}[]
     for !10!0 in range(0, N!0): (monolithic)
         max_dist!2{}[!10!0] = Φ(!4!0{}[!10!0], max_dist!4{}[(!10!0 - 1)])
         !3!2{}[!10!0] = (current_dist!5{}[!10!0] > max_dist!2{}[!10!0])
@@ -3724,10 +3730,10 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
 | `max_dist!4` | `shared[list[int; (N!0)]]` |
 | `max_dist!2` | `shared[list[int; (N!0)]]` |
 | `!3!2` | `shared[list[bool; (N!0)]]` |
+| `max_dist!3` | `shared[list[int; (N!0)]]` |
 | `current_dist!5` | `shared[list[int; (N!0)]]` |
 | `current_dist!2` | `shared[list[int; (N!0)]]` |
 | `current_dist!3` | `shared[list[int; (N!0)]]` |
-| `max_dist!3` | `shared[list[int; (N!0)]]` |
 | `!2!2` | `shared[list[bool; (N!0)]]` |
 | `!1!2` | `shared[list[bool; (N!0)]]` |
 | `!5!0` | `plaintext[list[int; (N!0)]]` |
@@ -3797,7 +3803,6 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     vectorized_assign(_5_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return current_dist_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (~vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {})));
-    vectorized_assign(max_dist_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(current_dist_5, {_MPC_PLAINTEXT_N_0}, {true}, {}));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__9_0 = std::uint32_t(0);
@@ -3815,6 +3820,7 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
 
     }
 
+    vectorized_assign(max_dist_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(current_dist_5, {_MPC_PLAINTEXT_N_0}, {true}, {}));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__10_0 = std::uint32_t(0);
@@ -3965,11 +3971,11 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
     !5!0{N!0}[] = lift(current_sum!1, (i!1:N!0))
     !1!2{N!0}[] = (!6!0{N!0}[] == !7!0{N!0}[])
     !2!2{N!0}[] = not !1!2{N!0}[]
-    max_sum!3{N!0}[] = current_sum!5{N!0}[]
     for !10!0 in range(0, N!0): (monolithic)
         current_sum!2{}[!10!0] = Φ(!5!0{}[!10!0], current_sum!5{}[(!10!0 - 1)])
         current_sum!3{}[!10!0] = (current_sum!2{}[!10!0] + !8!0{}[!10!0])
         current_sum!5{}[!10!0] = MUX(!2!2{}[!10!0], current_sum!3{}[!10!0], current_sum!4)
+    max_sum!3{N!0}[] = current_sum!5{N!0}[]
     for !11!0 in range(0, N!0): (monolithic)
         max_sum!2{}[!11!0] = Φ(!4!0{}[!11!0], max_sum!4{}[(!11!0 - 1)])
         !3!2{}[!11!0] = (current_sum!5{}[!11!0] > max_sum!2{}[!11!0])
@@ -3991,10 +3997,10 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
 | `max_sum!4` | `shared[list[int; (N!0)]]` |
 | `max_sum!2` | `shared[list[int; (N!0)]]` |
 | `!3!2` | `shared[list[bool; (N!0)]]` |
+| `max_sum!3` | `shared[list[int; (N!0)]]` |
 | `current_sum!5` | `shared[list[int; (N!0)]]` |
 | `current_sum!2` | `shared[list[int; (N!0)]]` |
 | `current_sum!3` | `shared[list[int; (N!0)]]` |
-| `max_sum!3` | `shared[list[int; (N!0)]]` |
 | `!2!2` | `shared[list[bool; (N!0)]]` |
 | `!1!2` | `shared[list[bool; (N!0)]]` |
 | `!5!0` | `plaintext[list[int; (N!0)]]` |
@@ -4066,7 +4072,6 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     vectorized_assign(_5_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return current_sum_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (~vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {})));
-    vectorized_assign(max_sum_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(current_sum_5, {_MPC_PLAINTEXT_N_0}, {true}, {}));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__10_0 = std::uint32_t(0);
@@ -4084,6 +4089,7 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
 
     }
 
+    vectorized_assign(max_sum_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(current_sum_5, {_MPC_PLAINTEXT_N_0}, {true}, {}));
 
     // Initialize loop counter
     _MPC_PLAINTEXT__11_0 = std::uint32_t(0);
