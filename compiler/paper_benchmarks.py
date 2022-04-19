@@ -68,7 +68,7 @@ def get_rand_ints(n, min=1, max=100):
 def get_biometric_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
     non_vec_up_to = 6 # Only run non-vectorized benchmark upto this index
-    for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 4096]]:
+    for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 2048], [4, 4096]]:
         D = config[0]
         N = config[1]
         args = [
@@ -88,7 +88,7 @@ def get_biometric_inputs() -> tuple[list[InputArgs], int]:
 def get_convex_hull_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -111,7 +111,7 @@ def get_convex_hull_inputs():
 def get_count_102_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -128,7 +128,7 @@ def get_count_102_inputs():
 def get_count_10s_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -145,7 +145,7 @@ def get_count_10s_inputs():
 def get_count_123_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -162,7 +162,7 @@ def get_count_123_inputs():
 def get_db_variance_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--len", "{}".format(N),
         ]
@@ -180,7 +180,7 @@ def get_histogram_inputs():
     all_args = []
     num_bins = 5
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--num_bins", "{}".format(num_bins),
         "--N", "{}".format(N),
@@ -201,7 +201,7 @@ def get_histogram_inputs():
 def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
     all_args = []
     non_vec_up_to = 8
-    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -292,28 +292,28 @@ def get_psi_inputs()-> tuple[list[InputArgs], int]:
     return (all_args, non_vec_up_to)
 
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
-    # if name == "biometric" or name == "biometric_fast":
-    #      return get_biometric_inputs()
-    # if name == "convex_hull" or name == "minimal_points":
-    #     return get_convex_hull_inputs()
-    # if name == "count_102" or name == "longest_102":
-    #     return get_count_102_inputs()
-    # if name == "count_10s":
-    #     return get_count_10s_inputs()
-    # if name == "count_123":
-    #     return get_count_123_inputs()
-    # if name == "db_variance":
-    #     return get_db_variance_inputs()
-    # if name == "histogram":
-    #     return get_histogram_inputs()
-    # if name == "inner_product":
-    #     return get_inner_product_inputs()
-    # if name == "kmeans_iteration":
-    #     return get_kmeans_iteration_inputs()
-    if name == "max_dist_between_syms":# or name == "max_sum_between_syms":
+    if name == "biometric" or name == "biometric_fast":
+         return get_biometric_inputs()
+    if name == "convex_hull" or name == "minimal_points":
+        return get_convex_hull_inputs()
+    if name == "count_102" or name == "longest_102":
+        return get_count_102_inputs()
+    if name == "count_10s":
+        return get_count_10s_inputs()
+    if name == "count_123":
+        return get_count_123_inputs()
+    if name == "db_variance":
+        return get_db_variance_inputs()
+    if name == "histogram":
+        return get_histogram_inputs()
+    if name == "inner_product":
+        return get_inner_product_inputs()
+    if name == "kmeans_iteration":
+        return get_kmeans_iteration_inputs()
+    if name == "max_dist_between_syms" or name == "max_sum_between_syms":
         return get_max_dist_between_syms_inputs()
-    # if name == "psi": # segfaults right now
-    #     return get_psi_inputs()
+    if name == "psi": # segfaults right now
+        return get_psi_inputs()
     return [[], 0]
 
 
@@ -477,35 +477,35 @@ def run_paper_benchmarks():
 
 def get_x_label_for_benchmark(name):
     if name == "biometric":
-        return "BioDist"
+        return "Biometric Distance"
     if name == "biometric_fast":
-        return "BioDistFast"
+        return "Biometric Distance (Fast)"
     if name == "convex_hull":
-        return "ConvH"
+        return "Convex Hull"
     if name == "count_102":
-        return "Count102"
+        return "Count 102"
     if name == "count_123":
-        return "Count123"
+        return "Count 123"
     if name == "count_10s":
-        return "Count10s"
+        return "Count 10s"
     if name == "db_variance":
-        return "DBVar"
+        return "Database Variance"
     if name == "histogram":
-        return "Hist"
+        return "Histogram"
     if name == "inner_product":
-        return "InnerProd"
+        return "Inner Product"
     if name == "kmeans_iteration":
         return "k-means"
     if name == "longest_102":
-        return "Longest102"
+        return "Longest 102"
     if name == "max_dist_between_syms":
-        return "Dist/Syms"
+        return "Max. Dist. b/w Symbols"
     if name == "max_sum_between_syms":
-        return "Sum/Syms"
+        return "Max. Sum b/w Symbols"
     if name == "minimal_points":
-        return "Min Points"
+        return "Minimal Points"
     if name == "psi":
-        return "PSI"
+        return "Private Set Intersection"
 
     return name
 
@@ -514,24 +514,11 @@ def run_gnuplot(plot_script, data_file, graph_file, title, y_label, dir, other_a
         data_file, graph_file, title, y_label, other_args)
     )
 
-    with subprocess.Popen(
-        [
-            "gnuplot",
-            "-c", plot_script,
-            data_file, graph_file,
-            title, y_label
-        ] + other_args,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        cwd=dir
-    ) as gnuplot:
-        gnuplot.wait()
-        if(gnuplot.returncode != 0):
-            log.error("gnuplot exited with returncode: {0}".format(gnuplot.returncode))
-            log.error("stderr: \n{0}".format(gnuplot.stderr.read()))
-            log.debug("stdout: \n{0}".format(gnuplot.stdout.read()))
-            exit(1)
+    subprocess.run(
+            ["gnuplot", "-c", plot_script, data_file, graph_file, title, y_label] + other_args,
+            cwd=dir, 
+            check=True,
+        )
 
 def ratio(a, b):
     if b != 0:
@@ -540,10 +527,11 @@ def ratio(a, b):
 
 
 def generate_graph_for_attr(all_stats, get_val, y_label, dir):
+    y_label_simple = ''.join(c for c in y_label if c.isalnum())
     for task_stat in all_stats:
-        fname = "{}-{}.txt".format(task_stat.label, y_label)
-        hist_graph_file = "{}-hist {}{}".format(task_stat.label, y_label, GRAPH_EXT)
-        line_graph_file = "{}-line {}{}".format(task_stat.label, y_label, GRAPH_EXT)
+        fname = "{}-{}.txt".format(task_stat.label, y_label_simple)
+        hist_graph_file = "{}-hist-{}{}".format(task_stat.label, y_label_simple, GRAPH_EXT)
+        line_graph_file = "{}-line-{}{}".format(task_stat.label, y_label_simple, GRAPH_EXT)
         file_path = os.path.join(dir, fname)
         with open(file_path, mode='w', encoding='utf-8') as f:
             f.write("x\tInput\t\"GMW\"\t\"GMW (Vectorized)\"\t\"BMR\"" \
@@ -578,9 +566,10 @@ def generate_graph_for_attr(all_stats, get_val, y_label, dir):
         #     y_label, dir, other_args = [])
 
 def generate_cumulative_graph_for_attr(all_stats, get_val, y_label, dir):
-    fname = "all-{}.txt".format(y_label)
-    hist_graph_file = "all-hist {}{}".format(y_label, GRAPH_EXT)
-    line_graph_file = "all-line {}{}".format(y_label, GRAPH_EXT)
+    y_label_simple = ''.join(c for c in y_label if c.isalnum())
+    fname = "all-{}.txt".format(y_label_simple)
+    hist_graph_file = "all-hist-{}{}".format(y_label_simple, GRAPH_EXT)
+    line_graph_file = "all-line-{}{}".format(y_label_simple, GRAPH_EXT)
     file_path = os.path.join(dir, fname)
     with open(file_path, mode='w', encoding='utf-8') as f:
         f.write("x\tBenchmark\t\"GMW\"\t\"GMW (Vectorized)\"\t\"BMR\"" \
@@ -632,12 +621,12 @@ def generate_single_network_graphs(all_stats, dir):
     generate_cumulative_graph_for_attr(all_stats, get_setup_time, 'Setup Time (ms)', dir)
 
     get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
-    generate_graph_for_attr(all_stats, get_send_size, 'Sent Data (MiB)', dir)
-    generate_cumulative_graph_for_attr(all_stats, get_send_size, 'Sent Data (MiB)', dir)
+    generate_graph_for_attr(all_stats, get_send_size, 'Communication (MiB)', dir)
+    generate_cumulative_graph_for_attr(all_stats, get_send_size, 'Communication (MiB)', dir)
 
-    get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
-    generate_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)  
-    generate_cumulative_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)
+    # get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
+    # generate_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)  
+    # generate_cumulative_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)
 
 
 def get_benchmark_stats(all_stats, benchmark_name, input_label, need_gmw_vec = True):
@@ -653,10 +642,11 @@ def get_benchmark_stats(all_stats, benchmark_name, input_label, need_gmw_vec = T
     return None
 
 def generate_comparison_graphs(lan_stats, wan_stats, get_val, y_label, dir):
-    gmwfile = "comparison-gmw-{}.txt".format(y_label)
-    bmrfile = "comparison-bmr-{}.txt".format(y_label)
-    gmw_hist_graph_file = "comparison-gmw-hist {}{}".format(y_label, GRAPH_EXT)
-    bmr_hist_graph_file = "comparison-bmr-hist {}{}".format(y_label, GRAPH_EXT)
+    y_label_simple = ''.join(c for c in y_label if c.isalnum())
+    gmwfile = "comparison-gmw-{}.txt".format(y_label_simple)
+    bmrfile = "comparison-bmr-{}.txt".format(y_label_simple)
+    gmw_hist_graph_file = "comparison-gmw-hist-{}{}".format(y_label_simple, GRAPH_EXT)
+    bmr_hist_graph_file = "comparison-bmr-hist-{}{}".format(y_label_simple, GRAPH_EXT)
     # line_graph_file = "all-line {}{}".format(y_label, GRAPH_EXT)
     gmwfile_path = os.path.join(dir, gmwfile)
     bmrfile_path = os.path.join(dir, bmrfile)
@@ -758,12 +748,12 @@ def generate_graphs(lan, wan):
             COMPARISON_GRAPHS_DIR)
 
         get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
-        generate_comparison_graphs(lan_stats, wan_stats, get_send_size, 'Sent Data (MiB)',
+        generate_comparison_graphs(lan_stats, wan_stats, get_send_size, 'Communication (MiB)',
             COMPARISON_GRAPHS_DIR)
 
-        get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
-        generate_comparison_graphs(lan_stats, wan_stats, get_recv_size, 'Received Data (MiB)',
-            COMPARISON_GRAPHS_DIR)
+        # get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
+        # generate_comparison_graphs(lan_stats, wan_stats, get_recv_size, 'Received Data (MiB)',
+        #     COMPARISON_GRAPHS_DIR)
   
 
 if __name__ == "__main__":
