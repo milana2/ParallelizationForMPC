@@ -129,10 +129,6 @@ def run_benchmark(
                 return (
                     None, None
                 )
-            assert party1.stdout is not None
-            assert party1.stderr is not None
-            party1_stdout_raw = party1.stdout.read()
-            party1_stderr = party1.stderr.read()
             with open(os.path.join(party1_dir, "stdout"), "w") as f:
                 f.write(party1_stdout_raw)
             with open(os.path.join(party1_dir, "stderr"), "w") as f:
