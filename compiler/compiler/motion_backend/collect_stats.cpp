@@ -62,7 +62,6 @@ CircuitStats collect_stats(const BackendPointer backend)
         }
     }
 
-    // depth first search to determine depth
     std::queue<std::int64_t> writeQueue;
     std::queue<std::int64_t> readQueue;
     for(const auto &gate : backend->GetInputGates()) {
