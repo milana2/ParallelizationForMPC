@@ -11,6 +11,8 @@ struct CircuitStats {
 
     std::size_t num_simd_gates = 0;
     std::size_t num_nonsimd_gates = 0;
+
+    std::size_t depth = 0;
 };
 
 CircuitStats collect_stats(const encrypto::motion::BackendPointer backend);

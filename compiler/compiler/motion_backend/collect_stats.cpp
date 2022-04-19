@@ -4,6 +4,7 @@
 #include <queue>
 #include <unordered_set>
 #include <utility>
+#include <stack>
 
 using namespace encrypto::motion;
 
@@ -61,6 +62,81 @@ CircuitStats collect_stats(const BackendPointer backend)
         }
     }
 
+    // depth first search to determine depth
+    std::queue<std::int64_t> writeQueue;
+    std::queue<std::int64_t> readQueue;
+    for(const auto &gate : backend->GetInputGates()) {
+        readQueue.push(gate->GetId());
+    }
+
+    stats.depth = 0;
+
+    while(!readQueue.empty()) {
+        ++stats.depth;
+
+        std::unordered_set<std::int64_t> seen_gates;
+        while(!readQueue.empty()) {
+            const auto gate_id = readQueue.front();
+            readQueue.pop();
+            const auto gate = backend->GetGate(gate_id);
+
+            if(dynamic_cast<OutputGate *>(&*gate)) {
+                continue;
+            }
+                
+            for (const auto &output_wire : gate->GetOutputWires()) {
+                for (const auto &child_gate_id : output_wire->GetWaitingGatesIds()) {
+                    if(seen_gates.find(child_gate_id) != seen_gates.end()) {
+                        continue;
+                    }
+                    writeQueue.push(child_gate_id);
+                    seen_gates.insert(child_gate_id);
+
+                }
+            }
+        }
+        std::swap(readQueue, writeQueue);
+    }
+
+
+    // std::stack<std::int64_t> stack;
+    // for(const auto &gate : backend->GetInputGates()) {
+    //     stack.push(gate->GetId());
+    // }
+
+
+    // while(!stack.empty()) {
+    //     std::size_t current_depth = 0;
+
+    //     while(!stack.empty()) {
+    //         const auto gate_id = stack.top();
+    //         stack.pop();
+    //         ++current_depth;
+
+    //         const auto gate = backend->GetGate(gate_id);
+    //         if(dynamic_cast<OutputGate *>(&*gate)) {
+    //             if(current_depth > stats.depth) {
+    //                 stats.depth = current_depth;
+    //             }
+    //             break;
+    //         }
+    //         else {
+    //             std::unordered_set<std::int64_t> seen_gates;
+    //             for (const auto &output_wire : gate->GetOutputWires()) {
+    //                 for (const auto &child_gate_id : output_wire->GetWaitingGatesIds()) {
+    //                     if(seen_gates.find(child_gate_id) != seen_gates.end()) {
+    //                         continue;
+    //                     }
+    //                     stack.push(child_gate_id);
+    //                     seen_gates.insert(child_gate_id);
+
+    //                 }
+    //             }
+    //         }
+
+    //     }
+    // }
+
     return stats;
 }
 
@@ -71,5 +147,6 @@ std::ostream &operator<<(std::ostream &ostr, const CircuitStats &stats)
     ostr << "num_outputs: " << stats.num_outputs << std::endl;
     ostr << "num_simd_gates: " << stats.num_simd_gates << std::endl;
     ostr << "num_nonsimd_gates: " << stats.num_nonsimd_gates << std::endl;
+    ostr << "depth: " << stats.depth << std::endl;
     return ostr;
 }

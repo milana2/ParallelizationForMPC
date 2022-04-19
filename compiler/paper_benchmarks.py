@@ -256,7 +256,7 @@ def get_kmeans_iteration_inputs():
 def get_max_dist_between_syms_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8]:#, 16, 32, 64, 128, 256, 512, 1024, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -304,14 +304,14 @@ def get_inputs(name: str) -> tuple[list[InputArgs], int]:
     #     return get_count_123_inputs()
     # if name == "db_variance":
     #     return get_db_variance_inputs()
-    if name == "histogram":
-        return get_histogram_inputs()
+    # if name == "histogram":
+    #     return get_histogram_inputs()
     # if name == "inner_product":
     #     return get_inner_product_inputs()
     # if name == "kmeans_iteration":
     #     return get_kmeans_iteration_inputs()
-    # if name == "max_dist_between_syms" or name == "max_sum_between_syms":
-    #     return get_max_dist_between_syms_inputs()
+    if name == "max_dist_between_syms":# or name == "max_sum_between_syms":
+        return get_max_dist_between_syms_inputs()
     # if name == "psi": # segfaults right now
     #     return get_psi_inputs()
     return [[], 0]
