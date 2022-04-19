@@ -62,21 +62,21 @@ CircuitStats collect_stats(const BackendPointer backend)
         }
     }
 
-    std::queue<std::int64_t> writeQueue;
-    std::queue<std::int64_t> readQueue;
+    std::queue<std::int64_t> write_queue;
+    std::queue<std::int64_t> read_queue;
     for(const auto &gate : backend->GetInputGates()) {
-        readQueue.push(gate->GetId());
+        read_queue.push(gate->GetId());
     }
 
     stats.depth = 0;
 
-    while(!readQueue.empty()) {
+    while(!read_queue.empty()) {
         ++stats.depth;
 
         std::unordered_set<std::int64_t> seen_gates;
-        while(!readQueue.empty()) {
-            const auto gate_id = readQueue.front();
-            readQueue.pop();
+        while(!read_queue.empty()) {
+            const auto gate_id = read_queue.front();
+            read_queue.pop();
             const auto gate = backend->GetGate(gate_id);
 
             if(dynamic_cast<OutputGate *>(&*gate)) {
@@ -88,13 +88,13 @@ CircuitStats collect_stats(const BackendPointer backend)
                     if(seen_gates.find(child_gate_id) != seen_gates.end()) {
                         continue;
                     }
-                    writeQueue.push(child_gate_id);
+                    write_queue.push(child_gate_id);
                     seen_gates.insert(child_gate_id);
 
                 }
             }
         }
-        std::swap(readQueue, writeQueue);
+        std::swap(read_queue, write_queue);
     }
 
     return stats;
