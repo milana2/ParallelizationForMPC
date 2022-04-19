@@ -68,34 +68,34 @@ CircuitStats collect_stats(const BackendPointer backend)
         read_queue.push(gate->GetId());
     }
 
-    stats.depth = 0;
+    // stats.depth = 0;
 
-    while(!read_queue.empty()) {
-        ++stats.depth;
+    // while(!read_queue.empty()) {
+    //     ++stats.depth;
 
-        std::unordered_set<std::int64_t> seen_gates;
-        while(!read_queue.empty()) {
-            const auto gate_id = read_queue.front();
-            read_queue.pop();
-            const auto gate = backend->GetGate(gate_id);
+    //     std::unordered_set<std::int64_t> seen_gates;
+    //     while(!read_queue.empty()) {
+    //         const auto gate_id = read_queue.front();
+    //         read_queue.pop();
+    //         const auto gate = backend->GetGate(gate_id);
 
-            if(dynamic_cast<OutputGate *>(&*gate)) {
-                continue;
-            }
+    //         if(dynamic_cast<OutputGate *>(&*gate)) {
+    //             continue;
+    //         }
                 
-            for (const auto &output_wire : gate->GetOutputWires()) {
-                for (const auto &child_gate_id : output_wire->GetWaitingGatesIds()) {
-                    if(seen_gates.find(child_gate_id) != seen_gates.end()) {
-                        continue;
-                    }
-                    write_queue.push(child_gate_id);
-                    seen_gates.insert(child_gate_id);
+    //         for (const auto &output_wire : gate->GetOutputWires()) {
+    //             for (const auto &child_gate_id : output_wire->GetWaitingGatesIds()) {
+    //                 if(seen_gates.find(child_gate_id) != seen_gates.end()) {
+    //                     continue;
+    //                 }
+    //                 write_queue.push(child_gate_id);
+    //                 seen_gates.insert(child_gate_id);
 
-                }
-            }
-        }
-        std::swap(read_queue, write_queue);
-    }
+    //             }
+    //         }
+    //     }
+    //     std::swap(read_queue, write_queue);
+    // }
 
     return stats;
 }
