@@ -98,45 +98,6 @@ CircuitStats collect_stats(const BackendPointer backend)
         std::swap(readQueue, writeQueue);
     }
 
-
-    // std::stack<std::int64_t> stack;
-    // for(const auto &gate : backend->GetInputGates()) {
-    //     stack.push(gate->GetId());
-    // }
-
-
-    // while(!stack.empty()) {
-    //     std::size_t current_depth = 0;
-
-    //     while(!stack.empty()) {
-    //         const auto gate_id = stack.top();
-    //         stack.pop();
-    //         ++current_depth;
-
-    //         const auto gate = backend->GetGate(gate_id);
-    //         if(dynamic_cast<OutputGate *>(&*gate)) {
-    //             if(current_depth > stats.depth) {
-    //                 stats.depth = current_depth;
-    //             }
-    //             break;
-    //         }
-    //         else {
-    //             std::unordered_set<std::int64_t> seen_gates;
-    //             for (const auto &output_wire : gate->GetOutputWires()) {
-    //                 for (const auto &child_gate_id : output_wire->GetWaitingGatesIds()) {
-    //                     if(seen_gates.find(child_gate_id) != seen_gates.end()) {
-    //                         continue;
-    //                     }
-    //                     stack.push(child_gate_id);
-    //                     seen_gates.insert(child_gate_id);
-
-    //                 }
-    //             }
-    //         }
-
-    //     }
-    // }
-
     return stats;
 }
 
