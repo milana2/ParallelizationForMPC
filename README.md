@@ -4,78 +4,82 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|5477|4522|915|4945|0.814 MiB |4945|0.814 MiB |1967.399 ms |434.0 ms |
-|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |11466.996 ms |4411.0 ms |
-|chapterfour_figure_12|449|0|445|750|0.071 MiB |750|0.071 MiB |214.283 ms |35.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|449|0|445|750|0.071 MiB |750|0.071 MiB |204.518 ms |35.0 ms |
-|count_102|3222|105|3080|3818|0.388 MiB |3818|0.388 MiB |1885.332 ms |281.0 ms |
-|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2230.725 ms |392.0 ms |
-|count_10s|2299|106|2159|2846|0.287 MiB |2846|0.287 MiB |1428.903 ms |203.0 ms |
-|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1385.214 ms |272.0 ms |
-|count_123|2306|110|2161|2848|0.288 MiB |2848|0.288 MiB |1357.475 ms |202.0 ms |
-|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1347.524 ms |272.0 ms |
-|cryptonets_max_pooling|825|679|42|949|0.181 MiB |949|0.181 MiB |469.589 ms |76.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |3133.358 ms |1037.0 ms |
-|db_cross_join_trivial|7896|49|7521|14484|1.519 MiB |14484|1.519 MiB |3161.337 ms |1018.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |4186.569 ms |1300.0 ms |
-|db_variance|16284|3309|12941|13644|1.49 MiB |13644|1.49 MiB |8767.936 ms |1253.0 ms |
-|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |12373.668 ms |2981.0 ms |
-|histogram|2652|2500|81|3016|0.396 MiB |3016|0.396 MiB |1418.906 ms |254.0 ms |
-|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |4751.928 ms |1212.0 ms |
-|inner_product|3888|2970|907|3580|0.387 MiB |3580|0.387 MiB |1304.8 ms |302.0 ms |
-|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2035.9 ms |735.0 ms |
-|longest_102|5471|111|5313|5640|0.568 MiB |5640|0.568 MiB |3177.473 ms |460.0 ms |
-|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2546.576 ms |570.0 ms |
-|longest_odd_10|4370|110|4222|4612|0.468 MiB |4612|0.468 MiB |2401.345 ms |373.0 ms |
-|longest_odd_10 (Non-Vectorized)|5047|0|5025|5942|0.598 MiB |5942|0.598 MiB |2347.891 ms |451.0 ms |
-|max_dist_between_syms|4264|38|4198|4452|0.441 MiB |4452|0.441 MiB |2572.349 ms |354.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |2007.904 ms |378.0 ms |
-|max_sum_between_syms|4263|38|4198|4452|0.441 MiB |4452|0.441 MiB |2384.97 ms |354.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |1982.583 ms |379.0 ms |
-|minimal_points|533|479|37|763|0.097 MiB |763|0.097 MiB |255.671 ms |41.0 ms |
-|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |980.254 ms |309.0 ms |
-|mnist_relu|840|228|209|769|0.47 MiB |769|0.47 MiB |342.391 ms |107.0 ms |
-|mnist_relu (Non-Vectorized)|45223|0|44600|36589|3.736 MiB |36589|3.736 MiB |8043.5 ms |4362.0 ms |
-|psi|133|62|43|472|0.063 MiB |472|0.063 MiB |152.396 ms |12.0 ms |
-|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |666.004 ms |151.0 ms |
+|biometric|5477|4522|915|4945|0.814 MiB |4945|0.814 MiB |2153.075 ms |451.0 ms |
+|biometric (Non-Vectorized)|58602|0|58558|47071|4.671 MiB |47071|4.671 MiB |11624.797 ms |4705.0 ms |
+|chapterfour_figure_12|449|0|445|750|0.071 MiB |750|0.071 MiB |226.751 ms |36.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|449|0|445|750|0.071 MiB |750|0.071 MiB |229.745 ms |36.0 ms |
+|convex_hull|1157|1075|63|1379|0.174 MiB |1379|0.174 MiB |440.369 ms |101.0 ms |
+|convex_hull (Non-Vectorized)|6292|0|6264|6263|0.621 MiB |6263|0.621 MiB |1506.137 ms |545.0 ms |
+|count_102|3222|105|3080|3818|0.388 MiB |3818|0.388 MiB |2047.757 ms |299.0 ms |
+|count_102 (Non-Vectorized)|4098|0|4071|5510|0.543 MiB |5510|0.543 MiB |2025.648 ms |410.0 ms |
+|count_10s|2299|106|2159|2846|0.287 MiB |2846|0.287 MiB |1356.062 ms |215.0 ms |
+|count_10s (Non-Vectorized)|2877|0|2857|3974|0.391 MiB |3974|0.391 MiB |1362.581 ms |288.0 ms |
+|count_123|2306|110|2161|2848|0.288 MiB |2848|0.288 MiB |1203.204 ms |215.0 ms |
+|count_123 (Non-Vectorized)|2899|0|2878|3988|0.392 MiB |3988|0.392 MiB |1464.144 ms |289.0 ms |
+|cryptonets_max_pooling|825|679|42|949|0.181 MiB |949|0.181 MiB |419.079 ms |77.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|13468|0|13340|11209|1.117 MiB |11209|1.117 MiB |2834.258 ms |1086.0 ms |
+|db_cross_join_trivial|7896|49|7521|14484|1.519 MiB |14484|1.519 MiB |3348.662 ms |1047.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|10481|0|10275|19664|1.978 MiB |19664|1.978 MiB |4051.559 ms |1409.0 ms |
+|db_variance|16284|3309|12941|13644|1.49 MiB |13644|1.49 MiB |9194.25 ms |1315.0 ms |
+|db_variance (Non-Vectorized)|39399|0|39357|31522|3.126 MiB |31522|3.126 MiB |11828.04 ms |3164.0 ms |
+|histogram|2652|2500|81|3016|0.396 MiB |3016|0.396 MiB |1469.728 ms |265.0 ms |
+|histogram (Non-Vectorized)|13473|0|13405|15674|1.553 MiB |15674|1.553 MiB |3942.629 ms |1282.0 ms |
+|inner_product|3888|2970|907|3580|0.387 MiB |3580|0.387 MiB |1249.695 ms |313.0 ms |
+|inner_product (Non-Vectorized)|9819|0|9808|8052|0.796 MiB |8052|0.796 MiB |2107.22 ms |776.0 ms |
+|longest_102|5471|111|5313|5640|0.568 MiB |5640|0.568 MiB |3327.935 ms |484.0 ms |
+|longest_102 (Non-Vectorized)|6368|0|6341|7350|0.725 MiB |7350|0.725 MiB |2512.335 ms |598.0 ms |
+|longest_odd_10|4370|110|4222|4612|0.468 MiB |4612|0.468 MiB |2453.452 ms |386.0 ms |
+|longest_odd_10 (Non-Vectorized)|5047|0|5025|5942|0.598 MiB |5942|0.598 MiB |2243.939 ms |476.0 ms |
+|max_dist_between_syms|4264|38|4198|4452|0.441 MiB |4452|0.441 MiB |2280.779 ms |370.0 ms |
+|max_dist_between_syms (Non-Vectorized)|4485|0|4465|4886|0.481 MiB |4886|0.481 MiB |1946.368 ms |394.0 ms |
+|max_sum_between_syms|4263|38|4198|4452|0.441 MiB |4452|0.441 MiB |2141.861 ms |368.0 ms |
+|max_sum_between_syms (Non-Vectorized)|4484|0|4465|4886|0.481 MiB |4886|0.481 MiB |2008.884 ms |400.0 ms |
+|minimal_points|533|479|37|763|0.097 MiB |763|0.097 MiB |224.264 ms |42.0 ms |
+|minimal_points (Non-Vectorized)|4064|0|4038|3647|0.361 MiB |3647|0.361 MiB |950.462 ms |326.0 ms |
+|mnist_relu|840|228|209|769|0.47 MiB |769|0.47 MiB |381.669 ms |103.0 ms |
+|mnist_relu (Non-Vectorized)|45223|0|44600|36589|3.736 MiB |36589|3.736 MiB |8499.007 ms |4344.0 ms |
+|psi|133|62|43|472|0.063 MiB |472|0.063 MiB |113.323 ms |12.0 ms |
+|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |693.7 ms |157.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4500|3641|819|7865|4.528 MiB |7857|4.527 MiB |650.619 ms |515.0 ms |
-|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |6245.433 ms |4858.0 ms |
-|chapterfour_figure_12|397|0|393|973|0.106 MiB |971|0.106 MiB |68.55 ms |37.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|397|0|393|973|0.106 MiB |971|0.106 MiB |64.85 ms |37.0 ms |
-|count_102|1772|105|1630|3869|0.655 MiB |3838|0.653 MiB |214.237 ms |199.0 ms |
-|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |298.704 ms |358.0 ms |
-|count_10s|1284|106|1144|2982|0.484 MiB |2952|0.482 MiB |173.944 ms |144.0 ms |
-|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |242.679 ms |254.0 ms |
-|count_123|1291|110|1146|2988|0.486 MiB |2959|0.484 MiB |187.046 ms |145.0 ms |
-|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |308.858 ms |255.0 ms |
-|cryptonets_max_pooling|747|601|42|1462|1.051 MiB |1398|1.047 MiB |201.551 ms |101.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1545.58 ms |1127.0 ms |
-|db_cross_join_trivial|7904|57|7521|36650|7.062 MiB |36344|7.041 MiB |929.855 ms |1595.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1202.965 ms |3287.0 ms |
-|db_variance|13369|3016|10319|20728|4.017 MiB |20710|4.015 MiB |1859.901 ms |1277.0 ms |
-|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |4494.11 ms |3242.0 ms |
-|histogram|1492|1340|81|2953|1.11 MiB |2898|1.106 MiB |268.776 ms |204.0 ms |
-|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1231.883 ms |950.0 ms |
-|inner_product|3303|2826|466|5837|1.118 MiB |5832|1.117 MiB |355.349 ms |316.0 ms |
-|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |1009.762 ms |853.0 ms |
-|longest_102|3761|111|3603|6834|1.015 MiB |6793|1.013 MiB |498.175 ms |387.0 ms |
-|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |541.253 ms |551.0 ms |
-|longest_odd_10|3018|110|2870|6717|1.011 MiB |6683|1.009 MiB |413.131 ms |352.0 ms |
-|longest_odd_10 (Non-Vectorized)|3695|0|3673|10878|1.289 MiB |10860|1.288 MiB |422.909 ms |508.0 ms |
-|max_dist_between_syms|2896|38|2830|5182|0.667 MiB |5156|0.665 MiB |397.495 ms |290.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |405.865 ms |333.0 ms |
-|max_sum_between_syms|2895|38|2830|5180|0.666 MiB |5155|0.665 MiB |408.375 ms |290.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |351.101 ms |331.0 ms |
-|minimal_points|481|427|37|1019|0.269 MiB |1014|0.269 MiB |105.157 ms |48.0 ms |
-|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |446.309 ms |283.0 ms |
-|mnist_relu|814|202|209|1482|3.365 MiB |1479|3.365 MiB |616.333 ms |185.0 ms |
-|mnist_relu (Non-Vectorized)|40023|0|39400|59433|7.445 MiB |59210|7.429 MiB |5485.433 ms |3750.0 ms |
-|psi|149|78|43|760|0.37 MiB |746|0.369 MiB |67.915 ms |26.0 ms |
-|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |216.779 ms |254.0 ms |
+|biometric|4500|3641|819|7865|4.528 MiB |7857|4.527 MiB |578.362 ms |525.0 ms |
+|biometric (Non-Vectorized)|51466|0|51422|86533|9.924 MiB |86521|9.923 MiB |5768.325 ms |5147.0 ms |
+|chapterfour_figure_12|397|0|393|973|0.106 MiB |971|0.106 MiB |43.098 ms |38.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|397|0|393|973|0.106 MiB |971|0.106 MiB |39.866 ms |38.0 ms |
+|convex_hull|1057|975|63|1993|0.557 MiB |1986|0.557 MiB |123.352 ms |117.0 ms |
+|convex_hull (Non-Vectorized)|5656|0|5628|9017|1.044 MiB |9001|1.043 MiB |600.662 ms |546.0 ms |
+|count_102|1772|105|1630|3869|0.655 MiB |3838|0.653 MiB |237.567 ms |207.0 ms |
+|count_102 (Non-Vectorized)|2648|0|2621|8079|0.939 MiB |8058|0.938 MiB |485.702 ms |373.0 ms |
+|count_10s|1284|106|1144|2982|0.484 MiB |2952|0.482 MiB |212.431 ms |151.0 ms |
+|count_10s (Non-Vectorized)|1862|0|1842|5774|0.669 MiB |5758|0.668 MiB |204.806 ms |262.0 ms |
+|count_123|1291|110|1146|2988|0.486 MiB |2959|0.484 MiB |173.496 ms |151.0 ms |
+|count_123 (Non-Vectorized)|1884|0|1863|5810|0.673 MiB |5795|0.672 MiB |205.267 ms |262.0 ms |
+|cryptonets_max_pooling|747|601|42|1462|1.051 MiB |1398|1.047 MiB |202.321 ms |101.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|11908|0|11780|17983|2.196 MiB |17895|2.19 MiB |1416.01 ms |1163.0 ms |
+|db_cross_join_trivial|7904|57|7521|36650|7.062 MiB |36344|7.041 MiB |1050.125 ms |1690.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|11081|0|10875|86064|10.389 MiB |85878|10.376 MiB |1248.934 ms |4182.0 ms |
+|db_variance|13369|3016|10319|20728|4.017 MiB |20710|4.015 MiB |1437.547 ms |1294.0 ms |
+|db_variance (Non-Vectorized)|34433|0|34391|56584|6.483 MiB |56558|6.481 MiB |3629.658 ms |3366.0 ms |
+|histogram|1492|1340|81|2953|1.11 MiB |2898|1.106 MiB |207.492 ms |215.0 ms |
+|histogram (Non-Vectorized)|7673|0|7605|18080|2.146 MiB |18028|2.142 MiB |1254.725 ms |947.0 ms |
+|inner_product|3303|2826|466|5837|1.118 MiB |5832|1.117 MiB |398.031 ms |330.0 ms |
+|inner_product (Non-Vectorized)|8946|0|8935|15767|1.799 MiB |15762|1.799 MiB |922.249 ms |956.0 ms |
+|longest_102|3761|111|3603|6834|1.015 MiB |6793|1.013 MiB |493.738 ms |399.0 ms |
+|longest_102 (Non-Vectorized)|4658|0|4631|11069|1.296 MiB |11048|1.295 MiB |576.221 ms |571.0 ms |
+|longest_odd_10|3018|110|2870|6717|1.011 MiB |6683|1.009 MiB |400.07 ms |368.0 ms |
+|longest_odd_10 (Non-Vectorized)|3695|0|3673|10878|1.289 MiB |10860|1.288 MiB |435.71 ms |524.0 ms |
+|max_dist_between_syms|2896|38|2830|5182|0.667 MiB |5156|0.665 MiB |406.241 ms |301.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3117|0|3097|6251|0.737 MiB |6233|0.735 MiB |396.207 ms |345.0 ms |
+|max_sum_between_syms|2895|38|2830|5180|0.666 MiB |5155|0.665 MiB |424.181 ms |313.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3116|0|3097|6249|0.736 MiB |6232|0.735 MiB |406.283 ms |351.0 ms |
+|minimal_points|481|427|37|1019|0.269 MiB |1014|0.269 MiB |72.529 ms |51.0 ms |
+|minimal_points (Non-Vectorized)|3572|0|3546|4183|0.491 MiB |4169|0.49 MiB |541.377 ms |297.0 ms |
+|mnist_relu|814|202|209|1482|3.365 MiB |1479|3.365 MiB |441.464 ms |179.0 ms |
+|mnist_relu (Non-Vectorized)|40023|0|39400|59433|7.445 MiB |59210|7.429 MiB |5489.552 ms |3962.0 ms |
+|psi|149|78|43|760|0.37 MiB |746|0.369 MiB |67.923 ms |26.0 ms |
+|psi (Non-Vectorized)|1341|0|1280|6752|0.796 MiB |6705|0.793 MiB |241.041 ms |279.0 ms |
 
 ## Compiler stages with different benchmarks
 ### `biometric`
@@ -569,6 +573,409 @@ encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
     z_4 = _2_1.Mux(z_2.Get(), z_3.Get());
     z_5 = _1_1.Mux(z_4.Get(), z_1.Get());
     return z_5;
+
+}
+```
+### `convex_hull`
+#### Input
+```python
+from UTIL import shared
+
+
+def convex_hull(
+    X_coords: shared[list[int]],
+    Y_coords: shared[list[int]],
+    N: int,
+    result_X: shared[list[int]],
+    result_Y: shared[list[int]],
+) -> tuple[shared[list[int]], shared[list[int]]]:
+    for i in range(0, N):
+        is_hull = True
+        p1_X = X_coords[i]
+        p1_Y = Y_coords[i]
+
+        if p1_X <= 0 and p1_Y >= 0:
+            for j in range(0, N):
+                p2_X = X_coords[j]
+                p2_Y = Y_coords[j]
+
+                if not (p1_X <= p2_X or p1_Y >= p2_Y):
+                    is_hull = False
+        val_X = result_X[i]
+        val_Y = result_Y[i]
+
+        if is_hull:
+            val_X = p1_X
+            val_Y = p1_Y
+        result_X[i] = val_X
+        result_Y[i] = val_Y
+
+    return (result_X, result_Y)
+
+
+X_coords = [1, 2, 3]
+Y_coords = [4, 5, 6]
+result_X = [0 for i in range(len(X_coords))]
+result_Y = [0 for i in range(len(Y_coords))]
+print(convex_hull(X_coords, Y_coords, 3, result_X, result_Y))
+
+```
+#### Restricted AST
+```python
+def convex_hull(X_coords: shared[list[int; ?]], Y_coords: shared[list[int; ?]], N: plaintext[int], result_X: shared[list[int; ?]], result_Y: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    for i: plaintext[int] in range(0, N):
+        is_hull = True
+        p1_X = X_coords[i]
+        p1_Y = Y_coords[i]
+        if ((p1_X <= 0) and (p1_Y >= 0)):
+            for j: plaintext[int] in range(0, N):
+                p2_X = X_coords[j]
+                p2_Y = Y_coords[j]
+                if not ((p1_X <= p2_X) or (p1_Y >= p2_Y)):
+                    is_hull = False
+        val_X = result_X[i]
+        val_Y = result_Y[i]
+        if is_hull:
+            val_X = p1_X
+            val_Y = p1_Y
+        result_X[i] = val_X
+        result_Y[i] = val_Y
+    return (result_X, result_Y)
+```
+#### Three-address code CFG
+![](images/convex_hull_tac_cfg.png)
+#### SSA
+![](images/convex_hull_ssa.png)
+#### SSA ϕ→MUX
+![](images/convex_hull_ssa_mux.png)
+#### Dead code elimination
+![](images/convex_hull_dead_code_elim.png)
+#### Linear code with loops
+```python
+def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    for i!1 in range(0, N!0):
+        result_X!1 = Φ(result_X!0, result_X!2)
+        result_Y!1 = Φ(result_Y!0, result_Y!2)
+        is_hull!2 = True
+        p1_X!2 = X_coords!0[i!1]
+        p1_Y!2 = Y_coords!0[i!1]
+        !1!2 = (p1_X!2 <= 0)
+        !2!2 = (p1_Y!2 >= 0)
+        !3!2 = (!1!2 and !2!2)
+        for j!1 in range(0, N!0):
+            is_hull!3 = Φ(is_hull!2, is_hull!5)
+            p2_X!3 = X_coords!0[j!1]
+            p2_Y!3 = Y_coords!0[j!1]
+            !6!3 = (p1_X!2 <= p2_X!3)
+            !7!3 = (p1_Y!2 >= p2_Y!3)
+            !8!3 = (!6!3 or !7!3)
+            !9!3 = not !8!3
+            is_hull!4 = False
+            is_hull!5 = MUX(!9!3, is_hull!4, is_hull!3)
+        is_hull!6 = MUX(!3!2, is_hull!3, is_hull!2)
+        val_X!2 = result_X!1[i!1]
+        val_Y!2 = result_Y!1[i!1]
+        val_X!3 = p1_X!2
+        val_Y!3 = p1_Y!2
+        val_X!4 = MUX(is_hull!6, val_X!3, val_X!2)
+        val_Y!4 = MUX(is_hull!6, val_Y!3, val_Y!2)
+        result_X!2 = Update(result_X!1, i!1, val_X!4)
+        result_Y!2 = Update(result_Y!1, i!1, val_Y!4)
+    !10!1 = (result_X!1, result_Y!1)
+    return !10!1
+```
+#### Dependency graph
+![](images/convex_hull_dep_graph.png)
+#### Removal of infeasible edges
+![](images/convex_hull_remove_infeasible_edges.png)
+#### Type Environment Before Vectorization
+| Variable | Type |
+| - | - |
+| `X_coords!0` | `shared[list[int; ?]]` |
+| `Y_coords!0` | `shared[list[int; ?]]` |
+| `N!0` | `plaintext[int]` |
+| `result_X!0` | `shared[list[int; ?]]` |
+| `result_Y!0` | `shared[list[int; ?]]` |
+| `i!1` | `plaintext[int]` |
+| `j!1` | `plaintext[int]` |
+| `!10!1` | `tuple[shared[list[int; (N!0)]], shared[list[int; (N!0)]]]` |
+| `result_Y!2` | `shared[list[int; (N!0)]]` |
+| `result_Y!1` | `shared[list[int; (N!0)]]` |
+| `val_Y!2` | `shared[int]` |
+| `val_Y!4` | `shared[int]` |
+| `result_X!2` | `shared[list[int; (N!0)]]` |
+| `result_X!1` | `shared[list[int; (N!0)]]` |
+| `val_X!2` | `shared[int]` |
+| `val_X!4` | `shared[int]` |
+| `val_Y!3` | `shared[int]` |
+| `val_X!3` | `shared[int]` |
+| `is_hull!6` | `shared[bool]` |
+| `is_hull!5` | `shared[bool]` |
+| `is_hull!3` | `shared[bool]` |
+| `is_hull!4` | `plaintext[bool]` |
+| `!9!3` | `shared[bool]` |
+| `!8!3` | `shared[bool]` |
+| `!7!3` | `shared[bool]` |
+| `!6!3` | `shared[bool]` |
+| `p2_Y!3` | `shared[int]` |
+| `p2_X!3` | `shared[int]` |
+| `!3!2` | `shared[bool]` |
+| `!2!2` | `shared[bool]` |
+| `!1!2` | `shared[bool]` |
+| `p1_Y!2` | `shared[int]` |
+| `p1_X!2` | `shared[int]` |
+| `is_hull!2` | `plaintext[bool]` |
+#### Basic Vectorization Phase 1
+```python
+def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))
+    !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
+    !13!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
+    !14!0{N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))
+    for i!1 in range(0, N!0):
+        result_X!1{N!0}[] = Φ(!11!0{N!0}[], result_X!2{N!0}[]) (targetless)
+        result_Y!1{N!0}[] = Φ(!12!0{N!0}[], result_Y!2{N!0}[]) (targetless)
+        is_hull!2 = True
+        p1_X!2{N!0}[] = !13!0{N!0}[]
+        p1_Y!2{N!0}[] = !14!0{N!0}[]
+        !1!2{N!0}[] = (p1_X!2{N!0}[] <= 0)
+        !2!2{N!0}[] = (p1_Y!2{N!0}[] >= 0)
+        !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
+        !15!0{N!0, N!0}[] = lift(is_hull!2, (i!1:N!0, j!1:N!0))
+        !16!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
+        !17!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
+        !18!0{N!0, N!0}[] = lift(p1_X!2{N!0}[], (i!1:N!0, j!1:N!0))
+        !19!0{N!0, N!0}[] = lift(p1_Y!2{N!0}[], (i!1:N!0, j!1:N!0))
+        for j!1 in range(0, N!0):
+            is_hull!3{N!0, N!0}[] = Φ(!15!0{N!0, N!0}[], is_hull!5{N!0, N!0}[])
+            p2_X!3{N!0, N!0}[] = !16!0{N!0, N!0}[]
+            p2_Y!3{N!0, N!0}[] = !17!0{N!0, N!0}[]
+            !6!3{N!0, N!0}[] = (!18!0{N!0, N!0}[] <= p2_X!3{N!0, N!0}[])
+            !7!3{N!0, N!0}[] = (!19!0{N!0, N!0}[] >= p2_Y!3{N!0, N!0}[])
+            !8!3{N!0, N!0}[] = (!6!3{N!0, N!0}[] or !7!3{N!0, N!0}[])
+            !9!3{N!0, N!0}[] = not !8!3{N!0, N!0}[]
+            is_hull!4 = False
+            is_hull!5{N!0, N!0}[] = MUX(!9!3{N!0, N!0}[], is_hull!4, is_hull!3{N!0, N!0}[])
+        !20!0{N!0}[] = drop_dim(is_hull!5{N!0, N!0}[])
+        is_hull!6{N!0}[] = MUX(!3!2{N!0}[], !20!0{N!0}[], is_hull!2)
+        val_X!2{N!0}[] = result_X!1{N!0}[]
+        val_Y!2{N!0}[] = result_Y!1{N!0}[]
+        val_X!3{N!0}[] = p1_X!2{N!0}[]
+        val_Y!3{N!0}[] = p1_Y!2{N!0}[]
+        val_X!4{N!0}[] = MUX(is_hull!6{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
+        val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
+        result_X!2{N!0}[] = VectorizedUpdate(result_X!1{N!0}[], [I!1], val_X!4{N!0}[])
+        result_Y!2{N!0}[] = VectorizedUpdate(result_Y!1{N!0}[], [I!1], val_Y!4{N!0}[])
+    !10!1 = (result_X!1, result_Y!1)
+    return !10!1
+```
+#### Basic Vectorization Phase 1 (dependence graph)
+![](images/convex_hull_bv_phase_1_dep_graph.png)
+#### Basic Vectorization Phase 2
+```python
+def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))
+    !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
+    !13!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
+    !14!0{N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))
+    is_hull!2 = True
+    !16!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
+    !17!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
+    is_hull!4 = False
+    val_X!2{N!0}[] = !11!0{N!0}[]
+    val_Y!2{N!0}[] = !12!0{N!0}[]
+    p1_X!2{N!0}[] = !13!0{N!0}[]
+    p1_Y!2{N!0}[] = !14!0{N!0}[]
+    !15!0{N!0, N!0}[] = lift(is_hull!2, (i!1:N!0, j!1:N!0))
+    p2_X!3{N!0, N!0}[] = !16!0{N!0, N!0}[]
+    p2_Y!3{N!0, N!0}[] = !17!0{N!0, N!0}[]
+    !1!2{N!0}[] = (p1_X!2{N!0}[] <= 0)
+    !18!0{N!0, N!0}[] = lift(p1_X!2{N!0}[], (i!1:N!0, j!1:N!0))
+    val_X!3{N!0}[] = p1_X!2{N!0}[]
+    !2!2{N!0}[] = (p1_Y!2{N!0}[] >= 0)
+    !19!0{N!0, N!0}[] = lift(p1_Y!2{N!0}[], (i!1:N!0, j!1:N!0))
+    val_Y!3{N!0}[] = p1_Y!2{N!0}[]
+    !6!3{N!0, N!0}[] = (!18!0{N!0, N!0}[] <= p2_X!3{N!0, N!0}[])
+    !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
+    !7!3{N!0, N!0}[] = (!19!0{N!0, N!0}[] >= p2_Y!3{N!0, N!0}[])
+    !8!3{N!0, N!0}[] = (!6!3{N!0, N!0}[] or !7!3{N!0, N!0}[])
+    !9!3{N!0, N!0}[] = not !8!3{N!0, N!0}[]
+    for !21!0 in range(0, N!0): (monolithic)
+        is_hull!3{N!0}[!21!0] = Φ(!15!0{N!0}[!21!0], is_hull!5{N!0}[(!21!0 - 1)])
+        is_hull!5{N!0}[!21!0] = MUX(!9!3{N!0}[!21!0], is_hull!4, is_hull!3{N!0}[!21!0])
+    !20!0{N!0}[] = drop_dim(is_hull!5{N!0, N!0}[])
+    is_hull!6{N!0}[] = MUX(!3!2{N!0}[], !20!0{N!0}[], is_hull!2)
+    val_X!4{N!0}[] = MUX(is_hull!6{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
+    val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
+    result_X!2{N!0}[] = VectorizedUpdate(!11!0{N!0}[], [I!1], val_X!4{N!0}[])
+    result_Y!2{N!0}[] = VectorizedUpdate(!12!0{N!0}[], [I!1], val_Y!4{N!0}[])
+    !10!1 = (result_X!2, result_Y!2)
+    return !10!1
+```
+#### Basic Vectorization Phase 2 (dependence graph)
+![](images/convex_hull_bv_phase_2_dep_graph.png)
+#### Type Environment After Vectorization
+| Variable | Type |
+| - | - |
+| `X_coords!0` | `shared[list[int; ?]]` |
+| `Y_coords!0` | `shared[list[int; ?]]` |
+| `N!0` | `plaintext[int]` |
+| `result_X!0` | `shared[list[int; ?]]` |
+| `result_Y!0` | `shared[list[int; ?]]` |
+| `!21!0` | `plaintext[int]` |
+| `!10!1` | `tuple[shared[list[int; (N!0)]], shared[list[int; (N!0)]]]` |
+| `result_Y!2` | `shared[list[int; (N!0)]]` |
+| `result_X!2` | `shared[list[int; (N!0)]]` |
+| `val_Y!4` | `shared[list[int; (N!0)]]` |
+| `val_X!4` | `shared[list[int; (N!0)]]` |
+| `is_hull!6` | `shared[list[bool; (N!0)]]` |
+| `!20!0` | `shared[list[bool; (N!0)]]` |
+| `is_hull!5` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `is_hull!3` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `!9!3` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `!8!3` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `!7!3` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `!3!2` | `shared[list[bool; (N!0)]]` |
+| `!6!3` | `shared[list[list[bool; (N!0)]; (N!0)]]` |
+| `val_Y!3` | `shared[list[int; (N!0)]]` |
+| `!19!0` | `shared[list[list[int; (N!0)]; (N!0)]]` |
+| `!2!2` | `shared[list[bool; (N!0)]]` |
+| `val_X!3` | `shared[list[int; (N!0)]]` |
+| `!18!0` | `shared[list[list[int; (N!0)]; (N!0)]]` |
+| `!1!2` | `shared[list[bool; (N!0)]]` |
+| `p2_Y!3` | `shared[list[list[int; (N!0)]; (N!0)]]` |
+| `p2_X!3` | `shared[list[list[int; (N!0)]; (N!0)]]` |
+| `!15!0` | `plaintext[list[list[bool; (N!0)]; (N!0)]]` |
+| `p1_Y!2` | `shared[list[int; (N!0)]]` |
+| `p1_X!2` | `shared[list[int; (N!0)]]` |
+| `val_Y!2` | `shared[list[int; (N!0)]]` |
+| `val_X!2` | `shared[list[int; (N!0)]]` |
+| `is_hull!4` | `plaintext[bool]` |
+| `!17!0` | `shared[list[list[int; (N!0)]; (N!0)]]` |
+| `!16!0` | `shared[list[list[int; (N!0)]; (N!0)]]` |
+| `is_hull!2` | `plaintext[bool]` |
+| `!14!0` | `shared[list[int; (N!0)]]` |
+| `!13!0` | `shared[list[int; (N!0)]]` |
+| `!12!0` | `shared[list[int; (N!0)]]` |
+| `!11!0` | `shared[list[int; (N!0)]]` |
+#### Motion code
+```cpp
+template <encrypto::motion::MpcProtocol Protocol>
+std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> convex_hull(
+    encrypto::motion::PartyPointer &party,
+    std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0,
+    std::uint32_t _MPC_PLAINTEXT_N_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_X_0,
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_Y_0
+) {
+    // Shared variable declarations
+    std::vector<encrypto::motion::ShareWrapper> _1_2((_MPC_PLAINTEXT_N_0));
+    std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> _10_1;
+    std::vector<encrypto::motion::SecureUnsignedInteger> _11_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _12_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _13_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _14_0((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _15_0((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _16_0((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _17_0((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _18_0((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> _19_0((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _2_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _20_0((_MPC_PLAINTEXT_N_0));
+    encrypto::motion::SecureUnsignedInteger _21_0;
+    std::vector<encrypto::motion::ShareWrapper> _3_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _6_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _7_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _8_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> _9_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    encrypto::motion::SecureUnsignedInteger N_0;
+    encrypto::motion::ShareWrapper is_hull_2;
+    std::vector<encrypto::motion::ShareWrapper> is_hull_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    encrypto::motion::ShareWrapper is_hull_4;
+    std::vector<encrypto::motion::ShareWrapper> is_hull_5((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::ShareWrapper> is_hull_6((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> p1_X_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> p1_Y_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> p2_X_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> p2_Y_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_X_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_Y_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_X_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_X_3((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_X_4((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_Y_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_Y_3((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> val_Y_4((_MPC_PLAINTEXT_N_0));
+
+    // Plaintext variable declarations
+    std::tuple<std::vector<std::uint32_t>, std::vector<std::uint32_t>> _MPC_PLAINTEXT__10_1;
+    std::vector<bool> _MPC_PLAINTEXT__15_0((_MPC_PLAINTEXT_N_0 + 1) * (_MPC_PLAINTEXT_N_0 + 1));
+    std::uint32_t _MPC_PLAINTEXT__21_0;
+    bool _MPC_PLAINTEXT_is_hull_2;
+    bool _MPC_PLAINTEXT_is_hull_4;
+
+    // Constant initializations
+    encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_0 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(0)), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_false = party->In<Protocol>(encrypto::motion::BitVector(1, false), 0);
+    encrypto::motion::ShareWrapper _MPC_CONSTANT_true = party->In<Protocol>(encrypto::motion::BitVector(1, true), 0);
+
+    // Plaintext parameter assignments
+    N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+
+    // Function body
+    vectorized_assign(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return result_X_0;}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return result_Y_0;}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return X_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Y_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
+    is_hull_2 = _MPC_CONSTANT_true;
+    _MPC_PLAINTEXT_is_hull_2 = true;
+    vectorized_assign(_16_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return X_coords_0[indices[1]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(_17_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Y_coords_0[indices[1]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    is_hull_4 = _MPC_CONSTANT_false;
+    _MPC_PLAINTEXT_is_hull_4 = false;
+    vectorized_assign(val_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(val_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(p1_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(p1_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(_15_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return is_hull_2;}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(p2_X_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, vectorized_access(_16_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}));
+    vectorized_assign(p2_Y_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, vectorized_access(_17_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}));
+    vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, ((decltype(_MPC_CONSTANT_0)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_0;}), {_MPC_PLAINTEXT_N_0})) > vectorized_access(p1_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) | (to_share_wrapper(vectorized_access(p1_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(decltype(_MPC_CONSTANT_0)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_0;}), {_MPC_PLAINTEXT_N_0}))))));
+    vectorized_assign(_18_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vectorized_access(p1_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Unsimdify();}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(val_X_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(p1_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, ((vectorized_access(p1_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}) > decltype(_MPC_CONSTANT_0)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_0;}), {_MPC_PLAINTEXT_N_0}))) | (to_share_wrapper(vectorized_access(p1_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(decltype(_MPC_CONSTANT_0)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_0;}), {_MPC_PLAINTEXT_N_0}))))));
+    vectorized_assign(_19_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vectorized_access(p1_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Unsimdify();}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(val_Y_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(p1_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}));
+    vectorized_assign(_6_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, ((vectorized_access(p2_X_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}) > vectorized_access(_18_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})) | (to_share_wrapper(vectorized_access(_18_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})) == to_share_wrapper(vectorized_access(p2_X_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})))));
+    vectorized_assign(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {})) & to_share_wrapper(vectorized_access(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
+    vectorized_assign(_7_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, ((vectorized_access(_19_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}) > vectorized_access(p2_Y_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})) | (to_share_wrapper(vectorized_access(_19_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})) == to_share_wrapper(vectorized_access(p2_Y_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})))));
+    vectorized_assign(_8_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, (to_share_wrapper(vectorized_access(_6_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})) | to_share_wrapper(vectorized_access(_7_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}))));
+    vectorized_assign(_9_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, (~vectorized_access(_8_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})));
+
+    // Initialize loop counter
+    _MPC_PLAINTEXT__21_0 = std::uint32_t(0);
+    // Initialize phi values
+    vectorized_assign(is_hull_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__21_0}, vectorized_access(_15_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__21_0}));
+    for (; _MPC_PLAINTEXT__21_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__21_0++) {
+        _21_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__21_0), 0);
+        // Update phi values
+        if (_MPC_PLAINTEXT__21_0 != std::uint32_t(0)) {
+            vectorized_assign(is_hull_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__21_0}, vectorized_access(is_hull_5, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {(_MPC_PLAINTEXT__21_0 - std::uint32_t(1))}));
+        }
+
+        vectorized_assign(is_hull_5, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__21_0}, vectorized_access(_9_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__21_0}).Mux(decltype(is_hull_4)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return is_hull_4;}), {_MPC_PLAINTEXT_N_0})).Get(), vectorized_access(is_hull_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__21_0}).Get()));
+
+    }
+
+    vectorized_assign(_20_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, drop_dim(vectorized_access(is_hull_5, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}).Unsimdify(), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    vectorized_assign(is_hull_6, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Mux(vectorized_access(_20_0, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get(), decltype(is_hull_2)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return is_hull_2;}), {_MPC_PLAINTEXT_N_0})).Get()));
+    vectorized_assign(val_X_4, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(is_hull_6, {_MPC_PLAINTEXT_N_0}, {true}, {}).Mux(vectorized_access(val_X_3, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get(), vectorized_access(val_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get()));
+    vectorized_assign(val_Y_4, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(is_hull_6, {_MPC_PLAINTEXT_N_0}, {true}, {}).Mux(vectorized_access(val_Y_3, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get(), vectorized_access(val_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get()));
+    vectorized_assign(result_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_update(vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}), {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(val_X_4, {_MPC_PLAINTEXT_N_0}, {true}, {})));
+    vectorized_assign(result_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_update(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}), {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(val_Y_4, {_MPC_PLAINTEXT_N_0}, {true}, {})));
+    _10_1 = std::make_tuple(result_X_2, result_Y_2);
+    return _10_1;
 
 }
 ```
