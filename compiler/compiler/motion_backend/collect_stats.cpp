@@ -107,6 +107,6 @@ std::ostream &operator<<(std::ostream &ostr, const CircuitStats &stats)
     ostr << "num_outputs: " << stats.num_outputs << std::endl;
     ostr << "num_simd_gates: " << stats.num_simd_gates << std::endl;
     ostr << "num_nonsimd_gates: " << stats.num_nonsimd_gates << std::endl;
-    ostr << "depth: " << stats.depth << std::endl;
+    // ostr << "depth: " << stats.depth << std::endl;
     return ostr;
 }
