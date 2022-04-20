@@ -50,7 +50,7 @@ def partially_ordered_sort(elems: list[E], ordering: Callable[[E, E], int]) -> l
         for e2 in elems[i + 1 :]:
             if ordering(e1, e2) < 0:
                 graph.add_edge(e1, e2)
-            elif ordering(e2, e1) > 0:
+            elif ordering(e1, e2) > 0:
                 graph.add_edge(e2, e1)
 
     return list(networkx.topological_sort(graph))

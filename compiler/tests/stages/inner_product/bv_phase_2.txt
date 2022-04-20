@@ -1,9 +1,9 @@
 def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plaintext[int]) -> shared[int]:
-    !3!0{N!0}[] = lift(B!0[i!1], (i!1:N!0))
-    !2!0{N!0}[] = lift(A!0[i!1], (i!1:N!0))
-    temp!2{N!0}[] = (!2!0{N!0}[] * !3!0{N!0}[])
     sum!1 = 0
+    !2!0{N!0}[] = lift(A!0[i!1], (i!1:N!0))
+    !3!0{N!0}[] = lift(B!0[i!1], (i!1:N!0))
     !1!0{N!0}[] = lift(sum!1, (i!1:N!0))
+    temp!2{N!0}[] = (!2!0{N!0}[] * !3!0{N!0}[])
     for !5!0 in range(0, N!0): (monolithic)
         sum!2{}[!5!0] = Φ(!1!0{}[!5!0], sum!3{}[(!5!0 - 1)])
         sum!3{}[!5!0] = (sum!2{}[!5!0] + temp!2{}[!5!0])

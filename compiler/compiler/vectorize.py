@@ -1321,53 +1321,69 @@ def _basic_vectorization_phase_2(
 
         # If s1 is a closure
         if isinstance(s1, tuple):
-            # If s2 is a closure
-            if isinstance(s2, tuple):
-                orderings = set(ordering(ss1, s2) for ss1 in s1)
-                orderings.discard(0)
-                if len(orderings) == 2:
-                    raise AssertionError(
-                        "Two closures have been detected with circular dependencies"
-                    )
-                elif len(orderings) == 1:
-                    return orderings.pop()
-                else:
-                    return 0
-            # If s2 is a statement
+            orderings = set(ordering(ss1, s2) for ss1 in s1)
+            orderings.discard(0)
+            if len(orderings) == 2:
+                raise AssertionError(
+                    "Two closures have been detected with circular dependencies"
+                )
+            elif len(orderings) == 1:
+                return orderings.pop()
             else:
-                # If there is a dependency from s1 to s2, s1 must be placed first
-                if any(dep_graph.has_same_level_path(ss1, s2) for ss1 in s1):
-                    return -1
-                # If there is a dependency from s2 to s1, then s2 must be placed first
-                elif any(dep_graph.has_same_level_path(s2, ss1) for ss1 in s1):
-                    return 1
-                # Otherwise, they can be placed in any order
-                else:
-                    return 0
-        # If s1 is a statement
+                return 0
+
+        # At this point, s1 is a statement
+        # If s2 is a closure, flip the order of the arguments and recurse
+        if isinstance(s2, tuple):
+            return -ordering(s2, s1)
+
+        # At this point, both s1 and s2 are statements
+        # If either of them is a return, place that one second
+        if isinstance(s1, llc.Return):
+            return 1
+        elif isinstance(s2, llc.Return):
+            return -1
+
+        # Order statements based on def-use edges.  These are re-computed here instead
+        # of using the dependency graph to be more robust against modifying statements
+        # before regenerating the dependency graph.
+
+        s1_lhs = s1.lhs
+        if isinstance(s1_lhs, llc.VectorizedAccess):
+            s1_lhs = s1_lhs.array
+
+        if isinstance(s1, llc.Phi):
+            s1_rhs = [
+                s1.rhs_true if isinstance(s1.rhs_true, Var) else s1.rhs_true.array,
+                s1.rhs_false if isinstance(s1.rhs_false, Var) else s1.rhs_false.array,
+            ]
         else:
-            # If s2 is a closure
-            if isinstance(s2, tuple):
-                # If there is a dependency from s1 to s2, s1 must be placed first
-                if any(dep_graph.has_same_level_path(s1, ss2) for ss2 in s2):
-                    return -1
-                # If there is a dependency from s2 to s1, then s2 must be placed first
-                elif any(dep_graph.has_same_level_path(ss2, s1) for ss2 in s2):
-                    return 1
-                # Otherwise, they can be placed in any order
-                else:
-                    return 0
-            # If s2 is a statement
-            else:
-                # If there is a dependency from s1 to s2, s1 must be placed first
-                if dep_graph.has_same_level_path(s1, s2):
-                    return -1
-                # If there is a dependency from s2 to s1, then s2 must be placed first
-                elif dep_graph.has_same_level_path(s2, s1):
-                    return 1
-                # Otherwise, they can be placed in any order
-                else:
-                    return 0
+            assert not isinstance(s1, llc.For)  # handled at the start of the function
+            s1_rhs = llc.assign_rhs_accessed_vars(s1.rhs)
+
+        s2_lhs = s2.lhs
+        if isinstance(s2_lhs, llc.VectorizedAccess):
+            s2_lhs = s2_lhs.array
+
+        if isinstance(s2, llc.Phi):
+            s2_rhs = [
+                s2.rhs_true if isinstance(s2.rhs_true, Var) else s2.rhs_true.array,
+                s2.rhs_false if isinstance(s2.rhs_false, Var) else s2.rhs_false.array,
+            ]
+        else:
+            assert not isinstance(s2, llc.For)  # handled at the start of the function
+            s2_rhs = llc.assign_rhs_accessed_vars(s2.rhs)
+
+        if s1_lhs in s2_rhs and s2_lhs in s1_rhs:
+            raise AssertionError(
+                "Two statements have been detected with circular dependencies"
+            )
+        elif s1_lhs in s2_rhs:
+            return -1
+        elif s2_lhs in s1_rhs:
+            return 1
+
+        return 0
 
     stmts_and_closures: list[
         Union[llc.Statement, tuple[llc.Statement]]
