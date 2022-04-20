@@ -612,9 +612,9 @@ def generate_single_network_graphs(all_stats, dir):
     generate_graph_for_attr(all_stats, get_circ_gen_time, 'Circuit Generation Time (ms)', dir)
     generate_cumulative_graph_for_attr(all_stats, get_circ_gen_time, 'Circuit Generation Time (ms)', dir)
     
-    get_online_time = lambda x: x.timing_stats.gates_online.mean if x is not None else 0
-    generate_graph_for_attr(all_stats, get_online_time, 'Online Time (ms)', dir)  
-    generate_cumulative_graph_for_attr(all_stats, get_online_time, 'Online Time (ms)', dir)
+    get_online_time = lambda x: x.timing_stats.gates_online.mean+x.timing_stats.gates_setup.mean if x is not None else 0
+    generate_graph_for_attr(all_stats, get_online_time, 'Online + Setup Time (ms)', dir)  
+    generate_cumulative_graph_for_attr(all_stats, get_online_time, 'Online + Setup Time (ms)', dir)
 
     get_setup_time = lambda x: x.timing_stats.gates_setup.mean if x is not None else 0
     generate_graph_for_attr(all_stats, get_setup_time, 'Setup Time (ms)', dir)    
@@ -739,8 +739,8 @@ def generate_graphs(lan, wan):
         generate_comparison_graphs(lan_stats, wan_stats, get_circ_gen_time, 
             'Circuit Generation Time (ms)', COMPARISON_GRAPHS_DIR)
 
-        get_online_time = lambda x: x.timing_stats.gates_online.mean if x is not None else 0
-        generate_comparison_graphs(lan_stats, wan_stats, get_online_time, 'Online Time (ms)',
+        get_online_time = lambda x: x.timing_stats.gates_online.mean+x.timing_stats.gates_setup.mean if x is not None else 0
+        generate_comparison_graphs(lan_stats, wan_stats, get_online_time, 'Online + Setup Time (ms)',
             COMPARISON_GRAPHS_DIR)
 
         get_setup_time = lambda x: x.timing_stats.gates_setup.mean if x is not None else 0

@@ -293,7 +293,7 @@ class CircuitStatistics:
     num_simd_gates: int
     num_nonsimd_gates: int
     circuit_gen_time: float  # in milliseconds
-    depth: int
+    # depth: int
 
     @classmethod
     def from_dictionary(cls, params):
@@ -303,7 +303,7 @@ class CircuitStatistics:
         num_simd_gates = params['num_simd_gates']
         num_nonsimd_gates = params['num_nonsimd_gates']
         circuit_gen_time = params['circuit_gen_time']
-        depth = params['depth']
+        # depth = params['depth']
         return cls(
             num_gates=num_gates,
             num_inputs=num_inputs,
@@ -311,7 +311,7 @@ class CircuitStatistics:
             num_simd_gates=num_simd_gates,
             num_nonsimd_gates=num_nonsimd_gates,
             circuit_gen_time=circuit_gen_time,
-            depth = depth,
+            # depth = depth,
             )
 
     def to_dictionary(self):
@@ -321,7 +321,7 @@ class CircuitStatistics:
                 'num_simd_gates': self.num_simd_gates,
                 'num_nonsimd_gates': self.num_nonsimd_gates,
                 'circuit_gen_time': self.circuit_gen_time,
-                'depth': self.depth
+                # 'depth': self.depth
                 }
 
 
@@ -346,11 +346,11 @@ def parse_circuit_data(lines: list[str]) -> CircuitStatistics:
     assert nonsimd_gates_data[0] == "num_nonsimd_gates:"
     num_nonsimd_gates = int(nonsimd_gates_data[1])
 
-    depth_data = lines[5].split()
-    assert depth_data[0] == "depth:"
-    depth = int(depth_data[1])
+    # depth_data = lines[5].split()
+    # assert depth_data[0] == "depth:"
+    # depth = int(depth_data[1])
 
-    circuit_gen_time_data = lines[6].split()
+    circuit_gen_time_data = lines[5].split()
     assert circuit_gen_time_data[0] == "circuit_gen_time:"
     circuit_gen_time = float(circuit_gen_time_data[1])
 
@@ -361,5 +361,5 @@ def parse_circuit_data(lines: list[str]) -> CircuitStatistics:
         num_simd_gates=num_simd_gates,
         num_nonsimd_gates=num_nonsimd_gates,
         circuit_gen_time=circuit_gen_time,
-        depth=depth,
+        # depth=depth,
     )
