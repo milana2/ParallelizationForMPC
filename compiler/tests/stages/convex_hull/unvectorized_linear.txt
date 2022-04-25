@@ -1,0 +1,31 @@
+def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+    for i!1 in range(0, N!0):
+        result_X!1 = Φ(result_X!0, result_X!2) (targetless)
+        result_Y!1 = Φ(result_Y!0, result_Y!2) (targetless)
+        is_hull!2 = True
+        p1_X!2 = X_coords!0[i!1]
+        p1_Y!2 = Y_coords!0[i!1]
+        !1!2 = (p1_X!2 <= 0)
+        !2!2 = (p1_Y!2 >= 0)
+        !3!2 = (!1!2 and !2!2)
+        for j!1 in range(0, N!0):
+            is_hull!3 = Φ(is_hull!2, is_hull!5)
+            p2_X!3 = X_coords!0[j!1]
+            p2_Y!3 = Y_coords!0[j!1]
+            !6!3 = (p1_X!2 <= p2_X!3)
+            !7!3 = (p1_Y!2 >= p2_Y!3)
+            !8!3 = (!6!3 or !7!3)
+            !9!3 = not !8!3
+            is_hull!4 = False
+            is_hull!5 = MUX(!9!3, is_hull!4, is_hull!3)
+        is_hull!6 = MUX(!3!2, is_hull!3, is_hull!2)
+        val_X!2 = result_X!1[i!1]
+        val_Y!2 = result_Y!1[i!1]
+        val_X!3 = p1_X!2
+        val_Y!3 = p1_Y!2
+        val_X!4 = MUX(is_hull!6, val_X!3, val_X!2)
+        val_Y!4 = MUX(is_hull!6, val_Y!3, val_Y!2)
+        result_X!2 = Update(result_X!1, i!1, val_X!4)
+        result_Y!2 = Update(result_Y!1, i!1, val_Y!4)
+    !10!1 = (result_X!1, result_Y!1)
+    return !10!1

@@ -2,13 +2,12 @@ from UTIL import shared
 
 
 def convex_hull(
-    X_coords: shared[list[int]], Y_coords: shared[list[int]], N: int, result_X: shared[list[int]], result_Y: shared[list[int]]
+    X_coords: shared[list[int]],
+    Y_coords: shared[list[int]],
+    N: int,
+    result_X: shared[list[int]],
+    result_Y: shared[list[int]],
 ) -> tuple[shared[list[int]], shared[list[int]]]:
-    hull_X: list[int] = []
-    hull_Y: list[int] = []
-
-    # dummy: int = 0
-
     for i in range(0, N):
         is_hull = True
         p1_X = X_coords[i]
@@ -21,9 +20,9 @@ def convex_hull(
 
                 if not (p1_X <= p2_X or p1_Y >= p2_Y):
                     is_hull = False
-        val_X: int = result_X[i]
-        val_Y: int = result_Y[i]            
-        
+        val_X = result_X[i]
+        val_Y = result_Y[i]
+
         if is_hull:
             val_X = p1_X
             val_Y = p1_Y
@@ -31,6 +30,7 @@ def convex_hull(
         result_Y[i] = val_Y
 
     return (result_X, result_Y)
+
 
 X_coords = [1, 2, 3]
 Y_coords = [4, 5, 6]

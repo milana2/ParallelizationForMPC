@@ -1,0 +1,100 @@
+Function convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+Entry block: 0
+Exit block: 3
+Block 0:
+    jump
+Block 1:
+    is_hull!1 = Φ(is_hull!0, is_hull!6)
+    p1_X!1 = Φ(p1_X!0, p1_X!2)
+    p1_Y!1 = Φ(p1_Y!0, p1_Y!2)
+    !1!1 = Φ(!1!0, !1!2)
+    !2!1 = Φ(!2!0, !2!2)
+    !3!1 = Φ(!3!0, !3!2)
+    val_X!1 = Φ(val_X!0, val_X!4)
+    val_Y!1 = Φ(val_Y!0, val_Y!4)
+    p2_X!1 = Φ(p2_X!0, p2_X!4)
+    p2_Y!1 = Φ(p2_Y!0, p2_Y!4)
+    !4!1 = Φ(!4!0, !4!4)
+    !5!1 = Φ(!5!0, !5!4)
+    !6!1 = Φ(!6!0, !6!4)
+    !7!1 = Φ(!7!0, !7!4)
+    !8!1 = Φ(!8!0, !8!4)
+    !9!1 = Φ(!9!0, !9!4)
+    result_X!1 = Φ(result_X!0, result_X!2)
+    result_Y!1 = Φ(result_Y!0, result_Y!2)
+    for i!1: plaintext[int] in range(0, N!0)
+Block 2:
+    is_hull!2 = True
+    p1_X!2 = X_coords!0[i!1]
+    p1_Y!2 = Y_coords!0[i!1]
+    !1!2 = (p1_X!2 <= 0)
+    !2!2 = (p1_Y!2 >= 0)
+    !3!2 = (!1!2 and !2!2)
+    conditional jump !3!2
+Block 3:
+    !10!1 = (result_X!1, result_Y!1)
+    return !10!1
+Block 4:
+    jump
+Block 5:
+    jump
+Block 6:
+    (merge from conditional jump !3!2)
+    is_hull!6 = MUX(!3!2, is_hull!3, is_hull!2)
+    p2_X!4 = MUX(!3!2, p2_X!2, p2_X!1)
+    p2_Y!4 = MUX(!3!2, p2_Y!2, p2_Y!1)
+    !4!4 = MUX(!3!2, !4!2, !4!1)
+    !5!4 = MUX(!3!2, !5!2, !5!1)
+    !6!4 = MUX(!3!2, !6!2, !6!1)
+    !7!4 = MUX(!3!2, !7!2, !7!1)
+    !8!4 = MUX(!3!2, !8!2, !8!1)
+    !9!4 = MUX(!3!2, !9!2, !9!1)
+    val_X!2 = result_X!1[i!1]
+    val_Y!2 = result_Y!1[i!1]
+    conditional jump is_hull!6
+Block 7:
+    is_hull!3 = Φ(is_hull!2, is_hull!5)
+    p2_X!2 = Φ(p2_X!1, p2_X!3)
+    p2_Y!2 = Φ(p2_Y!1, p2_Y!3)
+    !4!2 = Φ(!4!1, !4!3)
+    !5!2 = Φ(!5!1, !5!3)
+    !6!2 = Φ(!6!1, !6!3)
+    !7!2 = Φ(!7!1, !7!3)
+    !8!2 = Φ(!8!1, !8!3)
+    !9!2 = Φ(!9!1, !9!3)
+    for j!1: plaintext[int] in range(0, N!0)
+Block 8:
+    p2_X!3 = X_coords!0[j!1]
+    p2_Y!3 = Y_coords!0[j!1]
+    !4!3 = (p1_X!2 <= p2_X!3)
+    !5!3 = (p1_Y!2 >= p2_Y!3)
+    !6!3 = (p1_X!2 <= p2_X!3)
+    !7!3 = (p1_Y!2 >= p2_Y!3)
+    !8!3 = (!6!3 or !7!3)
+    !9!3 = not !8!3
+    conditional jump !9!3
+Block 9:
+    jump
+Block 10:
+    jump
+Block 11:
+    is_hull!4 = False
+    jump
+Block 12:
+    (merge from conditional jump !9!3)
+    is_hull!5 = MUX(!9!3, is_hull!4, is_hull!3)
+    jump
+Block 13:
+    jump
+Block 14:
+    val_X!3 = p1_X!2
+    val_Y!3 = p1_Y!2
+    jump
+Block 15:
+    (merge from conditional jump is_hull!6)
+    val_X!4 = MUX(is_hull!6, val_X!3, val_X!2)
+    val_Y!4 = MUX(is_hull!6, val_Y!3, val_Y!2)
+    result_X!2 = Update(result_X!1, i!1, val_X!4)
+    result_Y!2 = Update(result_Y!1, i!1, val_Y!4)
+    jump
+Edges: (0, 1, *) (1, 3, F) (1, 2, T) (2, 4, F) (2, 5, T) (4, 6, *) (5, 7, *) (6, 13, F) (6, 14, T) (7, 9, F) (7, 8, T) (8, 10, F) (8, 11, T) (9, 6, *) (10, 12, *) (11, 12, *) (12, 7, *) (13, 15, *) (14, 15, *) (15, 1, *)
