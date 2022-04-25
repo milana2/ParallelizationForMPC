@@ -85,6 +85,19 @@ def get_biometric_inputs() -> tuple[list[InputArgs], int]:
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
+def get_chapterfour_figure_12_inputs() -> tuple[list[InputArgs], int]:
+    all_args = []
+    non_vec_up_to = 6
+    x = random.randint(1, 100)
+    y = random.randint(1, 100)
+    args = [
+    "--x", str(x),
+    "--y", str(y)
+    ]
+    label = "x={}, y={}".format(x, y)
+    all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
 def get_convex_hull_inputs():
     all_args = []
     non_vec_up_to = 100
@@ -156,6 +169,55 @@ def get_count_123_inputs():
         args.append("--Syms")
         args.extend(list(map(str, Syms)))
         label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_cryptonets_max_pooling_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for config in [[4, 4], [8, 8], [16, 16], [32, 32], [64, 64]]:
+        rows = config[0]
+        cols = config[1]
+        rows_res = rows // 2
+        cols_res = cols // 2
+
+        args = [
+        "--cols", str(cols),
+        "--rows", str(rows),
+        "--cols_res", str(cols_res),
+        "--rows_res", str(rows_res)
+        ]
+        vals = [i + 2 for i in range(rows * cols)]
+        output_size = int(cols * rows / 4)
+        OUTPUT_res = [0] * output_size
+        args.append("--vals")
+        args.extend(list(map(str, vals)))
+        args.append("--OUTPUT_res")
+        args.extend(list(map(str, OUTPUT_res)))
+        label = "rows: {}, cols: {}".format(rows, cols)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_db_cross_join_trivial_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]:
+        Len_A = N
+        Len_B = N
+        args = [
+        "--Len_A", str(Len_A),
+        "--Len_B", str(Len_B)
+        ]
+        A = get_rand_ints(Len_A * 2)
+        B = get_rand_ints(Len_B * 2)
+        res = [0 for i in range(Len_A * Len_B * 3)]
+        args.append("--A")
+        args.extend(list(map(str, A)))
+        args.append("--B")
+        args.extend(list(map(str, B)))
+        args.append("--res")
+        args.extend(list(map(str, res)))
+        label = "{}, {}".format(Len_A, Len_B)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
@@ -253,10 +315,27 @@ def get_kmeans_iteration_inputs():
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
+def get_longest_odd_10_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+        args = [
+        "--N", str(N),
+        ]
+        Seq = get_rand_ints(N, min=0, max=1)
+        Syms = [0, 1]
+        args.append("--Seq")
+        args.extend(list(map(str, Seq)))
+        args.append("--Syms")
+        args.extend(list(map(str, Syms)))
+        label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
 def get_max_dist_between_syms_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [8]:#, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -268,6 +347,26 @@ def get_max_dist_between_syms_inputs():
         args.append("--Sym")
         args.append(str(Sym))
         label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_mnist_relu_inputs()-> tuple[list[InputArgs], int]:
+    all_args = []
+    non_vec_up_to = 6
+    for config in [[16, 16], [16, 32], [16, 64], [16, 128], [16, 256], [16, 512], [16, 1024]]:#[2048, 2084], [4096, 4096]]:
+        len_inner = config[0]
+        len_outer = config[1]
+        args = [
+        "--len_inner", "{}".format(len_inner),
+        "--len_outer", "{}".format(len_outer),
+        ]
+        input = [(i % 2) for i in range(len_inner * len_outer)]
+        OUTPUT_res = [0 for i in range(len_inner * len_outer)]
+        args.append("--input")
+        args.extend(list(map(str, input)))
+        args.append("--OUTPUT_res")
+        args.extend(list(map(str, OUTPUT_res)))
+        label = "{}, {}".format(len_inner, len_outer)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
@@ -283,37 +382,50 @@ def get_psi_inputs()-> tuple[list[InputArgs], int]:
         ]
         A = get_rand_ints(SA)
         B = get_rand_ints(SB)
+        result = [0 for i in range(SA)]
         args.append("--A")
         args.extend(list(map(str, A)))
         args.append("--B")
         args.extend(list(map(str, B)))
+        args.append("--result")
+        args.extend(list(map(str, result)))
         label = "SA: {}, SB: {}".format(SA, SB)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
-    if name == "biometric" or name == "biometric_fast":
-         return get_biometric_inputs()
-    if name == "convex_hull" or name == "minimal_points":
+    # if name == "biometric" or name == "biometric_fast": # --- need to get inputs at 2048
+    #     return get_biometric_inputs()
+    # if name == "chapterfour_figure_12": # new ---
+    #     return get_chapterfour_figure_12_inputs()
+    if name == "convex_hull":# or name == "minimal_points": #convex hull is new
         return get_convex_hull_inputs()
-    if name == "count_102" or name == "longest_102":
-        return get_count_102_inputs()
-    if name == "count_10s":
-        return get_count_10s_inputs()
-    if name == "count_123":
-        return get_count_123_inputs()
-    if name == "db_variance":
-        return get_db_variance_inputs()
-    if name == "histogram":
-        return get_histogram_inputs()
-    if name == "inner_product":
-        return get_inner_product_inputs()
-    if name == "kmeans_iteration":
-        return get_kmeans_iteration_inputs()
-    if name == "max_dist_between_syms" or name == "max_sum_between_syms":
-        return get_max_dist_between_syms_inputs()
-    if name == "psi": # segfaults right now
-        return get_psi_inputs()
+    # if name == "count_102" or name == "longest_102":
+    #     return get_count_102_inputs()
+    # if name == "count_10s":
+    #     return get_count_10s_inputs()
+    # if name == "count_123":
+    #     return get_count_123_inputs()
+    # if name == "cryptonets_max_pooling":
+    #     return get_cryptonets_max_pooling_inputs()
+    # if name == "db_cross_join_trivial": # could only do up to 64
+    #     return get_db_cross_join_trivial_inputs()
+    # if name == "db_variance":
+    #     return get_db_variance_inputs()
+    # if name == "histogram":
+    #     return get_histogram_inputs()
+    # if name == "inner_product":
+    #     return get_inner_product_inputs()
+    # if name == "kmeans_iteration":
+    #     return get_kmeans_iteration_inputs()
+    # if name == "longest_odd_10": # need to run for 4096
+    #     return get_longest_odd_10_inputs()
+    # if name == "max_dist_between_syms" or name == "max_sum_between_syms":
+    #     return get_max_dist_between_syms_inputs()
+    # if name == "mnist_relu":
+    #     return get_mnist_relu_inputs()
+    # if name == "psi": 
+    #     return get_psi_inputs()
     return [[], 0]
 
 
