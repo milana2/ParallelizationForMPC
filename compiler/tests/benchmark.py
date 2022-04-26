@@ -104,13 +104,22 @@ def run_benchmark(
             text=True,
             cwd=party1_dir,
         ) as party1:
-            party0.wait(timeout)
-            party1.wait(timeout)
+            # party0.wait(timeout)
+            # party1.wait(timeout)
+            # assert party0.stdout is not None
+            # assert party0.stderr is not None
+            # party0_stdout_raw = party0.stdout.read()
+            # party0_stderr = party0.stderr.read()
 
-            assert party0.stdout is not None
-            assert party0.stderr is not None
-            party0_stdout_raw = party0.stdout.read()
-            party0_stderr = party0.stderr.read()
+            try:
+                party0_stdout_raw, party0_stderr = party0.communicate(timeout)
+                party1_stdout_raw, party1_stderr = party1.communicate(timeout)
+            except subprocess.TimeoutExpired:
+                party0.kill()
+                party1.kill()
+                party0_stdout_raw, party0_stderr = party0.communicate(timeout)
+                party1_stdout_raw, party1_stderr = party1.communicate(timeout)
+
             with open(os.path.join(party0_dir, "stdout"), "w") as f:
                 f.write(party0_stdout_raw)
             with open(os.path.join(party0_dir, "stderr"), "w") as f:
@@ -120,10 +129,6 @@ def run_benchmark(
                 return (
                     None, None
                 )
-            assert party1.stdout is not None
-            assert party1.stderr is not None
-            party1_stdout_raw = party1.stdout.read()
-            party1_stderr = party1.stderr.read()
             with open(os.path.join(party1_dir, "stdout"), "w") as f:
                 f.write(party1_stdout_raw)
             with open(os.path.join(party1_dir, "stderr"), "w") as f:

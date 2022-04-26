@@ -4,6 +4,7 @@
 #include <queue>
 #include <unordered_set>
 #include <utility>
+#include <stack>
 
 using namespace encrypto::motion;
 
@@ -61,6 +62,41 @@ CircuitStats collect_stats(const BackendPointer backend)
         }
     }
 
+    std::queue<std::int64_t> write_queue;
+    std::queue<std::int64_t> read_queue;
+    for(const auto &gate : backend->GetInputGates()) {
+        read_queue.push(gate->GetId());
+    }
+
+    // stats.depth = 0;
+
+    // while(!read_queue.empty()) {
+    //     ++stats.depth;
+
+    //     std::unordered_set<std::int64_t> seen_gates;
+    //     while(!read_queue.empty()) {
+    //         const auto gate_id = read_queue.front();
+    //         read_queue.pop();
+    //         const auto gate = backend->GetGate(gate_id);
+
+    //         if(dynamic_cast<OutputGate *>(&*gate)) {
+    //             continue;
+    //         }
+                
+    //         for (const auto &output_wire : gate->GetOutputWires()) {
+    //             for (const auto &child_gate_id : output_wire->GetWaitingGatesIds()) {
+    //                 if(seen_gates.find(child_gate_id) != seen_gates.end()) {
+    //                     continue;
+    //                 }
+    //                 write_queue.push(child_gate_id);
+    //                 seen_gates.insert(child_gate_id);
+
+    //             }
+    //         }
+    //     }
+    //     std::swap(read_queue, write_queue);
+    // }
+
     return stats;
 }
 
@@ -71,5 +107,6 @@ std::ostream &operator<<(std::ostream &ostr, const CircuitStats &stats)
     ostr << "num_outputs: " << stats.num_outputs << std::endl;
     ostr << "num_simd_gates: " << stats.num_simd_gates << std::endl;
     ostr << "num_nonsimd_gates: " << stats.num_nonsimd_gates << std::endl;
+    // ostr << "depth: " << stats.depth << std::endl;
     return ostr;
 }

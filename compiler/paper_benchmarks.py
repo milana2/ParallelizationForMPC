@@ -68,7 +68,7 @@ def get_rand_ints(n, min=1, max=100):
 def get_biometric_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
     non_vec_up_to = 6 # Only run non-vectorized benchmark upto this index
-    for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 4096]]:
+    for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 2048], [4, 4096]]:
         D = config[0]
         N = config[1]
         args = [
@@ -85,47 +85,23 @@ def get_biometric_inputs() -> tuple[list[InputArgs], int]:
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
-def get_psi_inputs()-> tuple[list[InputArgs], int]:
+def get_chapterfour_figure_12_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
     non_vec_up_to = 6
-    for config in [[16, 16], [32, 32], [64, 64], [128, 128], [256, 256], [512, 512], [1024, 1024], [4096, 4096]]:
-        SA = config[0]
-        SB = config[1]
-        args = [
-        "--SA", "{}".format(SA),
-        "--SB", "{}".format(SB),
-        ]
-        A = get_rand_ints(SA)
-        B = get_rand_ints(SB)
-        args.append("--A")
-        args.extend(list(map(str, A)))
-        args.append("--B")
-        args.extend(list(map(str, B)))
-        label = "SA: {}, SB: {}".format(SA, SB)
-        all_args.append(InputArgs(label, args))
-    return (all_args, non_vec_up_to)
-
-def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
-    all_args = []
-    non_vec_up_to = 8
-    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
-        args = [
-        "--N", "{}".format(N),
-        ]
-        A = get_rand_ints(N)
-        B = get_rand_ints(N)
-        args.append("--A")
-        args.extend(list(map(str, A)))
-        args.append("--B")
-        args.extend(list(map(str, B)))
-        label = "N: {}".format(N)
-        all_args.append(InputArgs(label, args))
+    x = random.randint(1, 100)
+    y = random.randint(1, 100)
+    args = [
+    "--x", str(x),
+    "--y", str(y)
+    ]
+    label = "x={}, y={}".format(x, y)
+    all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
 def get_convex_hull_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -148,7 +124,7 @@ def get_convex_hull_inputs():
 def get_count_102_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -165,7 +141,7 @@ def get_count_102_inputs():
 def get_count_10s_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -182,7 +158,7 @@ def get_count_10s_inputs():
 def get_count_123_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -196,10 +172,59 @@ def get_count_123_inputs():
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
+def get_cryptonets_max_pooling_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for config in [[4, 4], [8, 8], [16, 16], [32, 32], [64, 64]]:
+        rows = config[0]
+        cols = config[1]
+        rows_res = rows // 2
+        cols_res = cols // 2
+
+        args = [
+        "--cols", str(cols),
+        "--rows", str(rows),
+        "--cols_res", str(cols_res),
+        "--rows_res", str(rows_res)
+        ]
+        vals = [i + 2 for i in range(rows * cols)]
+        output_size = int(cols * rows / 4)
+        OUTPUT_res = [0] * output_size
+        args.append("--vals")
+        args.extend(list(map(str, vals)))
+        args.append("--OUTPUT_res")
+        args.extend(list(map(str, OUTPUT_res)))
+        label = "rows: {}, cols: {}".format(rows, cols)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_db_cross_join_trivial_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]:
+        Len_A = N
+        Len_B = N
+        args = [
+        "--Len_A", str(Len_A),
+        "--Len_B", str(Len_B)
+        ]
+        A = get_rand_ints(Len_A * 2)
+        B = get_rand_ints(Len_B * 2)
+        res = [0 for i in range(Len_A * Len_B * 3)]
+        args.append("--A")
+        args.extend(list(map(str, A)))
+        args.append("--B")
+        args.extend(list(map(str, B)))
+        args.append("--res")
+        args.extend(list(map(str, res)))
+        label = "{}, {}".format(Len_A, Len_B)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
 def get_db_variance_inputs():
     all_args = []
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--len", "{}".format(N),
         ]
@@ -217,7 +242,7 @@ def get_histogram_inputs():
     all_args = []
     num_bins = 5
     non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
         args = [
         "--num_bins", "{}".format(num_bins),
         "--N", "{}".format(N),
@@ -229,8 +254,25 @@ def get_histogram_inputs():
         args.extend(list(map(str, A)))
         args.append("--B")
         args.extend(list(map(str, B)))
-        args.append("--R")
+        args.append("--result")
         args.extend(list(map(str, R)))
+        label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
+    all_args = []
+    non_vec_up_to = 8
+    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+        args = [
+        "--N", "{}".format(N),
+        ]
+        A = get_rand_ints(N)
+        B = get_rand_ints(N)
+        args.append("--A")
+        args.extend(list(map(str, A)))
+        args.append("--B")
+        args.extend(list(map(str, B)))
         label = "N: {}".format(N)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
@@ -273,6 +315,23 @@ def get_kmeans_iteration_inputs():
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
+def get_longest_odd_10_inputs():
+    all_args = []
+    non_vec_up_to = 100
+    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+        args = [
+        "--N", str(N),
+        ]
+        Seq = get_rand_ints(N, min=0, max=1)
+        Syms = [0, 1]
+        args.append("--Seq")
+        args.extend(list(map(str, Seq)))
+        args.append("--Syms")
+        args.extend(list(map(str, Syms)))
+        label = "N: {}".format(N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
 def get_max_dist_between_syms_inputs():
     all_args = []
     non_vec_up_to = 100
@@ -291,29 +350,82 @@ def get_max_dist_between_syms_inputs():
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
 
+def get_mnist_relu_inputs()-> tuple[list[InputArgs], int]:
+    all_args = []
+    non_vec_up_to = 6
+    for config in [[16, 16], [16, 32], [16, 64], [16, 128], [16, 256], [16, 512], [16, 1024]]:
+        len_inner = config[0]
+        len_outer = config[1]
+        args = [
+        "--len_inner", "{}".format(len_inner),
+        "--len_outer", "{}".format(len_outer),
+        ]
+        input = [(i % 2) for i in range(len_inner * len_outer)]
+        OUTPUT_res = [0 for i in range(len_inner * len_outer)]
+        args.append("--input")
+        args.extend(list(map(str, input)))
+        args.append("--OUTPUT_res")
+        args.extend(list(map(str, OUTPUT_res)))
+        label = "{}, {}".format(len_inner, len_outer)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_psi_inputs()-> tuple[list[InputArgs], int]:
+    all_args = []
+    non_vec_up_to = 6
+    for config in [[16, 16], [32, 32], [64, 64], [128, 128], [256, 256], [512, 512], [1024, 1024]]:#[2048, 2084], [4096, 4096]]:
+        SA = config[0]
+        SB = config[1]
+        args = [
+        "--SA", "{}".format(SA),
+        "--SB", "{}".format(SB),
+        ]
+        A = get_rand_ints(SA)
+        B = get_rand_ints(SB)
+        result = [0 for i in range(SA)]
+        args.append("--A")
+        args.extend(list(map(str, A)))
+        args.append("--B")
+        args.extend(list(map(str, B)))
+        args.append("--result")
+        args.extend(list(map(str, result)))
+        label = "SA: {}, SB: {}".format(SA, SB)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
-    # if name == "biometric" or name == "biometric_fast":
-    #      return get_biometric_inputs()
-    # if name == "convex_hull" or name == "minimal_points":
-    #     return get_convex_hull_inputs()
-    # if name == "count_102" or name == "longest_102":
-    #     return get_count_102_inputs()
-    # if name == "count_10s":
-    #     return get_count_10s_inputs()
-    # if name == "count_123":
-    #     return get_count_123_inputs()
-    # if name == "db_variance":
-    #     return get_db_variance_inputs()
-    # if name == "histogram":
-    #     return get_histogram_inputs()
-    # if name == "inner_product":
-    #     return get_inner_product_inputs()
+    if name == "biometric" or name == "biometric_fast":
+        return get_biometric_inputs()
+    if name == "chapterfour_figure_12": # millionaire's problem, not interesting
+        return get_chapterfour_figure_12_inputs()
+    if name == "convex_hull" or name == "minimal_points":
+        return get_convex_hull_inputs()
+    if name == "count_102" or name == "longest_102":
+        return get_count_102_inputs()
+    if name == "count_10s":
+        return get_count_10s_inputs()
+    if name == "count_123":
+        return get_count_123_inputs()
+    if name == "cryptonets_max_pooling":
+        return get_cryptonets_max_pooling_inputs()
+    if name == "db_cross_join_trivial": # could only do up to 64
+        return get_db_cross_join_trivial_inputs()
+    if name == "db_variance":
+        return get_db_variance_inputs()
+    if name == "histogram":
+        return get_histogram_inputs()
+    if name == "inner_product":
+        return get_inner_product_inputs()
     if name == "kmeans_iteration":
         return get_kmeans_iteration_inputs()
-    # if name == "max_dist_between_syms" or name == "max_sum_between_syms":
-    #     return get_max_dist_between_syms_inputs()
-    # if name == "psi": # segfaults right now
-    #     return get_psi_inputs()
+    if name == "longest_odd_10": # could not run for 4096
+        return get_longest_odd_10_inputs()
+    if name == "max_dist_between_syms" or name == "max_sum_between_syms":
+        return get_max_dist_between_syms_inputs()
+    if name == "mnist_relu":
+        return get_mnist_relu_inputs()
+    if name == "psi": # could not run from 2048 and 4096
+        return get_psi_inputs()
     return [[], 0]
 
 
@@ -463,7 +575,7 @@ def run_paper_benchmarks():
                 task_stats.input_configs.append(input_stats)
                 log.info("task {} input config {} DONE".format(task_stats.label, input_stats.label))
 
-                file_path = os.path.join(GRAPHS_DIR, "{}.json".format(task_stats.label))
+                file_path = os.path.join(FILE_DIR, "{}.json".format(task_stats.label))
                 with open(file_path, "w", encoding='utf-8') as f:
                     json_str = json_serialize(task_stats)
                     f.write(json_str)
@@ -477,35 +589,43 @@ def run_paper_benchmarks():
 
 def get_x_label_for_benchmark(name):
     if name == "biometric":
-        return "BioDist"
+        return "Biometric Distance"
     if name == "biometric_fast":
-        return "BioDistFast"
+        return "Biometric Distance (Fast)"
     if name == "convex_hull":
-        return "ConvH"
+        return "Convex Hull"
     if name == "count_102":
-        return "Count102"
+        return "Count 102"
     if name == "count_123":
-        return "Count123"
+        return "Count 123"
     if name == "count_10s":
-        return "Count10s"
+        return "Count 10s"
+    if name == "cryptonets_max_pooling":
+        return "Cryptonets (Max Pooling)"
+    if name == "db_cross_join_trivial":
+        return "DB Cross Join (Trivial)"
     if name == "db_variance":
-        return "DBVar"
+        return "Database Variance"
     if name == "histogram":
-        return "Hist"
+        return "Histogram"
     if name == "inner_product":
-        return "InnerProd"
+        return "Inner Product"
     if name == "kmeans_iteration":
         return "k-means"
     if name == "longest_102":
-        return "Longest102"
+        return "Longest 102"
+    if name == "longest_odd_10":
+        return "Longest Odd 10"
     if name == "max_dist_between_syms":
-        return "Dist/Syms"
+        return "Max. Dist. b/w Symbols"
     if name == "max_sum_between_syms":
-        return "Sum/Syms"
+        return "Max. Sum b/w Symbols"
     if name == "minimal_points":
-        return "Min Points"
+        return "Minimal Points"
+    if name == "mnist_relu":
+        return "MNIST ReLU"
     if name == "psi":
-        return "PSI"
+        return "Private Set Intersection"
 
     return name
 
@@ -514,24 +634,11 @@ def run_gnuplot(plot_script, data_file, graph_file, title, y_label, dir, other_a
         data_file, graph_file, title, y_label, other_args)
     )
 
-    with subprocess.Popen(
-        [
-            "gnuplot",
-            "-c", plot_script,
-            data_file, graph_file,
-            title, y_label
-        ] + other_args,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        cwd=dir
-    ) as gnuplot:
-        gnuplot.wait()
-        if(gnuplot.returncode != 0):
-            log.error("gnuplot exited with returncode: {0}".format(gnuplot.returncode))
-            log.error("stderr: \n{0}".format(gnuplot.stderr.read()))
-            log.debug("stdout: \n{0}".format(gnuplot.stdout.read()))
-            exit(1)
+    subprocess.run(
+            ["gnuplot", "-c", plot_script, data_file, graph_file, title, y_label] + other_args,
+            cwd=dir, 
+            check=True,
+        )
 
 def ratio(a, b):
     if b != 0:
@@ -540,10 +647,11 @@ def ratio(a, b):
 
 
 def generate_graph_for_attr(all_stats, get_val, y_label, dir):
+    y_label_simple = ''.join(c for c in y_label if c.isalnum())
     for task_stat in all_stats:
-        fname = "{}-{}.txt".format(task_stat.label, y_label)
-        hist_graph_file = "{}-hist {}{}".format(task_stat.label, y_label, GRAPH_EXT)
-        line_graph_file = "{}-line {}{}".format(task_stat.label, y_label, GRAPH_EXT)
+        fname = "{}-{}.txt".format(task_stat.label, y_label_simple)
+        hist_graph_file = "{}-hist-{}{}".format(task_stat.label, y_label_simple, GRAPH_EXT)
+        line_graph_file = "{}-line-{}{}".format(task_stat.label, y_label_simple, GRAPH_EXT)
         file_path = os.path.join(dir, fname)
         with open(file_path, mode='w', encoding='utf-8') as f:
             f.write("x\tInput\t\"GMW\"\t\"GMW (Vectorized)\"\t\"BMR\"" \
@@ -578,9 +686,10 @@ def generate_graph_for_attr(all_stats, get_val, y_label, dir):
         #     y_label, dir, other_args = [])
 
 def generate_cumulative_graph_for_attr(all_stats, get_val, y_label, dir):
-    fname = "all-{}.txt".format(y_label)
-    hist_graph_file = "all-hist {}{}".format(y_label, GRAPH_EXT)
-    line_graph_file = "all-line {}{}".format(y_label, GRAPH_EXT)
+    y_label_simple = ''.join(c for c in y_label if c.isalnum())
+    fname = "all-{}.txt".format(y_label_simple)
+    hist_graph_file = "all-hist-{}{}".format(y_label_simple, GRAPH_EXT)
+    line_graph_file = "all-line-{}{}".format(y_label_simple, GRAPH_EXT)
     file_path = os.path.join(dir, fname)
     with open(file_path, mode='w', encoding='utf-8') as f:
         f.write("x\tBenchmark\t\"GMW\"\t\"GMW (Vectorized)\"\t\"BMR\"" \
@@ -627,17 +736,21 @@ def generate_single_network_graphs(all_stats, dir):
     generate_graph_for_attr(all_stats, get_online_time, 'Online Time (ms)', dir)  
     generate_cumulative_graph_for_attr(all_stats, get_online_time, 'Online Time (ms)', dir)
 
-    get_setup_time = lambda x: x.timing_stats.gates_setup.mean if x is not None else 0
+    get_setup_time = lambda x: x.timing_stats.gates_setup.mean + x.timing_stats.preprocess_total.mean if x is not None else 0
     generate_graph_for_attr(all_stats, get_setup_time, 'Setup Time (ms)', dir)    
     generate_cumulative_graph_for_attr(all_stats, get_setup_time, 'Setup Time (ms)', dir)
 
-    get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
-    generate_graph_for_attr(all_stats, get_send_size, 'Sent Data (MiB)', dir)
-    generate_cumulative_graph_for_attr(all_stats, get_send_size, 'Sent Data (MiB)', dir)
+    get_online_time = lambda x: x.timing_stats.circuit_evaluation.mean if x is not None else 0
+    generate_graph_for_attr(all_stats, get_online_time, 'Online + Setup Time (ms)', dir)  
+    generate_cumulative_graph_for_attr(all_stats, get_online_time, 'Online + Setup Time (ms)', dir)
 
-    get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
-    generate_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)  
-    generate_cumulative_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)
+    get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
+    generate_graph_for_attr(all_stats, get_send_size, 'Communication (MiB)', dir)
+    generate_cumulative_graph_for_attr(all_stats, get_send_size, 'Communication (MiB)', dir)
+
+    # get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
+    # generate_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)  
+    # generate_cumulative_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)
 
 
 def get_benchmark_stats(all_stats, benchmark_name, input_label, need_gmw_vec = True):
@@ -653,10 +766,11 @@ def get_benchmark_stats(all_stats, benchmark_name, input_label, need_gmw_vec = T
     return None
 
 def generate_comparison_graphs(lan_stats, wan_stats, get_val, y_label, dir):
-    gmwfile = "comparison-gmw-{}.txt".format(y_label)
-    bmrfile = "comparison-bmr-{}.txt".format(y_label)
-    gmw_hist_graph_file = "comparison-gmw-hist {}{}".format(y_label, GRAPH_EXT)
-    bmr_hist_graph_file = "comparison-bmr-hist {}{}".format(y_label, GRAPH_EXT)
+    y_label_simple = ''.join(c for c in y_label if c.isalnum())
+    gmwfile = "comparison-gmw-{}.txt".format(y_label_simple)
+    bmrfile = "comparison-bmr-{}.txt".format(y_label_simple)
+    gmw_hist_graph_file = "comparison-gmw-hist-{}{}".format(y_label_simple, GRAPH_EXT)
+    bmr_hist_graph_file = "comparison-bmr-hist-{}{}".format(y_label_simple, GRAPH_EXT)
     # line_graph_file = "all-line {}{}".format(y_label, GRAPH_EXT)
     gmwfile_path = os.path.join(dir, gmwfile)
     bmrfile_path = os.path.join(dir, bmrfile)
@@ -749,21 +863,21 @@ def generate_graphs(lan, wan):
         generate_comparison_graphs(lan_stats, wan_stats, get_circ_gen_time, 
             'Circuit Generation Time (ms)', COMPARISON_GRAPHS_DIR)
 
-        get_online_time = lambda x: x.timing_stats.gates_online.mean if x is not None else 0
-        generate_comparison_graphs(lan_stats, wan_stats, get_online_time, 'Online Time (ms)',
+        get_online_time = lambda x: x.timing_stats.circuit_evaluation.mean if x is not None else 0
+        generate_comparison_graphs(lan_stats, wan_stats, get_online_time, 'Online + Setup Time (ms)',
             COMPARISON_GRAPHS_DIR)
 
-        get_setup_time = lambda x: x.timing_stats.gates_setup.mean if x is not None else 0
+        get_setup_time = lambda x: x.timing_stats.gates_setup.mean+x.timing_stats.preprocess_total.mean if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_setup_time, 'Setup Time (ms)',
             COMPARISON_GRAPHS_DIR)
 
         get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
-        generate_comparison_graphs(lan_stats, wan_stats, get_send_size, 'Sent Data (MiB)',
+        generate_comparison_graphs(lan_stats, wan_stats, get_send_size, 'Communication (MiB)',
             COMPARISON_GRAPHS_DIR)
 
-        get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
-        generate_comparison_graphs(lan_stats, wan_stats, get_recv_size, 'Received Data (MiB)',
-            COMPARISON_GRAPHS_DIR)
+        # get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
+        # generate_comparison_graphs(lan_stats, wan_stats, get_recv_size, 'Received Data (MiB)',
+        #     COMPARISON_GRAPHS_DIR)
   
 
 if __name__ == "__main__":
