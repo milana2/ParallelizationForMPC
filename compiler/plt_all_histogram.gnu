@@ -11,7 +11,7 @@ set autoscale
 set autoscale y
 set key autotitle columnhead
 set ylabel sprintf("%s", Y_LABEL)
-set xlabel 'Input Size'
+set xlabel 'Benchmark'
 set y2label 'Improvement (number of times)'
 set ytics nomirror
 set y2tics nomirror

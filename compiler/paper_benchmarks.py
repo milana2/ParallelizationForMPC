@@ -353,7 +353,7 @@ def get_max_dist_between_syms_inputs():
 def get_mnist_relu_inputs()-> tuple[list[InputArgs], int]:
     all_args = []
     non_vec_up_to = 6
-    for config in [[16, 16], [16, 32], [16, 64], [16, 128], [16, 256], [16, 512], [16, 1024]]:#[2048, 2084], [4096, 4096]]:
+    for config in [[16, 16], [16, 32], [16, 64], [16, 128], [16, 256], [16, 512], [16, 1024]]:
         len_inner = config[0]
         len_outer = config[1]
         args = [
@@ -394,38 +394,38 @@ def get_psi_inputs()-> tuple[list[InputArgs], int]:
     return (all_args, non_vec_up_to)
 
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
-    # if name == "biometric" or name == "biometric_fast": # --- need to get inputs at 2048
-    #     return get_biometric_inputs()
-    # if name == "chapterfour_figure_12": # new ---
-    #     return get_chapterfour_figure_12_inputs()
-    if name == "convex_hull":# or name == "minimal_points": #convex hull is new
+    if name == "biometric" or name == "biometric_fast":
+        return get_biometric_inputs()
+    if name == "chapterfour_figure_12": # millionaire's problem, not interesting
+        return get_chapterfour_figure_12_inputs()
+    if name == "convex_hull" or name == "minimal_points":
         return get_convex_hull_inputs()
-    # if name == "count_102" or name == "longest_102":
-    #     return get_count_102_inputs()
-    # if name == "count_10s":
-    #     return get_count_10s_inputs()
-    # if name == "count_123":
-    #     return get_count_123_inputs()
-    # if name == "cryptonets_max_pooling":
-    #     return get_cryptonets_max_pooling_inputs()
-    # if name == "db_cross_join_trivial": # could only do up to 64
-    #     return get_db_cross_join_trivial_inputs()
-    # if name == "db_variance":
-    #     return get_db_variance_inputs()
-    # if name == "histogram":
-    #     return get_histogram_inputs()
-    # if name == "inner_product":
-    #     return get_inner_product_inputs()
-    # if name == "kmeans_iteration":
-    #     return get_kmeans_iteration_inputs()
-    # if name == "longest_odd_10": # need to run for 4096
-    #     return get_longest_odd_10_inputs()
-    # if name == "max_dist_between_syms" or name == "max_sum_between_syms":
-    #     return get_max_dist_between_syms_inputs()
-    # if name == "mnist_relu":
-    #     return get_mnist_relu_inputs()
-    # if name == "psi": 
-    #     return get_psi_inputs()
+    if name == "count_102" or name == "longest_102":
+        return get_count_102_inputs()
+    if name == "count_10s":
+        return get_count_10s_inputs()
+    if name == "count_123":
+        return get_count_123_inputs()
+    if name == "cryptonets_max_pooling":
+        return get_cryptonets_max_pooling_inputs()
+    if name == "db_cross_join_trivial": # could only do up to 64
+        return get_db_cross_join_trivial_inputs()
+    if name == "db_variance":
+        return get_db_variance_inputs()
+    if name == "histogram":
+        return get_histogram_inputs()
+    if name == "inner_product":
+        return get_inner_product_inputs()
+    if name == "kmeans_iteration":
+        return get_kmeans_iteration_inputs()
+    if name == "longest_odd_10": # could not run for 4096
+        return get_longest_odd_10_inputs()
+    if name == "max_dist_between_syms" or name == "max_sum_between_syms":
+        return get_max_dist_between_syms_inputs()
+    if name == "mnist_relu":
+        return get_mnist_relu_inputs()
+    if name == "psi": # could not run from 2048 and 4096
+        return get_psi_inputs()
     return [[], 0]
 
 
@@ -600,6 +600,10 @@ def get_x_label_for_benchmark(name):
         return "Count 123"
     if name == "count_10s":
         return "Count 10s"
+    if name == "cryptonets_max_pooling":
+        return "Cryptonets (Max Pooling)"
+    if name == "db_cross_join_trivial":
+        return "DB Cross Join (Trivial)"
     if name == "db_variance":
         return "Database Variance"
     if name == "histogram":
@@ -610,12 +614,16 @@ def get_x_label_for_benchmark(name):
         return "k-means"
     if name == "longest_102":
         return "Longest 102"
+    if name == "longest_odd_10":
+        return "Longest Odd 10"
     if name == "max_dist_between_syms":
         return "Max. Dist. b/w Symbols"
     if name == "max_sum_between_syms":
         return "Max. Sum b/w Symbols"
     if name == "minimal_points":
         return "Minimal Points"
+    if name == "mnist_relu":
+        return "MNIST ReLU"
     if name == "psi":
         return "Private Set Intersection"
 
@@ -724,13 +732,17 @@ def generate_single_network_graphs(all_stats, dir):
     generate_graph_for_attr(all_stats, get_circ_gen_time, 'Circuit Generation Time (ms)', dir)
     generate_cumulative_graph_for_attr(all_stats, get_circ_gen_time, 'Circuit Generation Time (ms)', dir)
     
-    get_online_time = lambda x: x.timing_stats.gates_online.mean+x.timing_stats.gates_setup.mean if x is not None else 0
-    generate_graph_for_attr(all_stats, get_online_time, 'Online + Setup Time (ms)', dir)  
-    generate_cumulative_graph_for_attr(all_stats, get_online_time, 'Online + Setup Time (ms)', dir)
+    get_online_time = lambda x: x.timing_stats.gates_online.mean if x is not None else 0
+    generate_graph_for_attr(all_stats, get_online_time, 'Online Time (ms)', dir)  
+    generate_cumulative_graph_for_attr(all_stats, get_online_time, 'Online Time (ms)', dir)
 
-    get_setup_time = lambda x: x.timing_stats.gates_setup.mean if x is not None else 0
+    get_setup_time = lambda x: x.timing_stats.gates_setup.mean + x.timing_stats.preprocess_total.mean if x is not None else 0
     generate_graph_for_attr(all_stats, get_setup_time, 'Setup Time (ms)', dir)    
     generate_cumulative_graph_for_attr(all_stats, get_setup_time, 'Setup Time (ms)', dir)
+
+    get_online_time = lambda x: x.timing_stats.circuit_evaluation.mean if x is not None else 0
+    generate_graph_for_attr(all_stats, get_online_time, 'Online + Setup Time (ms)', dir)  
+    generate_cumulative_graph_for_attr(all_stats, get_online_time, 'Online + Setup Time (ms)', dir)
 
     get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
     generate_graph_for_attr(all_stats, get_send_size, 'Communication (MiB)', dir)
@@ -851,11 +863,11 @@ def generate_graphs(lan, wan):
         generate_comparison_graphs(lan_stats, wan_stats, get_circ_gen_time, 
             'Circuit Generation Time (ms)', COMPARISON_GRAPHS_DIR)
 
-        get_online_time = lambda x: x.timing_stats.gates_online.mean+x.timing_stats.gates_setup.mean if x is not None else 0
+        get_online_time = lambda x: x.timing_stats.circuit_evaluation.mean if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_online_time, 'Online + Setup Time (ms)',
             COMPARISON_GRAPHS_DIR)
 
-        get_setup_time = lambda x: x.timing_stats.gates_setup.mean if x is not None else 0
+        get_setup_time = lambda x: x.timing_stats.gates_setup.mean+x.timing_stats.preprocess_total.mean if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_setup_time, 'Setup Time (ms)',
             COMPARISON_GRAPHS_DIR)
 
