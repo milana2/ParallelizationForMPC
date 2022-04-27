@@ -4,74 +4,10 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric (Non-Vectorized)|58592|0|58558|47071|4.671 MiB |47071|4.671 MiB |11215.131 ms |4701.0 ms |
-|chapterfour_figure_12|452|0|445|750|0.071 MiB |750|0.071 MiB |239.652 ms |37.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|452|0|445|750|0.071 MiB |750|0.071 MiB |171.727 ms |37.0 ms |
-|convex_hull|1155|1073|61|1379|0.174 MiB |1379|0.174 MiB |392.416 ms |101.0 ms |
-|convex_hull (Non-Vectorized)|6295|0|6264|6263|0.621 MiB |6263|0.621 MiB |1471.707 ms |550.0 ms |
-|count_102|3204|105|3080|3818|0.388 MiB |3818|0.388 MiB |1924.399 ms |312.0 ms |
-|count_102 (Non-Vectorized)|4090|0|4071|5510|0.543 MiB |5510|0.543 MiB |2066.598 ms |422.0 ms |
-|count_10s|2281|106|2159|2846|0.287 MiB |2846|0.287 MiB |1388.983 ms |217.0 ms |
-|count_10s (Non-Vectorized)|2873|0|2857|3974|0.391 MiB |3974|0.391 MiB |1442.75 ms |292.0 ms |
-|count_123|2288|110|2161|2848|0.288 MiB |2848|0.288 MiB |1234.554 ms |218.0 ms |
-|count_123 (Non-Vectorized)|2895|0|2878|3988|0.392 MiB |3988|0.392 MiB |1571.367 ms |289.0 ms |
-|cryptonets_max_pooling|823|678|41|949|0.181 MiB |949|0.181 MiB |436.941 ms |78.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|13444|0|13340|11209|1.117 MiB |11209|1.117 MiB |2793.851 ms |1083.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|3326|0|2850|5714|0.593 MiB |5714|0.593 MiB |1319.281 ms |432.0 ms |
-|db_variance|16270|3308|12940|13644|1.49 MiB |13644|1.49 MiB |8453.949 ms |1343.0 ms |
-|db_variance (Non-Vectorized)|39379|0|39357|31522|3.126 MiB |31522|3.126 MiB |11984.115 ms |3173.0 ms |
-|inner_product|3886|2970|907|3580|0.387 MiB |3580|0.387 MiB |1174.317 ms |322.0 ms |
-|inner_product (Non-Vectorized)|9817|0|9808|8052|0.796 MiB |8052|0.796 MiB |2061.549 ms |778.0 ms |
-|longest_102|5454|111|5313|5640|0.568 MiB |5640|0.568 MiB |3062.706 ms |498.0 ms |
-|longest_102 (Non-Vectorized)|6371|0|6341|7350|0.725 MiB |7350|0.725 MiB |2558.967 ms |600.0 ms |
-|longest_odd_10|4357|110|4222|4612|0.468 MiB |4612|0.468 MiB |2540.812 ms |394.0 ms |
-|longest_odd_10 (Non-Vectorized)|5050|0|5025|5942|0.598 MiB |5942|0.598 MiB |2181.2 ms |482.0 ms |
-|max_dist_between_syms|4258|38|4198|4452|0.441 MiB |4452|0.441 MiB |2433.164 ms |380.0 ms |
-|max_dist_between_syms (Non-Vectorized)|4487|0|4465|4886|0.481 MiB |4886|0.481 MiB |2045.252 ms |407.0 ms |
-|max_sum_between_syms|4257|38|4198|4452|0.441 MiB |4452|0.441 MiB |2430.634 ms |373.0 ms |
-|max_sum_between_syms (Non-Vectorized)|4486|0|4465|4886|0.481 MiB |4886|0.481 MiB |1902.688 ms |406.0 ms |
-|minimal_points|527|477|35|763|0.097 MiB |763|0.097 MiB |236.368 ms |42.0 ms |
-|minimal_points (Non-Vectorized)|4055|0|4038|3647|0.361 MiB |3647|0.361 MiB |993.379 ms |334.0 ms |
-|mnist_relu|839|227|208|769|0.47 MiB |769|0.47 MiB |361.987 ms |94.0 ms |
-|mnist_relu (Non-Vectorized)|45203|0|44600|36589|3.736 MiB |36589|3.736 MiB |8343.539 ms |3686.0 ms |
-|psi|132|61|42|472|0.063 MiB |472|0.063 MiB |150.502 ms |11.0 ms |
-|psi (Non-Vectorized)|1261|0|1200|2644|0.26 MiB |2644|0.26 MiB |652.401 ms |158.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric (Non-Vectorized)|51456|0|51422|86513|9.917 MiB |86511|9.917 MiB |5552.488 ms |5263.0 ms |
-|chapterfour_figure_12|400|0|393|979|0.108 MiB |974|0.108 MiB |82.652 ms |41.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|400|0|393|979|0.108 MiB |974|0.108 MiB |85.418 ms |40.0 ms |
-|convex_hull|1055|973|61|1997|0.556 MiB |1988|0.555 MiB |188.66 ms |120.0 ms |
-|convex_hull (Non-Vectorized)|5659|0|5628|9023|1.039 MiB |9004|1.037 MiB |722.058 ms |565.0 ms |
-|count_102|1754|105|1630|3833|0.643 MiB |3820|0.643 MiB |220.517 ms |211.0 ms |
-|count_102 (Non-Vectorized)|2640|0|2621|8063|0.934 MiB |8050|0.933 MiB |304.053 ms |384.0 ms |
-|count_10s|1266|106|1144|2946|0.472 MiB |2934|0.471 MiB |132.794 ms |152.0 ms |
-|count_10s (Non-Vectorized)|1858|0|1842|5766|0.666 MiB |5754|0.665 MiB |174.182 ms |272.0 ms |
-|count_123|1273|110|1146|2952|0.474 MiB |2941|0.473 MiB |141.18 ms |150.0 ms |
-|count_123 (Non-Vectorized)|1880|0|1863|5802|0.67 MiB |5791|0.669 MiB |249.414 ms |275.0 ms |
-|cryptonets_max_pooling|745|600|41|1462|1.051 MiB |1398|1.047 MiB |169.344 ms |108.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|11884|0|11780|17935|2.181 MiB |17871|2.177 MiB |1404.265 ms |1183.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|3926|0|3450|51729|6.461 MiB |51273|6.429 MiB |658.226 ms |2029.0 ms |
-|db_variance|13355|3015|10318|20704|4.009 MiB |20698|4.009 MiB |1444.618 ms |1320.0 ms |
-|db_variance (Non-Vectorized)|34413|0|34391|56544|6.47 MiB |56538|6.47 MiB |3446.598 ms |3455.0 ms |
-|inner_product|3301|2826|466|5833|1.116 MiB |5830|1.116 MiB |379.021 ms |348.0 ms |
-|inner_product (Non-Vectorized)|8944|0|8935|15763|1.798 MiB |15760|1.798 MiB |972.341 ms |943.0 ms |
-|longest_102|3744|111|3603|6800|1.004 MiB |6776|1.003 MiB |424.507 ms |414.0 ms |
-|longest_102 (Non-Vectorized)|4661|0|4631|11075|1.298 MiB |11051|1.296 MiB |527.049 ms |592.0 ms |
-|longest_odd_10|3005|110|2870|6691|1.003 MiB |6670|1.001 MiB |386.814 ms |375.0 ms |
-|longest_odd_10 (Non-Vectorized)|3698|0|3673|10884|1.291 MiB |10863|1.289 MiB |425.648 ms |534.0 ms |
-|max_dist_between_syms|2890|38|2830|5170|0.663 MiB |5150|0.662 MiB |399.906 ms |307.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3119|0|3097|6255|0.738 MiB |6235|0.736 MiB |401.464 ms |353.0 ms |
-|max_sum_between_syms|2889|38|2830|5168|0.663 MiB |5149|0.661 MiB |393.512 ms |309.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3118|0|3097|6253|0.737 MiB |6234|0.736 MiB |340.054 ms |356.0 ms |
-|minimal_points|475|425|35|1015|0.267 MiB |1012|0.267 MiB |82.824 ms |53.0 ms |
-|minimal_points (Non-Vectorized)|3563|0|3546|4165|0.484 MiB |4160|0.483 MiB |446.109 ms |304.0 ms |
-|mnist_relu|813|201|208|1484|3.366 MiB |1480|3.366 MiB |486.145 ms |164.0 ms |
-|mnist_relu (Non-Vectorized)|40003|0|39400|59393|7.432 MiB |59190|7.418 MiB |5474.099 ms |3996.0 ms |
-|psi|148|77|42|762|0.366 MiB |747|0.365 MiB |104.946 ms |26.0 ms |
-|psi (Non-Vectorized)|1341|0|1280|6752|0.777 MiB |6705|0.774 MiB |196.804 ms |272.0 ms |
 
 ## Compiler stages with different benchmarks
 ### `biometric`
@@ -341,17 +277,17 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
+    min_sum_1 = _MPC_CONSTANT_10000;
     _MPC_PLAINTEXT_min_sum_1 = std::uint32_t(10000);
+    min_index_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_min_index_1 = std::uint32_t(0);
+    sum_2 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_sum_2 = std::uint32_t(0);
     vectorized_assign(_6_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return S_0[((indices[0] * _MPC_PLAINTEXT_D_0) + indices[1])];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}));
     vectorized_assign(_7_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return C_0[indices[1]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}));
     vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return encrypto::motion::SecureUnsignedInteger(party->In<Protocol>(encrypto::motion::ToInput(indices[0]), 0));}), {_MPC_PLAINTEXT_N_0}));
-    min_sum_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_min_sum_1), 0);
     vectorized_assign(_3_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return min_sum_1;}), {_MPC_PLAINTEXT_N_0}));
-    min_index_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_min_index_1), 0);
     vectorized_assign(_4_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return min_index_1;}), {_MPC_PLAINTEXT_N_0}));
-    sum_2 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_sum_2), 0);
     vectorized_assign(_5_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return sum_2;}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}));
     vectorized_assign(d_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}, {true, true}, {}, (vectorized_access(_6_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}, {true, true}, {}) - vectorized_access(_7_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}, {true, true}, {})));
     vectorized_assign(p_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}, {true, true}, {}, (vectorized_access(d_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}, {true, true}, {}) * vectorized_access(d_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_D_0}, {true, true}, {})));
@@ -547,15 +483,15 @@ encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
 
 
     // Function body
+    z_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_z_1 = std::uint32_t(0);
     _1_1 = (x_0 > _MPC_CONSTANT_0);
     _2_1 = (y_0 > _MPC_CONSTANT_0);
+    z_3 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_z_3 = std::uint32_t(0);
+    z_2 = _MPC_CONSTANT_1;
     _MPC_PLAINTEXT_z_2 = std::uint32_t(1);
-    z_2 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_z_2), 0);
-    z_3 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_z_3), 0);
     z_4 = _2_1.Mux(z_2.Get(), z_3.Get());
-    z_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_z_1), 0);
     z_5 = _1_1.Mux(z_4.Get(), z_1.Get());
     return z_5;
 
@@ -912,15 +848,16 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return result_Y_0;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return X_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Y_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
+    is_hull_2 = _MPC_CONSTANT_true;
     _MPC_PLAINTEXT_is_hull_2 = true;
     vectorized_assign(_16_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return X_coords_0[indices[1]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
     vectorized_assign(_17_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Y_coords_0[indices[1]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
+    is_hull_4 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_is_hull_4 = false;
     vectorized_assign(val_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
     vectorized_assign(val_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
     vectorized_assign(p1_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
     vectorized_assign(p1_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
-    is_hull_2 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_is_hull_2), 0);
     vectorized_assign(_15_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return is_hull_2;}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
     vectorized_assign(p2_X_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, vectorized_access(_16_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}));
     vectorized_assign(p2_Y_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, vectorized_access(_17_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}));
@@ -946,13 +883,11 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
             vectorized_assign(is_hull_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__21_0}, vectorized_access(is_hull_5, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {(_MPC_PLAINTEXT__21_0 - std::uint32_t(1))}));
         }
 
-        is_hull_4 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_is_hull_4), 0);
         vectorized_assign(is_hull_5, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__21_0}, vectorized_access(_9_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__21_0}).Mux(decltype(is_hull_4)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return is_hull_4;}), {_MPC_PLAINTEXT_N_0})).Get(), vectorized_access(is_hull_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, false}, {_MPC_PLAINTEXT__21_0}).Get()));
 
     }
 
     vectorized_assign(_20_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, drop_dim(vectorized_access(is_hull_5, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}).Unsimdify(), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
-    is_hull_2 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_is_hull_2), 0);
     vectorized_assign(is_hull_6, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Mux(vectorized_access(_20_0, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get(), decltype(is_hull_2)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return is_hull_2;}), {_MPC_PLAINTEXT_N_0})).Get()));
     vectorized_assign(val_X_4, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(is_hull_6, {_MPC_PLAINTEXT_N_0}, {true}, {}).Mux(vectorized_access(val_X_3, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get(), vectorized_access(val_X_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get()));
     vectorized_assign(val_Y_4, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(is_hull_6, {_MPC_PLAINTEXT_N_0}, {true}, {}).Mux(vectorized_access(val_Y_3, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get(), vectorized_access(val_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}).Get()));
@@ -1188,7 +1123,9 @@ encrypto::motion::SecureUnsignedInteger count_102(
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
+    s0_1 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_s0_1 = false;
+    c_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_c_1 = std::uint32_t(0);
     vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(2)];}), {_MPC_PLAINTEXT_N_0}));
@@ -1196,9 +1133,7 @@ encrypto::motion::SecureUnsignedInteger count_102(
     vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(1)];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(0)];}), {_MPC_PLAINTEXT_N_0}));
-    s0_1 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_s0_1), 0);
     vectorized_assign(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s0_1;}), {_MPC_PLAINTEXT_N_0}));
-    c_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_c_1), 0);
     vectorized_assign(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return c_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
@@ -1491,8 +1426,11 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
+    s0_1 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_s0_1 = false;
+    s1_1 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_s1_1 = false;
+    scount_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_scount_1 = std::uint32_t(0);
     vectorized_assign(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(0)];}), {_MPC_PLAINTEXT_N_0}));
@@ -1500,11 +1438,8 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     vectorized_assign(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(0)];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(1)];}), {_MPC_PLAINTEXT_N_0}));
-    s0_1 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_s0_1), 0);
     vectorized_assign(_5_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s0_1;}), {_MPC_PLAINTEXT_N_0}));
-    s1_1 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_s1_1), 0);
     vectorized_assign(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s1_1;}), {_MPC_PLAINTEXT_N_0}));
-    scount_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_scount_1), 0);
     vectorized_assign(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return scount_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (~(to_share_wrapper(vectorized_access(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {})))));
     vectorized_assign(_3_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
@@ -1820,8 +1755,11 @@ encrypto::motion::SecureUnsignedInteger count_123(
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
+    s1_1 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_s1_1 = false;
+    s2_1 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_s2_1 = false;
+    c_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_c_1 = std::uint32_t(0);
     vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(2)];}), {_MPC_PLAINTEXT_N_0}));
@@ -1829,11 +1767,8 @@ encrypto::motion::SecureUnsignedInteger count_123(
     vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(1)];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(0)];}), {_MPC_PLAINTEXT_N_0}));
-    s1_1 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_s1_1), 0);
     vectorized_assign(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s1_1;}), {_MPC_PLAINTEXT_N_0}));
-    s2_1 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_s2_1), 0);
     vectorized_assign(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s2_1;}), {_MPC_PLAINTEXT_N_0}));
-    c_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_c_1), 0);
     vectorized_assign(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return c_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_4_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
@@ -2481,6 +2416,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> db_cross_join_trivial(
     vectorized_assign(_10_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return A_0[(indices[0] * std::uint32_t(2))];}), {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}));
     vectorized_assign(_11_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return A_0[((indices[0] * std::uint32_t(2)) + std::uint32_t(1))];}), {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}));
     vectorized_assign(_12_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return B_0[((indices[1] * std::uint32_t(2)) + std::uint32_t(1))];}), {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}));
+    v_4 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_v_4 = std::uint32_t(0);
     vectorized_assign(_13_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return (to_share_wrapper(encrypto::motion::SecureUnsignedInteger(party->In<Protocol>(encrypto::motion::ToInput(indices[2]), 0))) == to_share_wrapper(_MPC_CONSTANT_0));}), {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}));
     vectorized_assign(_14_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return (to_share_wrapper(encrypto::motion::SecureUnsignedInteger(party->In<Protocol>(encrypto::motion::ToInput(indices[2]), 0))) == to_share_wrapper(_MPC_CONSTANT_1));}), {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}));
@@ -2491,11 +2427,9 @@ std::vector<encrypto::motion::SecureUnsignedInteger> db_cross_join_trivial(
     vectorized_assign(v_7, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, vectorized_access(_11_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}));
     vectorized_assign(v_9, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, vectorized_access(_12_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}));
     vectorized_assign(_7_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vectorized_access(_6_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Unsimdify();}), {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}));
-    v_4 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_v_4), 0);
     vectorized_assign(v_6, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, vectorized_access(_13_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Mux(vectorized_access(v_5, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Get(), decltype(v_4)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return v_4;}), {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)})).Get()));
     vectorized_assign(v_8, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, vectorized_access(_14_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Mux(vectorized_access(v_7, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Get(), vectorized_access(v_6, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Get()));
     vectorized_assign(v_10, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, vectorized_access(_15_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Mux(vectorized_access(v_9, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Get(), vectorized_access(v_8, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Get()));
-    v_4 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_v_4), 0);
     vectorized_assign(v_11, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, vectorized_access(_1_4, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Mux(vectorized_access(v_10, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}).Get(), decltype(v_4)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return v_4;}), {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)})).Get()));
     vectorized_assign(res_4, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, vectorized_update(_7_0, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {}, vectorized_access(v_11, {_MPC_PLAINTEXT_Len_A_0, _MPC_PLAINTEXT_Len_B_0, std::uint32_t(3)}, {true, true, true}, {})));
     return res_4;
@@ -2739,14 +2673,14 @@ encrypto::motion::SecureUnsignedInteger db_variance(
     len_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_len_0), 0);
 
     // Function body
+    sum_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_sum_1 = std::uint32_t(0);
     vectorized_assign(_3_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return A_0[indices[0]];}), {_MPC_PLAINTEXT_len_0}));
     vectorized_assign(_5_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return V_0;}), {_MPC_PLAINTEXT_len_0}));
     vectorized_assign(_6_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return A_0[indices[0]];}), {_MPC_PLAINTEXT_len_0}));
+    res_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_res_1 = std::uint32_t(0);
-    sum_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_sum_1), 0);
     vectorized_assign(_2_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return sum_1;}), {_MPC_PLAINTEXT_len_0}));
-    res_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_res_1), 0);
     vectorized_assign(_8_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return res_1;}), {_MPC_PLAINTEXT_len_0}));
 
     // Initialize loop counter
@@ -2764,7 +2698,6 @@ encrypto::motion::SecureUnsignedInteger db_variance(
     }
 
     _4_0 = drop_dim_monoreturn(vectorized_access(sum_3, {_MPC_PLAINTEXT_len_0}, {true}, {}).Unsimdify(), {_MPC_PLAINTEXT_len_0});
-    len_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_len_0), 0);
     exp_1 = (_4_0 / len_0);
     vectorized_assign(_7_0, {_MPC_PLAINTEXT_len_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return exp_1;}), {_MPC_PLAINTEXT_len_0}));
     vectorized_assign(dist_2, {_MPC_PLAINTEXT_len_0}, {true}, {}, (vectorized_access(_6_0, {_MPC_PLAINTEXT_len_0}, {true}, {}) - vectorized_access(_7_0, {_MPC_PLAINTEXT_len_0}, {true}, {})));
@@ -2786,7 +2719,6 @@ encrypto::motion::SecureUnsignedInteger db_variance(
     }
 
     _9_0 = drop_dim_monoreturn(vectorized_access(res_3, {_MPC_PLAINTEXT_len_0}, {true}, {}).Unsimdify(), {_MPC_PLAINTEXT_len_0});
-    len_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_len_0), 0);
     variance_1 = (_9_0 / len_0);
     return variance_1;
 
@@ -2993,7 +2925,6 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     std::transform(_MPC_PLAINTEXT_result_0.begin(), _MPC_PLAINTEXT_result_0.end(), std::back_inserter(result_0), [&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });
 
     // Function body
-    result_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_result_0), 0);
     vectorized_assign(_2_0, {_MPC_PLAINTEXT_num_bins_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return result_0;}), {_MPC_PLAINTEXT_num_bins_0}));
     vectorized_assign(_5_0, {_MPC_PLAINTEXT_num_bins_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return A_0[indices[1]];}), {_MPC_PLAINTEXT_num_bins_0, _MPC_PLAINTEXT_N_0}));
     vectorized_assign(_6_0, {_MPC_PLAINTEXT_num_bins_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return encrypto::motion::SecureUnsignedInteger(party->In<Protocol>(encrypto::motion::ToInput(indices[0]), 0));}), {_MPC_PLAINTEXT_num_bins_0, _MPC_PLAINTEXT_N_0}));
@@ -3163,10 +3094,10 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
+    sum_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_sum_1 = std::uint32_t(0);
     vectorized_assign(_2_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return A_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_3_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return B_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
-    sum_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_sum_1), 0);
     vectorized_assign(_1_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return sum_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(temp_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (vectorized_access(_2_0, {_MPC_PLAINTEXT_N_0}, {true}, {}) * vectorized_access(_3_0, {_MPC_PLAINTEXT_N_0}, {true}, {})));
 
@@ -3486,8 +3417,11 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
+    s0_1 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_s0_1 = false;
+    max_len_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_max_len_1 = std::uint32_t(0);
+    length_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_length_1 = std::uint32_t(0);
     vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(2)];}), {_MPC_PLAINTEXT_N_0}));
@@ -3495,12 +3429,10 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     vectorized_assign(_15_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(1)];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_16_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_17_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(0)];}), {_MPC_PLAINTEXT_N_0}));
+    length_4 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_length_4 = std::uint32_t(0);
-    s0_1 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_s0_1), 0);
     vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s0_1;}), {_MPC_PLAINTEXT_N_0}));
-    max_len_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_max_len_1), 0);
     vectorized_assign(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return max_len_1;}), {_MPC_PLAINTEXT_N_0}));
-    length_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_length_1), 0);
     vectorized_assign(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return length_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_15_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
@@ -3535,7 +3467,6 @@ encrypto::motion::SecureUnsignedInteger longest_102(
         }
 
         length_3[_MPC_PLAINTEXT__20_0] = (length_2[_MPC_PLAINTEXT__20_0] + _MPC_CONSTANT_1);
-        length_4 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_length_4), 0);
         length_5[_MPC_PLAINTEXT__20_0] = _6_2[_MPC_PLAINTEXT__20_0].Mux(length_3[_MPC_PLAINTEXT__20_0].Get(), length_4.Get());
 
     }
@@ -3856,19 +3787,20 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
+    current_length_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_current_length_1 = std::uint32_t(0);
+    max_length_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_max_length_1 = std::uint32_t(0);
+    s2_1 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_s2_1 = false;
     vectorized_assign(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(1)];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(0)];}), {_MPC_PLAINTEXT_N_0}));
+    current_length_4 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_current_length_4 = std::uint32_t(0);
-    current_length_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_current_length_1), 0);
     vectorized_assign(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return current_length_1;}), {_MPC_PLAINTEXT_N_0}));
-    max_length_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_max_length_1), 0);
     vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return max_length_1;}), {_MPC_PLAINTEXT_N_0}));
-    s2_1 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_s2_1), 0);
     vectorized_assign(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s2_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(s2_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
@@ -3900,7 +3832,6 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
             current_length_2[_MPC_PLAINTEXT__17_0] = current_length_6[(_MPC_PLAINTEXT__17_0 - std::uint32_t(1))];
         }
 
-        current_length_4 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_current_length_4), 0);
         current_length_5[_MPC_PLAINTEXT__17_0] = _2_2[_MPC_PLAINTEXT__17_0].Mux(current_length_4.Get(), current_length_2[_MPC_PLAINTEXT__17_0].Get());
         current_length_3[_MPC_PLAINTEXT__17_0] = (current_length_2[_MPC_PLAINTEXT__17_0] + _MPC_CONSTANT_1);
         current_length_6[_MPC_PLAINTEXT__17_0] = s1_2[_MPC_PLAINTEXT__17_0].Mux(current_length_3[_MPC_PLAINTEXT__17_0].Get(), current_length_5[_MPC_PLAINTEXT__17_0].Get());
@@ -4143,14 +4074,15 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
+    max_dist_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_max_dist_1 = std::uint32_t(0);
+    current_dist_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_current_dist_1 = std::uint32_t(0);
     vectorized_assign(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Sym_0;}), {_MPC_PLAINTEXT_N_0}));
+    current_dist_4 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_current_dist_4 = std::uint32_t(0);
-    max_dist_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_max_dist_1), 0);
     vectorized_assign(_4_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return max_dist_1;}), {_MPC_PLAINTEXT_N_0}));
-    current_dist_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_current_dist_1), 0);
     vectorized_assign(_5_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return current_dist_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (~vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {})));
@@ -4166,7 +4098,6 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
         }
 
         current_dist_3[_MPC_PLAINTEXT__9_0] = (current_dist_2[_MPC_PLAINTEXT__9_0] + _MPC_CONSTANT_1);
-        current_dist_4 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_current_dist_4), 0);
         current_dist_5[_MPC_PLAINTEXT__9_0] = _2_2[_MPC_PLAINTEXT__9_0].Mux(current_dist_3[_MPC_PLAINTEXT__9_0].Get(), current_dist_4.Get());
 
     }
@@ -4407,15 +4338,16 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
 
     // Function body
+    max_sum_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_max_sum_1 = std::uint32_t(0);
+    current_sum_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_current_sum_1 = std::uint32_t(0);
     vectorized_assign(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Sym_0;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
+    current_sum_4 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_current_sum_4 = std::uint32_t(0);
-    max_sum_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_max_sum_1), 0);
     vectorized_assign(_4_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return max_sum_1;}), {_MPC_PLAINTEXT_N_0}));
-    current_sum_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_current_sum_1), 0);
     vectorized_assign(_5_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return current_sum_1;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
     vectorized_assign(_2_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (~vectorized_access(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {})));
@@ -4431,7 +4363,6 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
         }
 
         current_sum_3[_MPC_PLAINTEXT__10_0] = (current_sum_2[_MPC_PLAINTEXT__10_0] + _8_0[_MPC_PLAINTEXT__10_0]);
-        current_sum_4 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_current_sum_4), 0);
         current_sum_5[_MPC_PLAINTEXT__10_0] = _2_2[_MPC_PLAINTEXT__10_0].Mux(current_sum_3[_MPC_PLAINTEXT__10_0].Get(), current_sum_4.Get());
 
     }
@@ -4739,6 +4670,7 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return result_Y_0;}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_16_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return X_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_17_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Y_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
+    bx_2 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_bx_2 = false;
     vectorized_assign(_11_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return X_coords_0[indices[1]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
     vectorized_assign(_12_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return X_coords_0[indices[0]];}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
@@ -4748,7 +4680,6 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     vectorized_assign(val_Y_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
     vectorized_assign(val_X_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_16_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
     vectorized_assign(val_Y_3, {_MPC_PLAINTEXT_N_0}, {true}, {}, vectorized_access(_17_0, {_MPC_PLAINTEXT_N_0}, {true}, {}));
-    bx_2 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_bx_2), 0);
     vectorized_assign(_10_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return bx_2;}), {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}));
     vectorized_assign(_3_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, (vectorized_access(_12_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}) > vectorized_access(_11_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})));
     vectorized_assign(_4_3, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}, (vectorized_access(_14_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {}) > vectorized_access(_13_0, {_MPC_PLAINTEXT_N_0, _MPC_PLAINTEXT_N_0}, {true, true}, {})));
@@ -4954,11 +4885,11 @@ std::vector<encrypto::motion::SecureUnsignedInteger> mnist_relu(
     vectorized_assign(_2_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return OUTPUT_res_0;}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}));
     vectorized_assign(_4_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return input_0[((indices[0] * _MPC_PLAINTEXT_len_inner_0) + indices[1])];}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}));
     vectorized_assign(_5_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return input_0[((indices[0] * _MPC_PLAINTEXT_len_inner_0) + indices[1])];}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}));
+    val_3 = _MPC_CONSTANT_1;
     _MPC_PLAINTEXT_val_3 = std::uint32_t(1);
     vectorized_assign(_3_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vectorized_access(_2_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}).Unsimdify();}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}));
     vectorized_assign(_1_3, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, (vectorized_access(_4_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}) > decltype(_MPC_CONSTANT_1)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_1;}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}))));
     vectorized_assign(val_4, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_access(_5_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}));
-    val_3 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_val_3), 0);
     vectorized_assign(val_5, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_access(_1_3, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}).Mux(vectorized_access(val_4, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}).Get(), decltype(val_3)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return val_3;}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0})).Get()));
     vectorized_assign(OUTPUT_res_3, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_update(_3_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_access(val_5, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {})));
     return OUTPUT_res_3;
@@ -5180,13 +5111,14 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     // Function body
     vectorized_assign(_2_0, {_MPC_PLAINTEXT_SA_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return result_0;}), {_MPC_PLAINTEXT_SA_0}));
     vectorized_assign(_6_0, {_MPC_PLAINTEXT_SA_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return A_0[indices[0]];}), {_MPC_PLAINTEXT_SA_0}));
+    flag_2 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_flag_2 = false;
     vectorized_assign(_4_0, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return A_0[indices[0]];}), {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}));
     vectorized_assign(_5_0, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return B_0[indices[1]];}), {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}));
+    flag_4 = _MPC_CONSTANT_true;
     _MPC_PLAINTEXT_flag_4 = true;
     vectorized_assign(val_2, {_MPC_PLAINTEXT_SA_0}, {true}, {}, vectorized_access(_2_0, {_MPC_PLAINTEXT_SA_0}, {true}, {}));
     vectorized_assign(val_3, {_MPC_PLAINTEXT_SA_0}, {true}, {}, vectorized_access(_6_0, {_MPC_PLAINTEXT_SA_0}, {true}, {}));
-    flag_2 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_flag_2), 0);
     vectorized_assign(_3_0, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return flag_2;}), {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}));
     vectorized_assign(_1_3, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, true}, {}, (to_share_wrapper(vectorized_access(_4_0, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, true}, {})) == to_share_wrapper(vectorized_access(_5_0, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, true}, {}))));
 
@@ -5200,7 +5132,6 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
             vectorized_assign(flag_3, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, false}, {_MPC_PLAINTEXT__8_0}, vectorized_access(flag_5, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, false}, {(_MPC_PLAINTEXT__8_0 - std::uint32_t(1))}));
         }
 
-        flag_4 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_flag_4), 0);
         vectorized_assign(flag_5, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, false}, {_MPC_PLAINTEXT__8_0}, vectorized_access(_1_3, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, false}, {_MPC_PLAINTEXT__8_0}).Mux(decltype(flag_4)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return flag_4;}), {_MPC_PLAINTEXT_SA_0})).Get(), vectorized_access(flag_3, {_MPC_PLAINTEXT_SA_0, _MPC_PLAINTEXT_SB_0}, {true, false}, {_MPC_PLAINTEXT__8_0}).Get()));
 
     }
