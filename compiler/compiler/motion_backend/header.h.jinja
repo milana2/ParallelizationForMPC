@@ -236,7 +236,7 @@ void vectorized_assign(std::vector<T> &tgt, const std::vector<std::uint32_t> &di
 }
 
 template <typename T, typename V>
-std::vector<T> vectorized_update(std::vector<T> tgt, const std::vector<std::uint32_t> dim_sizes,
+std::vector<T> vectorized_update(std::vector<T> &tgt, const std::vector<std::uint32_t> dim_sizes,
                                  const std::vector<bool> &vectorized_dims,
                                  std::vector<std::uint32_t> idxs, const std::vector<V> &val)
 {
@@ -245,7 +245,7 @@ std::vector<T> vectorized_update(std::vector<T> tgt, const std::vector<std::uint
 }
 
 template <typename T, typename V>
-std::vector<T> vectorized_update(const std::vector<T> &tgt,
+std::vector<T> vectorized_update(std::vector<T> &tgt,
                                  const std::vector<std::uint32_t> dim_sizes,
                                  const std::vector<bool> &vectorized_dims,
                                  std::vector<std::uint32_t> idxs, const V &val)
@@ -254,11 +254,12 @@ std::vector<T> vectorized_update(const std::vector<T> &tgt,
 }
 
 template <typename T, typename V>
-std::vector<T> vectorized_update(const T &tgt, const std::vector<std::uint32_t> dim_sizes,
+std::vector<T> vectorized_update(T tgt, const std::vector<std::uint32_t> dim_sizes,
                                  const std::vector<bool> &vectorized_dims,
                                  std::vector<std::uint32_t> idxs, const V &val)
 {
-    return vectorized_update(tgt.Unsimdify(), dim_sizes, vectorized_dims, idxs, val);
+    auto arr = tgt.Unsimdify();
+    return vectorized_update(arr, dim_sizes, vectorized_dims, idxs, val);
 }
 
 // clang-format off

@@ -783,7 +783,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         )
         idxs = "{}"
         update_array = expr.array
-        if isinstance(update_array, VectorizedAccess):
+        if isinstance(update_array, VectorizedAccess) and all(vectorized for vectorized in update_array.vectorized_dims):
             update_array = update_array.array
         return f"vectorized_update({render_expr(update_array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(expr.value, ctx)})"
 
