@@ -202,3 +202,18 @@
   columns=fullflexible,
   captionpos=b,
   escapechar=\%}}  {}
+  
+%\newcommand{\trule}[1]{\textsc{\scriptsize ({#1})}}
+
+\newenvironment{semantics}{
+  \begin{displaymath}}{
+  \end{displaymath}
+}
+\newcommand{\ntyperule}[3]{ 
+  \begin{array}{c} 
+    \textsc{\scriptsize ({#1})} \\ 
+    #2 \\[1mm]
+    \hline 
+    \raisebox{0pt}[12pt][0pt]{\ensuremath{#3}}
+  \end{array}} 
+

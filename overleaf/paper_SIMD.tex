@@ -398,18 +398,18 @@ infeasible loop-carried dependences introduced by standard SSA to improve vector
 def biometric(C: shared[list[int]], D: int, 
       S: shared[list[int]], N: int) -> 
       shared[tuple[int,int]]:
-   min_sum = MAX_INT
-   min_idx = 0  
+   min_sum : int = MAX_INT
+   min_idx : int = 0  
    for i in range(N): 
-      sum = 0
+      sum : int = 0
       for j in range(D): 
          # d = S[i,j] - C[j]
-         d = S[i * D + j] - C[j] 
-         p = d * d
+         d : int = S[i * D + j] - C[j] 
+         p : int = d * d
          sum = sum + p
       if sum < min_sum:
-         min_sum = sum
-         min_idx = i
+         min_sum : int = sum
+         min_idx : int = i
    return (min_sum, min_idx)
 \end{pythonn}
 }
@@ -726,7 +726,7 @@ Source syntax is essentially standard IMP syntax as shown below:
   s & ::= s;s \mid  & \mathit{sequence} \\
   & \x = e \mid \texttt{A[$e$]} = e \mid & \mathit{assignment \; stmt} \\
   & \texttt{for $i$ in range($I$)}: s \mid & \mathit{for \; stmt} \\
-  & \texttt{if $e$ then $s$ else $s$} & \mathit{if \; stmt} \\ 
+  & \texttt{if $e$: $s$ else: $s$} & \mathit{if \; stmt} \\ 
 %   t &::= q \; {\sf C} & \mathit{qualified \; type}\\
 %   q &::= \high \mid \poly \mid \low & \mathit{FlowCFL \; qualifier}\\
 %    t' &::= q' \; \C & \mathit{field \; qualified \; type}\\
@@ -752,42 +752,76 @@ Expressions are typed $q \; \tau$, where qualifier $q$ and base type $\tau$ are:
 \]
 }
 
-The type system is mostly standard, and in our experience, a sweet spot between simplicity and expressivity.
+The type system is mostly standard, and in our experience, a sweet spot between readability and expressivity.
 The \texttt{shared} qualifier denotes shared values, i.e., ones shared among the parties and computed upon 
-under secure computation protocols vs. \texttt{plain} which denotes plaintext values. Shared lists denote 
-shared elements, though the bounds of the list are plaintext. \ana{add subtyping}
+under secure computation protocols; the \texttt{plain} qualifier denotes plaintext values. Shared lists denote 
+shared elements, but plaintext length. Subtyping is again as expected: $q_1 \; \tau <: q_2 \; \tau$ 
+iff $q_1 <: q_2$ where $\texttt{plain} <: \texttt{shared}$. Thus, we can convert a plaintext value into a shared one, 
+but not vice versa.
 
 Our compiler imposes certain semantic restrictions that it enforces throughout the various 
-phased of compilation. We note that in some cases, the restrictions 
-can be easily lifted and we plan to do so in future iterations of our compiler. 
+phases of compilation. We note that in some cases, the restrictions 
+can be easily lifted and we plan to do so in future iterations of the work. 
 
 \begin{enumerate}
-\item Loops are of the form \texttt{0 <= i < I} and bounds are fixed at compile time. 
+\item Loops are of the form $0 <= i < I$ and bounds are fixed at compile time. 
 It is a standard restriction in MPC that the bounds must be known at circuit-generation time.
 \item Arrays are one-dimensional. N-dimensional arrays are linearized and accessed 
 in row-major order and at this point the programmer is responsible for linearization
 and access. (This restriction can be easily lifted.)
-\item Array subscrpts are plaintext values. The typing rule for array access \texttt{A[$e$]} \ana{???}
-Our compiler allows for output (write) arrays, however it restricts
-write access to \emph{canonical writes} along the dimensions of the array. I.e., \texttt{A[i,j] = ...}
-where \texttt{i} and \texttt{j} loop over the two dimensions of \texttt{A} is allowed, 
-but \texttt{A[i,j+2] = ...} is not allowed. Read access can be an arbitrary function of the 
-indices of the enclosing loops. 
-\item \ana{Add rules for logical ops}
-\item \ana{Add rules for arithmetic ops}
-\item \ana{Add rules for MUX}
+\item Array subscrpts are plaintext values as specified by the rule:
+\begin{semantics}
+    \ntyperule{Array Access}{
+%  \Gamma(\y) =  q_\y   \quad\quad \sigma(\f) = q_\f  \quad\quad \Gamma(\x) = q_\x \\
+  \Gamma \vdash e : \texttt{plain int} \quad \Gamma \vdash \texttt{A} : q \; \texttt{list}[\tau] \quad \tau \in \{ \texttt{int}, \texttt{bool} \}
+}{
+  \Gamma \vdash \texttt{A[$e$]} : q \; \tau
+}
+\end{semantics}
+The subscript $e$ is a function of the indices of the enclosing loops. 
+For read access, the compiler allows an arbitrary such function. 
+However, it restricts write access to \emph{canonical writes}, i.e., \texttt{A[i,j,k]} = ...
+where \texttt{i}, \texttt{j} and \texttt{k} loop over the three dimensions of \texttt{A}.  
+Write access such as for example \texttt{A[i,j+2]} = ... is not allowed. 
+%\item \ana{Add rules for logical ops}
+%\item \ana{Add rules for arithmetic ops}
+\item The final restriction involves MUX as expressed by the rule: 
+\begin{semantics}
+    \ntyperule{MUX}{
+%  \Gamma(\y) =  q_\y   \quad\quad \sigma(\f) = q_\f  \quad\quad \Gamma(\x) = q_\x \\
+  \Gamma \vdash e_1 : q_1 \; \texttt{bool} \quad \Gamma \vdash e_2 : q_2 \; \tau \quad \Gamma \vdash e_2 : q_2 \; \tau \quad \tau \in \{ \texttt{int}, \texttt{bool} \}
+}{
+  \Gamma \vdash \texttt{MUX($e_1$,$e_2$,$e_3$)} : q_1 \vee q_2 \vee q_3 \; \tau
+}
+\end{semantics}
 \end{enumerate}
+Importantly, the arguments of MUX are restricted to base types, as passing array arguments 
+is not valid MOTION MPC. \ana{Check this.} This causes a slight inconvenience as we could not write 
+\begin{pythonn}
+if e: A[i] = val
+\end{pythonn}
+Instead we had to write
+\begin{pythonn}
+if not(e): val = A[i];
+A[i] = val;
+\end{pythonn}
 
+We note that while the programmer writes 
+annotations at the level of IMP Source (recall \ana{ref to overview section}), the 
+annotations propagate through the transformations and are checked at the 
+level of MPC Source.
 
-We write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$
-and we use $I,J,K$ to denote the corresponding upper bounds. For simplicity, we write $A[i,j,k]$ to denote canonical access 
+%\ana{Disadvantage of MUX} 
+
+For the rest of this section we write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$
+and we use $I,J,K$ to denote the corresponding upper bounds. We write $A[i,j,k]$ to denote canonical access 
 to an array element. In the program, canonical access is achieved via the standard row-major order formula: $(J*K)*i + K*j + k$.
-To simplify the presentation we describe our algorithms in terms of three-element tuples $i,j,k$.
-All discussion generalizes to arbitrarily large loop nests.
+To simplify the presentation we describe our algorithms in terms of three-element tuples $i,j,k$, however, discussion easily generalizes to 
+arbitrarily large loop nests.
 
 
 
-\subsection{Semantic Analysis}
+\subsection{From IMP Source to SSA}
 
 Our compiler performs the following semantic analysis steps:
 
@@ -867,7 +901,7 @@ Our compiler performs the following semantic analysis steps:
         Convert the 3-address CFG to SSA with Cytron's algorithm.
 \end{enumerate}
 
-\subsection{MUX Nodes and Pseudo $\phi$-nodes}
+\subsection{From SSA to MPC Source: MUX Nodes and Pseudo $\phi$-nodes}
 
 Once the compiler converts the code to SSA,
 it transforms $\phi$-nodes that correspond to if-statements into MUX nodes.
