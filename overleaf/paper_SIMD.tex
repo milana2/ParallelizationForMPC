@@ -679,7 +679,7 @@ Following Amdahl's law~\ana{citation!}, we write $\alpha = \frac{1}{s}p\alpha + 
 is the fraction that does not, and $s$ is the available resource. Thus, $n\alpha = \frac{n}{s}p\alpha + n(1-p)\alpha$. 
 For the purpose of the model we assume that $s$ is large enough and the term $\frac{n}{s}p\alpha$ amounts to a \emph{fixed cost} incurred regardless of
 whether $n$ is $10,000$ or just $1$. (This models the cost of sending a packet from party A to party B for example.) The bottom line is that amortized execution 
-of $n$ operations costs $\alpha_\mathit{fix} + n\alpha_{var}$ in contrast to unamortized execution, which costs $n\alpha_\mathit{fix} + n\alpha_{var}$ and, of course,
+of $n$ operations is $f(n) = \alpha_\mathit{fix} + n\alpha_{var}$ in contrast to unamortized execution $g(n) = n\alpha_\mathit{fix} + n\alpha_{var}$ and, of course,
 $\alpha_\mathit{fix} << n\alpha_\mathit{fix}$.
 %We assume infinite parallel capacity---i.e., a single MPC-instruction costs as much as $N$ amortized instructions, namely $\alpha$ or $\beta$. 
 %This is a standard assumption in Cryptographic Parallel RAM. ABY presents empirical support for this assumption~\ana{Add citations. PRAM, ABY.}
@@ -695,44 +695,96 @@ still cost $2\alpha_\mathit{fix} + 2\alpha_\mathit{var}$ even when scheduled ``i
 
 \input{prob_stmt_np_hardness.tex}
 
-\section{\bf Compiler Framework}
-\label{sec:preliminaries}
-
 \begin{figure*}
   \includegraphics[width=1.0\linewidth]{figs_paper_SIMD/compiler_framework.png}
-  \caption{Compiler Framework.} 
+  \caption{Compiler Framework. \ana{Change figure since we are not doing div-and-conquer.}}
   \label{fig:compiler_framework}
 \end{figure*}
+
+\section{\bf Compiler Framework}
+\label{sec:preliminaries}
 
 
 %We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. 
 
-\figref{fig:compiler_framework} presents an overview of our compiler. In this section, we describe several of the phases of the compiler. 
-Sections~\secref{sec:vectorization} and~\secref{sec:div_and_conq} describe vectorization and divide-and-conquer.
+\figref{fig:compiler_framework} presents an overview of our compiler. This section describes the front-end phases of the compiler
+and Section~\secref{sec:vectorization} describes our vectorization algorithm. \ana{We'll need a section on MOTION code gen too.}
+%\ana{Need to state this more precisely.}
+
+\subsection{Syntax and Semantic Restrictions}
+
+Source syntax is essentially standard IMP syntax as shown below:
+%\begin{figure}[t]
+{\small
+\[
+\begin{array}{l@{~~~~~}l}
+  \begin{array}{l@{~}l@{~~~}l}
+ e & ::= e \; \mathit{op} \; e \mid e \mid \x \mid  \texttt{const} \mid \texttt{A[$e$]} & \mathit{expression} \\
+ % s &::= t \;\f & \mathit{field} \\
+ %\md &::= t\;{\m}(t \;{\this}, \; t\;\x) \; \{\; \ol{t\;\y}\;\s;\;\return\;\y \; \} 
+ %                 & \mathit{method} \\ 
+  s & ::= s;s \mid  & \mathit{sequence} \\
+  & \x = e \mid \texttt{A[$e$]} = e \mid & \mathit{assignment \; stmt} \\
+  & \texttt{for $i$ in range($I$)}: s \mid & \mathit{for \; stmt} \\
+  & \texttt{if $e$ then $s$ else $s$} & \mathit{if \; stmt} \\ 
+%   t &::= q \; {\sf C} & \mathit{qualified \; type}\\
+%   q &::= \high \mid \poly \mid \low & \mathit{FlowCFL \; qualifier}\\
+%    t' &::= q' \; \C & \mathit{field \; qualified \; type}\\
+%   q' &::= \tainted \mid \poly & \mathit{field \; qualifier}\\
+
+  \end{array}
+\end{array}
+\]
+}
+%\end{figure}
+
+The syntax allows for array accesses, arbitrarily nested loops, and if-then-else control flow. 
+Expressions are typed $q \; \tau$, where qualifier $q$ and base type $\tau$ are:
+
+{\small
+\[
+\begin{array}{l@{~~~~~}l}
+  \begin{array}{l@{~}l@{~~~}l}
+ \tau & ::= \texttt{int}  \mid \texttt{bool} \mid \texttt{list[int]} \mid  \texttt{list[bool]} & \mathit{base \; types} \\
+  q & ::= \texttt{shared} \mid \texttt{plain} & \mathit{qualifiers} \\
+  \end{array}
+\end{array}
+\]
+}
+
+The type system is mostly standard, and in our experience, a sweet spot between simplicity and expressivity.
+The \texttt{shared} qualifier denotes shared values, i.e., ones shared among the parties and computed upon 
+under secure computation protocols vs. \texttt{plain} which denotes plaintext values. Shared lists denote 
+shared elements, though the bounds of the list are plaintext. \ana{add subtyping}
+
+Our compiler imposes certain semantic restrictions that it enforces throughout the various 
+phased of compilation. We note that in some cases, the restrictions 
+can be easily lifted and we plan to do so in future iterations of our compiler. 
+
+\begin{enumerate}
+\item Loops are of the form \texttt{0 <= i < I} and bounds are fixed at compile time. 
+It is a standard restriction in MPC that the bounds must be known at circuit-generation time.
+\item Arrays are one-dimensional. N-dimensional arrays are linearized and accessed 
+in row-major order and at this point the programmer is responsible for linearization
+and access. (This restriction can be easily lifted.)
+\item Array subscrpts are plaintext values. The typing rule for array access \texttt{A[$e$]} \ana{???}
+Our compiler allows for output (write) arrays, however it restricts
+write access to \emph{canonical writes} along the dimensions of the array. I.e., \texttt{A[i,j] = ...}
+where \texttt{i} and \texttt{j} loop over the two dimensions of \texttt{A} is allowed, 
+but \texttt{A[i,j+2] = ...} is not allowed. Read access can be an arbitrary function of the 
+indices of the enclosing loops. 
+\item \ana{Add rules for logical ops}
+\item \ana{Add rules for arithmetic ops}
+\item \ana{Add rules for MUX}
+\end{enumerate}
+
+
 We write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$
 and we use $I,J,K$ to denote the corresponding upper bounds. For simplicity, we write $A[i,j,k]$ to denote canonical access 
 to an array element. In the program, canonical access is achieved via the standard row-major order formula: $(J*K)*i + K*j + k$.
 To simplify the presentation we describe our algorithms in terms of three-element tuples $i,j,k$.
 All discussion generalizes to arbitrarily large loop nests.
-%\ana{Need to state this more precisely.}
 
-\subsection{Syntax}
-
-Our compiler imposes the following restrictions. We note that in some cases, the restrictions 
-can be easily lifted and we plan to do so in future iterations of our compiler. 
-
-\begin{enumerate}
-\item The program contains arbitrarily nested loops, however, loop bounds are fixed: \texttt{0 <= i < N}.
-A standard restriction in MPC is that the bounds must be known at circuit-generation time.
-\item Arrays are one-dimensional. N-dimensional arrays are linearized and accessed 
-in row-major order and at this point the programmer is responsible for linearization
-and access. 
-\item Array subscrpts are plaintext values.
-\item Our compiler allows for output (write) arrays, however it restricts
-write access to \emph{canonical writes} along the dimensions of the array. I.e., \texttt{A[i,j] = ...}
-where \texttt{i} and \texttt{j} loop over the two dimensions of \texttt{A} is allowed, 
-but \texttt{A[i,j+2] = ...} is not allowed. Read access is arbitrary. 
-\end{enumerate}
 
 
 \subsection{Semantic Analysis}
@@ -749,7 +801,7 @@ Our compiler performs the following semantic analysis steps:
         This step outputs an instance of the \texttt{restricted\_ast.Function} class, which represents our restricted subset of the Python AST.
   \item
         \textbf{3-address CFG conversion}:
-        \benjamin{TODO: Is this a good amount of detail?}
+        \benjamin{TODO: Is this a good amount of detail?} \ana{This is good amount of detail for the Tech report. In the actual paper we'll shorten a lot and add pointers to the Tech report.} 
 
         Convert the restricted-syntax AST to a three-address control-flow graph.
         To do this, first,
@@ -826,8 +878,8 @@ For example, if $X_3 = \phi(X_1,X_2)$ is in a block with merge condition $C$,
 the compiler transforms it into $X_3 = \mathit{MUX}(C, X_1, X_2)$.
 Next, the compiler runs the dead code elimination algorithm from Cytron's SSA paper.
 
-Then, the control-flow graph is \emph{linearized} into MPC source,
-which has loops but no if-statements.
+Then, the control-flow graph is \emph{linearized} into MPC Source,
+which has loops but no if-then-else-statements.
 This means that both branches of all if-statements are executed,
 and the MUX nodes determine whether to use results from the then-block or from the else-block.
 The compiler linearizes the control-flow graph with a variation of breadth-first search.
@@ -905,7 +957,7 @@ When converting to MOTION code, any plaintext value used in the right-hand side 
 \section{Vectorization}
 \label{sec:vectorization}
 
-An important component of our algorithm is the "lifting" of scalars to the corresponding loop dimensionality. 
+An important component of our algorithm is the scalar expansion to the corresponding loop dimensionality. 
 For example, \texttt{d = S[i * D + j] - C[j]} equiv. to \texttt{d = S[i,j] - C[j]}, which gave rise to \texttt{N*D} subtraction operations in the sequential schedule, 
 is lifted. The argument arrays \texttt{S} and \texttt{C} are lifted and the scaler \texttt{d} is lifted: \texttt{d[i,j] = S[i,j] - C[i,j]}.
 The algorithm then detects that the statement can be vectorized. 
