@@ -243,6 +243,7 @@
 % in the abstract
 \begin{abstract}
 
+\ana{We need an abstract.}
 
 \end{abstract}
 
@@ -308,7 +309,8 @@ Multi-party computation (MPC) allows $N$ parties $p_1,\dots, p_N$ to perform a c
 MPC theory dates back to the early 1980-ies~\cite{FOCS:Yao82b,STOC:GolMicWig87,STOC:BenGolWig88,STOC:ChaCreDam88}. 
 Long the realm of theoretical cryptography, MPC has seen significant advances in programming technology in recent years. 
 These advances bring MPC closer to practice and wider applicability --- 
-MPC technology has been employed in real-world scenarios such as auctions~\cite{FC:BCDGJK09}, biometric identification~\cite{ESORICS:BlaGas11}, and privacy-preserving machine learning~\cite{SP:MohZha17,CCS:MohRin18}. 
+MPC technology has been employed in real-world scenarios such as auctions~\cite{FC:BCDGJK09}, biometric identification~\cite{ESORICS:BlaGas11}, 
+and privacy-preserving machine learning~\cite{SP:MohZha17,CCS:MohRin18}. 
 The goal is to bring the technology to a level where programmers can write \emph{secure} and \emph{efficient} programs without 
 commanding extensive knowledge of cryptographic primitives. 
 
@@ -346,11 +348,14 @@ in classical compilers, we envision translation of MPC Source (optimized or unop
 %The compilation problem, i.e., translation from a high-level language to circuits, is difficult and therefore, breaking the problem into sub-problems can  tractable. 
   
 
-\subsection{Our contribution} In this paper, we develop a compiler framework that takes a Python-like routine and produces MOTION code: we describe (a) the IMP-MPC language, its syntax and semantic restrictions, (b) translation from IMP-MPC into MPC Source, (c) a specific circuit-independent optimization: novel SIMD-vectorization on MPC Source, and (d) translation from MPC Source into MOTION code. \ana{I think we have to add more on MOTION, specifically mixing and amortization.}
+\subsection{Our Contribution} In this paper, we develop a compiler framework that takes a Python-like routine and produces MOTION code: we describe (a) the IMP-MPC language, its syntax and semantic restrictions, (b) translation from IMP-MPC into MPC Source, (c) a specific circuit-independent optimization: novel SIMD-vectorization on MPC Source, and (d) translation from MPC Source into MOTION code. %\ana{I think we have to add more on MOTION, specifically mixing and amortization.}
+
+We focus on the MOTION framework as our back-end for several reasons. First, it is the state of the art in terms of performance~\cite{Braun:2022}. Second, it provides an API over efficient implementation for a wide variety of cryptographic operations in three different protocols ---  Arithmetic GMW, Boolean GMW, and BMR --- which allows for protocol mixing~\cite{Ishaq:2019, Fang:2022}, a known backend-independent optimization. Third, MOTION provides API for SIMD-level operations, which amortize cost and lead to significant improvement in memory footprint and 
+throughput~\cite{NDSS:DemSchZoh15, CCS:ABFKLO18, Braun:2022}. It also enables MPC Source-level optimizations such SIMD vectorization. 
 
 Our second contribution is an analytical model for cost estimation of amortized schedules. Originally, we hoped that optimal scheduling (under our model) was tractable, as the problem
 appeared simpler than the classical scheduling problem. Unfortunately, we show that optimal scheduling is NP-hard via a reduction to the Shortest Common Supersequence (SCS) problem. 
-Cost estimation is important as it drives scheduling and protocol mixing optimizations~\cite{Ishaq:2019, Fang:2022}. 
+Cost estimation is important as it drives not only vectorization but other optimizations such as protocol mixing optimizations and scheduling as well~\cite{Ishaq:2019, Fang:2022}. 
 
 Our most important contribution is the implementation and evaluation of the compiler framework. We demonstrate expressivity of the source language by running the compiler on \ana{X} programs; these include classical MPC benchmarks such as PSI and Biometric matching, as well as kMeans, Histogram, and others. Vectorization leads to \ana{X}x improvement in number of gates on average, \ana{Y}x speedup in circuit generation time, \ana{Z}x speedup in the LAN setting, and \ana{Z}x speedup in the WAN setting using the Boolean GMW protocol. Results form BMR are similar. 
 
@@ -384,13 +389,111 @@ infeasible loop-carried dependences introduced by standard SSA to improve vector
 \section{Overview}
 \label{sec:overview}
 
+
+\begin{table*}
+\begin{tabular}{ccc}
+\begin{minipage}{0.3\textwidth}
+{\small
+\begin{pythonn}
+def biometric(C: shared[list[int]], D: int, 
+      S: shared[list[int]], N: int) -> 
+      shared[tuple[int,int]]:
+   min_sum = MAX_INT
+   min_idx = 0  
+   for i in range(N): 
+      sum = 0
+      for j in range(D): 
+         # d = S[i,j] - C[j]
+         d = S[i * D + j] - C[j] 
+         p = d * d
+         sum = sum + p
+      if sum < min_sum:
+         min_sum = sum
+         min_idx = i
+   return (min_sum, min_idx)
+\end{pythonn}
+}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.33\textwidth}
+{\tiny
+\begin{pythonn}
+min_sum!1 = MAX_INT
+min_idx!1 = 0
+for i in range(0, N):
+   min_sum!2 = PHI(min_sum!1, min_sum!4)
+   min_idx!2 = PHI(min_idx!1, min_idx!4)
+   sum!2 = 0
+   for j in range(0, D):
+      sum!3 = PHI(sum!2, sum!4)
+      d = SUB(S[((i * D) + j)],C[j]) 
+      p = MUL(d,d) 
+      sum!4 = ADD(sum!3,p) 
+   t = CMP(sum!3,min_sum!2) 
+   min_sum!3 = sum!3
+   min_idx!3 = i
+   min_sum!4 = MUX(t, min_sum!3, min_sum!2) 
+   min_idx!4 = MUX(t, min_idx!3, min_idx!2) 
+return (min_sum!2, min_idx!2)   
+\end{pythonn}
+}
+\end{minipage} 
+
+&
+
+\begin{minipage}{0.33\textwidth}
+{\small
+\begin{pythonn}
+min_sum!1 = MAX_INT
+min_idx!1 = 0
+# S^ is same as S. C^ replicates C N times: 
+S^ = lift(S, ((i * D) + j), (i:N,j:D)) # S^[i,j] = S[i,j]
+C^ = lift(C, j, (i:N,j:D)) # C^[i,j] = C[j]
+
+sum!2[I] = [0,..,0]
+# computes _all_  "at once"
+d[I,J] = SUB_SIMD(S^[I,J],C^[I,J])
+p[I,J] = MUL_SIMD(d[I,J],d[I,J])
+
+for j in range(0, D):
+   # sum!2[I], sum!3[I], sum!4[I] are size-N vectors 
+   # computes N intermediate sums "at once"
+   sum!3[I] = PHI(sum!2[I], sum!4[I])       
+   sum!4[I] = ADD_SIMD(sum!3[I],p[I,j])
+
+min_idx!3[I] = [0,1,...N-1]   
+for i in range(0, N):
+   min_sum!2 = PHI(min_sum!1, min_sum!4) 
+   t[i] = CMP(sum!3[i],min_sum!2)
+   min_sum!4 = MUX(t[i], sum!3[i], min_sum!2)  
+for i in range(0, N):
+   min_idx!2 = PHI(min_idx!1, min_idx!4)    
+   min_idx!4 = MUX(t[i], min_idx!3[i], min_idx!2)
+return (min_sum!2, min_idx!2)   
+\end{pythonn}
+}
+\end{minipage}
+
+\\
+
+(a) IMP Source & (b) MPC Source & (c) Optimized MPC Source
+\end{tabular}
+\caption{Biometric Matching: From IMP Source to MPC Source to Optimized MPC Source. }
+\label{tab:source_and_MPC_source_and_optimized_MPC_source}
+\end{table*}
+
+
 \subsection{Source}
 
 As a running example, consider Biometric matching, a standard MPC benchmark.
-Array \texttt{C} is the feature vector of \texttt{D} features that we wish to match and array \texttt{S} 
-is the database of \texttt{N} vectors of size \texttt{D} that we match against.
-An intuitive implementation is as follows:
+An intuitive (and naive) implementation is as shown in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(a).
+Array \python{C} is the feature vector of \texttt{D} features that we wish to match and \python{S} 
+is the database of \python{N} size-\python{D} vectors that we match against.
 
+
+\begin{comment}
 {\small
 \begin{verbatim}
 def biometric(C: shared[list[int]], D: int, 
@@ -410,36 +513,37 @@ def biometric(C: shared[list[int]], D: int,
     return (min_sum, min_index)
 \end{verbatim}
 }
+\end{comment}
 
-Our compiler takes (essentially) standard IMP syntax.
-The programmer can write intuitive iterative programs as the one above.
-They annotate certain inputs and outputs as \emph{shared}.
-Here the code iterates over the entries in the database and computes
-the sum of squares of the differences of individual features. The program returns the 
-index \texttt{i} of the vector that gives the best match plus the corresponding sum of squares.
+Our compiler takes essentially standard IMP~\ana{Need citation here.} 
+syntax and imposes certain semantic restrictions. (We detail the restrictions in the following sections.)
+The programmer writes an iterative program and annotate certain inputs 
+and outputs as \emph{shared}. In the example arrays \python{C} and \python{S}
+are shared, meaning that they store shares, however, the array sizes \python{D} and
+\python{N} respectively are plaintext. The code iterates over the entries in the 
+database and computes the Euclidean distance (its square actually) of the current 
+entry \python{S[i]} and \python{C}. The program returns the index of the vector that gives 
+the best match plus the corresponding sum of squares.
 
 
-Our compiler imposes the following restrictions. We note that in some cases, the restrictions 
-can be easily lifted and we plan to do so in future iterations of our compiler. 
 
-\begin{enumerate}
-\item The program contains arbitrarily nested loops, however, loop bounds are fixed: \texttt{0 <= i < N}.
-A standard restriction in MPC is that the bounds must be known at circuit-generation time.
-\item Arrays are one-dimensional. N-dimensional arrays are linearized and accessed 
-in row-major order and at this point the programmer is responsible for linearization
-and access. 
-\item Array subscrpts are plaintext values.
-\item Our compiler allows for output (write) arrays, however it restricts
-write access to \emph{canonical writes} along the dimensions of the array. I.e., \texttt{A[i,j] = ...}
-where \texttt{i} and \texttt{j} loop over the two dimensions of \texttt{A} is allowed, 
-but \texttt{A[i,j+2] = ...} is not allowed. Read access is arbitrary. 
-\end{enumerate}
 
 \subsection{MPC Source and Cost of Schedule}
 
-The compiler generates an IR, MPC source:
+Our compiler generates an intermediate representation, MPC Source. MPC Source 
+for Biometric Matching is shown in 
+Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(b). First, MPC Source is an SSA form. 
+Second, it is linear. The conditional in lines 13-14 in IMP Source turns into the linear code in lines 12-16 in MPC Source. 
+The test turns into a CMP operation (\python{t = CMP(sum!3,min\_sum!2)}), followed by the 
+true-branch sequence, followed by the MUX operations. The first MUX operation selects the value
+of \python{min\_sum}: if \python{t} is true, then \python{min\_sum} gets the value of the second multiplexer
+argument,  \python{min\_sum!3}, otherwise it takes the value of the third argument, \python{min\_sum!2}.  
+Third, MPC Source is a special form of SSA. The SSA $\phi$-nodes at the if-then-else (lines 13-15) turn into 
+MUX operations, while the $\phi$-nodes at for loops turn into what we call pseudo PHI nodes with a straightforward semantics.
+
+\begin{comment}
 {\small
-\begin{verbatim}
+\begin{pythonn}
 1. min_sum!1 = 10000
 2. min_index!1 = 0
 3. for i in range(0, N!0):
@@ -457,18 +561,19 @@ The compiler generates an IR, MPC source:
 15.  min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2) // MPC
 16.  min_index!4 = MUX(!1!2, min_index!3, min_index!2) // MPC
 17.!2!1 = (min_sum!2, min_index!2)   
-\end{verbatim}
+\end{pythonn}
 }
+\end{comment}
 
-The compiler linearizes the source turning conditionals into MUX statements. The PHI nodes
-are remnants of the SSA IR; the compiler generates code that picks the correct value 
-when producing MOTION output; the MOTION framework in turn linearizes 
-loops when it generates the circuit.
+%The compiler linearizes the source turning conditionals into MUX statements. The PHI nodes
+%are remnants of the SSA IR; the compiler generates code that picks the correct value 
+%when producing MOTION output; the MOTION framework in turn linearizes 
+%loops when it generates the circuit.
 
-We turn to our analytical model to compute the cost of this program. Assuming fixed 
+We turn to our analytical model to compute the \emph{cost} of the program. Assuming fixed 
 cost $\beta$ for a local MPC operation (essentially just ADD) and cost $\alpha$ for a remote
 MPC operation (e.g., MUX, CMP, and remaining operations), the cost of the iterative schedule 
-will be $N*D*(2*\alpha+\beta) + N*3*\alpha$. 
+will be $ND(2\alpha+\beta) + N(3\alpha$). 
 
 A key contribution is the vectorizing transformation. We can compute all $N*D$ 
 subtraction operations (line 9) in a single SIMD instruction; similarly we can compute 
@@ -477,14 +582,24 @@ vectorize computation of the N individual sums, we can compute the N sums in par
 Our compiler \emph{automatically detects these opportunities and transforms the program}. 
 It is standard that MPC researchers write vectorized versions of the Biometric
 program by hand; we are the first (to the best of our knowledge) to automatically 
-transform an intuitive, iterative MPC program into an unintuitive vectorized one.
+transform a naive, iterative MPC program into an unintuitive vectorized one.
 
 \subsection{Vectorized MPC Source and Cost of Schedule}
 
-Our compiler produces the following vectorized program. (Note that this is
-still higher-level IR, Vectorized MPC Source. Our compiler turns this code into MOTION variables, 
-loops and SIMD primitives, which MOTION then uses to generate the circuit.)
+Our compiler produces the vectorized program shown in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(c). 
+Note that this is still our intermediate representation, Optimized MPC Source. Subsequently,
+the compiler turns this code into MOTION variables, loops and SIMD primitives, which MOTION then 
+uses to generate the circuit.
 
+The compiler determines that SUB and MUL in ``naive'' MPC Source (lines 9 and 10 in (b))
+can be fully vectorized into the SIMD SUB and MUL in optimized MPC Source (lines 9 and 10 in (c)). 
+Notation \python{p[I,J]} denotes a 2-dimensional array with fully vectorized dimensions.
+The computation of sum (line 11 in (b))
+is sequential across the $j$-dimension, but it is parallel across the $i$-dimension. 
+The loop in lines 12-16 in (c) illustrates; here \python{p[I,j]} refers to the $j$-th column in \python{p}. 
+Unfortunately, CMP and MUX remain sequential.
+
+\begin{comment}
 {\small
 \begin{verbatim}
 min_sum!1 = 10000
@@ -517,14 +632,27 @@ for i in range(0, N!0):
 !2!1 = (min_sum!2, min_index!2)   
 \end{verbatim}
 }
+\end{comment}
 
-In MPC compilers a vectorized operation that computing M operations "at once" costs 
-essentially the same ($\alpha$ or $\beta$) as an individual operation. We elaborate 
-on these in the following section. Thus, the vectorized program costs 
-$2*\alpha$ + $D * \beta + N*3*\alpha$. The first term in the sum corresponds to the vectorized
-subtraction and multiplication, the second term corresponds to the for loop on $j$ and the third 
-one corresponds to the remaining for loops on $i$. Clearly, $2*\alpha + D * \beta + N*3*\alpha << N*D*(2*\alpha+\beta) + N*3*\alpha$.
-Our experimental results illustrate this as well. \ana{Add numbers.}
+In MPC backends, executing $n$ operations ``at once'' in a single SIMD operation costs a lot less than executing those $n$ operations one by one.
+This is particularly important when there is communication (i.e., in remote), since many 1-bit values are sent at once rather than sequentially. 
+%In MPC compilers a vectorized operation that computing M operations "at once" costs 
+%essentially the same ($\alpha$ or $\beta$) as an individual operation. 
+We elaborate on the cost model in the following section but for now consider that 
+each operation has a \emph{fixed} portion (does benefits from amortization) and 
+a \emph{variable} portion (does not benefit from amortization): $\alpha = \alpha_\mathit{fix} + \alpha_\mathit{var}$. 
+This gives rise to the following formula for amortized cost: $f(n) = \alpha_\mathit{fix} + n\alpha_\mathit{var}$, 
+as opposed to unamortized cost $g(n) = n\alpha_\mathit{fix} + n\alpha_\mathit{var}$. (We extend the same reasoning to 
+$\beta$-instructions.)
+
+Thus, the fixed cost of the vectorized program amounts to
+$2\alpha_\mathit{fix}$ + $D \beta_\mathit{fix} + N(3\alpha_\mathit{fix})$. (The variable cost is the same in both the vectorized and un-vectorized programs.) 
+The first term in the sum corresponds to the vectorized
+subtraction and multiplication, the second term corresponds to the FOR loop on $j$ and the third 
+one corresponds to the remaining FOR loops on $i$. Clearly, $2\alpha_\mathit{fix} + D\beta_\mathit{fix} + N(3\alpha_\mathit{fix}) << ND(2\alpha_\mathit{fix}+\beta_\mathit{fix}) + N3\alpha_\mathit{fix}$.
+Empirically, we observe 10x to 50x improvement over un-vectorized Biometric Matching in circuit generation time and setup time and 5x to 30x improvement in online time.
+Additionally, the un-vectorized version runs out of memory for N=256, while the vectorized one continues to run up to standard maximal input size N=4096.
+Our experimental results illustrate this as well. \ana{Check numbers.}
 
 
 \section{Analytical Model}
@@ -575,6 +703,25 @@ to an array element. In the program, canonical access is achieved via the standa
 To simplify the presentation we describe our algorithms in terms of three-element tuples $i,j,k$.
 All discussion generalizes to arbitrarily large loop nests.
 %\ana{Need to state this more precisely.}
+
+\subsection{Syntax}
+
+Our compiler imposes the following restrictions. We note that in some cases, the restrictions 
+can be easily lifted and we plan to do so in future iterations of our compiler. 
+
+\begin{enumerate}
+\item The program contains arbitrarily nested loops, however, loop bounds are fixed: \texttt{0 <= i < N}.
+A standard restriction in MPC is that the bounds must be known at circuit-generation time.
+\item Arrays are one-dimensional. N-dimensional arrays are linearized and accessed 
+in row-major order and at this point the programmer is responsible for linearization
+and access. 
+\item Array subscrpts are plaintext values.
+\item Our compiler allows for output (write) arrays, however it restricts
+write access to \emph{canonical writes} along the dimensions of the array. I.e., \texttt{A[i,j] = ...}
+where \texttt{i} and \texttt{j} loop over the two dimensions of \texttt{A} is allowed, 
+but \texttt{A[i,j+2] = ...} is not allowed. Read access is arbitrary. 
+\end{enumerate}
+
 
 \subsection{Semantic Analysis}
 
