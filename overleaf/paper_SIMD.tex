@@ -803,8 +803,8 @@ if e: A[i] = val
 \end{pythonn}
 Instead we had to write
 \begin{pythonn}
-if not(e): val = A[i];
-A[i] = val;
+if not(e): val = A[i]
+A[i] = val
 \end{pythonn}
 
 We note that while the programmer writes 
@@ -943,17 +943,20 @@ during circuit generation. If it is the 0-th iteration, then the $\phi$-node eva
 
 \subsection{Dependence Analysis}
 
-The next steps construct the dependence graph and ???. 
+The next steps construct the dependence graph and \ana{Add an intro here.}
 
 \subsubsection{Def-use Edges}
 
 The dependence graph has the following def-use edges:
 
 \begin{itemize}
-\item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge from \python{d = S[i,j] - C[j]} to \python{p = d*d} in the Biometric MPC-source is a same-level edge. A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
-\item outer-to-inner $X\rightarrow Y$ where $X$ is in an outer loop nest, say $i$, and $Y$ is in an inner one, say $i,j,k$. 
+\item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge 9 to 10 in the Biometric MPC Source in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source} is a same-level edge. A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge. 
+E.g., 15 to 4 in Biometric is a same-level back-edge.
+\item outer-to-inner $X\rightarrow Y$ where $X$ is in an outer loop nest, say $i$, and $Y$ is in an inner one, say $i,j,k$. E.g., 1 to 4 in Biometric forms is an outer-to-inner edge.
 %A $\phi$-node can be a source or a target of an outer-to-inner forward edge.
-\item inner-to-outer $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer edge. An inner-to-outer edge can be a back-edge as well in which case both $X$ and $Y$ are phi-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
+\item inner-to-outer $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g., the def-use from 8 to 12 gives rise to an inner-to-outer edge.
+%E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer edge. 
+An inner-to-outer edge can be a back-edge as well, in which case both $X$ and $Y$ are phi-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
 
 %Note that the source is \emph{always} a $\phi$-node of the $i,j,k$ loop and the target is in the immediately enclosing loop. The interpretation of this edge is that the use node $Y$ uses the definition made in the last iteration of the inner loop.
 %\ben{The current representation of pseudo $\phi$-nodes shows them attached to the loop header (i.e. in the loop).  We may want to clarify that they are also evaluated at the loop's termination.}
@@ -974,15 +977,18 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 
 \subsection{Taint Analysis}
 
-We require that all inputs are marked as either shared or plaintext.  We then determine if intermediate variables are shared through taint analysis with "taintedness" referring to the shared attribute.  Specifically, our compiler follows the following rules:
-\begin{itemize}
-\item If any variable on the right-hand side of an assignment is shared, then the assigned variable is shared
-\item If all variables on the right-hand side of an assignment are plaintext, then the assigned variable is plaintext
-\item Loop counters are always plaintext
-\item Any variables which cannot be determined as shared or plaintext via the above rules are plaintext
-\end{itemize}
+We require that all inputs are marked as either shared or plaintext, however, we do not require any other qualifier annotations in the program. Then we infer if intermediate variables and expressions are shared through taint analysis with "taintedness" referring to the shared attribute.  Specifically, the compiler follows the following rules, which are standard in positive-negative qualifier systems (here \texttt{shared} is the positive qualifier and \texttt{plain} is the negative one): 
+\begin{enumerate}
+\item Loop counters and array upper bounds are always \texttt{plain}.
+\item If any variable on the right-hand side of an assignment is shared, then the assigned variable is \texttt{shared}.
+%\item If all variables on the right-hand side of an assignment are plaintext, then the assigned variable is plaintext \ana{Will be covered by the last rule.}
+\item Any variables that cannot be determined as shared via the above rules are \texttt{plain}.
+\end{enumerate}
 
-The first two rules are standard for taint analysis, and the third rule follows from the MPC problem statement. \ben{Is the explanation for the third rule correct?}  The final rule is needed to handle cycles of plaintext values.  For example, in the below snippet \texttt{sum!2} and \texttt{sum!3} form a dependency cycle and cannot be marked as plaintext through simple taint analysis:
+%The first two rules are standard for taint analysis, and the third rule follows from the MPC problem statement. \ben{Is the explanation for the third rule correct?}  \ana{Yes, that is exactly it!}
+The final rule is needed in examples like the following. In the below snippet \texttt{sum!2} and \texttt{sum!3} form a dependency cycle and there is no \texttt{shared} value that flows to either one. 
+They are inferred as plaintext. 
+%cannot be marked as plaintext through simple taint analysis:
 {\small
 \begin{verbatim}
 plaintext_array = [0, 1, 2, ...]
@@ -992,9 +998,13 @@ for i in range(0, N):
     sum!3 = sum!2 + plaintext_array[i]
 \end{verbatim}
 }
-\ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}
+%\ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}\ana{I left the example, we can leave it in the TR, remove from paper.}
 
-When converting to MOTION code, any plaintext value used in the right-hand side of a shared assignment is implicitly converted to a shared value for that expression. \ben{Is this necessary to include?}
+When converting to MOTION code, any plaintext value used in the right-hand side of a shared assignment is converted to a shared value for that expression. 
+%\ben{Is this necessary to include?} \ana{Yes, that's important.}
+
+Importantly, the taint analysis works on MPC Source, which lacks if-then-else control flow. 
+This significantly simplifies the treatment as there is no need to handle conditionals and implicit flow. 
 
 \subsection{From (Optimized) MPC Source to MOTION}
 \label{sec:MOTION}
