@@ -104,13 +104,6 @@ def run_benchmark(
             text=True,
             cwd=party1_dir,
         ) as party1:
-            # party0.wait(timeout)
-            # party1.wait(timeout)
-            # assert party0.stdout is not None
-            # assert party0.stderr is not None
-            # party0_stdout_raw = party0.stdout.read()
-            # party0_stderr = party0.stderr.read()
-
             try:
                 party0_stdout_raw, party0_stderr = party0.communicate(timeout)
                 party1_stdout_raw, party1_stderr = party1.communicate(timeout)
@@ -167,3 +160,90 @@ def run_benchmark(
                     circuit_stats=party1_circuit_stats,
                 ),
             )
+
+
+def run_benchmark_for_party(
+    myid: str, party0_mpc_addr: str, party1_mpc_addr: str, app_path: str, timeout:int, cmd_args: list[str]
+) -> BenchmarkOutput:
+    # Create directories for output and MOTION logs
+    party_dir = os.path.join(app_path, "party" + myid)
+    if os.path.exists(party_dir):
+        shutil.rmtree(party_dir)
+    os.makedirs(party_dir, exist_ok=True)
+
+    exe_name = os.path.join(app_path, "build", benchmark_name)
+    with subprocess.Popen(
+        [
+            exe_name,
+            "--parties",
+            party0_mpc_addr,
+            party1_mpc_addr,
+            "--my-id",
+            myid,
+        ] + cmd_args,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        cwd=party0_dir,
+    ) as party:
+        try:
+            party_stdout_raw, party_stderr = party.communicate(timeout)
+        except subprocess.TimeoutExpired:
+            party.kill()
+            party_stdout_raw, party_stderr = party.communicate(timeout)
+
+        with open(os.path.join(party_dir, "stdout"), "w") as f:
+            f.write(party_stdout_raw)
+        with open(os.path.join(party_dir, "stderr"), "w") as f:
+            f.write(party_stderr)
+
+        if(party.returncode != 0):
+            return None
+
+        party_timing_stats = statistics.parse_timing_data(
+            party_stderr.split("\n")
+        )
+
+        party_stdout_lines = party_stdout_raw.split("\n")
+        party_output = party_stdout_lines[0]
+        party_circuit_stats = statistics.parse_circuit_data(
+            party_stdout_lines[1:]
+        )
+
+        return BenchmarkOutput(
+                name=benchmark_name,
+                output=party_output,
+                timing_stats=party_timing_stats,
+                circuit_stats=party_circuit_stats,
+            )
+
+
+def compile_benchmark(
+    benchmark_name: str, benchmark_path: str, protocol: str, vectorized: bool
+) -> str:
+    input_fname = os.path.join(benchmark_path, "input.py")
+
+    with open(input_fname, "r") as f:
+        input_py = f.read().strip()
+
+    app_path = os.path.join(
+        benchmark_path, "motion_app" + "-" + protocol + ("-vectorized" if vectorized else "")
+    )
+
+    compiler.compile(
+        f"{benchmark_name}.py", input_py, True, vectorized, app_path, True, protocol
+    )
+
+    subprocess.run(
+        ["cmake", "-S", app_path, "-B", os.path.join(app_path, "build")],
+        check=True,
+    )
+
+    subprocess.run(
+        ["cmake", "--build", os.path.join(app_path, "build")],
+        check=True,
+    )
+
+    return app_path
+
+

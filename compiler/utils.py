@@ -1,7 +1,10 @@
 from dataclasses import dataclass
-import json
 from tests.benchmark import BenchmarkOutput
 from tests.statistics import CircuitStatistics, TimingStatistics, CommunicationStatistics, TimingDatapoint
+
+import struct
+import json
+import socket
 
 @dataclass
 class StatsForInputConfig:
@@ -73,19 +76,82 @@ class StatsForTask:
                 }
 
 
+@dataclass
+class RunBenchmarkArgs:
+    party0_mpc_addr: str
+    party1_mpc_addr: str
+    cmd_args: list[str]
+    benchmark_name: str
+    benchmark_path: str
+    protocol: str
+    vectorized: bool
+
+    @classmethod
+    def from_dictionary(cls, params):
+        party0_mpc_addr = params['party0_mpc_addr']
+        party1_mpc_addr = params['party1_mpc_addr']
+        cmd_args = params['cmd_args']
+        benchmark_name = params['benchmark_name']
+        benchmark_path = params['benchmark_path']
+        protocol = params['protocol']
+        vectorized = params['vectorized']
+
+        return cls(
+            party0_mpc_addr=party0_mpc_addr,
+            party1_mpc_addr=party1_mpc_addr,
+            cmd_args=cmd_args,
+            benchmark_name=benchmark_name,
+            benchmark_path=benchmark_path,
+            protocol=protocol,
+            vectorized=vectorized
+            )
+
+    def to_dictionary(self):
+        return {
+            'party0_mpc_addr': self.party0_mpc_addr,
+            'party1_mpc_addr': self.party1_mpc_addr,
+            'cmd_args': cmd_args,
+            'benchmark_name': benchmark_name,
+            'benchmark_path': benchmark_path,
+            'protocol': protocol,
+            'vectorized': vectorized
+        }
+
+
 def json_serialize(obj):
     return json.dumps(obj, default=_to_json)
 
 def json_deserialize(json_str):
     return json.loads(json_str, object_hook=_from_json)
 
-def _to_json(python_object):
-    """
-    serializes data objects used in the benchmark script
-    :param python_object: object to serialize
-    :return: json serialization `python_object`
-    """
 
+def read_message(conn):
+    buf = _read_socket_buf(conn, 4)
+    if not buf:
+        print("Error: Unable to read message size")
+        return None
+
+    msg_size = struct.unpack("!i", buf)[0]
+    print("Length of the message is: {}".format(msg_size))
+
+    buf = _read_socket_buf(conn, msg_size)
+    if not buf:
+        print("Error: Unable to read message of length {}".format(msg_size))
+        return None
+
+    obj = json.loads(buf.decode("utf-8"), object_hook=_from_json)
+    return obj
+
+
+def write_message(conn, obj):
+    msg = json.dumps(obj, default=_to_json).encode('utf-8')
+    msg_size = len(msg)
+    buf_to_write = struct.pack("!i", msg_size) + msg
+    conn.sendall(buf_to_write)
+
+# --- Private Functions --
+
+def _to_json(python_object):
     if isinstance(python_object, TimingDatapoint):
         return  {'__class__': 'TimingDatapoint',
                  '__value__': python_object.to_dictionary()}
@@ -107,16 +173,14 @@ def _to_json(python_object):
     elif isinstance(python_object, StatsForInputConfig):
         return {'__class__': 'StatsForInputConfig',
                 '__value__': python_object.to_dictionary()}
+    elif isinstance(python_object, RunBenchmarkArgs):
+        return {'__class__': 'RunBenchmarkArgs',
+                '__value__': python_object.to_dictionary()}
 
     raise TypeError(repr(python_object) + ' is not JSON serializable')
 
 
 def _from_json(json_object):
-    """
-    deserializes data objects used in the benchmark script
-    :param json: json serialization of an object
-    :return: deserialized python object
-    """
     if '__class__' in json_object:
         if json_object['__class__'] == 'TimingDatapoint':
             return TimingDatapoint.from_dictionary(json_object['__value__'])
@@ -132,5 +196,21 @@ def _from_json(json_object):
             return StatsForTask.from_dictionary(json_object['__value__'])
         elif json_object['__class__'] == 'StatsForInputConfig':
             return StatsForInputConfig.from_dictionary(json_object['__value__'])
+        elif json_object['__class__'] == 'RunBenchmarkArgs':
+            return RunBenchmarkArgs.from_dictionary(json_object['__value__'])
 
     return json_object
+
+
+def _read_socket_buf(conn, n):
+    buf = b''
+    while len(buf) < n:
+        new_data = conn.recv(n - len(buf))
+        if not new_data:
+            return None
+        buf += new_data
+    return buf
+
+
+
+

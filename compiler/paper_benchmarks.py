@@ -9,13 +9,18 @@ import logging
 import logging.handlers
 import random
 import json
+import socket
 
 import compiler
 
 from tests import context as test_context
-from tests.benchmark import run_benchmark
+from tests.benchmark import run_benchmark, compile_benchmark, run_benchmark_for_party
 
-from utils import json_serialize, json_deserialize, StatsForInputConfig, StatsForTask
+from utils import json_serialize, json_deserialize, StatsForInputConfig, StatsForTask, RunBenchmarkArgs
+from utils import read_message, write_message
+
+SERVER_PORT = 42143
+CONNECTION_TIMEOUT = 3000
 
 GMW_PROTOCOL = "BooleanGmw"
 BMR_PROTOCOL = "Bmr"
@@ -500,8 +505,6 @@ def run_paper_benchmarks():
             continue;
 
         task_stats = StatsForTask(test_case_dir.name, [])
-        input_fname = os.path.join(test_case_dir.path, "input.py")
-
         compile = True
         i = 0
         non_vec_failed = False
@@ -585,6 +588,138 @@ def run_paper_benchmarks():
         all_stats.append(task_stats)
         log.info("task {} DONE".format(task_stats.label))
     print_benchmark_data(all_stats)
+
+def compile_all_benchmarks():
+    for test_case_dir in os.scandir(test_context.STAGES_DIR):
+        if test_case_dir.name in test_context.SKIPPED_TESTS:
+                continue
+        log.info("Compiling {} ...".format(test_case_dir.name))        
+        compile_benchmark(test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, False)
+        compile_benchmark(test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True)
+        compile_benchmark(test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, False)
+        compile_benchmark(test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, True)
+
+def run_server_role(address):
+    log.info("Compiling All benchmarks")
+    compile_all_benchmarks()
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((address, int(SERVER_PORT)))
+    s.listen()
+    log.info("Server started at address {} port {}".format(address, SERVER_PORT))
+    while True:
+        conn, addr = s.accept()
+        conn.settimeout(CONNECTION_TIMEOUT)
+        with conn:
+            log.debug('Connected by ', addr)
+            count = 1
+            while True:
+                data = conn.recv(2048)
+                if not data:
+                    break
+                msg = data.decode('utf-8')
+                log.debug()
+
+def run_client_role(address):
+    log.info("Compiling All benchmarks")
+    compile_all_benchmarks()
+    log.info("Client started, will connect to server at address {} port {}".format(address, SERVER_PORT))
+    server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_sock.connect(config.EM_ADDR)
+    server_sock.settimeout(CONNECTION_TIMEOUT)
+    
+    # all_stats = []
+    # for test_case_dir in os.scandir(test_context.STAGES_DIR):
+    #     if test_case_dir.name in test_context.SKIPPED_TESTS:
+    #             continue
+
+    #     all_args, non_vec_up_to = get_inputs(test_case_dir.name)
+    #     if len(all_args) == 0:
+    #         continue;
+
+    #     task_stats = StatsForTask(test_case_dir.name, [])
+
+    #     compile = True
+    #     i = 0
+    #     non_vec_failed = False
+    #     for args in all_args:
+    #         log.info("\n{} - arguments: {}".format(test_case_dir.name, args.args));
+
+    #         gmw_p0 = gmw_p1 = None
+    #         if (i < non_vec_up_to) and not non_vec_failed:
+    #             log.info("Running GMW Non Vectorized {} {}".format(test_case_dir.name, args.label));           
+    #             gmw_p0, gmw_p1 = run_benchmark(
+    #                 test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, False, None, args.args, compile,
+    #                 continue_on_error=True
+    #             )
+    #             if gmw_p0 is not None and gmw_p1 is not None:
+    #                 log.info("GMW Non Vectorized output is {}".format(gmw_p0.output.strip()))
+    #                 assert gmw_p0.output.strip() == gmw_p1.output.strip(), \
+    #                     (gmw_p0.output.strip(), gmw_p1.output.strip())
+    #             else:
+    #                 log.warning("GMW Non Vectorized FAILED! Will not run Non-Vectorized from now.")
+    #                 non_vec_failed = True
+            
+    #         log.info("Running GMW Vectorized {} {}".format(test_case_dir.name, args.label));
+    #         gmw_vec_p0, gmw_vec_p1 = run_benchmark(
+    #             test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True, None, args.args, compile,
+    #             continue_on_error=True
+    #         )
+
+    #         if(gmw_vec_p0 is not None and gmw_vec_p1 is not None):
+    #             log.info("GMW Vectorized output is {}".format(gmw_vec_p0.output.strip()))
+    #             assert gmw_vec_p0.output.strip() == gmw_vec_p1.output.strip(), \
+    #                 (gmw_vec_p0.output.strip(), gmw_vec_p1.output.strip())
+    #         else:
+    #             log.warning("GMW Vectorized FAILED!")
+
+    #         bmr_p0 = bmr_p1 = None
+    #         if (i < non_vec_up_to) and not non_vec_failed:
+    #             log.info("Running BMR Non Vectorized {} {}".format(test_case_dir.name, args.label));
+    #             bmr_p0, bmr_p1 = run_benchmark(
+    #                 test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, False, None, args.args, compile,
+    #                 continue_on_error=True
+    #             )
+    #             if bmr_p0 is not None and bmr_p1 is not None:
+    #                 log.info("BMR Non Vectorized output is {}".format(bmr_p0.output.strip()))
+    #                 assert bmr_p0.output.strip() == bmr_p1.output.strip(), \
+    #                     (bmr_p0.output.strip(), bmr_p1.output.strip())
+    #             else:
+    #                 log.warning("BMR Non Vectorized FAILED! Will not run Non-Vectorized from now.")
+    #                 non_vec_failed = True
+            
+    #         log.info("Running BMR Vectorized {} {}".format(test_case_dir.name, args.label));
+    #         bmr_vec_p0, bmr_vec_p1 = run_benchmark(
+    #             test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, True, None, args.args, compile,
+    #             continue_on_error=True
+    #         )
+
+    #         if bmr_vec_p0 is not None and bmr_vec_p1 is not None:
+    #             log.info("BMR Vectorized output is {}".format(bmr_vec_p0.output.strip()))
+    #             assert bmr_vec_p0.output.strip() == bmr_vec_p1.output.strip(), \
+    #                 (bmr_vec_p0.output.strip(), bmr_vec_p1.output.strip())
+    #         else:
+    #             log.warning("BMR Vectorized FAILED!")
+            
+    #         compile = False
+
+    #         if gmw_p0 is None and gmw_vec_p0 is None and bmr_p0 is None and bmr_vec_p0 is None:
+    #             log.warning("{}, {} No version ran on this iteration.".format(test_case_dir.name, 
+    #                 args.label))
+    #         else:
+    #             input_stats = StatsForInputConfig(args.label, gmw_p0, gmw_p1, gmw_vec_p0, gmw_vec_p1,
+    #                 bmr_p0, bmr_p1, bmr_vec_p0, bmr_vec_p1)
+    #             task_stats.input_configs.append(input_stats)
+    #             log.info("task {} input config {} DONE".format(task_stats.label, input_stats.label))
+
+    #             file_path = os.path.join(FILE_DIR, "{}.json".format(task_stats.label))
+    #             with open(file_path, "w", encoding='utf-8') as f:
+    #                 json_str = json_serialize(task_stats)
+    #                 f.write(json_str)
+            
+    #         i += 1
+
+    #     all_stats.append(task_stats)
+    #     log.info("task {} DONE".format(task_stats.label))
 
 
 def get_x_label_for_benchmark(name):
@@ -883,6 +1018,16 @@ def generate_graphs(lan, wan):
 if __name__ == "__main__":
     parser = ArgumentParser(
         description="runs and collects benchmarks statistics for the paper. (assumes correct network config)")
+    parser.add_argument('-r', '--role', nargs='?', 
+        help="choices for role 's' for Server, 'c' for client, 'b' for both (default=b)", 
+        choices=['s','c','b'],
+        default='b'
+    )
+    parser.add_argument('-a', '--address', nargs='?', 
+        help="server address, only needed if not running both roles", 
+        default="127.0.0.1",
+    )
+
     parser.add_argument('-g', "--graphs",
         action="store_true",
         help="generates graphs from benchmarks",
@@ -901,5 +1046,9 @@ if __name__ == "__main__":
     if args.graphs:
         generate_graphs(args.lan, args.wan)
     else:
-        run_paper_benchmarks()
-
+        if args.role == 'b':
+            run_paper_benchmarks()
+        elif args.role == 's':
+            run_server_role(args.address)
+        else:
+            run_client_role(args.address)
