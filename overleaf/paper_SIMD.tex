@@ -646,7 +646,7 @@ as opposed to unamortized cost $g(n) = n\alpha_\mathit{fix} + n\alpha_\mathit{va
 $\beta$-instructions.)
 
 Thus, the fixed cost of the vectorized program amounts to
-$2\alpha_\mathit{fix}$ + $D \beta_\mathit{fix} + N(3\alpha_\mathit{fix})$. (The variable cost is the same in both the vectorized and un-vectorized programs.) 
+$2\alpha_\mathit{fix}$ + $D \beta_\mathit{fix} + N(3\alpha_\mathit{fix})$. (The variable cost is the same in both the vectorized and non-vectorized programs.) 
 The first term in the sum corresponds to the vectorized
 subtraction and multiplication, the second term corresponds to the FOR loop on $j$ and the third 
 one corresponds to the remaining FOR loops on $i$. Clearly, $2\alpha_\mathit{fix} + D\beta_\mathit{fix} + N(3\alpha_\mathit{fix}) << ND(2\alpha_\mathit{fix}+\beta_\mathit{fix}) + N3\alpha_\mathit{fix}$.
@@ -712,6 +712,7 @@ and Section~\secref{sec:vectorization} describes our vectorization algorithm. \a
 %\ana{Need to state this more precisely.}
 
 \subsection{Syntax and Semantic Restrictions}
+\label{sec:syntax}
 
 Source syntax is essentially standard IMP syntax as shown below:
 %\begin{figure}[t]
@@ -823,7 +824,7 @@ arbitrarily large loop nests.
 
 \subsection{From IMP Source to SSA}
 
-Our compiler performs the following semantic analysis steps:
+Our compiler translates from Source to SSA as follows:
 
 \begin{enumerate}
   \item
@@ -831,47 +832,47 @@ Our compiler performs the following semantic analysis steps:
         Use Python's \texttt{ast} module to parse the input source code to a Python AST.
   \item
         \textbf{Syntax checking}:
-        Ensure that the AST matches a restricted subset that our compiler supports.
+        Ensure that the AST matches the restricted subset defined in Section~\secref{sec:syntax}.
         This step outputs an instance of the \texttt{restricted\_ast.Function} class, which represents our restricted subset of the Python AST.
   \item
         \textbf{3-address CFG conversion}:
-        \benjamin{TODO: Is this a good amount of detail?} \ana{This is good amount of detail for the Tech report. In the actual paper we'll shorten a lot and add pointers to the Tech report.} 
+        %\benjamin{TODO: Is this a good amount of detail?} \ana{This is good amount of detail for the Tech report. In the actual paper we'll shorten a lot and add pointers to the Tech report.} 
 
         Convert the restricted-syntax AST to a three-address control-flow graph.
         To do this, first,
         add an empty basic block to the CFG and mark it as current.
         Next, for each statement in the restricted AST's function body,
         process the statement.
-        Statements can either be for-loops, if-statements, or assignments.
+        Statements can either be for-loops, if-statements, or assignments (as in~\secref{sec:syntax}).
         Rules for processing each kind of statement are given below:
         \begin{enumerate}
           \item
                 \textbf{For-loops}:
                 Create new basic blocks for
                 the loop condition
-                (the condition block),
+                (the \emph{condition-block}),
                 the loop body
-                (the body block),
+                (the \emph{body-block}),
                 and the code after the loop
-                (the after-block).
-                Insert a jump from the end of the current block to the condition block.
-                Then, mark the condition block as the current block.
+                (the \emph{after-block}).
+                Insert a jump from the end of the current block to the condition-block.
+                Then, mark the condition-block as the current block.
                 Insert a for-instruction at the end of the current block with the loop counter variable and bounds from the AST.
                 Next, add an edge from the current block to the after-block labeled ``FALSE'' and
                 an edge from the current block to the
-                body block labeled ``TRUE''.
-                Then, set the body block to be the current block
+                body-block labeled ``TRUE''.
+                Then, set the body-block to be the current block
                 and process all statements in the AST's loop body.
-                Finally, insert a jump to the condition block and set the after-block as current.
+                Finally, insert a jump to the condition-block and set the after-block as current.
           \item
                 \textbf{If-statements}:
                 Create new basic blocks for
                 the ``then'' statements of the if-statement
-                (the then-block),
+                (the \emph{then-block}),
                 the ``else'' statements of the if-statement
-                (the else-block),
+                (the \emph{else-block}),
                 and the code after the if-statement
-                (the after-block).
+                (the \emph{after-block}).
                 At the end of the current block,
                 insert a conditional jump to the then-block or else-block
                 depending on the if-statement condition in the AST.
@@ -884,13 +885,13 @@ Our compiler performs the following semantic analysis steps:
                 process all else-statements,
                 and add a jump to the after-block.
                 Finally, set the after-block to be the current block,
-                and give it a ``merge condition'' property equal to the condition of the if-statement.
+                and give it a \emph{merge condition} property equal to the condition of the if-statement.
           \item
                 \textbf{Assignments}:
                 In the restricted-syntax AST,
                 the left-hand side of assignments
                 can be a variable or an array subscript.
-                If it is an array subscript such as \texttt{A[i] = x},
+                If it is an array subscript, e.g., \texttt{A[i] = x},
                 change the statement to \texttt{A = Update(A, i, x)}.
                 If the statement is not already three-address code,
                 for each sub-expression in the right-hand side of the assignment,
@@ -901,25 +902,30 @@ Our compiler performs the following semantic analysis steps:
         Convert the 3-address CFG to SSA with Cytron's algorithm.
 \end{enumerate}
 
-\subsection{From SSA to MPC Source: MUX Nodes and Pseudo $\phi$-nodes}
+\subsection{From SSA to MPC Source} %: MUX Nodes and Pseudo $\phi$-nodes}
 
 Once the compiler converts the code to SSA,
 it transforms $\phi$-nodes that correspond to if-statements into MUX nodes.
 From the 3-address CFG conversion step,
 $\phi$-nodes corresponding to if-statements will be in a basic block
-with the ``merge condition'' property.
+with the merge condition property.
 For example, if $X_3 = \phi(X_1,X_2)$ is in a block with merge condition $C$,
 the compiler transforms it into $X_3 = \mathit{MUX}(C, X_1, X_2)$.
 Next, the compiler runs the dead code elimination algorithm from Cytron's SSA paper.
 
-Then, the control-flow graph is \emph{linearized} into MPC Source,
+Next, the control-flow graph is \emph{linearized} into MPC Source,
 which has loops but no if-then-else-statements.
 This means that both branches of all if-statements are executed,
 and the MUX nodes determine whether to use results from the then-block or from the else-block.
 The compiler linearizes the control-flow graph with a variation of breadth-first search.
 Blocks with the ``merge condition'' property are only considered
 the second time they are visited,
-since that will be after both branches of the if-statement are visited.
+since that will be after both branches of the if-statement are visited. 
+(The Python AST naturally gives rise to a translation where each conditional has exactly two targets, 
+and each ``merge condition'' block has exactly two incoming edges, a TRUE and a FALSE edge.
+Thus, each $\phi$-node has exactly two multiplexer arguments, which dovetails into MUX.
+This is in contrast with Cytron's algorithm which operates at the level of the CFG and allows for 
+$\phi$-nodes with multiple arguments.)
 Each time the compiler visits a block,
 it adds the block's statements to the MPC source.
 If the block ends in a for-instruction,
@@ -929,20 +935,22 @@ If the block does not end in a for-instruction,
 the compiler recursively converts all successor branches to MPC source and
 appends these to the main MPC source.
 
-Now, the remaining $\phi$-nodes in MPC source are \emph{pseudo} $\phi$-nodes.
-A pseudo $\phi$-node $X_1 = \phi(X_0,X_2)$ in a loop header is evaluated during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to $X_0$, otherwise, it evaluates to $X_2$.
+Now, the remaining $\phi$-nodes in MPC source are the loop header nodes. We call these nodes \emph{pseudo} $\phi$-nodes 
+and we write \python{PHI} in MPC Source. A pseudo $\phi$-node $X_1 = $\python{PHI}$(X_0,X_2)$ in a loop header is evaluated 
+during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to $X_0$, otherwise, it evaluates to $X_2$.
 
 %\ana{We need to double check that the following captures all cases of def-use edges.}
 
 \subsection{Dependence Analysis}
 
+The next steps construct the dependence graph and ???. 
 
 \subsubsection{Def-use Edges}
 
 The dependence graph has the following def-use edges:
 
 \begin{itemize}
-\item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge from \texttt{d = S[i,j] - C[j]} to \texttt{p = d*d} in the Biometric MPC-source is a same-level edge. A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
+\item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge from \python{d = S[i,j] - C[j]} to \python{p = d*d} in the Biometric MPC-source is a same-level edge. A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
 \item outer-to-inner $X\rightarrow Y$ where $X$ is in an outer loop nest, say $i$, and $Y$ is in an inner one, say $i,j,k$. 
 %A $\phi$-node can be a source or a target of an outer-to-inner forward edge.
 \item inner-to-outer $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer edge. An inner-to-outer edge can be a back-edge as well in which case both $X$ and $Y$ are phi-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
@@ -987,6 +995,10 @@ for i in range(0, N):
 \ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}
 
 When converting to MOTION code, any plaintext value used in the right-hand side of a shared assignment is implicitly converted to a shared value for that expression. \ben{Is this necessary to include?}
+
+\subsection{From (Optimized) MPC Source to MOTION}
+\label{sec:MOTION}
+\ana{Ben, add the MOTION section here.}
 
 \section{Vectorization}
 \label{sec:vectorization}
