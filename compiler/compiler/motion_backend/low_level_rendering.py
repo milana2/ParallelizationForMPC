@@ -102,34 +102,35 @@ def render_param(param: Parameter, type_env: TypeEnv) -> str:
     )
 
 
-def collect_plaintext_conversions(expr: AssignRHS, type_env: TypeEnv) -> list[Var]:
+# Collect counter uses for conversion to shared variables
+def collect_counter_uses(expr: AssignRHS, enclosing_loops: list[For]) -> list[Var]:
     if isinstance(expr, Var):
-        if type_env[expr].is_plaintext():
+        if any(loop.counter == expr for loop in enclosing_loops):
             return [expr]
         else:
             return []
     elif isinstance(expr, UnaryOp):
-        return collect_plaintext_conversions(expr.operand, type_env)
+        return collect_counter_uses(expr.operand, enclosing_loops)
     elif isinstance(expr, BinOp):
-        return collect_plaintext_conversions(
-            expr.left, type_env
-        ) + collect_plaintext_conversions(expr.right, type_env)
+        return collect_counter_uses(
+            expr.left, enclosing_loops
+        ) + collect_counter_uses(expr.right, enclosing_loops)
     elif isinstance(expr, (List, Tuple)):
         return [
             var
             for elem in expr.items
-            for var in collect_plaintext_conversions(elem, type_env)
+            for var in collect_counter_uses(elem, enclosing_loops)
         ]
     elif isinstance(expr, (Update, VectorizedUpdate)):
-        return collect_plaintext_conversions(expr.value, type_env)
+        return collect_counter_uses(expr.value, enclosing_loops)
     elif isinstance(expr, Mux):
         return (
-            collect_plaintext_conversions(expr.condition, type_env)
-            + collect_plaintext_conversions(expr.true_value, type_env)
-            + collect_plaintext_conversions(expr.false_value, type_env)
+            collect_counter_uses(expr.condition, enclosing_loops)
+            + collect_counter_uses(expr.true_value, enclosing_loops)
+            + collect_counter_uses(expr.false_value, enclosing_loops)
         )
     elif isinstance(expr, LiftExpr):
-        return collect_plaintext_conversions(expr.expr, type_env)
+        return collect_counter_uses(expr.expr, enclosing_loops)
     # The below expressions never require conversion to plaintext
     elif isinstance(expr, (Constant, Subscript, VectorizedAccess, DropDim)):
         return []
@@ -145,35 +146,29 @@ def render_stmt(
 ) -> str:
     if isinstance(stmt, Assign):
         # Convert any plaintext assignments
-        plaintext_conversions = ""
-        if (
-            type_assign_expr(stmt.lhs, type_env, stmt, None).is_shared()
-            # lift expressions are always shared, even if they're lifting to "plaintext" arrays
-            or isinstance(stmt.rhs, LiftExpr)
-        ):
-            vars_needing_conversions = collect_plaintext_conversions(stmt.rhs, type_env)
-            plaintext_conversions = "\n".join(
-                render_expr(
-                    var,
-                    RenderContext(
-                        type_env, plaintext=False, enclosing_loops=enclosing_loops
-                    ),
-                )
-                + " = party->In<Protocol>("
-                + render_expr(
-                    var,
-                    RenderContext(
-                        type_env,
-                        as_motion_input=True,
-                        enclosing_loops=enclosing_loops,
-                    ),
-                )
-                + ", 0);"
-                for var in vars_needing_conversions
+        vars_needing_conversions = collect_counter_uses(stmt.rhs, enclosing_loops)
+        plaintext_conversions = "\n".join(
+            render_expr(
+                var,
+                RenderContext(
+                    type_env, plaintext=False, enclosing_loops=enclosing_loops
+                ),
             )
+            + " = party->In<Protocol>("
+            + render_expr(
+                var,
+                RenderContext(
+                    type_env,
+                    as_motion_input=True,
+                    enclosing_loops=enclosing_loops,
+                ),
+            )
+            + ", 0);"
+            for var in vars_needing_conversions
+        )
 
-            if plaintext_conversions:
-                plaintext_conversions += "\n"
+        if plaintext_conversions:
+            plaintext_conversions += "\n"
 
         # If we're assigning to a vectorized value, use a specialized function for this.
         if isinstance(stmt.lhs, VectorizedAccess):
@@ -311,7 +306,7 @@ def render_stmt(
         ):
             return plaintext_conversions + shared_assignment
         else:
-            return plaintext_conversions + plaintext_assignment
+            return plaintext_conversions + shared_assignment + "\n" + plaintext_assignment
 
     elif isinstance(stmt, For):
         ctr_initializer = (

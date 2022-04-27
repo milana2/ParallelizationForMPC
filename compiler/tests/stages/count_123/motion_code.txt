@@ -62,14 +62,14 @@ encrypto::motion::SecureUnsignedInteger count_123(
     vectorized_assign(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Syms_0[std::uint32_t(2)];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return Seq_0[indices[0]];}), {_MPC_PLAINTEXT_N_0}));
     vectorized_assign(_1_2, {_MPC_PLAINTEXT_N_0}, {true}, {}, (to_share_wrapper(vectorized_access(_9_0, {_MPC_PLAINTEXT_N_0}, {true}, {})) == to_share_wrapper(vectorized_access(_10_0, {_MPC_PLAINTEXT_N_0}, {true}, {}))));
+    c_1 = _MPC_CONSTANT_0;
     _MPC_PLAINTEXT_c_1 = std::uint32_t(0);
-    c_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_c_1), 0);
     vectorized_assign(_8_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return c_1;}), {_MPC_PLAINTEXT_N_0}));
+    s2_1 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_s2_1 = false;
-    s2_1 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_s2_1), 0);
     vectorized_assign(_7_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s2_1;}), {_MPC_PLAINTEXT_N_0}));
+    s1_1 = _MPC_CONSTANT_false;
     _MPC_PLAINTEXT_s1_1 = false;
-    s1_1 = party->In<Protocol>(encrypto::motion::BitVector(1, _MPC_PLAINTEXT_s1_1), 0);
     vectorized_assign(_6_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return s1_1;}), {_MPC_PLAINTEXT_N_0}));
 
     // Initialize loop counter
