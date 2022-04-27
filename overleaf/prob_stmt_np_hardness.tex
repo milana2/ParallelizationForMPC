@@ -81,14 +81,13 @@ Cost of schedule $P$ is computed using \cref{eq_par_schedule_cost} above and it 
 
 The problem of finding a schedule $P$ with a minimal $cost(P)$ is shown to be NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, a known NP-Hard problem\cite{Maier1978, Vazirani2010}. The shortest common supersequence problem is as follows: {\it given two or more sequences find the the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. For our problem $n$ is the maximum length of a sequence and $k$ is the number of total number of sequences. We can immediately see that the optimal schedule is the shortest schedule, since the shortest schedule minimizes the fixed cost while the variable cost remains the same.
 
-\ana{This paragraph needs work.} To formalize the reduction, suppose $P$ is a schedule with minimal cost (computed by a black-box algorithm). 
+To formalize the reduction, suppose $P$ is a schedule with minimal cost (computed by a black-box algorithm). 
 %We can derive a schedule $P'$ with the same cost as $P$, by mapping each mixed node $P_i \in P$ to two consecutive nodes in $P'$: an $A$-instruction node followed by an $M$-instruction node. 
-Clearly, $P'$, which now is a sequence of $M_1$ and $M_2$ nodes, is a supersequence of each sequence $S_i$, i.e., $P'$ is a common supersequence of $S_1 \dots S_n$. It is also a shortest common supersequence. 
+Clearly, $P$, which now is a sequence of $M_1$ and $M_2$ nodes, is a supersequence of each sequence $S_i$, i.e., $P$ is a common supersequence of $S_1 \dots S_n$. It is also a shortest common supersequence. 
 %To see this, let $X$ and $Y$ denote, respectively, the number of $A$ and $M$ nodes in $P'$. 
-The cost of $P$, is $L\alpha_\mathit{fix}+N\alpha_\mathit{var}$ where $L$ is the length of $P$ and $N$ is the total number of instructions across all sequences. %$X \cdot \alpha + Y \cdot \beta$. 
-
-Now suppose, there exists a shorter common supersequence $P'$. 
-that consists of $X'$ nodes of type $A$-instructions $Y'$ nodes of type $M$-instructions. Since $P''$ is shorter than $P'$, therefore $X' + Y' < X + Y$, and $X' \cdot \alpha + Y' \cdot \beta < X \cdot \alpha + Y \cdot \beta$ i.e. $\mathit{cost}(P'') < \mathit{cost}(P')$. But $\mathit{cost}(P') = \mathit{cost}(P)$ and $\mathit{cost}(P)$ is the optimal cost.  Therefore $\mathit{cost}(P'') < \mathit{cost}(P')$ is contradiction and no such $P''$ exists. \qed
+The cost of $\mathit{cost}(P) = L\alpha_\mathit{fix}+N\alpha_\mathit{var}$ where $L$ is the length of $P$ and $N$ is the total number of instructions across all sequences. %$X \cdot \alpha + Y \cdot \beta$. 
+Now suppose, there exist a shorter common supersequence $P'$ of length $L'$. $\mathit{cost}(P') < \mathit{cost}(P)$ since $L'\alpha_\mathit{var} + N\alpha_\mathit{var} < L\alpha_\mathit{var} + N\alpha_\mathit{var}$, however, this is a contradiction to the assumption that $P$ has the lowest cost. \qed
+%that consists of $X'$ nodes of type $A$-instructions $Y'$ nodes of type $M$-instructions. Since $P''$ is shorter than $P'$, therefore $X' + Y' < X + Y$, and $X' \cdot \alpha + Y' \cdot \beta < X \cdot \alpha + Y \cdot \beta$ i.e. $\mathit{cost}(P'') < \mathit{cost}(P')$. But $\mathit{cost}(P') = \mathit{cost}(P)$ and $\mathit{cost}(P)$ is the optimal cost.  Therefore $\mathit{cost}(P'') < \mathit{cost}(P')$ is contradiction and no such $P''$ exists. \qed
 
 \begin{comment}
 \subsection{Loud Thinking}
