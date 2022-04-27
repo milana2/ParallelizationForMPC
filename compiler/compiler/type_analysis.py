@@ -238,6 +238,8 @@ def type_assign_expr(
             expr_type,
             _dims=0,
             dim_sizes=[loop_bound for _idx_var, loop_bound in expr.dims],
+            # Vectorized arrays are always shared
+            visibility=VarVisibility.SHARED,
         )
 
     elif isinstance(expr, DropDim):

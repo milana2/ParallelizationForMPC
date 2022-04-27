@@ -26,15 +26,15 @@ encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
 
 
     // Function body
-    z_1 = _MPC_CONSTANT_0;
-    _MPC_PLAINTEXT_z_1 = std::uint32_t(0);
-    _1_1 = (x_0 > _MPC_CONSTANT_0);
-    _2_1 = (y_0 > _MPC_CONSTANT_0);
-    z_3 = _MPC_CONSTANT_0;
-    _MPC_PLAINTEXT_z_3 = std::uint32_t(0);
-    z_2 = _MPC_CONSTANT_1;
     _MPC_PLAINTEXT_z_2 = std::uint32_t(1);
+    _MPC_PLAINTEXT_z_3 = std::uint32_t(0);
+    _2_1 = (y_0 > _MPC_CONSTANT_0);
+    z_2 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_z_2), 0);
+    z_3 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_z_3), 0);
     z_4 = _2_1.Mux(z_2.Get(), z_3.Get());
+    _1_1 = (x_0 > _MPC_CONSTANT_0);
+    _MPC_PLAINTEXT_z_1 = std::uint32_t(0);
+    z_1 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_z_1), 0);
     z_5 = _1_1.Mux(z_4.Get(), z_1.Get());
     return z_5;
 

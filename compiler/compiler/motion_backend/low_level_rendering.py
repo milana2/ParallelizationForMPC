@@ -102,6 +102,41 @@ def render_param(param: Parameter, type_env: TypeEnv) -> str:
     )
 
 
+def collect_plaintext_conversions(expr: AssignRHS, type_env: TypeEnv) -> list[Var]:
+    if isinstance(expr, Var):
+        if type_env[expr].is_plaintext():
+            return [expr]
+        else:
+            return []
+    elif isinstance(expr, UnaryOp):
+        return collect_plaintext_conversions(expr.operand, type_env)
+    elif isinstance(expr, BinOp):
+        return collect_plaintext_conversions(
+            expr.left, type_env
+        ) + collect_plaintext_conversions(expr.right, type_env)
+    elif isinstance(expr, (List, Tuple)):
+        return [
+            var
+            for elem in expr.items
+            for var in collect_plaintext_conversions(elem, type_env)
+        ]
+    elif isinstance(expr, (Update, VectorizedUpdate)):
+        return collect_plaintext_conversions(expr.value, type_env)
+    elif isinstance(expr, Mux):
+        return (
+            collect_plaintext_conversions(expr.condition, type_env)
+            + collect_plaintext_conversions(expr.true_value, type_env)
+            + collect_plaintext_conversions(expr.false_value, type_env)
+        )
+    elif isinstance(expr, LiftExpr):
+        return collect_plaintext_conversions(expr.expr, type_env)
+    # The below expressions never require conversion to plaintext
+    elif isinstance(expr, (Constant, Subscript, VectorizedAccess, DropDim)):
+        return []
+    else:
+        assert_never(expr)
+
+
 def render_stmt(
     stmt: Union[Assign, For, Return],
     type_env: TypeEnv,
@@ -109,6 +144,37 @@ def render_stmt(
     enclosing_loops=[],
 ) -> str:
     if isinstance(stmt, Assign):
+        # Convert any plaintext assignments
+        plaintext_conversions = ""
+        if (
+            type_assign_expr(stmt.lhs, type_env, stmt, None).is_shared()
+            # lift expressions are always shared, even if they're lifting to "plaintext" arrays
+            or isinstance(stmt.rhs, LiftExpr)
+        ):
+            vars_needing_conversions = collect_plaintext_conversions(stmt.rhs, type_env)
+            plaintext_conversions = "\n".join(
+                render_expr(
+                    var,
+                    RenderContext(
+                        type_env, plaintext=False, enclosing_loops=enclosing_loops
+                    ),
+                )
+                + " = party->In<Protocol>("
+                + render_expr(
+                    var,
+                    RenderContext(
+                        type_env,
+                        as_motion_input=True,
+                        enclosing_loops=enclosing_loops,
+                    ),
+                )
+                + ", 0);"
+                for var in vars_needing_conversions
+            )
+
+            if plaintext_conversions:
+                plaintext_conversions += "\n"
+
         # If we're assigning to a vectorized value, use a specialized function for this.
         if isinstance(stmt.lhs, VectorizedAccess):
             ctx = RenderContext(
@@ -119,7 +185,7 @@ def render_stmt(
             # If this isn't a true vectorized access, just subscript normally
             if all(vectorized == False for vectorized in stmt.lhs.vectorized_dims):
                 lhs = render_expr(stmt.lhs, ctx)
-                return f"{lhs} = {val_expr};"
+                return plaintext_conversions + f"{lhs} = {val_expr};"
 
             dim_sizes = (
                 "{"
@@ -148,7 +214,10 @@ def render_stmt(
                 + "}"
             )
 
-            return f"vectorized_assign({render_expr(stmt.lhs.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {val_expr});"
+            return (
+                plaintext_conversions
+                + f"vectorized_assign({render_expr(stmt.lhs.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {val_expr});"
+            )
 
         if isinstance(stmt.rhs, Update):
             shared_assignment = (
@@ -240,9 +309,9 @@ def render_stmt(
             type_env[stmt.lhs].is_shared()
             or type_env[stmt.lhs].datatype == DataType.TUPLE
         ):
-            return shared_assignment
+            return plaintext_conversions + shared_assignment
         else:
-            return shared_assignment + "\n" + plaintext_assignment
+            return plaintext_conversions + plaintext_assignment
 
     elif isinstance(stmt, For):
         ctr_initializer = (
@@ -348,9 +417,6 @@ def render_stmt(
             + "\n"
             + header
             + "\n"
-            # Initialize loop counter for use in loop
-            + f"    {render_expr(stmt.counter, RenderContext(type_env, enclosing_loops=enclosing_loops))} = party->In<Protocol>(encrypto::motion::ToInput({render_expr(stmt.counter, RenderContext(type_env, plaintext=True, enclosing_loops=enclosing_loops))}), 0);"
-            + "\n"
             + indent(phi_updates, "    ")
             + "\n"
             + indent(body, "    ")
@@ -390,6 +456,20 @@ def _render_operator(op: Union[BinOpKind, UnaryOpKind]) -> str:
 
 
 def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> str:
+    if ctx.as_motion_input:
+        cpp_var = render_expr(
+            expr, dc.replace(ctx, plaintext=True, as_motion_input=False)
+        )
+
+        if type_assign_expr(expr, ctx.type_env, None, None).datatype == DataType.INT:
+            return f"encrypto::motion::ToInput({cpp_var})"
+        elif type_assign_expr(expr, ctx.type_env, None, None).datatype == DataType.BOOL:
+            return f"encrypto::motion::BitVector(1, {cpp_var})"
+        else:
+            raise NotImplementedError(
+                f"Unsupported datatype: {type_assign_expr(expr, ctx.type_env, None, None).datatype}"
+            )
+
     if isinstance(expr, (BinOp, SubscriptIndexBinOp)):
         if expr.operator == BinOpKind.LT:
             return render_expr(
@@ -494,19 +574,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             )
 
     elif isinstance(expr, Constant):
-        if ctx.as_motion_input:
-            cpp_const = render_expr(
-                expr, dc.replace(ctx, plaintext=True, as_motion_input=False)
-            )
-
-            if expr.datatype == DataType.INT:
-                return f"encrypto::motion::ToInput({cpp_const})"
-            elif expr.datatype == DataType.BOOL:
-                return f"encrypto::motion::BitVector(1, {cpp_const})"
-            else:
-                raise NotImplementedError(f"Unsupported datatype: {expr.datatype}")
-
-        elif ctx.plaintext:
+        if ctx.plaintext:
             if expr.datatype == DataType.INT:
                 return f"{ctx.int_type}({expr.value})"
             elif expr.datatype == DataType.BOOL:
@@ -719,6 +787,9 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             + "}"
         )
         idxs = "{}"
-        return f"vectorized_update({render_expr(expr.array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(expr.value, ctx)})"
+        update_array = expr.array
+        if isinstance(update_array, VectorizedAccess):
+            update_array = update_array.array
+        return f"vectorized_update({render_expr(update_array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(expr.value, ctx)})"
 
     return assert_never(expr)

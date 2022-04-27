@@ -1,29 +1,29 @@
 def longest_odd_10(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[list[int; ?]]) -> shared[int]:
-    current_length!1 = 0
-    max_length!1 = 0
-    s2!1 = False
-    !11!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !12!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
-    !13!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
-    !14!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
     current_length!4 = 0
-    !8!0{N!0}[] = lift(current_length!1, (i!1:N!0))
-    !9!0{N!0}[] = lift(max_length!1, (i!1:N!0))
-    !10!0{N!0}[] = lift(s2!1, (i!1:N!0))
-    !1!2{N!0}[] = (!11!0{N!0}[] == !12!0{N!0}[])
+    !14!0{N!0}[] = lift(Syms!0[0], (i!1:N!0))
+    !13!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
     s2!3{N!0}[] = (!13!0{N!0}[] == !14!0{N!0}[])
+    !12!0{N!0}[] = lift(Syms!0[1], (i!1:N!0))
+    !11!0{N!0}[] = lift(Seq!0[i!1], (i!1:N!0))
+    !1!2{N!0}[] = (!11!0{N!0}[] == !12!0{N!0}[])
+    s2!1 = False
+    !10!0{N!0}[] = lift(s2!1, (i!1:N!0))
     for !16!0 in range(0, N!0): (monolithic)
         s2!2{}[!16!0] = Φ(!10!0{}[!16!0], s2!3{}[(!16!0 - 1)])
     s1!2{N!0}[] = (s2!2{N!0}[] and !1!2{N!0}[])
     !2!2{N!0}[] = not s2!2{N!0}[]
+    max_length!1 = 0
+    !9!0{N!0}[] = lift(max_length!1, (i!1:N!0))
+    current_length!1 = 0
+    !8!0{N!0}[] = lift(current_length!1, (i!1:N!0))
     for !17!0 in range(0, N!0): (monolithic)
         current_length!2{}[!17!0] = Φ(!8!0{}[!17!0], current_length!6{}[(!17!0 - 1)])
         current_length!5{}[!17!0] = MUX(!2!2{}[!17!0], current_length!4, current_length!2{}[!17!0])
         current_length!3{}[!17!0] = (current_length!2{}[!17!0] + 1)
         current_length!6{}[!17!0] = MUX(s1!2{}[!17!0], current_length!3{}[!17!0], current_length!5{}[!17!0])
     !4!2{N!0}[] = (current_length!6{N!0}[] & 1)
-    max_length!3{N!0}[] = current_length!6{N!0}[]
     !5!2{N!0}[] = (!4!2{N!0}[] == 1)
+    max_length!3{N!0}[] = current_length!6{N!0}[]
     for !18!0 in range(0, N!0): (monolithic)
         max_length!2{}[!18!0] = Φ(!9!0{}[!18!0], max_length!4{}[(!18!0 - 1)])
         !6!2{}[!18!0] = (current_length!6{}[!18!0] > max_length!2{}[!18!0])
