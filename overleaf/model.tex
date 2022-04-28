@@ -1,7 +1,16 @@
 \section{Analytical Model}
 \label{sec:model}
 
-\ana{We need an intro to section here.}
+%\ana{We need an intro to section here.}
+\ana{Terminology: "operation" or "instruction" or "gate"?}
+
+This section presents a model to reason about the cost of execution of MPC programs, including accounting for amortization.
+We define the assumptions and setting in~\secref{sec:mpc}. We proceed to define the scheduling problem in~\secref{sec:problem}, 
+which we expected to be able to solve optimally. \secref{sec:np} show that the problem is NP-hard via a reduction to the 
+Shortest Common Supersequence (SCS) problem. Despite the negative general result, we expect the formulation in terms of SCS to 
+be useful as sequences are short and few in practice.
+
+
 
 \subsection{Scheduling in MPC}
 \label{sec:mpc}
@@ -21,7 +30,7 @@ instructions have the same cost.
 Following Amdahl's law~\ana{citation!}, we write $\alpha = \frac{1}{s}p\alpha + (1-p)\alpha$, where $p$ is the fraction of execution time that benefits from amortization and $(1-p)$
 is the fraction that does not, and $s$ is the available resource. Thus, $n\alpha = \frac{n}{s}p\alpha + n(1-p)\alpha$.
 For the purpose of the model we assume that $s$ is large enough and the term $\frac{n}{s}p\alpha$ amounts to a \emph{fixed cost} incurred regardless of
-whether $n$ is $10,000$ or just $1$. (This models the cost of sending a packet from party A to party B for example.) The bottom line is that amortized execution
+whether $n$ is $10,000$ or just $1$. (This models the cost of preparing and sending a packet from party A to party B for example.) The bottom line is that amortized execution
 of $n$ operations is $f(n) = \alpha_\mathit{fix} + n\alpha_{var}$ in contrast to unamortized execution $g(n) = n\alpha_\mathit{fix} + n\alpha_{var}$ and, of course,
 $\alpha_\mathit{fix} << n\alpha_\mathit{fix}$.
 %We assume infinite parallel capacity---i.e., a single MPC-instruction costs as much as $N$ amortized instructions, namely $\alpha$ or $\beta$.
