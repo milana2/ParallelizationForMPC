@@ -76,8 +76,9 @@ def get_rand_ints(n, min=1, max=100):
 
 def get_biometric_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
-    non_vec_up_to = 6 # Only run non-vectorized benchmark upto this index
-    for config in [[4, 4]]:#, [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 2048], [4, 4096]]:
+    non_vec_up_to = 0 #6# Only run non-vectorized benchmark upto this index
+    # for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 2048], [4, 4096]]:
+    for config in [[4, 128], [4, 4096]]:
         D = config[0]
         N = config[1]
         args = [
@@ -96,8 +97,9 @@ def get_biometric_inputs() -> tuple[list[InputArgs], int]:
 
 def get_biometric_fast_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
-    non_vec_up_to = 6 # Only run non-vectorized benchmark upto this index
-    for config in [[4, 4]]:#, [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 2048], [4, 4096]]:
+    non_vec_up_to = 0 #6 # Only run non-vectorized benchmark upto this index
+    # for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 2048], [4, 4096]]:
+    for config in [[4, 128], [4, 4096]]:
         D = config[0]
         N = config[1]
         args = [
@@ -143,8 +145,9 @@ def get_chapterfour_figure_12_inputs() -> tuple[list[InputArgs], int]:
 
 def get_convex_hull_inputs():
     all_args = []
-    non_vec_up_to = 100
-    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    non_vec_up_to = 0
+    #for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    for N in [32, 256]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -166,8 +169,9 @@ def get_convex_hull_inputs():
 
 def get_count_102_inputs():
     all_args = []
-    non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    non_vec_up_to = 0
+    #for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    for N in [1024, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -183,8 +187,9 @@ def get_count_102_inputs():
 
 def get_count_10s_inputs():
     all_args = []
-    non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    non_vec_up_to = 0
+    #for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    for N in [1024, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -200,8 +205,9 @@ def get_count_10s_inputs():
 
 def get_count_123_inputs():
     all_args = []
-    non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    non_vec_up_to = 0
+    #for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    for N in [1024, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -217,8 +223,9 @@ def get_count_123_inputs():
 
 def get_cryptonets_max_pooling_inputs():
     all_args = []
-    non_vec_up_to = 100
-    for config in [[4, 4], [8, 8], [16, 16], [32, 32], [64, 64]]:
+    non_vec_up_to = 0
+    #for config in [[4, 4], [8, 8], [16, 16], [32, 32], [64, 64]]:
+    for config in [[64, 64]]:
         rows = config[0]
         cols = config[1]
         rows_res = rows // 2
@@ -243,8 +250,9 @@ def get_cryptonets_max_pooling_inputs():
 
 def get_db_cross_join_trivial_inputs():
     all_args = []
-    non_vec_up_to = 100
-    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]:
+    non_vec_up_to = 0
+    #for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]:
+    for N in [32, 64]:
         Len_A = N
         Len_B = N
         args = [
@@ -266,8 +274,9 @@ def get_db_cross_join_trivial_inputs():
 
 def get_db_variance_inputs():
     all_args = []
-    non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    non_vec_up_to = 0
+    #for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    for N in [512, 4096]:
         args = [
         "--len", "{}".format(N),
         ]
@@ -284,8 +293,9 @@ def get_db_variance_inputs():
 def get_histogram_inputs():
     all_args = []
     num_bins = 5
-    non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    non_vec_up_to = 0
+    #for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    for N in [512, 4096]:
         args = [
         "--num_bins", "{}".format(num_bins),
         "--N", "{}".format(N),
@@ -305,8 +315,9 @@ def get_histogram_inputs():
 
 def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
     all_args = []
-    non_vec_up_to = 8
-    for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    non_vec_up_to = 0#8
+    #for N in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    for N in [512, 4096]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -323,8 +334,9 @@ def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
 def get_kmeans_iteration_inputs():
     all_args = []
     num_bins = 5
-    non_vec_up_to = 100
-    for config in [[32, 5], [32, 8], [64, 8], [128, 8], [200, 5], [256, 8]]:
+    non_vec_up_to = 0
+    #for config in [[32, 5], [32, 8], [64, 8], [128, 8], [200, 5], [256, 8]]:
+    for config in [[32, 5], [256, 8]]:
         len = config[0]
         num_cluster = config[1]
         data_x = [i for i in range(len)]
@@ -360,8 +372,9 @@ def get_kmeans_iteration_inputs():
 
 def get_longest_odd_10_inputs():
     all_args = []
-    non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    non_vec_up_to = 0
+    #for N in [8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]:
+    for N in [2048]:
         args = [
         "--N", str(N),
         ]
@@ -377,8 +390,9 @@ def get_longest_odd_10_inputs():
 
 def get_max_dist_between_syms_inputs():
     all_args = []
-    non_vec_up_to = 100
-    for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    non_vec_up_to = 0
+    # for N in [8, 16, 32, 64, 128, 256, 512, 1024, 4096]:
+    for N in [1024, 2048]:
         args = [
         "--N", "{}".format(N),
         ]
@@ -395,8 +409,9 @@ def get_max_dist_between_syms_inputs():
 
 def get_mnist_relu_inputs()-> tuple[list[InputArgs], int]:
     all_args = []
-    non_vec_up_to = 6
-    for config in [[16, 16], [16, 32], [16, 64], [16, 128], [16, 256], [16, 512], [16, 1024]]:
+    non_vec_up_to = 0
+    #for config in [[16, 16], [16, 32], [16, 64], [16, 128], [16, 256], [16, 512], [16, 1024]]:
+    for config in [[16, 512], [16, 2048]]:
         len_inner = config[0]
         len_outer = config[1]
         args = [
@@ -415,8 +430,9 @@ def get_mnist_relu_inputs()-> tuple[list[InputArgs], int]:
 
 def get_psi_inputs()-> tuple[list[InputArgs], int]:
     all_args = []
-    non_vec_up_to = 6
-    for config in [[16, 16], [32, 32], [64, 64], [128, 128], [256, 256], [512, 512], [1024, 1024]]:#[2048, 2084], [4096, 4096]]:
+    non_vec_up_to = 0
+    #for config in [[16, 16], [32, 32], [64, 64], [128, 128], [256, 256], [512, 512], [1024, 1024]]:#[2048, 2084], [4096, 4096]]:
+    for config in [[128, 128], [1024, 1024]]:
         SA = config[0]
         SB = config[1]
         args = [
@@ -437,40 +453,40 @@ def get_psi_inputs()-> tuple[list[InputArgs], int]:
     return (all_args, non_vec_up_to)
 
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
-    # if name == "biometric":
-    #     return get_biometric_inputs()
-    # if name == "biometric_fast":
-    #     return get_biometric_fast_inputs()
-    # if name == "chapterfour_figure_12": # millionaire's problem, not interesting
-    #     return get_chapterfour_figure_12_inputs()
-    # if name == "convex_hull" or name == "minimal_points":
-    #     return get_convex_hull_inputs()
-    if name == "longest_102": #name == "count_102" or 
+    if name == "biometric":
+        return get_biometric_inputs()
+    if name == "biometric_fast":
+        return get_biometric_fast_inputs()
+    if name == "chapterfour_figure_12": # millionaire's problem, not interesting
+        return get_chapterfour_figure_12_inputs()
+    if name == "convex_hull" or name == "minimal_points":
+        return get_convex_hull_inputs()
+    if name ==  name == "count_102" or "longest_102":
         return get_count_102_inputs()
-    # if name == "count_10s":
-    #     return get_count_10s_inputs()
+    if name == "count_10s":
+        return get_count_10s_inputs()
     # if name == "count_123":
     #     return get_count_123_inputs()
-    # if name == "cryptonets_max_pooling":
-    #     return get_cryptonets_max_pooling_inputs()
-    # if name == "db_cross_join_trivial": # could only do up to 64
-    #     return get_db_cross_join_trivial_inputs()
-    # if name == "db_variance":
-    #     return get_db_variance_inputs()
-    # if name == "histogram":
-    #     return get_histogram_inputs()
-    # if name == "inner_product":
-    #     return get_inner_product_inputs()
-    # if name == "kmeans_iteration":
-    #     return get_kmeans_iteration_inputs()
+    if name == "cryptonets_max_pooling":
+        return get_cryptonets_max_pooling_inputs()
+    if name == "db_cross_join_trivial": # could only do up to 64
+        return get_db_cross_join_trivial_inputs()
+    if name == "db_variance":
+        return get_db_variance_inputs()
+    if name == "histogram":
+        return get_histogram_inputs()
+    if name == "inner_product":
+        return get_inner_product_inputs()
+    if name == "kmeans_iteration":
+        return get_kmeans_iteration_inputs()
     # if name == "longest_odd_10": # could not run for 4096
     #     return get_longest_odd_10_inputs()
-    # if name == "max_dist_between_syms" or name == "max_sum_between_syms":
-    #     return get_max_dist_between_syms_inputs()
-    # if name == "mnist_relu":
-    #     return get_mnist_relu_inputs()
-    # if name == "psi": # could not run from 2048 and 4096
-    #     return get_psi_inputs()
+    if name == "max_dist_between_syms": # or name == "max_sum_between_syms":
+        return get_max_dist_between_syms_inputs()
+    if name == "mnist_relu":
+        return get_mnist_relu_inputs()
+    if name == "psi": # could not run from 2048 and 4096
+        return get_psi_inputs()
     return [[], 0]
 
 
