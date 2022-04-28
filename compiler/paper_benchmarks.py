@@ -739,14 +739,14 @@ def run_client_role(address):
                             party1_mpc_addr=mpc_party_client,
                             cmd_args=args.args,
                             benchmark_name=test_case_dir.name,
-                            protocol=GMW_PROTOCOL,
-                            vectorized=False
+                            protocol=protocol,
+                            vectorized=vectorized
                             )
 
                         write_message(server_sock, request)          
                         p1 = run_benchmark_for_party(
                             MPC_PARTY_CLIENT_ID, mpc_party_server, mpc_party_client, test_case_dir.name, 
-                            test_case_dir.path, GMW_PROTOCOL, False, None, args.args
+                            test_case_dir.path, protocol, vectorized, None, args.args
                         )
 
                         p0 = read_message(server_sock)
