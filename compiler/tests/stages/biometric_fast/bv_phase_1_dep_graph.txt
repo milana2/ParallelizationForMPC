@@ -1,0 +1,187 @@
+Nodes:
+    parameter D!0
+    parameter N!0
+    parameter C!0
+    parameter C_sqr_sum!0
+    parameter two_C!0
+    parameter S!0
+    parameter S_sqr_sum!0
+    parameter differences!0
+    min_index!1 = 0
+    !3!0{N!0}[] = lift(min_index!1, (i!1:N!0))
+    !4!0{N!0}[] = lift(differences!0, (i!1:N!0))
+    !5!0{N!0}[] = lift(S_sqr_sum!0[i!1], (i!1:N!0))
+    !6!0{N!0}[] = lift(C_sqr_sum!0, (i!1:N!0))
+    for i!1 in range(0, N!0):
+    min_index!2{N!0}[] = Φ(!3!0{N!0}[], min_index!3)
+    differences!1{N!0}[] = Φ(!4!0{N!0}[], differences!2{N!0}[]) (targetless)
+    a_sqr_plus_b_sqr!2{N!0}[] = (!5!0{N!0}[] + !6!0{N!0}[])
+    two_a_b!2 = 0
+    !7!0{N!0, D!0}[] = lift(two_a_b!2, (i!1:N!0, j!1:D!0))
+    !8!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    !9!0{N!0, D!0}[] = lift(two_C!0[j!1], (i!1:N!0, j!1:D!0))
+    for j!1 in range(0, D!0):
+        two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])
+        tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])
+        two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])
+    !10!0{N!0}[] = drop_dim(two_a_b!4{N!0, D!0}[])
+    this_diff!2{N!0}[] = (a_sqr_plus_b_sqr!2{N!0}[] - !10!0{N!0}[])
+    differences!2{N!0}[] = VectorizedUpdate(differences!1{N!0}[], [I!1], this_diff!2{N!0}[])
+    min_index!3 = 0
+    min_index!2{N!0}[] = Φ(!3!0{N!0}[], min_index!3)
+    differences!1{N!0}[] = Φ(!4!0{N!0}[], differences!2{N!0}[]) (targetless)
+    a_sqr_plus_b_sqr!2{N!0}[] = (!5!0{N!0}[] + !6!0{N!0}[])
+    two_a_b!2 = 0
+    !7!0{N!0, D!0}[] = lift(two_a_b!2, (i!1:N!0, j!1:D!0))
+    !8!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    !9!0{N!0, D!0}[] = lift(two_C!0[j!1], (i!1:N!0, j!1:D!0))
+    for j!1 in range(0, D!0):
+    two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])
+    tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])
+    two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])
+    two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])
+    tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])
+    two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])
+    !10!0{N!0}[] = drop_dim(two_a_b!4{N!0, D!0}[])
+    this_diff!2{N!0}[] = (a_sqr_plus_b_sqr!2{N!0}[] - !10!0{N!0}[])
+    differences!2{N!0}[] = VectorizedUpdate(differences!1{N!0}[], [I!1], this_diff!2{N!0}[])
+    min_index!3 = 0
+    min_diff!1 = 99999
+    !11!0{N!0}[] = lift(min_diff!1, (i!2:N!0))
+    for i!2 in range(0, N!0):
+    min_index!4{N!0}[] = Φ(min_index!2{N!0}[], min_index!6{N!0}[])
+    min_diff!2{N!0}[] = Φ(!11!0{N!0}[], min_diff!4{N!0}[])
+    !1!2{N!0}[] = (differences!1{N!0}[] < min_diff!2{N!0}[])
+    min_diff!3{N!0}[] = differences!1{N!0}[]
+    min_index!5 = i!2
+    min_index!6{N!0}[] = MUX(!1!2{N!0}[], min_index!5, min_index!4{N!0}[])
+    min_diff!4{N!0}[] = MUX(!1!2{N!0}[], min_diff!3{N!0}[], min_diff!2{N!0}[])
+    min_index!4{N!0}[] = Φ(min_index!2{N!0}[], min_index!6{N!0}[])
+    min_diff!2{N!0}[] = Φ(!11!0{N!0}[], min_diff!4{N!0}[])
+    !1!2{N!0}[] = (differences!1{N!0}[] < min_diff!2{N!0}[])
+    min_diff!3{N!0}[] = differences!1{N!0}[]
+    min_index!5 = i!2
+    min_index!6{N!0}[] = MUX(!1!2{N!0}[], min_index!5, min_index!4{N!0}[])
+    min_diff!4{N!0}[] = MUX(!1!2{N!0}[], min_diff!3{N!0}[], min_diff!2{N!0}[])
+    !12!0 = drop_dim(min_diff!4{N!0}[])
+    !13!0 = drop_dim(min_index!6{N!0}[])
+    !2!1 = (!12!0, !13!0)
+    return !2!1
+Forward edges:
+    parameter D!0  →  parameter D!0
+    parameter D!0  →  !8!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    parameter N!0  →  parameter N!0
+    parameter C!0  →  parameter C!0
+    parameter C_sqr_sum!0  →  parameter C_sqr_sum!0
+    parameter C_sqr_sum!0  →  !6!0{N!0}[] = lift(C_sqr_sum!0, (i!1:N!0))
+    parameter two_C!0  →  parameter two_C!0
+    parameter two_C!0  →  !9!0{N!0, D!0}[] = lift(two_C!0[j!1], (i!1:N!0, j!1:D!0))
+    parameter S!0  →  parameter S!0
+    parameter S!0  →  !8!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    parameter S_sqr_sum!0  →  parameter S_sqr_sum!0
+    parameter S_sqr_sum!0  →  !5!0{N!0}[] = lift(S_sqr_sum!0[i!1], (i!1:N!0))
+    parameter differences!0  →  parameter differences!0
+    parameter differences!0  →  !4!0{N!0}[] = lift(differences!0, (i!1:N!0))
+    min_index!1 = 0  →  !3!0{N!0}[] = lift(min_index!1, (i!1:N!0))
+    !3!0{N!0}[] = lift(min_index!1, (i!1:N!0))  →  min_index!2{N!0}[] = Φ(!3!0{N!0}[], min_index!3)
+    !4!0{N!0}[] = lift(differences!0, (i!1:N!0))  →  differences!1{N!0}[] = Φ(!4!0{N!0}[], differences!2{N!0}[]) (targetless)
+    !5!0{N!0}[] = lift(S_sqr_sum!0[i!1], (i!1:N!0))  →  a_sqr_plus_b_sqr!2{N!0}[] = (!5!0{N!0}[] + !6!0{N!0}[])
+    !6!0{N!0}[] = lift(C_sqr_sum!0, (i!1:N!0))  →  a_sqr_plus_b_sqr!2{N!0}[] = (!5!0{N!0}[] + !6!0{N!0}[])
+    for i!1 in range(0, N!0):
+    min_index!2{N!0}[] = Φ(!3!0{N!0}[], min_index!3)
+    differences!1{N!0}[] = Φ(!4!0{N!0}[], differences!2{N!0}[]) (targetless)
+    a_sqr_plus_b_sqr!2{N!0}[] = (!5!0{N!0}[] + !6!0{N!0}[])
+    two_a_b!2 = 0
+    !7!0{N!0, D!0}[] = lift(two_a_b!2, (i!1:N!0, j!1:D!0))
+    !8!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    !9!0{N!0, D!0}[] = lift(two_C!0[j!1], (i!1:N!0, j!1:D!0))
+    for j!1 in range(0, D!0):
+        two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])
+        tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])
+        two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])
+    !10!0{N!0}[] = drop_dim(two_a_b!4{N!0, D!0}[])
+    this_diff!2{N!0}[] = (a_sqr_plus_b_sqr!2{N!0}[] - !10!0{N!0}[])
+    differences!2{N!0}[] = VectorizedUpdate(differences!1{N!0}[], [I!1], this_diff!2{N!0}[])
+    min_index!3 = 0  →  !5!0{N!0}[] = lift(S_sqr_sum!0[i!1], (i!1:N!0))
+    for i!1 in range(0, N!0):
+    min_index!2{N!0}[] = Φ(!3!0{N!0}[], min_index!3)
+    differences!1{N!0}[] = Φ(!4!0{N!0}[], differences!2{N!0}[]) (targetless)
+    a_sqr_plus_b_sqr!2{N!0}[] = (!5!0{N!0}[] + !6!0{N!0}[])
+    two_a_b!2 = 0
+    !7!0{N!0, D!0}[] = lift(two_a_b!2, (i!1:N!0, j!1:D!0))
+    !8!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    !9!0{N!0, D!0}[] = lift(two_C!0[j!1], (i!1:N!0, j!1:D!0))
+    for j!1 in range(0, D!0):
+        two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])
+        tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])
+        two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])
+    !10!0{N!0}[] = drop_dim(two_a_b!4{N!0, D!0}[])
+    this_diff!2{N!0}[] = (a_sqr_plus_b_sqr!2{N!0}[] - !10!0{N!0}[])
+    differences!2{N!0}[] = VectorizedUpdate(differences!1{N!0}[], [I!1], this_diff!2{N!0}[])
+    min_index!3 = 0  →  !8!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    for i!1 in range(0, N!0):
+    min_index!2{N!0}[] = Φ(!3!0{N!0}[], min_index!3)
+    differences!1{N!0}[] = Φ(!4!0{N!0}[], differences!2{N!0}[]) (targetless)
+    a_sqr_plus_b_sqr!2{N!0}[] = (!5!0{N!0}[] + !6!0{N!0}[])
+    two_a_b!2 = 0
+    !7!0{N!0, D!0}[] = lift(two_a_b!2, (i!1:N!0, j!1:D!0))
+    !8!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    !9!0{N!0, D!0}[] = lift(two_C!0[j!1], (i!1:N!0, j!1:D!0))
+    for j!1 in range(0, D!0):
+        two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])
+        tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])
+        two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])
+    !10!0{N!0}[] = drop_dim(two_a_b!4{N!0, D!0}[])
+    this_diff!2{N!0}[] = (a_sqr_plus_b_sqr!2{N!0}[] - !10!0{N!0}[])
+    differences!2{N!0}[] = VectorizedUpdate(differences!1{N!0}[], [I!1], this_diff!2{N!0}[])
+    min_index!3 = 0  →  differences!2{N!0}[] = VectorizedUpdate(differences!1{N!0}[], [I!1], this_diff!2{N!0}[])
+    min_index!2{N!0}[] = Φ(!3!0{N!0}[], min_index!3)  →  min_index!4{N!0}[] = Φ(min_index!2{N!0}[], min_index!6{N!0}[])
+    differences!1{N!0}[] = Φ(!4!0{N!0}[], differences!2{N!0}[]) (targetless)  →  differences!2{N!0}[] = VectorizedUpdate(differences!1{N!0}[], [I!1], this_diff!2{N!0}[])
+    differences!1{N!0}[] = Φ(!4!0{N!0}[], differences!2{N!0}[]) (targetless)  →  !1!2{N!0}[] = (differences!1{N!0}[] < min_diff!2{N!0}[])
+    differences!1{N!0}[] = Φ(!4!0{N!0}[], differences!2{N!0}[]) (targetless)  →  min_diff!3{N!0}[] = differences!1{N!0}[]
+    a_sqr_plus_b_sqr!2{N!0}[] = (!5!0{N!0}[] + !6!0{N!0}[])  →  this_diff!2{N!0}[] = (a_sqr_plus_b_sqr!2{N!0}[] - !10!0{N!0}[])
+    two_a_b!2 = 0  →  !7!0{N!0, D!0}[] = lift(two_a_b!2, (i!1:N!0, j!1:D!0))
+    !7!0{N!0, D!0}[] = lift(two_a_b!2, (i!1:N!0, j!1:D!0))  →  two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])
+    !8!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))  →  tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])
+    !9!0{N!0, D!0}[] = lift(two_C!0[j!1], (i!1:N!0, j!1:D!0))  →  tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])
+    for j!1 in range(0, D!0):
+    two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])
+    tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])
+    two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])  →  !8!0{N!0, D!0}[] = lift(S!0[((i!1 * D!0) + j!1)], (i!1:N!0, j!1:D!0))
+    for j!1 in range(0, D!0):
+    two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])
+    tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])
+    two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])  →  !9!0{N!0, D!0}[] = lift(two_C!0[j!1], (i!1:N!0, j!1:D!0))
+    two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])  →  two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])
+    tmp!3{N!0, D!0}[] = (!8!0{N!0, D!0}[] * !9!0{N!0, D!0}[])  →  two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])
+    two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])  →  !10!0{N!0}[] = drop_dim(two_a_b!4{N!0, D!0}[])
+    !10!0{N!0}[] = drop_dim(two_a_b!4{N!0, D!0}[])  →  this_diff!2{N!0}[] = (a_sqr_plus_b_sqr!2{N!0}[] - !10!0{N!0}[])
+    this_diff!2{N!0}[] = (a_sqr_plus_b_sqr!2{N!0}[] - !10!0{N!0}[])  →  differences!2{N!0}[] = VectorizedUpdate(differences!1{N!0}[], [I!1], this_diff!2{N!0}[])
+    min_diff!1 = 99999  →  !11!0{N!0}[] = lift(min_diff!1, (i!2:N!0))
+    !11!0{N!0}[] = lift(min_diff!1, (i!2:N!0))  →  min_diff!2{N!0}[] = Φ(!11!0{N!0}[], min_diff!4{N!0}[])
+    for i!2 in range(0, N!0):
+    min_index!4{N!0}[] = Φ(min_index!2{N!0}[], min_index!6{N!0}[])
+    min_diff!2{N!0}[] = Φ(!11!0{N!0}[], min_diff!4{N!0}[])
+    !1!2{N!0}[] = (differences!1{N!0}[] < min_diff!2{N!0}[])
+    min_diff!3{N!0}[] = differences!1{N!0}[]
+    min_index!5 = i!2
+    min_index!6{N!0}[] = MUX(!1!2{N!0}[], min_index!5, min_index!4{N!0}[])
+    min_diff!4{N!0}[] = MUX(!1!2{N!0}[], min_diff!3{N!0}[], min_diff!2{N!0}[])  →  min_index!5 = i!2
+    min_index!4{N!0}[] = Φ(min_index!2{N!0}[], min_index!6{N!0}[])  →  min_index!6{N!0}[] = MUX(!1!2{N!0}[], min_index!5, min_index!4{N!0}[])
+    min_diff!2{N!0}[] = Φ(!11!0{N!0}[], min_diff!4{N!0}[])  →  !1!2{N!0}[] = (differences!1{N!0}[] < min_diff!2{N!0}[])
+    min_diff!2{N!0}[] = Φ(!11!0{N!0}[], min_diff!4{N!0}[])  →  min_diff!4{N!0}[] = MUX(!1!2{N!0}[], min_diff!3{N!0}[], min_diff!2{N!0}[])
+    !1!2{N!0}[] = (differences!1{N!0}[] < min_diff!2{N!0}[])  →  min_index!6{N!0}[] = MUX(!1!2{N!0}[], min_index!5, min_index!4{N!0}[])
+    !1!2{N!0}[] = (differences!1{N!0}[] < min_diff!2{N!0}[])  →  min_diff!4{N!0}[] = MUX(!1!2{N!0}[], min_diff!3{N!0}[], min_diff!2{N!0}[])
+    min_diff!3{N!0}[] = differences!1{N!0}[]  →  min_diff!4{N!0}[] = MUX(!1!2{N!0}[], min_diff!3{N!0}[], min_diff!2{N!0}[])
+    min_index!5 = i!2  →  min_index!6{N!0}[] = MUX(!1!2{N!0}[], min_index!5, min_index!4{N!0}[])
+    min_index!6{N!0}[] = MUX(!1!2{N!0}[], min_index!5, min_index!4{N!0}[])  →  !13!0 = drop_dim(min_index!6{N!0}[])
+    min_diff!4{N!0}[] = MUX(!1!2{N!0}[], min_diff!3{N!0}[], min_diff!2{N!0}[])  →  !12!0 = drop_dim(min_diff!4{N!0}[])
+    !12!0 = drop_dim(min_diff!4{N!0}[])  →  !2!1 = (!12!0, !13!0)
+    !13!0 = drop_dim(min_index!6{N!0}[])  →  !2!1 = (!12!0, !13!0)
+    !2!1 = (!12!0, !13!0)  →  return !2!1
+Back edges:
+    two_a_b!4{N!0, D!0}[] = (two_a_b!3{N!0, D!0}[] + tmp!3{N!0, D!0}[])  →  two_a_b!3{N!0, D!0}[] = Φ(!7!0{N!0, D!0}[], two_a_b!4{N!0, D!0}[])
+    differences!2{N!0}[] = VectorizedUpdate(differences!1{N!0}[], [I!1], this_diff!2{N!0}[])  →  differences!1{N!0}[] = Φ(!4!0{N!0}[], differences!2{N!0}[]) (targetless)
+    min_index!3 = 0  →  min_index!2{N!0}[] = Φ(!3!0{N!0}[], min_index!3)
+    min_index!6{N!0}[] = MUX(!1!2{N!0}[], min_index!5, min_index!4{N!0}[])  →  min_index!4{N!0}[] = Φ(min_index!2{N!0}[], min_index!6{N!0}[])
+    min_diff!4{N!0}[] = MUX(!1!2{N!0}[], min_diff!3{N!0}[], min_diff!2{N!0}[])  →  min_diff!2{N!0}[] = Φ(!11!0{N!0}[], min_diff!4{N!0}[])

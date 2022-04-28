@@ -1,7 +1,7 @@
 from UTIL import shared
 
 
-def biometric_matching_fast(
+def biometric_fast(
     D: int,
     N: int,
     C: shared[list[int]],
@@ -9,6 +9,7 @@ def biometric_matching_fast(
     two_C: shared[list[int]],
     S: shared[list[int]],
     S_sqr_sum: shared[list[int]],
+    differences: shared[list[int]],
 ) -> tuple[shared[int], shared[int]]:
     """
     Computes biometric matching
@@ -29,12 +30,7 @@ def biometric_matching_fast(
 
     """
 
-    differences: list[int] = []
-    for i in range(D):
-        differences = differences + [0]
-
     min_index: int = 0
-    min_diff: int = differences[0]
     for i in range(N):
         a_sqr_plus_b_sqr: int = S_sqr_sum[i] + C_sqr_sum
         two_a_b: int = 0
@@ -46,35 +42,26 @@ def biometric_matching_fast(
         this_diff: int = a_sqr_plus_b_sqr - two_a_b
         differences[i] = this_diff
 
-        min_diff = differences[0]
         min_index = 0
 
-        for k in range(N):
-            if differences[k] < min_diff:
-                min_diff = differences[k]
-                min_index = k
+    min_diff: int = 99999
+    for i in range(N):
+        if differences[i] < min_diff:
+            min_diff = differences[i]
+            min_index = i
 
     return (min_diff, min_index)
 
 
-def test_biometric_matching_fast(D, N, C, S):
-    """
-    just a convenience method for testing, computes the pre-processing data for the actual call
-    """
-    two_C = [0] * D
-    C_sqr_sum = 0
-    S_sqr_sum = [0] * N
-    for i in range(D):
-        two_C[i] = 2 * C[i]
-        C_sqr_sum = C_sqr_sum + (C[i] * C[i])
-
-    for i in range(N):
-        for j in range(D):
-            S_sqr_sum[i] = S_sqr_sum[i] + (S[i * D + j] * S[i * D + j])
-
-    print(biometric_matching_fast(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum))
-
-
+D = 4
+N = 4
 C = [1, 2, 3, 4]
 S = [4, 5, 2, 10, 2, 120, 4, 10, 99, 88, 77, 66, 55, 44, 33, 22]
-test_biometric_matching_fast(4, 4, C, S)
+S_sqr_sum = [0] * N
+two_C = [2 * C[i] for i in range(D)]
+C_sqr_sum = sum(val * val for val in C)
+S_sqr_sum = [sum(S[i * D + j] * S[i * D + j] for j in range(D)) for i in range(N)]
+
+differences = [0] * D
+
+print(biometric_fast(D, N, C, C_sqr_sum, two_C, S, S_sqr_sum, differences))

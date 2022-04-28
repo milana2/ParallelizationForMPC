@@ -1314,10 +1314,10 @@ def _basic_vectorization_phase_2(
         s2: Union[llc.Statement, tuple[llc.Statement]],
     ) -> int:
         if isinstance(s1, llc.For):
-            s1 = tuple(s1.body) # type: ignore
+            s1 = tuple(s1.body)  # type: ignore
 
         if isinstance(s2, llc.For):
-            s2 = tuple(s2.body) # type: ignore
+            s2 = tuple(s2.body)  # type: ignore
 
         # If s1 is a closure
         if isinstance(s1, tuple):

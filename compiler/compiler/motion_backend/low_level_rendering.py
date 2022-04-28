@@ -112,9 +112,9 @@ def collect_counter_uses(expr: AssignRHS, enclosing_loops: list[For]) -> list[Va
     elif isinstance(expr, UnaryOp):
         return collect_counter_uses(expr.operand, enclosing_loops)
     elif isinstance(expr, BinOp):
-        return collect_counter_uses(
-            expr.left, enclosing_loops
-        ) + collect_counter_uses(expr.right, enclosing_loops)
+        return collect_counter_uses(expr.left, enclosing_loops) + collect_counter_uses(
+            expr.right, enclosing_loops
+        )
     elif isinstance(expr, (List, Tuple)):
         return [
             var
@@ -178,7 +178,7 @@ def render_stmt(
             val_expr = render_expr(stmt.rhs, ctx)
 
             # If this isn't a true vectorized access, just subscript normally
-            if all(vectorized == False for vectorized in stmt.lhs.vectorized_dims):
+            if all(not vectorized for vectorized in stmt.lhs.vectorized_dims):
                 lhs = render_expr(stmt.lhs, ctx)
                 return plaintext_conversions + f"{lhs} = {val_expr};"
 
@@ -306,7 +306,9 @@ def render_stmt(
         ):
             return plaintext_conversions + shared_assignment
         else:
-            return plaintext_conversions + shared_assignment + "\n" + plaintext_assignment
+            return (
+                plaintext_conversions + shared_assignment + "\n" + plaintext_assignment
+            )
 
     elif isinstance(stmt, For):
         ctr_initializer = (
@@ -666,7 +668,9 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         # If we're lifting a vectorized array, don't render a vectorized access or else the lifted array
         # will hold too many values
         expr_to_render = expr.expr
-        if isinstance(expr_to_render, VectorizedAccess):
+        if isinstance(expr_to_render, VectorizedAccess) and any(
+            vectorized for vectorized in expr_to_render.vectorized_dims
+        ):
             post_expr = ".Unsimdify()"
         else:
             post_expr = ""
@@ -720,7 +724,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
 
     elif isinstance(expr, VectorizedAccess):
         # If this isn't a true vectorized access, just subscript normally
-        if all(vectorized == False for vectorized in expr.vectorized_dims):
+        if all(not vectorized for vectorized in expr.vectorized_dims):
             subscript = " + ".join(
                 f"({render_expr(idx, dc.replace(ctx, plaintext=True))} * "
                 + "*".join(
@@ -781,10 +785,17 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
             )
             + "}"
         )
+
+        specialization = ""
+        if all(not vectorized for vectorized in expr.vectorized_dims):
+            specialization = "_monoreturn"
+
         idxs = "{}"
         update_array = expr.array
-        if isinstance(update_array, VectorizedAccess) and all(vectorized for vectorized in update_array.vectorized_dims):
+        if isinstance(update_array, VectorizedAccess) and all(
+            vectorized for vectorized in update_array.vectorized_dims
+        ):
             update_array = update_array.array
-        return f"vectorized_update({render_expr(update_array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(expr.value, ctx)})"
+        return f"vectorized_update{specialization}({render_expr(update_array, ctx)}, {dim_sizes}, {vectorized_dims}, {idxs}, {render_expr(expr.value, ctx)})"
 
     return assert_never(expr)
