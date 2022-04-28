@@ -90,20 +90,6 @@ def get_biometric_inputs() -> tuple[list[InputArgs], int]:
         args.extend(list(map(str, C)))
         args.append("--S")
         args.extend(list(map(str, S)))
-
-        two_C = [2 * C[i] for i in range(D)]
-        args.append("--two_C")
-        args.extend(list(map(str, two_C)))
-        C_sqr_sum = sum(val * val for val in C)
-        args.append("--C_sqr_sum")
-        args.extend(list(map(str, C_sqr_sum)))
-        S_sqr_sum = [sum(S[i * D + j] * S[i * D + j] for j in range(D)) for i in range(N)]
-        args.append("--S_sqr_sum")
-        args.extend(list(map(str, S_sqr_sum)))
-        differences = [0] * D
-        args.append("--differences")
-        args.extend(list(map(str, differences)))
-
         label = "D: {}, N: {}".format(D, N)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
@@ -124,6 +110,20 @@ def get_biometric_fast_inputs() -> tuple[list[InputArgs], int]:
         args.extend(list(map(str, C)))
         args.append("--S")
         args.extend(list(map(str, S)))
+
+        two_C = [2 * C[i] for i in range(D)]
+        args.append("--two_C")
+        args.extend(list(map(str, two_C)))
+        C_sqr_sum = sum(val * val for val in C)
+        args.append("--C_sqr_sum")
+        args.append(str(C_sqr_sum))
+        S_sqr_sum = [sum(S[i * D + j] * S[i * D + j] for j in range(D)) for i in range(N)]
+        args.append("--S_sqr_sum")
+        args.extend(list(map(str, S_sqr_sum)))
+        differences = [0] * D
+        args.append("--differences")
+        args.extend(list(map(str, differences)))
+
         label = "D: {}, N: {}".format(D, N)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
@@ -747,11 +747,8 @@ def run_client_role(address):
                             accum_p0 = p0
                             accum_p1 = p1
                         else:
-                            accum_p0 = BenchmarkOutput.sum(accum_p0, p0)
-                            accum_p1 = BenchmarkOutput.sum(accum_p1, p1)
-
-                    accum_p0 = BenchmarkOutput.div(accum_p0, NUM_ITERS)
-                    accum_p1 = BenchmarkOutput.div(accum_p1, NUM_ITERS)
+                            accum_p0 = BenchmarkOutput.by_accumulating_readings(accum_p0, p0)
+                            accum_p1 = BenchmarkOutput.by_accumulating_readings(accum_p1, p1)
 
                     pair = (accum_p0, accum_p1)
                     outputs.append(pair)

@@ -36,20 +36,16 @@ class BenchmarkOutput:
                 }
 
     @classmethod
-    def sum(cls, a, b):
+    def by_accumulating_readings(cls, a, b):
         return cls(
            name = a.name,
            output = a.output,
-           timing_stats = statistics.TimingStatistics.sum(a.timing_stats, b.timing_stats),
-           circuit_stats = statistics.CircuitStatistics.sum(a.circuit_stats, b.circuit_stats)
-        )
-    @classmethod
-    def div(cls, obj, d):
-        return cls(
-            name = obj.name,
-            output = obj.output,
-            timing_stats = statistics.TimingStatistics.div(obj.timing_stats, d),
-            circuit_stats = statistics.CircuitStatistics.div(obj.circuit_stats, d)   
+           timing_stats = statistics.TimingStatistics.by_accumulating_readings(
+            a.timing_stats, b.timing_stats
+            ),
+           circuit_stats = statistics.CircuitStatistics.by_accumulating_readings(
+            a.circuit_stats, b.circuit_stats
+            )
         )
 
 
