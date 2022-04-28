@@ -13,15 +13,15 @@
   \label{fig:compiler_framework}
 \end{figure*}
 
-\figref{fig:compiler_framework} presents an overview of our compiler. 
+\figref{fig:compiler_framework} presents an overview of our compiler.
 We start the section with a brief description of the top-level syntax and semantic restrictions.
-We proceed to describe several phases of the compiler:~\secref{sec:imp_to_ssa} 
+We proceed to describe several phases of the compiler:~\secref{sec:imp_to_ssa}
 describes translation from IMP Source to SSA, and~\secref{sec:ssa_to_MPC_Source}
-describes translation form SSA into MPC Source, i.e., the front-end of our compiler. 
-Finally,~\secref{sec:MOTION} describes translation of MPC Source, un-optimized and 
+describes translation form SSA into MPC Source, i.e., the front-end of our compiler.
+Finally,~\secref{sec:MOTION} describes translation of MPC Source, un-optimized and
 optimized into MOTION, i.e., this is the back-end of our compiler.
 
-Analysis on MPC Source and vectorization comes in a separate section, Section~\secref{sec:vectorization}. 
+Analysis on MPC Source and vectorization comes in a separate section, Section~\secref{sec:vectorization}.
 %\ana{Need to state this more precisely.}
 
 \subsection{Syntax and Semantic Restrictions}
@@ -68,10 +68,10 @@ Expressions are typed $\langle q \; \tau\rangle$, where qualifier $q$ and type $
 
 The type system is mostly standard, and in our experience, a sweet spot between readability and expressivity.
 The \texttt{shared} qualifier denotes shared values, i.e., ones shared among the parties and computed upon
-under secure computation protocols; the \texttt{plain} qualifier denotes plaintext values. 
-Shared lists denote shared elements, but plaintext length. Subtyping is 
+under secure computation protocols; the \texttt{plain} qualifier denotes plaintext values.
+Shared lists denote shared elements, but plaintext length. Subtyping is
 $\texttt{plain} <: \texttt{shared}$, meaning that we can convert a plaintext value into a shared one,
-but not vice versa. Subtyping on qualified types is again as expected, it is covariant in the qualifier  
+but not vice versa. Subtyping on qualified types is again as expected, it is covariant in the qualifier
 and invariant in the type: $\langle q_1 \; \tau_1 \rangle <: \langle q_2 \; \tau_2 \rangle$
 iff $q_1 <: q_2$ and  $\tau_1 = \tau_2$.
 
@@ -267,7 +267,7 @@ MOTION supports FOR loops and SIMD operations, so translation from MPC source to
 % Variable naming
 \paragraph{Variable declarations:}
 Our compiler performs taint analysis on MPC Source based on the type system in~\secref{sec:syntax}. The analysis is described in the following section;
-for the most part, it is a standard taint analysis that propagates that \texttt{shared} qualifiers throughout the routine. 
+for the most part, it is a standard taint analysis that propagates that \texttt{shared} qualifiers throughout the routine.
 Taint analysis assigns \texttt{shared} or \texttt{plain} qualifiers to all local variables, which is important for code generation.
 Our generated C++ uses the following variable-naming scheme: shared variables are named the same as in the MPC Source with the {\sf !} replaced with an underscore (e.g. {\sf sum!2} would be translated to {\sf sum\_2}). Plaintext variables follow the same naming convention as shared variables but are prefixed with {\sf \_MPC\_PLAINTEXT\_}.  The shared representation of constants are named {\sf \_MPC\_CONSTANT\_} followed by the literal constant (e.g. the shared constant 0 would be named {\sf \_MPC\_CONSTANT\_0}).
 
@@ -358,11 +358,11 @@ MPC Source & MOTION Code
 \end{table*}
 
 % SIMD representation
-Vectorization is handled with utility functions to manage accessing and updating slices of arrays.  All SIMD values are stored in non-vectorized form as 1-dimensional \texttt{std::vector}s in row-major order. \ana{Does MOTION support just 1-dim SIMD arrays? If yes, mention it here.} Whenever a SIMD value is used in an expression, the utility function \texttt{vectorized\_access()} takes the multi-dimentional representation of a SIMD value, along with the size of each dimension and the requested slice's indices, and converts that slice to a MOTION SIMD value. \ana{Add the reference to the ADD example figure here.} Because MOTION supports SIMD operations using the same C++ operators as non-SIMD operations, we do not need to perform any other transformations to the expression. \ana{Is it correct to say that the operators are overloaded? If yes, use that term?} Therefore, the translation of an expression containing SIMD values is identical to that of expressions without SIMD values. 
+Vectorization is handled with utility functions to manage accessing and updating slices of arrays.  All SIMD values are stored in non-vectorized form as 1-dimensional \texttt{std::vector}s in row-major order. \ana{Does MOTION support just 1-dim SIMD arrays? If yes, mention it here.} \ben{MOTION does only support 1-dim SIMD arrays, but since we use helper functions to create and access SIMD arrays this restriction doesn't apply to our representation. There is no reason why these arrays need to be 1-dimensional other than that it slightly simplifies the code generation and avoids some nasty templates on the utility functions.} Whenever a SIMD value is used in an expression, the utility function \texttt{vectorized\_access()} takes the multi-dimentional representation of a SIMD value, along with the size of each dimension and the requested slice's indices, and converts that slice to a MOTION SIMD value. \ana{Add the reference to the ADD example figure here.} Because MOTION supports SIMD operations using the same C++ operators as non-SIMD operations, we do not need to perform any other transformations to the expression. \ana{Is it correct to say that the operators are overloaded? If yes, use that term?} \ben{I don't think that's the right term since SIMD and scalar MOTION values use the same C++ class, so the operator is the same.} Therefore, the translation of an expression containing SIMD values is identical to that of expressions without SIMD values.
 
 Similarly, the \texttt{vectorized\_assign()} function assigns a (potentially SIMD) value to a slice of a vectorized array.  This operation cannot be done with a simple subscript as SIMD assignments will update a range of values in the non-vectorized representation.
-\ben{Is the next sentence needed?  They can always check the implementation of vectorized\_assign() if they want to see specifics.}
-The function takes the array being assigned to as a reference to update it in place so that any existing values are not lost.  SIMD values are never directly assigned to non-SIMD values. \ana{Yes, this is implementation-specific, you can remove.}
+%\ben{Is the next sentence needed?  They can always check the implementation of vectorized\_assign() if they want to see specifics.}
+%The function takes the array being assigned to as a reference to update it in place so that any existing values are not lost.  SIMD values are never directly assigned to non-SIMD values. \ana{Yes, this is implementation-specific, you can remove.}
 
 \begin{table*}
 \begin{tabular}{cc}
@@ -380,9 +380,9 @@ sum!4[I] = ADD_SIMD(sum!3[I], p[I, j])
 {\small
 % Ben: This line is too long but I don't know how to break it well
 \begin{cppp}
-vectorized_assign(sum_4, {_MPC_PLAINTEXT_N}, {true}, {}, 
-      vectorized_access(sum_3, {_MPC_PLAINTEXT_N}, {true}, {}) + 
-      vectorized_access(p, {_MPC_PLAINTEXT_N, _MPC_PLAINTEXT_D}, {true, false}, 
+vectorized_assign(sum_4, {_MPC_PLAINTEXT_N}, {true}, {},
+      vectorized_access(sum_3, {_MPC_PLAINTEXT_N}, {true}, {}) +
+      vectorized_access(p, {_MPC_PLAINTEXT_N, _MPC_PLAINTEXT_D}, {true, false},
            {_MPC_PLAINTEXT_j}));
 \end{cppp}
 }
@@ -398,14 +398,16 @@ MPC Source & MOTION Code
 
 % vectorized_update()
 \ben{Technically this is semantically the same as non-vectorized update but we use a utility function to combine the steps into a single C++ statement - should it still be included?}
-\ana{I would leave this in the TR but it will go from the paper. Lots of stuff in Secs. 4 and 5 will go from the paper.} 
+\ana{I would leave this in the TR but it will go from the paper. Lots of stuff in Secs. 4 and 5 will go from the paper.}
 Updating SIMD arrays is also implemented differently from updating non-vectorized arrays.  Instead of separating the array update from the assignment of the new array, these steps are combined with the \texttt{vectorized\_update()} utility function.  This function operates identically to \texttt{vectorized\_assign()}, however it additionally returns the array after the assignment occurs.  This value is then used for the assignment to the new variable.
 
 % raise_dim() implementation
 
 \ben{The compiler and C++ internally uses ``lift'' as the terminology for raise\_dim(), but the paper does not :(...} \ana{Yes, that's true. To make matters worse, most of the explanation on this comes in the next section. But I'll leave as is for now.}
 \paragraph{Reshaping and raising dimensions:}
-Raising the dimensions of a scalar or array uses the \texttt{lift()} utility function which takes a lambda for the raised expression and the dimensions of the output.  The lambda accepts an array of integers representing the index along each of the dimensions being raised, and the translation of the expression which is being raised replaces each of the dimension index variables with the relevant subscript of this array.  There is also a special case of the \texttt{lift()} function which occurs when we are raising an array.  This case only occurs when the dimensionality of the array is equal to the first dimensions of the array (any dimension which is being lifted to which is not in the array is after every dimension in the array) \ben{I don't know how to phrase the previous sentence more concisely}.  In this case, the array is simply extended along the new dimensions (if the array is already correctly sized it is returned as is). \ana{Add the ref. to the figure. Also, try to rewrite. I understand what the paragraph is saying but it is too technical and does not convey the higher-level goal of these. Try first to state what the goal is, and then talk about the details such as the lambda funcs.}
+Raising the dimensions of a scalar or array uses the \texttt{lift()} utility function which takes a lambda for the raised expression and the dimensions of the output.  This function evaluates the expression for each permutation of indices along the dimensions and returns the resulting array in row-major order.  The lambda accepts an array of integers representing the index along each of the dimensions being raised, and the translation of the expression which is being raised replaces each of the dimension index variables with the relevant subscript of this array.  There is also a special case of the \texttt{lift()} function which occurs when we are raising an array.  In this case, instead of concatenating the array for each index, we extend the array along all dimensions being raised which are not present in the array already.  For example, when raising an array with dimensions $N \times M$ to an array with dimensions $N \times M \times D$, the input array will simply be extended along the $D$ dimension.  If input array is already correctly sized it will be returned as-is.
+%This case only occurs when the dimensionality of the array is equal to the first dimensions of the array (any dimension which is being lifted to which is not in the array is after every dimension in the array) \ben{I don't know how to phrase the previous sentence more concisely}.  In this case, the array is simply extended along the new dimensions (if the array is already correctly sized it is returned as is).
+\ana{Add the ref. to the figure. Also, try to rewrite. I understand what the paragraph is saying but it is too technical and does not convey the higher-level goal of these. Try first to state what the goal is, and then talk about the details such as the lambda funcs.} \ben{Rewrote the above paragraph to be less confusing/implementation-specific, please review.}
 
 % Ben (note as comment since tables aren't fixed placement): I only include the translation of the expression itself (instead of an assignment) since the assignment includes the extra junk from a vectorized_assign.  Also none of the raise_dims in biometric use the dimension index which I think is the most interesting/important part of the lift expression translation so I made up a toy example.
 \begin{table*}
@@ -423,7 +425,7 @@ raise_dim(i + j, (i:N, j:M))
 \begin{minipage}{0.66\textwidth}
 {\small
 \begin{cppp}
-lift(std::function([&](const std::vector<std::uint32_t > &idxs) {return idxs[0] + idxs[1];}), 
+lift(std::function([&](const std::vector<std::uint32_t > &idxs) {return idxs[0] + idxs[1];}),
       {_MPC_PLAINTEXT_N, _MPX_PLAINTEXT_M})
 \end{cppp}
 }
@@ -440,11 +442,10 @@ MPC Source & MOTION Code
 % drop_dim() implementation
 \paragraph{Dropping dimensions:}
 Dropping dimensions use the \texttt{drop\_dim()} and \texttt{drop\_dim\_monoreturn()} utility functions.  They function identically but the latter returns a scalar for the case when the final dimension of an array is dropped.  These functions take the non-vectorized representation of an array, along with the dimensions of that array, and return the array with the final dimension dropped.
-\ben{drop\_dim() taking the true branch of phi node values doesn't need to be covered here, right?} \ana{Right, I wouldn't add it here.}
 
 % Shared/plaintext conversions
 \ben{Ishaq or Vassilis: please check over this paragraph... I don't want to make some mistake about MOTION's capabilities.}
-Currently, our compiler only supports the \texttt{Bmr} and \texttt{BooleanGMW} protocols as MOTION does not implement all operations for other protocols \ben{Should that go here?} \ana{Yes, I think it's good}.  MOTION does not support publicly-known constants for these protocols, so all conversions from plaintext values to shares are performed by providing the plaintext value as a shared input from party 0.  Due to this limitation, our translation to MOTION code attempts to minimize the number of conversions into a plaintext value. \ana{Typo: conversions from plaintext values, right?} This is accomplished by creating a shared copy of each plaintext variable and updating that copy in lock-step with the plaintext variable.  Since variables are often initialized to a common constant value (e.g. 0), this approach decreases the number of input gates by only creating a shared input for each initialization constant.  Loop counters must still be converted to a shared value on each iteration that they are used, however we only generate this conversion when necessary, i.e., when the counter flows to a shared computation. This is to prevent unnecessary increase in the number of input gates.
+Currently, our compiler only supports the \texttt{Bmr} and \texttt{BooleanGMW} protocols as MOTION does not implement all operations for other protocols.  MOTION does not support publicly-known constants for these protocols, so all conversions from plaintext values to shares are performed by providing the plaintext value as a shared input from party 0.  Due to this limitation, our translation to MOTION code attempts to minimize the number of conversions from a plaintext value. This is accomplished by creating a shared copy of each plaintext variable and updating that copy in lock-step with the plaintext variable.  Since variables are often initialized to a common constant value (e.g. 0), this approach decreases the number of input gates by only creating a shared input for each initialization constant.  Loop counters must still be converted to a shared value on each iteration that they are used, however we only generate this conversion when necessary, i.e., when the counter flows to a shared computation. This is to prevent unnecessary increase in the number of input gates.
 
 % Tons of copies != runtime costs
 Due to the SSA translation phase as well as the various conversions to and from SIMD values which our utility functions perform, our generated MOTION code often includes many copies of arrays and scalar values.  These copies do not incur a runtime cost as the arrays simply hold pointers to the underlying shares, so no new shares or gates are created as a result of this copying. Cost in MPC programs is dominated by shares and computation on shares. \ben{Is there anything else to say here?  Should this be placed somewhere else?} \ana{It is clear to me! Will stay in the TR but likely will be cut from the paper.}
