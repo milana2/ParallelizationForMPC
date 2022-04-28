@@ -77,12 +77,38 @@ class StatsForTask:
 
 
 @dataclass
-class RunBenchmarkArgs:
+class GetAddressReq:
+
+    @classmethod
+    def from_dictionary(cls, params):
+        return cls()
+
+    def to_dictionary(self):
+        return {}
+
+@dataclass
+class GetAddressResp:
+    client_address: (str, int) # (address, port)
+
+    @classmethod
+    def from_dictionary(cls, params):
+        client_address = params['client_address']
+
+        return cls(
+            client_address=client_address,
+            )
+
+    def to_dictionary(self):
+        return {
+            'client_address': self.client_address,
+        }
+
+@dataclass
+class RunBenchmarkReq:
     party0_mpc_addr: str
     party1_mpc_addr: str
     cmd_args: list[str]
     benchmark_name: str
-    benchmark_path: str
     protocol: str
     vectorized: bool
 
@@ -92,7 +118,6 @@ class RunBenchmarkArgs:
         party1_mpc_addr = params['party1_mpc_addr']
         cmd_args = params['cmd_args']
         benchmark_name = params['benchmark_name']
-        benchmark_path = params['benchmark_path']
         protocol = params['protocol']
         vectorized = params['vectorized']
 
@@ -101,7 +126,6 @@ class RunBenchmarkArgs:
             party1_mpc_addr=party1_mpc_addr,
             cmd_args=cmd_args,
             benchmark_name=benchmark_name,
-            benchmark_path=benchmark_path,
             protocol=protocol,
             vectorized=vectorized
             )
@@ -110,11 +134,10 @@ class RunBenchmarkArgs:
         return {
             'party0_mpc_addr': self.party0_mpc_addr,
             'party1_mpc_addr': self.party1_mpc_addr,
-            'cmd_args': cmd_args,
-            'benchmark_name': benchmark_name,
-            'benchmark_path': benchmark_path,
-            'protocol': protocol,
-            'vectorized': vectorized
+            'cmd_args': self.cmd_args,
+            'benchmark_name': self.benchmark_name,
+            'protocol': self.protocol,
+            'vectorized': self.vectorized
         }
 
 
@@ -128,15 +151,15 @@ def json_deserialize(json_str):
 def read_message(conn):
     buf = _read_socket_buf(conn, 4)
     if not buf:
-        print("Error: Unable to read message size")
+        # print("Error: Unable to read message size")
         return None
 
     msg_size = struct.unpack("!i", buf)[0]
-    print("Length of the message is: {}".format(msg_size))
+    # print("Length of the message is: {}".format(msg_size))
 
     buf = _read_socket_buf(conn, msg_size)
     if not buf:
-        print("Error: Unable to read message of length {}".format(msg_size))
+        # print("Error: Unable to read message of length {}".format(msg_size))
         return None
 
     obj = json.loads(buf.decode("utf-8"), object_hook=_from_json)
@@ -173,8 +196,14 @@ def _to_json(python_object):
     elif isinstance(python_object, StatsForInputConfig):
         return {'__class__': 'StatsForInputConfig',
                 '__value__': python_object.to_dictionary()}
-    elif isinstance(python_object, RunBenchmarkArgs):
-        return {'__class__': 'RunBenchmarkArgs',
+    elif isinstance(python_object, RunBenchmarkReq):
+        return {'__class__': 'RunBenchmarkReq',
+                '__value__': python_object.to_dictionary()}
+    elif isinstance(python_object, GetAddressReq):
+        return {'__class__': 'GetAddressReq',
+                '__value__': python_object.to_dictionary()}
+    elif isinstance(python_object, GetAddressResp):
+        return {'__class__': 'GetAddressResp',
                 '__value__': python_object.to_dictionary()}
 
     raise TypeError(repr(python_object) + ' is not JSON serializable')
@@ -196,8 +225,12 @@ def _from_json(json_object):
             return StatsForTask.from_dictionary(json_object['__value__'])
         elif json_object['__class__'] == 'StatsForInputConfig':
             return StatsForInputConfig.from_dictionary(json_object['__value__'])
-        elif json_object['__class__'] == 'RunBenchmarkArgs':
-            return RunBenchmarkArgs.from_dictionary(json_object['__value__'])
+        elif json_object['__class__'] == 'RunBenchmarkReq':
+            return RunBenchmarkReq.from_dictionary(json_object['__value__'])
+        elif json_object['__class__'] == 'GetAddressReq':
+            return GetAddressReq.from_dictionary(json_object['__value__'])
+        elif json_object['__class__'] == 'GetAddressResp':
+            return GetAddressResp.from_dictionary(json_object['__value__'])
 
     return json_object
 

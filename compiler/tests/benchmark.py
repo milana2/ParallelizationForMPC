@@ -13,6 +13,7 @@ class BenchmarkOutput:
     output: str
     timing_stats: statistics.TimingStatistics
     circuit_stats: statistics.CircuitStatistics
+    
     @classmethod
     def from_dictionary(cls, params):
         name = params['name']
@@ -33,6 +34,23 @@ class BenchmarkOutput:
                 'timing_stats': self.timing_stats,
                 'circuit_stats': self.circuit_stats,
                 }
+
+    @classmethod
+    def sum(cls, a, b):
+        return cls(
+           name = a.name,
+           output = a.output,
+           timing_stats = statistics.TimingStatistics.sum(a.timing_stats, b.timing_stats),
+           circuit_stats = statistics.CircuitStatistics.sum(a.circuit_stats, b.circuit_stats)
+        )
+    @classmethod
+    def div(cls, obj, d):
+        return cls(
+            name = obj.name,
+            output = obj.output,
+            timing_stats = statistics.TimingStatistics.div(obj.timing_stats, d),
+            circuit_stats = statistics.CircuitStatistics.div(obj.circuit_stats, d)   
+        )
 
 
 def run_benchmark(
@@ -163,9 +181,13 @@ def run_benchmark(
 
 
 def run_benchmark_for_party(
-    myid: str, party0_mpc_addr: str, party1_mpc_addr: str, app_path: str, timeout:int, cmd_args: list[str]
+    myid: str, party0_mpc_addr: str, party1_mpc_addr: str, benchmark_name: str, benchmark_path: str, protocol: str, vectorized,
+    timeout:int, cmd_args: list[str]
 ) -> BenchmarkOutput:
     # Create directories for output and MOTION logs
+    app_path = os.path.join(
+        benchmark_path, "motion_app" + "-" + protocol + ("-vectorized" if vectorized else "")
+    )
     party_dir = os.path.join(app_path, "party" + myid)
     if os.path.exists(party_dir):
         shutil.rmtree(party_dir)
@@ -184,7 +206,7 @@ def run_benchmark_for_party(
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        cwd=party0_dir,
+        cwd=party_dir,
     ) as party:
         try:
             party_stdout_raw, party_stderr = party.communicate(timeout)
@@ -198,6 +220,7 @@ def run_benchmark_for_party(
             f.write(party_stderr)
 
         if(party.returncode != 0):
+            print("party.returncode: {}".format(party.returncode))
             return None
 
         party_timing_stats = statistics.parse_timing_data(
