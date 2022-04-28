@@ -737,7 +737,7 @@ def run_client_role(address):
 
                         if p0 is None or p1 is None:
                             log.error("Run Failed! p0 is None: {} - p1 is None: {}".format(p0 is None, p1 is None))
-                            exit()
+                            continue
 
                         log.info("Output {}".format(p0.output.strip()))
                         assert p0.output.strip() == p1.output.strip(), \
@@ -1028,22 +1028,23 @@ def generate_graphs(lan, wan):
         os.path.isfile(os.path.join(WAN_DIR, f)) and f.endswith('.json')]
     
     lan_stats = []
-    for f in lan_files:
-        with open(f, "r", encoding='utf-8') as f:
-            json_str = f.read()
-            file_stats = json_deserialize(json_str)
-            lan_stats.append(file_stats)
-
     wan_stats = []
-    for f in wan_files:
-        with open(f, "r", encoding='utf-8') as f:
-            json_str = f.read()
-            file_stats = json_deserialize(json_str)
-            wan_stats.append(file_stats)
 
     if lan is True:
+        for f in lan_files:
+            with open(f, "r", encoding='utf-8') as f:
+                json_str = f.read()
+                file_stats = json_deserialize(json_str)
+                lan_stats.append(file_stats)
         generate_single_network_graphs(lan_stats, LAN_GRAPHS_DIR)
+
     if wan is True:
+        for f in wan_files:
+            log.info("Loading: {}".format(f))
+            with open(f, "r", encoding='utf-8') as f:
+                json_str = f.read()
+                file_stats = json_deserialize(json_str)
+                wan_stats.append(file_stats)
         generate_single_network_graphs(wan_stats, WAN_GRAPHS_DIR)
 
     if lan is True and wan is True:
