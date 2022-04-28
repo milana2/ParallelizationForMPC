@@ -18,7 +18,6 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     std::vector<encrypto::motion::SecureUnsignedInteger> temp_2((_MPC_PLAINTEXT_N_0));
 
     // Plaintext variable declarations
-    std::vector<std::uint32_t> _MPC_PLAINTEXT__1_0((_MPC_PLAINTEXT_N_0 + 1));
     std::uint32_t _MPC_PLAINTEXT__5_0;
     std::uint32_t _MPC_PLAINTEXT_sum_1;
 
@@ -41,7 +40,6 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     // Initialize phi values
     sum_2[_MPC_PLAINTEXT__5_0] = _1_0[_MPC_PLAINTEXT__5_0];
     for (; _MPC_PLAINTEXT__5_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__5_0++) {
-        _5_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__5_0), 0);
         // Update phi values
         if (_MPC_PLAINTEXT__5_0 != std::uint32_t(0)) {
             sum_2[_MPC_PLAINTEXT__5_0] = sum_3[(_MPC_PLAINTEXT__5_0 - std::uint32_t(1))];

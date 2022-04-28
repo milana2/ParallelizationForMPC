@@ -57,8 +57,8 @@ std::vector<T> lift(const std::function<T(const std::vector<std::uint32_t> &)> &
  * Special case of lift() for the case when we are lifting a full array.
  *
  * If the array is incorrectly sized, resize it to be correct.  We assume that the incorrectly-sized
- * case only occurs when type analysis fails to propagate all of the dimensions of an array access backwards,
- * so this transformation is correct.
+ * case only occurs when type analysis fails to propagate all of the dimensions of an array access
+ * backwards, so this transformation is correct.
  */
 template <typename T>
 std::vector<T> lift(const std::function<std::vector<T>(const std::vector<std::uint32_t> &)> &expr,
@@ -73,9 +73,9 @@ std::vector<T> lift(const std::function<std::vector<T>(const std::vector<std::ui
     std::size_t num_source_dims = 0;
     do {
         num_source_dims += 1;
-    } while (
-        source_array.size() < std::accumulate(dim_sizes.begin(), dim_sizes.begin() + num_source_dims, 1, std::multiplies<std::uint32_t>())
-    );
+    } while (source_array.size() < std::accumulate(dim_sizes.begin(),
+                                                   dim_sizes.begin() + num_source_dims, 1,
+                                                   std::multiplies<std::uint32_t>()));
 
     for (std::size_t i = 0; i < raised_size; ++i) {
         // Extract the per-dimension index of the current element.
@@ -236,7 +236,7 @@ void vectorized_assign(std::vector<T> &tgt, const std::vector<std::uint32_t> &di
 }
 
 template <typename T, typename V>
-std::vector<T> vectorized_update(std::vector<T> tgt, const std::vector<std::uint32_t> dim_sizes,
+std::vector<T> vectorized_update(std::vector<T> &tgt, const std::vector<std::uint32_t> dim_sizes,
                                  const std::vector<bool> &vectorized_dims,
                                  std::vector<std::uint32_t> idxs, const std::vector<V> &val)
 {
@@ -245,8 +245,7 @@ std::vector<T> vectorized_update(std::vector<T> tgt, const std::vector<std::uint
 }
 
 template <typename T, typename V>
-std::vector<T> vectorized_update(const std::vector<T> &tgt,
-                                 const std::vector<std::uint32_t> dim_sizes,
+std::vector<T> vectorized_update(std::vector<T> &tgt, const std::vector<std::uint32_t> dim_sizes,
                                  const std::vector<bool> &vectorized_dims,
                                  std::vector<std::uint32_t> idxs, const V &val)
 {
@@ -254,11 +253,28 @@ std::vector<T> vectorized_update(const std::vector<T> &tgt,
 }
 
 template <typename T, typename V>
-std::vector<T> vectorized_update(const T &tgt, const std::vector<std::uint32_t> dim_sizes,
+std::vector<T> vectorized_update(T tgt, const std::vector<std::uint32_t> dim_sizes,
                                  const std::vector<bool> &vectorized_dims,
                                  std::vector<std::uint32_t> idxs, const V &val)
 {
-    return vectorized_update(tgt.Unsimdify(), dim_sizes, vectorized_dims, idxs, val);
+    auto arr = tgt.Unsimdify();
+    return vectorized_update(arr, dim_sizes, vectorized_dims, idxs, val);
+}
+
+template <typename T, typename V>
+T vectorized_update_monoreturn(std::vector<T> &tgt, const std::vector<std::uint32_t> dim_sizes,
+                               const std::vector<bool> &vectorized_dims,
+                               std::vector<std::uint32_t> idxs, const V &val)
+{
+    return vectorized_update(tgt, dim_sizes, vectorized_dims, idxs, val)[0];
+}
+
+template <typename T, typename V>
+T vectorized_update_monoreturn(T tgt, const std::vector<std::uint32_t> dim_sizes,
+                               const std::vector<bool> &vectorized_dims,
+                               std::vector<std::uint32_t> idxs, const V &val)
+{
+    return vectorized_update(tgt, dim_sizes, vectorized_dims, idxs, val)[0];
 }
 
 // clang-format off

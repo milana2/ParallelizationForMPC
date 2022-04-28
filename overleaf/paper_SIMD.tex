@@ -149,7 +149,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title[Scheduling and Vectorization for MPC]{Scheduling and Vectorization for MPC}
+\title[Compilation and Backend-Independent Vectorization for Multi-Party Computation]{Compilation and Backend-Independent Vectorization for Multi-Party Computation}
 
 %
 % The "author" command and its associated commands are used to define the authors and their affiliations.
@@ -177,31 +177,31 @@
 }
 
 \author{Muhammad Ishaq}
-\authornote{This work was done in part while the author was at RPI.}
-\email{m.ishaq@ed.ac.uk}
+%\authornote{This work was done in part while the author was at RPI.}
+\email{ishaqm@purdue.edu}
 %\orcid{1234-5678-9012}
 %\author{G.K.M. Tobin}
 %\authornotemark[1]
 %\email{webmaster@marysville-ohio.com}
 \affiliation{%
-    \institution{University of Edinburgh}
+    \institution{Purdue University}
     %\streetaddress{P.O. Box 1212}
-    \city{Edinburgh}
-    \state{Scotland}
+    \city{West Lafayette}
+    \state{Indiana}
 %    \postcode{43017-6221}
 }
 
 \author{Lindsey Kennard}
-\email{kennal@rpi.edu}
+\email{fire.elemental@gmail.com}
 \affiliation{%
-    \institution{Rensselaer Polytechnic Institute}
+    \institution{STR}
     %\streetaddress{1 Th{\o}rv{\"a}ld Circle}
-    \city{Troy}
-    \state{New York}
+    \city{Boston}
+    \state{Massachusets}
     %\country{Iceland}
 }
 
-\author{Ana L. Milanova}
+\author{Ana Milanova}
 \email{milanova@cs.rpi.edu}
 \affiliation{%
     \institution{Rensselaer Polytechnic Institute}
@@ -212,17 +212,17 @@
 }
 
 \author{Vassilis Zikas}
-\authornote{This work was done in part while the author was visiting UCLA and supported in part by DARPA and SPAWAR under contract N66001-15-C-4065 and by a SICSA Cyber Nexus Research Exchanges grant.}
-\email{vzikas@inf.ed.ac.uk}
+%\authornote{This work was done in part while the author was visiting UCLA and supported in part by DARPA and SPAWAR under contract N66001-15-C-4065 and by a SICSA Cyber Nexus Research Exchanges grant.}
+\email{vzikas@purdue.edu}
 %\orcid{1234-5678-9012}
 %\author{G.K.M. Tobin}
 %\authornotemark[1]
 %\email{webmaster@marysville-ohio.com}
 \affiliation{%
-    \institution{University of Edinburgh}
+    \institution{Purdue University}
     %\streetaddress{P.O. Box 1212}
-    \city{Edinburgh}
-    \state{Scotland}
+    \city{West Lafayette}
+    \state{Indiana}
     %    \postcode{43017-6221}
 }
 
@@ -243,6 +243,7 @@
 % in the abstract
 \begin{abstract}
 
+\ana{We need an abstract.}
 
 \end{abstract}
 
@@ -308,7 +309,8 @@ Multi-party computation (MPC) allows $N$ parties $p_1,\dots, p_N$ to perform a c
 MPC theory dates back to the early 1980-ies~\cite{FOCS:Yao82b,STOC:GolMicWig87,STOC:BenGolWig88,STOC:ChaCreDam88}. 
 Long the realm of theoretical cryptography, MPC has seen significant advances in programming technology in recent years. 
 These advances bring MPC closer to practice and wider applicability --- 
-MPC technology has been employed in real-world scenarios such as auctions~\cite{FC:BCDGJK09}, biometric identification~\cite{ESORICS:BlaGas11}, and privacy-preserving machine learning~\cite{SP:MohZha17,CCS:MohRin18}. 
+MPC technology has been employed in real-world scenarios such as auctions~\cite{FC:BCDGJK09}, biometric identification~\cite{ESORICS:BlaGas11}, 
+and privacy-preserving machine learning~\cite{SP:MohZha17,CCS:MohRin18}. 
 The goal is to bring the technology to a level where programmers can write \emph{secure} and \emph{efficient} programs without 
 commanding extensive knowledge of cryptographic primitives. 
 
@@ -326,7 +328,7 @@ Earlier compilers did both back-end and front-end translation without a specific
 programming problems. As the field advanced, works have focused more closely on front-end language design (e.g., Wysteria~\cite{SP:RasHamHic14} and Viaduct~\cite{Acay:2021}) 
 or back-end ``circuit-level'' design and implementation (e.g., MOTION~\cite{Braun:2022}). 
 
-In this work we focus on an intermediate language and what we call \emph{circuit-independent optimizations}, in a close analogy to \emph{machine-independent} optimizations
+In this work we focus on an intermediate language and what we call \emph{backend-independent optimizations}, in a close analogy to \emph{machine-independent} optimizations
 in the classical compiler. The following figure summarizes our key idea: 
 
 {\begin{center}
@@ -346,15 +348,18 @@ in classical compilers, we envision translation of MPC Source (optimized or unop
 %The compilation problem, i.e., translation from a high-level language to circuits, is difficult and therefore, breaking the problem into sub-problems can  tractable. 
   
 
-\subsection{Our contribution} In this paper, we develop a compiler framework that takes a Python-like routine and produces MOTION code: we describe (a) the IMP-MPC language, its syntax and semantic restrictions, (b) translation from IMP-MPC into MPC Source, (c) a specific circuit-independent optimization: novel SIMD-vectorization on MPC Source, and (d) translation from MPC Source into MOTION code. \ana{I think we have to add more on MOTION, specifically mixing and amortization.}
+\subsection{Our Contribution} In this paper, we develop a compiler framework that takes a Python-like routine and produces MOTION code: we describe (a) the IMP-MPC language, its syntax and semantic restrictions, (b) translation from IMP-MPC into MPC Source, (c) a specific backend-independent optimization: novel SIMD-vectorization on MPC Source, and (d) translation from MPC Source into MOTION code. %\ana{I think we have to add more on MOTION, specifically mixing and amortization.}
+
+We focus on the MOTION framework as our back-end for several reasons. First, it is the state of the art in terms of performance~\cite{Braun:2022}. Second, it provides an API over efficient implementation for a wide variety of cryptographic operations in three different protocols ---  Arithmetic GMW, Boolean GMW, and BMR --- which allows for protocol mixing~\cite{Ishaq:2019, Fang:2022}, a known backend-independent optimization. Third, MOTION provides API for SIMD-level operations, which amortize cost and lead to significant improvement in memory footprint and 
+throughput~\cite{NDSS:DemSchZoh15, CCS:ABFKLO18, Braun:2022}. It also enables MPC Source-level optimizations such SIMD vectorization. 
 
 Our second contribution is an analytical model for cost estimation of amortized schedules. Originally, we hoped that optimal scheduling (under our model) was tractable, as the problem
 appeared simpler than the classical scheduling problem. Unfortunately, we show that optimal scheduling is NP-hard via a reduction to the Shortest Common Supersequence (SCS) problem. 
-Cost estimation is important as it drives scheduling and protocol mixing optimizations~\cite{Ishaq:2019, Fang:2022}. 
+Cost estimation is important as it drives not only vectorization but other optimizations such as protocol mixing optimizations and scheduling as well~\cite{Ishaq:2019, Fang:2022}. 
 
 Our most important contribution is the implementation and evaluation of the compiler framework. We demonstrate expressivity of the source language by running the compiler on \ana{X} programs; these include classical MPC benchmarks such as PSI and Biometric matching, as well as kMeans, Histogram, and others. Vectorization leads to \ana{X}x improvement in number of gates on average, \ana{Y}x speedup in circuit generation time, \ana{Z}x speedup in the LAN setting, and \ana{Z}x speedup in the WAN setting using the Boolean GMW protocol. Results form BMR are similar. 
 
-Our results emphasize the importance of ``circuit-independent'' optimizations --- vectorization (described in this work) and protocol mixing (tackled in previous works~\cite{CCS:BDKKS18,Ishaq:2019, Fang:2022}) are two optimizations readily available at the level of MPC Source. We believe that our work can lead to future work on ``circuit-independent'' compilation and optimization, bringing in new MPC optimizations and combinations of optimizations, much in the vein of standard compilers, and bring MPC programming technology closer to practice and wider applicability.
+Our results emphasize the importance of backend-independent optimizations --- vectorization (described in this work) and protocol mixing (tackled in previous works~\cite{CCS:BDKKS18,Ishaq:2019, Fang:2022}) are two optimizations readily available at the level of MPC Source. We believe that our work can lead to future work on backend-independent compilation and optimization, bringing in new MPC optimizations and combinations of optimizations, much in the vein of standard compilers, and bring MPC programming technology closer to practice and wider applicability.
 
 \subsection{Outline} 
 
@@ -384,13 +389,111 @@ infeasible loop-carried dependences introduced by standard SSA to improve vector
 \section{Overview}
 \label{sec:overview}
 
+
+\begin{table*}
+\begin{tabular}{ccc}
+\begin{minipage}{0.275\textwidth}
+{\small
+\begin{pythonn}
+def biometric(C: shared[list[int]], D: int, 
+      S: shared[list[int]], N: int) -> 
+      shared[tuple[int,int]]:
+   min_sum : int = MAX_INT
+   min_idx : int = 0  
+   for i in range(N): 
+      sum : int = 0
+      for j in range(D): 
+         # d = S[i,j] - C[j]
+         d : int = S[i * D + j] - C[j] 
+         p : int = d * d
+         sum = sum + p
+      if sum < min_sum:
+         min_sum : int = sum
+         min_idx : int = i
+   return (min_sum, min_idx)
+\end{pythonn}
+}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.33\textwidth}
+{\tiny
+\begin{pythonn}
+min_sum!1 = MAX_INT
+min_idx!1 = 0
+for i in range(0, N):
+   min_sum!2 = PHI(min_sum!1, min_sum!4)
+   min_idx!2 = PHI(min_idx!1, min_idx!4)
+   sum!2 = 0
+   for j in range(0, D):
+      sum!3 = PHI(sum!2, sum!4)
+      d = SUB(S[((i * D) + j)],C[j]) 
+      p = MUL(d,d) 
+      sum!4 = ADD(sum!3,p) 
+   t = CMP(sum!3,min_sum!2) 
+   min_sum!3 = sum!3
+   min_idx!3 = i
+   min_sum!4 = MUX(t, min_sum!3, min_sum!2) 
+   min_idx!4 = MUX(t, min_idx!3, min_idx!2) 
+return (min_sum!2, min_idx!2)   
+\end{pythonn}
+}
+\end{minipage} 
+
+&
+
+\begin{minipage}{0.33\textwidth}
+{\small
+\begin{pythonn}
+min_sum!1 = MAX_INT
+min_idx!1 = 0
+# S^ is same as S. C^ replicates C N times: 
+S^ = raise_dim(S, ((i * D) + j), (i:N,j:D)) #S^[i,j] = S[i,j]
+C^ = raise_dim(C, j, (i:N,j:D)) #C^[i,j] = C[j]
+
+sum!2[I] = [0,..,0]
+# computes _all_  "at once"
+d[I,J] = SUB_SIMD(S^[I,J],C^[I,J])
+p[I,J] = MUL_SIMD(d[I,J],d[I,J])
+
+for j in range(0, D):
+   # sum!2[I], sum!3[I], sum!4[I] are size-N vectors 
+   # computes N intermediate sums "at once"
+   sum!3[I] = PHI(sum!2[I], sum!4[I])       
+   sum!4[I] = ADD_SIMD(sum!3[I],p[I,j])
+
+min_idx!3[I] = [0,1,...N-1]   
+for i in range(0, N):
+   min_sum!2 = PHI(min_sum!1, min_sum!4) 
+   t[i] = CMP(sum!3[i],min_sum!2)
+   min_sum!4 = MUX(t[i], sum!3[i], min_sum!2)  
+for i in range(0, N):
+   min_idx!2 = PHI(min_idx!1, min_idx!4)    
+   min_idx!4 = MUX(t[i], min_idx!3[i], min_idx!2)
+return (min_sum!2, min_idx!2)   
+\end{pythonn}
+}
+\end{minipage}
+
+\\
+
+(a) IMP Source & (b) MPC Source & (c) Optimized MPC Source
+\end{tabular}
+\caption{Biometric Matching: From IMP Source to MPC Source to Optimized MPC Source. }
+\label{tab:source_and_MPC_source_and_optimized_MPC_source}
+\end{table*}
+
+
 \subsection{Source}
 
 As a running example, consider Biometric matching, a standard MPC benchmark.
-Array \texttt{C} is the feature vector of \texttt{D} features that we wish to match and array \texttt{S} 
-is the database of \texttt{N} vectors of size \texttt{D} that we match against.
-An intuitive implementation is as follows:
+An intuitive (and naive) implementation is as shown in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(a).
+Array \python{C} is the feature vector of \texttt{D} features that we wish to match and \python{S} 
+is the database of \python{N} size-\python{D} vectors that we match against.
 
+
+\begin{comment}
 {\small
 \begin{verbatim}
 def biometric(C: shared[list[int]], D: int, 
@@ -410,36 +513,37 @@ def biometric(C: shared[list[int]], D: int,
     return (min_sum, min_index)
 \end{verbatim}
 }
+\end{comment}
 
-Our compiler takes (essentially) standard IMP syntax.
-The programmer can write intuitive iterative programs as the one above.
-They annotate certain inputs and outputs as \emph{shared}.
-Here the code iterates over the entries in the database and computes
-the sum of squares of the differences of individual features. The program returns the 
-index \texttt{i} of the vector that gives the best match plus the corresponding sum of squares.
+Our compiler takes essentially standard IMP~\ana{Need citation here.} 
+syntax and imposes certain semantic restrictions. (We detail the restrictions in the following sections.)
+The programmer writes an iterative program and annotate certain inputs 
+and outputs as \emph{shared}. In the example arrays \python{C} and \python{S}
+are shared, meaning that they store shares, however, the array sizes \python{D} and
+\python{N} respectively are plaintext. The code iterates over the entries in the 
+database and computes the Euclidean distance (its square actually) of the current 
+entry \python{S[i]} and \python{C}. The program returns the index of the vector that gives 
+the best match plus the corresponding sum of squares.
 
 
-Our compiler imposes the following restrictions. We note that in some cases, the restrictions 
-can be easily lifted and we plan to do so in future iterations of our compiler. 
 
-\begin{enumerate}
-\item The program contains arbitrarily nested loops, however, loop bounds are fixed: \texttt{0 <= i < N}.
-A standard restriction in MPC is that the bounds must be known at circuit-generation time.
-\item Arrays are one-dimensional. N-dimensional arrays are linearized and accessed 
-in row-major order and at this point the programmer is responsible for linearization
-and access. 
-\item Array subscrpts are plaintext values.
-\item Our compiler allows for output (write) arrays, however it restricts
-write access to \emph{canonical writes} along the dimensions of the array. I.e., \texttt{A[i,j] = ...}
-where \texttt{i} and \texttt{j} loop over the two dimensions of \texttt{A} is allowed, 
-but \texttt{A[i,j+2] = ...} is not allowed. Read access is arbitrary. 
-\end{enumerate}
 
 \subsection{MPC Source and Cost of Schedule}
 
-The compiler generates an IR, MPC source:
+Our compiler generates an intermediate representation, MPC Source. MPC Source 
+for Biometric Matching is shown in 
+Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(b). First, MPC Source is an SSA form. 
+Second, it is linear. The conditional in lines 13-14 in IMP Source turns into the linear code in lines 12-16 in MPC Source. 
+The test turns into a CMP operation (\python{t = CMP(sum!3,min\_sum!2)}), followed by the 
+true-branch sequence, followed by the MUX operations. The first MUX operation selects the value
+of \python{min\_sum}: if \python{t} is true, then \python{min\_sum} gets the value of the second multiplexer
+argument,  \python{min\_sum!3}, otherwise it takes the value of the third argument, \python{min\_sum!2}.  
+Third, MPC Source is a special form of SSA. The SSA $\phi$-nodes at the if-then-else (lines 13-15) turn into 
+MUX operations, while the $\phi$-nodes at for loops turn into what we call pseudo PHI nodes with a straightforward semantics.
+
+\begin{comment}
 {\small
-\begin{verbatim}
+\begin{pythonn}
 1. min_sum!1 = 10000
 2. min_index!1 = 0
 3. for i in range(0, N!0):
@@ -457,18 +561,19 @@ The compiler generates an IR, MPC source:
 15.  min_sum!4 = MUX(!1!2, min_sum!3, min_sum!2) // MPC
 16.  min_index!4 = MUX(!1!2, min_index!3, min_index!2) // MPC
 17.!2!1 = (min_sum!2, min_index!2)   
-\end{verbatim}
+\end{pythonn}
 }
+\end{comment}
 
-The compiler linearizes the source turning conditionals into MUX statements. The PHI nodes
-are remnants of the SSA IR; the compiler generates code that picks the correct value 
-when producing MOTION output; the MOTION framework in turn linearizes 
-loops when it generates the circuit.
+%The compiler linearizes the source turning conditionals into MUX statements. The PHI nodes
+%are remnants of the SSA IR; the compiler generates code that picks the correct value 
+%when producing MOTION output; the MOTION framework in turn linearizes 
+%loops when it generates the circuit.
 
-We turn to our analytical model to compute the cost of this program. Assuming fixed 
+We turn to our analytical model to compute the \emph{cost} of the program. Assuming fixed 
 cost $\beta$ for a local MPC operation (essentially just ADD) and cost $\alpha$ for a remote
 MPC operation (e.g., MUX, CMP, and remaining operations), the cost of the iterative schedule 
-will be $N*D*(2*\alpha+\beta) + N*3*\alpha$. 
+will be $ND(2\alpha+\beta) + N(3\alpha$). 
 
 A key contribution is the vectorizing transformation. We can compute all $N*D$ 
 subtraction operations (line 9) in a single SIMD instruction; similarly we can compute 
@@ -477,14 +582,24 @@ vectorize computation of the N individual sums, we can compute the N sums in par
 Our compiler \emph{automatically detects these opportunities and transforms the program}. 
 It is standard that MPC researchers write vectorized versions of the Biometric
 program by hand; we are the first (to the best of our knowledge) to automatically 
-transform an intuitive, iterative MPC program into an unintuitive vectorized one.
+transform a naive, iterative MPC program into an unintuitive vectorized one.
 
 \subsection{Vectorized MPC Source and Cost of Schedule}
 
-Our compiler produces the following vectorized program. (Note that this is
-still higher-level IR, Vectorized MPC Source. Our compiler turns this code into MOTION variables, 
-loops and SIMD primitives, which MOTION then uses to generate the circuit.)
+Our compiler produces the vectorized program shown in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(c). 
+Note that this is still our intermediate representation, Optimized MPC Source. Subsequently,
+the compiler turns this code into MOTION variables, loops and SIMD primitives, which MOTION then 
+uses to generate the circuit.
 
+The compiler determines that SUB and MUL in ``naive'' MPC Source (lines 9 and 10 in (b))
+can be fully vectorized into the SIMD SUB and MUL in optimized MPC Source (lines 9 and 10 in (c)). 
+Notation \python{p[I,J]} denotes a 2-dimensional array with fully vectorized dimensions.
+The computation of sum (line 11 in (b))
+is sequential across the $j$-dimension, but it is parallel across the $i$-dimension. 
+The loop in lines 12-16 in (c) illustrates; here \python{p[I,j]} refers to the $j$-th column in \python{p}. 
+Unfortunately, CMP and MUX remain sequential.
+
+\begin{comment}
 {\small
 \begin{verbatim}
 min_sum!1 = 10000
@@ -517,18 +632,33 @@ for i in range(0, N!0):
 !2!1 = (min_sum!2, min_index!2)   
 \end{verbatim}
 }
+\end{comment}
 
-In MPC compilers a vectorized operation that computing M operations "at once" costs 
-essentially the same ($\alpha$ or $\beta$) as an individual operation. We elaborate 
-on these in the following section. Thus, the vectorized program costs 
-$2*\alpha$ + $D * \beta + N*3*\alpha$. The first term in the sum corresponds to the vectorized
-subtraction and multiplication, the second term corresponds to the for loop on $j$ and the third 
-one corresponds to the remaining for loops on $i$. Clearly, $2*\alpha + D * \beta + N*3*\alpha << N*D*(2*\alpha+\beta) + N*3*\alpha$.
-Our experimental results illustrate this as well. \ana{Add numbers.}
+In MPC backends, executing $n$ operations ``at once'' in a single SIMD operation costs a lot less than executing those $n$ operations one by one.
+This is particularly important when there is communication (i.e., in remote), since many 1-bit values are sent at once rather than sequentially. 
+%In MPC compilers a vectorized operation that computing M operations "at once" costs 
+%essentially the same ($\alpha$ or $\beta$) as an individual operation. 
+We elaborate on the cost model in the following section but for now consider that 
+each operation has a \emph{fixed} portion (does benefits from amortization) and 
+a \emph{variable} portion (does not benefit from amortization): $\alpha = \alpha_\mathit{fix} + \alpha_\mathit{var}$. 
+This gives rise to the following formula for amortized cost: $f(n) = \alpha_\mathit{fix} + n\alpha_\mathit{var}$, 
+as opposed to unamortized cost $g(n) = n\alpha_\mathit{fix} + n\alpha_\mathit{var}$. (We extend the same reasoning to 
+$\beta$-instructions.)
+
+Thus, the fixed cost of the vectorized program amounts to
+$2\alpha_\mathit{fix}$ + $D \beta_\mathit{fix} + N(3\alpha_\mathit{fix})$. (The variable cost is the same in both the vectorized and non-vectorized programs.) 
+The first term in the sum corresponds to the vectorized
+subtraction and multiplication, the second term corresponds to the FOR loop on $j$ and the third 
+one corresponds to the remaining FOR loops on $i$. Clearly, $2\alpha_\mathit{fix} + D\beta_\mathit{fix} + N(3\alpha_\mathit{fix}) << ND(2\alpha_\mathit{fix}+\beta_\mathit{fix}) + N3\alpha_\mathit{fix}$.
+Empirically, we observe 10x to 50x improvement over un-vectorized Biometric Matching in circuit generation time and setup time and 5x to 30x improvement in online time.
+Additionally, the un-vectorized version runs out of memory for $N=256$, while the vectorized one runs with the standard maximal input size $N=4,096$.
+\ana{Edit numbers with final experiments.}
 
 
 \section{Analytical Model}
 \label{sec:model}
+
+\ana{We need an intro to section here.}
 
 \subsection{Scheduling in MPC}
 \label{sec:mpc}
@@ -544,41 +674,158 @@ For this treatment we make the following simplifying assumptions:
 and a remote instruction (e.g., MUX, MUL, SHL, etc.) has cost $\alpha$, where $\alpha >> \beta$. We assume that all remote 
 instructions have the same cost.
 %\ishaq{Don't we need to distinguish between local (cheap) vs. interactive (expensive) instructions? I don't see how we could assume this. -- Past suggestion from Vassilis: Ideally we should assume cost to be a convex function.}\ana{After discussion 1/12: replace single costs 1 with two levels of costs: $\alpha$ for non-local operations, e.g., MUL, and $\beta$ for local ops, e.g., ADD.}
-\item We assume infinite parallel capacity---i.e., a single MPC-instruction costs as much as $N$ amortized instructions, namely $\alpha$ or $\beta$. 
-This is a standard assumption in Cryptographic Parallel RAM. ABY presents empirical support for this assumption~\ana{Add citations. PRAM, ABY.}
+\item  In MPC frameworks, executing $n$ operations ``at once'' in a single SIMD operation costs a lot less than executing those $n$ operations one by one.
+Following Amdahl's law~\ana{citation!}, we write $\alpha = \frac{1}{s}p\alpha + (1-p)\alpha$, where $p$ is the fraction of execution time that benefits from amortization and $(1-p)$ 
+is the fraction that does not, and $s$ is the available resource. Thus, $n\alpha = \frac{n}{s}p\alpha + n(1-p)\alpha$. 
+For the purpose of the model we assume that $s$ is large enough and the term $\frac{n}{s}p\alpha$ amounts to a \emph{fixed cost} incurred regardless of
+whether $n$ is $10,000$ or just $1$. (This models the cost of sending a packet from party A to party B for example.) The bottom line is that amortized execution 
+of $n$ operations is $f(n) = \alpha_\mathit{fix} + n\alpha_{var}$ in contrast to unamortized execution $g(n) = n\alpha_\mathit{fix} + n\alpha_{var}$ and, of course,
+$\alpha_\mathit{fix} << n\alpha_\mathit{fix}$.
+%We assume infinite parallel capacity---i.e., a single MPC-instruction costs as much as $N$ amortized instructions, namely $\alpha$ or $\beta$. 
+%This is a standard assumption in Cryptographic Parallel RAM. ABY presents empirical support for this assumption~\ana{Add citations. PRAM, ABY.}
 %\ishaq{Comment from Vassilis: We assume there are infinite parallel capacities, this is the standard assumption in PRAM (Cryptographic Parallel RAM).}\ana{PRAM assumption stays. We have to replace the unit cost of 1 with a suitable amortization function $f(n)$, which I don't think changes much in the cost modeling and analysis.}
 \item MPC instructions scheduled in parallel benefit from amortization \emph{only if} they are the same instruction. Given our previous assumption,
-2 MUL instructions scheduled in parallel benefit from amortization and cost $\alpha$, however a MUL and a MUX instructions scheduled
-in parallel still cost $2\alpha$. 
+2 MUL instructions can be amortized in a single SIMD instruction that costs $\alpha_\mathit{fix} + 2\alpha_\mathit{var}$, however a MUL and a MUX instruction 
+still cost $2\alpha_\mathit{fix} + 2\alpha_\mathit{var}$ even when scheduled ``in parallel''. 
+%MPC instructions scheduled in parallel benefit from amortization \emph{only if} they are the same instruction. Given our previous assumption,
+%2 MUL instructions scheduled in parallel benefit from amortization and cost $\alpha$, however a MUL and a MUX instructions scheduled
+%in parallel still cost $2\alpha$. 
 %\ishaq{We need to reword this assumption to something like "$K$ parallel MUL costs much less than $K$ (because they get amortized), but any mix of $K$  MUL and MUX still cost roughly $K$. Specifically, we should take away the low constants (2 and 1) because we know for low constants this is not true.} \ana{Again, core assumption that MUL and MUX don't benefit from amortization stays. We have to replace constant costs with functions, as in (3).}
 \end{enumerate}
 
 \input{prob_stmt_np_hardness.tex}
 
-\section{\bf Compiler Framework}
-\label{sec:preliminaries}
-
 \begin{figure*}
   \includegraphics[width=1.0\linewidth]{figs_paper_SIMD/compiler_framework.png}
-  \caption{Compiler Framework.} 
+  \caption{Compiler Framework. \ana{Change figure since we are not doing div-and-conquer.}}
   \label{fig:compiler_framework}
 \end{figure*}
 
+\section{\bf Compiler Framework}
+\label{sec:preliminaries}
+
+\ana{Convention: use \texttt{shared, plain}, {\sf code}, $i$ and $I$ for counters outside of code.}
 
 %We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. 
 
-\figref{fig:compiler_framework} presents an overview of our compiler. In this section, we describe several of the phases of the compiler. 
-Sections~\secref{sec:vectorization} and~\secref{sec:div_and_conq} describe vectorization and divide-and-conquer.
-We write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$
-and we use $I,J,K$ to denote the corresponding upper bounds. For simplicity, we write $A[i,j,k]$ to denote canonical access 
-to an array element. In the program, canonical access is achieved via the standard row-major order formula: $(J*K)*i + K*j + k$.
-To simplify the presentation we describe our algorithms in terms of three-element tuples $i,j,k$.
-All discussion generalizes to arbitrarily large loop nests.
+\figref{fig:compiler_framework} presents an overview of our compiler. This section describes the front-end phases of the compiler
+and Section~\secref{sec:vectorization} describes our vectorization algorithm. \ana{We'll need a section on MOTION code gen too.}
 %\ana{Need to state this more precisely.}
 
-\subsection{Semantic Analysis}
+\subsection{Syntax and Semantic Restrictions}
+\label{sec:syntax}
 
-Our compiler performs the following semantic analysis steps:
+Source syntax is essentially standard IMP syntax as shown below:
+%\begin{figure}[t]
+{\small
+\[
+\begin{array}{l@{~~~~~}l}
+  \begin{array}{l@{~}l@{~~~}l}
+ e & ::= e \; \mathit{op} \; e \mid e \mid \x \mid  \texttt{const} \mid \texttt{A[$e$]} & \mathit{expression} \\
+ % s &::= t \;\f & \mathit{field} \\
+ %\md &::= t\;{\m}(t \;{\this}, \; t\;\x) \; \{\; \ol{t\;\y}\;\s;\;\return\;\y \; \} 
+ %                 & \mathit{method} \\ 
+  s & ::= s;s \mid  & \mathit{sequence} \\
+  & \x = e \mid \texttt{A[$e$]} = e \mid & \mathit{assignment \; stmt} \\
+  & \texttt{for $i$ in range($I$)}: s \mid & \mathit{for \; stmt} \\
+  & \texttt{if $e$: $s$ else: $s$} & \mathit{if \; stmt} \\ 
+%   t &::= q \; {\sf C} & \mathit{qualified \; type}\\
+%   q &::= \high \mid \poly \mid \low & \mathit{FlowCFL \; qualifier}\\
+%    t' &::= q' \; \C & \mathit{field \; qualified \; type}\\
+%   q' &::= \tainted \mid \poly & \mathit{field \; qualifier}\\
+
+  \end{array}
+\end{array}
+\]
+}
+%\end{figure}
+
+The syntax allows for array accesses, arbitrarily nested loops, and if-then-else control flow. 
+Expressions are typed $q \; \tau$, where qualifier $q$ and base type $\tau$ are:
+
+{\small
+\[
+\begin{array}{l@{~~~~~}l}
+  \begin{array}{l@{~}l@{~~~}l}
+ \tau & ::= \texttt{int}  \mid \texttt{bool} \mid \texttt{list[int]} \mid  \texttt{list[bool]} & \mathit{base \; types} \\
+  q & ::= \texttt{shared} \mid \texttt{plain} & \mathit{qualifiers} \\
+  \end{array}
+\end{array}
+\]
+}
+
+The type system is mostly standard, and in our experience, a sweet spot between readability and expressivity.
+The \texttt{shared} qualifier denotes shared values, i.e., ones shared among the parties and computed upon 
+under secure computation protocols; the \texttt{plain} qualifier denotes plaintext values. Shared lists denote 
+shared elements, but plaintext length. Subtyping is again as expected: $q_1 \; \tau <: q_2 \; \tau$ 
+iff $q_1 <: q_2$ where $\texttt{plain} <: \texttt{shared}$. Thus, we can convert a plaintext value into a shared one, 
+but not vice versa.
+
+Our compiler imposes certain semantic restrictions that it enforces throughout the various 
+phases of compilation. We note that in some cases, the restrictions 
+can be easily lifted and we plan to do so in future iterations of the work. 
+
+\begin{enumerate}
+\item Loops are of the form $0 <= i < I$ and bounds are fixed at compile time. 
+It is a standard restriction in MPC that the bounds must be known at circuit-generation time.
+\item Arrays are one-dimensional. N-dimensional arrays are linearized and accessed 
+in row-major order and at this point the programmer is responsible for linearization
+and access. (This restriction can be easily lifted.)
+\item Array subscrpts are plaintext values as specified by the rule:
+\begin{semantics}
+    \ntyperule{Array Access}{
+%  \Gamma(\y) =  q_\y   \quad\quad \sigma(\f) = q_\f  \quad\quad \Gamma(\x) = q_\x \\
+  \Gamma \vdash e : \texttt{plain int} \quad \Gamma \vdash \texttt{A} : q \; \texttt{list}[\tau] \quad \tau \in \{ \texttt{int}, \texttt{bool} \}
+}{
+  \Gamma \vdash \texttt{A[$e$]} : q \; \tau
+}
+\end{semantics}
+The subscript $e$ is a function of the indices of the enclosing loops. 
+For read access, the compiler allows an arbitrary such function. 
+However, it restricts write access to \emph{canonical writes}, i.e., {\sf A[i,j,k] = ...}
+where $i$, $j$ and $k$ loop over the three dimensions of {\sf A}.  
+Write access such as for example {\sf A[i,j+2] = ...} is not allowed. 
+%\item \ana{Add rules for logical ops}
+%\item \ana{Add rules for arithmetic ops}
+\item The final restriction involves MUX as expressed by the rule: 
+\begin{semantics}
+    \ntyperule{MUX}{
+%  \Gamma(\y) =  q_\y   \quad\quad \sigma(\f) = q_\f  \quad\quad \Gamma(\x) = q_\x \\
+  \Gamma \vdash e_1 : q_1 \; \texttt{bool} \quad \Gamma \vdash e_2 : q_2 \; \tau \quad \Gamma \vdash e_2 : q_2 \; \tau \quad \tau \in \{ \texttt{int}, \texttt{bool} \}
+}{
+  \Gamma \vdash \texttt{MUX($e_1$,$e_2$,$e_3$)} : q_1 \vee q_2 \vee q_3 \; \tau
+}
+\end{semantics}
+\end{enumerate}
+Importantly, the arguments of MUX are restricted to base types, as passing array arguments 
+is not valid MOTION MPC. \ana{Check this.} This causes a slight inconvenience as we could not write 
+\begin{pythonn}
+if e: A[i] = val
+\end{pythonn}
+Instead we had to write
+\begin{pythonn}
+if not(e): val = A[i]
+A[i] = val
+\end{pythonn}
+
+We note that while the programmer writes 
+annotations at the level of IMP Source (recall \ana{ref to overview section}), the 
+annotations propagate through the transformations and are checked at the 
+level of MPC Source.
+
+%\ana{Disadvantage of MUX} 
+
+For the rest of this section we write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$
+and we use $I,J,K$ to denote the corresponding upper bounds. We write $A[i,j,k]$ to denote canonical access 
+to an array element. In the program, canonical access is achieved via the standard row-major order formula: $(J*K)*i + K*j + k$.
+To simplify the presentation we describe our algorithms in terms of three-element tuples $i,j,k$, however, discussion easily generalizes to 
+arbitrarily large loop nests.
+
+
+
+\subsection{From IMP Source to SSA}
+
+Our compiler translates from Source to SSA as follows:
 
 \begin{enumerate}
   \item
@@ -586,47 +833,47 @@ Our compiler performs the following semantic analysis steps:
         Use Python's \texttt{ast} module to parse the input source code to a Python AST.
   \item
         \textbf{Syntax checking}:
-        Ensure that the AST matches a restricted subset that our compiler supports.
+        Ensure that the AST matches the restricted subset defined in Section~\secref{sec:syntax}.
         This step outputs an instance of the \texttt{restricted\_ast.Function} class, which represents our restricted subset of the Python AST.
   \item
         \textbf{3-address CFG conversion}:
-        \benjamin{TODO: Is this a good amount of detail?}
+        %\benjamin{TODO: Is this a good amount of detail?} \ana{This is good amount of detail for the Tech report. In the actual paper we'll shorten a lot and add pointers to the Tech report.} 
 
         Convert the restricted-syntax AST to a three-address control-flow graph.
         To do this, first,
         add an empty basic block to the CFG and mark it as current.
         Next, for each statement in the restricted AST's function body,
         process the statement.
-        Statements can either be for-loops, if-statements, or assignments.
+        Statements can either be for-loops, if-statements, or assignments (as in~\secref{sec:syntax}).
         Rules for processing each kind of statement are given below:
         \begin{enumerate}
           \item
                 \textbf{For-loops}:
                 Create new basic blocks for
                 the loop condition
-                (the condition block),
+                (the \emph{condition-block}),
                 the loop body
-                (the body block),
+                (the \emph{body-block}),
                 and the code after the loop
-                (the after-block).
-                Insert a jump from the end of the current block to the condition block.
-                Then, mark the condition block as the current block.
+                (the \emph{after-block}).
+                Insert a jump from the end of the current block to the condition-block.
+                Then, mark the condition-block as the current block.
                 Insert a for-instruction at the end of the current block with the loop counter variable and bounds from the AST.
                 Next, add an edge from the current block to the after-block labeled ``FALSE'' and
                 an edge from the current block to the
-                body block labeled ``TRUE''.
-                Then, set the body block to be the current block
+                body-block labeled ``TRUE''.
+                Then, set the body-block to be the current block
                 and process all statements in the AST's loop body.
-                Finally, insert a jump to the condition block and set the after-block as current.
+                Finally, insert a jump to the condition-block and set the after-block as current.
           \item
                 \textbf{If-statements}:
                 Create new basic blocks for
                 the ``then'' statements of the if-statement
-                (the then-block),
+                (the \emph{then-block}),
                 the ``else'' statements of the if-statement
-                (the else-block),
+                (the \emph{else-block}),
                 and the code after the if-statement
-                (the after-block).
+                (the \emph{after-block}).
                 At the end of the current block,
                 insert a conditional jump to the then-block or else-block
                 depending on the if-statement condition in the AST.
@@ -639,14 +886,14 @@ Our compiler performs the following semantic analysis steps:
                 process all else-statements,
                 and add a jump to the after-block.
                 Finally, set the after-block to be the current block,
-                and give it a ``merge condition'' property equal to the condition of the if-statement.
+                and give it a \emph{merge condition} property equal to the condition of the if-statement.
           \item
                 \textbf{Assignments}:
                 In the restricted-syntax AST,
                 the left-hand side of assignments
                 can be a variable or an array subscript.
-                If it is an array subscript such as \texttt{A[i] = x},
-                change the statement to \texttt{A = Update(A, i, x)}.
+                If it is an array subscript, e.g., {\sf A[i] = x},
+                change the statement to {\sf A = Update(A, i, x)}.
                 If the statement is not already three-address code,
                 for each sub-expression in the right-hand side of the assignment,
                 insert an assignment to a temporary variable.
@@ -656,25 +903,30 @@ Our compiler performs the following semantic analysis steps:
         Convert the 3-address CFG to SSA with Cytron's algorithm.
 \end{enumerate}
 
-\subsection{MUX Nodes and Pseudo $\phi$-nodes}
+\subsection{From SSA to MPC Source} %: MUX Nodes and Pseudo $\phi$-nodes}
 
 Once the compiler converts the code to SSA,
 it transforms $\phi$-nodes that correspond to if-statements into MUX nodes.
 From the 3-address CFG conversion step,
 $\phi$-nodes corresponding to if-statements will be in a basic block
-with the ``merge condition'' property.
+with the merge condition property.
 For example, if $X_3 = \phi(X_1,X_2)$ is in a block with merge condition $C$,
 the compiler transforms it into $X_3 = \mathit{MUX}(C, X_1, X_2)$.
 Next, the compiler runs the dead code elimination algorithm from Cytron's SSA paper.
 
-Then, the control-flow graph is \emph{linearized} into MPC source,
-which has loops but no if-statements.
+Next, the control-flow graph is \emph{linearized} into MPC Source,
+which has loops but no if-then-else-statements.
 This means that both branches of all if-statements are executed,
 and the MUX nodes determine whether to use results from the then-block or from the else-block.
 The compiler linearizes the control-flow graph with a variation of breadth-first search.
 Blocks with the ``merge condition'' property are only considered
 the second time they are visited,
-since that will be after both branches of the if-statement are visited.
+since that will be after both branches of the if-statement are visited. 
+(The Python AST naturally gives rise to a translation where each conditional has exactly two targets, 
+and each ``merge condition'' block has exactly two incoming edges, a TRUE and a FALSE edge.
+Thus, each $\phi$-node has exactly two multiplexer arguments, which dovetails into MUX.
+This is in contrast with Cytron's algorithm which operates at the level of the CFG and allows for 
+$\phi$-nodes with multiple arguments.)
 Each time the compiler visits a block,
 it adds the block's statements to the MPC source.
 If the block ends in a for-instruction,
@@ -684,23 +936,28 @@ If the block does not end in a for-instruction,
 the compiler recursively converts all successor branches to MPC source and
 appends these to the main MPC source.
 
-Now, the remaining $\phi$-nodes in MPC source are \emph{pseudo} $\phi$-nodes.
-A pseudo $\phi$-node $X_1 = \phi(X_0,X_2)$ in a loop header is evaluated during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to $X_0$, otherwise, it evaluates to $X_2$.
+Now, the remaining $\phi$-nodes in MPC source are the loop header nodes. We call these nodes \emph{pseudo} $\phi$-nodes 
+and we write \python{PHI} in MPC Source. A pseudo $\phi$-node $X_1 = $\python{PHI}$(X_0,X_2)$ in a loop header is evaluated 
+during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to $X_0$, otherwise, it evaluates to $X_2$.
 
 %\ana{We need to double check that the following captures all cases of def-use edges.}
 
 \subsection{Dependence Analysis}
 
+The next steps construct the dependence graph and \ana{Add an intro here.}
 
 \subsubsection{Def-use Edges}
 
 The dependence graph has the following def-use edges:
 
 \begin{itemize}
-\item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge from \texttt{d = S[i,j] - C[j]} to \texttt{p = d*d} in the Biometric MPC-source is a same-level edge. A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
-\item outer-to-inner $X\rightarrow Y$ where $X$ is in an outer loop nest, say $i$, and $Y$ is in an inner one, say $i,j,k$. 
+\item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge 9 to 10 in the Biometric MPC Source in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source} is a same-level edge. A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge. 
+E.g., 15 to 4 in Biometric is a same-level back-edge.
+\item outer-to-inner $X\rightarrow Y$ where $X$ is in an outer loop nest, say $i$, and $Y$ is in an inner one, say $i,j,k$. E.g., 1 to 4 in Biometric forms is an outer-to-inner edge.
 %A $\phi$-node can be a source or a target of an outer-to-inner forward edge.
-\item inner-to-outer $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer edge. An inner-to-outer edge can be a back-edge as well in which case both $X$ and $Y$ are phi-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
+\item inner-to-outer $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g., the def-use from 8 to 12 gives rise to an inner-to-outer edge.
+%E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer edge. 
+An inner-to-outer edge can be a back-edge as well, in which case both $X$ and $Y$ are phi-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
 
 %Note that the source is \emph{always} a $\phi$-node of the $i,j,k$ loop and the target is in the immediately enclosing loop. The interpretation of this edge is that the use node $Y$ uses the definition made in the last iteration of the inner loop.
 %\ben{The current representation of pseudo $\phi$-nodes shows them attached to the loop header (i.e. in the loop).  We may want to clarify that they are also evaluated at the loop's termination.}
@@ -721,34 +978,50 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 
 \subsection{Taint Analysis}
 
-We require that all inputs are marked as either shared or plaintext.  We then determine if intermediate variables are shared through taint analysis with "taintedness" referring to the shared attribute.  Specifically, our compiler follows the following rules:
-\begin{itemize}
-\item If any variable on the right-hand side of an assignment is shared, then the assigned variable is shared
-\item If all variables on the right-hand side of an assignment are plaintext, then the assigned variable is plaintext
-\item Loop counters are always plaintext
-\item Any variables which cannot be determined as shared or plaintext via the above rules are plaintext
-\end{itemize}
+We require that all inputs are marked as either shared or plaintext, however, we do not require any other qualifier annotations in the program. Then we infer if intermediate variables and expressions are shared through taint analysis with "taintedness" referring to the shared attribute.  Specifically, the compiler follows the following rules, which are standard in positive-negative qualifier systems (here \texttt{shared} is the positive qualifier and \texttt{plain} is the negative one): 
+\begin{enumerate}
+\item Loop counters and array upper bounds are always \texttt{plain}.
+\item If any variable on the right-hand side of an assignment is shared, then the assigned variable is \texttt{shared}.
+%\item If all variables on the right-hand side of an assignment are plaintext, then the assigned variable is plaintext \ana{Will be covered by the last rule.}
+\item Any variables that cannot be determined as shared via the above rules are \texttt{plain}.
+\end{enumerate}
 
-The first two rules are standard for taint analysis, and the third rule follows from the MPC problem statement. \ben{Is the explanation for the third rule correct?}  The final rule is needed to handle cycles of plaintext values.  For example, in the below snippet \texttt{sum!2} and \texttt{sum!3} form a dependency cycle and cannot be marked as plaintext through simple taint analysis:
+%The first two rules are standard for taint analysis, and the third rule follows from the MPC problem statement. \ben{Is the explanation for the third rule correct?}  \ana{Yes, that is exactly it!}
+The final rule is needed in examples like the following. In the below snippet \texttt{sum!2} and \texttt{sum!3} form a dependency cycle and there is no \texttt{shared} value that flows to either one. 
+They are inferred as plaintext. 
+%cannot be marked as plaintext through simple taint analysis:
 {\small
-\begin{verbatim}
+\begin{pythonn}
 plaintext_array = [0, 1, 2, ...]
 sum!1 = 0
 for i in range(0, N):
     sum!2 = PHI(sum!1, sum!3)
     sum!3 = sum!2 + plaintext_array[i]
-\end{verbatim}
+\end{pythonn}
 }
-\ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}
+%\ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}\ana{I left the example, we can leave it in the TR, remove from paper.}
 
-When converting to MOTION code, any plaintext value used in the right-hand side of a shared assignment is implicitly converted to a shared value for that expression. \ben{Is this necessary to include?}
+When converting to MOTION code, any plaintext value used in the right-hand side of a shared assignment is converted to a shared value for that expression. 
+%\ben{Is this necessary to include?} \ana{Yes, that's important.}
+
+Importantly, the taint analysis works on MPC Source, which lacks if-then-else control flow. 
+This significantly simplifies treatment as there is no need to handle conditionals and implicit flow. 
+
+\subsection{From (Optimized) MPC Source to MOTION}
+\label{sec:MOTION}
+\ana{Ben, add the MOTION section here.}
 
 \section{Vectorization}
 \label{sec:vectorization}
 
-An important component of our algorithm is the "lifting" of scalars to the corresponding loop dimensionality. 
-For example, \texttt{d = S[i * D + j] - C[j]} equiv. to \texttt{d = S[i,j] - C[j]}, which gave rise to \texttt{N*D} subtraction operations in the sequential schedule, 
-is lifted. The argument arrays \texttt{S} and \texttt{C} are lifted and the scaler \texttt{d} is lifted: \texttt{d[i,j] = S[i,j] - C[i,j]}.
+\ana{Need an intro here!}
+
+
+\subsection{Scalar Expansion}
+
+An important component of our algorithm is the scalar expansion to the corresponding loop dimensionality. 
+For example, {\sf d = S[i*D+j] - C[j]} equiv. to {\sf d = S[i,j] - C[j]}, which gave rise to {\sf N*D} subtraction operations in the sequential schedule, 
+is lifted. The argument arrays {\sf S} and {\sf C} are lifted and the scaler {\sf d} is lifted: {\sf d[i,j] = S[i,j] - C[i,j]}.
 The algorithm then detects that the statement can be vectorized. 
 
 There are three kinds of arrays (for now all kept internally as one-dimensional arrays, but that's under discussion).
@@ -756,17 +1029,17 @@ There are three kinds of arrays (for now all kept internally as one-dimensional 
 
 \item Scalars: These are scalar variables we lift into arrays for the purposes of vectorization. 
 For those, all writes are canonical writes and all reads are canonical reads. We will apply raise dimension when 
-a scalar is used in an inner loop (e.g., \texttt{sum0} in line 6 of the MPC source code will be raised to a 1-dimensional 
-array since \texttt{sum0} is used in the inner $j$-loop). Drop dimension applies as well; this happens when a scalar
-written in an inner loop is used outside of the loop (e.g., \texttt{sum0} for which the lifted inner loop computes 
-\texttt{D} values, but the outer loop only needs the last one.)
+a scalar is used in an inner loop (e.g., {\sf sum!2} in line 6 of the MPC source code will be raised to a 1-dimensional 
+array since {\sf sum!2} is used in the inner $j$-loop). Drop dimension applies as well; this happens when a scalar
+written in an inner loop is used outside of the loop (e.g., {\sf sum!2} for which the lifted inner loop computes 
+{\sf D} values, but the outer loop only needs the last one.)
 
 \item Read-only input arrays: Read-only inputs. There are NO writes, while we may have non-canonical reads, $f(i,j,k)$. 
 Phase 1 of Basic vectorization will add raise dimension operation at the beginning of the function to lift these arrays, 
 and raise dimension may \emph{reshape} arrays. If there are multiple "views" of the input array, there would be multiple raise dimension statements to create
 each one of these views. The invariant is that at reads in loops, the reads of "views" of the original input array are canonical.
 Only raise dimension applies to these arrays, and only in the beginning of the program. For example, 1-dimensional array 
-\texttt{C} is lifted into 2-dimensional array \texttt{N x D} by copying the row \texttt{N} times. 
+\python{C} is lifted into 2-dimensional array {\sf N x D} by copying the row {\sf N} times. 
  
  \item Read-write output arrays: Writes are canonical (by restriction) but reads can be non-canonical. 
  Dependence analysis limits vectorization when non-canonical read access refers to array writes in
@@ -790,7 +1063,7 @@ followed by our vectorization algorithm.
 There are two conceptual versions of $\mathit{raise\_dim}$. One applies on read-only input arrays and reshapes those arrays 
 when necessary to ensure canonical read access in the corresponding loop. The signature of $\mathit{raise\_dim}$
 is as follows. It takes the original array \texttt{C}, the access pattern function $f(i,j,k)$ in loop nest $i,j,k$ and the loop bounds
-\texttt{((i:I),(j:J),(k:K))}: 
+$((i:I),(j:J),(k:K))$: 
 \[ \mathit{raise\_dim}(\texttt{A}, f(i,j,k), \texttt{((i:I),(j:J),(k:K))}) \]
 It produces a new 3-dimensional array \texttt{A'} by iterating over $i,j,k$ and setting each element of  \texttt{A'} as follows:
 \[ \texttt{A'[i,j,k] =  A[f(i,j,k)]} \]
@@ -1583,6 +1856,73 @@ After Phase 2 and Phase 3. The EQ operation is vectorizable across both dimensio
 \section{Related Work}
 \label{sec:related}
 
+\paragraph{MPC languages and compilers.}
+
+Languages and compilers for secure computation have seen significant attention and advances in recent years. The early MPC compilers Fairplay~\cite{CCS:BenNisPin08}, 
+and Sharemind~\cite{ESORICS:BogLauWil08} were followed by PICCO~\cite{CCS:ZhaSteBla13}, Obliv-C~\cite{Zahur:2015}, TinyGarble~\cite{SP:SHSSK15}, 
+Wystiria~\cite{SP:RasHamHic14}, and others. A new generation of MPC compilers 
+includes SPDZ/SCALE-MAMBA/MP-SPDZ~\cite{Keller:2020} and the ABY/HyCC/MOTION~\cite{NDSS:DemSchZoh15,CCS:BDKKS18,Braun:2022} frameworks. 
+These two families are the state-of-the art and
+are actively developed. Another recent development is Viaduct, a functional language and compiler that supports a range of secure computation 
+frameworks, including MPC and ZKP. Hastings et el. present a review of compiler frameworks~\cite{Hastings:2019}.
+
+While each of these languages and compilers brings in new ideas and advances, none addresses the problem of ``circuit independent'' intermediate 
+representation and optimization. We envision a classical compiler structure: (1) a Wysteria, Viaduct, Obliv-C, or IMP Source front end, including rich type systems and 
+AST-level semantic analysis, compile into the MPC Source IR, (2) MPC Source-level optimizations take place, followed by (3) back-end compilers into circuits. 
+Our focus is at the intermediate level.
+
+%{\begin{center}
+%\includegraphics[width=0.5\linewidth]{figs/focus.png}
+%\end{center}
+%}
+
+Many works focus on the implementation of MPC protocols exposing an API to the programmer. For example, the ABY/MOTION line of 
+compiler frameworks provides a library of MPC primitives; the programmer writes MPC programs in C++ on top of the library. These back ends implement 
+different protocols and allow for mixing, but notably, they leave it to the programer to assign different protocols to different parts of the 
+computation and perform share conversion accordingly. In addition, MOTION provides SIMD primitives, which allows for efficient execution 
+of MPC operations, but again, using SIMD primitives is the responsibility of the programer. There is interest in frameworks for automatic mixing, 
+e.g., \cite{CCS:BDKKS18,Ishaq:2019,Fang:2022}.
+
+Other works, e.g., Obliv-C~\cite{Zahur:2015}, Wystiria~\cite{SP:RasHamHic14} and Viaduct~\cite{Acay:2021} focus on higher-level language design, particularly information-flow systems that 
+restrict flow between secure and insecure parts of the program. 
+%Key ideas such as ${\sf insecure} <: {\sf secure}$ qualifier systems are similar to the ideas we 
+%present in~\Secref{sec:interprocedural} and~\Secref{sec:zkp} and we intend to draw on these work. While we will design a high-level language expanding our 
+%intraprocedural IMP-MPC syntax and semantics into the \emph{interprocedural} case, our interest and focus lie primarily in the ``machine-independent'' optimizations 
+%thrust of the proposal. 
+
+%There is significant development in ZKP languages as well. ~\ana{Alex Ozdemir's talk, ZoKrates, Cairo, others} Our work focuses on ZKP via MPC and our key idea
+%is the separation of the higher-level ``backend-independent'' compilation and optimization and the lower-level compilation into circuits.  
+
+\paragraph{Classical HPC compilers.}
+Automatic vectorization is a longstanding problem in high-performance computing (HPC). 
+There are thousands of works in this area reflecting over 40 years of research. We presented a vectorization
+algorithm for MPC Source, essentially extending classical loop vectorization \cite{Allen:1987}. In HPC vectorization, conditional control flow 
+presents a challenge --- one cannot estimate the cost of a schedule or vectorize branches in a straightforward manner --- in contrast to 
+MPC Source vectorization. 
+We view Karrenberg's work on Whole function vectorization~\cite{Karrenberg:2015} as most closely related to ours --- it linearizes the program and vectorizes 
+both branches of a conditional applying masking to avoid execution of the branch-not-taken code, and selection (similar to MUX) to select the correct value based on the 
+result of the condition at runtime. 
+The problem is that masking and selection, or more generally, handling control predicates~\cite{Benabderrahmane:2010,Karrenberg:2015}, 
+can lead to \emph{slowdown}. 
+%As a result, vectorizing compilers and polyhedral compilers tend to focus on straight-line code due to the unpredictable 
+%overhead conditionals may introduce. \ana{add Louis noel pochet's benchmarks. citation on vectorizing compilers???}
+
+We argue that vectorization over linear MPC Source is a different problem, one that warrants a new look, while drawing from 
+results in HPC.
+Since both branches of the conditional and the multiplexer \emph{always} execute, not only can we apply aggressive vectorization on linear code, but (perhaps more importantly) 
+we can also build analytical models that accurately predict execution time. These models in turn would drive optimizations such as vectorization, protocol mixing, and others. 
+Vectorization meshes in with those additional optimizations in non-trivial ways.
+
+Furthermore, extensions of classical loop vectorization with array writes, arbitrary indexing, including non-affine indexing, and interaction with SSA are non-trivial 
+and present novel challenges and opportunities for contribution. Polyhedral parallelization~\cite{Benabderrahmane:2010} considers a higher-level source (typically AST) 
+representation, while our work takes advantage of linear MPC Source and SSA form. The work by Karrenberg~\cite{Karrenberg:2015} is rare in that space, in the sense that it considers 
+vectorization over SSA form, which has similarities to MPC Source. We consider different array representation, notion of dependence, and reasoning 
+about dependence, which we conjecture is more suitable for MPC Source. Buscher~\cite{Buscher:2018} considers SIMD-vectorization 
+at the level of source code, which then combines with circuit-level optimizations in the TinyGarble compiler. 
+He proposes using an off-the-shelf polyhedral compiler, however, application is limited to only two routines, 
+essentially just inner product and euclidian distance; it is unclear how effective the off-the-shelf compiler is. 
+In contrast, we consider vectorization at the level of MPC Source separating ``backend-independent'' vectorization
+and circuit-level amortization (done by MOTION). We apply our compiler on a wide range of routines.
 
 %\section{Future Work}
 %\label{sec:implementation_and_benchmarks}

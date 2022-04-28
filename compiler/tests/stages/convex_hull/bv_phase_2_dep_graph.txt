@@ -4,25 +4,30 @@ Nodes:
     parameter N!0
     parameter result_X!0
     parameter result_Y!0
-    is_hull!2 = True
-    !15!0{N!0, N!0}[] = lift(is_hull!2, (i!1:N!0, j!1:N!0))
-    !16!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
-    p2_X!3{N!0, N!0}[] = !16!0{N!0, N!0}[]
-    !17!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
-    p2_Y!3{N!0, N!0}[] = !17!0{N!0, N!0}[]
-    is_hull!4 = False
+    !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))
+    !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
+    !13!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
     !14!0{N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))
+    is_hull!2 = True
+    !16!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
+    !17!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
+    is_hull!4 = False
+    val_X!2{N!0}[] = !11!0{N!0}[]
+    val_Y!2{N!0}[] = !12!0{N!0}[]
+    p1_X!2{N!0}[] = !13!0{N!0}[]
     p1_Y!2{N!0}[] = !14!0{N!0}[]
+    !15!0{N!0, N!0}[] = lift(is_hull!2, (i!1:N!0, j!1:N!0))
+    p2_X!3{N!0, N!0}[] = !16!0{N!0, N!0}[]
+    p2_Y!3{N!0, N!0}[] = !17!0{N!0, N!0}[]
+    !1!2{N!0}[] = (p1_X!2{N!0}[] <= 0)
+    !18!0{N!0, N!0}[] = lift(p1_X!2{N!0}[], (i!1:N!0, j!1:N!0))
+    val_X!3{N!0}[] = p1_X!2{N!0}[]
     !2!2{N!0}[] = (p1_Y!2{N!0}[] >= 0)
     !19!0{N!0, N!0}[] = lift(p1_Y!2{N!0}[], (i!1:N!0, j!1:N!0))
-    !7!3{N!0, N!0}[] = (!19!0{N!0, N!0}[] >= p2_Y!3{N!0, N!0}[])
     val_Y!3{N!0}[] = p1_Y!2{N!0}[]
-    !13!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
-    p1_X!2{N!0}[] = !13!0{N!0}[]
-    !1!2{N!0}[] = (p1_X!2{N!0}[] <= 0)
-    !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
-    !18!0{N!0, N!0}[] = lift(p1_X!2{N!0}[], (i!1:N!0, j!1:N!0))
     !6!3{N!0, N!0}[] = (!18!0{N!0, N!0}[] <= p2_X!3{N!0, N!0}[])
+    !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
+    !7!3{N!0, N!0}[] = (!19!0{N!0, N!0}[] >= p2_Y!3{N!0, N!0}[])
     !8!3{N!0, N!0}[] = (!6!3{N!0, N!0}[] or !7!3{N!0, N!0}[])
     !9!3{N!0, N!0}[] = not !8!3{N!0, N!0}[]
     for !21!0 in range(0, N!0): (monolithic)
@@ -32,59 +37,61 @@ Nodes:
     is_hull!5{N!0}[!21!0] = MUX(!9!3{N!0}[!21!0], is_hull!4, is_hull!3{N!0}[!21!0])
     !20!0{N!0}[] = drop_dim(is_hull!5{N!0, N!0}[])
     is_hull!6{N!0}[] = MUX(!3!2{N!0}[], !20!0{N!0}[], is_hull!2)
-    val_X!3{N!0}[] = p1_X!2{N!0}[]
-    !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
-    val_Y!2{N!0}[] = !12!0{N!0}[]
-    val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
-    result_Y!2{N!0}[] = VectorizedUpdate(!12!0{N!0}[], [I!1], val_Y!4{N!0}[])
-    !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))
-    val_X!2{N!0}[] = !11!0{N!0}[]
     val_X!4{N!0}[] = MUX(is_hull!6{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
+    val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
     result_X!2{N!0}[] = VectorizedUpdate(!11!0{N!0}[], [I!1], val_X!4{N!0}[])
+    result_Y!2{N!0}[] = VectorizedUpdate(!12!0{N!0}[], [I!1], val_Y!4{N!0}[])
     !10!1 = (result_X!2, result_Y!2)
     return !10!1
 Forward edges:
     parameter X_coords!0  →  parameter X_coords!0
-    parameter X_coords!0  →  !16!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
     parameter X_coords!0  →  !13!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
+    parameter X_coords!0  →  !16!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))
     parameter Y_coords!0  →  parameter Y_coords!0
-    parameter Y_coords!0  →  !17!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
     parameter Y_coords!0  →  !14!0{N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))
+    parameter Y_coords!0  →  !17!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))
     parameter N!0  →  parameter N!0
     parameter result_X!0  →  parameter result_X!0
     parameter result_X!0  →  !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))
     parameter result_Y!0  →  parameter result_Y!0
     parameter result_Y!0  →  !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
+    !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))  →  val_X!2{N!0}[] = !11!0{N!0}[]
+    !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))  →  result_X!2{N!0}[] = VectorizedUpdate(!11!0{N!0}[], [I!1], val_X!4{N!0}[])
+    !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))  →  val_Y!2{N!0}[] = !12!0{N!0}[]
+    !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))  →  result_Y!2{N!0}[] = VectorizedUpdate(!12!0{N!0}[], [I!1], val_Y!4{N!0}[])
+    !13!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))  →  p1_X!2{N!0}[] = !13!0{N!0}[]
+    !14!0{N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))  →  p1_Y!2{N!0}[] = !14!0{N!0}[]
     is_hull!2 = True  →  !15!0{N!0, N!0}[] = lift(is_hull!2, (i!1:N!0, j!1:N!0))
     is_hull!2 = True  →  is_hull!6{N!0}[] = MUX(!3!2{N!0}[], !20!0{N!0}[], is_hull!2)
-    !15!0{N!0, N!0}[] = lift(is_hull!2, (i!1:N!0, j!1:N!0))  →  for !21!0 in range(0, N!0): (monolithic)
-    is_hull!3{N!0}[!21!0] = Φ(!15!0{N!0}[!21!0], is_hull!5{N!0}[(!21!0 - 1)])
-    is_hull!5{N!0}[!21!0] = MUX(!9!3{N!0}[!21!0], is_hull!4, is_hull!3{N!0}[!21!0])
-    !15!0{N!0, N!0}[] = lift(is_hull!2, (i!1:N!0, j!1:N!0))  →  is_hull!3{N!0}[!21!0] = Φ(!15!0{N!0}[!21!0], is_hull!5{N!0}[(!21!0 - 1)])
     !16!0{N!0, N!0}[] = lift(X_coords!0[j!1], (i!1:N!0, j!1:N!0))  →  p2_X!3{N!0, N!0}[] = !16!0{N!0, N!0}[]
-    p2_X!3{N!0, N!0}[] = !16!0{N!0, N!0}[]  →  !6!3{N!0, N!0}[] = (!18!0{N!0, N!0}[] <= p2_X!3{N!0, N!0}[])
     !17!0{N!0, N!0}[] = lift(Y_coords!0[j!1], (i!1:N!0, j!1:N!0))  →  p2_Y!3{N!0, N!0}[] = !17!0{N!0, N!0}[]
-    p2_Y!3{N!0, N!0}[] = !17!0{N!0, N!0}[]  →  !7!3{N!0, N!0}[] = (!19!0{N!0, N!0}[] >= p2_Y!3{N!0, N!0}[])
     is_hull!4 = False  →  for !21!0 in range(0, N!0): (monolithic)
     is_hull!3{N!0}[!21!0] = Φ(!15!0{N!0}[!21!0], is_hull!5{N!0}[(!21!0 - 1)])
     is_hull!5{N!0}[!21!0] = MUX(!9!3{N!0}[!21!0], is_hull!4, is_hull!3{N!0}[!21!0])
     is_hull!4 = False  →  is_hull!5{N!0}[!21!0] = MUX(!9!3{N!0}[!21!0], is_hull!4, is_hull!3{N!0}[!21!0])
-    !14!0{N!0}[] = lift(Y_coords!0[i!1], (i!1:N!0))  →  p1_Y!2{N!0}[] = !14!0{N!0}[]
-    p1_Y!2{N!0}[] = !14!0{N!0}[]  →  !2!2{N!0}[] = (p1_Y!2{N!0}[] >= 0)
-    p1_Y!2{N!0}[] = !14!0{N!0}[]  →  !19!0{N!0, N!0}[] = lift(p1_Y!2{N!0}[], (i!1:N!0, j!1:N!0))
-    p1_Y!2{N!0}[] = !14!0{N!0}[]  →  val_Y!3{N!0}[] = p1_Y!2{N!0}[]
-    !2!2{N!0}[] = (p1_Y!2{N!0}[] >= 0)  →  !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
-    !19!0{N!0, N!0}[] = lift(p1_Y!2{N!0}[], (i!1:N!0, j!1:N!0))  →  !7!3{N!0, N!0}[] = (!19!0{N!0, N!0}[] >= p2_Y!3{N!0, N!0}[])
-    !7!3{N!0, N!0}[] = (!19!0{N!0, N!0}[] >= p2_Y!3{N!0, N!0}[])  →  !8!3{N!0, N!0}[] = (!6!3{N!0, N!0}[] or !7!3{N!0, N!0}[])
-    val_Y!3{N!0}[] = p1_Y!2{N!0}[]  →  val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
-    !13!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))  →  p1_X!2{N!0}[] = !13!0{N!0}[]
+    val_X!2{N!0}[] = !11!0{N!0}[]  →  val_X!4{N!0}[] = MUX(is_hull!6{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
+    val_Y!2{N!0}[] = !12!0{N!0}[]  →  val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
     p1_X!2{N!0}[] = !13!0{N!0}[]  →  !1!2{N!0}[] = (p1_X!2{N!0}[] <= 0)
     p1_X!2{N!0}[] = !13!0{N!0}[]  →  !18!0{N!0, N!0}[] = lift(p1_X!2{N!0}[], (i!1:N!0, j!1:N!0))
     p1_X!2{N!0}[] = !13!0{N!0}[]  →  val_X!3{N!0}[] = p1_X!2{N!0}[]
+    p1_Y!2{N!0}[] = !14!0{N!0}[]  →  !2!2{N!0}[] = (p1_Y!2{N!0}[] >= 0)
+    p1_Y!2{N!0}[] = !14!0{N!0}[]  →  !19!0{N!0, N!0}[] = lift(p1_Y!2{N!0}[], (i!1:N!0, j!1:N!0))
+    p1_Y!2{N!0}[] = !14!0{N!0}[]  →  val_Y!3{N!0}[] = p1_Y!2{N!0}[]
+    !15!0{N!0, N!0}[] = lift(is_hull!2, (i!1:N!0, j!1:N!0))  →  for !21!0 in range(0, N!0): (monolithic)
+    is_hull!3{N!0}[!21!0] = Φ(!15!0{N!0}[!21!0], is_hull!5{N!0}[(!21!0 - 1)])
+    is_hull!5{N!0}[!21!0] = MUX(!9!3{N!0}[!21!0], is_hull!4, is_hull!3{N!0}[!21!0])
+    !15!0{N!0, N!0}[] = lift(is_hull!2, (i!1:N!0, j!1:N!0))  →  is_hull!3{N!0}[!21!0] = Φ(!15!0{N!0}[!21!0], is_hull!5{N!0}[(!21!0 - 1)])
+    p2_X!3{N!0, N!0}[] = !16!0{N!0, N!0}[]  →  !6!3{N!0, N!0}[] = (!18!0{N!0, N!0}[] <= p2_X!3{N!0, N!0}[])
+    p2_Y!3{N!0, N!0}[] = !17!0{N!0, N!0}[]  →  !7!3{N!0, N!0}[] = (!19!0{N!0, N!0}[] >= p2_Y!3{N!0, N!0}[])
     !1!2{N!0}[] = (p1_X!2{N!0}[] <= 0)  →  !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
-    !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])  →  is_hull!6{N!0}[] = MUX(!3!2{N!0}[], !20!0{N!0}[], is_hull!2)
     !18!0{N!0, N!0}[] = lift(p1_X!2{N!0}[], (i!1:N!0, j!1:N!0))  →  !6!3{N!0, N!0}[] = (!18!0{N!0, N!0}[] <= p2_X!3{N!0, N!0}[])
+    val_X!3{N!0}[] = p1_X!2{N!0}[]  →  val_X!4{N!0}[] = MUX(is_hull!6{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
+    !2!2{N!0}[] = (p1_Y!2{N!0}[] >= 0)  →  !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])
+    !19!0{N!0, N!0}[] = lift(p1_Y!2{N!0}[], (i!1:N!0, j!1:N!0))  →  !7!3{N!0, N!0}[] = (!19!0{N!0, N!0}[] >= p2_Y!3{N!0, N!0}[])
+    val_Y!3{N!0}[] = p1_Y!2{N!0}[]  →  val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
     !6!3{N!0, N!0}[] = (!18!0{N!0, N!0}[] <= p2_X!3{N!0, N!0}[])  →  !8!3{N!0, N!0}[] = (!6!3{N!0, N!0}[] or !7!3{N!0, N!0}[])
+    !3!2{N!0}[] = (!1!2{N!0}[] and !2!2{N!0}[])  →  is_hull!6{N!0}[] = MUX(!3!2{N!0}[], !20!0{N!0}[], is_hull!2)
+    !7!3{N!0, N!0}[] = (!19!0{N!0, N!0}[] >= p2_Y!3{N!0, N!0}[])  →  !8!3{N!0, N!0}[] = (!6!3{N!0, N!0}[] or !7!3{N!0, N!0}[])
     !8!3{N!0, N!0}[] = (!6!3{N!0, N!0}[] or !7!3{N!0, N!0}[])  →  !9!3{N!0, N!0}[] = not !8!3{N!0, N!0}[]
     !9!3{N!0, N!0}[] = not !8!3{N!0, N!0}[]  →  for !21!0 in range(0, N!0): (monolithic)
     is_hull!3{N!0}[!21!0] = Φ(!15!0{N!0}[!21!0], is_hull!5{N!0}[(!21!0 - 1)])
@@ -107,19 +114,12 @@ Forward edges:
     is_hull!5{N!0}[!21!0] = MUX(!9!3{N!0}[!21!0], is_hull!4, is_hull!3{N!0}[!21!0])
     is_hull!5{N!0}[!21!0] = MUX(!9!3{N!0}[!21!0], is_hull!4, is_hull!3{N!0}[!21!0])  →  !20!0{N!0}[] = drop_dim(is_hull!5{N!0, N!0}[])
     !20!0{N!0}[] = drop_dim(is_hull!5{N!0, N!0}[])  →  is_hull!6{N!0}[] = MUX(!3!2{N!0}[], !20!0{N!0}[], is_hull!2)
-    is_hull!6{N!0}[] = MUX(!3!2{N!0}[], !20!0{N!0}[], is_hull!2)  →  val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
     is_hull!6{N!0}[] = MUX(!3!2{N!0}[], !20!0{N!0}[], is_hull!2)  →  val_X!4{N!0}[] = MUX(is_hull!6{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
-    val_X!3{N!0}[] = p1_X!2{N!0}[]  →  val_X!4{N!0}[] = MUX(is_hull!6{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
-    !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))  →  val_Y!2{N!0}[] = !12!0{N!0}[]
-    !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))  →  result_Y!2{N!0}[] = VectorizedUpdate(!12!0{N!0}[], [I!1], val_Y!4{N!0}[])
-    val_Y!2{N!0}[] = !12!0{N!0}[]  →  val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
-    val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])  →  result_Y!2{N!0}[] = VectorizedUpdate(!12!0{N!0}[], [I!1], val_Y!4{N!0}[])
-    result_Y!2{N!0}[] = VectorizedUpdate(!12!0{N!0}[], [I!1], val_Y!4{N!0}[])  →  !10!1 = (result_X!2, result_Y!2)
-    !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))  →  val_X!2{N!0}[] = !11!0{N!0}[]
-    !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))  →  result_X!2{N!0}[] = VectorizedUpdate(!11!0{N!0}[], [I!1], val_X!4{N!0}[])
-    val_X!2{N!0}[] = !11!0{N!0}[]  →  val_X!4{N!0}[] = MUX(is_hull!6{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])
+    is_hull!6{N!0}[] = MUX(!3!2{N!0}[], !20!0{N!0}[], is_hull!2)  →  val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])
     val_X!4{N!0}[] = MUX(is_hull!6{N!0}[], val_X!3{N!0}[], val_X!2{N!0}[])  →  result_X!2{N!0}[] = VectorizedUpdate(!11!0{N!0}[], [I!1], val_X!4{N!0}[])
+    val_Y!4{N!0}[] = MUX(is_hull!6{N!0}[], val_Y!3{N!0}[], val_Y!2{N!0}[])  →  result_Y!2{N!0}[] = VectorizedUpdate(!12!0{N!0}[], [I!1], val_Y!4{N!0}[])
     result_X!2{N!0}[] = VectorizedUpdate(!11!0{N!0}[], [I!1], val_X!4{N!0}[])  →  !10!1 = (result_X!2, result_Y!2)
+    result_Y!2{N!0}[] = VectorizedUpdate(!12!0{N!0}[], [I!1], val_Y!4{N!0}[])  →  !10!1 = (result_X!2, result_Y!2)
     !10!1 = (result_X!2, result_Y!2)  →  return !10!1
 Back edges:
     is_hull!5{N!0}[!21!0] = MUX(!9!3{N!0}[!21!0], is_hull!4, is_hull!3{N!0}[!21!0])  →  is_hull!3{N!0}[!21!0] = Φ(!15!0{N!0}[!21!0], is_hull!5{N!0}[(!21!0 - 1)])

@@ -29,8 +29,6 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
 
     // Plaintext variable declarations
     std::uint32_t _MPC_PLAINTEXT__10_0;
-    std::vector<std::uint32_t> _MPC_PLAINTEXT__4_0((_MPC_PLAINTEXT_N_0 + 1));
-    std::vector<std::uint32_t> _MPC_PLAINTEXT__5_0((_MPC_PLAINTEXT_N_0 + 1));
     std::uint32_t _MPC_PLAINTEXT__9_0;
     std::uint32_t _MPC_PLAINTEXT_current_dist_1;
     std::uint32_t _MPC_PLAINTEXT_current_dist_4;
@@ -62,7 +60,6 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     // Initialize phi values
     current_dist_2[_MPC_PLAINTEXT__9_0] = _5_0[_MPC_PLAINTEXT__9_0];
     for (; _MPC_PLAINTEXT__9_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__9_0++) {
-        _9_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__9_0), 0);
         // Update phi values
         if (_MPC_PLAINTEXT__9_0 != std::uint32_t(0)) {
             current_dist_2[_MPC_PLAINTEXT__9_0] = current_dist_5[(_MPC_PLAINTEXT__9_0 - std::uint32_t(1))];
@@ -80,7 +77,6 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     // Initialize phi values
     max_dist_2[_MPC_PLAINTEXT__10_0] = _4_0[_MPC_PLAINTEXT__10_0];
     for (; _MPC_PLAINTEXT__10_0 < _MPC_PLAINTEXT_N_0; _MPC_PLAINTEXT__10_0++) {
-        _10_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT__10_0), 0);
         // Update phi values
         if (_MPC_PLAINTEXT__10_0 != std::uint32_t(0)) {
             max_dist_2[_MPC_PLAINTEXT__10_0] = max_dist_4[(_MPC_PLAINTEXT__10_0 - std::uint32_t(1))];
