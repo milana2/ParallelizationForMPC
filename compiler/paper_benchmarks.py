@@ -709,7 +709,7 @@ def run_client_role(address):
             outputs = [];
             for protocol in [GMW_PROTOCOL, BMR_PROTOCOL]:
                 for vectorized in [False, True]:
-                    if i > non_vec_up_to:
+                    if i > non_vec_up_to and vectorized is False:
                         pair = (None, None)
                         outputs.append(pair)
                         continue
