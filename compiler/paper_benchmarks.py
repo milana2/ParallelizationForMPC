@@ -9,13 +9,22 @@ import logging
 import logging.handlers
 import random
 import json
+import socket
 
 import compiler
 
 from tests import context as test_context
-from tests.benchmark import run_benchmark
+from tests.benchmark import run_benchmark, compile_benchmark, run_benchmark_for_party, BenchmarkOutput
 
-from utils import json_serialize, json_deserialize, StatsForInputConfig, StatsForTask
+from utils import json_serialize, json_deserialize, StatsForInputConfig, StatsForTask, RunBenchmarkReq
+from utils import GetAddressReq, GetAddressResp
+from utils import read_message, write_message
+
+SERVER_PORT = 42142
+CONNECTION_TIMEOUT = 3000
+MPC_PARTY_SERVER_ID = "0"
+MPC_PARTY_CLIENT_ID = "1"
+NUM_ITERS = 5
 
 GMW_PROTOCOL = "BooleanGmw"
 BMR_PROTOCOL = "Bmr"
@@ -68,7 +77,7 @@ def get_rand_ints(n, min=1, max=100):
 def get_biometric_inputs() -> tuple[list[InputArgs], int]:
     all_args = []
     non_vec_up_to = 6 # Only run non-vectorized benchmark upto this index
-    for config in [[4, 4], [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 2048], [4, 4096]]:
+    for config in [[4, 4]]:#, [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 2048], [4, 4096]]:
         D = config[0]
         N = config[1]
         args = [
@@ -396,36 +405,36 @@ def get_psi_inputs()-> tuple[list[InputArgs], int]:
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
     if name == "biometric" or name == "biometric_fast":
         return get_biometric_inputs()
-    if name == "chapterfour_figure_12": # millionaire's problem, not interesting
-        return get_chapterfour_figure_12_inputs()
-    if name == "convex_hull" or name == "minimal_points":
-        return get_convex_hull_inputs()
-    if name == "count_102" or name == "longest_102":
-        return get_count_102_inputs()
-    if name == "count_10s":
-        return get_count_10s_inputs()
-    if name == "count_123":
-        return get_count_123_inputs()
-    if name == "cryptonets_max_pooling":
-        return get_cryptonets_max_pooling_inputs()
-    if name == "db_cross_join_trivial": # could only do up to 64
-        return get_db_cross_join_trivial_inputs()
-    if name == "db_variance":
-        return get_db_variance_inputs()
-    if name == "histogram":
-        return get_histogram_inputs()
-    if name == "inner_product":
-        return get_inner_product_inputs()
-    if name == "kmeans_iteration":
-        return get_kmeans_iteration_inputs()
-    if name == "longest_odd_10": # could not run for 4096
-        return get_longest_odd_10_inputs()
-    if name == "max_dist_between_syms" or name == "max_sum_between_syms":
-        return get_max_dist_between_syms_inputs()
-    if name == "mnist_relu":
-        return get_mnist_relu_inputs()
-    if name == "psi": # could not run from 2048 and 4096
-        return get_psi_inputs()
+    # if name == "chapterfour_figure_12": # millionaire's problem, not interesting
+    #     return get_chapterfour_figure_12_inputs()
+    # if name == "convex_hull" or name == "minimal_points":
+    #     return get_convex_hull_inputs()
+    # if name == "count_102" or name == "longest_102":
+    #     return get_count_102_inputs()
+    # if name == "count_10s":
+    #     return get_count_10s_inputs()
+    # if name == "count_123":
+    #     return get_count_123_inputs()
+    # if name == "cryptonets_max_pooling":
+    #     return get_cryptonets_max_pooling_inputs()
+    # if name == "db_cross_join_trivial": # could only do up to 64
+    #     return get_db_cross_join_trivial_inputs()
+    # if name == "db_variance":
+    #     return get_db_variance_inputs()
+    # if name == "histogram":
+    #     return get_histogram_inputs()
+    # if name == "inner_product":
+    #     return get_inner_product_inputs()
+    # if name == "kmeans_iteration":
+    #     return get_kmeans_iteration_inputs()
+    # if name == "longest_odd_10": # could not run for 4096
+    #     return get_longest_odd_10_inputs()
+    # if name == "max_dist_between_syms" or name == "max_sum_between_syms":
+    #     return get_max_dist_between_syms_inputs()
+    # if name == "mnist_relu":
+    #     return get_mnist_relu_inputs()
+    # if name == "psi": # could not run from 2048 and 4096
+    #     return get_psi_inputs()
     return [[], 0]
 
 
@@ -500,8 +509,6 @@ def run_paper_benchmarks():
             continue;
 
         task_stats = StatsForTask(test_case_dir.name, [])
-        input_fname = os.path.join(test_case_dir.path, "input.py")
-
         compile = True
         i = 0
         non_vec_failed = False
@@ -572,6 +579,158 @@ def run_paper_benchmarks():
             else:
                 input_stats = StatsForInputConfig(args.label, gmw_p0, gmw_p1, gmw_vec_p0, gmw_vec_p1,
                     bmr_p0, bmr_p1, bmr_vec_p0, bmr_vec_p1)
+                task_stats.input_configs.append(input_stats)
+                log.info("task {} input config {} DONE".format(task_stats.label, input_stats.label))
+
+                file_path = os.path.join(FILE_DIR, "{}.json".format(task_stats.label))
+                with open(file_path, "w", encoding='utf-8') as f:
+                    json_str = json_serialize(task_stats)
+                    f.write(json_str)
+            
+            i += 1
+
+        all_stats.append(task_stats)
+        log.info("task {} DONE".format(task_stats.label))
+    print_benchmark_data(all_stats)
+
+def compile_all_benchmarks():
+    for test_case_dir in os.scandir(test_context.STAGES_DIR):
+        if test_case_dir.name in test_context.SKIPPED_TESTS:
+                continue
+        all_args, non_vec_up_to = get_inputs(test_case_dir.name)
+        if len(all_args) == 0:
+            continue
+        log.info("Compiling {} ...".format(test_case_dir.name))        
+        compile_benchmark(test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, False)
+        compile_benchmark(test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True)
+        compile_benchmark(test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, False)
+        compile_benchmark(test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, True)
+
+def run_server_role(address):
+    # log.info("Compiling All benchmarks")
+    # compile_all_benchmarks()
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind((address, int(SERVER_PORT)))
+    s.listen()
+    log.info("Server started at address {} port {}".format(address, SERVER_PORT))
+    while True:
+        conn, addr = s.accept()
+        conn.settimeout(CONNECTION_TIMEOUT)
+        while True:
+            msg = read_message(conn)
+            if not msg:
+                log.error("Unable to read message from the client.")
+                conn.close()
+                break
+
+            if isinstance(msg, GetAddressReq):
+                log.info("Message is to get address")
+                resp = GetAddressResp(addr)
+                log.info("address is {}".format(addr))
+                write_message(conn, resp)
+            elif isinstance(msg, RunBenchmarkReq):
+                log.info("Request to run: {} {} {}".format(msg.benchmark_name, msg.protocol, msg.vectorized))
+                for dir in os.scandir(test_context.STAGES_DIR):
+                    if dir.name == msg.benchmark_name:
+                        test_case_dir = dir;
+                        break
+                log.info("path is {}".format(test_case_dir.path))
+                resp = run_benchmark_for_party(
+                        MPC_PARTY_SERVER_ID, msg.party0_mpc_addr, msg.party1_mpc_addr, test_case_dir.name,
+                        test_case_dir.path, msg.protocol, msg.vectorized, None, msg.cmd_args
+                    )
+                write_message(conn, resp)
+
+def run_client_role(address):
+    # log.info("Compiling All benchmarks")
+    # compile_all_benchmarks()
+    log.info("Client started, will connect to server at address {} port {}".format(address, SERVER_PORT))
+    server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_sock.connect((address, SERVER_PORT))
+    server_sock.settimeout(CONNECTION_TIMEOUT)
+    write_message(server_sock, GetAddressReq())
+    msg = read_message(server_sock)
+    my_ip = msg.client_address[0]
+    # my_ip = '127.0.0.1'
+    mpc_party_server = "0,{},23000".format(address)
+    mpc_party_client = "1,{},23001".format(my_ip)
+    
+    all_stats = []
+    for test_case_dir in os.scandir(test_context.STAGES_DIR):
+        if test_case_dir.name in test_context.SKIPPED_TESTS:
+                continue
+
+        all_args, non_vec_up_to = get_inputs(test_case_dir.name)
+        if len(all_args) == 0:
+            continue;
+
+        task_stats = StatsForTask(test_case_dir.name, [])
+
+        i = 0
+        for args in all_args:
+            log.info("\n{} - arguments: {}".format(test_case_dir.name, args.args));
+
+            outputs = [];
+            for protocol in [GMW_PROTOCOL, BMR_PROTOCOL]:
+                for vectorized in [False, True]:
+                    if i > non_vec_up_to:
+                        pair = (None, None)
+                        outputs.append(pair)
+                        continue
+
+                    accum_p0 = accum_p1 = None
+                    for j in range(NUM_ITERS):
+                        log.info("Running Iteration {} {} {} {} {}".format(j+1, test_case_dir.name, protocol,
+                            ("vec" if vectorized else "non-vec"), args.label)); 
+                        request = RunBenchmarkReq(
+                            party0_mpc_addr=mpc_party_server,
+                            party1_mpc_addr=mpc_party_client,
+                            cmd_args=args.args,
+                            benchmark_name=test_case_dir.name,
+                            protocol=GMW_PROTOCOL,
+                            vectorized=False
+                            )
+
+                        write_message(server_sock, request)          
+                        p1 = run_benchmark_for_party(
+                            MPC_PARTY_CLIENT_ID, mpc_party_server, mpc_party_client, test_case_dir.name, 
+                            test_case_dir.path, GMW_PROTOCOL, False, None, args.args
+                        )
+
+                        p0 = read_message(server_sock)
+
+                        if p0 is None or p1 is None:
+                            log.error("Run Failed! p0 is None: {} - p1 is None: {}".format(p0 is None, p1 is None))
+                            exit()
+
+                        log.info("Output {}".format(p0.output.strip()))
+                        assert p0.output.strip() == p1.output.strip(), \
+                            (p0.output.strip(), p1.output.strip())
+
+                        if accum_p0 is None:
+                            accum_p0 = p0
+                            accum_p1 = p1
+                        else:
+                            accum_p0 = BenchmarkOutput.sum(accum_p0, p0)
+                            accum_p1 = BenchmarkOutput.sum(accum_p1, p1)
+
+                    accum_p0 = BenchmarkOutput.div(accum_p0, NUM_ITERS)
+                    accum_p1 = BenchmarkOutput.div(accum_p1, NUM_ITERS)
+
+                    pair = (accum_p0, accum_p1)
+                    outputs.append(pair)
+
+            gmw = outputs[0]
+            gmw_vec = outputs[1]
+            bmr = outputs[2]
+            bmr_vec = outputs[3]
+
+            if gmw[0] is None and gmw_vec[0] is None and bmr[0] is None and bmr_vec[0] is None:
+                log.warning("{}, {} No version ran on this iteration.".format(test_case_dir.name, 
+                    args.label))
+            else:
+                input_stats = StatsForInputConfig(args.label, gmw[0], gmw[1], gmw_vec[0], gmw_vec[1],
+                    bmr[0], bmr[1], bmr_vec[0], bmr_vec[1])
                 task_stats.input_configs.append(input_stats)
                 log.info("task {} input config {} DONE".format(task_stats.label, input_stats.label))
 
@@ -883,6 +1042,16 @@ def generate_graphs(lan, wan):
 if __name__ == "__main__":
     parser = ArgumentParser(
         description="runs and collects benchmarks statistics for the paper. (assumes correct network config)")
+    parser.add_argument('-r', '--role', nargs='?', 
+        help="choices for role 's' for Server, 'c' for client, 'b' for both (default=b)", 
+        choices=['s','c','b'],
+        default='b'
+    )
+    parser.add_argument('-a', '--address', nargs='?', 
+        help="server address, only needed if not running both roles", 
+        default="127.0.0.1",
+    )
+
     parser.add_argument('-g', "--graphs",
         action="store_true",
         help="generates graphs from benchmarks",
@@ -896,10 +1065,21 @@ if __name__ == "__main__":
         help="only used when generating graphs, uses WAN data", 
     )
 
+    parser.add_argument('-c', '--compile', 
+        action="store_true",
+        help="compile all benchmarks", 
+    )
+
     args = parser.parse_args()
 
     if args.graphs:
         generate_graphs(args.lan, args.wan)
+    elif args.compile:
+        compile_all_benchmarks()
     else:
-        run_paper_benchmarks()
-
+        if args.role == 'b':
+            run_paper_benchmarks()
+        elif args.role == 's':
+            run_server_role(args.address)
+        else:
+            run_client_role(args.address)

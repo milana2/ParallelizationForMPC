@@ -34,6 +34,28 @@ class TimingDatapoint:
                 'stddev': self.stddev
                 }
 
+    @classmethod
+    def sum(cls, a, b):
+        """
+        In our results, mean is the only statistic that has a value, and we only run 1 
+        iteration, so it is not really a mean, it is just a number. Therefore, it makes
+        sense to perform arithmetic on it like this
+        """
+        return cls(
+            datapoint_name = a.datapoint_name,
+            mean = a.mean + b.mean,
+            median = 0,
+            stddev = 0
+        )
+    @classmethod
+    def div(cls, obj, d):
+        return cls(
+            datapoint_name = obj.datapoint_name,
+            mean = (obj.mean / d),
+            median = 0,
+            stddev = 0
+        )
+
 
 
 def parse_datapoint(line: str) -> TimingDatapoint:
@@ -90,6 +112,23 @@ class CommunicationStatistics:
                 'recv_size': self.recv_size,
                 'recv_num_msgs': self.recv_num_msgs
                 }
+
+    @classmethod
+    def sum(cls, a, b):
+        return cls(
+           send_size = a.send_size + b.send_size,
+           send_num_msgs = a.send_num_msgs + b.send_num_msgs,
+           recv_size = a.recv_size + b.recv_size,
+           recv_num_msgs = a.recv_num_msgs + b.recv_num_msgs
+        )
+    @classmethod
+    def div(cls, obj, d):
+        return cls(
+            send_size = obj.send_size / d,
+            send_num_msgs = obj.send_num_msgs / d,
+            recv_size = obj.recv_size / d,
+            recv_num_msgs = obj.recv_num_msgs / d    
+        )
 
 
 def parse_communication_statistics(
@@ -195,6 +234,50 @@ class TimingStatistics:
                 
                 'communication': self.communication,
                 }
+
+    @classmethod
+    def sum(cls, a, b):
+        return cls(
+           num_iterations = a.num_iterations + b.num_iterations,
+           mt_presetup = TimingDatapoint.sum(a.mt_presetup, b.mt_presetup),
+           mt_setup = TimingDatapoint.sum(a.mt_setup, b.mt_setup),
+           sp_presetup = TimingDatapoint.sum(a.sp_presetup, b.sp_presetup),
+           sp_setup = TimingDatapoint.sum(a.sp_setup, b.sp_setup),
+           sb_presetup = TimingDatapoint.sum(a.sb_presetup, b.sb_presetup),
+           sb_setup = TimingDatapoint.sum(a.sb_setup, b.sb_setup),
+           base_ots = TimingDatapoint.sum(a.base_ots, b.base_ots),
+           ot_extension_setup = TimingDatapoint.sum(a.ot_extension_setup, b.ot_extension_setup),
+
+           preprocess_total = TimingDatapoint.sum(a.preprocess_total, b.preprocess_total),
+           gates_setup = TimingDatapoint.sum(a.gates_setup, b.gates_setup),
+           gates_online = TimingDatapoint.sum(a.gates_online, b.gates_online),
+
+           circuit_evaluation = TimingDatapoint.sum(a.circuit_evaluation, b.circuit_evaluation),
+
+           communication = CommunicationStatistics.sum(a.communication, b.communication)
+        )
+
+    @classmethod
+    def div(cls, obj, d):
+        return cls(
+           num_iterations = obj.num_iterations / d,
+           mt_presetup = TimingDatapoint.div(obj.mt_presetup, d),
+           mt_setup = TimingDatapoint.div(obj.mt_setup, d),
+           sp_presetup = TimingDatapoint.div(obj.sp_presetup, d),
+           sp_setup = TimingDatapoint.div(obj.sp_setup, d),
+           sb_presetup = TimingDatapoint.div(obj.sb_presetup, d),
+           sb_setup = TimingDatapoint.div(obj.sb_setup, d),
+           base_ots = TimingDatapoint.div(obj.base_ots, d),
+           ot_extension_setup = TimingDatapoint.div(obj.ot_extension_setup, d),
+
+           preprocess_total = TimingDatapoint.div(obj.preprocess_total, d),
+           gates_setup = TimingDatapoint.div(obj.gates_setup, d),
+           gates_online = TimingDatapoint.div(obj.gates_online, d),
+
+           circuit_evaluation = TimingDatapoint.div(obj.circuit_evaluation, d),
+
+           communication = CommunicationStatistics.div(obj.communication, d)
+        )
 
 
 def is_thick_boundary(line: str) -> bool:
@@ -323,6 +406,27 @@ class CircuitStatistics:
                 'circuit_gen_time': self.circuit_gen_time,
                 # 'depth': self.depth
                 }
+
+    @classmethod
+    def sum(cls, a, b):
+        return cls(
+           num_gates = a.num_gates + b.num_gates,
+           num_inputs = a.num_inputs + b.num_inputs,
+           num_outputs = a.num_outputs + b.num_outputs,
+           num_simd_gates = a.num_simd_gates + b.num_simd_gates,
+           num_nonsimd_gates = a.num_nonsimd_gates + b.num_nonsimd_gates,
+           circuit_gen_time = a.circuit_gen_time + b.circuit_gen_time
+        )
+    @classmethod
+    def div(cls, obj, d):
+        return cls(
+            num_gates = obj.num_gates / d,
+            num_inputs = obj.num_inputs / d,
+            num_outputs = obj.num_outputs / d,
+            num_simd_gates = obj.num_simd_gates / d,
+            num_nonsimd_gates = obj.num_nonsimd_gates / d,
+            circuit_gen_time = obj.circuit_gen_time / d   
+        )
 
 
 def parse_circuit_data(lines: list[str]) -> CircuitStatistics:
