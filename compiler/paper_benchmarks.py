@@ -90,6 +90,40 @@ def get_biometric_inputs() -> tuple[list[InputArgs], int]:
         args.extend(list(map(str, C)))
         args.append("--S")
         args.extend(list(map(str, S)))
+
+        two_C = [2 * C[i] for i in range(D)]
+        args.append("--two_C")
+        args.extend(list(map(str, two_C)))
+        C_sqr_sum = sum(val * val for val in C)
+        args.append("--C_sqr_sum")
+        args.extend(list(map(str, C_sqr_sum)))
+        S_sqr_sum = [sum(S[i * D + j] * S[i * D + j] for j in range(D)) for i in range(N)]
+        args.append("--S_sqr_sum")
+        args.extend(list(map(str, S_sqr_sum)))
+        differences = [0] * D
+        args.append("--differences")
+        args.extend(list(map(str, differences)))
+
+        label = "D: {}, N: {}".format(D, N)
+        all_args.append(InputArgs(label, args))
+    return (all_args, non_vec_up_to)
+
+def get_biometric_fast_inputs() -> tuple[list[InputArgs], int]:
+    all_args = []
+    non_vec_up_to = 6 # Only run non-vectorized benchmark upto this index
+    for config in [[4, 4]]:#, [4, 8], [4, 16], [4, 32], [4, 64], [4, 128], [4, 256], [4, 512], [4, 1024], [4, 2048], [4, 4096]]:
+        D = config[0]
+        N = config[1]
+        args = [
+        "--D", "{}".format(D),
+        "--N", "{}".format(N),
+        ]
+        C = get_rand_ints(D)
+        S = get_rand_ints(D * N)
+        args.append("--C")
+        args.extend(list(map(str, C)))
+        args.append("--S")
+        args.extend(list(map(str, S)))
         label = "D: {}, N: {}".format(D, N)
         all_args.append(InputArgs(label, args))
     return (all_args, non_vec_up_to)
@@ -403,8 +437,10 @@ def get_psi_inputs()-> tuple[list[InputArgs], int]:
     return (all_args, non_vec_up_to)
 
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
-    if name == "biometric" or name == "biometric_fast":
-        return get_biometric_inputs()
+    # if name == "biometric":
+    #     return get_biometric_inputs()
+    if name == "biometric_fast":
+        return get_biometric_fast_inputs()
     # if name == "chapterfour_figure_12": # millionaire's problem, not interesting
     #     return get_chapterfour_figure_12_inputs()
     # if name == "convex_hull" or name == "minimal_points":
