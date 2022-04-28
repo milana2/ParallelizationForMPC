@@ -1,9 +1,4 @@
 
-\begin{figure*}
-  \includegraphics[width=1.0\linewidth]{figs_paper_SIMD/compiler_framework.png}
-  \caption{Compiler Framework. \ana{Change figure since we are not doing div-and-conquer.}}
-  \label{fig:compiler_framework}
-\end{figure*}
 
 \section{\bf Compiler Framework}
 \label{sec:compiler}
@@ -12,8 +7,21 @@
 
 %We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops.
 
-\figref{fig:compiler_framework} presents an overview of our compiler. This section describes the front-end phases of the compiler
-and Section~\secref{sec:vectorization} describes our vectorization algorithm. \ana{We'll need a section on MOTION code gen too.}
+\begin{figure*}
+  \includegraphics[width=0.9\linewidth]{figs_paper_SIMD/compiler_framework.png}
+  \caption{Compiler Framework. \ana{Change figure since we are not doing div-and-conquer.}}
+  \label{fig:compiler_framework}
+\end{figure*}
+
+\figref{fig:compiler_framework} presents an overview of our compiler. 
+We start the section with a brief description of the top-level syntax and semantic restrictions.
+We proceed to describe several phases of the compiler:~\secref{sec:imp_to_ssa} 
+describes translation from IMP Source to SSA, and~\secref{sec:ssa_to_MPC_Source}
+describes translation form SSA into MPC Source, i.e., the front-end of our compiler. 
+Finally,~\secref{sec:MOTION} describes translation of MPC Source, un-optimized and 
+optimized into MOTION, i.e., this is the back-end of our compiler.
+
+Analysis on MPC Source and vectorization comes in a separate section, Section~\secref{sec:vectorization}. 
 %\ana{Need to state this more precisely.}
 
 \subsection{Syntax and Semantic Restrictions}
@@ -45,7 +53,7 @@ Source syntax is essentially standard IMP syntax as shown below:
 %\end{figure}
 
 The syntax allows for array accesses, arbitrarily nested loops, and if-then-else control flow.
-Expressions are typed $q \; \tau$, where qualifier $q$ and base type $\tau$ are:
+Expressions are typed $\langle q \; \tau\rangle$, where qualifier $q$ and type $\tau$ are:
 
 {\small
 \[
@@ -60,10 +68,12 @@ Expressions are typed $q \; \tau$, where qualifier $q$ and base type $\tau$ are:
 
 The type system is mostly standard, and in our experience, a sweet spot between readability and expressivity.
 The \texttt{shared} qualifier denotes shared values, i.e., ones shared among the parties and computed upon
-under secure computation protocols; the \texttt{plain} qualifier denotes plaintext values. Shared lists denote
-shared elements, but plaintext length. Subtyping is again as expected: $q_1 \; \tau <: q_2 \; \tau$
-iff $q_1 <: q_2$ where $\texttt{plain} <: \texttt{shared}$. Thus, we can convert a plaintext value into a shared one,
-but not vice versa.
+under secure computation protocols; the \texttt{plain} qualifier denotes plaintext values. 
+Shared lists denote shared elements, but plaintext length. Subtyping is 
+$\texttt{plain} <: \texttt{shared}$, meaning that we can convert a plaintext value into a shared one,
+but not vice versa. Subtyping on qualified types is again as expected, it is covariant in the qualifier  
+and invariant in the type: $\langle q_1 \; \tau_1 \rangle <: \langle q_2 \; \tau_2 \rangle$
+iff $q_1 <: q_2$ and  $\tau_1 = \tau_2$.
 
 Our compiler imposes certain semantic restrictions that it enforces throughout the various
 phases of compilation. We note that in some cases, the restrictions
@@ -72,16 +82,16 @@ can be easily lifted and we plan to do so in future iterations of the work.
 \begin{enumerate}
 \item Loops are of the form $0 <= i < I$ and bounds are fixed at compile time.
 It is a standard restriction in MPC that the bounds must be known at circuit-generation time.
-\item Arrays are one-dimensional. N-dimensional arrays are linearized and accessed
+\item Arrays are one-dimensional. $N$-dimensional arrays are linearized and accessed
 in row-major order and at this point the programmer is responsible for linearization
 and access. (This restriction can be easily lifted.)
 \item Array subscrpts are plaintext values as specified by the rule:
 \begin{semantics}
     \ntyperule{Array Access}{
 %  \Gamma(\y) =  q_\y   \quad\quad \sigma(\f) = q_\f  \quad\quad \Gamma(\x) = q_\x \\
-  \Gamma \vdash e : \texttt{plain int} \quad \Gamma \vdash \texttt{A} : q \; \texttt{list}[\tau] \quad \tau \in \{ \texttt{int}, \texttt{bool} \}
+  \Gamma \vdash e : \langle \texttt{plain int} \rangle \quad \Gamma \vdash \texttt{A} : \langle q \; \texttt{list}[\tau] \rangle \quad \tau \in \{ \texttt{int}, \texttt{bool} \}
 }{
-  \Gamma \vdash \texttt{A[$e$]} : q \; \tau
+  \Gamma \vdash \texttt{A[$e$]} : \langle q \; \tau \rangle
 }
 \end{semantics}
 The subscript $e$ is a function of the indices of the enclosing loops.
@@ -95,9 +105,9 @@ Write access such as for example {\sf A[i,j+2] = ...} is not allowed.
 \begin{semantics}
     \ntyperule{MUX}{
 %  \Gamma(\y) =  q_\y   \quad\quad \sigma(\f) = q_\f  \quad\quad \Gamma(\x) = q_\x \\
-  \Gamma \vdash e_1 : q_1 \; \texttt{bool} \quad \Gamma \vdash e_2 : q_2 \; \tau \quad \Gamma \vdash e_2 : q_2 \; \tau \quad \tau \in \{ \texttt{int}, \texttt{bool} \}
+  \Gamma \vdash e_1 : \langle q_1 \; \texttt{bool} \rangle \quad \Gamma \vdash e_2 : \langle q_2 \; \tau \rangle \quad \Gamma \vdash e_2 : \langle q_2 \; \tau \rangle \quad \tau \in \{ \texttt{int}, \texttt{bool} \}
 }{
-  \Gamma \vdash \texttt{MUX($e_1$,$e_2$,$e_3$)} : q_1 \vee q_2 \vee q_3 \; \tau
+  \Gamma \vdash \texttt{MUX($e_1$,$e_2$,$e_3$)} : \langle q_1 \vee q_2 \vee q_3  \; \tau \rangle
 }
 \end{semantics}
 \end{enumerate}
@@ -128,6 +138,8 @@ arbitrarily large loop nests.
 
 
 \subsection{From IMP Source to SSA}
+\label{sec:imp_to_ssa}
+
 
 Our compiler translates from Source to SSA as follows:
 
@@ -208,6 +220,7 @@ Our compiler translates from Source to SSA as follows:
 \end{enumerate}
 
 \subsection{From SSA to MPC Source} %: MUX Nodes and Pseudo $\phi$-nodes}
+\label{sec:ssa_to_MPC_Source}
 
 Once the compiler converts the code to SSA,
 it transforms $\phi$-nodes that correspond to if-statements into MUX nodes.
@@ -246,77 +259,13 @@ during circuit generation. If it is the 0-th iteration, then the $\phi$-node eva
 
 %\ana{We need to double check that the following captures all cases of def-use edges.}
 
-\subsection{Dependence Analysis}
-
-The next steps construct the dependence graph and \ana{Add an intro here.}
-
-\subsubsection{Def-use Edges}
-
-The dependence graph has the following def-use edges:
-
-\begin{itemize}
-\item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge 9 to 10 in the Biometric MPC Source in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source} is a same-level edge. A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge.
-E.g., 15 to 4 in Biometric is a same-level back-edge.
-\item outer-to-inner $X\rightarrow Y$ where $X$ is in an outer loop nest, say $i$, and $Y$ is in an inner one, say $i,j,k$. E.g., 1 to 4 in Biometric forms is an outer-to-inner edge.
-%A $\phi$-node can be a source or a target of an outer-to-inner forward edge.
-\item inner-to-outer $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g., the def-use from 8 to 12 gives rise to an inner-to-outer edge.
-%E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer edge.
-An inner-to-outer edge can be a back-edge as well, in which case both $X$ and $Y$ are phi-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
-
-%Note that the source is \emph{always} a $\phi$-node of the $i,j,k$ loop and the target is in the immediately enclosing loop. The interpretation of this edge is that the use node $Y$ uses the definition made in the last iteration of the inner loop.
-%\ben{The current representation of pseudo $\phi$-nodes shows them attached to the loop header (i.e. in the loop).  We may want to clarify that they are also evaluated at the loop's termination.}
-%\item same-level back-edge $X\rightarrow Y$. $Y$ is a phi-node in the header of the loop and $X$ is a definition of the variable in the loop body. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
-%\item inner-to-outer back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in a loop nested into $Y$'s loop (not necessarily immediately).
-
-\item mixed forward edge $X\rightarrow Y$. $X$ is in some loop $i,j,k$ and $Y$ is in a loop nested into $i,j,k'$. We transform mixed forward edges as follows. Let $\x$ be the variable defined at $X$. We add a variable and assignment $\x' = \x$ immediately after the $i,j,k$ loop. Then we replace the use of $\x$ at $Y$ with $\x'$. This transforms a mixed forward edge into an "inner-to-outer" forward edge followed by an outer-to-inner forward edge. Thus, Basic Vectorization handles one of "same-level", "inner-to-outer", or "outer-to-inner" def-use edges.
- \end{itemize}
-
-\subsubsection{Closures}
-
-We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. The closure of $n$ is defined as follows:
-\begin{itemize}
-\item $n$ is in $\mathit{closure}(n)$
-\item $X$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $X$, and $X \rightarrow n$ is a same-level back-edge.
-\item $Y$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $Y$ and there is a same-level path from $Y$ to some $X$ in $\mathit{closure}(n)$.
-\end{itemize}
-
-\subsection{Taint Analysis}
-
-We require that all inputs are marked as either shared or plaintext, however, we do not require any other qualifier annotations in the program. Then we infer if intermediate variables and expressions are shared through taint analysis with "taintedness" referring to the shared attribute.  Specifically, the compiler follows the following rules, which are standard in positive-negative qualifier systems (here \texttt{shared} is the positive qualifier and \texttt{plain} is the negative one):
-\begin{enumerate}
-\item Loop counters and array upper bounds are always \texttt{plain}.
-\item If any variable on the right-hand side of an assignment is shared, then the assigned variable is \texttt{shared}.
-%\item If all variables on the right-hand side of an assignment are plaintext, then the assigned variable is plaintext \ana{Will be covered by the last rule.}
-\item Any variables that cannot be determined as shared via the above rules are \texttt{plain}.
-\end{enumerate}
-
-%The first two rules are standard for taint analysis, and the third rule follows from the MPC problem statement. \ben{Is the explanation for the third rule correct?}  \ana{Yes, that is exactly it!}
-The final rule is needed in examples like the following. In the below snippet \texttt{sum!2} and \texttt{sum!3} form a dependency cycle and there is no \texttt{shared} value that flows to either one.
-They are inferred as plaintext.
-%cannot be marked as plaintext through simple taint analysis:
-{\small
-\begin{pythonn}
-plaintext_array = [0, 1, 2, ...]
-sum!1 = 0
-for i in range(0, N):
-    sum!2 = PHI(sum!1, sum!3)
-    sum!3 = sum!2 + plaintext_array[i]
-\end{pythonn}
-}
-%\ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}\ana{I left the example, we can leave it in the TR, remove from paper.}
-
-When converting to MOTION code, any plaintext value used in the right-hand side of a shared assignment is converted to a shared value for that expression.
-%\ben{Is this necessary to include?} \ana{Yes, that's important.}
-
-Importantly, the taint analysis works on MPC Source, which lacks if-then-else control flow.
-This significantly simplifies treatment as there is no need to handle conditionals and implicit flow.
 
 \subsection{From (Optimized) MPC Source to MOTION}
 \label{sec:MOTION}
 
 MOTION supports FOR loops and SIMD operations, so translation from MPC source to MOTION C++ code is relatively straightforward.
 % Variable naming
-Our generated C++ uses the following variable-naming scheme: shared variables are named the same as in the MPC source with the \texttt{!} replaced with an underscore (e.g. \texttt{sum!2} would be translated to \texttt{sum\_2}).  Plaintext variables follow the same naming convention as shared variables but are prefixed with \texttt{\_MPC\_PLAINTEXT\_}.  The shared representation of constants are named \texttt{\_MPC\_CONSTANT\_} followed by the literal constant (e.g. the shared constant \texttt{0} would be named \texttt{\_MPC\_CONSTANT\_0}).
+Our generated C++ uses the following variable-naming scheme: shared variables are named the same as in the MPC Source with the {\sf !} replaced with an underscore (e.g. {\sf sum!2} would be translated to {\sf sum\_2}). Plaintext variables follow the same naming convention as shared variables but are prefixed with \texttt{\_MPC\_PLAINTEXT\_}.  The shared representation of constants are named \texttt{\_MPC\_CONSTANT\_} followed by the literal constant (e.g. the shared constant \texttt{0} would be named \texttt{\_MPC\_CONSTANT\_0}).
 
 % Function preamble
 The generated MOTION code begins with the declaration of all variables used in the function, including loop counters.  If a variable is a vectorized array, it is initialized to a correctly-sized array of empty MOTION shares.  Additionally, each plaintext variable and parameter has a shared counterpart declared.  Next, all constant values which are used as part of shared expressions are initialized as a shared input from party 0.  Finally, all plaintext parameters are converted used as shared inputs from party 0 to initialize their shared counterparts.
