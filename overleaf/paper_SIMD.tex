@@ -704,6 +704,7 @@ still cost $2\alpha_\mathit{fix} + 2\alpha_\mathit{var}$ even when scheduled ``i
 \section{\bf Compiler Framework}
 \label{sec:preliminaries}
 
+\ana{Convention: use \texttt{shared, plain}, {\sf code}, $i$ and $I$ for counters outside of code.}
 
 %We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops. 
 
@@ -781,9 +782,9 @@ and access. (This restriction can be easily lifted.)
 \end{semantics}
 The subscript $e$ is a function of the indices of the enclosing loops. 
 For read access, the compiler allows an arbitrary such function. 
-However, it restricts write access to \emph{canonical writes}, i.e., \texttt{A[i,j,k]} = ...
-where \texttt{i}, \texttt{j} and \texttt{k} loop over the three dimensions of \texttt{A}.  
-Write access such as for example \texttt{A[i,j+2]} = ... is not allowed. 
+However, it restricts write access to \emph{canonical writes}, i.e., {\sf A[i,j,k] = ...}
+where $i$, $j$ and $k$ loop over the three dimensions of {\sf A}.  
+Write access such as for example {\sf A[i,j+2] = ...} is not allowed. 
 %\item \ana{Add rules for logical ops}
 %\item \ana{Add rules for arithmetic ops}
 \item The final restriction involves MUX as expressed by the rule: 
@@ -891,8 +892,8 @@ Our compiler translates from Source to SSA as follows:
                 In the restricted-syntax AST,
                 the left-hand side of assignments
                 can be a variable or an array subscript.
-                If it is an array subscript, e.g., \texttt{A[i] = x},
-                change the statement to \texttt{A = Update(A, i, x)}.
+                If it is an array subscript, e.g., {\sf A[i] = x},
+                change the statement to {\sf A = Update(A, i, x)}.
                 If the statement is not already three-address code,
                 for each sub-expression in the right-hand side of the assignment,
                 insert an assignment to a temporary variable.
@@ -990,13 +991,13 @@ The final rule is needed in examples like the following. In the below snippet \t
 They are inferred as plaintext. 
 %cannot be marked as plaintext through simple taint analysis:
 {\small
-\begin{verbatim}
+\begin{pythonn}
 plaintext_array = [0, 1, 2, ...]
 sum!1 = 0
 for i in range(0, N):
     sum!2 = PHI(sum!1, sum!3)
     sum!3 = sum!2 + plaintext_array[i]
-\end{verbatim}
+\end{pythonn}
 }
 %\ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}\ana{I left the example, we can leave it in the TR, remove from paper.}
 
@@ -1013,9 +1014,14 @@ This significantly simplifies treatment as there is no need to handle conditiona
 \section{Vectorization}
 \label{sec:vectorization}
 
+\ana{Need an intro here!}
+
+
+\subsection{Scalar Expansion}
+
 An important component of our algorithm is the scalar expansion to the corresponding loop dimensionality. 
-For example, \texttt{d = S[i * D + j] - C[j]} equiv. to \texttt{d = S[i,j] - C[j]}, which gave rise to \texttt{N*D} subtraction operations in the sequential schedule, 
-is lifted. The argument arrays \texttt{S} and \texttt{C} are lifted and the scaler \texttt{d} is lifted: \texttt{d[i,j] = S[i,j] - C[i,j]}.
+For example, {\sf d = S[i*D+j] - C[j]} equiv. to {\sf d = S[i,j] - C[j]}, which gave rise to {\sf N*D} subtraction operations in the sequential schedule, 
+is lifted. The argument arrays {\sf S} and {\sf C} are lifted and the scaler {\sf d} is lifted: {\sf d[i,j] = S[i,j] - C[i,j]}.
 The algorithm then detects that the statement can be vectorized. 
 
 There are three kinds of arrays (for now all kept internally as one-dimensional arrays, but that's under discussion).
@@ -1023,17 +1029,17 @@ There are three kinds of arrays (for now all kept internally as one-dimensional 
 
 \item Scalars: These are scalar variables we lift into arrays for the purposes of vectorization. 
 For those, all writes are canonical writes and all reads are canonical reads. We will apply raise dimension when 
-a scalar is used in an inner loop (e.g., \texttt{sum0} in line 6 of the MPC source code will be raised to a 1-dimensional 
-array since \texttt{sum0} is used in the inner $j$-loop). Drop dimension applies as well; this happens when a scalar
-written in an inner loop is used outside of the loop (e.g., \texttt{sum0} for which the lifted inner loop computes 
-\texttt{D} values, but the outer loop only needs the last one.)
+a scalar is used in an inner loop (e.g., {\sf sum!2} in line 6 of the MPC source code will be raised to a 1-dimensional 
+array since {\sf sum!2} is used in the inner $j$-loop). Drop dimension applies as well; this happens when a scalar
+written in an inner loop is used outside of the loop (e.g., {\sf sum!2} for which the lifted inner loop computes 
+{\sf D} values, but the outer loop only needs the last one.)
 
 \item Read-only input arrays: Read-only inputs. There are NO writes, while we may have non-canonical reads, $f(i,j,k)$. 
 Phase 1 of Basic vectorization will add raise dimension operation at the beginning of the function to lift these arrays, 
 and raise dimension may \emph{reshape} arrays. If there are multiple "views" of the input array, there would be multiple raise dimension statements to create
 each one of these views. The invariant is that at reads in loops, the reads of "views" of the original input array are canonical.
 Only raise dimension applies to these arrays, and only in the beginning of the program. For example, 1-dimensional array 
-\texttt{C} is lifted into 2-dimensional array \texttt{N x D} by copying the row \texttt{N} times. 
+\python{C} is lifted into 2-dimensional array {\sf N x D} by copying the row {\sf N} times. 
  
  \item Read-write output arrays: Writes are canonical (by restriction) but reads can be non-canonical. 
  Dependence analysis limits vectorization when non-canonical read access refers to array writes in
@@ -1057,7 +1063,7 @@ followed by our vectorization algorithm.
 There are two conceptual versions of $\mathit{raise\_dim}$. One applies on read-only input arrays and reshapes those arrays 
 when necessary to ensure canonical read access in the corresponding loop. The signature of $\mathit{raise\_dim}$
 is as follows. It takes the original array \texttt{C}, the access pattern function $f(i,j,k)$ in loop nest $i,j,k$ and the loop bounds
-\texttt{((i:I),(j:J),(k:K))}: 
+$((i:I),(j:J),(k:K))$: 
 \[ \mathit{raise\_dim}(\texttt{A}, f(i,j,k), \texttt{((i:I),(j:J),(k:K))}) \]
 It produces a new 3-dimensional array \texttt{A'} by iterating over $i,j,k$ and setting each element of  \texttt{A'} as follows:
 \[ \texttt{A'[i,j,k] =  A[f(i,j,k)]} \]
