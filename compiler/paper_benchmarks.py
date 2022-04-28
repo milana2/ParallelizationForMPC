@@ -457,8 +457,8 @@ def get_inputs(name: str) -> tuple[list[InputArgs], int]:
         return get_biometric_inputs()
     if name == "biometric_fast":
         return get_biometric_fast_inputs()
-    if name == "chapterfour_figure_12": # millionaire's problem, not interesting
-        return get_chapterfour_figure_12_inputs()
+    # if name == "chapterfour_figure_12": # millionaire's problem, not interesting
+    #     return get_chapterfour_figure_12_inputs()
     if name == "convex_hull" or name == "minimal_points":
         return get_convex_hull_inputs()
     if name ==  name == "count_102" or "longest_102":
