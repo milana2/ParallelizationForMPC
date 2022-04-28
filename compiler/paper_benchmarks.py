@@ -24,7 +24,7 @@ SERVER_PORT = 42142
 CONNECTION_TIMEOUT = 3000
 MPC_PARTY_SERVER_ID = "0"
 MPC_PARTY_CLIENT_ID = "1"
-NUM_ITERS = 5
+NUM_ITERS = 10
 
 GMW_PROTOCOL = "BooleanGmw"
 BMR_PROTOCOL = "Bmr"
@@ -439,14 +439,14 @@ def get_psi_inputs()-> tuple[list[InputArgs], int]:
 def get_inputs(name: str) -> tuple[list[InputArgs], int]:
     # if name == "biometric":
     #     return get_biometric_inputs()
-    if name == "biometric_fast":
-        return get_biometric_fast_inputs()
+    # if name == "biometric_fast":
+    #     return get_biometric_fast_inputs()
     # if name == "chapterfour_figure_12": # millionaire's problem, not interesting
     #     return get_chapterfour_figure_12_inputs()
     # if name == "convex_hull" or name == "minimal_points":
     #     return get_convex_hull_inputs()
-    # if name == "count_102" or name == "longest_102":
-    #     return get_count_102_inputs()
+    if name == "longest_102": #name == "count_102" or 
+        return get_count_102_inputs()
     # if name == "count_10s":
     #     return get_count_10s_inputs()
     # if name == "count_123":
