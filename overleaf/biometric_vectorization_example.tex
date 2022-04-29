@@ -2,9 +2,9 @@
 
 %\begin{document}
 
-\subsection{Example: Biometric}
+\subsubsection{Example: Biometric}
 
-We start from MPC Source:
+We now demonstrate the workings of the basic algorithm on our running example. Recall the MPC Source for Biometric:
 
 {\small
 \begin{pythonn}
@@ -28,7 +28,7 @@ for i in range(0, N!0):
 \end{pythonn}
 }
 
-\subsubsection{Phase 1 of Basic Vectorization}
+\paragraph{Phase 1 of Vectorization Algorithm}
 
 The transformation preserves the dependence edges. It raises the dimensions of scalars and optimistically vectorizes all operations. 
 The next phase discovers loop-carried dependences and removes affected vectorization.
@@ -69,7 +69,7 @@ min_index!2^ = drop_dim(min_index!2)
 \end{pythonn}
 }
 
-\subsubsection{Phase 2 of Basic Vectorization}
+\paragraph{Phase 2 of Vectorization Algorithm}
 
 This phase analyzes statements from the innermost loop to the outermost. The key point is to discover loop-carried dependencies and re-introduce loops whenever dependencies make this necessary.
 
@@ -149,7 +149,7 @@ min_index!2^ = drop_dim(min_index!2)
 
 
 
-\subsubsection{Phase 3 of Basic Vectorization}
+\paragraph{Phase 3 of Vectorization Algorithm}
 
 This phase removes redundant dimensionality. 
 It starts by removing redundant dimensions in MOTION loops followed
@@ -180,7 +180,7 @@ for j in range(0, D!0):
 // then copy propagation and dead code elimination 
 min_index!3 = [0,1,2,...N!0-1] // or min_index!3 = [i, (i:N!0)]
 
-// i is redundant for min_sum!2, min_sum!4 but not for !12![i]!
+// i is redundant for min_sum!2, min_sum!4 but not for !12![i]
 for i in range(0, N!0):
   min_sum!2 = PHI(min_sum!1, min_sum!4) 
   !1!2[i] = (sum!3[i] < min_sum!2)
@@ -196,9 +196,9 @@ for i in range(0, N!0):
 \end{pythonn}
 }
 
-\subsubsection{Phase 4 of Basic Vectorization}
+\paragraph{Phase 4 of Basic Vectorization}
 
-And this phase adds SIMD operations:
+This phase adds SIMD operations:
 
 {\small
 \begin{pythonn}
