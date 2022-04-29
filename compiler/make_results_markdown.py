@@ -115,7 +115,6 @@ def build_benchmark_tables(circuits_path: str) -> str:
                     )
                     continue
 
-                # Move circuit graph to directory
                 if data.circuit_file:
                     circuit_graph_path = os.path.join(
                         circuits_path,
