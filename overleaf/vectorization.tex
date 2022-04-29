@@ -1,5 +1,5 @@
 
-\section{Vectorization}
+\section{Backend-Independent Vectorization}
 \label{sec:vectorization}
 
 \ana{Need an intro here!}
@@ -38,40 +38,6 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 \item $X$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $X$, and $X \rightarrow n$ is a same-level back-edge.
 \item $Y$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $Y$ and there is a same-level path from $Y$ to some $X$ in $\mathit{closure}(n)$.
 \end{itemize}
-
-\subsection{Taint Analysis}
-\label{sec:taint}
-
-We require that all inputs are marked as either shared or plaintext, however, we do not require any other qualifier annotations in the program. Then we infer if intermediate variables and expressions are shared through taint analysis with "taintedness" referring to the shared attribute.  Specifically, the compiler follows the following rules, which are standard in positive-negative qualifier systems (here \texttt{shared} is the positive qualifier and \texttt{plain} is the negative one):
-\begin{enumerate}
-\item Loop counters and array upper bounds are always \texttt{plain}.
-\item If any variable on the right-hand side of an assignment is shared, then the assigned variable is \texttt{shared}.
-%\item If all variables on the right-hand side of an assignment are plaintext, then the assigned variable is plaintext \ana{Will be covered by the last rule.}
-\item Any variables that cannot be determined as shared via the above rules are \texttt{plain}.
-\end{enumerate}
-
-%The first two rules are standard for taint analysis, and the third rule follows from the MPC problem statement. \ben{Is the explanation for the third rule correct?}  \ana{Yes, that is exactly it!}
-The final rule is needed in examples like the following. In the below snippet \texttt{sum!2} and \texttt{sum!3} form a dependency cycle and there is no \texttt{shared} value that flows to either one.
-They are inferred as plaintext.
-%cannot be marked as plaintext through simple taint analysis:
-{\small
-\begin{pythonn}
-plaintext_array = [0, 1, 2, ...]
-sum!1 = 0
-for i in range(0, N):
-    sum!2 = PHI(sum!1, sum!3)
-    sum!3 = sum!2 + plaintext_array[i]
-\end{pythonn}
-}
-%\ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}\ana{I left the example, we can leave it in the TR, remove from paper.}
-
-When converting to MOTION code, any plaintext value used in the right-hand side of a shared assignment is converted to a shared value for that expression.
-%\ben{Is this necessary to include?} \ana{Yes, that's important.}
-
-Importantly, the taint analysis works on MPC Source, which lacks if-then-else control flow.
-This significantly simplifies treatment as there is no need to handle conditionals and implicit flow.
-
-
 
 \subsection{Scalar Expansion}
 

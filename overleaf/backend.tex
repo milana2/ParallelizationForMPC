@@ -1,265 +1,39 @@
+\section{Compiler Back End}
+\label{sec:backend} 
 
+\subsection{Taint Analysis}
+\label{sec:taint}
 
-\section{\bf Compiler Front End}
-\label{sec:compiler}
-
-\ana{Convention: use \texttt{shared, plain}, {\sf code}, $i$ and $I$ for counters outside of code.}
-
-%We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops.
-
-\begin{figure*}
-  \includegraphics[width=0.9\linewidth]{figs_paper_SIMD/compiler_framework.png}
-  \caption{Compiler Framework. \ana{Change figure since we are not doing div-and-conquer.}}
-  \label{fig:compiler_framework}
-\end{figure*}
-
-\figref{fig:compiler_framework} presents an overview of our compiler.
-We start the section with a brief description of the top-level syntax and semantic restrictions.
-We proceed to describe several phases of the compiler:~\secref{sec:imp_to_ssa}
-describes translation from IMP Source to SSA, and~\secref{sec:ssa_to_MPC_Source}
-describes translation form SSA into MPC Source, i.e., the front-end of our compiler.
-Finally,~\secref{sec:MOTION} describes translation of MPC Source, un-optimized and
-optimized into MOTION, i.e., this is the back-end of our compiler.
-
-Analysis on MPC Source and vectorization comes in a separate section, Section~\secref{sec:vectorization}.
-%\ana{Need to state this more precisely.}
-
-\subsection{Syntax and Semantic Restrictions}
-\label{sec:syntax}
-
-Source syntax is essentially standard IMP syntax as shown below:
-%\begin{figure}[t]
-{\small
-\[
-\begin{array}{l@{~~~~~}l}
-  \begin{array}{l@{~}l@{~~~}l}
- e & ::= e \; \mathit{op} \; e \mid e \mid \x \mid  \texttt{const} \mid \texttt{A[$e$]} & \mathit{expression} \\
- % s &::= t \;\f & \mathit{field} \\
- %\md &::= t\;{\m}(t \;{\this}, \; t\;\x) \; \{\; \ol{t\;\y}\;\s;\;\return\;\y \; \}
- %                 & \mathit{method} \\
-  s & ::= s;s \mid  & \mathit{sequence} \\
-  & \x = e \mid \texttt{A[$e$]} = e \mid & \mathit{assignment \; stmt} \\
-  & \texttt{for $i$ in range($I$)}: s \mid & \mathit{for \; stmt} \\
-  & \texttt{if $e$: $s$ else: $s$} & \mathit{if \; stmt} \\
-%   t &::= q \; {\sf C} & \mathit{qualified \; type}\\
-%   q &::= \high \mid \poly \mid \low & \mathit{FlowCFL \; qualifier}\\
-%    t' &::= q' \; \C & \mathit{field \; qualified \; type}\\
-%   q' &::= \tainted \mid \poly & \mathit{field \; qualifier}\\
-
-  \end{array}
-\end{array}
-\]
-}
-%\end{figure}
-
-The syntax allows for array accesses, arbitrarily nested loops, and if-then-else control flow.
-Expressions are typed $\langle q \; \tau\rangle$, where qualifier $q$ and type $\tau$ are:
-
-{\small
-\[
-\begin{array}{l@{~~~~~}l}
-  \begin{array}{l@{~}l@{~~~}l}
- \tau & ::= \texttt{int}  \mid \texttt{bool} \mid \texttt{list[int]} \mid  \texttt{list[bool]} & \mathit{base \; types} \\
-  q & ::= \texttt{shared} \mid \texttt{plain} & \mathit{qualifiers} \\
-  \end{array}
-\end{array}
-\]
-}
-
-The type system is mostly standard, and in our experience, a sweet spot between readability and expressivity.
-The \texttt{shared} qualifier denotes shared values, i.e., ones shared among the parties and computed upon
-under secure computation protocols; the \texttt{plain} qualifier denotes plaintext values.
-Shared lists denote shared elements, but plaintext length. Subtyping is
-$\texttt{plain} <: \texttt{shared}$, meaning that we can convert a plaintext value into a shared one,
-but not vice versa. Subtyping on qualified types is again as expected, it is covariant in the qualifier
-and invariant in the type: $\langle q_1 \; \tau_1 \rangle <: \langle q_2 \; \tau_2 \rangle$
-iff $q_1 <: q_2$ and  $\tau_1 = \tau_2$.
-
-Our compiler imposes certain semantic restrictions that it enforces throughout the various
-phases of compilation. We note that in some cases, the restrictions
-can be easily lifted and we plan to do so in future iterations of the work.
-
+We require that all inputs are marked as either shared or plaintext, however, we do not require any other qualifier annotations in the program. Then we infer if intermediate variables and expressions are shared through taint analysis with "taintedness" referring to the shared attribute.  Specifically, the compiler follows the following rules, which are standard in positive-negative qualifier systems (here \texttt{shared} is the positive qualifier and \texttt{plain} is the negative one):
 \begin{enumerate}
-\item Loops are of the form $0 <= i < I$ and bounds are fixed at compile time.
-It is a standard restriction in MPC that the bounds must be known at circuit-generation time.
-\item Arrays are one-dimensional. $N$-dimensional arrays are linearized and accessed
-in row-major order and at this point the programmer is responsible for linearization
-and access. (This restriction can be easily lifted.)
-\item Array subscrpts are plaintext values as specified by the rule:
-\begin{semantics}
-    \ntyperule{Array Access}{
-%  \Gamma(\y) =  q_\y   \quad\quad \sigma(\f) = q_\f  \quad\quad \Gamma(\x) = q_\x \\
-  \Gamma \vdash e : \langle \texttt{plain int} \rangle \quad \Gamma \vdash \texttt{A} : \langle q \; \texttt{list}[\tau] \rangle \quad \tau \in \{ \texttt{int}, \texttt{bool} \}
-}{
-  \Gamma \vdash \texttt{A[$e$]} : \langle q \; \tau \rangle
-}
-\end{semantics}
-The subscript $e$ is a function of the indices of the enclosing loops.
-For read access, the compiler allows an arbitrary such function.
-However, it restricts write access to \emph{canonical writes}, i.e., {\sf A[i,j,k] = ...}
-where $i$, $j$ and $k$ loop over the three dimensions of {\sf A}.
-Write access such as for example {\sf A[i,j+2] = ...} is not allowed.
-%\item \ana{Add rules for logical ops}
-%\item \ana{Add rules for arithmetic ops}
-\item The final restriction involves MUX as expressed by the rule:
-\begin{semantics}
-    \ntyperule{MUX}{
-%  \Gamma(\y) =  q_\y   \quad\quad \sigma(\f) = q_\f  \quad\quad \Gamma(\x) = q_\x \\
-  \Gamma \vdash e_1 : \langle q_1 \; \texttt{bool} \rangle \quad \Gamma \vdash e_2 : \langle q_2 \; \tau \rangle \quad \Gamma \vdash e_2 : \langle q_2 \; \tau \rangle \quad \tau \in \{ \texttt{int}, \texttt{bool} \}
-}{
-  \Gamma \vdash \texttt{MUX($e_1$,$e_2$,$e_3$)} : \langle q_1 \vee q_2 \vee q_3  \; \tau \rangle
-}
-\end{semantics}
+\item Loop counters and array upper bounds are always \texttt{plain}.
+\item If any variable on the right-hand side of an assignment is shared, then the assigned variable is \texttt{shared}.
+%\item If all variables on the right-hand side of an assignment are plaintext, then the assigned variable is plaintext \ana{Will be covered by the last rule.}
+\item Any variables that cannot be determined as shared via the above rules are \texttt{plain}.
 \end{enumerate}
-Importantly, the arguments of MUX are restricted to base types, as passing array arguments
-is not valid MOTION MPC. \ana{Check this.} This causes a slight inconvenience as we could not write
+
+%The first two rules are standard for taint analysis, and the third rule follows from the MPC problem statement. \ben{Is the explanation for the third rule correct?}  \ana{Yes, that is exactly it!}
+The final rule is needed in examples like the following. In the below snippet \texttt{sum!2} and \texttt{sum!3} form a dependency cycle and there is no \texttt{shared} value that flows to either one.
+They are inferred as plaintext.
+%cannot be marked as plaintext through simple taint analysis:
+{\small
 \begin{pythonn}
-if e: A[i] = val
+plaintext_array = [0, 1, 2, ...]
+sum!1 = 0
+for i in range(0, N):
+    sum!2 = PHI(sum!1, sum!3)
+    sum!3 = sum!2 + plaintext_array[i]
 \end{pythonn}
-Instead we had to write
-\begin{pythonn}
-if not(e): val = A[i]
-A[i] = val
-\end{pythonn}
+}
+%\ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}\ana{I left the example, we can leave it in the TR, remove from paper.}
 
-We note that while the programmer writes
-annotations at the level of IMP Source (recall \ana{ref to overview section}), the
-annotations propagate through the transformations and are checked at the
-level of MPC Source.
+When converting to MOTION code, any plaintext value used in the right-hand side of a shared assignment is converted to a shared value for that expression.
+%\ben{Is this necessary to include?} \ana{Yes, that's important.}
 
-%\ana{Disadvantage of MUX}
-
-For the rest of this section we write $i,j,k$ to denote the loop nest: $i$ is the outermost loop, $j$, is immediately nested in $i$, and so on until $k$
-and we use $I,J,K$ to denote the corresponding upper bounds. We write $A[i,j,k]$ to denote canonical access
-to an array element. In the program, canonical access is achieved via the standard row-major order formula: $(J*K)*i + K*j + k$.
-To simplify the presentation we describe our algorithms in terms of three-element tuples $i,j,k$, however, discussion easily generalizes to
-arbitrarily large loop nests.
+Importantly, the taint analysis works on MPC Source, which lacks if-then-else control flow.
+This significantly simplifies treatment as there is no need to handle conditionals and implicit flow.
 
 
-
-\subsection{From IMP Source to SSA}
-\label{sec:imp_to_ssa}
-
-
-Our compiler translates from Source to SSA as follows:
-
-%\begin{enumerate}
-%  \item
-        \paragraph{Parsing:}
-        Use Python's \texttt{ast} module to parse the input source code to a Python AST.
-%  \item
-        \paragraph{Syntax checking:}
-        Ensure that the AST matches the restricted subset defined in Section~\secref{sec:syntax}.
-        This step outputs an instance of the \texttt{restricted\_ast.Function} class, which represents our restricted subset of the Python AST.
-%  \item
-        \paragraph{3-address CFG conversion:}
-        %\benjamin{TODO: Is this a good amount of detail?} \ana{This is good amount of detail for the Tech report. In the actual paper we'll shorten a lot and add pointers to the Tech report.}
-
-        Convert the restricted-syntax AST to a three-address control-flow graph.
-        To do this, first,
-        add an empty basic block to the CFG and mark it as current.
-        Next, for each statement in the restricted AST's function body,
-        process the statement.
-        Statements can either be for-loops, if-statements, or assignments (as in~\secref{sec:syntax}).
-        Rules for processing each kind of statement are given below:
-        \begin{enumerate}
-          \item
-                \textbf{For-loops}:
-                Create new basic blocks for
-                the loop condition
-                (the \emph{condition-block}),
-                the loop body
-                (the \emph{body-block}),
-                and the code after the loop
-                (the \emph{after-block}).
-                Insert a jump from the end of the current block to the condition-block.
-                Then, mark the condition-block as the current block.
-                Insert a for-instruction at the end of the current block with the loop counter variable and bounds from the AST.
-                Next, add an edge from the current block to the after-block labeled ``FALSE'' and
-                an edge from the current block to the
-                body-block labeled ``TRUE''.
-                Then, set the body-block to be the current block
-                and process all statements in the AST's loop body.
-                Finally, insert a jump to the condition-block and set the after-block as current.
-          \item
-                \textbf{If-statements}:
-                Create new basic blocks for
-                the ``then'' statements of the if-statement
-                (the \emph{then-block}),
-                the ``else'' statements of the if-statement
-                (the \emph{else-block}),
-                and the code after the if-statement
-                (the \emph{after-block}).
-                At the end of the current block,
-                insert a conditional jump to the then-block or else-block
-                depending on the if-statement condition in the AST.
-                Next,
-                mark the then-block as current,
-                process all then-statements,
-                and add a jump to the after-block.
-                Similarly,
-                mark the else-block as current,
-                process all else-statements,
-                and add a jump to the after-block.
-                Finally, set the after-block to be the current block,
-                and give it a \emph{merge condition} property equal to the condition of the if-statement.
-          \item
-                \textbf{Assignments}:
-                In the restricted-syntax AST,
-                the left-hand side of assignments
-                can be a variable or an array subscript.
-                If it is an array subscript, e.g., {\sf A[i] = x},
-                change the statement to {\sf A = Update(A, i, x)}.
-                If the statement is not already three-address code,
-                for each sub-expression in the right-hand side of the assignment,
-                insert an assignment to a temporary variable.
-        \end{enumerate}
-  %\item
-        \paragraph{SSA conversion}:
-        Convert the 3-address CFG to SSA with Cytron's algorithm.
-%\end{enumerate}
-
-\subsection{From SSA to MPC Source} %: MUX Nodes and Pseudo $\phi$-nodes}
-\label{sec:ssa_to_MPC_Source}
-
-Once the compiler converts the code to SSA,
-it transforms $\phi$-nodes that correspond to if-statements into MUX nodes.
-From the 3-address CFG conversion step,
-$\phi$-nodes corresponding to if-statements will be in a basic block
-with the merge condition property.
-For example, if {\sf X!3 = $\phi$(X!1,X!2)} is in a block with merge condition {\sf C},
-the compiler transforms it into {\sf X!3 = MUX(C, X!1, X!2)}.
-Next, the compiler runs the dead code elimination algorithm from Cytron's SSA paper.
-
-Next, the control-flow graph is \emph{linearized} into MPC Source,
-which has loops but no if-then-else-statements.
-This means that both branches of all if-statements are executed,
-and the MUX nodes determine whether to use results from the then-block or from the else-block.
-The compiler linearizes the control-flow graph with a variation of breadth-first search.
-Blocks with the ``merge condition'' property are only considered
-the second time they are visited,
-since that will be after both branches of the if-statement are visited.
-(The Python AST naturally gives rise to a translation where each conditional has exactly two targets,
-and each ``merge condition'' block has exactly two incoming edges, a TRUE and a FALSE edge.
-Thus, each $\phi$-node has exactly two multiplexer arguments, which dovetails into MUX.
-This is in contrast with Cytron's algorithm which operates at the level of the CFG and allows for
-$\phi$-nodes with multiple arguments.)
-Each time the compiler visits a block,
-it adds the block's statements to the MPC source.
-If the block ends in a for-instruction,
-the compiler recursively converts the body and code after the loop to MPC source
-and adds the for-loop and code after the loop to the main MPC source.
-If the block does not end in a for-instruction,
-the compiler recursively converts all successor branches to MPC source and
-appends these to the main MPC source.
-
-Now, the remaining $\phi$-nodes in MPC source are the loop header nodes. We call these nodes \emph{pseudo} $\phi$-nodes
-and we write {\sf PHI} in MPC Source. A pseudo $\phi$-node {\sf X!1 = PHI(X!0,X!2)} in a loop header is evaluated
-during circuit generation. If it is the 0-th iteration, then the $\phi$-node evaluates to {\sf X!0}, otherwise, it evaluates to {\sf X!2}.
-
-%\ana{We need to double check that the following captures all cases of def-use edges.}
-
-\begin{comment}
 \subsection{From (Optimized) MPC Source to MOTION}
 \label{sec:MOTION}
 
@@ -452,4 +226,3 @@ Currently, our compiler only supports the \texttt{Bmr} and \texttt{BooleanGMW} p
 
 % Tons of copies != runtime costs
 Due to the SSA translation phase as well as the conversions to and from SIMD values which our utility functions perform, our generated vectorized MOTION code often includes multiple copies of arrays and scalar values.  These copies do not incur a runtime cost as the arrays simply hold \emph{pointers} to the underlying shares, so no new shares or gates are created as a result of this copying. Cost in MPC programs is dominated by shares and computation on shares. %\ben{Is there anything else to say here?  Should this be placed somewhere else?} \ana{It is clear to me! Will stay in the TR but likely will be cut from the paper.}
-\end{comment}
