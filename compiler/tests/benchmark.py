@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import os
 import shutil
 import subprocess
+from typing import Optional
 
 import compiler
 from . import statistics
@@ -13,39 +14,59 @@ class BenchmarkOutput:
     output: str
     timing_stats: statistics.TimingStatistics
     circuit_stats: statistics.CircuitStatistics
+    circuit_file: Optional[str] = None
+
     @classmethod
     def from_dictionary(cls, params):
-        name = params['name']
-        output = params['output']
-        timing_stats = params['timing_stats']
-        circuit_stats = params['circuit_stats']
+        name = params["name"]
+        output = params["output"]
+        timing_stats = params["timing_stats"]
+        circuit_stats = params["circuit_stats"]
+        circuit_file = params.get("circuit_file")
 
         return cls(
             name=name,
             output=output,
             timing_stats=timing_stats,
-            circuit_stats=circuit_stats
-            )
+            circuit_stats=circuit_stats,
+        )
 
     def to_dictionary(self):
-        return {'name': self.name,
-                'output': self.output,
-                'timing_stats': self.timing_stats,
-                'circuit_stats': self.circuit_stats,
-                }
+        if self.circuit_file:
+            return {
+                "name": self.name,
+                "output": self.output,
+                "timing_stats": self.timing_stats,
+                "circuit_stats": self.circuit_stats,
+                "circuit_file": self.circuit_file,
+            }
+        else:
+            return {
+                "name": self.name,
+                "output": self.output,
+                "timing_stats": self.timing_stats,
+                "circuit_stats": self.circuit_stats,
+            }
 
 
 def run_benchmark(
-    benchmark_name: str, benchmark_path: str, protocol: str, vectorized=True, timeout=600,
-    cmd_args = [], compile=True, continue_on_error = False
-) -> tuple[BenchmarkOutput, BenchmarkOutput]:
+    benchmark_name: str,
+    benchmark_path: str,
+    protocol: str,
+    vectorized=True,
+    timeout=600,
+    cmd_args=[],
+    compile=True,
+    continue_on_error=False,
+) -> Optional[tuple[BenchmarkOutput, BenchmarkOutput]]:
     input_fname = os.path.join(benchmark_path, "input.py")
 
     with open(input_fname, "r") as f:
         input_py = f.read().strip()
 
     app_path = os.path.join(
-        benchmark_path, "motion_app" + "-" + protocol + ("-vectorized" if vectorized else "")
+        benchmark_path,
+        "motion_app" + "-" + protocol + ("-vectorized" if vectorized else ""),
     )
 
     if compile:
@@ -84,7 +105,8 @@ def run_benchmark(
             "1,127.0.0.1,2301",
             "--my-id",
             "0",
-        ] + cmd_args,
+        ]
+        + cmd_args,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
@@ -98,7 +120,8 @@ def run_benchmark(
                 "1,127.0.0.1,2301",
                 "--my-id",
                 "1",
-            ] + cmd_args,
+            ]
+            + cmd_args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -125,10 +148,8 @@ def run_benchmark(
             with open(os.path.join(party0_dir, "stderr"), "w") as f:
                 f.write(party0_stderr)
 
-            if(party0.returncode != 0 and party1.returncode != 0 and continue_on_error):
-                return (
-                    None, None
-                )
+            if party0.returncode != 0 and party1.returncode != 0 and continue_on_error:
+                return None
             with open(os.path.join(party1_dir, "stdout"), "w") as f:
                 f.write(party1_stdout_raw)
             with open(os.path.join(party1_dir, "stderr"), "w") as f:
@@ -159,11 +180,13 @@ def run_benchmark(
                     output=party0_output,
                     timing_stats=party0_timing_stats,
                     circuit_stats=party0_circuit_stats,
+                    circuit_file=os.path.join(party0_dir, "circuit.dot"),
                 ),
                 BenchmarkOutput(
                     name=benchmark_name,
                     output=party1_output,
                     timing_stats=party1_timing_stats,
                     circuit_stats=party1_circuit_stats,
+                    circuit_file=os.path.join(party1_dir, "circuit.dot"),
                 ),
             )

@@ -16,24 +16,21 @@ class TimingDatapoint:
 
     @classmethod
     def from_dictionary(cls, params):
-        datapoint_name = params['datapoint_name']
-        mean = params['mean']
-        median = params['median']
-        stddev = params['stddev']
+        datapoint_name = params["datapoint_name"]
+        mean = params["mean"]
+        median = params["median"]
+        stddev = params["stddev"]
         return cls(
-            datapoint_name=datapoint_name,
-            mean=mean,
-            median=median,
-            stddev=stddev
-            )
+            datapoint_name=datapoint_name, mean=mean, median=median, stddev=stddev
+        )
 
     def to_dictionary(self):
-        return {'datapoint_name': self.datapoint_name,
-                'mean': self.mean,
-                'median': self.median,
-                'stddev': self.stddev
-                }
-
+        return {
+            "datapoint_name": self.datapoint_name,
+            "mean": self.mean,
+            "median": self.median,
+            "stddev": self.stddev,
+        }
 
 
 def parse_datapoint(line: str) -> TimingDatapoint:
@@ -73,23 +70,24 @@ class CommunicationStatistics:
 
     @classmethod
     def from_dictionary(cls, params):
-        send_size = params['send_size']
-        send_num_msgs = params['send_num_msgs']
-        recv_size = params['recv_size']
-        recv_num_msgs = params['recv_num_msgs']
+        send_size = params["send_size"]
+        send_num_msgs = params["send_num_msgs"]
+        recv_size = params["recv_size"]
+        recv_num_msgs = params["recv_num_msgs"]
         return cls(
             send_size=send_size,
             send_num_msgs=send_num_msgs,
             recv_size=recv_size,
             recv_num_msgs=recv_num_msgs,
-            )
+        )
 
     def to_dictionary(self):
-        return {'send_size': self.send_size,
-                'send_num_msgs': self.send_num_msgs,
-                'recv_size': self.recv_size,
-                'recv_num_msgs': self.recv_num_msgs
-                }
+        return {
+            "send_size": self.send_size,
+            "send_num_msgs": self.send_num_msgs,
+            "recv_size": self.recv_size,
+            "recv_num_msgs": self.recv_num_msgs,
+        }
 
 
 def parse_communication_statistics(
@@ -142,23 +140,23 @@ class TimingStatistics:
 
     @classmethod
     def from_dictionary(cls, params):
-        num_iterations = params['num_iterations']
-        mt_presetup = params['mt_presetup']
-        mt_setup = params['mt_setup']
-        sp_presetup = params['sp_presetup']
-        sp_setup = params['sp_setup']
-        sb_presetup = params['sb_presetup']
-        sb_setup = params['sb_setup']
-        base_ots = params['base_ots']
-        ot_extension_setup = params['ot_extension_setup']
+        num_iterations = params["num_iterations"]
+        mt_presetup = params["mt_presetup"]
+        mt_setup = params["mt_setup"]
+        sp_presetup = params["sp_presetup"]
+        sp_setup = params["sp_setup"]
+        sb_presetup = params["sb_presetup"]
+        sb_setup = params["sb_setup"]
+        base_ots = params["base_ots"]
+        ot_extension_setup = params["ot_extension_setup"]
 
-        preprocess_total = params['preprocess_total']
-        gates_setup = params['gates_setup']
-        gates_online = params['gates_online']
+        preprocess_total = params["preprocess_total"]
+        gates_setup = params["gates_setup"]
+        gates_online = params["gates_online"]
 
-        circuit_evaluation = params['circuit_evaluation']
+        circuit_evaluation = params["circuit_evaluation"]
 
-        communication = params['communication']
+        communication = params["communication"]
         return cls(
             num_iterations=num_iterations,
             mt_presetup=mt_presetup,
@@ -174,27 +172,25 @@ class TimingStatistics:
             gates_online=gates_online,
             circuit_evaluation=circuit_evaluation,
             communication=communication,
-            )
+        )
 
     def to_dictionary(self):
-        return {'num_iterations': self.num_iterations,
-                'mt_presetup': self.mt_presetup,
-                'mt_setup': self.mt_setup,
-                'sp_presetup': self.sp_presetup,
-                'sp_setup': self.sp_setup,
-                'sb_presetup': self.sb_presetup,
-                'sb_setup': self.sb_setup,
-                'base_ots': self.base_ots,
-                'ot_extension_setup': self.ot_extension_setup,
-
-                'preprocess_total': self.preprocess_total,
-                'gates_setup': self.gates_setup,
-                'gates_online': self.gates_online,
-                
-                'circuit_evaluation': self.circuit_evaluation,
-                
-                'communication': self.communication,
-                }
+        return {
+            "num_iterations": self.num_iterations,
+            "mt_presetup": self.mt_presetup,
+            "mt_setup": self.mt_setup,
+            "sp_presetup": self.sp_presetup,
+            "sp_setup": self.sp_setup,
+            "sb_presetup": self.sb_presetup,
+            "sb_setup": self.sb_setup,
+            "base_ots": self.base_ots,
+            "ot_extension_setup": self.ot_extension_setup,
+            "preprocess_total": self.preprocess_total,
+            "gates_setup": self.gates_setup,
+            "gates_online": self.gates_online,
+            "circuit_evaluation": self.circuit_evaluation,
+            "communication": self.communication,
+        }
 
 
 def is_thick_boundary(line: str) -> bool:
@@ -293,17 +289,17 @@ class CircuitStatistics:
     num_simd_gates: int
     num_nonsimd_gates: int
     circuit_gen_time: float  # in milliseconds
-    # depth: int
+    depth: int
 
     @classmethod
     def from_dictionary(cls, params):
-        num_gates = params['num_gates']
-        num_inputs = params['num_inputs']
-        num_outputs = params['num_outputs']
-        num_simd_gates = params['num_simd_gates']
-        num_nonsimd_gates = params['num_nonsimd_gates']
-        circuit_gen_time = params['circuit_gen_time']
-        # depth = params['depth']
+        num_gates = params["num_gates"]
+        num_inputs = params["num_inputs"]
+        num_outputs = params["num_outputs"]
+        num_simd_gates = params["num_simd_gates"]
+        num_nonsimd_gates = params["num_nonsimd_gates"]
+        circuit_gen_time = params["circuit_gen_time"]
+        depth = params["depth"]
         return cls(
             num_gates=num_gates,
             num_inputs=num_inputs,
@@ -311,18 +307,19 @@ class CircuitStatistics:
             num_simd_gates=num_simd_gates,
             num_nonsimd_gates=num_nonsimd_gates,
             circuit_gen_time=circuit_gen_time,
-            # depth = depth,
-            )
+            depth=depth,
+        )
 
     def to_dictionary(self):
-        return {'num_gates': self.num_gates,
-                'num_inputs': self.num_inputs,
-                'num_outputs': self.num_outputs,
-                'num_simd_gates': self.num_simd_gates,
-                'num_nonsimd_gates': self.num_nonsimd_gates,
-                'circuit_gen_time': self.circuit_gen_time,
-                # 'depth': self.depth
-                }
+        return {
+            "num_gates": self.num_gates,
+            "num_inputs": self.num_inputs,
+            "num_outputs": self.num_outputs,
+            "num_simd_gates": self.num_simd_gates,
+            "num_nonsimd_gates": self.num_nonsimd_gates,
+            "circuit_gen_time": self.circuit_gen_time,
+            "depth": self.depth,
+        }
 
 
 def parse_circuit_data(lines: list[str]) -> CircuitStatistics:
@@ -346,11 +343,11 @@ def parse_circuit_data(lines: list[str]) -> CircuitStatistics:
     assert nonsimd_gates_data[0] == "num_nonsimd_gates:"
     num_nonsimd_gates = int(nonsimd_gates_data[1])
 
-    # depth_data = lines[5].split()
-    # assert depth_data[0] == "depth:"
-    # depth = int(depth_data[1])
+    depth_data = lines[5].split()
+    assert depth_data[0] == "depth:"
+    depth = int(depth_data[1])
 
-    circuit_gen_time_data = lines[5].split()
+    circuit_gen_time_data = lines[6].split()
     assert circuit_gen_time_data[0] == "circuit_gen_time:"
     circuit_gen_time = float(circuit_gen_time_data[1])
 
@@ -361,5 +358,5 @@ def parse_circuit_data(lines: list[str]) -> CircuitStatistics:
         num_simd_gates=num_simd_gates,
         num_nonsimd_gates=num_nonsimd_gates,
         circuit_gen_time=circuit_gen_time,
-        # depth=depth,
+        depth=depth,
     )

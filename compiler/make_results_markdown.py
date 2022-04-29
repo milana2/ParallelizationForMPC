@@ -90,13 +90,13 @@ def type_env_to_table(type_env: TypeEnv) -> str:
     )
 
 
-def build_benchmark_tables() -> str:
+def build_benchmark_tables(circuits_path: str) -> str:
     table = "## Benchmark Data\n"
     for protocol in compiler.motion_backend.VALID_PROTOCOLS:
         table += f"\n### {protocol}\n"
 
-        table += "| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |\n"
-        table += "| - | - | - | - | - | - | - | - | - | - |\n"
+        table += "| Benchmark | Total # Gates | Depth | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |\n"
+        table += "| - | - | - | - | - | - | - | - | - | - | - |\n"
 
         for test_case_dir in sorted(
             os.scandir(STAGES_DIR), key=lambda entry: entry.name
@@ -115,6 +115,17 @@ def build_benchmark_tables() -> str:
                     )
                     continue
 
+                # Move circuit graph to directory
+                if data.circuit_file:
+                    circuit_graph_path = os.path.join(
+                        circuits_path,
+                        test_case_dir.name
+                        + f"-{protocol}"
+                        + ("-Vectorized" if vectorized else "")
+                        + ".dot",
+                    )
+                    os.rename(data.circuit_file, circuit_graph_path)
+
                 table += "|"
                 table += (
                     test_case_dir.name
@@ -122,6 +133,7 @@ def build_benchmark_tables() -> str:
                     + "|"
                 )
                 table += str(data.circuit_stats.num_gates) + "|"
+                table += str(data.circuit_stats.depth) + "|"
                 table += str(data.circuit_stats.num_simd_gates) + "|"
                 table += str(data.circuit_stats.num_nonsimd_gates) + "|"
                 table += str(data.timing_stats.communication.send_num_msgs) + "|"
@@ -142,11 +154,13 @@ def main():
     args = parser.parse_args()
 
     os.makedirs(os.path.join(args.path, "images"), exist_ok=True)
+    circuits_path = os.path.join(args.path, "circuits")
+    os.makedirs(circuits_path, exist_ok=True)
 
     md = "# Compiler results data\n"
     md = "## [View the current version of the paper here](paper_SIMD.pdf)\n"
 
-    md += build_benchmark_tables() + "\n"
+    md += build_benchmark_tables(circuits_path) + "\n"
 
     md += "## Compiler stages with different benchmarks\n"
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
