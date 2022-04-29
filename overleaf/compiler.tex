@@ -14,14 +14,13 @@
 \end{figure*}
 
 \figref{fig:compiler_framework} presents an overview of our compiler.
-We start the section with a brief description of the top-level syntax and semantic restrictions.
-We proceed to describe several phases of the compiler:~\secref{sec:imp_to_ssa}
+We start the section with a brief description of the top-level syntax and semantic restrictions in~\secref{sec:syntax}.
+We proceed to describe the front end of the compiler:~\secref{sec:imp_to_ssa}
 describes translation from IMP Source to SSA, and~\secref{sec:ssa_to_MPC_Source}
-describes translation form SSA into MPC Source, i.e., the front-end of our compiler.
-Finally,~\secref{sec:MOTION} describes translation of MPC Source, un-optimized and
-optimized into MOTION, i.e., this is the back-end of our compiler.
+describes translation form SSA into MPC Source.
 
-Analysis on MPC Source and vectorization comes in a separate section, Section~\secref{sec:vectorization}.
+We describe analysis on MPC Source and backend-independent vectorization in~\secref{sec:vectorization}
+and translation into MOTION code in~\secref{sec:backend}.
 %\ana{Need to state this more precisely.}
 
 \subsection{Syntax and Semantic Restrictions}
