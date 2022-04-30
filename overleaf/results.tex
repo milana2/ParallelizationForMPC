@@ -7,5 +7,49 @@ We tested our framework with several benchmarks. For the multiparty computation 
 We repeated all experiments (except one) five times and report average and standard deviation values of various metrics. The one experiment where we measure metrics across a range of input configurations (from small to large), was run only once. Note however that due to the very low standard deviation (more on this below) seen in the multiple-run experiments, the accuracy of results of this experiments is not unreasonably affected.
 
 \subsection{Results and Analysis}\label{sec:result_analysis}
-TODO
+
+
+\begin{figure*}[htbp]
+\centering
+\include{graphs/all-hist-OnlineSetupTimesec}
+\caption{Circuit Evaluation Time (Setup + Online) of Benchmarks}
+\label{fig:graph_all_online_setup}
+\end{figure*}
+
+\begin{figure*}[htbp]
+\centering
+\include{graphs/all-hist-CommunicationMiB}
+\caption{Communication Size of Benchmarks}
+\label{fig:graph_comm_size_time}
+\end{figure*}
+
+
+\begin{figure*}[htbp]
+\centering
+\include{graphs/all-hist-CircuitGenerationTimesec}
+\caption{Circuit Generation Time of Benchmarks}
+\label{fig:graph_circ_gen_time}
+\end{figure*}
+
+\begin{figure*}[htbp]
+\centering
+\include{graphs/all-hist-TotalGates}
+\caption{Number of Gates of Benchmarks}
+\label{fig:graph_total_gates}
+\end{figure*}
+
+\begin{figure*}[htbp]
+\centering
+\include{graphs/all-hist-OnlineTimesec}
+\caption{Online Time of Benchmarks}
+\label{fig:graph_online_time}
+\end{figure*}
+
+\begin{figure*}[htbp]
+\centering
+\include{graphs/all-hist-SetupTimesec}
+\caption{Setup Time of Benchmarks}
+\label{fig:graph_setup_time}
+\end{figure*}
+
 

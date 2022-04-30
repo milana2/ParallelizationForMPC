@@ -1,0 +1,142 @@
+% GNUPLOT: LaTeX picture with Postscript
+\begingroup
+  \makeatletter
+  \providecommand\color[2][]{%
+    \GenericError{(gnuplot) \space\space\space\@spaces}{%
+      Package color not loaded in conjunction with
+      terminal option `colourtext'%
+    }{See the gnuplot documentation for explanation.%
+    }{Either use 'blacktext' in gnuplot or load the package
+      color.sty in LaTeX.}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\includegraphics[2][]{%
+    \GenericError{(gnuplot) \space\space\space\@spaces}{%
+      Package graphicx or graphics not loaded%
+    }{See the gnuplot documentation for explanation.%
+    }{The gnuplot epslatex terminal needs graphicx.sty or graphics.sty.}%
+    \renewcommand\includegraphics[2][]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \@ifundefined{ifGPcolor}{%
+    \newif\ifGPcolor
+    \GPcolortrue
+  }{}%
+  \@ifundefined{ifGPblacktext}{%
+    \newif\ifGPblacktext
+    \GPblacktextfalse
+  }{}%
+  % define a \g@addto@macro without @ in the name:
+  \let\gplgaddtomacro\g@addto@macro
+  % define empty templates for all commands taking text:
+  \gdef\gplbacktext{}%
+  \gdef\gplfronttext{}%
+  \makeatother
+  \ifGPblacktext
+    % no textcolor at all
+    \def\colorrgb#1{}%
+    \def\colorgray#1{}%
+  \else
+    % gray or color?
+    \ifGPcolor
+      \def\colorrgb#1{\color[rgb]{#1}}%
+      \def\colorgray#1{\color[gray]{#1}}%
+      \expandafter\def\csname LTw\endcsname{\color{white}}%
+      \expandafter\def\csname LTb\endcsname{\color{black}}%
+      \expandafter\def\csname LTa\endcsname{\color{black}}%
+      \expandafter\def\csname LT0\endcsname{\color[rgb]{1,0,0}}%
+      \expandafter\def\csname LT1\endcsname{\color[rgb]{0,1,0}}%
+      \expandafter\def\csname LT2\endcsname{\color[rgb]{0,0,1}}%
+      \expandafter\def\csname LT3\endcsname{\color[rgb]{1,0,1}}%
+      \expandafter\def\csname LT4\endcsname{\color[rgb]{0,1,1}}%
+      \expandafter\def\csname LT5\endcsname{\color[rgb]{1,1,0}}%
+      \expandafter\def\csname LT6\endcsname{\color[rgb]{0,0,0}}%
+      \expandafter\def\csname LT7\endcsname{\color[rgb]{1,0.3,0}}%
+      \expandafter\def\csname LT8\endcsname{\color[rgb]{0.5,0.5,0.5}}%
+    \else
+      % gray
+      \def\colorrgb#1{\color{black}}%
+      \def\colorgray#1{\color[gray]{#1}}%
+      \expandafter\def\csname LTw\endcsname{\color{white}}%
+      \expandafter\def\csname LTb\endcsname{\color{black}}%
+      \expandafter\def\csname LTa\endcsname{\color{black}}%
+      \expandafter\def\csname LT0\endcsname{\color{black}}%
+      \expandafter\def\csname LT1\endcsname{\color{black}}%
+      \expandafter\def\csname LT2\endcsname{\color{black}}%
+      \expandafter\def\csname LT3\endcsname{\color{black}}%
+      \expandafter\def\csname LT4\endcsname{\color{black}}%
+      \expandafter\def\csname LT5\endcsname{\color{black}}%
+      \expandafter\def\csname LT6\endcsname{\color{black}}%
+      \expandafter\def\csname LT7\endcsname{\color{black}}%
+      \expandafter\def\csname LT8\endcsname{\color{black}}%
+    \fi
+  \fi
+    \setlength{\unitlength}{0.0500bp}%
+    \ifx\gptboxheight\undefined%
+      \newlength{\gptboxheight}%
+      \newlength{\gptboxwidth}%
+      \newsavebox{\gptboxtext}%
+    \fi%
+    \setlength{\fboxrule}{0.5pt}%
+    \setlength{\fboxsep}{1pt}%
+    \definecolor{tbcol}{rgb}{1,1,1}%
+\begin{picture}(10080.00,5040.00)%
+    \gplgaddtomacro\gplbacktext{%
+      \csname LTb\endcsname%%
+      \put(814,1100){\makebox(0,0)[r]{\strut{}$0$}}%
+      \put(814,1647){\makebox(0,0)[r]{\strut{}$50$}}%
+      \put(814,2193){\makebox(0,0)[r]{\strut{}$100$}}%
+      \put(814,2740){\makebox(0,0)[r]{\strut{}$150$}}%
+      \put(814,3286){\makebox(0,0)[r]{\strut{}$200$}}%
+      \put(814,3833){\makebox(0,0)[r]{\strut{}$250$}}%
+      \put(814,4379){\makebox(0,0)[r]{\strut{}$300$}}%
+      \put(1416,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Biometric Distance}}}%
+      \put(1886,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Biometric Distance (Fast)}}}%
+      \put(2356,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Convex Hull}}}%
+      \put(2826,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Count 102}}}%
+      \put(3296,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Count 10s}}}%
+      \put(3766,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Cryptonets (Max Pooling)}}}%
+      \put(4236,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}DB Cross Join (Trivial)}}}%
+      \put(4706,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Database Variance}}}%
+      \put(5175,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Histogram}}}%
+      \put(5645,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Inner Product}}}%
+      \put(6115,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}k-means}}}%
+      \put(6585,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Longest 102}}}%
+      \put(7055,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Max. Dist. b/w Symbols}}}%
+      \put(7525,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Minimal Points}}}%
+      \put(7995,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}MNIST ReLU}}}%
+      \put(8465,968){\rotatebox{-45}{\makebox(0,0)[l]{\strut{}Private Set Intersection}}}%
+      \put(9067,1100){\makebox(0,0)[l]{\strut{}$0$}}%
+      \put(9067,1428){\makebox(0,0)[l]{\strut{}$5$}}%
+      \put(9067,1756){\makebox(0,0)[l]{\strut{}$10$}}%
+      \put(9067,2084){\makebox(0,0)[l]{\strut{}$15$}}%
+      \put(9067,2412){\makebox(0,0)[l]{\strut{}$20$}}%
+      \put(9067,2740){\makebox(0,0)[l]{\strut{}$25$}}%
+      \put(9067,3067){\makebox(0,0)[l]{\strut{}$30$}}%
+      \put(9067,3395){\makebox(0,0)[l]{\strut{}$35$}}%
+      \put(9067,3723){\makebox(0,0)[l]{\strut{}$40$}}%
+      \put(9067,4051){\makebox(0,0)[l]{\strut{}$45$}}%
+      \put(9067,4379){\makebox(0,0)[l]{\strut{}$50$}}%
+    }%
+    \gplgaddtomacro\gplfronttext{%
+      \csname LTb\endcsname%%
+      \put(209,2739){\rotatebox{-270}{\makebox(0,0){\strut{}Setup Time (sec)}}}%
+      \put(9573,2739){\rotatebox{-270}{\makebox(0,0){\strut{}Improvement (number of times)}}}%
+      \csname LTb\endcsname%%
+      \put(2602,4867){\makebox(0,0)[r]{\strut{}GMW}}%
+      \csname LTb\endcsname%%
+      \put(2602,4647){\makebox(0,0)[r]{\strut{}GMW (Vectorized)}}%
+      \csname LTb\endcsname%%
+      \put(5569,4867){\makebox(0,0)[r]{\strut{}BMR}}%
+      \csname LTb\endcsname%%
+      \put(5569,4647){\makebox(0,0)[r]{\strut{}BMR (Vectorized)}}%
+      \csname LTb\endcsname%%
+      \put(8536,4867){\makebox(0,0)[r]{\strut{}GMW Improvement}}%
+      \csname LTb\endcsname%%
+      \put(8536,4647){\makebox(0,0)[r]{\strut{}BMR Improvement}}%
+    }%
+    \gplbacktext
+    \put(0,0){\includegraphics[width={504.00bp},height={252.00bp}]{all-hist-SetupTimesec}}%
+    \gplfronttext
+  \end{picture}%
+\endgroup
