@@ -1,8 +1,8 @@
 \section{Compiler Back End}
 \label{sec:backend}
 
-MOTION code generation requires that variables are marked as \texttt{plain} or \texttt{shared} 
-following the type system in~\secref{sec:syntax}. We require that all inputs are marked as either shared or plaintext, 
+MOTION code generation requires that variables are marked as \texttt{plain} or \texttt{shared}
+following the type system in~\secref{sec:syntax}. We require that all inputs are marked as either shared or plaintext,
 however, we infer qualifiers for the rest of the variables. \secref{sec:taint} briefly describes the taint analysis
 and \secref{sec:MOTION} describes MOTION code generation.
 
@@ -11,10 +11,10 @@ and \secref{sec:MOTION} describes MOTION code generation.
 
 The taint analysis works on MPC Source, which lacks if-then-else control flow.
 This significantly simplifies treatment as there is no need to handle conditionals and implicit flow.
-%taint analysis with "taintedness" referring to the shared attribute.  
+%taint analysis with "taintedness" referring to the shared attribute.
 Specifically, the compiler uses the following rules, which are standard in positive-negative qualifier systems (here \texttt{shared} is the positive qualifier and \texttt{plain} is the negative one):
 \begin{enumerate}
-\item Loop counters and array bounds are always \texttt{plain}.
+\item Loop counters are always \texttt{plain}. \ben{I removed the reference to array bounds since those are not variables defined in MPC source}
 \item If any variable on the right-hand side {\sf rhs} of an assignment is shared, then the assigned variable {\sf lhs} is \texttt{shared} following subtyping rule ${\sf rhs} <: {\sf lhs}$.
 %\item If all variables on the right-hand side of an assignment are plaintext, then the assigned variable is plaintext \ana{Will be covered by the last rule.}
 \item Any variables that cannot be determined as shared via the above rules are \texttt{plain}.
@@ -50,8 +50,7 @@ MOTION supports FOR loops and SIMD operations, so translation from MPC source to
 Our generated C++ uses the following variable-naming scheme: shared variables are named the same as in the MPC Source with the {\sf !} replaced with an underscore (e.g. {\sf sum!2} would be translated to {\sf sum\_2}). Plaintext variables follow the same naming convention as shared variables but are prefixed with {\sf \_MPC\_PLAINTEXT\_}.  The shared representation of constants are named {\sf \_MPC\_CONSTANT\_} followed by the literal constant (e.g. the shared constant 0 would be named {\sf \_MPC\_CONSTANT\_0}).
 
 % Function preamble
-The generated MOTION code begins with the declaration of all variables used in the function, including loop counters.  If a variable is a vectorized array, it is initialized to a correctly-sized array of empty MOTION shares.  Additionally, each plaintext variable and parameter has a shared counterpart declared.  Next, all constant values which are used as part of shared expressions are initialized as a shared input from party 0.  Finally, plaintext parameters are converted used as shared inputs from party 0 to initialize their shared counterparts.  
-\ben{The note in parentheses is not true: we currently assume that all plaintext variables other than loop counters will be used in a shared expression.  We initialize a shared version of them in the preamble (using the \texttt{\_MPC\_CONSTANT} variables or the plaintext parameter, depending on how the plaintext variable is initialized) and update that shared variable whenever the plaintext variable is updated.  This is done to minimize the number of input gates (e.g. if a plaintext variable is upcast to shared in a loop, that would insert N input gates).  With protocols that allow publicly known shared constants, this would not be necessary.  This is described in the final subsection of this section.}\ana{Got it, thanks! I think it is good now.}
+The generated MOTION code begins with the declaration of all variables used in the function, including loop counters.  If a variable is a vectorized array, it is initialized to a correctly-sized array of empty MOTION shares.  Additionally, each plaintext variable and parameter has a shared counterpart declared.  Next, all constant values which are used as part of shared expressions are initialized as a shared input from party 0.  Finally, plaintext parameters are converted used as shared inputs from party 0 to initialize their shared counterparts.
 
 \paragraph{Code generation:}
 % Non-vectorized assignments and returns
@@ -143,7 +142,7 @@ Whenever a SIMD value is used in an expression, the utility function {\sf vector
 %\ana{Is it correct to say that the operators are overloaded? If yes, use that term?} \ben{I don't think that's the right term since SIMD and scalar MOTION values use the same C++ class, so the operator is the same.} \ana{Ok, leave as is.}
 Therefore, once vectorized accesses are inserted the translation of an expression containing SIMD values is identical to that of expressions without SIMD values.
 
-Similarly, the {\sf vectorized\_assign()} function assigns a (potentially SIMD) value to a slice of a vectorized array.  This operation cannot be done with a simple subscript as SIMD assignments will update a range of values in the underlying array representation. \ana{Changed non-vectorized -> array representation. Check if correct.}
+Similarly, the {\sf vectorized\_assign()} function assigns a (potentially SIMD) value to a slice of a vectorized array.  This operation cannot be done with a simple subscript as SIMD assignments will update a range of values in the underlying array representation.
 %\ben{Is the next sentence needed?  They can always check the implementation of vectorized\_assign() if they want to see specifics.}
 %The function takes the array being assigned to as a reference to update it in place so that any existing values are not lost.  SIMD values are never directly assigned to non-SIMD values. \ana{Yes, this is implementation-specific, you can remove.}
 
@@ -188,7 +187,7 @@ Updating SIMD arrays is also implemented differently from updating non-vectorize
 
 \ben{The compiler and C++ internally uses ``lift'' as the terminology for raise\_dim(), but the paper does not :(...} \ana{True. To make matters worse, most of the explanation on this comes in the next section. But I'll leave as is for now but leave the comments too because it needs work.} \ben{Attempted to explain the naming, please review.}
 \paragraph{Reshaping and raising dimensions:}
-Raising the dimensions of a scalar or array uses the {\sf lift()} utility function which takes a lambda for the raised expression and the dimensions of the output.  This function is also used for the scalar expansion of values which have been lifted out of FOR loops as described in \secref{sec:expansion}.  This function evaluates the expression for each permutation of indices along the dimensions and returns the resulting array in row-major order.  The lambda accepts an array of integers representing the index along each of the dimensions being raised, and the translation of the expression which is being raised replaces each of the dimension index variables with the relevant subscript of this array.  There is also a special case of the {\sf lift()} function which occurs when we are raising an array.  In this case, instead of concatenating the array for each index, \ana{can we remove "instead of concatenating the array"} we extend the array along all dimensions being raised which are not present in the array already.  For example, when raising an array with dimensions $N \times M$ to an array with dimensions $N \times M \times D$, the input array will simply be extended along the $D$ dimension: ${\sf A'}[n,m,d] = {\sf A}[n,m]$ for every $d$.  If the input array is already correctly sized it will be returned as-is.
+Raising the dimensions of a scalar or array uses the {\sf lift()} utility function which takes a lambda for the raised expression and the dimensions of the output.  This function is also used for the scalar expansion of values which have been lifted out of FOR loops as described in \secref{sec:expansion}.  This function evaluates the expression for each permutation of indices along the dimensions and returns the resulting array in row-major order.  The lambda accepts an array of integers representing the index along each of the dimensions being raised, and the translation of the expression which is being raised replaces each of the dimension index variables with the relevant subscript of this array.  There is also a special case of the {\sf lift()} function which occurs when we are raising an array.  In this case, instead of concatenating the array for each index, \ana{can we remove "instead of concatenating the array"} \ben{I included it to show why the standard implementation of lift() doesn't work, if you don't think that's necessary then it can be removed.} we extend the array along all dimensions being raised which are not present in the array already.  For example, when raising an array with dimensions $N \times M$ to an array with dimensions $N \times M \times D$, the input array will simply be extended along the $D$ dimension: ${\sf A'}[n,m,d] = {\sf A}[n,m]$ for every $d$.  If the input array is already correctly sized it will be returned as-is.
 %This case only occurs when the dimensionality of the array is equal to the first dimensions of the array (any dimension which is being lifted to which is not in the array is after every dimension in the array) \ben{I don't know how to phrase the previous sentence more concisely}.  In this case, the array is simply extended along the new dimensions (if the array is already correctly sized it is returned as is).
 %\ana{Add the ref. to the figure. Also, try to rewrite. I understand what the paragraph is saying but it is too technical and does not convey the higher-level goal of these. Try first to state what the goal is, and then talk about the details such as the lambda funcs.} \ben{Rewrote the above paragraph to be less confusing/implementation-specific, please review.} \ana{Better, removing comment.}
 
