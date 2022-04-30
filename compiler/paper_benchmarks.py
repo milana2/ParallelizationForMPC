@@ -905,7 +905,7 @@ def generate_cumulative_graph_for_attr(all_stats, get_val, y_label, dir):
         x = 1
         for task_stat in all_stats:
             label = get_x_label_for_benchmark(task_stat.label)
-            for i in range(len(task_stat.input_configs)-1, 0, -1):
+            for i in range(len(task_stat.input_configs)-1, -1, -1):
                 input = task_stat.input_configs[i]
                 if input.gmw_p0 is not None and input.gmw_vec_p0 is not None and \
                     input.bmr_p0 is not None and input.bmr_vec_p0 is not None:
@@ -956,6 +956,7 @@ def generate_single_network_graphs(all_stats, dir):
     generate_graph_for_attr(all_stats, get_send_size, 'Communication (MiB)', dir)
     generate_cumulative_graph_for_attr(all_stats, get_send_size, 'Communication (MiB)', dir)
 
+    # Not needed anymore
     # get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
     # generate_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)  
     # generate_cumulative_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)
