@@ -2,18 +2,28 @@
 \section{Backend-Independent Vectorization}
 \label{sec:vectorization}
 
-\ana{Need an intro/overview here!}
-\ana{Need to define notion of canonical access!}
-\ana{Talk about MPC Source, opportunities for vectorization, algorithm unique to MPC Source.}
+%\ana{Need an intro/overview here!}
+%\ana{Need to define notion of canonical access!}
+%\ana{Talk about MPC Source, opportunities for vectorization, algorithm unique to MPC Source.}
+
+This section describes our vectorization algorithm. While vectorization is a longstanding problem, 
+and we build upon existing work on scalar expansion and classical loop vectorization~\cite{Allen:1987}, 
+our algorithm is unique as it works on the MPC Source SSA-form representation. We posit that vectorization 
+over MPC Source is a new problem that warrants a new look, in part because of MPC's unique linear 
+structure and in part because vectorization meshes in with other MPC-specific optimizations in non-trivial ways
+(other works have explored manual vectorization and protocol mixing in an ad-hoc way, e.g.,~\cite{NDSS:DemSchZoh15,CCS:BDKKS18,Ishaq:2019}).
+
+\secref{sec:dependence} describes our dependence analysis and ~\secref{sec:expansion} describes scalar expansion,
+which lifts scalars (and arrays) to the corresponding loop dimensionality to create opportunities for vectorization. 
+\secref{sec:basic_vectorization} describes our core vectorization algorithm and~\secref{sec:correctness} argues correctness of the vectorization transformation.
+\secref{sec:array_writes} extends vectorization with array writes.   
 
 \subsection{Dependence Analysis}
 \label{sec:dependence}
 
-The next steps construct the dependence graph and \ana{Add an intro here.}
+We build a dependence graph where the nodes are the MPC Source statements and the edges represent the def-use relations.
 
-\subsubsection{Def-use Edges}
-
-The dependence graph has the following def-use edges:
+\paragraph{Def-use Edges} We distinguish the following def-use edges:
 
 \begin{itemize}
 \item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge 9 to 10 in the Biometric MPC Source in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source} is a same-level edge. A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge.
@@ -32,9 +42,8 @@ An inner-to-outer edge can be a back-edge as well, in which case both $X$ and $Y
 \item mixed forward edge $X\rightarrow Y$. $X$ is in some loop $i,j,k$ and $Y$ is in a loop nested into $i,j,k'$. We transform mixed forward edges as follows. Let $\x$ be the variable defined at $X$. We add a variable and assignment $\x' = \x$ immediately after the $i,j,k$ loop. Then we replace the use of $\x$ at $Y$ with $\x'$. This transforms a mixed forward edge into an "inner-to-outer" forward edge followed by an outer-to-inner forward edge. Thus, Basic Vectorization handles one of "same-level", "inner-to-outer", or "outer-to-inner" def-use edges.
  \end{itemize}
 
-\subsubsection{Closures}
-
-We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. The closure of $n$ is defined as follows:
+\paragraph{Closures}
+We define $\mathit{closure}(n)$ where $n$ is a PHI-node. Intuitively, it computes the set of nodes (i.e., statements) that form a dependence cycle with $n$. The closure of $n$ is defined as follows:
 \begin{itemize}
 \item $n$ is in $\mathit{closure}(n)$
 \item $X$ is in $\mathit{closure}(n)$ if there is a same-level path from $n$ to $X$, and $X \rightarrow n$ is a same-level back-edge.
@@ -42,18 +51,20 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 \end{itemize}
 
 \subsection{Scalar Expansion}
+\label{sec:expansion}
 
 %\subsubsection{Overview}
 
 An important component of our algorithm is the scalar expansion to the corresponding loop dimensionality, 
 which is necessary to expose opportunities for vectorization.
-For example, {\sf d = S[i*D+j] - C[j]} equiv. to {\sf d = S[i,j] - C[j]}, which gave rise to {\sf N*D} subtraction operations in the sequential schedule,
-is lifted. The argument arrays {\sf S} and {\sf C} are lifted and the scaler {\sf d} is lifted: {\sf d[i,j] = S[i,j] - C[i,j]}.
+In the Biometric example, {\sf d = S[i*D+j] - C[j]} equiv. to {\sf d = S[i,j] - C[j]}, which gave rise to $N*D$ subtraction operations in the sequential schedule,
+is lifted. The argument arrays {\sf S} and {\sf C} are lifted and the scalar {\sf d} is lifted: {\sf d[i,j] = S[i,j] - C[i,j]}.
 The algorithm then detects that the statement can be vectorized.
 
-\paragraph{Arrays} There are three kinds of arrays.
-\begin{itemize}
+\paragraph{Arrays} Conceptually, we treat all variables as arrays. There are three kinds of arrays. 
+%\ana{Arrays is not a good name here.}
 
+\begin{itemize}
 \item Scalars: These are scalar variables we expand into arrays for the purposes of vectorization.
 For those, all writes are canonical writes and all reads are canonical reads. We will \emph{raise dimension} when
 a scalar gives rise to an outer-to-inner dependence edge (e.g., {\sf sum!2} in line 6 of the MPC source code will be raised to a 1-dimensional
@@ -79,43 +90,45 @@ each one of these views. The invariant is that at reads in loops, the reads of "
 
 \end{itemize}
 
-In the sections below we detail the $\mathit{raise\_dim}$ (raise dimension) and $\mathit{drop\_dim}$ (drop dimension) operations,
-followed by our vectorization algorithm.
+%In the sections below we detail the $\mathit{raise\_dim}$ (raise dimension) and $\mathit{drop\_dim}$ (drop dimension) operations,
+%followed by our vectorization algorithm.
 
 %\subsubsection{Raise Dimension and Drop Dimension}
 
 \paragraph{Raise dimension} 
+The $\mathit{raise\_dim}$ function expands a scalar (or array). 
 There are two conceptual versions of $\mathit{raise\_dim}$. One reshapes an arbitrary access into a canonical read access in the corresponding loop. 
 %The signature of $\mathit{raise\_dim}$ is as follows. 
 It takes the original array, the access pattern function $f(i,j,k)$ in loop nest $i,j,k$ and the loop bounds
 $((i:I),(j:J),(k:K))$:
-\[ \mathit{raise\_dim}({\sf A, f(i,j,k), ((i:I),(j:J),(k:K))}) \]
-It produces a new 3-dimensional array {\sf A'} by iterating over $i,j,k$ and setting each element of  {\sf A'} as follows:
-\[ {\sf A'[i,j,k] =  A[f(i,j,k)]} \]
-The end result is that uses of {\sf [A[f(i,j,k)]} in loop nest $i,j,k$ are replaced with canonical read-accesses to {\sf A'[i,j,k]}
-that can be vectorized. In the running Biometric example, {\sf C'} = $\mathit{raise\_dim}${\sf (C, j, (i:N,j:D))} lifts the
-1-dimensional array {\sf C} into a 2-dimensional array. The $i,j$ loop now accesses {\sf C'} in the canonical way, {\sf C'[i,j]}.
-Similarly, {\sf S'} = $\mathit{raise\_dim}${\sf (S, i*D+j, (i:N,j:D))} tries to lift {\sf S}, but the operation turns into a no-op
+\[ \mathit{raise\_dim}(A, f(i,j,k), ((i:I),(j:J),(k:K))) \]
+It produces a new 3-dimensional array ${\sf A'}$ by iterating over $i,j,k$ and setting each element of  ${\sf A'}$ as follows:
+\[ {\sf A'}[i,j,k] =  {\sf A}[f(i,j,k)] \]
+The end result is that uses of ${\sf A}[f(i,j,k)]$ in loop nest $i,j,k$ are replaced with canonical read-accesses to ${\sf A'}[i,j,k]$
+that can be vectorized. In the running Biometric example, ${\sf C'} = \mathit{raise\_dim}({\sf C}, j, (i:N,j:D))$ lifts the
+1-dimensional array {\sf C} into a 2-dimensional array. The $i,j$ loop now accesses ${\sf C'}$ in the canonical way, ${\sf C'}[i,j]$.
+Similarly, ${\sf S'} = \mathit{raise\_dim}({\sf S}, i*D+j, (i:N,j:D))$ tries to lift {\sf S}, but the operation turns into a no-op
 because {\sf S} is already a 2-dimensional array and the read access is canonical.
 
-\paragraph{Drop dimension} 
 The other version of $\mathit{raise\_dim}$ lifts a lower-dimension array into a
 higher-dimension for access in a nested loop. It is necessary when processing outer-to-inner dependences. 
 Here {\sf A} is an $i$-array and raise dimension adds two additional dimensions:
-\[ \mathit{raise\_dim}({\sf A}, {\sf (j:J,k:K)}) \]
+\[ \mathit{raise\_dim}({\sf A}, (j:J,k:K)) \]
 This version is reduced to the above version by adding the access pattern function, which is just $i$:
-\[ \mathit{raise\_dim}({\sf A, i, (j:J,k:K)}) \]
+\[ \mathit{raise\_dim}({\sf A}, i, (j:J,k:K)) \]
 
+\paragraph{Drop dimension}  
 The corresponding $\mathit{drop\_dim}$ is carried out when an array written in an inner loop is used in an enclosing loop.
 It takes a higher dimensional array, say $i,j,k$ and removes trailing dimensions, say $j,k$:
-\[ \mathit{drop\_dim}({\sf A, (j:J,k:K)}) \]
+\[ \mathit{drop\_dim}({\sf A}, (j:J,k:K)) \]
 It iterates over $i$ and takes the result at the maximal index of $j$ and $k$, i.e., the result at the last iterations of $j$ and $k$:
-\[ {\sf A'[i] = A[i,J-1,K-1]} \]
+\[ {\sf A'}[i] = A[i,J-1,K-1] \]
 
 
 \subsection{Basic Vectorization}
+\label{sec:basic_vectorization}
 
-We present our vectorization algorithm in detail followed by a detailed example on Biometric Matching. 
+We present our algorithm followed by an example on Biometric. 
 
 \subsubsection{Algorithm}
 
@@ -143,26 +156,26 @@ Phases 3 and 4 are less important --- phase 3 cleans up local arrays of referenc
 
 \STATE \COMMENT { Phase 1: Raise dimension of scalar variables to corresponding loop nest. We can traverse stmts linearly in MPC-source. }
 
-\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i,j,k$}
+\FOR {each MPC $\mathit{stmt}: \x = \mathit{Op}(\y_1,\y_2)$ in loop $i,j,k$}
 %\FOR {each $Y_n$}
-\FOR {each argument $Y_n$} %def-use edge $\mathit{stmt}' (\mbox{def of } Y) \rightarrow \mathit{stmt} (\mbox{def of } X)$}
-\STATE {case def-use edge $\mathit{stmt}' (\mbox{def of } Y_n) \rightarrow \mathit{stmt} (\mbox{def of } X)$ of} \\
-\STATE \hspace{0.25cm} {same-level: $Y'_n$ is $Y_n$} \\
-\STATE \hspace{0.25cm} {outer-to-inner: add $Y'_n[i,j,k] = \mathit{raise\_dim}(Y_n)$ at $\mathit{stmt'}$}
+\FOR {each argument $\y_n$} %def-use edge $\mathit{stmt}' (\mbox{def of } Y) \rightarrow \mathit{stmt} (\mbox{def of } X)$}
+\STATE {case def-use edge $\mathit{stmt}' (\mbox{def of } \y_n) \rightarrow \mathit{stmt} (\mbox{def of } \x)$ of} \\
+\STATE \hspace{0.25cm} {same-level: $\y'_n$ is $\y_n$} \\
+\STATE \hspace{0.25cm} {outer-to-inner: add $\y'_n[i,j,k] = \mathit{raise\_dim}(\y_n)$ at $\mathit{stmt'}$}
 \STATE \hspace{0.25cm} {(more precisely, right after $\mathit{stmt'}$)}
-\STATE \hspace{0.25cm} {inner-to-outer: add $Y'_n[i,j,k] = \mathit{drop\_dim}(Y_n)$ at $\mathit{stmt}$}
+\STATE \hspace{0.25cm} {inner-to-outer: add $\y'_n[i,j,k] = \mathit{drop\_dim}(\y_n)$ at $\mathit{stmt}$}
 \STATE \hspace{0.25cm} {(more precisely, in loop of $\mathit{stmt}$ right after loop of $\mathit{stmt'}$)}
 \ENDFOR
 
 \COMMENT { Optimistically vectorize all. $I$ means vectorized dimension. }
 %\FOR {each MPC $\mathit{stmt}: X = \mathit{Op}(Y_1,Y_2)$ in loop $i,j,k$}
-\STATE {change to $X[I,J,K] = \mathit{Op}(Y'_1[I,J,K],Y'_2[I,J,K])$ }
+\STATE {change to $\x[I,J,K] = \mathit{Op}(\y'_1[I,J,K],\y'_2[I,J,K])$ }
 \ENDFOR
 
-\COMMENT { Phase 2: Recreating FOR loops for cycles; vectorizable statements hoisted up. }
+\COMMENT { Phase 2: Recreating for-loops for cycles; vectorizable stmts hoisted up. }
 
 \FOR {each dimension $d$ from highest to 0}
-\FOR {each $\phi$-node $n$ in loop $i_1,...,i_d$}
+\FOR {each PHI-node $n$ in loop $i_1,...,i_d$}
 \STATE {compute $\mathit{closure}(n)$}
 \ENDFOR
 
@@ -172,35 +185,35 @@ Phases 3 and 4 are less important --- phase 3 cleans up local arrays of referenc
 \STATE {merge $cl_1$ and $cl_2$}
 \ENDWHILE
 \FOR {each closure $cl$ (after merge)}
-\STATE {create FOR $i_d = 0; ...$ loop}
-\STATE {add $\phi$-nodes in $cl$ to header block}
-\STATE {{\color{red}{add target-less $\phi$-node for A if $cl$ updates array A}}}
-\STATE {add statements in $cl$ to loop body in some order of dependences}
+\STATE {create \python{for} $i_d$ \python{in} ... loop}
+\STATE {add PHI-nodes in $cl$ to header block}
+\STATE {{\color{red}{add target-less PHI-node for A if $cl$ updates array A}}}
+\STATE {add statements in $cl$ to loop in some order of dependences}
 \STATE \COMMENT { Dimension is not vectorizable: }
 \STATE {change ${I_d}$ to $i_d$ in all statements in loop}
-\STATE {treat FOR loop as monolith node for def-uses: e.g., some def-use edges become same-level.}
+\STATE {treat \python{for}-loop as monolith node for def-uses: e.g., some def-use edges become same-level.}
 \ENDFOR
 {
 \color{red}
-\FOR {each target-less $\phi$-node $A_1 = \phi(A_0,A_k)$}
-\STATE {in vectorizable stmts, replace use of $A_1$ with $A_0$}
-\STATE {discard $\phi$-node if not used in any $cl$, replacing $A_1$ with $A_0$ or $A_k$ appropriately}
+\FOR {each target-less PHI-node {\sf A!1 = PHI(A!0,A!k)}}
+\STATE {in vectorizable stmts, replace use of {\sf A!1} with {\sf A!0}}
+\STATE {discard PHI-node if not used in any $cl$, replacing {\sf A!1} with {\sf A!0} or {\sf A!k} appropriately}
 \ENDFOR
 }
 \ENDFOR
 
 \COMMENT { Phase 3: Remove unnecessary dimensionality. }
 
-\COMMENT { A dimension $i$ is dead on exit from stmt $X[...i...] = ...$ if all def-uses with targets outside of the enclosing
-FOR $i=0 ...$ MOTION loop end at target (use) $X' = \mathit{drop\_dim}(X, i)$. }
-\FOR {each stmt and dimension $X[...i...] = ...$}
-\STATE {if $i$ is a dead dimension on exit from stmt $X[...i...] = ...$, remove $i$ from $X$ (all defs and uses)}
+\COMMENT { A dimension $i$ is dead on exit from stmt $\x[...i...] = ...$ if all def-uses with targets outside of the enclosing
+\python{for} $i$ ... MOTION loop end at target (use) $\x' = \mathit{drop\_dim}(\x, i)$. }
+\FOR {each stmt and dimension $\x[...i...] = ...$}
+\STATE {if $i$ is a dead dimension on exit from stmt $\x[...i...] = ...$, remove $i$ from $\x$ (all defs and uses)}
 %\COMMENT{ A stmt v[...i] is a "dead dimension i" if all edges out of FOR i = 0; ... loop end at drop\_dim(v, i)}
 \ENDFOR
 
 \COMMENT { Now clean up drop\_dim and raise\_dim }
-\FOR {each $X' =  \mathit{drop\_dim(X,i)}$ }
-\STATE {replace with $X' = X$ if $i$ is dead in $X$.}
+\FOR {each $\x' =  \mathit{drop\_dim(\x,i)}$ }
+\STATE {replace with $\x' = \x$ if $i$ is dead in $\x$.}
 \ENDFOR
 \STATE {do (1) (extended) constant propagation, (2) copy propagation and (3) dead code elimination to get rid of redundant variables and raise and drop dimension statements}
 
@@ -212,6 +225,7 @@ FOR $i=0 ...$ MOTION loop end at target (use) $X' = \mathit{drop\_dim}(X, i)$. }
 \input{biometric_vectorization_example.tex}
 
 \subsection{Correctness Argument}
+\label{sec:correctness}
 
 We build a correctness argument that loosely follows Abstract Interpretation.
 First we define the MPC Source syntax. The domain of MPC Source programs
@@ -399,7 +413,7 @@ clearly, vectorization preserves all statements and def-use edges in the origina
 same result as the original MPC Source. (In this case we have an equivalence, $a_0 = a_1$ according to our partial order.)
 
 \subsection{Extension with Array Writes}
-\label{sec:extension_with_writes}
+\label{sec:array_writes}
 
 \subsubsection{Removal of Infeasible Edges}
 
