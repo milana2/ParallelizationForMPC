@@ -59,7 +59,7 @@ To prove that optimal scheduling is an NP-Hard problem, we consider the followin
 In each sequence $s_i$ operations depend on previous operations via a def-use i.e. $s_i[j], j > 1$ depends on $s_i[j-1]$. 
 %However, the sequences $S_i, 1 \leq i \leq n$ themselves, can overlap each other in any way i.e. distinct sequences can be executed in parallel. We argue that an MPC program can be transformed into such collection of sequences by traversing the circuit for each pair of input and output values. \ishaq{I am not sure how this will be done, see \cref{fig:sequence_construction}}
 
-As an example, consider the MPC program consisting of the following three sequences, all made up of two distinct $\alpha$-instructions $M_1$ and $M_2$, e.g., a $M_1$ is MUL and $M_2$ is MUX. The right arrow indicates a def-use \emph{dependence}, meaning that the source node must execute before the target node: 
+As an example, consider the MPC program consisting of the following three sequences, all made up of two distinct $\alpha$-instructions $M_1$ and $M_2$, e.g., $M_1$ is MUL and $M_2$ is MUX. The right arrow indicates a def-use \emph{dependence}, meaning that the source node must execute before the target node: 
 
 \begin{enumerate}
     \item $M_1 \rightarrow M_2 \rightarrow M_1$
@@ -84,7 +84,8 @@ M_1(1), M_1(2) \; ;\; M_1(2) \; ; \; M_2(1), M_2(3) \; ; \; M_1(1), M_1(2), M_1(
 The parentheses above indicate the sequence where the instruction comes from: (1), (2), or (3). 
 Cost of schedule $P$ is computed using \cref{eq_par_schedule_cost} above and it amounts to $5\alpha_\mathit{fix} + 9\alpha_\mathit{var}$.
 
-The problem of finding a schedule $P$ with a minimal $cost(P)$ is shown to be NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, a known NP-Hard problem\cite{Maier1978, Vazirani2010}. The shortest common supersequence problem is as follows: {\it given two or more sequences find the the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. For our problem $n$ is the maximum length of a sequence and $k$ is the number of instructions of sequences. We can immediately see that the optimal schedule is the shortest schedule, since the shortest schedule minimizes the fixed cost while the variable cost remains the same.
+The problem of finding a schedule $P$ with a minimal $cost(P)$ is shown to be NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, a known NP-Hard problem\cite{Maier1978, Vazirani2010}. The shortest common supersequence problem is as follows: {\it given two or more sequences find the the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. %For our problem $n$ is the maximum length of a sequence and $k$ is the number of instructions of sequences. 
+We can immediately see that the optimal schedule is the shortest schedule, since the shortest schedule minimizes the fixed cost while the variable cost remains the same.
 
 To formalize the reduction, suppose $P$ is a schedule with minimal cost (computed by a black-box algorithm). 
 %We can derive a schedule $P'$ with the same cost as $P$, by mapping each mixed node $P_i \in P$ to two consecutive nodes in $P'$: an $A$-instruction node followed by an $M$-instruction node. 

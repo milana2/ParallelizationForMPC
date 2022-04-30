@@ -22,7 +22,7 @@ E.g., 15 to 4 in Biometric is a same-level back-edge.
 %A $\phi$-node can be a source or a target of an outer-to-inner forward edge.
 \item inner-to-outer $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g., the def-use from 8 to 12 gives rise to an inner-to-outer edge.
 %E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer edge.
-An inner-to-outer edge can be a back-edge as well, in which case both $X$ and $Y$ are phi-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
+An inner-to-outer edge can be a back-edge as well, in which case both $X$ and $Y$ are $\phi$-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
 
 %Note that the source is \emph{always} a $\phi$-node of the $i,j,k$ loop and the target is in the immediately enclosing loop. The interpretation of this edge is that the use node $Y$ uses the definition made in the last iteration of the inner loop.
 %\ben{The current representation of pseudo $\phi$-nodes shows them attached to the loop header (i.e. in the loop).  We may want to clarify that they are also evaluated at the loop's termination.}
@@ -43,14 +43,15 @@ We define $\mathit{closure}(n)$ where $n$ is a phi-node. Intuitively, it compute
 
 \subsection{Scalar Expansion}
 
-\subsubsection{Overview}
+%\subsubsection{Overview}
 
-An important component of our algorithm is the scalar expansion to the corresponding loop dimensionality.
+An important component of our algorithm is the scalar expansion to the corresponding loop dimensionality, 
+which is necessary to expose opportunities for vectorization.
 For example, {\sf d = S[i*D+j] - C[j]} equiv. to {\sf d = S[i,j] - C[j]}, which gave rise to {\sf N*D} subtraction operations in the sequential schedule,
 is lifted. The argument arrays {\sf S} and {\sf C} are lifted and the scaler {\sf d} is lifted: {\sf d[i,j] = S[i,j] - C[i,j]}.
 The algorithm then detects that the statement can be vectorized.
 
-There are three kinds of arrays.
+\paragraph{Arrays} There are three kinds of arrays.
 \begin{itemize}
 
 \item Scalars: These are scalar variables we expand into arrays for the purposes of vectorization.
@@ -81,8 +82,9 @@ each one of these views. The invariant is that at reads in loops, the reads of "
 In the sections below we detail the $\mathit{raise\_dim}$ (raise dimension) and $\mathit{drop\_dim}$ (drop dimension) operations,
 followed by our vectorization algorithm.
 
-\subsubsection{Raise Dimension and Drop Dimension}
+%\subsubsection{Raise Dimension and Drop Dimension}
 
+\paragraph{Raise dimension} 
 There are two conceptual versions of $\mathit{raise\_dim}$. One reshapes an arbitrary access into a canonical read access in the corresponding loop. 
 %The signature of $\mathit{raise\_dim}$ is as follows. 
 It takes the original array, the access pattern function $f(i,j,k)$ in loop nest $i,j,k$ and the loop bounds
@@ -96,6 +98,7 @@ that can be vectorized. In the running Biometric example, {\sf C'} = $\mathit{ra
 Similarly, {\sf S'} = $\mathit{raise\_dim}${\sf (S, i*D+j, (i:N,j:D))} tries to lift {\sf S}, but the operation turns into a no-op
 because {\sf S} is already a 2-dimensional array and the read access is canonical.
 
+\paragraph{Drop dimension} 
 The other version of $\mathit{raise\_dim}$ lifts a lower-dimension array into a
 higher-dimension for access in a nested loop. It is necessary when processing outer-to-inner dependences. 
 Here {\sf A} is an $i$-array and raise dimension adds two additional dimensions:

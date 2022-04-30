@@ -95,9 +95,9 @@ and access. (This restriction can be easily lifted.)
 \end{semantics}
 The subscript $e$ is a function of the indices of the enclosing loops.
 For read access, the compiler allows an arbitrary such function.
-However, it restricts write access to \emph{canonical writes}, i.e., {\sf A[i,j,k] = ...}
+However, it restricts write access to \emph{canonical writes}, i.e., {\sf A[$i,j,k$] = ...}
 where $i$, $j$ and $k$ loop over the three dimensions of {\sf A}.
-Write access such as for example {\sf A[i,j+2] = ...} is not allowed.
+Write access such as for example {\sf A[$i,j+2$] = ...} is not allowed.
 %\item \ana{Add rules for logical ops}
 %\item \ana{Add rules for arithmetic ops}
 \item The final restriction involves MUX as expressed by the rule:
@@ -122,9 +122,9 @@ A[i] = val
 \end{pythonn}
 
 We note that while the programmer writes
-annotations at the level of IMP Source (recall \ana{ref to overview section}), the
-annotations propagate through the transformations and are checked at the
-level of MPC Source.
+annotations at the level of IMP Source (as in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(a)), the
+annotations propagate through the transformations and are checked at the 
+level of MPC Source. Recall that the programmer annotates only inputs
 
 %\ana{Disadvantage of MUX}
 
