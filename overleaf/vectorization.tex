@@ -132,25 +132,32 @@ We present our algorithm followed by an example on Biometric.
 
 \subsubsection{Algorithm}
 
-There are two key phases of the algorithm. Phase 1 applies dependence analysis and inserts
-raise dimension and drop dimension operations as necessary. After this phase operations work
+There are two key phases of the algorithm. Phase 1 inserts raise dimension and drop dimension 
+operations according to def-uses. E.g., if there is an inner-to-outer dependence, it inserts $\mathit{raise\_dim}$,
+and similarly, if there is an outer-to-inner dependence, it inserts $\mathit{drop\_dim}$. After this phase operations work
 on arrays of the corresponding dimensionality and we optimistically vectorize all arrays.
 
-Phase 2 takes into account dependence analysis. It proceeds from the inner-most towards the outer-most 
-loop. For each loop it anchors dependence cycles (closures) around pseudo PHI nodes, removing vectorization 
-from the dimension of the loop.
+Phase 2 proceeds from the inner-most towards the outer-most loop. For each loop it anchors dependence cycles (closures) 
+around pseudo PHI nodes then removes vectorization from the dimension of that loop. There are two important points in this 
+phase. First, it may break a loop into smaller loops which would discover opportunities 
+for vectorization in intermediate statements in the loop. Second, it handles write arrays. 
+It creates opportunities for vectorization in the presence of write arrays, even though 
+Cytron's SSA adds a back-edge to the array PHI-node, thus killing vectorization of statements
+that read and write that array.
 
-There are several important points in this phase. We may break a loop into smaller loops which would discover opportunities 
-for optimization in intermediate statements in the loop. We remove redundant back edges into PHI nodes that are 
-due entirely to arrays, which opens up opportunities as well. The pseudo-code in red deals with this extension
-of the basic algorithm. We determine that some array pseudo-PHIs are \emph{target-less}, meaning
-that there is no loop-carried dependence for that array and back-edges into these nodes can be safely removed. 
-This opens up opportunities for vectorization across the write array. Handling of target-less nodes is non-trivial, 
-as in certain cases the node cannot be removed. \secref{sec:extension_with_writes} details our algorithm. 
+The excerpts in {\color{red} red} color in the pseudo code below highlight the extension 
+with array writes. We advise the reader to omit the extension and assume just read-only
+arrays. We explain the extension in \secref{sec:array_writes} details our algorithm. 
+(As many of our benchmarks include array writes, it plays an important role.)
 
-\ana{Add an example from histogram here.} 
+%The pseudo-code in red deals with this extension
+%of the basic algorithm. We determine that some array pseudo-PHIs are \emph{target-less}, meaning
+%that there is no loop-carried dependence for that array and back-edges into these nodes can be safely removed. 
+%This opens up opportunities for vectorization across the write array. Handling of target-less nodes is non-trivial, 
+%as in certain cases the node cannot be removed. \secref{sec:extension_with_writes} details our algorithm. 
 
-Phases 3 and 4 are less important --- phase 3 cleans up local arrays of references and phase 4 turns operations into MOTION operations.
+Phases 3 cleans up local arrays of references (this is an optional phase and our current implementation does not include it)
+and Phase 4 explicitly turns operations into MOTION SIMD operations.
 
 \begin{algorithmic}
 
@@ -265,10 +272,10 @@ result as the schedule corresponding to the vectorized program.
 \begin{array}{l@{~~~~~}l}
   \begin{array}{l@{~~~~~~~~~}l@{~~~~~~~~~}l@{~~~~~~~~~}l}
   s &::= s_1;s_2 & \gamma(s) = \gamma(s_1) \; ; \; \gamma(s_2) & \mathit{sequence} \\
-     & \mid \x[i,J,k] = {\sf op\_SIMD}(\y[i,J,k], \z[i,J,k]) & \gamma(\x[i,J,k] = {\sf op\_SIMD}(\y[i,J,k], \z[i,J,k])) = & \mathit{operation} \\ 
-     &                                                                               & ~~\x[i,0,k] = \y[i,0,k] \; {\sf op} \; \z[i,0,k] \;\; || &  \\
-     &                                                                               & ~~~~\x[i,1,k] = \y[i,1,k] \; {\sf op} \; \z[i,1,k] \;\; || \; ...\; || & \\
-     &                                                                               & ~~~~~~\x[i,J\!-\!1,k] = \y[i,J\!-\!1,k] \; {\sf op} \; \z[i,J\!-\!1,k] & \\
+     & \mid \x[i,J,k] = {\sf op\_SIMD}(\y_1[i,J,k], \y_2[i,J,k]) & \gamma(\x[i,J,k] = {\sf op\_SIMD}(\y_1[i,J,k], \y_2[i,J,k])) = & \mathit{operation} \\ 
+     &                                                                               & ~~\x[i,0,k] = \y_1[i,0,k] \; {\sf op} \; \y_2[i,0,k] \;\; || &  \\
+     &                                                                               & ~~~~\x[i,1,k] = \y_1[i,1,k] \; {\sf op} \; \y_2[i,1,k] \;\; || \; ...\; || & \\
+     &                                                                               & ~~~~~~\x[i,J\!-\!1,k] = \y_1[i,J\!-\!1,k] \; {\sf op} \; \y_2[i,J\!-\!1,k] & \\
      & \mid \x[i,J,k] = {\sf const} & \mbox{analogous} & \mathit{constant} \\
      & \mid \x[i,J,k]  = {\sf PHI}(\x_1[i,J,k],\x_2[i,J,k\!-\!1]) & & \mathit{pseudo} \; \mathit{PHI} \\
      & \mid \x[i,J,k] = {\sf raise\_dim}(\x'[i],(J\!:\!J,k\!:\!K)) & & \mathit{raise} \; \mathit{dimension(s)} \\
@@ -287,8 +294,11 @@ result as the schedule corresponding to the vectorized program.
 
 \paragraph{MPC Source Syntax}
 
-\figref{fig:mpc_syntax} states the syntax and linearization semantics of MPC Source. For simiplicity,
-we consider only scalars and read-only arrays, however, the treatment extends to write arrays as well.
+\figref{fig:mpc_syntax} states the syntax and linearization semantics of MPC Source. 
+Although notation is heavy, the linearization simply produces schedules as discussed in~\secref{sec:model}; 
+the iterative MPC Source gives rise to what we called sequential schedule where loops are unrolled 
+and MPC Source with vectorized dimensions gives rise to what we called parallel schedule. 
+For simplicity, we consider only scalars and read-only arrays, however, the treatment extends to write arrays as well.
 $\x[i,J,k]$ denotes the value of scalar variable \x{} at loop nest $i,j,k$. 
 %(We use 3 dimensions, $i,j,k$, however, the treatment generalizes to arbitrary dimensions.) 
 Upper case $J$ denotes a vectorized dimension and lower case $i,k$ denote iterative dimensions. Our compiler imposes 
@@ -372,12 +382,10 @@ We have that $a_0 \le a_1$.
 
 \paragraph{Partial Orders}
 
-For each MPC Source program $a$ we compute the def-use edges in the standard way: if base statement $s1 \in a$ defines variable \x, e.g., $\x[i,j,k] = ...$, 
-and base statement $s2 \in a$ uses \x, e.g., $... = ... \x[i,j,k]$ and there is a path in CFG from $s1$ to $s2$, then there is a def-use edge from
+For each MPC Source program $a$ we compute the def-use edges in the standard way: if statement $s1 \in a$ defines variable \x, e.g., $\x[i,j,k] = ...$, 
+and statement $s2 \in a$ uses \x, e.g., $... = ... \x[i,j,k]$ and there is a path in CFG from $s1$ to $s2$, then there is a def-use edge from
  $s1$ to $s2$. We extend the dimensionality of a statement into $s1[i,j,k]$ where $s1[i,j,k]$ inherits the dimensionality of the left-hand-side of the assignment.
-  
- \ana{Add on the linearization semantics?} 
-  
+    
  Let $a_0, a_1$ be two MPC Source programs in $A$. 
  Two statements, $s \in a_0$ and $s' \in a_1$ are \emph{same}, written $s \equiv s'$ if they are of the same operation and they operate on 
  the same variables: same variable name and same dimensionality. Recall that dimensions in MPC Source are either iterative (lower case), or vectorized (upper case). 
@@ -417,7 +425,8 @@ same result as the original MPC Source. (In this case we have an equivalence, $a
 
 \subsubsection{Removal of Infeasible Edges}
 
-Array writes limit vectorization as they sometimes introduce infeasible loop-carried dependencies. Consider the following example: \ana{Have to add citation to Aiken's paper}
+Array writes limit vectorization as they sometimes introduce infeasible loop-carried dependencies. Consider the classical example from~\cite{Aiken:1988}: 
+
 
 {\small
 \begin{pythonn}
