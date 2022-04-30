@@ -140,15 +140,15 @@ on arrays of the corresponding dimensionality and we optimistically vectorize al
 Phase 2 proceeds from the inner-most towards the outer-most loop. For each loop it anchors dependence cycles (closures) 
 around pseudo PHI nodes then removes vectorization from the dimension of that loop. There are two important points in this 
 phase. First, it may break a loop into smaller loops which would discover opportunities 
-for vectorization in intermediate statements in the loop. Second, it handles write arrays. 
+for vectorization in intermediate statements in the loop. Second, it handles writes arrays. 
 It creates opportunities for vectorization in the presence of write arrays, even though 
 Cytron's SSA adds a back-edge to the array PHI-node, thus killing vectorization of statements
 that read and write that array.
 
 The excerpts in {\color{red} red} color in the pseudo code below highlight the extension 
-with array writes. We advise the reader to omit the extension and assume just read-only
-arrays. We explain the extension in \secref{sec:array_writes} details our algorithm. 
-(As many of our benchmarks include array writes, it plays an important role.)
+with array writes. We advise the reader to omit the extension for now and consider just read-only
+arrays. We explain the extension in \secref{sec:array_writes}. 
+(As many of our benchmarks include write arrays, it plays an important role.)
 
 %The pseudo-code in red deals with this extension
 %of the basic algorithm. We determine that some array pseudo-PHIs are \emph{target-less}, meaning

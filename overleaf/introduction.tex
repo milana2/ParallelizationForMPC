@@ -35,8 +35,7 @@ in the classical compiler. The following figure summarizes our key idea:
 \end{center}
 }
 
-We emphasize the MPC Source intermediate representation and optimization over MPC Source. As in classical compilers, we envision different front ends (e.g., Wysteria,
-our front end IMP-MPC) compiling into MPC Source. MPC Source is particularly suitable for optimizations such as protocol mixing~\cite{Ishaq:2019, Fang:2022} and SIMD-vectorization,
+We use the MPC Source~\cite{Ishaq:2019} intermediate representation and emphasize optimization over MPC Source. As in classical compilers, we envision different front ends (e.g., our front end IMP Source, other) compiling into MPC Source. MPC Source is particularly suitable for optimizations such as protocol mixing~\cite{Ishaq:2019, Fang:2022} and SIMD-vectorization,
 which takes advantage of amortization at the circuit level. The MPC Source IR exposes the linear structure of MPC programs, which simplifies program analysis; this is
 in contrast to source, which has if-then-else constructs. In the same time, MPC Source is sufficiently ``high-level''  to support analyses and optimizations that take into account
 control and data flow in a specific program. MPC Source is small in size and analysis is tractable, as opposed to analysis over an unrolled circuit~\cite{Ishaq:2019}. Again as
@@ -47,7 +46,7 @@ in classical compilers, we envision translation of MPC Source (optimized or unop
 %The compilation problem, i.e., translation from a high-level language to circuits, is difficult and therefore, breaking the problem into sub-problems can  tractable.
 
 
-\subsection{Our Contribution} In this paper, we develop a compiler framework that takes a Python-like routine and produces MOTION code: we describe (a) the IMP-MPC language, its syntax and semantic restrictions, (b) translation from IMP-MPC into MPC Source, (c) a specific backend-independent optimization: novel SIMD-vectorization on MPC Source, and (d) translation from MPC Source into MOTION code. %\ana{I think we have to add more on MOTION, specifically mixing and amortization.}
+\subsection{Our Contribution} In this paper, we develop a compiler framework that takes a Python-like routine and produces MOTION code: we describe (a) the IMP Source language, its syntax and semantic restrictions, (b) translation from IMP Source into MPC Source, (c) a specific backend-independent optimization: novel SIMD-vectorization on MPC Source, and (d) translation from MPC Source into MOTION code. %\ana{I think we have to add more on MOTION, specifically mixing and amortization.}
 
 We focus on the MOTION framework as our back-end for several reasons. First, it is the state of the art in terms of performance~\cite{Braun:2022}. Second, it provides an API over efficient implementation for a wide variety of cryptographic operations in three different protocols ---  Arithmetic GMW, Boolean GMW, and BMR --- which allows for protocol mixing~\cite{Ishaq:2019, Fang:2022}, a known backend-independent optimization. Third, MOTION provides API for SIMD-level operations, which amortize cost and lead to significant improvement in memory footprint and
 throughput~\cite{NDSS:DemSchZoh15, CCS:ABFKLO18, Braun:2022}. It enables MPC Source-level vectorization, a key focus of this paper.
