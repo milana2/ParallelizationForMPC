@@ -1,2 +1,9 @@
 \section{Experimental Results}
 \label{sec:results}
+
+\subsection{Experiment Setup}
+We tested our framework with several benchmarks. For the multiparty computation (MPC), we restriced our evaluation to 2 party computation (2PC) setting because it requires fewer computing resources. We stress that there is no such inherent restriction in our framework. We use hardware resources provided by CloudLab\cite{DuplyakinATC19} and consider two network settings, namely Local Area Netowrk (LAN) and Wide Area Network (WAN). In the LAN setting, we use \texttt{c6525-25g} machines for both parties. These machines are equipped with 16-core AMD 7302P 3.0GHz processors and 128GB of RAM. The connection between these machines had 10Gbps bandwidth and sub-millisecond latency. This setting reflects typical LAN usecase considering that 10Gbps LAN is increasingly common in business networks and is now available even in some home networks. For WAN setting, we again used a \texttt{c6525-25g} machine (located in Utah, US) for the first party and a \texttt{c220g1} machine (located in Wisconsin, US) for the second. The \texttt{c220g1} machine is equiped with two Intel E5-2630 8-core 2.40GHz processors and 128GB of RAM. We measured the connection bandwidth between these machines to be 560Mbps and average round trip time (RTT) to be 38ms. At the time of this writing, all major internet providers in the US offer 1Gbps connections to home consumers, therefore this setting reasonably reflects the typical WAN usecase.
+
+\subsection{Results and Analysis}
+TODO
+
