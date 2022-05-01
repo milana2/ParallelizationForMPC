@@ -2,11 +2,58 @@
 \label{sec:results}
 
 \subsection{Experiment Setup}\label{sec:experiment_setup}
-We tested our framework with several benchmarks. For the multiparty computation (MPC), we restriced our evaluation to 2 party computation (2PC) setting because it requires fewer computing resources. We stress that there is no such inherent restriction in our framework. We use hardware resources provided by CloudLab\cite{DuplyakinATC19} and consider two network settings, namely Local Area Netowrk (LAN) and Wide Area Network (WAN). In the LAN setting, we use \texttt{c6525-25g} machines for both parties. These machines are equipped with 16-core AMD 7302P 3.0GHz processors and 128GB of RAM. The connection between these machines had 10Gbps bandwidth and sub-millisecond latency. This setting reflects typical LAN usecase considering that 10Gbps LAN is increasingly common in business networks and is now available even in some home networks. For WAN setting, we again used a \texttt{c6525-25g} machine (located in Utah, US) for the first party and a \texttt{c220g1} machine (located in Wisconsin, US) for the second. The \texttt{c220g1} machine is equiped with two Intel E5-2630 8-core 2.40GHz processors and 128GB of RAM. We measured the connection bandwidth between these machines to be 560Mbps and average round trip time (RTT) to be 38ms. At the time of this writing, all major internet providers in the US offer 1Gbps connections to home consumers, therefore this setting reasonably reflects the typical WAN usecase.
+We tested our framework with several benchmarks. For the multiparty computation (MPC), we restriced our evaluation to 2 party computation (2PC) setting because it requires fewer computing resources. We stress that there is no such inherent restriction in our framework. We use hardware resources provided by CloudLab\cite{DuplyakinATC19} and consider two network settings, namely Local Area Netowrk (LAN) and Wide Area Network (WAN). In the LAN setting, we use {\tt c6525-25g} machines for both parties. These machines are equipped with 16-core AMD 7302P 3.0GHz processors and 128GB of RAM. The connection between these machines had 10Gbps bandwidth and sub-millisecond latency. This setting reflects typical LAN usecase considering that 10Gbps LAN is increasingly common in business networks and is now available even in some home networks. For WAN setting, we again used a {\tt c6525-25g} machine (located in Utah, US) for the first party and a {\tt c220g1} machine (located in Wisconsin, US) for the second. The {\tt c220g1} machine is equiped with two Intel E5-2630 8-core 2.40GHz processors and 128GB of RAM. We measured the connection bandwidth between these machines to be 560Mbps and average round trip time (RTT) to be 38ms. At the time of this writing, all major internet providers in the US offer 1Gbps connections to home consumers, therefore this setting reasonably reflects the typical WAN usecase.
 
-We repeated all experiments (except one) five times and report average and standard deviation values of various metrics. The one experiment where we measure metrics across a range of input configurations (from small to large), was run only once. Note however that due to the very low standard deviation (more on this below) seen in the multiple-run experiments, the accuracy of results of this experiments is not unreasonably affected.
+We run all experiments 5 times and report average values of various metrics. Note that standard deviation in all observations was at most 1\% of the mean value, therefore the accuracy of the results is not effected by the relatively fewer runs.
+
+\subsection{Benchmarks}\label{sec:benchmarks_description}
+In the following, we say {\em both} for an experiment in which we execute both non-vectorized and vectorized protocols and {\em vec} for the vectorized only experiment. We used the following benchmarks in our evaluation:
+
+
+\ishaq{We don't have space to show individual benchmark graphs, and vec data is only plotted in individual benchmark graphs, so specifying what we use for vec experiment in the following text is unnecessary. (unless, we change the graph)}
+
+\ishaq{TODO: go through description again, and add why each benchmark may be important from MPC/private-learning/distributed-computing perspective}
+\begin{enumerate}
+    \item {\em Biometric Matching} Server has a database S of {\tt N} records, each record's dimension is {\tt D}. Client submits a query C, client and server compute the closest record to C in an MPC. We use {\tt N=128} for {\em both} and {\tt N=4096} for {\em vec}. {\tt D} is fixed at 4.
+    
+    \item {\em Biometric Matching (Fast)} is the faster instantiation taken from \ishaq{cite ABY}. Parameters are same as above.
+    
+    \item {\em Convex Hull} given a polygon of {\tt N} vertices (split between Alice and Bob), convex hull is computed in an MPC. adapted from \ishaq{cite: https://www.cs.toronto.edu/~azadeh/resources/papers/pldi21-full.pdf} We use {\tt N=32} for {\em both} experiment and {\tt N=256} for {\em vec} experiment.
+    
+    \item {\em Count 102} Alice has a string of length {\tt N} of symbols, Bob has a regular expression of the form 1(0*)2, together they compute number of substrings that match the regular expression. adopted from \ishaq{cite: same as above}. We use {\tt N=1024} for {\em both} and {\tt N=4096} for {\em vec}.
+    
+    \item {\em Count 10} Same as {\em Count 102} except now the regular expression is of the form 1(0+). Parameters are same as above.
+    
+    \item {\em Cryptonets Max Pooling} Given a matrix of $\mathtt{rows}\times\mathtt{cols}$ elements that are split between Alice and Bob, they compute the max pooling subroutine of the cryptonet benchmark\ishaq{cite: https://www.microsoft.com/en-us/research/wp-content/uploads/2016/04/CryptonetsTechReport.pdf}. We use {\tt rows=64, cols=64} for {\em both} experiment.
+
+    \item {\em Database Join} given two databases with {\tt A} and {\tt B} 2-element records, compute cross join. We use {\tt A=B=32} for {\em both} and {\tt A=B=64} for {\em vec}.
+    
+    \item {\em Database Variance} given a database of {\tt len} records, compute variance. \ishaq{Ben/Ana: Please correct the description, I don't know what this benchmark is} We use {\tt len=512} for {\em both} and {\tt len=4096} for {\em vec}.
+    
+    \item {\em Histogram} given {\tt N} 5-star ratings, compute their histogram, taken from: \ishaq{Ana, cite OPA? or this one: https://www.cs.toronto.edu/~azadeh/resources/papers/pldi21-full.pdf ?} We use {\tt N=512} for {\em both} and {\tt N=4096} for {\em vec}.
+
+    \item {\em Inner Product} given two vectors, each of {\tt N} elements, compute their inner product. We use {\tt N=512} for {\em both} and {\tt N=4096} for {\em vec}.
+
+    \item {\em k-means Iteration} performs the iteration subroutine of k-means database clustering operation \cite{https://dl.acm.org/doi/10.1145/1081870.1081942, https://dl.acm.org/doi/10.1145/956750.956776}. Here {\tt len1} is the size of input data, and {\tt len2} is the number of clusters. We use {\tt len1=32, len2=5} for {\em both} and {\tt len1=256, len2=8} for {\em vec}. \ishaq{Ana/Ben: please update description}
+    
+    \item {\em Longest 102} Similar to {\em Count 102} except that it computes the largest substring matching the regular expression. We use same parameters as {\em Count 102}.
+    
+    \item {\em Max Distance b/w Symbols} Alice has a string of {\tt N} symbols and Bob has some symbol {\tt 0}. The MPC computes the maximum distance between {\tt 0}s in the string. adopted from {\ishaq, cite here too}. We use {\tt N=1024} for {\em both} and {\tt N=2048} for {\em vec}.
+    
+    \item {\em Minimal Points} Given a set of {\tt N} points (split between Alice and Bob), a set of minimal points is computed i.e. there is no other point that has both a lower x and y coordinate. We use {\tt N=32} for {\em both} and {\tt N=64} for {\em vec}.
+    
+    \item {\em MNIST ReLU} given an input of ${\tt outer}\times{\tt inner}$ elements, executes the MNIST ReLU subroutine. We use {\tt inner=512} for {\em both} and {\tt inner=2048} for {\em vec}. {\tt outer} is fixed at 16. \ishaq{Ben/Ana, please update}
+    
+    \item {\em Private Set Intersection (PSI)} Alice holds set S1 with size {\tt SA}, Bob holds set S2 with size {\tt SB}, together they compute intersection of their sets. We use {\tt SA=SB=128} for {\em both} and {\tt SA=SB=1024} for {\em vec}.
+\end{enumerate}
 
 \subsection{Results and Analysis}\label{sec:result_analysis}
+
+- Discuss Overall LAN results (Time, Communication Size)
+- Discuss inner product and biometric in detail on LAN
+- Discuss their comparison (Time) with WAN
+- Discuss hand simdified code (native MOTION)
+- Put error bars
 
 
 \begin{figure*}[htbp]
