@@ -1570,3 +1570,51 @@ year = {2013}
     url       = "https://www.flux.utah.edu/paper/duplyakin-atc19"
 
 }
+
+@inproceedings{Jagannathan:2005,
+author = {Jagannathan, Geetha and Wright, Rebecca N.},
+title = {Privacy-Preserving Distributed k-Means Clustering over Arbitrarily Partitioned Data},
+year = {2005},
+isbn = {159593135X},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1081870.1081942},
+doi = {10.1145/1081870.1081942},
+abstract = {Advances in computer networking and database technologies have enabled the collection and storage of vast quantities of data. Data mining can extract valuable knowledge from this data, and organizations have realized that they can often obtain better results by pooling their data together. However, the collected data may contain sensitive or private information about the organizations or their customers, and privacy concerns are exacerbated if data is shared between multiple organizations.Distributed data mining is concerned with the computation of models from data that is distributed among multiple participants. Privacy-preserving distributed data mining seeks to allow for the cooperative computation of such models without the cooperating parties revealing any of their individual data items. Our paper makes two contributions in privacy-preserving data mining. First, we introduce the concept of arbitrarily partitioned data, which is a generalization of both horizontally and vertically partitioned data. Second, we provide an efficient privacy-preserving protocol for k-means clustering in the setting of arbitrarily partitioned data.},
+booktitle = {Proceedings of the Eleventh ACM SIGKDD International Conference on Knowledge Discovery in Data Mining},
+pages = {593–599},
+numpages = {7},
+location = {Chicago, Illinois, USA},
+series = {KDD '05}
+}
+
+@inproceedings{Vaidya:2003,
+author = {Vaidya, Jaideep and Clifton, Chris},
+title = {Privacy-Preserving <i>k</i>-Means Clustering over Vertically Partitioned Data},
+year = {2003},
+isbn = {1581137370},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/956750.956776},
+doi = {10.1145/956750.956776},
+abstract = {Privacy and security concerns can prevent sharing of data, derailing data mining projects. Distributed knowledge discovery, if done correctly, can alleviate this problem. The key is to obtain valid results, while providing guarantees on the (non)disclosure of data. We present a method for k-means clustering when different sites contain different attributes for a common set of entities. Each site learns the cluster of each entity, but learns nothing about the attributes at other sites.},
+booktitle = {Proceedings of the Ninth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
+pages = {206–215},
+numpages = {10},
+keywords = {privacy},
+location = {Washington, D.C.},
+series = {KDD '03}
+}
+
+@inproceedings{Dowlin:2016,
+author = {Dowlin, Nathan and Gilad-Bachrach, Ran and Laine, Kim and Lauter, Kristin and Naehrig, Michael and Wernsing, John},
+title = {CryptoNets: Applying Neural Networks to Encrypted Data with High Throughput and Accuracy},
+year = {2016},
+publisher = {JMLR.org},
+abstract = {Applying machine learning to a problem which involves medical, financial, or other types of sensitive data, not only requires accurate predictions but also careful attention to maintaining data privacy and security. Legal and ethical requirements may prevent the use of cloud-based machine learning solutions for such tasks. In this work, we will present a method to convert learned neural networks to CryptoNets, neural networks that can be applied to encrypted data. This allows a data owner to send their data in an encrypted form to a cloud service that hosts the network. The encryption ensures that the data remains confidential since the cloud does not have access to the keys needed to decrypt it. Nevertheless, we will show that the cloud service is capable of applying the neural network to the encrypted data to make encrypted predictions, and also return them in encrypted form. These encrypted predictions can be sent back to the owner of the secret key who can decrypt them. Therefore, the cloud service does not gain any information about the raw data nor about the prediction it made. We demonstrate CryptoNets on the MNIST optical character recognition tasks. CryptoNets achieve 99% accuracy and can make around 59000 predictions per hour on a single PC. Therefore, they allow high throughput, accurate, and private predictions.},
+booktitle = {Proceedings of the 33rd International Conference on International Conference on Machine Learning - Volume 48},
+pages = {201–210},
+numpages = {10},
+location = {New York, NY, USA},
+series = {ICML'16}
+}

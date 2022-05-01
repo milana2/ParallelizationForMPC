@@ -14,34 +14,36 @@ In the following, we say {\em both} for an experiment in which we execute both n
 
 \ishaq{TODO: go through description again, and add why each benchmark may be important from MPC/private-learning/distributed-computing perspective}
 
+\ishaq{TODO: add a large table for LAN, incorporating as much data as possible}
+
 \begin{enumerate}
     \item {\em Biometric Matching} Server has a database S of {\tt N} records, each record's dimension is {\tt D}. Client submits a query C, client and server compute the closest record to C in an MPC. We use {\tt N=128} for {\em both} and {\tt N=4096} for {\em vec}. {\tt D} is fixed at 4.
     
-    \item {\em Biometric Matching (Fast)} is the faster instantiation taken from \ishaq{cite ABY}. Parameters are same as above.
+    \item {\em Biometric Matching (Fast)} is the faster instantiation taken from \cite{Demmler:2015}. Parameters are same as above.
     
-    \item {\em Convex Hull} given a polygon of {\tt N} vertices (split between Alice and Bob), convex hull is computed in an MPC. adapted from \ishaq{cite: https://www.cs.toronto.edu/~azadeh/resources/papers/pldi21-full.pdf} We use {\tt N=32} for {\em both} experiment and {\tt N=256} for {\em vec} experiment.
+    \item {\em Convex Hull} given a polygon of {\tt N} vertices (split between Alice and Bob), convex hull is computed in an MPC. adapted from \cite{Farzan:2021}. We use {\tt N=32} for {\em both} experiment and {\tt N=256} for {\em vec} experiment.
     
-    \item {\em Count 102} Alice has a string of length {\tt N} of symbols, Bob has a regular expression of the form 1(0*)2, together they compute number of substrings that match the regular expression. adopted from \ishaq{cite: same as above}. We use {\tt N=1024} for {\em both} and {\tt N=4096} for {\em vec}.
+    \item {\em Count 102} Alice has a string of length {\tt N} of symbols, Bob has a regular expression of the form 1(0*)2, together they compute number of substrings that match the regular expression. adapted from \cite{Farzan:2021}. We use {\tt N=1024} for {\em both} and {\tt N=4096} for {\em vec}.
     
     \item {\em Count 10} Same as {\em Count 102} except now the regular expression is of the form 1(0+). Parameters are same as above.
     
-    \item {\em Cryptonets Max Pooling} Given a matrix of $\mathtt{rows}\times\mathtt{cols}$ elements that are split between Alice and Bob, they compute the max pooling subroutine of the cryptonet benchmark\ishaq{cite: https://www.microsoft.com/en-us/research/wp-content/uploads/2016/04/CryptonetsTechReport.pdf}. We use {\tt rows=64, cols=64} for {\em both} experiment.
+    \item {\em Cryptonets Max Pooling} Given a matrix of $\mathtt{rows}\times\mathtt{cols}$ elements that are split between Alice and Bob, they compute the max pooling subroutine of the cryptonet benchmark\cite{Dowlin:2016}. We use {\tt rows=64, cols=64} for {\em both} experiment.
 
     \item {\em Database Join} given two databases with {\tt A} and {\tt B} 2-element records, compute cross join. We use {\tt A=B=32} for {\em both} and {\tt A=B=64} for {\em vec}.
     
     \item {\em Database Variance} given a database of {\tt len} records, compute variance. \ishaq{Ben/Ana: Please correct the description, I don't know what this benchmark is} We use {\tt len=512} for {\em both} and {\tt len=4096} for {\em vec}.
     
-    \item {\em Histogram} given {\tt N} 5-star ratings, compute their histogram, taken from: \ishaq{Ana, cite OPA? or this one: https://www.cs.toronto.edu/~azadeh/resources/papers/pldi21-full.pdf ?} We use {\tt N=512} for {\em both} and {\tt N=4096} for {\em vec}.
+    \item {\em Histogram} given {\tt N} 5-star ratings, compute their histogram, taken from \cite{Ishaq:2019, Farzan:2021}. We use {\tt N=512} for {\em both} and {\tt N=4096} for {\em vec}.
 
     \item {\em Inner Product} given two vectors, each of {\tt N} elements, compute their inner product. We use {\tt N=512} for {\em both} and {\tt N=4096} for {\em vec}.
 
-    \item {\em k-means Iteration} performs the iteration subroutine of k-means database clustering operation \cite{https://dl.acm.org/doi/10.1145/1081870.1081942, https://dl.acm.org/doi/10.1145/956750.956776}. Here {\tt len1} is the size of input data, and {\tt len2} is the number of clusters. We use {\tt len1=32, len2=5} for {\em both} and {\tt len1=256, len2=8} for {\em vec}. \ishaq{Ana/Ben: please update description}
+    \item {\em k-means Iteration} performs the iteration subroutine of k-means database clustering operation \cite{Jagannathan:2005, Vaidya:2003}. Here {\tt len1} is the size of input data, and {\tt len2} is the number of clusters. We use {\tt len1=32, len2=5} for {\em both} and {\tt len1=256, len2=8} for {\em vec}. \ishaq{Ana/Ben: please update description}
     
-    \item {\em Longest 102} Similar to {\em Count 102} except that it computes the largest substring matching the regular expression. We use same parameters as {\em Count 102}.
+    \item {\em Longest 102} Similar to {\em Count 102} except that it computes the largest substring matching the regular expression. We use same parameters as {\em Count 102}, adapted from \cite{Farzan:2021}.
     
-    \item {\em Max Distance b/w Symbols} Alice has a string of {\tt N} symbols and Bob has some symbol {\tt 0}. The MPC computes the maximum distance between {\tt 0}s in the string. adopted from {\ishaq, cite here too}. We use {\tt N=1024} for {\em both} and {\tt N=2048} for {\em vec}.
+    \item {\em Max Distance b/w Symbols} Alice has a string of {\tt N} symbols and Bob has some symbol {\tt 0}. The MPC computes the maximum distance between {\tt 0}s in the string. We adapted it from \cite{Farzan:2021}. We use {\tt N=1024} for {\em both} and {\tt N=2048} for {\em vec}.
     
-    \item {\em Minimal Points} Given a set of {\tt N} points (split between Alice and Bob), a set of minimal points is computed i.e. there is no other point that has both a lower x and y coordinate. We use {\tt N=32} for {\em both} and {\tt N=64} for {\em vec}.
+    \item {\em Minimal Points} Given a set of {\tt N} points (split between Alice and Bob), a set of minimal points is computed i.e. there is no other point that has both a lower x and y coordinate, adapted from \cite{Farzan:2021}. We use {\tt N=32} for {\em both} and {\tt N=64} for {\em vec}.
     
     \item {\em MNIST ReLU} given an input of ${\tt outer}\times{\tt inner}$ elements, executes the MNIST ReLU subroutine. We use {\tt inner=512} for {\em both} and {\tt inner=2048} for {\em vec}. {\tt outer} is fixed at 16. \ishaq{Ben/Ana, please update}
     
@@ -95,7 +97,7 @@ Next, we look closely at circuit evaluation \cref{fig:graph_biometric_eval_time}
 \label{fig:graph_comparison_eval_time}
 \end{figure}
 
-Since our vectorization framework is network agnostic, it will produce the same circuit for both LAN and WAN settings. This means that the number of gates and communication size remain the same. Moreover, time for circuit generation, which is a local operation, also remains unchanged. Setup and Online times, however, increase due to lower bandwidth and higher latency of the WAN. Indeed, this is what we observe in \cref{fig:graph_comparison_eval_time}.
+Since our vectorization framework is network agnostic, it produces the same circuit for both LAN and WAN. This means that the number of gates and communication size remain the same. Moreover, time for circuit generation, which is a local operation, also remains unchanged. Setup and Online times, however, increase due to lower bandwidth and higher latency of the WAN. Indeed, this is what we observe in \cref{fig:graph_comparison_eval_time}.
 
 \begin{figure*}[htbp]
 \centering
