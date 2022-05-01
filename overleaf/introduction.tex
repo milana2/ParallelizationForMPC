@@ -23,7 +23,7 @@ implementation~\cite{NDSS:DemSchZoh15, CCS:ABFKLO18, Braun:2022}, e.g., implemen
 (Boolean or Arithmetic GMW~\cite{STOC:GolMicWig87} or Yao's garbled circuits~\cite{FOCS:Yao82b}), as well as efficient share conversion from one representation
 to another.
 
-Earlier compilers did both back-end and front-end translation without a specific focus on either, as their aim was to demonstrate applicability of MPC on real-world
+Earlier compilers did both back-end and front-end translation as their aim was to demonstrate applicability of MPC on real-world
 programming problems. As the field advanced, works have focused more closely on front-end language design (e.g., Wysteria~\cite{SP:RasHamHic14} and Viaduct~\cite{Acay:2021})
 or back-end ``circuit-level'' design and implementation (e.g., MOTION~\cite{Braun:2022}).
 
@@ -35,11 +35,12 @@ in the classical compiler. The following figure summarizes our key idea:
 \end{center}
 }
 
-We use the MPC Source~\cite{Ishaq:2019} intermediate representation and emphasize optimization over MPC Source. As in classical compilers, we envision different front ends (e.g., our front end IMP Source, other) compiling into MPC Source. MPC Source is particularly suitable for optimizations such as protocol mixing~\cite{Ishaq:2019, Fang:2022} and SIMD-vectorization,
-which takes advantage of amortization at the circuit level. The MPC Source IR exposes the linear structure of MPC programs, which simplifies program analysis; this is
-in contrast to source, which has if-then-else constructs. In the same time, MPC Source is sufficiently ``high-level''  to support analyses and optimizations that take into account
-control and data flow in a specific program. MPC Source is small in size and analysis is tractable, as opposed to analysis over an unrolled circuit~\cite{Ishaq:2019}. Again as
-in classical compilers, we envision translation of MPC Source (optimized or unoptimized) into MOTION, SPDZ, or other back-end code.
+We formalize the MPC Source~\cite{Ishaq:2019} intermediate representation and emphasize optimization over MPC Source. As in classical compilers, we envision different front ends (e.g., our front end IMP Source, other) compiling into MPC Source. MPC Source is particularly suitable for optimizations such as protocol mixing~\cite{Ishaq:2019, Fang:2022} and SIMD-vectorization,
+which takes advantage of amortization at the circuit level. The MPC Source IR exposes the \emph{linear structure} of MPC programs, which simplifies program analysis; this is
+in contrast to source, which has if-then-else constructs. In the same time, MPC Source is sufficiently ``high-level''  to support analysis and optimizations that take into account
+control and data flow in a specific program. MPC Source facilitates cost modeling. 
+%MPC Source is small in size and analysis is tractable, as opposed to analysis over an unrolled circuit~\cite{Ishaq:2019}. 
+Again as in classical compilers, we envision translation of MPC Source (optimized or unoptimized) into MOTION, SPDZ, or other back-end code.
 
 
 %In contrast, the high-level program contains if-then-else and array writes, or the low-level circuit .
