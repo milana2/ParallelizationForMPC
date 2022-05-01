@@ -36,7 +36,7 @@ LAN_GRAPHS_DIR = os.path.join(LAN_DIR, "graphs")
 WAN_DIR = os.path.join(BENCHDATA_DIR, "wan")
 WAN_GRAPHS_DIR = os.path.join(WAN_DIR, "graphs")
 COMPARISON_GRAPHS_DIR = os.path.join(BENCHDATA_DIR, "comparison-graphs")
-GRAPH_EXT = ".png"
+GRAPH_EXT = ".tex"
 
 os.makedirs(BENCHDATA_DIR, exist_ok=True)
 os.makedirs(LAN_DIR, exist_ok=True)

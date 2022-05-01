@@ -3,20 +3,20 @@ GRAPH_FILE=ARG2
 GRAPH_TITLE=ARG3
 Y_LABEL=ARG4
 
-#set terminal epslatex size 6in,3in color colortext
-set terminal pngcairo size 800,600 enhanced #font 'Verdana,10'
+set terminal epslatex  size 4in,3in color colortext
+#set terminal pngcairo size 800,600 enhanced #font 'Verdana,10'
 set output GRAPH_FILE
-set title GRAPH_TITLE noenhanced
+#set title GRAPH_TITLE noenhanced
 set autoscale
 set autoscale y
 set key autotitle columnhead
 set ylabel sprintf("%s", Y_LABEL)
-#set bmargin 5
-set xlabel 'Input Config'
+set bmargin 2
+#set xlabel 'Input Config'
 set y2label 'Improvement (number of times)'
 set ytics nomirror
 set y2tics nomirror
-set key tmargin horizontal center
+set key top horizontal left
 
 set style data histogram
 set style histogram errorbars gap 1 lw 1
