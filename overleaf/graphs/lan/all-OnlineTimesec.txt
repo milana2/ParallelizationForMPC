@@ -1,5 +1,5 @@
 x	"Benchmark"	"GMW"	"SD"	"GMW (Vectorized)"	"SD"	"BMR"	"SD"	"BMR (Vectorized)"	"SD"	"GMW Improvement"	"BMR Improvement"
-1	"Biometric Matching"	154	1	12	0	89	0	3	0	12.833333333333334	29.666666666666668
+1	"Biometric Matching"	145	0	12	0	88	4	2	0	12.083333333333334	44.0
 2	"Biometric Matching (Fast)"	145	0	12	0	88	4	2	0	12.083333333333334	44.0
 3	"Convex Hull"	48	0	0	0	27	0	0	0	0	0
 4	"Count 102"	79	0	70	0	14	0	10	0	1.1285714285714286	1.4

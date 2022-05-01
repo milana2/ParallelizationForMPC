@@ -52,7 +52,8 @@ In the following, we say {\em both} for an experiment in which we execute both n
 
 \begin{figure*}[htbp]
 \centering
-\include{graphs/lan/all-hist-OnlineSetupTimesec}
+%\resizebox{7in}{!}{\input{graphs/lan/all-hist-OnlineSetupTimesec}}
+\input{graphs/lan/all-hist-OnlineSetupTimesec}
 \caption{Circuit Evaluation Time (Setup + Online) of Benchmarks}
 \label{fig:graph_all_eval_time}
 \end{figure*}
@@ -62,11 +63,27 @@ We show circuit evaluation times in \cref{fig:graph_all_eval_time}. In terms of 
 We present evaluation for communication size in \cref{fig:graph_comm_size_time}, circuit generation time in \cref{fig:graph_circ_gen_time}, number of gates in \cref{fig:graph_total_gates} and online time and setup time in \cref{fig:graph_online_time} and \cref{fig:graph_setup_time} respectively. \ishaq{Ana: Let me know if I should add more substance.}
 
 - Discuss inner product and biometric in detail on LAN
+
+
+\begin{figure}[htbp]
+\centering
+\resizebox{3.6in}{!}{\input{graphs/lan/biometric-hist-OnlineSetupTimesec}}
+\caption{Circuit Evaluation Time for Biometric Matching, x-axis lists database size}
+\label{fig:graph_biometric_eval_time}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\resizebox{3.6in}{!}{\input{graphs/lan/inner_product-hist-OnlineSetupTimesec}}
+\caption{Circuit Evaluation Time for Inner Product, x-axis lists database size}
+\label{fig:graph_inner_product_eval_time}
+\end{figure}
+
 - Discuss their comparison (Time) with WAN
 
 \begin{figure*}[htbp]
 \centering
-\include{graphs/lan/all-hist-CommunicationMiB}
+\input{graphs/lan/all-hist-CommunicationMiB}
 \caption{Communication Size of Benchmarks}
 \label{fig:graph_comm_size_time}
 \end{figure*}
@@ -74,28 +91,28 @@ We present evaluation for communication size in \cref{fig:graph_comm_size_time},
 
 \begin{figure*}[htbp]
 \centering
-\include{graphs/lan/all-hist-CircuitGenerationTimesec}
+\input{graphs/lan/all-hist-CircuitGenerationTimesec}
 \caption{Circuit Generation Time of Benchmarks}
 \label{fig:graph_circ_gen_time}
 \end{figure*}
 
 \begin{figure*}[htbp]
 \centering
-\include{graphs/lan/all-hist-TotalGates}
+\input{graphs/lan/all-hist-TotalGates}
 \caption{Number of Gates of Benchmarks}
 \label{fig:graph_total_gates}
 \end{figure*}
 
 \begin{figure*}[htbp]
 \centering
-\include{graphs/lan/all-hist-OnlineTimesec}
+\input{graphs/lan/all-hist-OnlineTimesec}
 \caption{Online Time of Benchmarks}
 \label{fig:graph_online_time}
 \end{figure*}
 
 \begin{figure*}[htbp]
 \centering
-\include{graphs/lan/all-hist-SetupTimesec}
+\input{graphs/lan/all-hist-SetupTimesec}
 \caption{Setup Time of Benchmarks}
 \label{fig:graph_setup_time}
 \end{figure*}
