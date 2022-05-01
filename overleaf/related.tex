@@ -30,10 +30,24 @@ e.g., \cite{CCS:BDKKS18,Ishaq:2019,Fang:2022}.
 
 Other works, e.g., Obliv-C~\cite{Zahur:2015}, Wystiria~\cite{SP:RasHamHic14} and Viaduct~\cite{Acay:2021} focus on higher-level language design, particularly information-flow systems that
 restrict flow between secure and insecure parts of the program.
+
+%\ana{Add discussion on HyCC/Buscher here. 1. Formalization, reasoning about correctness of transformation. Source-to-source cannot handle if-then-else vs. MPC Source.}
 %Key ideas such as ${\sf insecure} <: {\sf secure}$ qualifier systems are similar to the ideas we
 %present in~\Secref{sec:interprocedural} and~\Secref{sec:zkp} and we intend to draw on these work. While we will design a high-level language expanding our
 %intraprocedural IMP-MPC syntax and semantics into the \emph{interprocedural} case, our interest and focus lie primarily in the ``machine-independent'' optimizations
 %thrust of the proposal.
+
+HyCC~\cite{CCS:BDKKS18} is a compiler from C Source into ABY/MOTION circuits. It does source-to-source compilation with the key goal to decompose the 
+program into modules and then assign protocols to modules. In contrast, we focus on MPC Source-level optimizations, specifically vectorization, although we envision 
+future optimizations as well. We formalize MPC Source and reasoning about transformations, which we conjecture is more tractable than reasoning over
+the higher-level AST. On the other hand, HyCC does inter-procedural optimizations, while our analysis is intra-procedural. We will explore context-sensitive inter-procedural 
+analysis over MPC Source in future work. HyCC, similarly to Buscher~\cite{Buscher:2018} uses an of-the-shelf source-to-source polyhedral compiler~\footnote{We believe HyCC uses 
+Par4All~\ana{add citation!}, however, it is not appear to be included with the publicly available distribution of HyCC.}
+to perform vectorization at the level of source code. The disadvantage of using an of-the-shelf source-to-source compiler is that it solves a more general 
+problem than what MPC presents and may forgo opportunities for optimization --- specifically, it is well-known that vectorization and polyhedral compilation 
+does not work well with conditionals~\cite{Benabderrahmane:2010,Karrenberg:2015}. In contrast, we consider vectorization at the level of MPC Source which 
+linearizes conditionals; we are able to handle programs with interleaved if-statements and for-loops and achieve significant speedup. 
+ 
 
 %There is significant development in ZKP languages as well. ~\ana{Alex Ozdemir's talk, ZoKrates, Cairo, others} Our work focuses on ZKP via MPC and our key idea
 %is the separation of the higher-level ``backend-independent'' compilation and optimization and the lower-level compilation into circuits.
@@ -62,9 +76,10 @@ Furthermore, extensions of classical loop vectorization with array writes, arbit
 and present novel challenges and opportunities for contribution. Polyhedral parallelization~\cite{Benabderrahmane:2010} considers a higher-level source (typically AST)
 representation, while our work takes advantage of linear MPC Source and SSA form. The work by Karrenberg~\cite{Karrenberg:2015} is rare in that space, in the sense that it considers
 vectorization over SSA form, which has similarities to MPC Source. We consider different array representation, notion of dependence, and reasoning
-about dependence, which we conjecture is more suitable for MPC Source. Buscher~\cite{Buscher:2018} considers SIMD-vectorization
-at the level of source code, which then combines with circuit-level optimizations in the TinyGarble compiler.
-He proposes using an off-the-shelf polyhedral compiler, however, application is limited to only two routines,
-essentially just inner product and euclidian distance; it is unclear how effective the off-the-shelf compiler is.
-In contrast, we consider vectorization at the level of MPC Source separating ``backend-independent'' vectorization
-and circuit-level amortization (done by MOTION). We apply our compiler on a wide range of routines.
+about dependence, which we conjecture is more suitable for MPC Source. 
+%Buscher~\cite{Buscher:2018} considers SIMD-vectorization
+%at the level of source code, which then combines with circuit-level optimizations in the TinyGarble compiler.
+%He proposes using an off-the-shelf polyhedral compiler, however, application is limited to only two routines,
+%essentially just inner product and euclidian distance; it is unclear how effective the off-the-shelf compiler is.
+%In contrast, we consider vectorization at the level of MPC Source separating ``backend-independent'' vectorization
+%and circuit-level amortization (done by MOTION). We apply our compiler on a wide range of routines.
