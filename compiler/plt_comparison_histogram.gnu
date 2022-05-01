@@ -4,14 +4,15 @@ GRAPH_TITLE=ARG3
 Y_LABEL=ARG4
 
 #set terminal epslatex# size 5in,2.5in
-set terminal pngcairo size 1200,600 enhanced #font 'Verdana,10'
+set terminal pngcairo size 800,600 enhanced #font 'Verdana,10'
 set output GRAPH_FILE
 set title GRAPH_TITLE noenhanced
 set autoscale
 set autoscale y
 set key autotitle columnhead
 set ylabel sprintf("%s", Y_LABEL)
-set xlabel 'Input Size'
+#set bmargin 5
+set xlabel 'Input Config'
 # set key top horizontal center
 
 set y2label 'Improvement (number of times)'
