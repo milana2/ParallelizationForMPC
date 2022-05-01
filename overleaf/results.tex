@@ -10,11 +10,9 @@ We run all experiments 5 times and report average values of various metrics. Not
 In the following, we say {\em both} for an experiment in which we execute both non-vectorized and vectorized protocols and {\em vec} for the vectorized only experiment. We used the following benchmarks in our evaluation:
 
 
-\ishaq{We don't have space to show individual benchmark graphs, and vec data is only plotted in individual benchmark graphs, so specifying what we use for vec experiment in the following text is unnecessary. (unless, we change the graph)}
+\ishaq{@Ana: I don't know what to do about this: In the following list of benchmarks, I specify paramters for vectorized experiments too. but we don't have enough space to show the vectorized only experiments (we could replace the graphs). Not sure if I should take it out}
 
 \ishaq{TODO: go through description again, and add why each benchmark may be important from MPC/private-learning/distributed-computing perspective}
-
-\ishaq{TODO: add a large table for LAN, incorporating as much data as possible}
 
 \begin{enumerate}
     \item {\em Biometric Matching} Server has a database S of {\tt N} records, each record's dimension is {\tt D}. Client submits a query C, client and server compute the closest record to C in an MPC. We use {\tt N=128} for {\em both} and {\tt N=4096} for {\em vec}. {\tt D} is fixed at 4.
