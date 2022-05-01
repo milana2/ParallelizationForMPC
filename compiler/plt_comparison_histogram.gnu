@@ -11,7 +11,7 @@ set autoscale
 set autoscale y
 set key autotitle columnhead
 set ylabel sprintf("%s", Y_LABEL)
-set bmargin 5
+set bmargin 3
 #set xlabel 'Input Config'
 set key top vertical left
 

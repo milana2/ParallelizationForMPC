@@ -1048,7 +1048,7 @@ def generate_single_network_graphs(all_stats, dir):
 def get_benchmark_stats(all_stats, benchmark_name, input_label):
     for task_stat in all_stats:
         if task_stat.label == benchmark_name:
-            for i in range(len(task_stat.input_configs)-1, 0, -1):
+            for i in range(len(task_stat.input_configs)-1, -1, -1):
                 input = task_stat.input_configs[i]
                 if input.label == input_label:
                     if input.gmw_vec_p0 is not None and input.bmr_vec_p0 is not None:
@@ -1070,7 +1070,7 @@ def generate_comparison_graphs(lan_stats, wan_stats, get_val, y_label, dir):
         for lan_task_stat in lan_stats:
             label = get_x_label_for_benchmark(lan_task_stat.label)
 
-            for i in range(len(lan_task_stat.input_configs)-1, 0, -1):
+            for i in range(len(lan_task_stat.input_configs)-1, -1, -1):
                 lan_input = lan_task_stat.input_configs[i]
                 if lan_input.gmw_vec_p0 is not None and lan_input.bmr_vec_p0 is not None:
                     wan_input = get_benchmark_stats(wan_stats, lan_task_stat.label, lan_input.label)
@@ -1102,6 +1102,67 @@ def generate_comparison_graphs(lan_stats, wan_stats, get_val, y_label, dir):
     # run_gnuplot(hist_script, bmrfile_path, bmr_hist_graph_file, bmr_title, y_label, dir, other_args = [])
     # run_gnuplot(line_script, file_path, line_graph_file, title, y_label, dir, other_args = [])
 
+def gen_latex_table(all_stats):
+    print('\n\n')
+    for task_stats in all_stats:
+        if(task_stats.label == 'biometric_fast'):
+            continue
+        label = get_x_label_for_benchmark(task_stats.label)
+        for i in range(len(task_stats.input_configs)-1, -1, -1):
+            input = task_stats.input_configs[i]
+            if input.gmw_p0 is not None and input.gmw_vec_p0 is not None and \
+                input.bmr_p0 is not None and input.bmr_vec_p0 is not None:
+                
+                a_ts = input.gmw_p0.timing_stats
+                a_cs = input.gmw_p0.circuit_stats
+                b_ts = input.bmr_p0.timing_stats
+                b_cs = input.bmr_p0.circuit_stats
+
+                vals1 = [label,
+                  "{:,.0f}".format(round(a_ts.gates_online.mean/1000)),
+                  "{:,.0f}".format(round((a_ts.preprocess_total.mean + a_ts.gates_setup.mean)/1000)),
+                  "{:,.0f}".format(round(a_cs.num_gates/1000)),
+                  "{:,.0f}".format(round(a_cs.circuit_gen_time/1000)),
+                  "{:,.0f}".format(round(a_ts.communication.send_num_msgs/1000)),
+                  "{:,}".format(round(a_ts.communication.send_size)),
+
+                  "{:,.0f}".format(round(b_ts.gates_online.mean/1000)),
+                  "{:,.0f}".format(round((b_ts.preprocess_total.mean + b_ts.gates_setup.mean)/1000)),
+                  "{:,.0f}".format(round(b_cs.num_gates/1000)),
+                  "{:,.0f}".format(round(b_cs.circuit_gen_time/1000)),
+                  "{:,.0f}".format(round(b_ts.communication.send_num_msgs/1000)),
+                  "{:,}".format(round(b_ts.communication.send_size))
+                ]
+
+
+                c_ts = input.gmw_vec_p0.timing_stats
+                c_cs = input.gmw_vec_p0.circuit_stats
+                d_ts = input.bmr_vec_p0.timing_stats
+                d_cs = input.bmr_vec_p0.circuit_stats
+
+                vals2 = [label + " (V)",
+                  "{:,.0f}".format(round(c_ts.gates_online.mean/1000)),
+                  "{:,.0f}".format(round((c_ts.preprocess_total.mean + c_ts.gates_setup.mean)/1000)),
+                  "{:,.0f}".format(round(c_cs.num_gates/1000)),
+                  "{:,.0f}".format(round(c_cs.circuit_gen_time/1000)),
+                  "{:,.0f}".format(round(c_ts.communication.send_num_msgs/1000)),
+                  "{:,}".format(round(c_ts.communication.send_size)),
+
+                  "{:,.0f}".format(round(d_ts.gates_online.mean/1000)),
+                  "{:,.0f}".format(round((d_ts.preprocess_total.mean + d_ts.gates_setup.mean)/1000)),
+                  "{:,.0f}".format(round(d_cs.num_gates/1000)),
+                  "{:,.0f}".format(round(d_cs.circuit_gen_time/1000)),
+                  "{:,.0f}".format(round(d_ts.communication.send_num_msgs/1000)),
+                  "{:,}".format(round(d_ts.communication.send_size))
+                ]
+
+                line = ' & '.join(list(map(str, vals1))) + '\\\\'
+                print(line)
+                line = ' & '.join(list(map(str, vals2))) + '\\\\'
+                print(line)
+                print('\\midrule')
+                break
+
 def generate_graphs(lan, wan):
     if lan is not True and wan is not True:
         log.error("Need to specify at least one of LAN or WAN directories for source data")
@@ -1122,15 +1183,19 @@ def generate_graphs(lan, wan):
 
     if lan is True:
         for f in lan_files:
+            if "biometric_fast" in f:
+                continue
             with open(f, "r", encoding='utf-8') as f:
                 json_str = f.read()
                 file_stats = json_deserialize(json_str)
                 lan_stats.append(file_stats)
+        # gen_latex_table(lan_stats)
         generate_single_network_graphs(lan_stats, LAN_GRAPHS_DIR)
 
     if wan is True:
         for f in wan_files:
-            log.info("Loading: {}".format(f))
+            if "biometric_fast" in f:
+                continue
             with open(f, "r", encoding='utf-8') as f:
                 json_str = f.read()
                 file_stats = json_deserialize(json_str)
