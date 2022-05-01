@@ -52,6 +52,67 @@ In the following, we say {\em both} for an experiment in which we execute both n
 
 \subsection{Results and Analysis}\label{sec:result_analysis}
 
+   \begin{table*}[htbp]
+       \centering
+       \caption{Vectorized vs Non-Vectorized Comparison, times in seconds (in LAN setting where applicable), Communication in MiB, Numbers in 1000s, values rounded to nearest integer, benchmark names ending in {\em V} are vectorized.}
+       \label{table:metrics}
+       \rowcolors{5}{}{gray!10}
+       \tabcolsep3pt
+       \begin{tabular}{lrrrrrrrrrrrr}
+           \toprule
+           {} & \multicolumn{6}{c}{\textbf{GMW}} & \multicolumn{6}{c}{\textbf{BMR}} \\
+            \cmidrule(r){2-7} \cmidrule(r){8-13} \\
+            {\bf Benchmark} & Online & Setup & \# Gates & Circ Gen & \# Msgs & Comm. &  Online & Setup & \# Gates & Circ Gen & \# Msgs & Comm. \\
+          \midrule
+            Biometric Matching & 146 & 16 & 1,784 & 119 & 1,413 & 140 & 89 & 263 & 1,595 & 139 & 2,716 & 312\\
+            Biometric Matching (V) & 12 & 4 & 34 & 2 & 28 & 14 & 2 & 13 & 30 & 4 & 61 & 130\\
+            \midrule
+            Convex Hull & 48 & 6 & 551 & 40 & 516 & 51 & 28 & 72 & 494 & 39 & 695 & 80\\
+            Convex Hull (V) & 0 & 1 & 2 & 0 & 1 & 4 & 0 & 2 & 1 & 1 & 2 & 32\\
+            \midrule
+            Count 102 & 79 & 6 & 418 & 35 & 525 & 52 & 15 & 62 & 269 & 33 & 785 & 92\\
+            Count 102 (V) & 71 & 5 & 316 & 24 & 332 & 34 & 11 & 30 & 167 & 16 & 304 & 59\\
+            \midrule
+            Count 10s & 79 & 6 & 419 & 35 & 525 & 52 & 14 & 62 & 270 & 33 & 785 & 92\\
+            Count 10s (V) & 71 & 4 & 316 & 24 & 332 & 34 & 11 & 29 & 167 & 16 & 304 & 59\\
+            \midrule
+            Cryptonets (Max Pooling) & 50 & 11 & 688 & 46 & 554 & 55 & 36 & 89 & 608 & 51 & 898 & 110\\
+            Cryptonets (Max Pooling) (V) & 1 & 1 & 7 & 1 & 2 & 5 & 2 & 4 & 7 & 2 & 12 & 49\\
+            \midrule
+            Database Join & 70 & 8 & 433 & 48 & 790 & 80 & 19 & 229 & 458 & 119 & 3,518 & 427\\
+            Database Join (V) & 54 & 6 & 320 & 35 & 575 & 61 & 16 & 112 & 320 & 57 & 1,457 & 285\\
+            \midrule
+            Database Variance & 166 & 18 & 2,009 & 135 & 1,639 & 163 & 95 & 269 & 1,708 & 145 & 2,795 & 320\\
+            Database Variance (V) & 37 & 6 & 321 & 24 & 334 & 43 & 10 & 30 & 170 & 13 & 178 & 141\\
+            \midrule
+            Histogram & 94 & 10 & 862 & 68 & 979 & 97 & 27 & 94 & 491 & 51 & 1,132 & 135\\
+            Histogram (V) & 33 & 5 & 166 & 16 & 164 & 23 & 7 & 17 & 92 & 13 & 154 & 68\\
+            \midrule
+            Inner Product & 127 & 15 & 1,675 & 108 & 1,308 & 130 & 83 & 250 & 1,526 & 134 & 2,623 & 301\\
+            Inner Product (V) & 16 & 5 & 158 & 12 & 165 & 25 & 6 & 18 & 83 & 7 & 86 & 127\\
+            \midrule
+            k-means & 108 & 12 & 1,333 & 88 & 1,090 & 108 & 63 & 185 & 1,141 & 99 & 1,958 & 225\\
+            k-means (V) & 6 & 3 & 47 & 4 & 43 & 12 & 2 & 11 & 32 & 4 & 54 & 95\\
+            \midrule
+            Longest 102 & 93 & 7 & 650 & 52 & 713 & 71 & 26 & 93 & 475 & 49 & 1,091 & 128\\
+            Longest 102 (V) & 169 & 6 & 544 & 41 & 519 & 53 & 25 & 60 & 369 & 33 & 605 & 95\\
+            \midrule
+            Max. Dist. b/w Symbols & 71 & 8 & 572 & 43 & 576 & 57 & 24 & 69 & 397 & 38 & 748 & 89\\
+            Max. Dist. b/w Symbols (V) & 166 & 7 & 538 & 39 & 512 & 51 & 24 & 57 & 363 & 32 & 589 & 78\\
+            \midrule
+            Minimal Points & 35 & 5 & 458 & 31 & 369 & 37 & 24 & 46 & 401 & 26 & 347 & 40\\
+            Minimal Points (V) & 0 & 1 & 1 & 0 & 1 & 3 & 0 & 1 & 1 & 0 & 1 & 16\\
+            \midrule
+            MNIST ReLU & 132 & 31 & 1,843 & 126 & 1,483 & 152 & 98 & 247 & 1,630 & 135 & 2,401 & 298\\
+            MNIST ReLU (V) & 3 & 3 & 25 & 3 & 9 & 17 & 5 & 11 & 25 & 5 & 33 & 136\\
+            \midrule
+            Private Set Intersection & 95 & 9 & 558 & 59 & 1,049 & 104 & 22 & 186 & 591 & 96 & 2,639 & 302\\
+            Private Set Intersection (V) & 1 & 2 & 1 & 2 & 1 & 8 & 1 & 8 & 2 & 4 & 2 & 122\\
+          \bottomrule
+       \end{tabular}
+       \label{table:metrics}
+   \end{table*}
+
 \begin{figure*}[htbp]
 \centering
 %\resizebox{7in}{!}{\input{graphs/lan/all-hist-OnlineSetupTimesec}}
@@ -60,7 +121,7 @@ In the following, we say {\em both} for an experiment in which we execute both n
 \label{fig:graph_all_eval_time}
 \end{figure*}
 
-We show circuit evaluation times in \cref{fig:graph_all_eval_time}. In terms of amenability to vectorization, we divide benchmarks into 3 categories: 1) {\it High:} these include convex hull, cryptonets max pooling, minimal points and private set intersection. These benchmarks are highly parallelizable and see 25x to 70x speedup in BMR, and 30x to 55x in GMW protocol. 2) {\it Medium:} these include biometric matching, DB Variance, histogram, inner product, k-means iteration and MNIST ReLU. These benchmarks have non-parallelizable phases e.g. the summing phase of inner product and biometric matching. Still, most computation is parallelizable and it results in speedup from 5x to 25x in BMR, and 2x to 25x in GMW protocol. 3) {\it Low:} these include the Database Join and the regular expression benchmarks (count 102, count 10, longest 102 and max distance between symbols). There is very little parallelizable computation in these programs, thus the speedup is lower. We see a speedup from 1.1x to 2x in BMR. In GMW, DB Join, Count 102 and Count 10s see speedup from 1.1x to 1.3x. However, longest 102 and max distance between symbols suffer a slowdown of 0.5x. The structure of these benchmarks is such that transformation to vectorized code increases multiplicative depth and, the negative effect of increased depth is more noticeable in a round-based protocol like GMW. We fix this via a simple heuristic where if the transformation increases circuit depth beyond some threshold (e.g. more than 10\% of the original circuit), we reject the transformation. Nevertheless, we show these graphs here for the sake of completeness and to highlight that vectorization is not always reduce run time. Note that in some settings it may still be desirable to vectorize e.g. in data constrained environments. As shown in \cref{fig:graph_comm_size}, vectorization results in reduced communication (fewer bits are transferred).
+A detailed summery of the effects of vectorization on various benchmarks is presented in \cref{table:metrics}. We show circuit evaluation times in \cref{fig:graph_all_eval_time}. In terms of amenability to vectorization, we divide benchmarks into 3 categories: 1) {\it High:} these include convex hull, cryptonets max pooling, minimal points and private set intersection. These benchmarks are highly parallelizable and see 25x to 70x speedup in BMR, and 30x to 55x in GMW protocol. 2) {\it Medium:} these include biometric matching, DB Variance, histogram, inner product, k-means iteration and MNIST ReLU. These benchmarks have non-parallelizable phases e.g. the summing phase of inner product and biometric matching. Still, most computation is parallelizable and it results in speedup from 5x to 25x in BMR, and 2x to 25x in GMW protocol. 3) {\it Low:} these include the Database Join and the regular expression benchmarks (count 102, count 10, longest 102 and max distance between symbols). There is very little parallelizable computation in these programs, thus the speedup is lower. We see a speedup from 1.1x to 2x in BMR. In GMW, DB Join, Count 102 and Count 10s see speedup from 1.1x to 1.3x. However, longest 102 and max distance between symbols suffer a slowdown of 0.5x. The structure of these benchmarks is such that transformation to vectorized code increases multiplicative depth and, the negative effect of increased depth is more noticeable in a round-based protocol like GMW. We fix this via a simple heuristic where if the transformation increases circuit depth beyond some threshold (e.g. more than 10\% of the original circuit), we reject the transformation. Nevertheless, we show these graphs here for the sake of completeness and to highlight that vectorization is not always reduce run time. Note that in some settings it may still be desirable to vectorize e.g. in data constrained environments. As shown in \cref{fig:graph_comm_size}, vectorization results in reduced communication (fewer bits are transferred).
 
 We present evaluation for communication size in \cref{fig:graph_comm_size_time}, circuit generation time in \cref{fig:graph_circ_gen_time}, number of gates in \cref{fig:graph_total_gates} and online time and setup time in \cref{fig:graph_online_time} and \cref{fig:graph_setup_time} respectively. \ishaq{Ana: Let me know if I should add more substance.}
 
