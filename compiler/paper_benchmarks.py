@@ -11,6 +11,7 @@ import random
 import json
 import socket
 
+
 import compiler
 
 from tests import context as test_context
@@ -1015,22 +1016,22 @@ def generate_single_network_graphs(all_stats, dir):
     generate_graph_for_attr(all_stats, get_num_gates, None, 'Total Gates', dir)
     generate_cumulative_graph_for_attr(all_stats, get_num_gates, None, 'Total Gates', dir)
     
-    get_circ_gen_time = lambda x: int(x.circuit_stats.circuit_gen_time/1000) if x is not None else 0
+    get_circ_gen_time = lambda x: (x.circuit_stats.circuit_gen_time/1000) if x is not None else 0
     generate_graph_for_attr(all_stats, get_circ_gen_time, None, 'Circuit Generation Time (sec)', dir)
     generate_cumulative_graph_for_attr(all_stats, get_circ_gen_time, None, 'Circuit Generation Time (sec)', dir)
     
-    get_online_time = lambda x: int(x.timing_stats.gates_online.mean/1000) if x is not None else 0
-    get_online_time_sd = lambda x: int(x.timing_stats.gates_online.stddev/1000) if x is not None else 0
+    get_online_time = lambda x: (x.timing_stats.gates_online.mean/1000) if x is not None else 0
+    get_online_time_sd = lambda x: (x.timing_stats.gates_online.stddev/1000) if x is not None else 0
     generate_graph_for_attr(all_stats, get_online_time, get_online_time_sd, 'Online Time (sec)', dir)  
     generate_cumulative_graph_for_attr(all_stats, get_online_time, get_online_time_sd, 'Online Time (sec)', dir)
 
-    get_setup_time = lambda x: int((x.timing_stats.gates_setup.mean + x.timing_stats.preprocess_total.mean)/1000) if x is not None else 0
-    get_setup_time_sd = lambda x: int((x.timing_stats.gates_setup.stddev + x.timing_stats.preprocess_total.stddev)/1000) if x is not None else 0
+    get_setup_time = lambda x: ((x.timing_stats.gates_setup.mean + x.timing_stats.preprocess_total.mean)/1000) if x is not None else 0
+    get_setup_time_sd = lambda x: ((x.timing_stats.gates_setup.stddev + x.timing_stats.preprocess_total.stddev)/1000) if x is not None else 0
     generate_graph_for_attr(all_stats, get_setup_time, get_setup_time_sd, 'Setup Time (sec)', dir)    
     generate_cumulative_graph_for_attr(all_stats, get_setup_time, get_setup_time_sd, 'Setup Time (sec)', dir)
 
-    get_eval_time = lambda x: int(x.timing_stats.circuit_evaluation.mean/1000) if x is not None else 0
-    get_eval_time_sd = lambda x: int(x.timing_stats.circuit_evaluation.stddev/1000) if x is not None else 0
+    get_eval_time = lambda x: (x.timing_stats.circuit_evaluation.mean/1000) if x is not None else 0
+    get_eval_time_sd = lambda x: (x.timing_stats.circuit_evaluation.stddev/1000) if x is not None else 0
     generate_graph_for_attr(all_stats, get_eval_time, get_eval_time_sd, 'Online + Setup Time (sec)', dir)  
     generate_cumulative_graph_for_attr(all_stats, get_eval_time, get_eval_time_sd, 'Online + Setup Time (sec)', dir)
 
@@ -1044,73 +1045,61 @@ def generate_single_network_graphs(all_stats, dir):
     # generate_cumulative_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)
 
 
-def get_benchmark_stats(all_stats, benchmark_name, input_label, need_gmw_vec = True):
+def get_benchmark_stats(all_stats, benchmark_name, input_label):
     for task_stat in all_stats:
         if task_stat.label == benchmark_name:
             for i in range(len(task_stat.input_configs)-1, 0, -1):
                 input = task_stat.input_configs[i]
                 if input.label == input_label:
-                    if need_gmw_vec is True and input.gmw_vec_p0 is not None:
+                    if input.gmw_vec_p0 is not None and input.bmr_vec_p0 is not None:
                         return input
-                    elif need_gmw_vec is False and input.bmr_vec_p0 is not None:
-                        return input 
     return None
 
 def generate_comparison_graphs(lan_stats, wan_stats, get_val, y_label, dir):
     y_label_simple = ''.join(c for c in y_label if c.isalnum())
-    gmwfile = "comparison-gmw-{}.txt".format(y_label_simple)
-    bmrfile = "comparison-bmr-{}.txt".format(y_label_simple)
-    gmw_hist_graph_file = "comparison-gmw-hist-{}{}".format(y_label_simple, GRAPH_EXT)
-    bmr_hist_graph_file = "comparison-bmr-hist-{}{}".format(y_label_simple, GRAPH_EXT)
+    data_file = "comparison-{}.txt".format(y_label_simple)
+    graph_file = "comparison-hist-{}{}".format(y_label_simple, GRAPH_EXT)
     # line_graph_file = "all-line {}{}".format(y_label, GRAPH_EXT)
-    gmwfile_path = os.path.join(dir, gmwfile)
-    bmrfile_path = os.path.join(dir, bmrfile)
-    with open(bmrfile_path, mode='w', encoding='utf-8') as bmrf:
-        with open(gmwfile_path, mode='w', encoding='utf-8') as gmwf:
-            bmrf.write("x\tBenchmark\t\"LAN\"\t\"WAN\"\tWAN/LAN\tInputLabel\n")
-            gmwf.write("x\tBenchmark\t\"LAN\"\t\"WAN\"\tWAN/LAN\tInputLabel\n")
-            x = 1
-            for lan_task_stat in lan_stats:
-                label = get_x_label_for_benchmark(lan_task_stat.label)
+    data_file_path = os.path.join(dir, data_file)
+    with open(data_file_path, mode='w', encoding='utf-8') as f:
+        line = '\t'.join(['x', '"Benchmark"', '"GMW LAN"', '"GMW WAN"',
+            '"BMR LAN"', '"BMR WAN"', '"Input Label"']) + '\n'
+        # f.write("x\tBenchmark\t\"LAN\"\t\"WAN\"\tWAN/LAN\tInputLabel\n")
+        f.write(line)
+        x = 1
+        for lan_task_stat in lan_stats:
+            label = get_x_label_for_benchmark(lan_task_stat.label)
 
-                for i in range(len(lan_task_stat.input_configs)-1, 0, -1):
-                    lan_input = lan_task_stat.input_configs[i]
+            for i in range(len(lan_task_stat.input_configs)-1, 0, -1):
+                lan_input = lan_task_stat.input_configs[i]
+                if lan_input.gmw_vec_p0 is not None and lan_input.bmr_vec_p0 is not None:
+                    wan_input = get_benchmark_stats(wan_stats, lan_task_stat.label, lan_input.label)
+                    if wan_input is not None:
+                        gmw_lan = get_val(lan_input.gmw_vec_p0)
+                        gmw_wan  = get_val(wan_input.gmw_vec_p0)
+                        bmr_lan = get_val(lan_input.bmr_vec_p0)
+                        bmr_wan  = get_val(wan_input.bmr_vec_p0)
 
-                    if lan_input.gmw_vec_p0 is not None:
-                        wan_input = get_benchmark_stats(wan_stats, lan_task_stat.label, 
-                            lan_input.label, True)
-                        if wan_input is not None:
-                            lan = get_val(lan_input.gmw_vec_p0)
-                            wan  = get_val(wan_input.gmw_vec_p0)
-                            r_wan_lan  = ratio(wan, lan)
-                            
-                            gmwf.write("{x}\t\"{label}\"\t{lan}\t{wan}\t{r_wan_lan}\t\"{input_label}\"\n".format(
-                                x=x, label=label, lan=lan, wan=wan, r_wan_lan=r_wan_lan, 
-                                input_label=lan_input.label))
-                            break
+                        vals = list(
+                            map(str, 
+                                [x, '"' + label + '"', gmw_lan, gmw_wan, bmr_lan, bmr_wan, '"' + lan_input.label + '"']
+                                )
+                        )
 
-                for i in range(len(lan_task_stat.input_configs)-1, 0, -1):
-                    lan_input = lan_task_stat.input_configs[i]
+                        line = '\t'.join(vals) + '\n'
+                        
+                        # gmwf.write("{x}\t\"{label}\"\t{lan}\t{wan}\t{r_wan_lan}\t\"{input_label}\"\n".format(
+                        #     x=x, label=label, lan=lan, wan=wan, r_wan_lan=r_wan_lan, 
+                        #     input_label=lan_input.label))
+                        f.write(line)
+                        break
 
-                    if lan_input.bmr_vec_p0 is not None:
-                        wan_input = get_benchmark_stats(wan_stats, lan_task_stat.label, 
-                            lan_input.label, False)
-                        if wan_input is not None:
-                            lan = get_val(lan_input.bmr_vec_p0)
-                            wan  = get_val(wan_input.bmr_vec_p0)
-                            r_wan_lan  = ratio(wan, lan)
-                            
-                            bmrf.write("{x}\t\"{label}\"\t{lan}\t{wan}\t{r_wan_lan}\t\"{input_label}\"\n".format(
-                                x=x, label=label, lan=lan, wan=wan, r_wan_lan=r_wan_lan, 
-                                input_label=lan_input.label))
-                            break
 
-    gmw_title = "{} - GMW - All Benchmarks".format(y_label)
-    bmr_title = "{} - BMR - All Benchmarks".format(y_label)            
+    title = "{} - All Benchmarks".format(y_label)
     hist_script = os.path.join(FILE_DIR, 'plt_comparison_histogram.gnu')
     # line_script = os.path.join(FILE_DIR, 'plt_linegraph.gnu')
-    run_gnuplot(hist_script, gmwfile_path, gmw_hist_graph_file, gmw_title, y_label, dir, other_args = [])
-    run_gnuplot(hist_script, bmrfile_path, bmr_hist_graph_file, bmr_title, y_label, dir, other_args = [])
+    run_gnuplot(hist_script, data_file_path, graph_file, title, y_label, dir, other_args = [])
+    # run_gnuplot(hist_script, bmrfile_path, bmr_hist_graph_file, bmr_title, y_label, dir, other_args = [])
     # run_gnuplot(line_script, file_path, line_graph_file, title, y_label, dir, other_args = [])
 
 def generate_graphs(lan, wan):
