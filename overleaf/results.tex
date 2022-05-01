@@ -58,34 +58,50 @@ In the following, we say {\em both} for an experiment in which we execute both n
 \label{fig:graph_all_eval_time}
 \end{figure*}
 
-We show circuit evaluation times in \cref{fig:graph_all_eval_time}. In terms of amenability to vectorization, we divide benchmarks into 3 categories: 1) {\it High:} these include convex hull, cryptonets max pooling, minimal points and private set intersection. These benchmarks are highly parallelizable and see 25x to 70x speedup in BMR, and 30x to 55x in GMW protocol. 2) {\it Medium:} these include biometric matching, DB Variance, histogram, inner product, k-means iteration and MNIST ReLU. These benchmarks have non-parallelizable phases e.g. the summing phase of inner product and biometric matching. Still, most computation is parallelizable and it results in speedup from 5x to 25x in BMR, and 2x to 25x in GMW protocol. 3) {\it Low:} these include the Database Join and the regular expression benchmarks (count 102, count 10, longest 102 and max distance between symbols). There is very little parallelizable computation in these programs, thus the speedup is lower. We see a speedup from 1.1x to 2x in BMR. In GMW, DB Join, Count 102 and Count 10s see speedup from 1.1x to 1.3x. However, longest 102 and max distance between symbols suffer a slowdown of 0.5x. The structure of these benchmarks is such that transformation to vectorized code increases multiplicative depth and, the negative effect of increased depth is more noticeable in a round-based protocol like GMW. We fix this via a simple heuristic where if the transformation increases circuit depth beyond some threshold (e.g. more than 10\% of the original circuit), we reject the transformation. Nevertheless, we show these graphs here for the sake of completeness and to highlight that vectorization is not always reduce run time. Note that in some settings it may still be desirable to vectorize e.g. in data constrained environments. As shown in \cref{fig:graph_comm_size_time}, vectorization results in reduced communication (i.e. fewer bits are transferred).
+We show circuit evaluation times in \cref{fig:graph_all_eval_time}. In terms of amenability to vectorization, we divide benchmarks into 3 categories: 1) {\it High:} these include convex hull, cryptonets max pooling, minimal points and private set intersection. These benchmarks are highly parallelizable and see 25x to 70x speedup in BMR, and 30x to 55x in GMW protocol. 2) {\it Medium:} these include biometric matching, DB Variance, histogram, inner product, k-means iteration and MNIST ReLU. These benchmarks have non-parallelizable phases e.g. the summing phase of inner product and biometric matching. Still, most computation is parallelizable and it results in speedup from 5x to 25x in BMR, and 2x to 25x in GMW protocol. 3) {\it Low:} these include the Database Join and the regular expression benchmarks (count 102, count 10, longest 102 and max distance between symbols). There is very little parallelizable computation in these programs, thus the speedup is lower. We see a speedup from 1.1x to 2x in BMR. In GMW, DB Join, Count 102 and Count 10s see speedup from 1.1x to 1.3x. However, longest 102 and max distance between symbols suffer a slowdown of 0.5x. The structure of these benchmarks is such that transformation to vectorized code increases multiplicative depth and, the negative effect of increased depth is more noticeable in a round-based protocol like GMW. We fix this via a simple heuristic where if the transformation increases circuit depth beyond some threshold (e.g. more than 10\% of the original circuit), we reject the transformation. Nevertheless, we show these graphs here for the sake of completeness and to highlight that vectorization is not always reduce run time. Note that in some settings it may still be desirable to vectorize e.g. in data constrained environments. As shown in \cref{fig:graph_comm_size}, vectorization results in reduced communication (fewer bits are transferred).
 
 We present evaluation for communication size in \cref{fig:graph_comm_size_time}, circuit generation time in \cref{fig:graph_circ_gen_time}, number of gates in \cref{fig:graph_total_gates} and online time and setup time in \cref{fig:graph_online_time} and \cref{fig:graph_setup_time} respectively. \ishaq{Ana: Let me know if I should add more substance.}
-
-- Discuss inner product and biometric in detail on LAN
 
 
 \begin{figure}[htbp]
 \centering
 \resizebox{3.6in}{!}{\input{graphs/lan/biometric-hist-OnlineSetupTimesec}}
-\caption{Circuit Evaluation Time for Biometric Matching, x-axis lists database size}
+\caption{Biometric Matching Circuit Evaluation Time, x-axis lists database size}
 \label{fig:graph_biometric_eval_time}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\resizebox{3.6in}{!}{\input{graphs/lan/inner_product-hist-OnlineSetupTimesec}}
-\caption{Circuit Evaluation Time for Inner Product, x-axis lists database size}
-\label{fig:graph_inner_product_eval_time}
+\resizebox{3.6in}{!}{\input{graphs/lan/biometric-hist-CommunicationMiB}}
+\caption{Biometric Matching Communication Size, x-axis lists database size}
+\label{fig:graph_biometic_comm_size}
 \end{figure}
 
-- Discuss their comparison (Time) with WAN
+\begin{figure}[htbp]
+\centering
+\resizebox{3.6in}{!}{\input{graphs/lan/biometric-hist-CircuitGenerationTimesec}}
+\caption{Biometric Matching Circuit Generation Time, x-axis lists database size}
+\label{fig:graph_biometic_circ_gen_time}
+\end{figure}
+
+Next, we look closely at circuit evaluation \cref{fig:graph_biometric_eval_time}, communication size \cref{fig:graph_biometic_comm_size} and circuit generation time \cref{fig:graph_biometic_circ_gen_time} for biometric matching benchmark. For input size beyond {\tt N=128} the memory usage exceeds available memory and prevents circuit generation. Consequently, non-vectorized bars are missing beyond this threshold. Notice that vectorization improves all metrics. A database of size {\tt N=128} is smaller than any real world usecase, therefore lets use it as baseline for improvement. Comparing performance improvement between BMR and GMW, we see more speedup for BMR (23x vs 10x), GMW gets more communication size reduction (10x vs 2.5x) and circuit generation sees a speedup of 35x and 45x for BMR and GMW respectively. 
+
+
+
+\begin{figure}[htbp]
+\centering
+\resizebox{3.6in}{!}{\input{graphs/comparison-hist-OnlineSetupTimesec}}
+\caption{LAN vs. WAN: Circuit Evaluation Time Comparison}
+\label{fig:graph_comparison_eval_time}
+\end{figure}
+
+Since our vectorization framework is network agnostic, it will produce the same circuit for both LAN and WAN settings. This means that the number of gates and communication size remain the same. Moreover, time for circuit generation, which is a local operation, also remains unchanged. Setup and Online times, however, increase due to lower bandwidth and higher latency of the WAN. Indeed, this is what we observe in \cref{fig:graph_comparison_eval_time}.
 
 \begin{figure*}[htbp]
 \centering
 \input{graphs/lan/all-hist-CommunicationMiB}
 \caption{Communication Size of Benchmarks}
-\label{fig:graph_comm_size_time}
+\label{fig:graph_comm_size}
 \end{figure*}
 
 
