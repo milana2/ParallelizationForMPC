@@ -1,0 +1,268 @@
+%\documentclass{article}
+
+%\begin{document}
+
+\subsubsection{Example: Biometric}
+
+We now demonstrate the workings of the basic algorithm on our running example. Recall the MPC Source for Biometric:
+
+{\small
+\begin{pythonn}
+min_sum!1 = MAX_INT
+min_idx!1 = 0
+for i in range(0, N):
+   min_sum!2 = PHI(min_sum!1, min_sum!4)
+   min_idx!2 = PHI(min_idx!1, min_idx!4)
+   sum!2 = 0
+   for j in range(0, D):
+      sum!3 = PHI(sum!2, sum!4)
+      d = SUB(S[((i * D) + j)],C[j])
+      p = MUL(d,d)
+      sum!4 = ADD(sum!3,p)
+   t = CMP(sum!3,min_sum!2)
+   min_sum!3 = sum!3
+   min_idx!3 = i
+   min_sum!4 = MUX(t, min_sum!3, min_sum!2)
+   min_idx!4 = MUX(t, min_idx!3, min_idx!2)
+return (min_sum!2, min_idx!2)
+
+\end{pythonn}
+}
+
+\paragraph{Phase 1 of Vectorization Algorithm}
+
+The transformation preserves the dependence edges. It raises the dimensions of scalars and optimistically vectorizes all operations. 
+The next phase discovers loop-carried dependences and removes affected vectorization.
+
+In the code below statements (e.g., {\sf min\_sum!3 = sum!3}) are implicitly vectorized. 
+%$\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ statements have slightly different interpretation. %\ana{This is vague, may need elaboration.}
+The example illustrates the two different versions of $\mathit{raise\_dim}$. E.g., {\sf raise\_dim(C, j, (i:N,j:D))} reshapes
+the read-only input array. {\sf drop\_dim(sum!3)} removes the $j$ dimension of {\sf sum!3}.
+%\ana{More here! One just adds a least-significant dimension. The other one may reshape an input array.}
+
+{\small
+\begin{pythonn}
+min_sum!1 = MAX_INT
+min_sum!1^ = raise_dim(min_sum!1, (i:N))
+min_idx!1 = 0
+min_idx!1^ = raise_dim(min_idx!1, (i:N))
+S^ = raise_dim(S, ((i * D) + j), (i:N,j:D))
+C^ = raise_dim(C, j, (i:N,j:D))
+for i in range(0, N):
+   min_sum!2 = PHI(min_sum!1^, min_sum!4)
+   min_idx!2 = PHI(min_idx!1^, min_idx!4) 
+   sum!2 = 0 // Will lift, when hoisted
+   sum!2^ = raise_dim(sum!2, (j:D)) 
+   for j in range(0, D):
+      sum!3 = PHI(sum!2^, sum!4)
+      d = SUB(S^,C^)
+      p = MUL(d,d) 
+      sum!4 = ADD(sum!3,p)
+   sum!3^ = drop_dim(sum!3)     
+   t = CMP(sum!3^,min_sum!2)
+   min_sum!3 = sum!3^
+   min_idx!3 = i  // Same-level, will lift when hoisted
+   min_sum!4 = MUX(t, min_sum!3, min_sum!2)
+   min_idx!4 = MUX(t, min_idx!3, min_idx!2)
+min_sum!2^ = drop_dim(min_sum!2)
+min_idx!2^ = drop_dim(min_idx!2)   
+return (min_sum!2^, min_idx!2^)     
+\end{pythonn}
+}
+
+\paragraph{Phase 2 of Vectorization Algorithm}
+
+This phase analyzes statements from the innermost loop to the outermost. The key point is to discover loop-carried dependencies and re-introduce loops whenever dependencies make this necessary.
+
+Starting at the inner phi-node {\sf sum!3 = PHI(...)}, the algorithm first computes its closure. The closure amounts to the phi-node itself and the addition node {\sf sum!4 = ADD(sum!3,p!3)}, accounting for the loop-carried dependency of the computation of {\sf sum}. The algorithm replaces this closure with a for-loop on $j$ removing vectorization on $j$. Note that the SUB and MUL computations remain outside of the loop as they do not depend on PHI-nodes that are part of cycles. The dependences are from {\sf p[I,J] = MUL(d[I,J],d[I,J])} to the monolithic for-loop and from the for-loop to {\sf sum!3\^ = drop\_dim(sum!3)}. Lower case index, e.g., \texttt{i}, indicates non-vectorized dimension, while uppercase index, e.g., \texttt{I} indicates vectorized dimension.
+
+After processing the inner loop code becomes:
+
+{\small
+\begin{pythonn}
+min_sum!1 = MAX_INT
+min_sum!1^ = raise_dim(min_sum!1, (i:N!0))
+min_idx!1 = 0
+min_idx!1^ = raise_dim(min_idx!1, (i:N))
+S^ = raise_dim(S, ((i * D) + j), (i:N,j:D))
+C^ = raise_dim(C, j, (i:N,j:D))
+for i in range(0, N):
+  min_sum!2[I] = PHI(min_sum!1^[I], min_sum!4[I]) 
+  min_idx!2[I] = PHI(min_idx!1^[I], min_idx!4[I])  
+  sum!2 = [0,..,0] 
+  sum!2^ = raise_dim(sum!2, (j:D))
+  d[I,J] = SUB(S^[I,J],C^[I,J])
+  p[I,J] = MUL(d[I,J],d[I,J])
+  for j in range(0, D):
+    sum!3[I,j] = PHI(sum!2^[I,j], sum!4[I,j-1])       
+    sum!4[I,j] = ADD(sum!3[I,j],p[I,j])
+  sum!3^ = drop_dim(sum!3)     
+  t[I] = CMP(sum!3^[I],min_sum!2[I])
+  min_sum!3 = sum!3^
+  min_idx!3 = i
+  min_sum!4[I] = MUX(t[I], min_sum!3[I], min_sum!2[I])
+  min_idx!4[I] = MUX(t[I], min_idx!3[I], min_idx!2[I])
+min_sum!2^ = drop_dim(min_sum!2)
+min_idx!2^ = drop_dim(min_idx!2)   
+return (min_sum!2^, min_idx!2^)
+\end{pythonn}
+}
+
+When processing the outer loop two closures arise, one for {\sf min\_sum!2[I] = PHI(...)} and one 
+for {\sf min\_idx!2[I] = PHI(...)}. Since the two closures \emph{do not} intersect, we have two distinct for-loops on $i$:
+
+{\small
+\begin{pythonn}
+min_sum!1 = MAX_INT
+min_sum!1^ = raise_dim(min_sum!1, (i:N))
+min_idx!1 = 0
+min_idx!1^ = raise_dim(min_idx!1, (i:N))
+S^ = raise_dim(S, ((i * D) + j), (i:N,j:D))
+C^ = raise_dim(C, j, (i:N,j:D))
+
+sum!2 = [0,..,0]
+sum!2^ = raise_dim(sum!2, (j:D))
+d[I,J] = SUB(S^[I,J], C^[I,J])
+p[I,J] = MUL(d[I,J], d[I,J])
+
+for j in range(0, D):
+  sum!3[I,j] = PHI(sum!2^[I,j], sum!4[I,j-1])       
+  sum!4[I,j] = ADD(sum!3[I,j],p[I,j])
+
+sum!3^ = drop_dim(sum!3)     
+min_idx!3 = [0,1,2,...N-1] // i.e., min_idx!3 = [i, (i:N)]
+min_sum!3 = sum!3^
+
+for i in range(0, N):
+  min_sum!2[i] = PHI(min_sum!1^[i], min_sum!4[i-1]) 
+  t[i] = CMP(sum!3^[i], min_sum!2[i])
+  min_sum!4[i] = MUX(t[i], min_sum!3[i], min_sum!2[i])
+    
+for i in range(0, N):
+  min_idx!2[i] = PHI(min_idx!1^[i], min_idx!4[i-1])  
+  min_idx!4[i] = MUX(t[i], min_idx!3[i], min_idx!2[i])
+
+min_sum!2^ = drop_dim(min_sum!2)
+min_idx!2^ = drop_dim(min_idx!2)   
+return (min_sum!2^, min_idx!2^)
+\end{pythonn}
+}
+
+
+
+\paragraph{Phase 3 of Vectorization Algorithm}
+
+This phase removes redundant dimensionality. 
+It starts by removing redundant dimensions in MOTION loops followed
+by removal of redundant drop dimension statements.
+It then does (extended) constant propagation 
+to "bypass" raise statements, followed by copy propagation
+and dead code elimination.
+
+The code becomes closer to what we started with:
+
+{\small
+\begin{pythonn}
+min_sum!1 = MAX_INT
+min_idx!1 = 0
+S^ = raise_dim(S, ((i * D) + j), (i:N,j:D))
+C^ = raise_dim(C, j, (i:N,j:D))
+
+sum!2 = [0,..,0]
+d[I,J] = SUB(S^[I,J],C^[I,J])
+p[I,J] = MUL(d[I,J],d[I,J])
+
+// j is redundant for sum!3 and sum!4
+for j in range(0, D):
+  sum!3[I] = PHI(sum!2[I], sum!4[I])       
+  sum!4[I] = ADD(sum!3[I], p[I,j])
+
+// drop_dim is redundant, removing
+// then copy propagation and dead code elimination 
+min_idx!3 = [0,1,2,...N-1] // i.e., min_idx!3 = [i, (i:N)]
+
+// i is redundant for min_sum!2, min_sum!4 but not for t[i]
+for i in range(0, N):
+  min_sum!2 = PHI(min_sum!1, min_sum!4) 
+  t[i] = CMP(sum!3[i],min_sum!2)
+  min_sum!4 = MUX(t[i], sum!3[i], min_sum!2)
+
+// same, i is redundant for min_idx!2, min_idx!4
+for i in range(0, N):
+  min_idx!2 = PHI(min_idx!1, min_idx!4)  
+  min_idx!4 = MUX(t[i], min_idx!3[i], min_idx!2)
+
+// drop_dim becomes redundant
+return (min_sum!2, min_idx!2)
+\end{pythonn}
+}
+
+\paragraph{Phase 4 of Basic Vectorization}
+
+This phase adds SIMD operations:
+
+{\small
+\begin{pythonn}
+min_sum!1 = MAX_INT
+min_idx!1 = 0
+S^ = raise_dim(S, ((i * D) + j), (i:N,j:D))
+C^ = raise_dim(C, j, (i:N,j:D))
+
+sum!2 = [0,..,0]
+d[I,J] = SUB_SIMD(S^[I,J],C^[I,J])
+p[I,J] = MUL_SIMD(d[I,J], d[I,J])
+
+for j in range(0, D):
+  // I dim is a noop. sum is already a one-dimensional vector
+  sum!3[I] = PHI(sum!2[I], sum!4[I])       
+  sum!4[I] = ADD_SIMD(sum!3[I],p[I,j])
+
+min_idx!3 = [0,1,...N-1]   
+
+for i in range(0, N):
+  min_sum!2 = PHI(min_sum!1, min_sum!4) 
+  t[i] = CMP(sum!3[i],min_sum!2)
+  min_sum!4 = MUX(t[i], sum!3[i], min_sum!2)
+    
+for i in range(0, N):
+  min_idx!2 = PHI(min_idx!1, min_idx!4)  
+  min_idx!4 = MUX(t[i], min_idx!3[i], min_idx!2)
+   
+return (min_sum!2, min_idx!2)   
+\end{pythonn}
+}
+
+
+%\ana{TODO: It will be good to add a pass in Phase 3, or post Phase 3, to get rid of extra dimensionality. Once we have vectorized as much as possible, there is no need to keep higher dimensionality. E.g., there is no need for the 2-dimensional array sum in the first for loop, and similarly, there is no need for 1-dimensional arrays for min\_sum and min\_index. We should get rid of these before generating MOTION code.}
+
+%\ana{I don't have a crisp algorithm in mind. I don't think it will be difficult but we have to think this through. Put on our TODO list for us to think about since it will simplify MOTION code tremendously.}
+
+%\ana{Begin Work-in-progress notes on implementation. Just some thoughts...} 
+\begin{comment}
+For now, I suggest we go with a "naive" implementation and try to do only minimal optimizations. 
+All arrays are stored in the program as one-dimensional arrays. Arrays lifted from scalars have dimensionality of the loop enclosure in 
+the original code, e.g., \texttt{sum!3} is two dimensional \texttt{[N!0,D!0]} (but represented linearly in row-major order; all these "copies" are 
+arrays of references to shares). Naturally, all writes into these arrays are canonical writes, i.e., $A[i,j] = ...$ and no things like $A[i+1,j-1] = ...$.
+
+The loop "for j in range..." is perhaps the most interesting. First, consider "projection", e.g., p!3[I,j]. 
+We fix j (the current iteration) and iterate over I using the row-major formula; it returns the j-th column, 
+a one-dimensional column vector. I think this can be generalized across any mix of vectorized vs. 
+non-vectorized dimensions but I'm not 100\% sure.
+
+\begin{verbatim}
+// project the (j-1)-st column vector:
+A = sum!4[I,j-1]
+// project j-th column from p!3: 
+B = p!3[I,j] 
+// we get a N!0-size vector of references to NEW shares:
+C = ADD_SIMD(A,B) 
+// Writes j-th column of sum!4 with the new references:
+sum!4[I,j] = C 
+// may eventually optimize since C is A
+\end{verbatim}
+\end{comment}
+
+
+%\ana{End Work-in-progress notes.}
+
+%\end{document}
