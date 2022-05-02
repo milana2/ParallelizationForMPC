@@ -211,7 +211,7 @@ is an artifact of our vectorization. We rewrote the accumulation (manually, for 
 MOTION's compiler performs analysis that informs circuit generation and the example illustrates the power of the analysis. In the above example, 
 MOTION does the standard divide-and-conquer accumulation. The poor performance of our loop is not a limitation of our approach, but it could be a 
 limitation of our current implementation. Recall that the next phase of Vectorization, in~\secref{sec:vectorization}, which we have not implemented yet, gets rid of redundant 
-dimensions and generates {\sf if (i!=0) { result\_pref = result; } result = result\_prev + mult\_unsimdified[i]}. And while it is unrealistic to expect that MOTION's static analysis 
+dimensions and generates {\sf if (i!=0) \{ result\_prev = result; \} result = result\_prev + mult\_unsimdified[i]}. And while it is unrealistic to expect that MOTION's static analysis 
 will detect the associative accumulation in the scalar expansion code, it is realistic to expect that it will in the above only slightly more complex code. 
 It still might lead to confusion in the static analysis as analysis on the AST is difficult (unfortunately, we ran out of time and did not experiment further).
 %Interestingly, the non-vectorized version, which is the literal translation of inner product does not appear to benefit from any optimizations. 
