@@ -153,7 +153,7 @@ MUX operations, while the $\phi$-nodes at for-loops turn into \emph{pseudo} PHI 
 
 We turn to our analytical model to compute the \emph{cost} of the iterative program. Assume
 cost $\beta$ for a local MPC operation (e.g., ADD in Arithmetic sharing) and cost $\alpha$ for a remote
-MPC operation (e.g., MUX, CMP, etc.). Assuming that ADD is $\alpha$ and SUM, CMP and MUX are $\beta$, 
+MPC operation (e.g., MUX, CMP, etc.). Assuming that ADD is $\beta$ and SUM, CMP and MUX are $\alpha$, 
 the MPC Source in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(b) gives 
 rise to an iterative schedule with cost $ND(2\alpha+\beta) + N(3\alpha$).
 
