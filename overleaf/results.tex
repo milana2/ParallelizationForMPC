@@ -116,7 +116,7 @@ We used the following benchmarks in our evaluation:
 \begin{figure*}[htbp]
 \centering
 %\resizebox{7in}{!}{\input{graphs/lan/all-hist-OnlineSetupTimesec}}
-\input{graphs/lan/all-hist-OnlineSetupTimesec}
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-OnlineSetupTimesec}}
 \caption{Circuit Evaluation Time (Setup + Online) of Benchmarks}
 \label{fig:graph_all_eval_time}
 \end{figure*}
@@ -129,21 +129,21 @@ We present evaluation for communication size in \cref{fig:graph_comm_size}, circ
 
 \begin{figure}[htbp]
 \centering
-\resizebox{3.6in}{!}{\input{graphs/lan/biometric-hist-OnlineSetupTimesec}}
+\resizebox{0.7\columnwidth}{!}{\input{graphs/lan/biometric-hist-OnlineSetupTimesec}}
 \caption{Biometric Matching Circuit Evaluation Time, x-axis lists database size}
 \label{fig:graph_biometric_eval_time}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\resizebox{3.6in}{!}{\input{graphs/lan/biometric-hist-CommunicationMiB}}
+\resizebox{0.7\columnwidth}{!}{\input{graphs/lan/biometric-hist-CommunicationMiB}}
 \caption{Biometric Matching Communication Size, x-axis lists database size}
 \label{fig:graph_biometic_comm_size}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\resizebox{3.6in}{!}{\input{graphs/lan/biometric-hist-CircuitGenerationTimesec}}
+\resizebox{0.7\columnwidth}{!}{\input{graphs/lan/biometric-hist-CircuitGenerationTimesec}}
 \caption{Biometric Matching Circuit Generation Time, x-axis lists database size}
 \label{fig:graph_biometic_circ_gen_time}
 \end{figure}
@@ -155,7 +155,7 @@ Comparing performance improvement between BMR and GMW, we see more speedup for B
 
 \begin{figure}[htbp]
 \centering
-\resizebox{3.6in}{!}{\input{graphs/comparison-hist-OnlineSetupTimesec}}
+\resizebox{0.7\columnwidth}{!}{\input{graphs/comparison-hist-OnlineSetupTimesec}}
 \caption{LAN vs. WAN: Circuit Evaluation Time Comparison}
 \label{fig:graph_comparison_eval_time}
 \end{figure}
@@ -164,7 +164,7 @@ Since our vectorization framework is network agnostic, it produces the same circ
 
 \begin{figure*}[htbp]
 \centering
-\input{graphs/lan/all-hist-CommunicationMiB}
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-CommunicationMiB}}
 \caption{Communication Size of Benchmarks}
 \label{fig:graph_comm_size}
 \end{figure*}
@@ -172,33 +172,33 @@ Since our vectorization framework is network agnostic, it produces the same circ
 
 \begin{figure*}[htbp]
 \centering
-\input{graphs/lan/all-hist-CircuitGenerationTimesec}
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-CircuitGenerationTimesec}}
 \caption{Circuit Generation Time of Benchmarks}
 \label{fig:graph_circ_gen_time}
 \end{figure*}
 
 \begin{figure*}[htbp]
 \centering
-\input{graphs/lan/all-hist-TotalGates}
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-TotalGates}}
 \caption{Number of Gates of Benchmarks}
 \label{fig:graph_total_gates}
 \end{figure*}
 
 \begin{figure*}[htbp]
 \centering
-\input{graphs/lan/all-hist-OnlineTimesec}
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-OnlineTimesec}}
 \caption{Online Time of Benchmarks}
 \label{fig:graph_online_time}
 \end{figure*}
 
 \begin{figure*}[htbp]
 \centering
-\input{graphs/lan/all-hist-SetupTimesec}
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-SetupTimesec}}
 \caption{Setup Time of Benchmarks}
 \label{fig:graph_setup_time}
 \end{figure*}
 
-\subsection{Comparison with MOTION-native Inner Product and Discussion}
+\subsection{Comparison with MOTION-native Inner Product}
 
 %We conclude the . 
 Finally, we compared our automatically generated routine for Inner Product with the manually SIMD-ified MOTION-native routine in the distribution. 
