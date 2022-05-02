@@ -140,7 +140,7 @@ arbitrarily large loop nests.
 \label{sec:imp_to_ssa}
 
 
-Our compiler translates from Source to SSA as follows:
+Our compiler translates from Source to SSA as outlined below. Full details are in the extended version~\cite{Anon_TR}.
 
 %\begin{enumerate}
 %  \item
@@ -149,12 +149,13 @@ Our compiler translates from Source to SSA as follows:
 %  \item
         \paragraph{Syntax checking:}
         Ensure that the AST matches the restricted subset defined in Section~\secref{sec:syntax}.
-        This step outputs an instance of the \texttt{restricted\_ast.Function} class, which represents our restricted subset of the Python AST.
+        %This step outputs an instance of the \texttt{restricted\_ast.Function} class, which represents our restricted subset of the Python AST.
 %  \item
         \paragraph{3-address CFG conversion:}
         %\benjamin{TODO: Is this a good amount of detail?} \ana{This is good amount of detail for the Tech report. In the actual paper we'll shorten a lot and add pointers to the Tech report.}
 
-        Convert the restricted-syntax AST to a three-address control-flow graph.
+        Convert the restricted-syntax AST to a three-address control-flow graph. The step processes for-loops, if-statements and assignments as restricted by the syntax.
+\begin{comment}
         To do this, first,
         add an empty basic block to the CFG and mark it as current.
         Next, for each statement in the restricted AST's function body,
@@ -213,9 +214,10 @@ Our compiler translates from Source to SSA as follows:
                 for each sub-expression in the right-hand side of the assignment,
                 insert an assignment to a temporary variable.
         \end{enumerate}
+\end{comment}        
   %\item
         \paragraph{SSA conversion:}
-        Convert the 3-address CFG to SSA with Cytron's algorithm.
+        Convert 3-address CFG to SSA with Cytron's algorithm.
 %\end{enumerate}
 
 \subsection{From SSA to MPC Source} %: MUX Nodes and Pseudo $\phi$-nodes}
