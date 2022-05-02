@@ -149,10 +149,16 @@ It iterates over $i$ and takes the result at the maximal index of $j$ and $k$, i
 There are two key phases of the algorithm. Phase 1 inserts raise dimension and drop dimension 
 operations according to def-uses. E.g., if there is an inner-to-outer dependence, it inserts $\mathit{raise\_dim}$,
 and similarly, if there is an outer-to-inner dependence, it inserts $\mathit{drop\_dim}$. After this phase operations work
-on arrays of the corresponding dimensionality and we optimistically vectorize all arrays.
+on arrays of the corresponding dimensionality and we optimistically vectorize all arrays. For example, 
+lines 4 and 5 in Biometric~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(c) reshape the input arrays 
 
 Phase 2 proceeds from the inner-most towards the outer-most loop. For each loop it anchors dependence cycles (closures) 
-around pseudo PHI nodes then removes vectorization from the dimension of that loop. There are two important points in this 
+around pseudo PHI nodes then removes vectorization from the dimension of that loop. In the 
+Biometric example~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(b), the iteration on the inner loop (7-11)
+determines that $j$ is not vectorizable. The next iteration on the outer loop determines that $i$ is vectorizable. It also 
+splits the remainder of the loop anchoring each loop around the corresponding PHI node. 
+
+There are two important points in this 
 phase. First, it may break a loop into smaller loops which would discover opportunities 
 for vectorization in intermediate statements in the loop. Second, it handles writes arrays. 
 It creates opportunities for vectorization in the presence of write arrays, even though 
@@ -247,20 +253,6 @@ and Phase 4 explicitly turns operations into MOTION SIMD operations.
 
 \input{biometric_vectorization_example.tex}
 
-\subsection{Correctness Argument}
-\label{sec:correctness}
-
-We build a correctness argument that loosely follows Abstract Interpretation.
-First we define the MPC Source syntax. The domain of MPC Source programs
-expressible in the syntax (with certain semantic restrictions) is the abstract domain $A$.
-We then define the \emph{linearization} of an MPC Source program as an interpretation
-over the syntax. The linearization, which is a \emph{schedule} (as in~\secref{sec:overview}), is the concrete domain $C$.
-Since we reason over def-use graphs in $A$ we define a partial order relation over elements of $A$
-in terms of def-use relations. We define a partial order over elements of $C$ as well,
-in terms of def-use relations in the concrete domain $C$. We prove two theorems
-that state (informally) that the schedule corresponding to the original program computes the same
-result as the schedule corresponding to the vectorized program. 
-
 \begin{comment}
 \begin{figure}%[!b]
 %\small
@@ -307,6 +299,21 @@ result as the schedule corresponding to the vectorized program.
 \label{fig:mpc_syntax}
 \vspace{-5mm}
 \end{figure*}
+
+\subsection{Correctness Argument}
+\label{sec:correctness}
+
+
+We build a correctness argument that loosely follows Abstract Interpretation.
+First we define the MPC Source syntax. The domain of MPC Source programs
+expressible in the syntax (with certain semantic restrictions) is the abstract domain $A$.
+We then define the \emph{linearization} of an MPC Source program as an interpretation
+over the syntax. The linearization, which is a \emph{schedule} (as in~\secref{sec:overview}), is the concrete domain $C$.
+Since we reason over def-use graphs in $A$ we define a partial order relation over elements of $A$
+in terms of def-use relations. We define a partial order over elements of $C$ as well,
+in terms of def-use relations in the concrete domain $C$. We state two theorems
+that state (informally) that the schedule corresponding to the original program computes the same
+result as the schedule corresponding to the vectorized program. 
 
 \paragraph{MPC Source Syntax}
 
@@ -428,20 +435,43 @@ $e'$ in $a_1$ such that $e \equiv e'$.
 We have that $a_0 \le a_1$. 
 \end{theorem}
 
-Theorem 1 states that a def-use edge in MPC Source $a_0$ gives rise to a set of def-use edges in $\gamma(a_0)$
-and a ``same'' edge in $a_1$ gives rise to a set of def-use edges in $\gamma(a_1)$ and the former set is included in the latter one.
-This means that the computation of $\gamma(a_0)$ is carried out by $\gamma(a_1)$ as well, computing the same result. 
-The theorem allows that $a_1$ and $\gamma(a_1)$ have larger state that $a_0$ and $\gamma(a_0)$, i.e., doing additional 
-computation into additional memory locations. Theorem 2 establishes the correctness of vectorization --- 
-clearly, vectorization preserves all statements and def-use edges in the original MPC Source, and therefore the linearization computes the 
-same result as the original MPC Source. (In this case we have an equivalence, $a_0 = a_1$ according to our partial order.)
+These theorems simply state that the transformation preserves def-use relations which is an invariant of the algorithm.
+
+%Theorem 1 states that a def-use edge in MPC Source $a_0$ gives rise to a set of def-use edges in $\gamma(a_0)$
+%and a ``same'' edge in $a_1$ gives rise to a set of def-use edges in $\gamma(a_1)$ and the former set is included in the latter one.
+%This means that the computation of $\gamma(a_0)$ is carried out by $\gamma(a_1)$ as well, computing the same result. 
+%The theorem allows that $a_1$ and $\gamma(a_1)$ have larger state that $a_0$ and $\gamma(a_0)$, i.e., doing additional 
+%computation into additional memory locations. Theorem 2 establishes the correctness of vectorization --- 
+%clearly, vectorization preserves all statements and def-use edges in the original MPC Source, and therefore the linearization computes the 
+%same result as the original MPC Source. (In this case we have an equivalence, $a_0 = a_1$ according to our partial order.)
 
 \subsection{Extension with Array Writes}
 \label{sec:array_writes}
 
-\subsubsection{Removal of Infeasible Edges}
+%\subsubsection{Removal of Infeasible Edges}
 
-Array writes limit vectorization as they sometimes introduce infeasible loop-carried dependencies. Consider the classical example from~\cite{Aiken:1988}: 
+Array writes limit vectorization as they sometimes introduce infeasible loop-carried dependencies. For example, consider 
+one of our benchmarks, Histogram. The source takes two arrays {\sf A} and {\sf B} of size {\sf N}, where ${\sf A}[j]$ stores the bin number and
+${\sf B}[j]$ stores the corresponding value that we need to add. The MPC Source is:
+
+{\small
+\begin{pythonn}
+for i in range(0, num_bins):
+  res1 = PHI(res, res2)
+  for j in range(0, N):
+    res2 = PHI(res1, res3)
+    tmp1 = (A[j] == i)
+    tmp2 = (res2[i] + B[j])
+    tmp3 = MUX(tmp1, res2[i], tmp2)
+    res3 = Update(res2, i, tmp3)
+return res1
+\end{pythonn}
+}
+
+There is loop-carried dependence from 8 to 2 for write array {\sf res} even though the loop can be vectorized across $i$.
+
+\begin{comment}
+Consider the classical example from~\cite{Aiken:1988}: 
 
 
 {\small
@@ -474,10 +504,12 @@ There is a cycle around {\sf B\_1 = PHI(B\_0,B\_2)} that includes statement
 {\sf A\_1 = update(A\_0, i, B\_1[i] + 10)} and that statement won't be vectorized even
 though in fact there is no loop-carried dependency from the write of {\sf B\_1[i]} at 7 to the
 read of {\sf ... = B\_1[i]} at 6.
+\end{comment}
 
 The following algorithm removes certain infeasible loop-carried dependencies that are due to array writes. Consider a loop with index $0 \le j < J$
-nested at $i,j,k$. Here $i$ represents the enclosing loops of $j$ and $k$ represents the enclosed loops in $j$.
-
+nested at $i,j,k$. 
+%Here $i$ represents the enclosing loops of $j$ and $k$ represents the enclosed loops in $j$.
+\begin{comment}
 \begin{algorithmic}
 \FOR {each array ${\sf A}$ written in loop $j$}
 \STATE \COMMENT { including enclosed loops in $j$ }
@@ -492,17 +524,24 @@ nested at $i,j,k$. Here $i$ represents the enclosing loops of $j$ and $k$ repres
 \ENDIF
 \ENDFOR
 \end{algorithmic}
-
+\end{comment}
 Consider a loop $j$ enclosed in some fixed $\underline{i}$. Only if an update (definition) ${\sf A}_m[f(i,j,k)] = ... $ at some iteration $\underline{j}$
 references the \emph{same} array element as a use $ ... = {\sf A}_n[f'(i,j,k)]$ at some later iteration $\underline{j}'$,
 we may have a loop-carried dependence for ${\sf A}$ due to this def-use pair. (In contrast, Cytron's algorithm inserts a loop-carried dependency every time there is an array update.)
-The algorithm above examines all def-use pairs in loop $j$, including defs and uses in nested loops, searching for values $\underline{i}, \underline{j}, \underline{j}', \underline{k}, \underline{k}'$ that satisfy
-$f(\underline{i},\underline{j},\underline{k}) = f'(\underline{i},\underline{j}',\underline{k}')$. If such values exist for some def-use pair, then there is a potential
-loop-carried dependence on ${\sf A}$; otherwise there is not and we can remove the spurious backward edge thus ``freeing up'' statements for vectorization. %\ana{Double check this!!!}
+The algorithm, shown in~\cite{Anon_TR}, examines all def-use pairs in loop $j$, including defs and uses in nested loops, 
+searching for values $\underline{i}, \underline{j}, \underline{j}', \underline{k}, \underline{k}'$ that satisfy
+$f(\underline{i},\underline{j},\underline{k}) = f'(\underline{i},\underline{j}',\underline{k}')$ (using Z3). If such values exist for some def-use pair, then there is a potential
+loop-carried dependence on ${\sf A}$; otherwise there is not and we can remove the spurious backward edge to the array PHI-node 
+thus ``freeing up'' statements for vectorization. %\ana{Double check this!!!}
 
+In the Histogram example, this removes the back edge from the update at 8 to the PHI node at 2. Clearly there does not exist $i < i'$ that will make 
+$i$ at 9 and $i'$ at 6 and 7 equal. The back-edge from 9 to 4 stays because for every $j < j'$ 9 and 6 and 7 access the same location in {\sf res}. %\ana{Can't wrap my head around this...}
+
+\begin{comment}
 Consider the earlier example. There is a single loop, $i$. Clearly, there is no pair $\underline{i}$ and $\underline{i}'$, where $\underline{i} < \underline{i}'$ that make $\underline{i} = \underline{i}'$
 due to the def-use pairs of {\sf A} 6-7 and 6-8.
 Therefore, we remove the back edge from 6 to the phi-node 2. Analogously, we remove the back edges from 7 to 3 and from 8 to 4. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 9 to 5 remains (def-use pairs for {\sf D}). As a result of removing these spurious edges, Vectorization will find that statement 6 is vectorizable. Statements 7, 8 and 9 will correctly appear in the FOR loop.
+\end{comment}
 
 Note however, that this step renders some array phi-nodes target-less. We handle target-less phi-nodes with a minor extension of Vectorization (Phase 2).
 First, we merge closures that update the same array. This simplifies handling of array $\phi$-nodes: if each closure is turned into a separate loop
@@ -511,6 +550,8 @@ Second, we add the target-less node of array {\sf A} back to the closure that up
 the intuition is, even if there is no loop-carried dependence from writes to reads on {\sf A}, {\sf A} is written and the write (i.e., update) cannot be vectorized;
 therefore, the updated array has to carry to the next iteration of the loop. Third, in cases when the phi-node remains target-less, i.e., cases when the
 array write can be vectorized, we have to properly remove the phi-node replacing uses of the left-hand side of the phi-node with its arguments.
+Additional detail, as well as detailed treatment of the minor changes to $\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ required to do expansion of arrays 
+in addition to scalars, appear in~\cite{Anon_TR}.
 
 %\ana{Commented out previous writeup. Removal/handling of targetless phi-nodes will go into the Extension to Basic vectorization.}
 
@@ -550,6 +591,7 @@ the size of those vectors. Note that this is a heuristic that handles a common c
 \end{algorithmic}
 \end{comment}
 
+\begin{comment}
 \subsubsection{Restricting Array Writes}
 
 For now, we restrict array updates to \emph{canonical updates}. Assume (for simplicity) a two-dimensional array {\sf A[I,J]}. A canonical update is the following:
@@ -590,6 +632,11 @@ If the use of the array is a read ${\sf A}[f(i,j,k)]$ different than a canonical
 all arrays are ${\sf A}[i,j,k]$. It can be added after raise\_dim/drop\_dim or incorporated in these operations.
 The bulk of the change is in Phase 2 of Vectorization as outlined earlier.
 
+\end{comment}
+
+
+
+\begin{comment}
 \subsubsection{Examples with Array Writes}
 
 \paragraph{Example 1}
@@ -635,7 +682,7 @@ for i in range(N): // MOTION loop
 \end{pythonn}
 }
 
-
+\end{comment}
 
 \begin{comment}
 \begin{algorithmic}
@@ -650,6 +697,7 @@ for i in range(N): // MOTION loop
 \end{algorithmic}
 \end{comment}
 
+\begin{comment}
 \paragraph{Example 2} Now consider the MPC Source of Histogram:
 
 {\small
@@ -665,8 +713,9 @@ for i in range(0, num_bins):
 return res1
 \end{pythonn}
 }
+\end{comment}
 
-The canonical dimensionality of {\sf res} is 1. Also, the phi-node {\sf res1 = PHI(res, res2)} is a target-less phi-node (the implication being that the inner for loop can be vectorized across $i$). After Phase 1, Vectorization produces the following code (statements are implicitly vectorized along $i$ and $j$). In a vectorized update statement, we can ignore the incoming array, {\sf res2} in this case. The update writes (in parallel) all locations of the 2-dimensional array, in this case it sets up each {\sf res3[i,j] = tmp3[i,j]}.
+Returning to the histogram example, the canonical (i.e., declared) dimensionality of {\sf res} is 1. Also, the phi-node {\sf res1 = PHI(res, res2)} is a target-less phi-node (the implication being that the inner for loop can be vectorized across $i$). After Phase 1, Vectorization produces the following code (statements are implicitly vectorized along $i$ and $j$). In a vectorized update statement, we can ignore the incoming array, {\sf res2} in this case. The update writes (in parallel) all locations of the 2-dimensional array, in this case it sets up each {\sf res3[i,j] = tmp3[i,j]}.
 
 {\small
 \begin{pythonn}
@@ -688,7 +737,7 @@ return res1''
 \end{pythonn}
 }
 
-Processing the inner loop in Phase 2 vectorizes {\sf tmp1 = (A1 == I)} along the $j$ dimension but leaves the rest of the statements in a MOTION loop. Processing the outer loop is interesting. This is because the PHI node is a target-less node, and therefore, there are no closures! Several things happen. (1) Everything can be vectorized along the $i$ dimension. (2) We remove the target-less PHI node, however, we must update uses of {\sf res1} appropriately: the use at $\mathit{raise\_dim}$ goes to the first argument of the PHI function and the use at $\mathit{drop\_dim}$ goes to the second argument.
+Processing the inner loop in Phase 2 vectorizes {\sf tmp1 = (A1 == I)} along the $j$ dimension but leaves the rest of the statements in a MOTION loop. Processing the outer loop is interesting. This is because the PHI node is a target-less node, and therefore, there are no closures. (1) Everything can be vectorized along the $i$ dimension. (2) We remove the target-less PHI node, however, we must update uses of {\sf res1} appropriately: the use at $\mathit{raise\_dim}$ goes to the first argument of the PHI function and the use at $\mathit{drop\_dim}$ goes to the second argument.
 
 {\small
 \begin{pythonn}
