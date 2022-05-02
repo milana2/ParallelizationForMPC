@@ -198,7 +198,29 @@ Since our vectorization framework is network agnostic, it produces the same circ
 \label{fig:graph_setup_time}
 \end{figure*}
 
-\subsection{Discussion}
-\ana{Ana todo: Discuss why we are slower than HyCC --- because of ad-hoc div-and-conquer optimizations. Have to summarize what Ben and I figured out yesterday.}
+\subsection{Comparison with MOTION-native Inner Product and Discussion}
 
-\ana{If we can add that our cost model works great (it does!), that would be great but probably won't have time...}
+%We conclude the . 
+Finally, we compared our automatically generated routine for Inner Product with the manually SIMD-ified MOTION-native routine in the distribution. 
+We were surprised that we were an order of magnitude slower in Boolean GMW as our circuit ran a significantly larger 
+number of communication rounds. Upon investigation, it turned out that the vectorized multiplications were essentially the same, 
+however, our addition loop incurred significant cost (ADD is non-local and expensive in Boolean GMW). The MOTION-native loop ran 
+{\sf result += mult\_unsimdified[i];} while our loop generated and ran {\sf result[i] = result[i] + mult\_unsimdified[i];}. 
+We rewrote the accumulation (manually, for testing purposes) and that led to the comparable speedup!
+
+Therefore, MOTION's compiler performs analysis that informs circuit generation. In the above example, 
+MOTION does the standard divide-and-conquer accumulation. The example also illustrates the limitation of higher-level AST analysis --- while 
+the analysis was able to detect the associative accumulation when operator {\sf += } was used, it was unable to do so when an equivalent 
+code was used. We conjecture that MPC source, as a more straight-forward representation will
+not only enable detection of general associative loops, but also allow for program synthesis to increase opportunities for divide-and-conquer
+parallelization~\cite{Farzan:2021}; we leave this as future work. 
+
+The most closely related work, HyCC~\cite{CCS:BDKKS18}, is a mixing compiler that focuses on mixed protocols, while we run vectorization within a single protocol. 
+The paper only provides data for Boolean and Yao for a version of Biometric matching on $N=1000$; it does provide a lot of data on mixed protocol executions.
+Again, we estimate we are about an order of magnitude slower. This is likely due to the same issue as Inner Product --- the computation of min can be optimized. 
+
+
+
+%\ana{Ana todo: Discuss why we are slower than HyCC --- because of ad-hoc div-and-conquer optimizations. Have to summarize what Ben and I figured out yesterday.}
+
+%\ana{If we can add that our cost model works great (it does!), that would be great but probably won't have time...}

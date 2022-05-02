@@ -37,15 +37,15 @@ restrict flow between secure and insecure parts of the program.
 %intraprocedural IMP-MPC syntax and semantics into the \emph{interprocedural} case, our interest and focus lie primarily in the ``machine-independent'' optimizations
 %thrust of the proposal.
 
-HyCC~\cite{CCS:BDKKS18} is a compiler from C Source into ABY/MOTION circuits. It does source-to-source compilation with the key goal to decompose the 
+HyCC~\cite{CCS:BDKKS18} is a compiler from C Source into ABY circuits. It does source-to-source compilation with the key goal to decompose the 
 program into modules and then assign protocols to modules. In contrast, we focus on MPC Source-level optimizations, specifically vectorization, although we envision 
 future optimizations as well. We formalize MPC Source and reasoning about transformations, which we conjecture is more tractable than reasoning over
 the higher-level AST. On the other hand, HyCC does inter-procedural optimizations, while our analysis is intra-procedural. We will explore context-sensitive inter-procedural 
 analysis over MPC Source in future work. HyCC, similarly to Buscher~\cite{Buscher:2018} uses an of-the-shelf source-to-source polyhedral compiler~\footnote{We believe HyCC uses 
 Par4All~\ana{add citation!}, however, it is not appear to be included with the publicly available distribution of HyCC.}
 to perform vectorization at the level of source code. The disadvantage of using an of-the-shelf source-to-source compiler is that it solves a more general 
-problem than what MPC presents and may forgo opportunities for optimization --- specifically, it is well-known that vectorization and polyhedral compilation 
-does not work well with conditionals~\cite{Benabderrahmane:2010,Karrenberg:2015}. In contrast, we consider vectorization at the level of MPC Source which 
+problem than what MPC presents and may forgo opportunities for optimization --- concretely, it is well-known that vectorization and polyhedral compilation 
+do not work well with conditionals~\cite{Benabderrahmane:2010,Karrenberg:2015}. In contrast, we consider vectorization at the level of MPC Source which 
 linearizes conditionals; we are able to handle programs with interleaved if-statements and for-loops and achieve significant speedup. 
  
 
