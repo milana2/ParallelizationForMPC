@@ -208,8 +208,8 @@ however, our addition loop incurred significant cost (ADD is non-local and expen
 {\sf result += mult\_unsimdified[i];} while our loop generated and ran {\sf result[i] = result[i] + mult\_unsimdified[i];}. 
 We rewrote the accumulation (manually, for testing purposes) and that led to the comparable speedup!
 
-Therefore, MOTION's compiler performs analysis that informs circuit generation. In the above example, 
-MOTION does the standard divide-and-conquer accumulation. The example also illustrates the limitation of higher-level AST analysis --- while 
+Therefore, MOTION's compiler performs analysis that informs circuit generation and the example illustrates the power of the analysis. In the above example, 
+MOTION does the standard divide-and-conquer accumulation. It also illustrates the limitation of higher-level AST analysis --- while 
 the analysis was able to detect the associative accumulation when operator {\sf += } was used, it was unable to do so when an equivalent 
 code was used. We conjecture that MPC source, as a more straight-forward representation will
 not only enable detection of general associative loops, but also allow for program synthesis to increase opportunities for divide-and-conquer
