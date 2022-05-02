@@ -205,13 +205,13 @@ Finally, we compared our automatically generated routine for Inner Product with 
 We were surprised that we were an order of magnitude slower in Boolean GMW as our circuit ran a significantly larger 
 number of communication rounds. Upon investigation, it turned out that the vectorized multiplications were essentially the same, 
 however, our addition loop incurred significant cost (ADD is non-local and expensive in Boolean GMW). The MOTION-native loop ran 
-{\sf result += mult\_unsimdified[i];} while our loop generated and ran {\sf result[i] = result[i] + mult\_unsimdified[i];}. 
+{\sf result += mult\_unsimdified[i];} while our loop generated and ran {\sf result[i] = prev + mult\_unsimdified[i];}. 
 We rewrote the accumulation (manually, for testing purposes) and that led to the comparable speedup!
 
 Therefore, MOTION's compiler performs analysis that informs circuit generation and the example illustrates the power of the analysis. In the above example, 
 MOTION does the standard divide-and-conquer accumulation. It also illustrates the limitation of higher-level AST analysis --- while 
 the analysis was able to detect the associative accumulation when operator {\sf += } was used, it was unable to do so when an equivalent 
-code was used. We conjecture that MPC source, as a more straight-forward representation will
+code was used. \ana{This is not true, have to tone down.} We conjecture that MPC source, as a more straight-forward representation will
 not only enable detection of general associative loops, but also allow for program synthesis to increase opportunities for divide-and-conquer
 parallelization~\cite{Farzan:2021}; we leave this as future work. 
 
