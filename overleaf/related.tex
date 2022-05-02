@@ -8,9 +8,11 @@ and Sharemind~\cite{ESORICS:BogLauWil08} were followed by PICCO~\cite{CCS:ZhaSte
 Wystiria~\cite{SP:RasHamHic14}, and others. A new generation of MPC compilers
 includes SPDZ/SCALE-MAMBA/MP-SPDZ~\cite{Keller:2020} and the ABY/HyCC/MOTION~\cite{NDSS:DemSchZoh15,CCS:BDKKS18,Braun:2022} frameworks.
 These two families are the state-of-the art and
-are actively developed. Another recent development is Viaduct, a functional language and compiler that supports a range of secure computation
-frameworks, including MPC and ZKP. Hastings et el. present a review of compiler frameworks~\cite{Hastings:2019}.
+are actively developed. Another recent development is Viaduct~\cite{Acay:2021}, a functional language and compiler that supports a range of secure computation
+frameworks, including MPC and ZKP. Hastings et el. present a review of compiler frameworks~\cite{Hastings:2019}. We believe that our work is unique as 
+as a facade between the high-level language and lower-level circuit protocols.
 
+\begin{comment}
 While each of these languages and compilers brings in new ideas and advances, none addresses the problem of ``circuit independent'' intermediate
 representation and optimization. We envision a classical compiler structure: (1) a Wysteria, Viaduct, Obliv-C, or IMP Source front end, including rich type systems and
 AST-level semantic analysis, compile into the MPC Source IR, (2) MPC Source-level optimizations take place, followed by (3) back-end compilers into circuits.
@@ -30,6 +32,7 @@ e.g., \cite{CCS:BDKKS18,Ishaq:2019,Fang:2022}.
 
 Other works, e.g., Obliv-C~\cite{Zahur:2015}, Wystiria~\cite{SP:RasHamHic14} and Viaduct~\cite{Acay:2021} focus on higher-level language design, particularly information-flow systems that
 restrict flow between secure and insecure parts of the program.
+\end{comment}
 
 %\ana{Add discussion on HyCC/Buscher here. 1. Formalization, reasoning about correctness of transformation. Source-to-source cannot handle if-then-else vs. MPC Source.}
 %Key ideas such as ${\sf insecure} <: {\sf secure}$ qualifier systems are similar to the ideas we
@@ -53,8 +56,8 @@ linearizes conditionals; we are able to handle programs with interleaved if-stat
 %is the separation of the higher-level ``backend-independent'' compilation and optimization and the lower-level compilation into circuits.
 
 \paragraph{Classical HPC compilers.}
-Automatic vectorization is a longstanding problem in high-performance computing (HPC).
-There are thousands of works in this area reflecting over 40 years of research. We presented a vectorization
+Automatic vectorization is a longstanding problem in high-performance computing and
+there are thousands of works in this area reflecting over 40 years of research. We presented a vectorization
 algorithm for MPC Source, essentially extending classical loop vectorization \cite{Allen:1987}. In HPC vectorization, conditional control flow
 presents a challenge --- one cannot estimate the cost of a schedule or vectorize branches in a straightforward manner --- in contrast to
 MPC Source vectorization.
@@ -68,12 +71,12 @@ can lead to \emph{slowdown}.
 
 We argue that vectorization over linear MPC Source is a different problem, one that warrants a new look, while drawing from
 results in HPC.
-Since both branches of the conditional and the multiplexer \emph{always} execute, not only can we apply aggressive vectorization on linear code, but (perhaps more importantly)
-we can also build analytical models that accurately predict execution time. These models in turn would drive optimizations such as vectorization, protocol mixing, and others.
-Vectorization meshes in with those additional optimizations in non-trivial ways.
-
-Furthermore, extensions of classical loop vectorization with array writes, arbitrary indexing, including non-affine indexing, and interaction with SSA are non-trivial
-and present novel challenges and opportunities for contribution. Polyhedral parallelization~\cite{Benabderrahmane:2010} considers a higher-level source (typically AST)
+%Since both branches of the conditional and the multiplexer \emph{always} execute, not only can we apply aggressive vectorization on linear code, but (perhaps more importantly)
+%we can also build analytical models that accurately predict execution time. These models in turn would drive optimizations such as vectorization, protocol mixing, and others.
+%Vectorization meshes in with those additional optimizations in non-trivial ways.
+%Furthermore, extensions of classical loop vectorization with array writes, arbitrary indexing, including non-affine indexing, and interaction with SSA are non-trivial
+%and present novel challenges and opportunities for contribution. 
+Polyhedral parallelization~\cite{Benabderrahmane:2010} considers a higher-level source (typically AST)
 representation, while our work takes advantage of linear MPC Source and SSA form. The work by Karrenberg~\cite{Karrenberg:2015} is rare in that space, in the sense that it considers
 vectorization over SSA form, which has similarities to MPC Source. We consider different array representation, notion of dependence, and reasoning
 about dependence, which we conjecture is more suitable for MPC Source. 
