@@ -220,7 +220,7 @@ Our experience indicates the limitation of AST-based analysis; because AST analy
 %Interestingly, the non-vectorized version, which is the literal translation of inner product does not appear to benefit from any optimizations. 
 
 We conjecture that MPC Source, a straight-forward representation suitable for static analysis, will not only enable detection of general associative loops, but also allow 
-for program synthesis to increase opportunities for divide-and-conquer parallelization~\cite{Farzan:2021}; we leave this as future work. 
+for program synthesis to increase opportunities for divide-and-conquer parallelization~\cite{Farzan:2021}; we leave this and other optimizations as future work. 
 
 The most closely related work, HyCC~\cite{CCS:BDKKS18}, is a mixing compiler that focuses on mixed protocols, while we run vectorization within a single protocol. 
 The paper only provides data for Boolean and Yao for a version of Biometric matching on $N=1000$; it does provide a lot of data on mixed protocol executions.
