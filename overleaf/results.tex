@@ -8,10 +8,17 @@ In the WAN setting we again used a {\tt c6525-25g} machine (located in Utah, US)
 We run all experiments 5 times and report average values of various metrics. Note that standard deviation --- shown as error bar on top of the bars in the graphs --- in all observations was at most 4.5\% of the mean value. %,  therefore the accuracy of the results is not effected by the relatively fewer runs.
 
 \subsection{Benchmarks}\label{sec:benchmarks_description}
+
+We used benchmarks from ABY and OPA~\cite{NDSS:DemSchZoh15,Ishaq:2019} (Biometric Matching, Histogram, PSI), HyCC~\cite{CCS:BDKKS18} (Database Join, Database Variance, Inner Product, Cryptonets Max Pooling, MNIST ReLU, k-means Iteration) and Parsynth~\cite{Farzan:2021} (Convex Hull, Minimal Points, Count 102, Count 10, Longest 102, Max distance between symbols). 
+We did not use Gcd and Modular Exponentiation from~\cite{Ishaq:2019} as they do not benefit from vectorization according to our model. 
+We ran as many routines from~\cite{CCS:BDKKS18} and~\cite{Farzan:2021} as possible. Gaussian decomposition cannot be expressed 
+in our syntax at the moment and the compiler errors on Cryptonets Convolution at the time of writing, although we expect to fix the issue soon. 
+The extended version describes what the benchmarks do in detail~\cite{Anon_TR}.
+
 In the following, we say {\em both} for an experiment in which we execute both non-vectorized and vectorized protocols and {\em vec} for the vectorized only experiment. 
-In a preliminary experiment we ran {\tt N=2, N=4}, all the way to {\tt N=4096}; the non-vectorized version ran out of memory at the value {\em both} and we fixed this value for these experiments. The vectorized one completed for {\tt N=4096} for nearly all benchmarks (numbers are not shown for space reasons).
+In a preliminary experiment we ran {\tt N=2, N=4}, all the way to {\tt N=4096}; the non-vectorized version ran out of memory at the value for {\em both} and we fixed this value for these experiments. The vectorized one completed for {\tt N=4096} for nearly all benchmarks (numbers are not shown for space reasons).
 % however, they times are largely consistent, e.g., if {\em both} is $N = 2^k$ and it completes in $X$ seconds for vectorized, then $N = 2^{12}$ completes in $(12-k)X$ seconds).
-We used the following benchmarks in our evaluation: 
+
 
 %\ishaq{@Ana: I don't know what to do about this: In the following list of benchmarks, I specify paramters for vectorized experiments too. but we don't have enough space to show the vectorized only experiments (we could replace the graphs). Not sure if I should take it out} \ana{I think I got this.}
 
