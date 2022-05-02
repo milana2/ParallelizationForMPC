@@ -205,15 +205,18 @@ Finally, we compared our automatically generated routine for Inner Product with 
 We were surprised that we were an order of magnitude slower in Boolean GMW as our circuit ran a significantly larger 
 number of communication rounds. Upon investigation, it turned out that the vectorized multiplications were essentially the same, 
 however, our addition loop incurred significant cost (ADD is non-local and expensive in Boolean GMW). The MOTION-native loop ran 
-{\sf result += mult\_unsimdified[i];} while our loop generated and ran {\sf result[i] = prev + mult\_unsimdified[i];}. 
-We rewrote the accumulation (manually, for testing purposes) and that led to the comparable speedup!
+{\sf result += mult\_unsimdified[i];} while our loop generated and ran {\sf result[i] = result[i-1] + mult\_unsimdified[i];} (recall that the array computation
+is an artifact of our vectorization). We rewrote the accumulation (manually, for testing purposes) and that led to the comparable speedup!
 
 Therefore, MOTION's compiler performs analysis that informs circuit generation and the example illustrates the power of the analysis. In the above example, 
-MOTION does the standard divide-and-conquer accumulation. It also illustrates the limitation of higher-level AST analysis --- while 
-the analysis was able to detect the associative accumulation when operator {\sf += } was used, it was unable to do so when an equivalent 
-code was used. \ana{This is not true, have to tone down.} We conjecture that MPC source, as a more straight-forward representation will
-not only enable detection of general associative loops, but also allow for program synthesis to increase opportunities for divide-and-conquer
-parallelization~\cite{Farzan:2021}; we leave this as future work. 
+MOTION does the standard divide-and-conquer accumulation. The poor performance of our loop is not a limitation of our approach, but of our current 
+implementation. Recall that the next phase of Vectorization, in~\secref{sec:vectorization}, which we have not implemented yet, gets rid of redundant 
+dimensions and generates {\sf result = result\_prev + mult\_unsimdified[i]}. This could have benefited from MOTION's divide-and-conquer optimization
+but it might lead to confusion of the static analysis as analysis on the AST is difficult (unfortunately, we ran out of time and did not experiment further).
+%Interestingly, the non-vectorized version, which is the literal translation of inner product does not appear to benefit from any optimizations. 
+
+We conjecture that MPC source, as a more straight-forward representation will not only enable detection of general associative loops, but also allow 
+for program synthesis to increase opportunities for divide-and-conquer parallelization~\cite{Farzan:2021}; we leave this as future work. 
 
 The most closely related work, HyCC~\cite{CCS:BDKKS18}, is a mixing compiler that focuses on mixed protocols, while we run vectorization within a single protocol. 
 The paper only provides data for Boolean and Yao for a version of Biometric matching on $N=1000$; it does provide a lot of data on mixed protocol executions.
