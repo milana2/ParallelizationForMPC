@@ -3,7 +3,7 @@
 \section{\bf Compiler Front End}
 \label{sec:compiler}
 
-\ana{Convention: use \texttt{shared, plain}, {\sf code}, $i$ and $I$ for counters outside of code.}
+%\ana{Convention: use \texttt{shared, plain}, {\sf code}, $i$ and $I$ for counters outside of code.}
 
 %We assume arbitrarily nested loops in the MPC-source IR and read-only arrays. We assume that loops range from 0 to some constant N. Arrays are linearized (row-major order as in MOTION) and accesses are via functions of the induction variables of the enclosing loops.
 
@@ -26,7 +26,7 @@ and translation into MOTION code in~\secref{sec:backend}.
 \subsection{Syntax and Semantic Restrictions}
 \label{sec:syntax}
 
-Source syntax is essentially standard IMP syntax as shown below:
+Source syntax is essentially standard IMP syntax but with for-loops:
 %\begin{figure}[t]
 {\small
 \[
@@ -68,8 +68,7 @@ Expressions are typed $\langle q \; \tau\rangle$, where qualifier $q$ and type $
 The type system is mostly standard, and in our experience, a sweet spot between readability and expressivity.
 The \texttt{shared} qualifier denotes shared values, i.e., ones shared among the parties and computed upon
 under secure computation protocols; the \texttt{plain} qualifier denotes plaintext values.
-Shared lists denote shared elements, but plaintext length. Subtyping is
-$\texttt{plain} <: \texttt{shared}$, meaning that we can convert a plaintext value into a shared one,
+Subtyping is $\texttt{plain} <: \texttt{shared}$, meaning that we can convert a plaintext value into a shared one,
 but not vice versa. Subtyping on qualified types is again as expected, it is covariant in the qualifier
 and invariant in the type: $\langle q_1 \; \tau_1 \rangle <: \langle q_2 \; \tau_2 \rangle$
 iff $q_1 <: q_2$ and  $\tau_1 = \tau_2$.
@@ -97,7 +96,7 @@ The subscript $e$ is a function of the indices of the enclosing loops.
 For read access, the compiler allows an arbitrary such function.
 However, it restricts write access to \emph{canonical writes}, i.e., {\sf A[$i,j,k$] = ...}
 where $i$, $j$ and $k$ loop over the three dimensions of {\sf A}.
-Write access such as for example {\sf A[$i,j+2$] = ...} is not allowed.
+Write access such as for example {\sf A[$i,j+2$] = ...} is not allowed. (This is again a restriction we imposed for convenience in our current implementation; we plan to extend the compiler with arbitrary write access.)
 %\item \ana{Add rules for logical ops}
 %\item \ana{Add rules for arithmetic ops}
 \item The final restriction involves MUX as expressed by the rule:
@@ -110,8 +109,9 @@ Write access such as for example {\sf A[$i,j+2$] = ...} is not allowed.
 }
 \end{semantics}
 \end{enumerate}
-Importantly, the arguments of MUX are restricted to base types, as passing array arguments
-is not valid MOTION MPC. \ana{Check this.} This causes a slight inconvenience as we could not write
+The arguments of MUX are restricted to base types. 
+(Again, this is just a restriction of our current implementation that will be lifted.)
+This causes an inconvenience as we could not write
 \begin{pythonn}
 if e: A[i] = val
 \end{pythonn}
@@ -123,8 +123,8 @@ A[i] = val
 
 We note that while the programmer writes
 annotations at the level of IMP Source (as in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(a)), the
-annotations propagate through the transformations and are checked at the 
-level of MPC Source. Recall that the programmer annotates only inputs
+annotations propagate through the transformations; annotations are inferred and checked with a taint analysis at the 
+level of MPC Source. Tthe programmer annotates only inputs.
 
 %\ana{Disadvantage of MUX}
 
@@ -214,7 +214,7 @@ Our compiler translates from Source to SSA as follows:
                 insert an assignment to a temporary variable.
         \end{enumerate}
   %\item
-        \paragraph{SSA conversion}:
+        \paragraph{SSA conversion:}
         Convert the 3-address CFG to SSA with Cytron's algorithm.
 %\end{enumerate}
 

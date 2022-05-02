@@ -10,7 +10,7 @@ Long the realm of theoretical cryptography, MPC has seen significant advances in
 These advances bring MPC closer to practice and wider applicability ---
 MPC technology has been employed in real-world scenarios such as auctions~\cite{FC:BCDGJK09}, biometric identification~\cite{ESORICS:BlaGas11},
 and privacy-preserving machine learning~\cite{SP:MohZha17,CCS:MohRin18}.
-The goal is to bring the technology to a level where programmers can write \emph{secure} and \emph{efficient} programs without
+The goal is to improve technology so that programmers can write \emph{secure} and \emph{efficient} programs without
 commanding extensive knowledge of cryptographic primitives.
 
 The problem, therefore, is to build a high-level programming language and a compiler, and there has been significant advance in
@@ -35,7 +35,7 @@ in the classical compiler. The following figure summarizes our key idea:
 \end{center}
 }
 
-We formalize the MPC Source~\cite{Ishaq:2019} intermediate representation and emphasize optimization over MPC Source. As in classical compilers, we envision different front ends (e.g., our front end IMP Source, other) compiling into MPC Source. MPC Source is particularly suitable for optimizations such as protocol mixing~\cite{Ishaq:2019, Fang:2022} and SIMD-vectorization,
+We formalize the MPC Source~\cite{Ishaq:2019} intermediate representation and emphasize optimization over MPC Source. As in classical compilers, we envision different front ends (e.g., our front end IMP Source, other) compiling into MPC Source. MPC Source is particularly suitable for optimizations such as protocol mixing~\cite{CCS:BDKKS18,Ishaq:2019, Fang:2022} and SIMD-vectorization,
 which takes advantage of amortization at the circuit level. The MPC Source IR exposes the \emph{linear structure} of MPC programs, which simplifies program analysis; this is
 in contrast to source, which has if-then-else constructs. In the same time, MPC Source is sufficiently ``high-level''  to support analysis and optimizations that take into account
 control and data flow in a specific program. MPC Source facilitates cost modeling. 
@@ -47,20 +47,30 @@ Again as in classical compilers, we envision translation of MPC Source (optimize
 %The compilation problem, i.e., translation from a high-level language to circuits, is difficult and therefore, breaking the problem into sub-problems can  tractable.
 
 
-\subsection{Our Contribution} In this paper, we develop a compiler framework that takes a Python-like routine and produces MOTION code: we describe (a) the IMP Source language, its syntax and semantic restrictions, (b) translation from IMP Source into MPC Source, (c) a specific backend-independent optimization: novel SIMD-vectorization on MPC Source, and (d) translation from MPC Source into MOTION code. %\ana{I think we have to add more on MOTION, specifically mixing and amortization.}
+\subsection{Our Contribution} In this paper, we develop a compiler framework that takes a Python-like routine and produces MOTION code: we describe (a) the IMP Source language, its syntax and semantic restrictions, (b) translation into MPC Source, (c) a specific backend-independent optimization: novel SIMD-vectorization on MPC Source, and (d) translation from MPC Source into MOTION code. %\ana{I think we have to add more on MOTION, specifically mixing and amortization.}
 
-We focus on the MOTION framework as our back-end for several reasons. First, it is the state of the art in terms of performance~\cite{Braun:2022}. Second, it provides an API over efficient implementation for a wide variety of cryptographic operations in three different protocols ---  Arithmetic GMW, Boolean GMW, and BMR --- which allows for protocol mixing~\cite{Ishaq:2019, Fang:2022}, a known backend-independent optimization. Third, MOTION provides API for SIMD-level operations, which amortize cost and lead to significant improvement in memory footprint and
+We focus on the MOTION framework as our back-end for several reasons. First, it is the state of the art in terms of performance~\cite{Braun:2022}. Second, it provides an API over efficient implementation for a wide variety of cryptographic operations in three different protocols ---  Arithmetic GMW, Boolean GMW, and BMR --- which allows for protocol mixing~\cite{CCS:BDKKS18,Ishaq:2019, Fang:2022}, a known backend-independent optimization. Third, MOTION provides API for SIMD-level operations, which amortize cost and lead to significant improvement in memory footprint and
 throughput~\cite{NDSS:DemSchZoh15, CCS:ABFKLO18, Braun:2022}. It enables MPC Source-level vectorization, a key focus of this paper.
 
-Our second contribution is an analytical model for cost estimation of amortized schedules. Originally, we hoped that optimal scheduling (under our model, which essentially minimizes the length of the schedule) was tractable, as the problem appeared simpler than the classical scheduling problem. Unfortunately, we show that optimal scheduling is NP-hard via a reduction to the Shortest Common Supersequence (SCS) problem. Cost modeling is important as it drives not only vectorization but optimizations such as protocol mixing and scheduling as well~\cite{Ishaq:2019, Fang:2022}.
+Our second contribution is an analytical model for cost estimation of amortized schedules. Originally, we hoped that optimal scheduling (under our model, which essentially minimizes the length of the schedule) was tractable, as the problem appeared simpler than the classical scheduling problem. Unfortunately, we show that optimal scheduling is NP-hard via a reduction to the Shortest Common Supersequence (SCS) problem. Cost modeling is important as it drives not only vectorization but optimizations such as protocol mixing and scheduling as well~\cite{CCS:BDKKS18,Ishaq:2019, Fang:2022}.
 
-Our most important contribution is the implementation and evaluation of the compiler framework. We demonstrate expressivity of the source language by running the compiler on \ana{X} programs with interleaved if- and for-statements; these include classical MPC benchmarks such as PSI and Biometric matching, as well as kMeans, Histogram, and others. \ana{Summarize results.}
+Our most important contribution is the implementation and evaluation of the compiler framework. We demonstrate expressivity of the source language by running the compiler on 16 programs with interleaved if- and for-statements; these include classical MPC benchmarks such as PSI and Biometric matching, as well as kMeans, Histogram, and other examples from the literature. 
+Our compiler takes the routine and generated \emph{non-vectorized} MOTION code (from MPC Source on the picture above). It then optimizes MPC Source and generates 
+\emph{vectorized} MOTION code (from Optimized MPC Source). We then run the two versions using Boolean GMW and the BMR protocols. (MOTION, which is designed for 
+protocol mixing, supports Arithmetic GMW, however, it does not implement Comparison (CMP) and Multiplexing (MUX) as they would be rather inefficient.)
+In our experiments vectorized code exhibits 24x improvement on average in circuit generation time for Boolean GMW (20x for BMR), 7x reduction 
+in communication (2x), 97x reduction in number of gates (91x), 4x improvement in setup time (23x) and 21x improvement in online time (18x).
+%\ana{Summarize results.}
 
 Our results emphasize the importance of backend-independent optimizations --- vectorization (described in this work) and protocol mixing (tackled in previous works~\cite{CCS:BDKKS18,Ishaq:2019, Fang:2022}) are two optimizations readily available at the level of MPC Source. We believe that our work can lead to future work on backend-independent compilation and optimization, ushering new MPC optimizations and combinations of optimizations in the vein of standard compilers, and thus bringing MPC programming technology closer to practice and wider applicability.
 
 \subsection{Outline}
 
 The rest of the paper is organized as follows. \secref{sec:overview} presents an overview of the compiler. \secref{sec:model} describes our model for cost estimation and argues NP-hardness of optimal scheduling. \secref{sec:compiler} details the front-end phases of the compiler, \secref{sec:vectorization} focuses in on backend-independent vectorization, and \secref{sec:backend} describes translation into MOTION. \secref{sec:results} presents the experimental evaluation.\secref{sec:related} discusses related work and \secref{sec:conclusion} concludes.
+
+All our code, including benchmark Python-like code, compilation phases, and generated MOTION code is available on Github. We do not provide the link only to preserve anonymity, 
+however, we will gladly make it available upon request from reviewers. The Github setup generates graphs and intermediate code for each program along each compiler phase and runs MOTION on 
+small inputs to generate tables of data (the experiments in the paper run on real LAN and WAN). We plan to release the link and code, which we believe will be useful to researchers.
 
 \begin{comment}
 \begin{itemize}

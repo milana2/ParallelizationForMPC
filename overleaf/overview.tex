@@ -122,7 +122,7 @@ An intuitive (and naive) implementation is as shown in Listing~\ref{tab:source_a
 Array {\sf C} is the feature vector of {\sf D} features that we wish to match and {\sf S}
 is the database of {\sf N} size-{\sf D} vectors that we match against.
 
-Our compiler takes essentially standard IMP~\ana{Need citation here.}
+Our compiler takes essentially standard IMP~\cite{Nipkow2014}
 syntax and imposes certain semantic restrictions. (We detail the restrictions in the following sections.)
 The programmer writes an iterative program and annotates certain inputs
 and outputs as \emph{shared}. In the example arrays {\sf C} and {\sf S}
@@ -151,19 +151,20 @@ Third, MPC Source is a special form of SSA. The SSA $\phi$-nodes at the if-then-
 MUX operations, while the $\phi$-nodes at for-loops turn into \emph{pseudo} PHI nodes with a straightforward semantics.
 \end{comment}
 
-We turn to our analytical model to compute the \emph{cost} of the iterative program. Assuming
-cost $\beta$ for a local MPC operation (essentially just ADD) and cost $\alpha$ for a remote
-MPC operation (e.g., MUX, CMP, and remaining operations), the cost of the iterative schedule
-will be $ND(2\alpha+\beta) + N(3\alpha$).
+We turn to our analytical model to compute the \emph{cost} of the iterative program. Assume
+cost $\beta$ for a local MPC operation (e.g., ADD in Arithmetic sharing) and cost $\alpha$ for a remote
+MPC operation (e.g., MUX, CMP, etc.). Assuming that ADD is $\alpha$ and SUM, CMP and MUX are $\beta$, 
+the MPC Source in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(b) gives 
+rise to an iterative schedule with cost $ND(2\alpha+\beta) + N(3\alpha$).
 
 A key contribution is the vectorizing transformation. We can compute all $N*D$
 subtraction operations (line 9 in (b)) in a single SIMD instruction; similarly we can compute
 all multiplication operations (line 10) in a single SIMD instruction. And while computation
 of an individual sum remains sequential, we can compute the $N$ sums in parallel.
-Our compiler \emph{automatically detects these opportunities and transforms the program}.
-It is standard that MPC researchers write vectorized versions of the Biometric
-program by hand; we are the first (to the best of our knowledge) to automatically
-transform a naive, iterative MPC program into an unintuitive vectorized one.
+%Our compiler \emph{automatically detects these opportunities and transforms the program}.
+%It is standard that MPC researchers write vectorized versions of the Biometric
+%program by hand; we are the first (to the best of our knowledge) to automatically
+%transform a naive, iterative MPC program into an unintuitive vectorized one.
 
 \subsection{Vectorized MPC Source and Cost of Schedule}
 
@@ -199,6 +200,7 @@ The first term in the sum corresponds to the vectorized
 subtraction and multiplication (lines 9-10 in (c)), the second term corresponds to the for-loop on $j$ (lines 12-16) and the third
 one corresponds to the remaining for-loops on $i$ (lines 19-25). 
 Clearly, $2\alpha_\mathit{fix} + D\beta_\mathit{fix} + N(3\alpha_\mathit{fix}) << ND(2\alpha_\mathit{fix}+\beta_\mathit{fix}) + N3\alpha_\mathit{fix}$.
-Empirically, we observe 10x to 50x improvement over un-vectorized Biometric Matching in circuit generation time and setup time and 5x to 30x improvement in online time.
-Additionally, the un-vectorized version runs out of memory for $N=256$, while the vectorized one runs with the standard maximal input size $N=4,096$.
-\ana{Edit numbers with final experiments.}
+Empirically, we observe that $\alpha_\mathit{var} \approx 0$ and orders of magnitude improvement (e.g., 12x in online time in GMW). 
+Additionally, the un-vectorized version runs out of memory for $N=256$, while the vectorized one runs with the standard maximal input 
+size $N=4,096$.
+%\ana{Edit numbers with final experiments.}

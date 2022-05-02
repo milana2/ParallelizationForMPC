@@ -3,7 +3,7 @@
 
 %\ana{Ishaq? Basically, define sequential schedule, then define an equivalent parallel schedule. A parallel schedule is equivalent if it preserves def-use relations in sequential schedule, or in other words, schedules def ahead of the use. Problem is to minimize cost of Parallel schedule.}
 
-As mentioned earlier, at the lowest level, we have two types of MPC instructions (also called \emph{gates} in similar works) 1) local/non-interactive instruction (i.e. an addition instruction $A$) and 2) remote/interactive instruction (i.e. a multiplication instruction $M$). %Each instruction in the program is either an $A$-instruction or an $M$-instruction.
+As mentioned earlier, at the lowest level, we have two types of MPC instructions (also called \emph{gates} or \emph{operations} in similar works) 1) local/non-interactive (e.g., an addition instruction $A$) and 2) remote/interactive (e.g., a multiplication instruction $M$). %Each instruction in the program is either an $A$-instruction or an $M$-instruction.
 
 % Let the cost of a single \add ~instruction be given by a monotonically decreasing $f(n)$, where the argument $n$ is the number of \add ~instructions being executed in parallel. Similarly the cost of a single \mul ~is given by a monotonically decreasing function $g(n)$.
 
@@ -11,7 +11,7 @@ Given a serial schedule (a linear graph) of an MPC program i.e. a sequence of in
 
 \begin{enumerate}
     \item All $P_i$'s consist of MPC instructions of the same kind, e.g., all MUL, MUX, ADD, etc. 
-    \item Def-use dependencies of the graph $G(V, E)$ should be preserved i.e. if instructions $S_i, S_j, i < j$ form a def-use i.e. an edge exists from $S_i$ to $S_j$ in $G$, then they can only be mapped to $P_{i'}, P_{j'}$ such that $i' < j'$.
+    \item Def-use dependencies of the graph $G(V, E)$ are preserved i.e. if instructions $S_i, S_j, i < j$ form a def-use i.e. an edge exists from $S_i$ to $S_j$ in $G$, then they can only be mapped to $P_{i'}, P_{j'}$ such that $i' < j'$.
 \end{enumerate}
 
 \paragraph{Correctness} Correctness of $P$ is guaranteed by definition. Preserving def-use \emph{dependencies} means the computed function remains the same in both $S$ and $P$.
@@ -84,8 +84,8 @@ M_1(1), M_1(2) \; ;\; M_1(2) \; ; \; M_2(1), M_2(3) \; ; \; M_1(1), M_1(2), M_1(
 The parentheses above indicate the sequence where the instruction comes from: (1), (2), or (3). 
 Cost of schedule $P$ is computed using \cref{eq_par_schedule_cost} above and it amounts to $5\alpha_\mathit{fix} + 9\alpha_\mathit{var}$.
 
-The problem of finding a schedule $P$ with a minimal $cost(P)$ is shown to be NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, a known NP-Hard problem\cite{Maier1978, Vazirani2010}. The shortest common supersequence problem is as follows: {\it given two or more sequences find the the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. %For our problem $n$ is the maximum length of a sequence and $k$ is the number of instructions of sequences. 
-We can immediately see that the optimal schedule is the shortest schedule, since the shortest schedule minimizes the fixed cost while the variable cost remains the same.
+The problem of finding a schedule $P$ with a minimal $cost(P)$ is shown to be NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, a known NP-Hard problem~\cite{Vazirani:2010}. The shortest common supersequence problem is as follows: {\it given two or more sequences find the the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. %For our problem $n$ is the maximum length of a sequence and $k$ is the number of instructions of sequences. 
+We can see that the optimal schedule is the shortest schedule, since the shortest schedule minimizes the fixed cost while the variable cost remains the same.
 
 To formalize the reduction, suppose $P$ is a schedule with minimal cost (computed by a black-box algorithm). 
 %We can derive a schedule $P'$ with the same cost as $P$, by mapping each mixed node $P_i \in P$ to two consecutive nodes in $P'$: an $A$-instruction node followed by an $M$-instruction node. 
