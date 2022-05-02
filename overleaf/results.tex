@@ -5,18 +5,20 @@
 We tested our framework with several benchmarks. For the multiparty computation (MPC), we restricted our evaluation to 2 party computation (2PC) setting because it requires fewer computing resources. We stress that there is no such inherent restriction in our framework. We use hardware resources provided by CloudLab\cite{DuplyakinATC19} and consider two network settings, namely Local Area Network (LAN) and Wide Area Network (WAN). In the LAN setting, we use {\tt c6525-25g} machines for both parties. These machines are equipped with 16-core AMD 7302P 3.0GHz processors and 128GB of RAM. The connection between these machines had 10Gbps bandwidth and sub-millisecond latency. %This setting reflects typical LAN use case considering that 10Gbps LAN is increasingly common in business networks and is now available even in some home networks. 
 In the WAN setting we again used a {\tt c6525-25g} machine (located in Utah, US) for the first party and a {\tt c220g1} machine (located in Wisconsin, US) for the second. The {\tt c220g1} machine is equipped with two Intel E5-2630 8-core 2.40GHz processors and 128GB of RAM. We measured the connection bandwidth to be 560Mbps and average round trip time (RTT) to be 38ms. %At the time of this writing, all major internet providers in the US offer 1Gbps connections to home consumers, therefore this setting reasonably reflects the typical WAN use case.
 
-We run all experiments 5 times and report average values of various metrics. Note that standard deviation --- shown as error bar on top of the bars in the graphs --- in all observations was at most 4.5\% of the mean value. %,  therefore the accuracy of the results is not effected by the relatively fewer runs.
+We run all experiments 5 times and report average values of various metrics. Note that standard deviation in all observations was at most 4.5\% of the mean value. %,  therefore the accuracy of the results is not effected by the relatively fewer runs.
 
 \subsection{Benchmarks}\label{sec:benchmarks_description}
 
 We used benchmarks from ABY and OPA~\cite{NDSS:DemSchZoh15,Ishaq:2019} (Biometric Matching, Histogram, PSI), HyCC~\cite{CCS:BDKKS18} (Database Join, Database Variance, Inner Product, Cryptonets Max Pooling, MNIST ReLU, k-means Iteration) and Parsynth~\cite{Farzan:2021} (Convex Hull, Minimal Points, Count 102, Count 10, Longest 102, Max distance between symbols). 
 We did not use Gcd and Modular Exponentiation from~\cite{Ishaq:2019} as they do not benefit from vectorization according to our model. 
 We ran as many routines from~\cite{CCS:BDKKS18} and~\cite{Farzan:2021} as possible. Gaussian decomposition cannot be expressed 
-in our syntax at the moment and the compiler errors on Cryptonets Convolution at the time of writing, although we expect to fix the issue soon. 
-The extended version describes what the benchmarks do in detail~\cite{Anon_TR}.
+in our syntax and the compiler errors on Cryptonets Convolution at the time of writing, although we expect to fix the issue soon. 
+\cite{Anon_TR} describes what the benchmarks do.
 
-In the following, we say {\em both} for an experiment in which we execute both non-vectorized and vectorized protocols and {\em vec} for the vectorized only experiment. 
-In a preliminary experiment we ran {\tt N=2, N=4}, all the way to {\tt N=4096}; the non-vectorized version ran out of memory at the value for {\em both} and we fixed this value for these experiments. The vectorized one completed for {\tt N=4096} for nearly all benchmarks (numbers are not shown for space reasons).
+To compare we run {\em both} versions with the maximal value of $N$ for which the non-vectorized version succeeds (typically {\tt N=128}) and we run {\em vec} with typically {\tt N=4096}.
+Again, due to space constraints \cite{Anon_TR} gives the exact values.
+% In the following, we say {\em both} for an experiment in which we execute both non-vectorized and vectorized protocols and {\em vec} for the vectorized only experiment. 
+%In a preliminary experiment we ran {\tt N=2, N=4}, all the way to {\tt N=4096}; the non-vectorized version ran out of memory at the value for {\em both} and we fixed this value for these experiments. The vectorized one completed for {\tt N=4096} for nearly all benchmarks (numbers are not shown for space reasons).
 % however, they times are largely consistent, e.g., if {\em both} is $N = 2^k$ and it completes in $X$ seconds for vectorized, then $N = 2^{12}$ completes in $(12-k)X$ seconds).
 
 
@@ -143,7 +145,7 @@ Note that in some settings it may still be desirable to vectorize e.g. in data c
 \begin{figure}[htbp]
 \centering
 \resizebox{0.7\columnwidth}{!}{\input{graphs/lan/biometric-hist-OnlineSetupTimesec}}
-\caption{Biometric Matching Circuit Evaluation Time, x-axis lists database size}
+\caption{Biometric Matching Circuit Evaluation Time}
 \label{fig:graph_biometric_eval_time}
 \end{figure}
 
@@ -224,24 +226,24 @@ Finally, we compared our automatically generated routine for Inner Product with 
 We were surprised that we were an order of magnitude slower in Boolean GMW as our circuit ran a significantly larger 
 number of communication rounds. Upon investigation, it turned out that the vectorized multiplications were essentially the same, 
 however, our addition loop incurred significant cost (ADD is non-local and expensive in Boolean GMW). The MOTION-native loop ran 
-{\sf result += mult\_unsimdified[i];} while our loop ran auto generated {\sf result[i] = result\_prev[i] + mult\_unsimdified[i];} (recall that scalar expansion
-is an artifact of our vectorization). We rewrote the accumulation (manually, for testing purposes) and that led to the comparable speedup!
+{\sf result += mult\_unsimdified[i];} while our loop ran auto generated {\sf result[i] = result\_prev[i] + mult\_unsimdified[i];} (as scalar expansion
+is an artifact of our vectorization). We rewrote the accumulation manually and that led to the comparable speedup!
 
 MOTION's compiler performs analysis that informs circuit generation and the example illustrates the power of the analysis. In the above example, 
-MOTION does the standard divide-and-conquer accumulation. We conjectured that poor performance of our loop was due to a
-limitation of our current implementation. Recall that the Phase 3 of Vectorization, in~\secref{sec:vectorization}, which we have not implemented yet, gets rid of redundant 
-dimensions and generates {\sf if (i!=0) \{ result\_prev = result; \} result = result\_prev + mult\_unsimdified[i]}. And while it is unrealistic to expect that MOTION's static analysis 
+MOTION does the standard divide-and-conquer accumulation. We conjectured that poor performance of our loop was due to
+limitations of our implementation. Recall that Phase 3 of Vectorization, in~\secref{sec:vectorization}, which we have not implemented yet, gets rid of redundant 
+dimensions and generates {\sf if (i!=0) \{ result\_prev = result; \} result = result\_prev + mult\_unsimdified[i]}. And while it is unrealistic to expect that static analysis 
 will detect the associative accumulation in the scalar expansion code, one might expect that it will in the above slightly more complex code. 
-Our experience indicates the limitation of AST-based analysis; because AST analysis is difficult it does not appear to detect the associative accumulation.
+However, because AST analysis is difficult it does not appear to detect the accumulation.
 %(unfortunately, we ran out of time and did not experiment further).
 %Interestingly, the non-vectorized version, which is the literal translation of inner product does not appear to benefit from any optimizations. 
 
 We conjecture that MPC Source, a straight-forward representation suitable for static analysis, will not only enable detection of general associative loops, but also allow 
 for program synthesis to increase opportunities for divide-and-conquer parallelization~\cite{Farzan:2021}; we leave this and other optimizations as future work. 
 
-The most closely related work, HyCC~\cite{CCS:BDKKS18}, is a mixing compiler that focuses on mixed protocols, while we run vectorization within a single protocol. 
-The paper only provides data for Boolean and Yao for a version of Biometric matching on $N=1000$; it does provide a lot of data on mixed protocol executions.
-Again, we estimate we are about an order of magnitude slower, which is likely due to the same issue as Inner Product --- the computation of $\mathit{min}$ can be optimized. 
+HyCC~\cite{CCS:BDKKS18} is a mixing compiler that focuses on mixed protocols, while we run vectorization within a single protocol. 
+The paper only provides data for Boolean and Yao for a version of Biometric matching on $N=1000$ as its focus is mixing. %; it does provide a lot of data on mixed protocol executions.
+We estimate we are about an order of magnitude slower, which is likely due to the same issue --- the computation of $\mathit{min}$ can be optimized. 
 
 
 

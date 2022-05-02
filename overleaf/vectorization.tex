@@ -176,8 +176,8 @@ arrays. We explain the extension in \secref{sec:array_writes}.
 %This opens up opportunities for vectorization across the write array. Handling of target-less nodes is non-trivial, 
 %as in certain cases the node cannot be removed. \secref{sec:extension_with_writes} details our algorithm. 
 
-Phases 3 cleans up local arrays of references (this is an optional phase and our current implementation does not include it)
-and Phase 4 explicitly turns operations into MOTION SIMD operations.
+Phases 3 cleans up local arrays of references (this is an optional phase and our current implementation does not include it).
+%and Phase 4 explicitly turns operations into MOTION SIMD operations.
 
 \paragraph{Pseudocode:}
 
@@ -246,8 +246,8 @@ and Phase 4 explicitly turns operations into MOTION SIMD operations.
 \ENDFOR
 \STATE {do (1) (extended) constant propagation, (2) copy propagation and (3) dead code elimination to get rid of redundant variables and raise and drop dimension statements}
 
-\COMMENT { Phase 4: }
-\STATE {add SIMD for simdified dimensions}
+%\COMMENT { Phase 4: }
+%\STATE {add SIMD for simdified dimensions}
 
 \end{algorithmic}
 
@@ -315,6 +315,7 @@ in terms of def-use relations in the concrete domain $C$. We state two theorems
 that state (informally) that the schedule corresponding to the original program computes the same
 result as the schedule corresponding to the vectorized program. 
 
+\squeeze
 \paragraph{MPC Source Syntax}
 
 \figref{fig:mpc_syntax} states the syntax and linearization semantics of MPC Source. 
@@ -329,7 +330,6 @@ semantic restrictions over the syntax: (1) $\x$ is treated as a 3-dimensional ar
 into for-loops on non-vectorized dimensions $i$ and $k$:
 \begin{pythonn}
 for i in range(I):
-   ...
    for k in range(K):
       ... x[i,J,k] ...
 \end{pythonn}
@@ -403,6 +403,7 @@ We have that $a_0 \le a_1$.
 \ana{Write the proof sketch and final argument, etc.}
 \end{comment}
 
+\squeeze
 \paragraph{Partial Orders}
 
 For each MPC Source program $a$ we compute the def-use edges in the standard way: if statement $s1 \in a$ defines variable \x, e.g., $\x[i,j,k] = ...$, 
@@ -426,6 +427,7 @@ $e'$ in $a_1$ such that $e \equiv e'$.
  indices, e.g., $\underline{i}$, refer to fixed values, not iterative or vectorized dimensions since in the concrete schedule all induction variables are expanded. 
  E.g., there is a def-use edge from the statement that defines $\x[0,1,2]$ and a statement that uses $\x[0,1,2]$.
  
+\squeeze 
 \paragraph{Theorems} The two theorems arising from the Basic vectorization optimization are as follows: 
 
 \begin{theorem} $a_0 \le a_1 \Rightarrow \gamma(a_0) \subseteq \gamma(a_1)$.
