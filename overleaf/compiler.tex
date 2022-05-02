@@ -14,13 +14,15 @@
 \end{figure*}
 
 \figref{fig:compiler_framework} presents an overview of our compiler.
-We start the section with a brief description of the top-level syntax and semantic restrictions in~\secref{sec:syntax}.
-We proceed to describe the front end of the compiler:~\secref{sec:imp_to_ssa}
-describes translation from IMP Source to SSA, and~\secref{sec:ssa_to_MPC_Source}
-describes translation form SSA into MPC Source.
-
-We describe analysis on MPC Source and backend-independent vectorization in~\secref{sec:vectorization}
-and translation into MOTION code in~\secref{sec:backend}. Full details on all parts appear in~\cite{Anon_TR}.
+%We start the section with a brief description of the top-level syntax and semantic restrictions in~\secref{sec:syntax}.
+%We proceed to describe the front end of the compiler:~\secref{sec:imp_to_ssa}
+%describes translation from IMP Source to SSA, and~\secref{sec:ssa_to_MPC_Source}
+%describes translation form SSA into MPC Source.
+This section outlines the front end, the following section describes analysis on MPC Source and backend vectorization 
+and~\secref{sec:backend} outlines the back end. 
+%We describe analysis on MPC Source and backend-independent vectorization in~\secref{sec:vectorization}
+%and translation into MOTION code in~\secref{sec:backend}. 
+Details on all parts appear in~\cite{Anon_TR}.
 %\ana{Need to state this more precisely.}
 
 \subsection{Syntax and Semantic Restrictions}
@@ -153,17 +155,19 @@ Our compiler translates from Source to SSA as sketched below. %Full details are 
 
 %\begin{enumerate}
 %  \item
+        \squeeze
         \paragraph{Parsing:}
         Use Python's \texttt{ast} module to parse the input source code to a Python AST.
 %  \item
+        \squeeze
         \paragraph{Syntax checking:}
         Ensure that the AST matches the restricted subset defined in Section~\secref{sec:syntax}.
         %This step outputs an instance of the \texttt{restricted\_ast.Function} class, which represents our restricted subset of the Python AST.
 %  \item
+        \squeeze
         \paragraph{3-address CFG conversion:}
         %\benjamin{TODO: Is this a good amount of detail?} \ana{This is good amount of detail for the Tech report. In the actual paper we'll shorten a lot and add pointers to the Tech report.}
-
-        Convert the restricted-syntax AST to a three-address control-flow graph. The step processes for-loops, if-statements and assignments as restricted by the syntax.
+        Convert the restricted-syntax AST to a three-address control-flow graph (CFG). The step processes for-loops, if-statements and assignments as restricted by the syntax.
 \begin{comment}
         To do this, first,
         add an empty basic block to the CFG and mark it as current.
@@ -225,6 +229,7 @@ Our compiler translates from Source to SSA as sketched below. %Full details are 
         \end{enumerate}
 \end{comment}        
   %\item
+        \squeeze
         \paragraph{SSA conversion:}
         Convert 3-address CFG to SSA with Cytron's algorithm~\cite{Cytron:1991}.
 %\end{enumerate}
@@ -236,16 +241,17 @@ Once the compiler converts the code to SSA,
 it transforms $\phi$-nodes that correspond to if-statements into MUX nodes.
 From the 3-address CFG conversion step,
 $\phi$-nodes corresponding to if-statements will be in a basic block
-with the merge condition property.
-For example, if {\sf X!3 = $\phi$(X!1,X!2)} is in a block with merge condition {\sf C},
+with the ``merge condition'' property.
+E.g., if {\sf X!3 = $\phi$(X!1,X!2)} is in a block with merge condition {\sf C},
 the compiler transforms it into {\sf X!3 = MUX(C, X!1, X!2)}.
-Next, the compiler runs the dead code elimination algorithm from Cytron's SSA paper.
+Next, the compiler runs the dead code elimination algorithm from~\cite{Cytron:1991}. %Cytron's SSA paper.
 
 Next, the control-flow graph is \emph{linearized} into MPC Source,
 which has loops but no if-then-else-statements.
 This means that both branches of all if-statements are executed,
 and the MUX nodes determine whether to use results from the then-block or from the else-block.
 The compiler linearizes the control-flow graph with a variation of breadth-first search.
+%\begin{comment}
 Blocks with the ``merge condition'' property are only considered
 the second time they are visited,
 since that will be after both branches of the if-statement are visited.
@@ -262,6 +268,7 @@ and adds the for-loop and code after the loop to the main MPC source.
 If the block does not end in a for-instruction,
 the compiler recursively converts all successor branches to MPC source and
 appends to the main MPC source.
+%\end{comment}
 
 Now, the remaining $\phi$-nodes in MPC source are the loop header nodes. We call these nodes \emph{pseudo} $\phi$-nodes
 and we write {\sf PHI} in MPC Source. A pseudo $\phi$-node {\sf X!1 = PHI(X!0,X!2)} in a loop header is evaluated

@@ -14,10 +14,10 @@ structure and in part because vectorization meshes in with other MPC-specific op
 (other works have explored manual vectorization and protocol mixing in an ad-hoc way, e.g.,~\cite{NDSS:DemSchZoh15,CCS:BDKKS18,Ishaq:2019}).
 
 In this section, we briefly describe the analysis. Details, including edge cases and examples, can be found in the supplementary extended version~\cite{Anon_TR}.
-\secref{sec:dependence} describes our dependence analysis and ~\secref{sec:expansion} describes scalar expansion,
-which lifts scalars (and arrays) to the corresponding loop dimensionality to create opportunities for vectorization. 
-\secref{sec:basic_vectorization} describes our core vectorization algorithm and~\secref{sec:correctness} argues correctness of the vectorization transformation.
-\secref{sec:array_writes} extends vectorization with array writes.   
+%\secref{sec:dependence} describes our dependence analysis and ~\secref{sec:expansion} describes scalar expansion,
+%which lifts scalars (and arrays) to the corresponding loop dimensionality to create opportunities for vectorization. 
+%\secref{sec:basic_vectorization} describes our core vectorization algorithm and~\secref{sec:correctness} argues correctness of the vectorization transformation.
+%\secref{sec:array_writes} extends vectorization with array writes.   
 
 \subsection{Dependence Analysis}
 \label{sec:dependence}
@@ -150,7 +150,7 @@ There are two key phases of the algorithm. Phase 1 inserts raise dimension and d
 operations according to def-uses. E.g., if there is an inner-to-outer dependence, it inserts $\mathit{raise\_dim}$,
 and similarly, if there is an outer-to-inner dependence, it inserts $\mathit{drop\_dim}$. After this phase operations work
 on arrays of the corresponding dimensionality and we optimistically vectorize all arrays. For example, 
-lines 4 and 5 in Biometric~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(c) reshape the input arrays 
+lines 4,5 in Biometric~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(c) reshape the input arrays. 
 
 Phase 2 proceeds from the inner-most towards the outer-most loop. For each loop it anchors dependence cycles (closures) 
 around pseudo PHI nodes then removes vectorization from the dimension of that loop. In the 
@@ -534,7 +534,7 @@ $f(\underline{i},\underline{j},\underline{k}) = f'(\underline{i},\underline{j}',
 loop-carried dependence on ${\sf A}$; otherwise there is not and we can remove the spurious backward edge to the array PHI-node 
 thus ``freeing up'' statements for vectorization. %\ana{Double check this!!!}
 
-In the Histogram example, this removes the back edge from the update at 8 to the PHI node at 2. Clearly there does not exist $i < i'$ that will make 
+In Histogram, this removes the back edge from the update at 8 to the PHI node at 2. Clearly there does not exist $i < i'$ that makes
 $i$ at 9 and $i'$ at 6 and 7 equal. The back-edge from 9 to 4 stays because for every $j < j'$ 9 and 6 and 7 access the same location in {\sf res}. %\ana{Can't wrap my head around this...}
 
 \begin{comment}
@@ -715,7 +715,7 @@ return res1
 }
 \end{comment}
 
-Returning to the histogram example, the canonical (i.e., declared) dimensionality of {\sf res} is 1. Also, the phi-node {\sf res1 = PHI(res, res2)} is a target-less phi-node (the implication being that the inner for loop can be vectorized across $i$). After Phase 1, Vectorization produces the following code (statements are implicitly vectorized along $i$ and $j$). In a vectorized update statement, we can ignore the incoming array, {\sf res2} in this case. The update writes (in parallel) all locations of the 2-dimensional array, in this case it sets up each {\sf res3[i,j] = tmp3[i,j]}.
+Returning to the histogram example, the canonical (i.e., declared) dimensionality of {\sf res} is 1. Also, the phi-node {\sf res1 = PHI(res, res2)} is a target-less phi-node (the implication being that the inner for loop can be vectorized across $i$). After Phase 1, Vectorization produces the following code (statements are implicitly vectorized along $i$ and $j$). In a vectorized update statement, we can ignore the incoming array, {\sf res2} in this case. The update writes (in parallel) all locations of the 2-d array, in this case it sets up each {\sf res3[i,j] = tmp3[i,j]}.
 
 {\small
 \begin{pythonn}

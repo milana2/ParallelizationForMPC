@@ -51,7 +51,7 @@ When converting to MOTION code, any plaintext value used in the right-hand side 
 %\subsection{From (Optimized) MPC Source to MOTION}
 %\label{sec:MOTION}
 
-
+\squeeze
 \paragraph{Variable declarations:}
 % Variable naming
 %Our generated C++ uses the following variable-naming scheme: shared variables are named the same as in the MPC Source with the {\sf !} replaced with an underscore (e.g. {\sf sum!2} would be translated to {\sf sum\_2}). Plaintext variables follow the same naming convention as shared variables but are prefixed with {\sf \_MPC\_PLAINTEXT\_}.  The shared representation of constants are named {\sf \_MPC\_CONSTANT\_} followed by the literal constant (e.g. the shared constant 0 would be named {\sf \_MPC\_CONSTANT\_0}).
@@ -60,6 +60,7 @@ When converting to MOTION code, any plaintext value used in the right-hand side 
 The generated MOTION code begins with the declaration of all variables used in the function, including loop counters.  If a variable is a vectorized array, it is initialized to a correctly-sized array of empty MOTION shares.  Additionally, each plaintext variable and parameter has a shared counterpart declared.  Next, all constant values which are used as part of shared expressions are initialized as a shared input from party 0. Finally, plaintext parameters are converted as shared inputs from party 0 to initialize their shared counterparts. (We note that inputs are read-only and
 the conversion currently incurs 2-3 redundant input gates per application; this can be easily fixed.)
 
+\squeeze
 \paragraph{Code generation:}
 % Non-vectorized assignments and returns
 Once the function preamble is complete, the MPC Source is translated into C++ one statement at a time. The linear structure of MPC Source enables this approach to translation. 
@@ -149,6 +150,7 @@ MPC Source & MOTION Code
 \end{table*}
 \end{comment}
 
+\squeeze
 % SIMD representation
 \paragraph{Vectorization and SIMD operations:}
 Vectorization is handled with utility functions to manage accessing and updating slices of arrays.  All SIMD values are stored in non-vectorized form as 1-dimensional {\sf std::vector}s in row-major order. %\ana{Does MOTION support just 1-dim SIMD arrays? If yes, mention it here.} \ben{MOTION does only support 1-dim SIMD arrays, but since we use helper functions to create and access SIMD arrays this restriction doesn't apply to our representation. There is no reason why these arrays need to be 1-dimensional other than that it slightly simplifies the code generation and avoids some nasty templates on the utility functions.} \ana{Ok! Leave as is.}
@@ -238,9 +240,8 @@ MPC Source & MOTION Code
 
 % drop_dim() implementation
 Dropping dimensions use the {\sf drop\_dim()} and {\sf drop\_dim\_monoreturn()} utility functions.  They function identically but the latter returns a scalar for the case when the final dimension of an array is dropped.  These functions take the non-vectorized representation of an array, along with the dimensions of that array, and return the array with the final dimension dropped.
-
 \end{comment}
-
+\squeeze
 % Shared/plaintext conversions
 \paragraph{Upcasting from plaintext to shared:}
 Currently, our compiler only supports the \texttt{Bmr} and \texttt{BooleanGMW} protocols as MOTION does not implement all operations for other protocols.  MOTION does not support publicly-known constants for these protocols, so all conversions from plaintext values to shares are performed by providing the plaintext value as a shared input from party 0. %Due to this limitation, our translation to MOTION code attempts to minimize the number of conversions from a plaintext value. This is accomplished by
