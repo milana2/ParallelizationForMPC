@@ -64,11 +64,11 @@ We view Karrenberg's work on Whole function vectorization~\cite{Karrenberg:2015}
 both branches of a conditional applying masking to avoid execution of the branch-not-taken code, and selection (similar to MUX) to select the correct value based on the
 result of the condition at runtime.
 The problem is that masking and selection, or more generally, handling control predicates~\cite{Benabderrahmane:2010,Karrenberg:2015},
-can lead to \emph{slowdown}.
+can lead to slowdown.
 %As a result, vectorizing compilers and polyhedral compilers tend to focus on straight-line code due to the unpredictable
 %overhead conditionals may introduce. \ana{add Louis noel pochet's benchmarks. citation on vectorizing compilers???}
 
-We argue that vectorization over linear MPC Source is a different problem, one that warrants a new look, while drawing from
+We believe that vectorization over linear MPC Source warrants a new look, while drawing from
 results in HPC.
 %Since both branches of the conditional and the multiplexer \emph{always} execute, not only can we apply aggressive vectorization on linear code, but (perhaps more importantly)
 %we can also build analytical models that accurately predict execution time. These models in turn would drive optimizations such as vectorization, protocol mixing, and others.
