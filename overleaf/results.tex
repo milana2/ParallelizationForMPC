@@ -2,19 +2,22 @@
 \label{sec:results}
 
 \subsection{Experiment Setup}\label{sec:experiment_setup}
-We tested our framework with several benchmarks. For the multiparty computation (MPC), we restricted our evaluation to 2 party computation (2PC) setting because it requires fewer computing resources. We stress that there is no such inherent restriction in our framework. We use hardware resources provided by CloudLab\cite{DuplyakinATC19} and consider two network settings, namely Local Area Network (LAN) and Wide Area Network (WAN). In the LAN setting, we use {\tt c6525-25g} machines for both parties. These machines are equipped with 16-core AMD 7302P 3.0GHz processors and 128GB of RAM. The connection between these machines had 10Gbps bandwidth and sub-millisecond latency. This setting reflects typical LAN use case considering that 10Gbps LAN is increasingly common in business networks and is now available even in some home networks. In the WAN setting we again used a {\tt c6525-25g} machine (located in Utah, US) for the first party and a {\tt c220g1} machine (located in Wisconsin, US) for the second. The {\tt c220g1} machine is equipped with two Intel E5-2630 8-core 2.40GHz processors and 128GB of RAM. We measured the connection bandwidth between these machines to be 560Mbps and average round trip time (RTT) to be 38ms. At the time of this writing, all major internet providers in the US offer 1Gbps connections to home consumers, therefore this setting reasonably reflects the typical WAN use case.
+We tested our framework with several benchmarks. For the multiparty computation (MPC), we restricted our evaluation to 2 party computation (2PC) setting because it requires fewer computing resources. We stress that there is no such inherent restriction in our framework. We use hardware resources provided by CloudLab\cite{DuplyakinATC19} and consider two network settings, namely Local Area Network (LAN) and Wide Area Network (WAN). In the LAN setting, we use {\tt c6525-25g} machines for both parties. These machines are equipped with 16-core AMD 7302P 3.0GHz processors and 128GB of RAM. The connection between these machines had 10Gbps bandwidth and sub-millisecond latency. %This setting reflects typical LAN use case considering that 10Gbps LAN is increasingly common in business networks and is now available even in some home networks. 
+In the WAN setting we again used a {\tt c6525-25g} machine (located in Utah, US) for the first party and a {\tt c220g1} machine (located in Wisconsin, US) for the second. The {\tt c220g1} machine is equipped with two Intel E5-2630 8-core 2.40GHz processors and 128GB of RAM. We measured the connection bandwidth between these machines to be 560Mbps and average round trip time (RTT) to be 38ms. %At the time of this writing, all major internet providers in the US offer 1Gbps connections to home consumers, therefore this setting reasonably reflects the typical WAN use case.
 
-We run all experiments 5 times and report average values of various metrics. Note that standard deviation --- shown as error bar on top of the bars in the graphs --- in all observations was at most 4.5\% of the mean value, therefore the accuracy of the results is not effected by the relatively fewer runs.
+We run all experiments 5 times and report average values of various metrics. Note that standard deviation --- shown as error bar on top of the bars in the graphs --- in all observations was at most 4.5\% of the mean value. %,  therefore the accuracy of the results is not effected by the relatively fewer runs.
 
 \subsection{Benchmarks}\label{sec:benchmarks_description}
 In the following, we say {\em both} for an experiment in which we execute both non-vectorized and vectorized protocols and {\em vec} for the vectorized only experiment. 
-In a preliminary experiment we ran {\tt N=2, N=4}, all the way to {\tt N=4096}; the non-vectorized version ran out of memory at the value {\em both} and we fixed this value for these experiments. The vectorized one completed for {\tt N=4096} for nearly all benchmarks (numbers are not shown for space reasons; however, they times are largely consistent, e.g., if {\em both} is $N = 2^k$ and it completes in $X$ seconds for vectorized, then $N = 2^{12}$ completes in $(12-k)X$ seconds).
-We used the following benchmarks in our evaluation:
+In a preliminary experiment we ran {\tt N=2, N=4}, all the way to {\tt N=4096}; the non-vectorized version ran out of memory at the value {\em both} and we fixed this value for these experiments. The vectorized one completed for {\tt N=4096} for nearly all benchmarks (numbers are not shown for space reasons).
+% however, they times are largely consistent, e.g., if {\em both} is $N = 2^k$ and it completes in $X$ seconds for vectorized, then $N = 2^{12}$ completes in $(12-k)X$ seconds).
+We used the following benchmarks in our evaluation: 
 
 %\ishaq{@Ana: I don't know what to do about this: In the following list of benchmarks, I specify paramters for vectorized experiments too. but we don't have enough space to show the vectorized only experiments (we could replace the graphs). Not sure if I should take it out} \ana{I think I got this.}
 
 %\ishaq{TODO: go through description again, and add why each benchmark may be important from MPC/private-learning/distributed-computing perspective}
 
+\begin{comment}
 \begin{enumerate}
     \item {\em Biometric Matching:} Server has a database S of {\tt N} records, each record's dimension is {\tt D}. Client submits a query C, client and server compute the closest record to C in an MPC. We use {\tt N=128} for {\em both} and {\tt N=4096} for {\em vec}. {\tt D} is fixed at 4.
     
@@ -49,6 +52,7 @@ We used the following benchmarks in our evaluation:
     
     \item {\em Private Set Intersection (PSI)} Alice holds set S1 with size {\tt SA}, Bob holds set S2 with size {\tt SB}, together they compute intersection of their sets. We use {\tt SA=SB=128} for {\em both} and {\tt SA=SB=1024} for {\em vec}.
 \end{enumerate}
+\end{comment}
 
 \subsection{Results and Analysis}\label{sec:result_analysis}
 {\small
@@ -121,8 +125,10 @@ We used the following benchmarks in our evaluation:
 \label{fig:graph_all_eval_time}
 \end{figure*}
 
-A detailed summary of the effects of vectorization on various benchmarks is presented in \cref{table:metrics}. We show circuit evaluation times in \cref{fig:graph_all_eval_time}. In terms of amenability to vectorization, we divide benchmarks into 3 categories: 1) {\it High:} these include convex hull, cryptonets max pooling, minimal points and private set intersection. These benchmarks are highly parallelizable and see 25x to 70x speedup in BMR, and 30x to 55x in GMW protocol. 2) {\it Medium:} these include biometric matching, DB Variance, histogram, inner product, k-means iteration and MNIST ReLU. These benchmarks have non-parallelizable phases e.g. the summing phase of inner product and biometric matching. Still, most computation is parallelizable and it results in speedup from 5x to 25x in BMR, and 2x to 25x in GMW protocol. 3) {\it Low:} these include the Database Join and the regular expression benchmarks (count 102, count 10, longest 102 and max distance between symbols). There is less parallelizable computation in these programs, thus the speedup is lower. We see a speedup from 1.1x to 2x in BMR. In GMW, DB Join, Count 102 and Count 10s see speedup from 1.1x to 1.3x. However, longest102 and max distance between symbols suffer a slowdown of 0.5x. There is opportunity for vectorization in these benchmarks according to our analytical model, particularly, a there is a large EQ that is vectorized, although a large portion of the loop cannot be vectorized. We observed that transformation to vectorized code increased multiplicative depth and, the negative effect of increased depth is more noticeable in a round-based protocol like GMW. The cause of the increase is not clear --- we conjecture that MOTION performs optimizations over the non-vectorized loop body that decreases depth; also, EQ is relatively inexpensive in Boolean GMW and BMR compared to ADD and MUL, which also de-emphasizes the benefit of vectorization. We propose a simple heuristic although we do leave all the benchmarks in the table: if the transformation increases circuit depth beyond some threshold (e.g. more than 10\% of the original circuit), we can reject the transformation. %Nevertheless, we show these graphs here for the sake of completeness and to highlight that vectorization is not always reduce run time. 
-Note that in some settings it may still be desirable to vectorize e.g. in data constrained environments as communication is reduced for all benchmarks. (The report presents plots of communication, circuit generation time, number of gates, and separate online and setup time~\cite{Anon_TR}.)%As shown in \cref{fig:graph_comm_size}, vectorization results in reduced communication (fewer bits are transferred).
+A detailed summary of the effects of vectorization on various benchmarks is presented in \cref{table:metrics}. We show circuit evaluation times in \cref{fig:graph_all_eval_time}. In terms of observed benefits from vectorization, we divide benchmarks into 3 categories: 1) {\it High:} these include Convex Hull, Cryptonets Max Pooling, Minimal Points and Private Set Intersection. 
+%These benchmarks are highly parallelizable and see 25x to 70x speedup in BMR, and 30x to 55x in GMW protocol. 
+2) {\it Medium:} these include Biometric Matching, DB Variance, Histogram, Inner Product, k-means Iteration and MNIST ReLU. These benchmarks have non-parallelizable phases e.g. the summing phase of Inner Product. Still, most computation is parallelizable and it results in speedup from 5x to 25x in BMR, and 2x to 25x in GMW protocol. 3) {\it Low:} these include the Database Join and the regular expression benchmarks (Count 102, Count 10, Longest 102 and Max distance between symbols). There is less parallelizable computation in these programs, thus the speedup is lower. We see a speedup from 1.1x to 2x in BMR. In GMW, DB Join, Count 102 and Count 10s see speedup from 1.1x to 1.3x. However, Longest 102 and Max distance between symbols suffer a slowdown of 0.5x. There is opportunity for vectorization in these benchmarks according to our analytical model, particularly, a there is a large EQ that is vectorized, although a large portion of the loop cannot be vectorized. We observed that transformation to vectorized code increased multiplicative depth and, the negative effect of increased depth is more noticeable in a round-based protocol like GMW. The cause of the increase is not clear --- we conjecture that MOTION performs optimizations over the non-vectorized loop body that decreases depth; also, EQ is relatively inexpensive in Boolean GMW and BMR compared to ADD and MUL, which also de-emphasizes the benefit of vectorization. We propose a simple heuristic although we do leave all the benchmarks in the table: if the transformation increases circuit depth beyond some threshold (e.g. more than 10\% of the original circuit), we can reject the transformation. %Nevertheless, we show these graphs here for the sake of completeness and to highlight that vectorization is not always reduce run time. 
+Note that in some settings it may still be desirable to vectorize e.g. in data constrained environments as communication as well as all other metrics, is reduced for all benchmarks. (The report presents plots of for all metrics~\cite{Anon_TR}.)%As shown in \cref{fig:graph_comm_size}, vectorization results in reduced communication (fewer bits are transferred).
 
 %We present evaluation for communication size in \cref{fig:graph_comm_size}, circuit generation time in \cref{fig:graph_circ_gen_time}, number of gates in \cref{fig:graph_total_gates} and online time and setup time in \cref{fig:graph_online_time} and \cref{fig:graph_setup_time} respectively. %\ishaq{Ana: Let me know if I should add more substance.} \ana{It's good!}
 
@@ -134,6 +140,7 @@ Note that in some settings it may still be desirable to vectorize e.g. in data c
 \label{fig:graph_biometric_eval_time}
 \end{figure}
 
+\begin{comment}
 \begin{figure}[htbp]
 \centering
 \resizebox{0.7\columnwidth}{!}{\input{graphs/lan/biometric-hist-CommunicationMiB}}
@@ -147,8 +154,11 @@ Note that in some settings it may still be desirable to vectorize e.g. in data c
 \caption{Biometric Matching Circuit Generation Time, x-axis lists database size}
 \label{fig:graph_biometic_circ_gen_time}
 \end{figure}
+\end{comment}
 
-We look closely at the Biometric Matching benchmark: circuit evaluation in~\cref{fig:graph_biometric_eval_time}, communication size in \cref{fig:graph_biometic_comm_size} and circuit generation time in~\cref{fig:graph_biometic_circ_gen_time}. For input size beyond {\tt N=128} the memory usage exceeds available memory and prevents circuit generation. Consequently, non-vectorized bars are missing beyond this threshold. Notice that vectorization improves all metrics. %A database of size {\tt N=128} is smaller than any real world use case, therefore lets use it as baseline for improvement. 
+We look closely at the Biometric Matching benchmark: circuit evaluation in~\cref{fig:graph_biometric_eval_time}, communication size in~\cite{Anon_TR} and circuit generation time in~\cite{Anon_TR}.
+%\cref{fig:graph_biometic_comm_size} and circuit generation time in~\cref{fig:graph_biometic_circ_gen_time}. 
+For input size beyond {\tt N=128} the memory usage exceeds available memory and prevents circuit generation. Consequently, non-vectorized bars are missing beyond this threshold. Notice that vectorization improves all metrics. %A database of size {\tt N=128} is smaller than any real world use case, therefore lets use it as baseline for improvement. 
 Comparing performance improvement between BMR and GMW, we see more speedup for BMR (23x vs 10x), GMW gets more communication size reduction (10x vs 2.5x) and circuit generation sees a speedup of 35x and 45x for BMR and GMW respectively. 
 
 
@@ -156,7 +166,7 @@ Comparing performance improvement between BMR and GMW, we see more speedup for B
 \begin{figure}[htbp]
 \centering
 \resizebox{0.7\columnwidth}{!}{\input{graphs/comparison-hist-OnlineSetupTimesec}}
-\caption{LAN vs. WAN: Circuit Evaluation Time Comparison}
+\caption{LAN vs. WAN: Circuit Evaluation Time}
 \label{fig:graph_comparison_eval_time}
 \end{figure}
 
@@ -200,7 +210,7 @@ Since our vectorization framework is network agnostic, it produces the same circ
 \end{figure*}
 \end{comment}
 
-\subsection{Comparison with MOTION-native Inner Product}
+\subsection{Comparison with MOTION-native Inner Product and Discussion}
 
 %We conclude the . 
 Finally, we compared our automatically generated routine for Inner Product with the manually SIMD-ified MOTION-native routine in the distribution. 

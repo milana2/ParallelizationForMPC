@@ -20,7 +20,7 @@ describes translation from IMP Source to SSA, and~\secref{sec:ssa_to_MPC_Source}
 describes translation form SSA into MPC Source.
 
 We describe analysis on MPC Source and backend-independent vectorization in~\secref{sec:vectorization}
-and translation into MOTION code in~\secref{sec:backend}.
+and translation into MOTION code in~\secref{sec:backend}. Full details on all parts appear in~\cite{Anon_TR}.
 %\ana{Need to state this more precisely.}
 
 \subsection{Syntax and Semantic Restrictions}
@@ -99,6 +99,8 @@ where $i$, $j$ and $k$ loop over the three dimensions of {\sf A}.
 Write access such as for example {\sf A[$i,j+2$] = ...} is not allowed. (This is again a restriction we imposed for convenience in our current implementation; we plan to extend the compiler with arbitrary write access.)
 %\item \ana{Add rules for logical ops}
 %\item \ana{Add rules for arithmetic ops}
+
+\begin{comment}
 \item The final restriction involves MUX as expressed by the rule:
 \begin{semantics}
     \ntyperule{MUX}{
@@ -108,7 +110,11 @@ Write access such as for example {\sf A[$i,j+2$] = ...} is not allowed. (This is
   \Gamma \vdash \texttt{MUX($e_1$,$e_2$,$e_3$)} : \langle q_1 \vee q_2 \vee q_3  \; \tau \rangle
 }
 \end{semantics}
+\end{comment}
+
 \end{enumerate}
+
+\begin{comment}
 The arguments of MUX are restricted to base types. 
 (Again, this is just a restriction of our current implementation that will be lifted.)
 This causes an inconvenience as we could not write
@@ -121,10 +127,13 @@ if not(e): val = A[i]
 A[i] = val
 \end{pythonn}
 
+%\end{comment}
+
 We note that while the programmer writes
 annotations at the level of IMP Source (as in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(a)), the
 annotations propagate through the transformations; annotations are inferred and checked with a taint analysis at the 
-level of MPC Source. Tthe programmer annotates only inputs.
+level of MPC Source. The programmer annotates only inputs.
+\end{comment}
 
 %\ana{Disadvantage of MUX}
 
@@ -140,7 +149,7 @@ arbitrarily large loop nests.
 \label{sec:imp_to_ssa}
 
 
-Our compiler translates from Source to SSA as outlined below. Full details are in the extended version~\cite{Anon_TR}.
+Our compiler translates from Source to SSA as sketched below. %Full details are in the extended version~\cite{Anon_TR}.
 
 %\begin{enumerate}
 %  \item
@@ -217,7 +226,7 @@ Our compiler translates from Source to SSA as outlined below. Full details are i
 \end{comment}        
   %\item
         \paragraph{SSA conversion:}
-        Convert 3-address CFG to SSA with Cytron's algorithm.
+        Convert 3-address CFG to SSA with Cytron's algorithm~\cite{Cytron:1991}.
 %\end{enumerate}
 
 \subsection{From SSA to MPC Source} %: MUX Nodes and Pseudo $\phi$-nodes}
@@ -252,7 +261,7 @@ the compiler recursively converts the body and code after the loop to MPC source
 and adds the for-loop and code after the loop to the main MPC source.
 If the block does not end in a for-instruction,
 the compiler recursively converts all successor branches to MPC source and
-appends these to the main MPC source.
+appends to the main MPC source.
 
 Now, the remaining $\phi$-nodes in MPC source are the loop header nodes. We call these nodes \emph{pseudo} $\phi$-nodes
 and we write {\sf PHI} in MPC Source. A pseudo $\phi$-node {\sf X!1 = PHI(X!0,X!2)} in a loop header is evaluated
