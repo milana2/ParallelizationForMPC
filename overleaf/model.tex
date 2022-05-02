@@ -20,13 +20,14 @@ be useful as sequences are short and few in practice.
 For this treatment we make the following simplifying assumptions:
 
 \begin{enumerate}
+
 \item All statements in the program execute using the same protocol (sharing). That is, there is no share conversion.
 %\ishaq{This is not an assumption, this is our setting. We work in the single protocol world.}
 \item There are two tiers of MPC instructions, local and remote. A local instruction (e.g., ADD in Arithmetic, XOR in Boolean) 
 has cost $\beta$ and a remote instruction (e.g., MUX, MUL, SHL, etc.) has cost $\alpha$, where $\alpha >> \beta$. We assume that all remote
 instructions have the same cost.
 %\ishaq{Don't we need to distinguish between local (cheap) vs. interactive (expensive) instructions? I don't see how we could assume this. -- Past suggestion from Vassilis: Ideally we should assume cost to be a convex function.}\ana{After discussion 1/12: replace single costs 1 with two levels of costs: $\alpha$ for non-local operations, e.g., MUL, and $\beta$ for local ops, e.g., ADD.}
-\item  In MPC frameworks, executing $n$ operations ``at once'' in a single SIMD operation costs a lot less than executing those $n$ operations one by one.
+\item  %In MPC frameworks, executing $n$ operations ``at once'' in a single SIMD operation costs a lot less than executing those $n$ operations one by one.
 Following Amdahl's law, we write $\alpha = \frac{1}{s}p\alpha + (1-p)\alpha$, where $p$ is the fraction of execution time that benefits from amortization and $(1-p)$
 is the fraction that does not, and $s$ is the available resource. Thus, $n\alpha = \frac{n}{s}p\alpha + n(1-p)\alpha$.
 For the purpose of the model we assume that $s$ is large enough and the term $\frac{n}{s}p\alpha$ amounts to a \emph{fixed cost} incurred regardless of

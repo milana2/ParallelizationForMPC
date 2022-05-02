@@ -246,7 +246,7 @@
 
 Research on MPC programming technology largely falls at the two ends of the classical compiler: (1) work on front-end language design (e.g., Wysteria, Viaduct) and (2) work on back-end protocol implementation (e.g., ABY, MOTION). 
 
-In this work, we formalize the MPC Source intermediate language and advance the idea of what we call backend-independent optimizations, in a close analogy to machine-independent optimizations in the classical compiler.  We present a compiler framework that takes a Python-like routine and produces MOTION code. We focus on a specific backend-independent optimization: novel SIMD-vectorization on MPC Source, which we show leads to significant speedup in circuit generation time and running time, as well as significant reduction in communication and number of gates over the corresponding iterative schedule.
+In this work, we formalize the MPC Source intermediate language and advance what we call \emph{backend-independent} optimizations, in a close analogy to machine-independent optimizations in the classical compiler.  We present a compiler framework that takes a Python-like routine and produces MOTION code. We focus on a specific backend-independent optimization: novel SIMD-vectorization on MPC Source, which we show leads to significant improvement in circuit generation time, running time, and communication over the corresponding iterative schedule.
 %Our results emphasize the importance of backend-independent optimizations --- vectorization (this work) and protocol mixing (previous work) are two optimizations available at the level of MPC Source. We envision future work on backend-independent optimization: new MPC optimizations and combinations of optimizations in the vein of the classical compiler.
 
 \end{abstract}

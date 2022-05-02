@@ -123,14 +123,15 @@ Array {\sf C} is the feature vector of {\sf D} features that we wish to match an
 is the database of {\sf N} size-{\sf D} vectors that we match against.
 
 Our compiler takes essentially standard IMP~\cite{Nipkow2014}
-syntax and imposes certain semantic restrictions. (We detail the restrictions in the following sections.)
+syntax and imposes certain semantic restrictions. %(We detail the restrictions in the following sections.)
 The programmer writes an iterative program and annotates certain inputs
 and outputs as \emph{shared}. In the example arrays {\sf C} and {\sf S}
 are \texttt{shared}, meaning that they store shares, however, the array sizes {\sf D} and
-{\sf N} respectively are plaintext. The code iterates over the entries in the
-database and computes the Euclidean distance of the current
-entry ${\sf S}[i]$ and {\sf C} (its square actually). The program returns the index of the vector that gives
-the best match plus the corresponding sum of squares.
+{\sf N} respectively are plaintext. 
+%The code iterates over the entries in the
+%database and computes the Euclidean distance of the current
+%entry ${\sf S}[i]$ and {\sf C} (its square actually). The program returns the index of the vector that gives
+%the best match plus the corresponding sum of squares.
 
 \subsection{MPC Source and Cost of Schedule}
 
@@ -153,13 +154,13 @@ MUX operations, while the $\phi$-nodes at for-loops turn into \emph{pseudo} PHI 
 
 We turn to our analytical model to compute the \emph{cost} of the iterative program. Assume
 cost $\beta$ for a local MPC operation (e.g., ADD in Arithmetic sharing) and cost $\alpha$ for a remote
-MPC operation (e.g., MUX, CMP, etc.). Assuming that ADD is $\alpha$ and SUM, CMP and MUX are $\beta$, 
+MPC operation (e.g., MUX, CMP, etc.). Assuming that ADD is $\beta$ and SUB, CMP and MUX are $\alpha$, 
 the MPC Source in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(b) gives 
 rise to an iterative schedule with cost $ND(2\alpha+\beta) + N(3\alpha$).
 
 A key contribution is the vectorizing transformation. We can compute all $N*D$
-subtraction operations (line 9 in (b)) in a single SIMD instruction; similarly we can compute
-all multiplication operations (line 10) in a single SIMD instruction. And while computation
+subtractions (line 9 in (b)) in a single SIMD instruction; similarly we can compute
+all multiplications (line 10) in a single SIMD instruction. And while computation
 of an individual sum remains sequential, we can compute the $N$ sums in parallel.
 %Our compiler \emph{automatically detects these opportunities and transforms the program}.
 %It is standard that MPC researchers write vectorized versions of the Biometric
@@ -191,8 +192,8 @@ We elaborate on the cost model in Section~\secref{sec:model} but for now conside
 each operation has a \emph{fixed} portion (does benefits from amortization) and
 a \emph{variable} portion (does not benefit from amortization): $\alpha = \alpha_\mathit{fix} + \alpha_\mathit{var}$.
 This gives rise to the following formula for amortized cost: $f(n) = \alpha_\mathit{fix} + n\alpha_\mathit{var}$,
-as opposed to unamortized cost $g(n) = n\alpha_\mathit{fix} + n\alpha_\mathit{var}$. (We extend the same reasoning to
-$\beta$-instructions.)
+as opposed to unamortized cost $g(n) = n\alpha_\mathit{fix} + n\alpha_\mathit{var}$. We extend the same reasoning to
+$\beta$-instructions.
 
 Thus, the fixed cost of the vectorized program amounts to
 $2\alpha_\mathit{fix}$ + $D \beta_\mathit{fix} + N(3\alpha_\mathit{fix})$. (The variable cost is the same in both the vectorized and non-vectorized programs.)
@@ -200,7 +201,7 @@ The first term in the sum corresponds to the vectorized
 subtraction and multiplication (lines 9-10 in (c)), the second term corresponds to the for-loop on $j$ (lines 12-16) and the third
 one corresponds to the remaining for-loops on $i$ (lines 19-25). 
 Clearly, $2\alpha_\mathit{fix} + D\beta_\mathit{fix} + N(3\alpha_\mathit{fix}) << ND(2\alpha_\mathit{fix}+\beta_\mathit{fix}) + N3\alpha_\mathit{fix}$.
-Empirically, we observe that $\alpha_\mathit{var} \approx 0$ and orders of magnitude improvement (e.g., 12x in online time in GMW). 
-Additionally, the un-vectorized version runs out of memory for $N=256$, while the vectorized one runs with the standard maximal input 
-size $N=4,096$.
+Empirically, we observe that (1) $\alpha_\mathit{var} \approx 0$ and (2) there is orders of magnitude improvement in running time and memory. 
+E.g., we see about 12x improvement in online time in GMW for $N=128$. Additionally, the non-vectorized version runs out of memory for $N=256$, 
+while the vectorized one runs with the standard maximal input size $N=4,096$.
 %\ana{Edit numbers with final experiments.}

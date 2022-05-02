@@ -13,6 +13,7 @@ over MPC Source is a new problem that warrants a new look, in part because of MP
 structure and in part because vectorization meshes in with other MPC-specific optimizations in non-trivial ways
 (other works have explored manual vectorization and protocol mixing in an ad-hoc way, e.g.,~\cite{NDSS:DemSchZoh15,CCS:BDKKS18,Ishaq:2019}).
 
+In this section, we briefly describe the analysis. Details, including edge cases and examples, can be found in the supplementary extended version~\cite{Anon_TR}.
 \secref{sec:dependence} describes our dependence analysis and ~\secref{sec:expansion} describes scalar expansion,
 which lifts scalars (and arrays) to the corresponding loop dimensionality to create opportunities for vectorization. 
 \secref{sec:basic_vectorization} describes our core vectorization algorithm and~\secref{sec:correctness} argues correctness of the vectorization transformation.
@@ -26,20 +27,20 @@ We build a dependence graph where the nodes are the MPC Source statements and th
 \paragraph{Def-use Edges} We distinguish the following def-use edges:
 
 \begin{itemize}
-\item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge 9 to 10 in the Biometric MPC Source in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source} is a same-level edge. A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge.
-E.g., 15 to 4 in Biometric is a same-level back-edge.
+\item same-level edge $X\rightarrow Y$ where $X$ and $Y$ are in the same loop nest, say $i,j,k$. E.g., the def-use edge 9 to 10 in the Biometric MPC Source in Listing~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(b) is a same-level edge. 
+%A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge. E.g., 15 to 4 in Biometric is a same-level back-edge.
 \item outer-to-inner $X\rightarrow Y$ where $X$ is in an outer loop nest, say $i$, and $Y$ is in an inner one, say $i,j,k$. E.g., 1 to 4 in Biometric forms is an outer-to-inner edge.
 %A $\phi$-node can be a source or a target of an outer-to-inner forward edge.
 \item inner-to-outer $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g., the def-use from 8 to 12 gives rise to an inner-to-outer edge.
 %E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer edge.
-An inner-to-outer edge can be a back-edge as well, in which case both $X$ and $Y$ are $\phi$-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
+%An inner-to-outer edge can be a back-edge as well, in which case both $X$ and $Y$ are $\phi$-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
 
 %Note that the source is \emph{always} a $\phi$-node of the $i,j,k$ loop and the target is in the immediately enclosing loop. The interpretation of this edge is that the use node $Y$ uses the definition made in the last iteration of the inner loop.
 %\ben{The current representation of pseudo $\phi$-nodes shows them attached to the loop header (i.e. in the loop).  We may want to clarify that they are also evaluated at the loop's termination.}
 %\item same-level back-edge $X\rightarrow Y$. $Y$ is a phi-node in the header of the loop and $X$ is a definition of the variable in the loop body. E.g., $\texttt{min}_1 = \mathit{MUX}(\texttt{c},\texttt{sum}_1,\texttt{min}_1)$ to $\texttt{min}_0 = \phi(\texttt{min}_1, 10000)$ in Biometric is a same-level back-edge.
 %\item inner-to-outer back-edge $X\rightarrow Y$: $X$ and $Y$ are both $\phi$-nodes for some variable. The source $X$ is in a loop nested into $Y$'s loop (not necessarily immediately).
 
-\item mixed forward edge $X\rightarrow Y$. $X$ is in some loop $i,j,k$ and $Y$ is in a loop nested into $i,j,k'$. We transform mixed forward edges as follows. Let $\x$ be the variable defined at $X$. We add a variable and assignment $\x' = \x$ immediately after the $i,j,k$ loop. Then we replace the use of $\x$ at $Y$ with $\x'$. This transforms a mixed forward edge into an "inner-to-outer" forward edge followed by an outer-to-inner forward edge. Thus, Basic Vectorization handles one of "same-level", "inner-to-outer", or "outer-to-inner" def-use edges.
+\item mixed forward edge $X\rightarrow Y$. $X$ is in some loop $i,j,k$ and $Y$ is in a loop nested into $i,j,k'$. We transform mixed forward edges as follows. Let $\x$ be the variable defined at $X$. We add a variable and assignment $\x' = \x$ immediately after the $i,j,k$ loop. Then we replace the use of $\x$ at $Y$ with $\x'$. This transforms a mixed forward edge into an "inner-to-outer" forward edge followed by an outer-to-inner forward edge. %Thus, Basic Vectorization handles one of "same-level", "inner-to-outer", or "outer-to-inner" def-use edges.
  \end{itemize}
 
 \paragraph{Closures}
@@ -55,12 +56,27 @@ We define $\mathit{closure}(n)$ where $n$ is a PHI-node. Intuitively, it compute
 
 %\subsubsection{Overview}
 
-An important component of our algorithm is the scalar expansion to the corresponding loop dimensionality, 
+An important component of our algorithm is expansion of scalars and arrays to the corresponding loop dimensionality, 
 which is necessary to expose opportunities for vectorization.
 In the Biometric example, {\sf d = S[i*D+j] - C[j]} equiv. to {\sf d = S[i,j] - C[j]}, which gave rise to $N*D$ subtraction operations in the sequential schedule,
 is lifted. The argument arrays {\sf S} and {\sf C} are lifted and the scalar {\sf d} is lifted: {\sf d[i,j] = S[i,j] - C[i,j]}.
 The algorithm then detects that the statement can be vectorized.
 
+Expansion (and also reduction) is done with the $\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ functions, 
+which we believe are standard. $\mathit{raise\_dim}$ takes the original array, the access function 
+$f(i,j,k)$ in loop nest $i,j,k$ and the loop bounds $((i\!:\!I),(j\!:\!J),(k\!:\!K))$ and produces a new 3-dimensional array 
+${\sf A'}$ by iterating over $i,j,k$ and setting each element of  ${\sf A'}$:
+\[ \mathit{raise\_dim}(A, f(i,j,k), ((i\!:\!I),(j\!:\!J),(k\!:\!K))): {\sf A'}[i,j,k] =  {\sf A}[f(i,j,k)] \]
+Raise dimension applies when reshaping input arrays and also, at outer-to-inner def-use edges.
+Analogously $\mathit{drop\_dim}$ applies at inner-to-outer def-use edges.
+It takes a higher dimensional array, say $i,j,k$ and removes trailing dimensions, say $j,k$. 
+It iterates over $i$ and takes the result at the maximal index of $j$ and $k$, i.e., the result at the last iterations of $j$ and $k$:
+\[ \mathit{drop\_dim}({\sf A}, (j\!:\!J,k\!:\!K)): {\sf A'}[i] = A[i,J-1,K-1] \] 
+%It iterates over $i$ and takes the result at the maximal index of $j$ and $k$, i.e., the result at the last iterations of $j$ and $k$:
+%\[ {\sf A'}[i] = A[i,J-1,K-1] \]
+
+
+\begin{comment}
 \paragraph{Arrays} Conceptually, we treat all variables as arrays. There are three kinds of arrays. 
 %\ana{Arrays is not a good name here.}
 
@@ -123,14 +139,12 @@ It takes a higher dimensional array, say $i,j,k$ and removes trailing dimensions
 \[ \mathit{drop\_dim}({\sf A}, (j:J,k:K)) \]
 It iterates over $i$ and takes the result at the maximal index of $j$ and $k$, i.e., the result at the last iterations of $j$ and $k$:
 \[ {\sf A'}[i] = A[i,J-1,K-1] \]
-
+\end{comment}
 
 \subsection{Basic Vectorization}
 \label{sec:basic_vectorization}
 
-We present our algorithm followed by an example on Biometric. 
-
-\subsubsection{Algorithm}
+%\subsubsection{Algorithm}
 
 There are two key phases of the algorithm. Phase 1 inserts raise dimension and drop dimension 
 operations according to def-uses. E.g., if there is an inner-to-outer dependence, it inserts $\mathit{raise\_dim}$,
@@ -158,6 +172,8 @@ arrays. We explain the extension in \secref{sec:array_writes}.
 
 Phases 3 cleans up local arrays of references (this is an optional phase and our current implementation does not include it)
 and Phase 4 explicitly turns operations into MOTION SIMD operations.
+
+\paragraph{Pseudocode:}
 
 \begin{algorithmic}
 
@@ -192,8 +208,8 @@ and Phase 4 explicitly turns operations into MOTION SIMD operations.
 \STATE {merge $cl_1$ and $cl_2$}
 \ENDWHILE
 \FOR {each closure $cl$ (after merge)}
-\STATE {create \python{for} $i_d$ \python{in} ... loop}
-\STATE {add PHI-nodes in $cl$ to header block}
+\STATE {create \python{for} $i_d$ \python{in} ... loop} \COMMENT{ i.e., MOTION loop }
+\STATE {add PHI-nodes in $cl$ to header block} 
 \STATE {{\color{red}{add target-less PHI-node for A if $cl$ updates array A}}}
 \STATE {add statements in $cl$ to loop in some order of dependences}
 \STATE \COMMENT { Dimension is not vectorizable: }

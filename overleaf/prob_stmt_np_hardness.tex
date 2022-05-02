@@ -31,7 +31,7 @@ The cost of schedule $S$ is
 where $L_\alpha$ is the number of $\alpha$-instructions and $L_\beta$ is the number of $\beta$ ones.
 (We used this formula to compute the cost of the unrolled MPC Source program in~\secref{sec:overview}.)
 %$cost(S_i) = \alpha$ or $\beta$. if $S_i$ is an $A$-instruction and $cost(S_i) = \beta$ if $S_i$ is an $M$-instruction. 
-The cost of schedule $P$ is more interesting:
+The cost of $P$ is more interesting:
 
 \begin{equation}\label{eq_par_schedule_cost}
     \mathit{cost}(P) = \sum_{i=1}^m \mathit{cost}(P_i)
@@ -84,7 +84,8 @@ M_1(1), M_1(2) \; ;\; M_1(2) \; ; \; M_2(1), M_2(3) \; ; \; M_1(1), M_1(2), M_1(
 The parentheses above indicate the sequence where the instruction comes from: (1), (2), or (3). 
 Cost of schedule $P$ is computed using \cref{eq_par_schedule_cost} above and it amounts to $5\alpha_\mathit{fix} + 9\alpha_\mathit{var}$.
 
-The problem of finding a schedule $P$ with a minimal $cost(P)$ is shown to be NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, a known NP-Hard problem~\cite{Vazirani:2010}. The shortest common supersequence problem is as follows: {\it given two or more sequences find the the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. %For our problem $n$ is the maximum length of a sequence and $k$ is the number of instructions of sequences. 
+%The problem of finding a schedule $P$ with a minimal $cost(P)$ is shown to be NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, a known NP-Hard problem~\cite{Vazirani:2010}. 
+The shortest common supersequence problem~\cite{Vazirani:2010} is as follows: {\it given two or more sequences find the the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. %For our problem $n$ is the maximum length of a sequence and $k$ is the number of instructions of sequences. 
 We can see that the optimal schedule is the shortest schedule, since the shortest schedule minimizes the fixed cost while the variable cost remains the same.
 
 To formalize the reduction, suppose $P$ is a schedule with minimal cost (computed by a black-box algorithm). 
