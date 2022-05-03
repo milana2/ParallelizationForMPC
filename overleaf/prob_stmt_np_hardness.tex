@@ -44,7 +44,7 @@ or $\mathit{cost}(P_i) = \beta_\mathit{fix} + |P_i|\beta_\mathit{var}$ if it sto
 %if $P_i$ consists of $A$-instructions only, it is $\beta$ if $P_i$ consists of $M$-instructions only, and it is $(\alpha + \beta)$ if $P_i$ mixes $A$-instructions and $M$-instructions. 
 
 Our goal is to construct a parallel schedule $P$ that reduces the program cost (when compared to cost of $S$), possibly an optimal schedule. 
-Originally we hoped that the problem is simper and computation of the optimal schedule is tractable. Unfortunately, the optimal schedule turns out to be NP-hard via a reduction 
+Originally we hoped that the problem is simper and computation of the optimal schedule was tractable. Unfortunately, the optimal schedule turns out to be NP-hard via a reduction 
 to the Shortest Common Supersequence problem.
 
 % \paragraph{Cost Comparison} For the sequential schedule $\mathcal{S}$ consisting of $L$ local and $R$ remote instructions, the total cost is $\mathit{cost}(\mathcal{S}) = L \cdot f(1) + R \cdot g(1)$. In the extreme case where all $L$ and all $R$ instructions can be parallelized, the cost of $\mathcal{P}$ is $\mathit{cost}(\mathcal{P}) = L \cdot f(L) + R \cdot g(R)$. Since both $f$ and $g$ are monotonically decreasing, $\mathit{cost}(\mathcal{P}) < \mathit{cost}(\mathcal{S})$. Cost of all other parallel schedules lies between the extremes of $\mathit{cost}(\mathcal{S})$ and $\mathit{cost}(\mathcal{P})$.
@@ -85,7 +85,7 @@ The parentheses above indicate the sequence where the instruction comes from: (1
 Cost of schedule $P$ is computed using \cref{eq_par_schedule_cost} above and it amounts to $5\alpha_\mathit{fix} + 9\alpha_\mathit{var}$.
 
 %The problem of finding a schedule $P$ with a minimal $cost(P)$ is shown to be NP-Hard problem, as it can be reduced to the problem of finding a \emph{shortest common supersequence}, a known NP-Hard problem~\cite{Vazirani:2010}. 
-The shortest common supersequence problem~\cite{Vazirani:2010} is as follows: {\it given two or more sequences find the the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. %For our problem $n$ is the maximum length of a sequence and $k$ is the number of instructions of sequences. 
+The shortest common supersequence problem~\cite{Vazirani:2010} is as follows: {\it given two or more sequences find the shortest sequence that contains all of the original sequences.} This can be solved in $O(n^k)$ time, where $n$ is the cardinality of the longest sequence and $k$ is the number of sequences. %For our problem $n$ is the maximum length of a sequence and $k$ is the number of instructions of sequences. 
 We can see that the optimal schedule is the shortest schedule, since the shortest schedule minimizes the fixed cost while the variable cost remains the same.
 
 To formalize the reduction, suppose $P$ is a schedule with minimal cost (computed by a black-box algorithm). 

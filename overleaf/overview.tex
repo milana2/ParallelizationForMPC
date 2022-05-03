@@ -94,7 +94,7 @@ return (min_sum!2, min_idx!2)
 \end{tabular}
 \caption{Biometric Matching: ==== From (a) IMP Source to (b) MPC Source: 
 First, MPC Source is an SSA form.
-Second, it is linear. The conditional in lines 13-14 in IMP Source turns into the linear code in lines 12-16 in MPC Source.
+Second, it is linear. The conditional in lines 13-15 in IMP Source turns into the linear code in lines 12-16 in MPC Source.
 The test turns into the CMP operation {\sf t = CMP(sum!3,min\_sum!2)}, followed by the
 true-branch sequence, followed by the MUX operations. The first MUX operation selects the value
 of {\sf min\_sum}: if {\sf t} is true, then {\sf min\_sum} gets the value of the second multiplexer
@@ -203,5 +203,5 @@ one corresponds to the remaining for-loops on $i$ (lines 19-25).
 Clearly, $2\alpha_\mathit{fix} + D\beta_\mathit{fix} + N(3\alpha_\mathit{fix}) << ND(2\alpha_\mathit{fix}+\beta_\mathit{fix}) + N3\alpha_\mathit{fix}$.
 Empirically, we observe that (1) $\alpha_\mathit{var} \approx 0$ and (2) there is orders of magnitude improvement in running time and memory. 
 E.g., we see about 12x improvement in online time in GMW for $N=128$. Additionally, the non-vectorized version runs out of memory for $N=256$, 
-while the vectorized one runs with the standard maximal input size $N=4,096$.
+while the vectorized one runs with the standard maximal input size $N=4,096$ (and perhaps larger $N$).
 %\ana{Edit numbers with final experiments.}
