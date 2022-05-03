@@ -459,7 +459,7 @@ ${\sf B}[j]$ stores the corresponding value that we need to add. The MPC Source 
 {\small
 \begin{pythonn}
 for i in range(0, num_bins):
-  res1 = PHI(res, res2)
+  res1 = PHI(res, res2) # res is the result array
   for j in range(0, N):
     res2 = PHI(res1, res3)
     tmp1 = (A[j] == i)
@@ -470,7 +470,7 @@ return res1
 \end{pythonn}
 }
 
-There is loop-carried dependence from 8 to 2 for write array {\sf res} even though the loop can be vectorized across $i$.
+There is a def-use edge to 2 due to the update at 8 of array {\sf res} even though the loop can be vectorized across $i$.
 
 \begin{comment}
 Consider the classical example from~\cite{Aiken:1988}: 
@@ -534,9 +534,9 @@ The algorithm, shown in~\cite{Anon_TR}, examines all def-use pairs in loop $j$, 
 searching for values $\underline{i}, \underline{j}, \underline{j}', \underline{k}, \underline{k}'$ that satisfy
 $f(\underline{i},\underline{j},\underline{k}) = f'(\underline{i},\underline{j}',\underline{k}')$ (using Z3). If such values exist for some def-use pair, then there is a potential
 loop-carried dependence on ${\sf A}$; otherwise there is not and we can remove the spurious backward edge to the array PHI-node 
-thus ``freeing up'' statements for vectorization. %\ana{Double check this!!!}
+for loop $j$, thus ``freeing up'' statements for vectorization. %\ana{Double check this!!!}
 
-In Histogram, this removes the back edge from the update at 8 to the PHI node at 2. Clearly there does not exist $i < i'$ that makes
+In Histogram, this removes the back edge from 4 to the PHI node at 2. Clearly there does not exist $i < i'$ that makes
 $i$ at 9 and $i'$ at 6 and 7 equal. The back-edge from 9 to 4 stays because for every $j < j'$ 9 and 6 and 7 access the same location in {\sf res}. %\ana{Can't wrap my head around this...}
 
 \begin{comment}
@@ -545,15 +545,14 @@ due to the def-use pairs of {\sf A} 6-7 and 6-8.
 Therefore, we remove the back edge from 6 to the phi-node 2. Analogously, we remove the back edges from 7 to 3 and from 8 to 4. However, there are many values $\underline{i} < \underline{i'}$ that make $\underline{i} = \underline{i'}-1$ and the back edge from 9 to 5 remains (def-use pairs for {\sf D}). As a result of removing these spurious edges, Vectorization will find that statement 6 is vectorizable. Statements 7, 8 and 9 will correctly appear in the FOR loop.
 \end{comment}
 
-Note however, that this step renders some array phi-nodes target-less. We handle target-less phi-nodes with a minor extension of Vectorization (Phase 2).
+Removing infeasible edges renders some array phi-nodes \emph{target-less}. We handle target-less phi-nodes with a minor extension of Vectorization (Phase 2).
 First, we merge closures that update the same array. This simplifies handling of array $\phi$-nodes: if each closure is turned into a separate loop
 each loop will need to have its own array phi-node to account for the update and this would complicate the analysis.
 Second, we add the target-less node of array {\sf A} back to the closure that updates {\sf A} ---
 the intuition is, even if there is no loop-carried dependence from writes to reads on {\sf A}, {\sf A} is written and the write (i.e., update) cannot be vectorized;
 therefore, the updated array has to carry to the next iteration of the loop. Third, in cases when the phi-node remains target-less, i.e., cases when the
 array write can be vectorized, we have to properly remove the phi-node replacing uses of the left-hand side of the phi-node with its arguments.
-Additional detail, as well as detailed treatment of the minor changes to $\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ required to do expansion of arrays 
-in addition to scalars, appear in~\cite{Anon_TR}.
+Additional detail on the minor changes to $\mathit{raise\_dim}$ and $\mathit{drop\_dim}$ required to do expansion of arrays appear in~\cite{Anon_TR}.
 
 %\ana{Commented out previous writeup. Removal/handling of targetless phi-nodes will go into the Extension to Basic vectorization.}
 
@@ -749,7 +748,7 @@ I1 = raise_dim(i, ((i:num_bins),(j:N)))
 
 tmp1[I,J] = (A1[I,J] == I1[I,J])
 
-res1^ = raise_dim(res, (j:N)) // replacing res1 with res, 1st arg
+res1^ = raise_dim(res, (j:N)) # replacing res1 with res, 1st arg
 for j in range(0, N):
    res2 = PHI(res1^, res3)
    tmp2[I,j] = (res2[I,j] + B1[I,j])
@@ -757,7 +756,7 @@ for j in range(0, N):
    res3 = Update(res2, (I,j), tmp3)
    equiv. to res3 = res2; res3[I,j] = tmp3[I,j]
 res2^ = drop_dim(res2)
-res1 = drop_dim(res2^) // replacing with res2^, 2nd arg. NOOP
+res1 = drop_dim(res2^) # replacing with res2^, 2nd arg. NOOP
 return res1
 \end{pythonn}
 }

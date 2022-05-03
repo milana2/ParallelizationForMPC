@@ -57,8 +57,8 @@ When converting to MOTION code, any plaintext value used in the right-hand side 
 %Our generated C++ uses the following variable-naming scheme: shared variables are named the same as in the MPC Source with the {\sf !} replaced with an underscore (e.g. {\sf sum!2} would be translated to {\sf sum\_2}). Plaintext variables follow the same naming convention as shared variables but are prefixed with {\sf \_MPC\_PLAINTEXT\_}.  The shared representation of constants are named {\sf \_MPC\_CONSTANT\_} followed by the literal constant (e.g. the shared constant 0 would be named {\sf \_MPC\_CONSTANT\_0}).
 
 % Function preamble
-The generated MOTION code begins with the declaration of all variables used in the function, including loop counters.  If a variable is a vectorized array, it is initialized to a correctly-sized array of empty MOTION shares.  Additionally, each plaintext variable and parameter has a shared counterpart declared.  Next, all constant values which are used as part of shared expressions are initialized as a shared input from party 0. Finally, plaintext parameters are converted as shared inputs from party 0 to initialize their shared counterparts. (We note that inputs are read-only and
-the conversion currently incurs 2-3 redundant input gates per application; this can be easily fixed.)
+The generated MOTION code begins with the declaration of all variables used in the function, including loop counters.  If a variable is a vectorized array, it is initialized to a correctly-sized array of empty MOTION shares.  Additionally, each plaintext variable and parameter has a shared counterpart declared.  Next, all constant values which are used as part of shared expressions are initialized as a shared input from party 0. Finally, plaintext parameters are converted as shared inputs from party 0 to initialize their shared counterparts. (We note that inputs are typically read-only and
+the conversion may incur 2-3 redundant input gates per application; this can be fixed.)
 
 \squeeze
 \paragraph{Code generation:}
