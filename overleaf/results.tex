@@ -9,9 +9,9 @@ We run all experiments 5 times and report average values of various metrics. Not
 
 \subsection{Benchmarks}\label{sec:benchmarks_description}
 
-We used benchmarks from ABY and OPA~\cite{NDSS:DemSchZoh15,Ishaq:2019} (Biometric Matching, Histogram, PSI), HyCC~\cite{CCS:BDKKS18} (Database Join, Database Variance, Inner Product, Cryptonets Max Pooling, MNIST ReLU, k-means Iteration) and Parsynt~\cite{Farzan:2021} (Convex Hull, Minimal Points, Count 102, Count 10, Longest 102, Max distance between symbols). 
-We did not use Gcd~\cite{Ishaq:2019} and Modular Exponentiation from~\cite{NDSS:DemSchZoh15} as they do not benefit from vectorization according to our model. 
-We ran as many routines from~\cite{CCS:BDKKS18} and~\cite{Farzan:2021} as possible. Gaussian decomposition cannot be expressed 
+We used benchmarks from ABY and OPA~\cite{Demmler:2015,Ishaq:2019} (Biometric Matching, Histogram, PSI), HyCC~\cite{Buscher:2018b} (Database Join, Database Variance, Inner Product, Cryptonets Max Pooling, MNIST ReLU, k-means Iteration) and Parsynt~\cite{Farzan:2021} (Convex Hull, Minimal Points, Count 102, Count 10, Longest 102, Max distance between symbols). 
+We did not use Gcd~\cite{Ishaq:2019} and Modular Exponentiation from~\cite{Demmler:2015} as they do not benefit from vectorization according to our model. 
+We ran as many routines from~\cite{Buscher:2018} and~\cite{Farzan:2021} as possible. Gaussian decomposition cannot be expressed 
 in our syntax and the compiler errors on Cryptonets Convolution at the time of writing, although we expect to fix the issue soon. 
 \cite{Anon_TR} describes what the benchmarks do.
 
@@ -240,7 +240,7 @@ However, because AST analysis is difficult, it does not appear to detect the acc
 We conjecture that MPC Source, a straight-forward representation suitable for static analysis, will not only enable detection of general associative loops, but also allow 
 for program synthesis to increase opportunities for divide-and-conquer parallelization~\cite{Farzan:2021}; we leave this and other optimizations as future work. 
 
-HyCC~\cite{CCS:BDKKS18} is a mixing compiler that focuses on mixed protocols, while we run vectorization within a single protocol. 
+HyCC~\cite{Buscher:2018b} is a mixing compiler that focuses on mixed protocols, while we run vectorization within a single protocol. 
 The paper only provides data for Boolean and Yao for a version of Biometric matching on $N=1000$ (as its focus is mixing). %; it does provide a lot of data on mixed protocol executions.
 We estimate we are about an order of magnitude slower, which is likely due to the same issue --- the computation of $\mathit{min}$ can be optimized. 
 

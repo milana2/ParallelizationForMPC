@@ -40,7 +40,7 @@ We have $\alpha_\mathit{fix} << n\alpha_\mathit{fix}$ and since fixed cost domin
 \item MPC instructions scheduled in parallel benefit from amortization \emph{only if} they are the same instruction. Given our previous assumption,
 2 MUL instructions can be amortized in a single SIMD instruction that costs $\alpha_\mathit{fix} + 2\alpha_\mathit{var}$, however a MUL and a MUX instruction
 still cost $2\alpha_\mathit{fix} + 2\alpha_\mathit{var}$ even when scheduled ``in parallel''.\footnote{This is not strictly true, but assuming it, e.g. as in 
-\cite{Ishaq:2019, NDSS:DemSchZoh15, Mohassel:2018}, helps simplify the problem.}
+\cite{Ishaq:2019, Demmler:2015, Mohassel:2018}, helps simplify the problem.}
 %MPC instructions scheduled in parallel benefit from amortization \emph{only if} they are the same instruction. Given our previous assumption,
 %2 MUL instructions scheduled in parallel benefit from amortization and cost $\alpha$, however a MUL and a MUX instructions scheduled
 %in parallel still cost $2\alpha$.
