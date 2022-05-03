@@ -31,7 +31,7 @@ We build a dependence graph where the nodes are the MPC Source statements and th
 %A same-level edge can be a back-edge in which case a $\phi$ node is the target of the edge. E.g., 15 to 4 in Biometric is a same-level back-edge.
 \item outer-to-inner $X\rightarrow Y$ where $X$ is in an outer loop nest, say $i$, and $Y$ is in an inner one, say $i,j,k$. E.g., 1 to 4 in Biometric forms is an outer-to-inner edge.
 %A $\phi$-node can be a source or a target of an outer-to-inner forward edge.
-\item inner-to-outer $X\rightarrow Y$ where $X$ is a $phi$-node in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g., the def-use from 8 to 12 gives rise to an inner-to-outer edge.
+\item inner-to-outer $X\rightarrow Y$ where $X$ is in an inner loop nest, $i,j,k$, and $Y$ is in the enclosing loop nest $i,j$. E.g., the def-use from 8 to 12 gives rise to an inner-to-outer edge.
 %E.g. $\texttt{sum}_0 = \phi(\texttt{sum}_1, 0)$ to $\texttt{c} = \mathit{CMP}(\texttt{sum}_0,\texttt{min}_0)$ is an inner-to-outer edge.
 %An inner-to-outer edge can be a back-edge as well, in which case both $X$ and $Y$ are $\phi$-nodes with the source $X$ in a loop nested into $Y$'s loop (not necessarily immediately).
 
@@ -148,9 +148,9 @@ It iterates over $i$ and takes the result at the maximal index of $j$ and $k$, i
 
 There are two key phases of the algorithm. Phase 1 inserts raise dimension and drop dimension 
 operations according to def-uses. E.g., if there is an inner-to-outer dependence, it inserts $\mathit{raise\_dim}$,
-and similarly, if there is an outer-to-inner dependence, it inserts $\mathit{drop\_dim}$. After this phase operations work
-on arrays of the corresponding dimensionality and we optimistically vectorize all arrays. For example, 
-lines 4,5 in Biometric~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(c) reshape the input arrays. 
+and similarly, if there is an outer-to-inner dependence, it inserts $\mathit{drop\_dim}$. 
+For example, lines 4,5 in Biometric~\ref{tab:source_and_MPC_source_and_optimized_MPC_source}(c) reshape the input arrays. 
+After this phase, operations work on arrays of the corresponding dimensionality and we optimistically vectorize all arrays. 
 
 Phase 2 proceeds from the inner-most towards the outer-most loop. For each loop it anchors dependence cycles (closures) 
 around pseudo PHI nodes then removes vectorization from the dimension of that loop. In the 
@@ -176,7 +176,7 @@ arrays. We explain the extension in \secref{sec:array_writes}.
 %This opens up opportunities for vectorization across the write array. Handling of target-less nodes is non-trivial, 
 %as in certain cases the node cannot be removed. \secref{sec:extension_with_writes} details our algorithm. 
 
-Phases 3 cleans up local arrays of references (this is an optional phase and our current implementation does not include it).
+Phases 3 reverses scalar expansion (this is an optional phase and our current implementation does not include it).
 %and Phase 4 explicitly turns operations into MOTION SIMD operations.
 
 \paragraph{Pseudocode:}
@@ -311,9 +311,9 @@ We then define the \emph{linearization} of an MPC Source program as an interpret
 over the syntax. The linearization, which is a \emph{schedule} (as in~\secref{sec:overview}), is the concrete domain $C$.
 Since we reason over def-use graphs in $A$ we define a partial order relation over elements of $A$
 in terms of def-use relations. We define a partial order over elements of $C$ as well,
-in terms of def-use relations in the concrete domain $C$. We state two theorems
-that state (informally) that the schedule corresponding to the original program computes the same
-result as the schedule corresponding to the vectorized program. 
+in terms of def-use relations in the concrete domain $C$. The theorems state 
+(informally) that the vectorized program preserves def-uses and thus computes the same 
+result as the original program. 
 
 \squeeze
 \paragraph{MPC Source Syntax}
