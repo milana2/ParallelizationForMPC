@@ -18,7 +18,7 @@
 %We proceed to describe the front end of the compiler:~\secref{sec:imp_to_ssa}
 %describes translation from IMP Source to SSA, and~\secref{sec:ssa_to_MPC_Source}
 %describes translation form SSA into MPC Source.
-This section outlines the front end, the following section describes analysis on MPC Source and backend vectorization 
+This section outlines the front end, \secref{sec:vectorization} describes analysis on MPC Source and backend-independent vectorization 
 and~\secref{sec:backend} outlines the back end. 
 %We describe analysis on MPC Source and backend-independent vectorization in~\secref{sec:vectorization}
 %and translation into MOTION code in~\secref{sec:backend}. 
@@ -81,7 +81,7 @@ can be easily lifted and we plan to do so in future iterations of the work.
 
 \begin{enumerate}
 \item Loops are of the form $0 <= i < I$ and bounds are fixed at compile time.
-It is a standard restriction in MPC that the bounds must be known at circuit-generation time.
+It is a standard restriction in MPC that computation is bounded~\cite{NDSS:DemSchZoh15,CCS:BDKKS18}.
 \item Arrays are one-dimensional. $N$-dimensional arrays are linearized and accessed
 in row-major order and at this point the programmer is responsible for linearization
 and access. (This restriction can be easily lifted.)
