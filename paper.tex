@@ -573,6 +573,8 @@ of instructions in each parallel node, is going to make the problem harder, not 
 
 We now consider the answer to Problem 2 (in MPC). 
 
+\ana{We need an intro here to give a roadmap of what we are going to be doing.}
+
 \begin{comment}
 \subsection{Overview and Problem Statement} 
 
@@ -983,7 +985,7 @@ for a statement x = f(y,z), follow the reverse def-use link.
   & \mid \x = \y \; \mid \x=\y \; \op \; \z \mid {\sf A[f(i)] = x} \; \mid {\sf x = A[f(i)]} & \mathit{assignment} \\
 %  & \mid \x = \phi(\y,\z) \\
   & \mid {\sf for} \; (i = 0; i \le \mathit{Const}; \mathit{i\!+\!+}) \; \{ \; s \; \} \\
-  & \mid {\sf if} \; (\x \; \cop \; \y) \; \{ \; s \; \} \; {\sf else} \; \{ \; s \; \} \\
+  & \mid {\sf if} \; (\x \; \cop \; \y) \; {\sf then} \; \{ \; s \; \} \; {\sf else} \; \{ \; s \; \} \\
  % \bool &::= \x \; \cop \; \y & \mathit{comparison} \\
   \op &::= + \mid - \mid * \mid / & \mathit{arithmetic} \; \mathit{operator} \\
   \cop &::=  \; == \; \mid \; != \; \mid \; < \; \mid \; \le & \mathit{comparison} \; \mathit{operator}
@@ -1019,16 +1021,17 @@ if (x > 0) {
   if (y > 0) {
     z = 1;
   }  else {
-    z = -1;
+    z = 2;
   }
 }
 print z
 \end{minted}
 Line 10 is the dominance frontier of the assignments to \z, and Cytron et. al.'s algorithm
 creates a $\phi$ node at 10: $z_3 = \phi(z_0, z_1, z_2)$. There is no information retained
-that $z_0$ is triggered when $x \le 0$, $z_1$ is triggered when $x > 0 \; \wedge \; y > 0$, 
-and $z_2$ is triggered when $x > 0 \; \wedge \; y \le 0$. The Multiplexer at the join point
-needs this information however in order to assign the correct value to $z_3$ at runtime.
+that $z_0$ is triggered under path condition $x \le 0$, $z_1$ is triggered under path condition 
+$x > 0 \; \wedge \; y > 0$, and $z_2$ is triggered when $x > 0 \; \wedge \; y \le 0$. The 
+Multiplexer at the join point needs this information however in order to assign the correct 
+value to $z_3$ at runtime.
 
 We propose a simple extension to the classical algorithm. Recall from Cytron et. al.'s 
 that efficient static single assignment computation has two phases, phase one is the 
@@ -1043,7 +1046,7 @@ just the same classical algorithm with minor extension.}
 Once we have the graph in SSA form with \ana{MORE}
 
 \begin{algorithm}
-\caption{Determine Graph edges}
+\caption{From $\phi$-nodes to MUX nodes}
 \begin{algorithmic}[1]
 %\REQUIRE $c \neq null$
 %\STATE $L \leftarrow get\_nodes(c)$
@@ -1078,7 +1081,7 @@ SEARCH(X) : \\
 \IF {$X$ is a conditional node}
    \STATE {push $\mathit{Cond}, \mathit{Branch}$ onto $P$ // $\mathit{Branch}$ is $T$ if $X \rightarrow Y$ is the True branch, $F$ otherwise}     
 \ENDIF   
-     \STATE{// $Y$ is not done if $Y$ has an incomplete MUX predecessor or an original CFG predecessor \ana{Better?}}
+     \STATE{// $Y$ is not done if $Y$ has an incomplete MUX predecessor or an original CFG predecessor}
       \IF {$Y$ has $\phi$-assignments and $Y$ is not done} 
           \STATE {$\mathit{Cond}, \mathit{Branch} \gets$ pop $P$}
           \FORALL {$\phi$-assignments in $Y$}
@@ -1114,9 +1117,9 @@ SEARCH(X) : \\
 \subsubsection{Handling of Arrays}
 \label{???}
 
-So far we focused on the classical SSA analysis and the extension to create MUX nodes. 
+So far we focused on the classical SSA analysis and the extension necessary to create MUX nodes. 
 Classical SSA treats arrays as scalars, i.e., an array write, e.g., {\sf A[i] = x+y} is considered
-a modification of {\sf A} and warrants its own indexed variable ${\sf A}_k$. A later use of {\sf A}, 
+a modification of {\sf A} and warrants its own indexed variable ${\sf A}_k$. A subsequent use of {\sf A}, 
 even one such as {\sf x = A[i+1]} where there is no def-use link from {\sf A[i] = x+y}, will be 
 considered a use of ${\sf A}_k$. This hinders parallelization. To illustrate, consider our running
 example in~\figref{fig:MPCexample}:
@@ -1132,19 +1135,22 @@ a dependence from {\sf B} to {\sf A} via the back edge. As a result, statement {
 be vectorized because each (i+1)-th iteration depends on {\sf B} in the i-th iteration,
 which depends on {\sf A} in the i-th iteration. 
 
-To mitigate against this, we propose a technique, similar to Array-SSA though much simpler and 
-less general, which breaks certain dependence edges and allows for better vectorization. 
+To mitigate against this, we propose a technique, similar to Array-SSA though much simpler, 
+which breaks certain dependence edges and allows for better vectorization. 
 \ana{Have to make a claim how 
 often this technique resolves dependences perfectly, and how often it defaults to standard SSA.}
 
 \ana{TODO: Summary of the technique}
 
-\paragraph {Equivalence and Non-equivalence} Let $f(i)$ and $f'(i)$ be two index functions on induction variables $i$, 
+\paragraph {Equivalence and Non-equivalence} Let $f(i)$ and $f'(i)$ be two index functions on induction variable $i$, 
 e.g., we have array accesses ${\A}[f(i)]$ and ${\A}[f'(i)]$. We say that $f(i) \cong f'(i)$ iff for every $1 \le i \le N$,
 $f(i) = f'(i)$. We say that $f(i) \ncong f'(i)$ iff for every $1 \le i \le N$, $f(i) \neq f'(i)$. 
 
+\ana{This needs explanation and examples. The context is single loops where multidimensional arrays are turned 
+into one dimensional ones. The index function becomes complex.}
+
 \paragraph{Array Well-formedness Conditions} Let ${\A}$ be an array mentioned in the loop body. 
-We will treat array accesses ${\A}[f(i)]$ as distinct scalar variables if we can show that the loop body is
+We treat array accesses ${\A}[f(i)]$ as distinct scalar variables if we can show that the loop body is
 well-formed with respect to \A. Otherwise, we treat array {\A} as a single variable, thus defaulting to the 
 case of standard SSA. The well-formedness conditions are as follows: \ana{This needs some work!}
 
@@ -1160,7 +1166,8 @@ we have either $f(i) \cong f'(i)$ or $f(i) \ncong f'(i)$.
 
 \item For each pair $n_1\!: A[f(i)] = ... $ and $n_2\!: ... = A[f'(i)]$ %such that $n_1$ reaches the loop exit (we assume that there is
 %a unique loop exit node) on a forward path, and there is  $n_2$ on a forward path, 
-we have either $f(i-d) \cong f'(i)$ or $f(i-d) \ncong f'(i)$. \ana{FIX!}
+we have $f(i-d) \cong f'(i)$ for at most one $d$ such that $1 \le d \le N-1$ and 
+we have $f(i-d') \ncong f'(i)$ for every $d' \neq d$. 
 
 \end{enumerate}
 
@@ -1176,7 +1183,12 @@ for the rest; if $f(i)$ is equivalent to $f'(i)$, then the MUX will be $... = \m
 $f(i)$ and $f'(i)$ are non-equivalent then there will be two MUX nodes: $... = \mathit{MUX}(\mathit{cond}, {\A}[f(i)], {\A'[f(i)]})$
 and $... = \mathit{MUX}(..., {\A}[f'(i)], {\A'[f'(i)]})$. (Note that after SSA, the A's will be properly indexed.)
 \ana{I need explanations of (2) and (3).}
-
+Now consider rule (3). If there exist a $d$ such that $f(i-d) \cong f'(i)$, that means that the array write $j: \A[f(i)] = ... $ that
+happened $d$ iterations before array read $k: ... = \A[f'(i)]$ is being used at that read. In addition, this holds for every $i$, 
+i.e., for every iteration, the array read at $k$ references the array write at $j$ that happened $d$ iterations ago. Also,
+since for every other $d'$ the array accesses are non-equivalent, this means, that the read at $k$ never references  
+the write at $j$ in a different iteration.
+%any other previous iteration, just $I-d$, where $I$ is the current iteration.
 
 Consider our running example in~\figref{fig:MPCexample}(a). There is a single write to each array in the loop body, 
 so there are no write-write pairs and no tests for (1). There are the following write-read pairs: 2 and 3 (access of \A), 
@@ -1186,11 +1198,8 @@ Test (2) clearly passes because $i$ is obviously equivalent to $i$. For the rema
 Pair 3 and 2 passes as well because $i-1$ and $i$ are nonequivalent for every $d > 0$. 5 and 3, and analogously 5 and 4, pass test (3). 
 In these two cases, the unique $d = 1$ makes $i - d$ and $i-1$ equivalent. 
 
-\ana{Where do we put this? Theorem: simple rule is not restrictive, and Theorem 2: program equivalent to transformed one where 
-each A[f(i)] is replaced with scalar.} 
 
-
-\subsubsection{Constructing G}
+\subsubsection{Constructing MPC G}
 
 Construction proceeds as follows: 
 
@@ -1201,7 +1210,7 @@ then accesses $\A[f(i)]$ and $\A[f'(i)]$ are in the same equivalence class, i.e.
 (just as $V_k$) to denote the SSA-indexed versions of the equivalent accesses. (Although we give a general treatment, the reader 
 may just think of the equivalence accesses as just one $\A[f(i)]$, e.g., $\A[i]$). 
 
-\item We run \ref{alg:algorithm1} to compute SSA of the loop body with MUX nodes. Equivalent accesses get their own indexed versions.
+\item We run Algorithm~\ref{alg:algorithm1} to compute SSA of the loop body with MUX nodes. Equivalent accesses get their own indexed versions.
 
 \item Constructing the ``forward'' portion of the graph: add a forward edge $n_1 \rightarrow n_2$ if for some $V_k$, 
 $V_k \in LHS(n_1)$ and $V_k \in RHS(n_2)$.  
@@ -1232,6 +1241,9 @@ $5 \stackrel{-1}{\dasharrow} 3$ and $5 \stackrel{-1}{\dasharrow} 4$. The graph i
 
 \ana{Another example, with conditional?}
 
+\ana{Here we need a theorem: program equivalent to transformed one in which every A[f(i)] is replaced with scalar. 
+Prove that original def-use graph and one with scalars are the same?} 
+
 \subsection{SCCs and Amortized Schedule}
 \label{sec:scc}
 
@@ -1254,7 +1266,7 @@ $d(n)$ are possible in theory. \ana{HERE HAVE TO GIVE empirical evidence, how go
 %We will consider Strongly Connected Components (SCCs) in $G$. In the running example in~\figref{fig:MPCexample}(b), 
 %we have two SCCs, $SCC_1$ consists of node 2, and $SCC_2$ consists of nodes $3,4,5$. 
 Without loss of generality, we may assume that each cycle has the form $n_1 \rightarrow n_2 \rightarrow ... \rightarrow n_k \stackrel{-d}{\dasharrow} n_1$, 
-or in other words, there is a single backward edge in the entire cycle. Even though cycles with $n \ge 2$ backward 
+or in other words, there is a single backward edge in the entire cycle. Even though cycles with more than $2$ backward 
 edges are possible, such cycles can be transformed into $n$ disjoint cycles of the above form. The $-d$ on the
 single backward edge in each of the $n$ cycles, is the sum of the $-d$'s of all backward edges in the original cycle. 
 \ana{We probably need more here.}
@@ -1272,14 +1284,21 @@ consists of nodes $3,4,5$. $d(\mathit{SCC}_1) = N$ and $d(\mathit{SCC}_2) = 1$.
 as input. $S$ takes into account only the forward edges in $G$: if $n_1, n_2 \in SCC$ and $n_1 \rightarrow n_2 \in G$, 
 then $S(n_1)$ precedes $S(n_2)$ in the linear schedule. Note that computing an optimal schedule is NP-complete, 
 as we showed earlier, however, given a small SCC, one can brute force an optimal $S$. For the running example in 
-in~\figref{fig:MPCexample}(b), assuming that nodes 3 and 4 perform the same operation, we work with schedule 
-$S: \{3,4\} \rightarrow \{5\}$
+~\figref{fig:MPCexample}(b), assuming that nodes 3 and 4 perform the same operation, we work with schedule 
+$S: \{3,4\} \rightarrow \{5\}$. Importantly, due to our treatment of arrays we have the same schedule for 
+each iteration of the loop, i.e., for each iteration, we either have a dependence edge or we do not have a dependence.
 
 \item Given $S$ for a given SCC, we then compute the amortized schedule $\mathcal{A}_{\mathit{SCC}}$; 
 this is the schedule across all iterations of the loop. For each $P_i$ in $S$, there are $\lceil{\frac{N}{d(SCC)}}\rceil$
-nodes in $\mathcal{A}_{\mathit{SCC}}$. $P_i(1),P_i(2),...P_i(d(SCC))$ go into node $P^1_i$, $P_i(d(SCC)+1),...P_i(2\cdot d(SCC))$ 
-go into node $P^2_i$, etc. The parenthesized number denotes the iteration, e.g., $P_i(1)$ denotes $P_i$ at the first iteration 
-of the loop. There are dependence edges as follows:
+nodes in $\mathcal{A}_{\mathit{SCC}}$:
+\begin{itemize}
+\item[] $P_i(1),P_i(2),...P_i(d(SCC))$ go into node $P^1_i$, 
+\item[] $P_i(d(SCC)+1),...P_i(2\cdot d(SCC))$ go into node $P^2_i$, etc. 
+\end{itemize}
+The parenthesized number denotes the iteration, e.g., $P_i(1)$ denotes $P_i$ at the first iteration 
+of the loop. 
+
+There are dependence edges as follows:
 \begin{enumerate}
 \item $P^j_i \rightarrow P^j_{i'}$ if there is an edge $P_i \rightarrow P_{i'}$ in $S$ (intra-loop edges).
 \item $P^{\lceil{\frac{N}{d(SCC)}}\rceil}_i \rightarrow P^1_{i+1}$ for each $1 \le i < \lceil{\frac{N}{d(SCC)}}\rceil$ (across-loop edges).
@@ -1290,12 +1309,15 @@ as each iteration depends on the previous-iteration value computed at the same n
 This is illustrated graphically in~\figref{fig:MPCexample}(d).
 
 
-\item User gives an SCC schedule $SCC_1 \rightarrow SCC_2 \rightarrow ... \rightarrow SCC_m$. Again, an optimal schedule 
-is NP-complete. The final schedule is $\mathcal{A} = \mathcal{A}_{\mathit{SCC}_1} \rightarrow \mathcal{A}_{\mathit{SCC}_2} ... \rightarrow \mathcal{A}_{\mathit{SCC}_m}$.
-In our running example, there is only one possible ordering of the two components, and the final schedule is as depicted in~\figref{fig:MPCexample}(d).
-%dependence edges $P(n)_1 \dasharrow P(n)_2 ... \dasharrow P(n)_{\lceil{\frac{N}{d(n)}}\rceil}$, reflecting the across-loop dependence 
-%edges we saw earlier. The rest of the edges for every edge $n_1 \rightarrow n_2 \in G$ and every $1 \le i \le N$, add an edge 
-%$G'(n_1(i)) \rightarrow G'(n_2(i))$ to $G'$ where $G'(n(i))$ returns the $P$ node in $G'$ that contains $n(i)$. 
+\item Computing an optimal schedule for the loop, even when we assume optimal schedules 
+for the SCCs, remains NP-complete. 
+One possible schedule can be computed by ordering the strongly connected components 
+in a straight line: $SCC_1 \rightarrow SCC_2 \rightarrow ... \rightarrow SCC_m$, such that
+if $SCC_i$ precedes $SCC_j$ in the SCC DAG, then $SCC_i$ precedes $SCC_j$ in the
+above straight line. The final schedule is $\mathcal{A} = \mathcal{A}_{\mathit{SCC}_1} 
+\rightarrow \mathcal{A}_{\mathit{SCC}_2} ... \rightarrow \mathcal{A}_{\mathit{SCC}_m}$.
+In our running example, there is only one possible ordering of the two components, and 
+the final schedule is as depicted in~\figref{fig:MPCexample}(d).
 
 \end{enumerate}
 
@@ -1311,14 +1333,12 @@ In our running example, there is only one possible ordering of the two component
 %$d_2$ iterations ago. Taking all nodes in the SCC, if all nodes have the same parallelization factor $d$, 
 %then we do nothing, otherwise we assign to all nodes factor -1. \ana{More intuition here, why is this important etc}
 
-\ana{Have to make some kind of claim that certain \% of bench falls under this assumptions or otherwise our results don't count for much.}
-
-\subsection{Theoretical Guarantees}
+\subsection{Theoretical Guarantees on Correctness and Optimality}
 \label{sec:results}
 
 Unfortunately, finding an optimal across-loop amortized schedule is NP-complete, just as finding an optimal loop-body schedule is.
-Our key premise is that one can still compute an optimal across-loop amortized schedule for real-world loops. Given certain 
-properties of the loop, the amortized schedule we compute in the previous section turns out to be correct and optimal. 
+Our key premise is that the schedule we compute in~\secref{sec:scc} (1) improves upon the original schedule $\mathcal{S}$, and 
+(2) is an optimal across-loop amortized schedule in many cases of real-world loop examples. \ana{Talk about decomposition.} 
 
 The first theorem below establishes correctness, i.e., that $\mathcal{A}$ computes the same result as $\mathcal{S}$ where
 $\mathcal{S}$ is the standard sequential schedule of the loop. 
@@ -1340,19 +1360,26 @@ the execution of $s$ and show that $s$ in $\mathcal{A}$ computes the same result
 theorem: the computation of the operands of $s$ precedes $s$ in $\mathcal{A}$ and by the inductive hypothesis, they compute the
 same value as in $\mathcal{S}$; therefore, $s$ computes the same result.
 
+\ana{1. Theorem: Each SCC schedule is optimal}
+
+\ana{2. Theorem: An optimal across-loop schedule (even under assumptions about optimality of individual SCC schedules) is NP-complete.}
+
+\ana{Conditions under which schedule is optimal. Exploit the fact that all SCCs are either d=1 or d=N. Scheduling SCCs in parallel and computing the schedule.
+Also, ???}
+
 %\ana{Correctness theorem should come here...}
 
-\begin{theorem}(Optimality)
-Let $G$ be a constant-rate graph that entails a DAG $D$, where the nodes of $D$ are the strongly connected components of $G$. 
-If $D$ is linear, and each $SCC \in D$ entails a loop-body schedule $S: P_1 \rightarrow P_2 ... P_k$, s.t. (1) $S$ is optimal 
-and (2) for every $P_i, i<k$, for every $n_1 \in P_i, \exists n_2 \in P_{i+1}$, s.t. $n_1 \rightarrow n_2 \in G$, then $\mathcal{A}$ is optimal.
-\end{theorem}
+%\begin{theorem}(Optimality)
+%Let $G$ be a constant-rate graph that entails a DAG $D$, where the nodes of $D$ are the strongly connected components of $G$. 
+%If $D$ is linear, and each $SCC \in D$ entails a loop-body schedule $S: P_1 \rightarrow P_2 ... P_k$, s.t. (1) $S$ is optimal 
+%and (2) for every $P_i, i<k$, for every $n_1 \in P_i, \exists n_2 \in P_{i+1}$, s.t. $n_1 \rightarrow n_2 \in G$, then $\mathcal{A}$ is optimal.
+%\end{theorem}
 
-\begin{proof} (Sketch)
-Each SCC schedule is optimal because 1) dependences are the same across the loop iterations, and 2) there is dependence between 
-iteration $i$ and iteration $i+1$, no node in $i+1$ can be computed before the last node, i.e., $P_k(i)$ has been computed, as all 
-nodes in $i+1$ depend on $P_k(i)$. \ana{Expand here.}
-\end{proof}
+%\begin{proof} (Sketch)
+%Each SCC schedule is optimal because 1) dependences are the same across the loop iterations, and 2) there is dependence between 
+%iteration $i$ and iteration $i+1$, no node in $i+1$ can be computed before the last node, i.e., $P_k(i)$ has been computed, as all 
+%nodes in $i+1$ depend on $P_k(i)$. \ana{Expand here.}
+%\end{proof}
 
 One can also use Aiken's result to compute an optimal greedy schedule using $n^2$ iterations, where $n$ is the number of nodes 
 in the loop-body schedule. \ana{Add citations.}

@@ -107,4 +107,47 @@ In order for the above to work we will make the following assumptions about arra
 
 The above will construct the graph (nodes are statements in the loop body) and edges are the def-use dependences, including within-iteration dependences and loop-carried dependences. From here we can construct those SCCs and form a DAG of SCCs, where each SCC comes with a delay $d$. We make use of the \emph{constant-rate assumption} and we'll have to take the $d$'s of a bunch of loops to verify that indeed the constant-rate assumption holds. In practice $d$ is either 1 or infinity, i.e., we either have a sequential schedule for the instruction or the instruction can be vectorized. 
 
+\section{Array SSA Algorithm}
+
+\begin{verbatim}
+// initialize the downwardExposed map for entryBlock with the original A's.
+// ANA: I think this will be the phi-node block when extending with nested loops
+add entryBlock to WL
+BFS(WL)
+
+
+BFS(worklist) // bfs traversal of loop body CFG
+  block <- remove next basic block from WL queue
+  process(block) 
+  for each block1 in succ(block), add block1 to WL if not already there. 
+
+process(basicBlock) 
+  if basicBlock is a merge block 
+    B1 <- predecessor of basicBlock
+    B2 <- predecessor of basicBlock
+    for each array A
+       currentA_B1 <- downwardExposed.get(B1).get(A) 
+       currentA_B2 <- downwardExposed.get(B2).get(A) 
+       if currentA_B1 != currentA_B2 
+       // if there were modifications in either B1 or B2 will differ
+          newA <- phi(currentAB1, currentAB2) // creates phi node for array A
+          downwardExposed.get(basicBlock).put(A,newA) 
+  else // it is not a merge block
+    Block <- predecessor of basicBlock // single pred, not a merge node
+    for each array A
+       currentA <- downwardExposed.get(Block).get(A)
+       downwardExposed.get(basicBlock).put(A,currentA)
+ 
+  // now start the traversal of statements in basicBlock:
+  for (each stmt in statements of basicBlock)
+     case stmt is array write A[f(i)] = ...
+         newA <- create a new version of A
+         downwardExposed.get(basicBlock).put(A,newA) 
+         // have to add the new stmt
+     case stmt is array read ... = A[f(i)]
+         currentA <- downwardExposed.get(basicBlock).get(A)
+         change stmt to ... = currentA[f(i)]
+          
+\end{verbatim}
+
 \end{document}
