@@ -4,6 +4,25 @@ from datetime import datetime
 from enum import Enum, unique
 from typing import Optional
 
+def median(lst: list[float]) -> float:
+    assert len(lst) > 1, lst
+    sorted_lst = sorted(lst)
+    mid = len(sorted_lst) // 2
+    median = (sorted_lst[mid] + sorted_lst[~mid]) / 2
+    return median
+
+def mean(lst: list[float]) -> float:
+    assert len(lst) > 1, lst
+    mean = sum(lst) / len(lst)
+    return mean
+
+def stddev(lst: list[float]) -> float:
+    assert len(lst) > 1, lst
+    mean = sum(lst) / len(lst)
+    variance = sum([((x - mean) ** 2) for x in lst]) / len(lst)
+    stddev = variance ** 0.5
+    return stddev
+
 
 @dataclass
 class TimingDatapoint:
@@ -13,24 +32,55 @@ class TimingDatapoint:
     median: float
     stddev: float
     # unit: str = 'ms'
+    readings: list[float]
+
+    def __init__(self, datapoint_name: str, mean: float, median: float, 
+        stddev: float, readings: list[float] = []):
+        self.datapoint_name = datapoint_name
+        self.mean = mean
+        self.median = median
+        self.stddev = stddev
+        self.readings = readings
+        if len(self.readings) == 0:
+            self.readings = [self.mean]
 
     @classmethod
     def from_dictionary(cls, params):
-        datapoint_name = params["datapoint_name"]
-        mean = params["mean"]
-        median = params["median"]
-        stddev = params["stddev"]
+        datapoint_name = params['datapoint_name']
+        mean = params['mean']
+        median = params['median']
+        stddev = params['stddev']
+        readings = params['readings']
         return cls(
-            datapoint_name=datapoint_name, mean=mean, median=median, stddev=stddev
-        )
+            datapoint_name=datapoint_name,
+            mean=mean,
+            median=median,
+            stddev=stddev,
+            readings=readings
+            )
 
     def to_dictionary(self):
-        return {
-            "datapoint_name": self.datapoint_name,
-            "mean": self.mean,
-            "median": self.median,
-            "stddev": self.stddev,
-        }
+        return {'datapoint_name': self.datapoint_name,
+                'mean': self.mean,
+                'median': self.median,
+                'stddev': self.stddev,
+                'readings': self.readings
+                }
+
+    @classmethod
+    def by_accumulating_readings(cls, a, b):
+        readings = a.readings + b.readings
+        mean_value = mean(readings)
+        median_value = median(readings)
+        stddev_value = stddev(readings)
+
+        return cls(
+            datapoint_name = a.datapoint_name,
+            mean = mean_value,
+            median = median_value,
+            stddev = stddev_value,
+            readings = readings
+        )
 
 
 def parse_datapoint(line: str) -> TimingDatapoint:
@@ -88,6 +138,13 @@ class CommunicationStatistics:
             "recv_size": self.recv_size,
             "recv_num_msgs": self.recv_num_msgs,
         }
+
+    @classmethod
+    def by_accumulating_readings(cls, a, b):
+        """
+        this class contains metrics that don't change between runs
+        """
+        return a
 
 
 def parse_communication_statistics(
@@ -191,6 +248,54 @@ class TimingStatistics:
             "circuit_evaluation": self.circuit_evaluation,
             "communication": self.communication,
         }
+
+    @classmethod
+    def by_accumulating_readings(cls, a, b):
+        return cls(
+           num_iterations = a.num_iterations + b.num_iterations,
+           mt_presetup = TimingDatapoint.by_accumulating_readings(
+            a.mt_presetup, b.mt_presetup
+            ),
+           mt_setup = TimingDatapoint.by_accumulating_readings(
+            a.mt_setup, b.mt_setup
+            ),
+           sp_presetup = TimingDatapoint.by_accumulating_readings(
+            a.sp_presetup, b.sp_presetup
+            ),
+           sp_setup = TimingDatapoint.by_accumulating_readings(
+            a.sp_setup, b.sp_setup
+            ),
+           sb_presetup = TimingDatapoint.by_accumulating_readings(
+            a.sb_presetup, b.sb_presetup
+            ),
+           sb_setup = TimingDatapoint.by_accumulating_readings(
+            a.sb_setup, b.sb_setup
+            ),
+           base_ots = TimingDatapoint.by_accumulating_readings(
+            a.base_ots, b.base_ots
+            ),
+           ot_extension_setup = TimingDatapoint.by_accumulating_readings(
+            a.ot_extension_setup, b.ot_extension_setup
+            ),
+
+           preprocess_total = TimingDatapoint.by_accumulating_readings(
+            a.preprocess_total, b.preprocess_total
+            ),
+           gates_setup = TimingDatapoint.by_accumulating_readings(
+            a.gates_setup, b.gates_setup
+            ),
+           gates_online = TimingDatapoint.by_accumulating_readings(
+            a.gates_online, b.gates_online
+            ),
+
+           circuit_evaluation = TimingDatapoint.by_accumulating_readings(
+            a.circuit_evaluation, b.circuit_evaluation
+            ),
+
+           communication = CommunicationStatistics.by_accumulating_readings(
+            a.communication, b.communication
+            )
+        )
 
 
 def is_thick_boundary(line: str) -> bool:
@@ -320,6 +425,16 @@ class CircuitStatistics:
             "circuit_gen_time": self.circuit_gen_time,
             "depth": self.depth,
         }
+
+    @classmethod
+    def by_accumulating_readings(cls, a, b):
+        """
+        These values should not change between runs
+
+        NOTE: circuit generation time does change due to noise but it is not a 
+        TimingDatapoint and I am too lazy to write code for it
+        """
+        return a
 
 
 def parse_circuit_data(lines: list[str]) -> CircuitStatistics:
