@@ -1,0 +1,235 @@
+\section{Compiler Back End}
+\label{sec:backend}
+
+MOTION code generation requires that variables are marked as \texttt{plain} or \texttt{shared}
+following the type system in~\secref{sec:syntax}. We require that all inputs are marked as either shared or plaintext,
+however, we infer qualifiers for the rest of the variables. \secref{sec:taint} briefly describes the taint analysis
+and \secref{sec:MOTION} describes MOTION code generation.
+
+\subsection{Taint Analysis}
+\label{sec:taint}
+
+The taint analysis works on MPC Source, which lacks if-then-else control flow.
+This significantly simplifies treatment as there is no need to handle conditionals and implicit flow.
+%taint analysis with "taintedness" referring to the shared attribute.
+Specifically, the compiler uses the following rules, which are standard in positive-negative qualifier systems (here \texttt{shared} is the positive qualifier and \texttt{plain} is the negative one):
+\begin{enumerate}
+\item Loop counters are always \texttt{plain}. %\ben{I removed the reference to array bounds since those are not variables defined in MPC source}\ana{Ok, resolved.}
+\item If any variable on the right-hand side {\sf rhs} of an assignment is shared, then the assigned variable {\sf lhs} is \texttt{shared} following subtyping rule ${\sf rhs} <: {\sf lhs}$.
+%\item If all variables on the right-hand side of an assignment are plaintext, then the assigned variable is plaintext \ana{Will be covered by the last rule.}
+\item Any variables that cannot be determined as shared via the above rules are \texttt{plain}.
+\end{enumerate}
+
+%The first two rules are standard for taint analysis, and the third rule follows from the MPC problem statement. \ben{Is the explanation for the third rule correct?}  \ana{Yes, that is exactly it!}
+%The final rule is needed in examples like the following. 
+In the below snippet {\sf sum!2} and {\sf sum!3} form a dependency cycle and there is no \texttt{shared} value that flows to either one.
+They are inferred as plaintext.
+%cannot be marked as plaintext through simple taint analysis:
+{\small
+\begin{pythonn}
+plaintext_array = [0, 1, 2, ...]
+sum!1 = 0
+for i in range(0, N):
+    sum!2 = PHI(sum!1, sum!3)
+    sum!3 = sum!2 + plaintext_array[i]
+\end{pythonn}
+}
+%\ben{I think the above example is unnecessary and could be replaced by an explanation of how "untainted" variables are implicitly plaintext, but I couldn't think of a way to phrase that.}\ana{I left the example, we can leave it in the TR, remove from paper.}
+
+When converting to MOTION code, any plaintext value used in the right-hand side of a shared assignment is converted to a shared value for that expression.
+%\ben{Is this necessary to include?} \ana{Yes, that's important.}
+
+
+
+
+\subsection{From (Optimized) MPC Source to MOTION}
+\label{sec:MOTION}
+
+MOTION supports FOR loops and SIMD operations, so translation from MPC source to MOTION C++ code is relatively straightforward.
+\paragraph{Variable declarations:}
+% Variable naming
+Our generated C++ uses the following variable-naming scheme: shared variables are named the same as in the MPC Source with the {\sf !} replaced with an underscore (e.g. {\sf sum!2} would be translated to {\sf sum\_2}). Plaintext variables follow the same naming convention as shared variables but are prefixed with {\sf \_MPC\_PLAINTEXT\_}.  The shared representation of constants are named {\sf \_MPC\_CONSTANT\_} followed by the literal constant (e.g. the shared constant 0 would be named {\sf \_MPC\_CONSTANT\_0}).
+
+% Function preamble
+The generated MOTION code begins with the declaration of all variables used in the function, including loop counters.  If a variable is a vectorized array, it is initialized to a correctly-sized array of empty MOTION shares.  Additionally, each plaintext variable and parameter has a shared counterpart declared.  Next, all constant values which are used as part of shared expressions are initialized as a shared input from party 0.  Finally, plaintext parameters are converted used as shared inputs from party 0 to initialize their shared counterparts.
+
+\paragraph{Code generation:}
+% Non-vectorized assignments and returns
+Once the function preamble is complete, the MPC Source is translated into C++ one statement at a time. The linear structure of MPC Source enables this approach to translation. If there is no vectorization present in a statement, translation to C++ is straightforward: outside of MUX statements and array updates, non-vectorized assignments, expressions, and returns directly translate into their C++ equivalents.  Non-vectorized MUX statements are converted to MOTION's MUX member function on the condition variable.  Array updates are translated into two C++ assignments: one to update the value in the original array and one to assign the new array as shown in Listing~\ref{tab:motion_translation_array_updates}.
+
+\begin{table*}
+\begin{tabular}{ccc}
+\begin{minipage}{0.33\textwidth}
+{\small
+\begin{pythonn}
+A[i] = val
+\end{pythonn}
+}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.33\textwidth}
+{\small
+\begin{pythonn}
+A!2 = update(A!1, i, val)
+\end{pythonn}
+}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.33\textwidth}
+{\small
+\begin{cppp}
+A_1[i] = val;
+A_2 = A_1;
+\end{cppp}
+}
+\end{minipage}
+
+\\
+
+IMP Source & MPC Source & MOTION Code
+\end{tabular}
+\caption{MOTION Translation: Array Updates}
+\label{tab:motion_translation_array_updates}
+\end{table*}
+
+% Phi nodes and FOR loops
+MPC FOR loops are converted to C++ FOR loops which iterate the loop counter over the specified range.  Pseudo PHI nodes are broken into two components: the ``FALSE'' branch which assigns the initial value of the PHI node and the ``TRUE'' branch which assigns the PHI node's back-edge.  The assignment of the ``FALSE'' branch occurs right before the PHI node's enclosing loop.  As these assignments may rely on the loop counter, the loop counter is initialized before these statements.  Inside of the PHI node's enclosing loop, a C++ \texttt{if} statement is inserted to only assign the true branch of the PHI node after the first iteration.  Listing~\ref{tab:motion_translation_for_loop} illustrates this translation.%\ana{Add the reference to the corresponding figure somewhere in this paragraph.}
+
+\begin{table*}
+\begin{tabular}{cc}
+\begin{minipage}{0.33\textwidth}
+{\small
+\begin{pythonn}
+for i in range(N):
+   tmp = PHI(arr[i], val!0)
+	 ...
+\end{pythonn}
+}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.66\textwidth}
+{\small
+\begin{cppp}
+_MPC_PLAINTEXT_i = 0;
+tmp = arr[_MPC_PLAINTEXT_i];
+for (; _MPC_PLAINTEXT_i < _MPC_PLAINTEXT_N; _MPC_PLAINTEXT_i++) {
+   if (_MPC_PLAINTEXT_i != 0) {
+      tmp = val_0;
+	 }
+	 ...
+}
+\end{cppp}
+}
+\end{minipage}
+
+\\
+
+MPC Source & MOTION Code
+\end{tabular}
+\caption{MOTION Translation: FOR loop with Phi nodes}
+\label{tab:motion_translation_for_loop}
+\end{table*}
+
+% SIMD representation
+\paragraph{Vectorization and SIMD operations:}
+Vectorization is handled with utility functions to manage accessing and updating slices of arrays.  All SIMD values are stored in non-vectorized form as 1-dimensional {\sf std::vector}s in row-major order. %\ana{Does MOTION support just 1-dim SIMD arrays? If yes, mention it here.} \ben{MOTION does only support 1-dim SIMD arrays, but since we use helper functions to create and access SIMD arrays this restriction doesn't apply to our representation. There is no reason why these arrays need to be 1-dimensional other than that it slightly simplifies the code generation and avoids some nasty templates on the utility functions.} \ana{Ok! Leave as is.}
+Whenever a SIMD value is used in an expression, the utility function {\sf vectorized\_access()} takes the multi-dimentional representation of a SIMD value, along with the size of each dimension and the requested slice's indices, and converts that slice to a MOTION SIMD value. Because MOTION supports SIMD operations using the same C++ operators as non-SIMD operations, we do not need to perform any other transformations to the expression.
+%\ana{Is it correct to say that the operators are overloaded? If yes, use that term?} \ben{I don't think that's the right term since SIMD and scalar MOTION values use the same C++ class, so the operator is the same.} \ana{Ok, leave as is.}
+Therefore, once vectorized accesses are inserted the translation of an expression containing SIMD values is identical to that of expressions without SIMD values.
+
+Similarly, the {\sf vectorized\_assign()} function assigns a (potentially SIMD) value to a slice of a vectorized array.  This operation cannot be done with a simple subscript as SIMD assignments will update a range of values in the underlying array representation.
+%\ben{Is the next sentence needed?  They can always check the implementation of vectorized\_assign() if they want to see specifics.}
+%The function takes the array being assigned to as a reference to update it in place so that any existing values are not lost.  SIMD values are never directly assigned to non-SIMD values. \ana{Yes, this is implementation-specific, you can remove.}
+
+\begin{table*}
+\begin{tabular}{cc}
+\begin{minipage}{0.33\textwidth}
+{\small
+\begin{pythonn}
+sum!4[I] = ADD_SIMD(sum!3[I], p[I, j])
+\end{pythonn}
+}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.66\textwidth}
+{\small
+% Ben: This line is too long but I don't know how to break it well
+\begin{cppp}
+vectorized_assign(sum_4, {_MPC_PLAINTEXT_N}, {true}, {},
+      vectorized_access(sum_3, {_MPC_PLAINTEXT_N}, {true}, {}) +
+      vectorized_access(p, {_MPC_PLAINTEXT_N, _MPC_PLAINTEXT_D}, {true, false},
+           {_MPC_PLAINTEXT_j}));
+\end{cppp}
+}
+\end{minipage}
+
+\\
+
+MPC Source & MOTION Code
+\end{tabular}
+\caption{MOTION Translation: Assignment to SIMD value}
+\label{tab:motion_translation_simd_assignment}
+\end{table*}
+
+% vectorized_update()
+%\ben{Technically this is semantically the same as non-vectorized update but we use a utility function to combine the steps into a single C++ statement - should it still be included?}
+%\ana{I would leave this in the TR but it will go from the paper. Lots of stuff in Secs. 4 and 5 will go from the paper.} \ana{Leaving in TR, will shorten in paper.}
+Updating SIMD arrays is also implemented differently from updating non-vectorized arrays.  Instead of separating the array update from the assignment of the new array, these steps are combined with the {\sf vectorized\_update()} utility function.  This function operates identically to {\sf vectorized\_assign()}, however it additionally returns the array after the assignment occurs.  This value is then used for the assignment to the new variable. Listing~\ref{tab:motion_translation_simd_assignment} illustrates {\sf vectorized\_assign()} and {\sf vectorized\_update()} on the Biometric example.
+
+% raise_dim() implementation
+
+%\ben{The compiler and C++ internally uses ``lift'' as the terminology for raise\_dim(), but the paper does not :(...} \ana{True. To make matters worse, most of the explanation on this comes in the next section. But I'll leave as is for now but leave the comments too because it needs work.} \ben{Attempted to explain the naming, please review.} \ana{Marked as resolved.}
+\paragraph{Reshaping and raising dimensions:}
+Raising the dimensions of a scalar or array uses the {\sf lift()} utility function which takes a lambda for the raised expression and the dimensions of the output.  This function is also used for the scalar expansion of values which have been lifted out of FOR loops as described in \secref{sec:expansion}.  This function evaluates the expression for each permutation of indices along the dimensions and returns the resulting array in row-major order.  The lambda accepts an array of integers representing the index along each of the dimensions being raised, and the translation of the expression which is being raised replaces each of the dimension index variables with the relevant subscript of this array.  There is also a special case of the {\sf lift()} function which occurs when we are raising an array.  In this case, instead of concatenating the array for each index, %\ana{can we remove "instead of concatenating the array"} \ben{I included it to show why the standard implementation of lift() doesn't work, if you don't think that's necessary then it can be removed.} \ana{ok, left it in, marked as resolved.}
+we extend the array along all dimensions being raised which are not present in the array already.  For example, when raising an array with dimensions $N \times M$ to an array with dimensions $N \times M \times D$, the input array will simply be extended along the $D$ dimension: ${\sf A'}[n,m,d] = {\sf A}[n,m]$ for every $d$.  If the input array is already correctly sized it will be returned as-is.
+%This case only occurs when the dimensionality of the array is equal to the first dimensions of the array (any dimension which is being lifted to which is not in the array is after every dimension in the array) \ben{I don't know how to phrase the previous sentence more concisely}.  In this case, the array is simply extended along the new dimensions (if the array is already correctly sized it is returned as is).
+%\ana{Add the ref. to the figure. Also, try to rewrite. I understand what the paragraph is saying but it is too technical and does not convey the higher-level goal of these. Try first to state what the goal is, and then talk about the details such as the lambda funcs.} \ben{Rewrote the above paragraph to be less confusing/implementation-specific, please review.} \ana{Better, removing comment.}
+
+% Ben (note as comment since tables aren't fixed placement): I only include the translation of the expression itself (instead of an assignment) since the assignment includes the extra junk from a vectorized_assign.  Also none of the raise_dims in biometric use the dimension index which I think is the most interesting/important part of the lift expression translation so I made up a toy example.
+\begin{table*}
+\begin{tabular}{cc}
+\begin{minipage}{0.33\textwidth}
+{\small
+\begin{pythonn}
+raise_dim(i + j, (i:N, j:M))
+\end{pythonn}
+}
+\end{minipage}
+
+&
+
+\begin{minipage}{0.66\textwidth}
+{\small
+\begin{cppp}
+lift(std::function([&](const std::vector<std::uint32_t > &idxs) {return idxs[0] + idxs[1];}),
+      {_MPC_PLAINTEXT_N, _MPX_PLAINTEXT_M})
+\end{cppp}
+}
+\end{minipage}
+
+\\
+
+MPC Source & MOTION Code
+\end{tabular}
+\caption{MOTION Translation: Raising dimensions}
+\label{tab:motion_translation_raise_dim}
+\end{table*}
+
+% drop_dim() implementation
+Dropping dimensions use the {\sf drop\_dim()} and {\sf drop\_dim\_monoreturn()} utility functions.  They function identically but the latter returns a scalar for the case when the final dimension of an array is dropped.  These functions take the non-vectorized representation of an array, along with the dimensions of that array, and return the array with the final dimension dropped.
+
+% Shared/plaintext conversions
+\paragraph{Upcasting from plaintext to shared:}
+Currently, our compiler only supports the \texttt{Bmr} and \texttt{BooleanGMW} protocols as MOTION does not implement all operations for other protocols.  MOTION does not support publicly-known constants for these protocols, so all conversions from plaintext values to shares are performed by providing the plaintext value as a shared input from party 0.  Due to this limitation, our translation to MOTION code attempts to minimize the number of conversions from a plaintext value. This is accomplished by creating a shared copy of each plaintext variable and updating that copy in lock-step with the plaintext variable.  Since variables are often initialized to a common constant value (e.g. 0), this approach decreases the number of input gates by only creating a shared input for each initialization constant.  Loop counters must still be converted to a shared value on each iteration that they are used, however we only generate this conversion when necessary, i.e., when the counter flows to a shared computation. This is to prevent unnecessary increase in the number of input gates when loop counters are only used as plaintext.
+%\ben{Ishaq or Vassilis: please check over this paragraph... I don't want to make some mistake about MOTION's capabilities.}
+
+% Tons of copies != runtime costs
+Due to the SSA translation phase as well as the conversions to and from SIMD values which our utility functions perform, our generated vectorized MOTION code often includes multiple copies of arrays and scalar values.  These copies do not incur a runtime cost as the arrays simply hold \emph{pointers} to the underlying shares, so no new shares or gates are created as a result of this copying. Cost in MPC programs is dominated by shares and computation on shares. %\ben{Is there anything else to say here?  Should this be placed somewhere else?} \ana{It is clear to me! Will stay in the TR but likely will be cut from the paper.}

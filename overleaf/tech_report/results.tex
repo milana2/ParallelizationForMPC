@@ -1,0 +1,230 @@
+\section{Experimental Results}
+\label{sec:results}
+
+\subsection{Experiment Setup}\label{sec:experiment_setup}
+We tested our framework with several benchmarks. For the multiparty computation (MPC), we restricted our evaluation to 2 party computation (2PC) setting because it requires fewer computing resources. We stress that there is no such inherent restriction in our framework. We use hardware resources provided by CloudLab\cite{DuplyakinATC19} and consider two network settings, namely Local Area Network (LAN) and Wide Area Network (WAN). In the LAN setting, we use {\tt c6525-25g} machines for both parties. These machines are equipped with 16-core AMD 7302P 3.0GHz processors and 128GB of RAM. The connection between these machines had 10Gbps bandwidth and sub-millisecond latency. This setting reflects typical LAN use case considering that 10Gbps LAN is increasingly common in business networks and is now available even in some home networks. In the WAN setting we again used a {\tt c6525-25g} machine (located in Utah, US) for the first party and a {\tt c220g1} machine (located in Wisconsin, US) for the second. The {\tt c220g1} machine is equipped with two Intel E5-2630 8-core 2.40GHz processors and 128GB of RAM. We measured the connection bandwidth between these machines to be 560Mbps and average round trip time (RTT) to be 38ms. At the time of this writing, all major internet providers in the US offer 1Gbps connections to home consumers, therefore this setting reasonably reflects the typical WAN use case.
+
+We run all experiments 5 times and report average values of various metrics. Note that standard deviation --- shown as error bar on top of the bars in the graphs --- in all observations was at most 4.5\% of the mean value, therefore the accuracy of the results is not effected by the relatively fewer runs.
+
+\subsection{Benchmarks}\label{sec:benchmarks_description}
+In the following, we say {\em both} for an experiment in which we execute both non-vectorized and vectorized protocols and {\em vec} for the vectorized only experiment. 
+In a preliminary experiment we ran {\tt N=2, N=4}, all the way to {\tt N=4096}; the non-vectorized version ran out of memory at the value {\em both} and we fixed this value for these experiments. The vectorized one completed for {\tt N=4096} for nearly all benchmarks (numbers are not shown for space reasons; however, they times are largely consistent, e.g., if {\em both} is $N = 2^k$ and it completes in $X$ seconds for vectorized, then $N = 2^{12}$ completes in $(12-k)X$ seconds).
+We used the following benchmarks in our evaluation:
+
+%\ishaq{@Ana: I don't know what to do about this: In the following list of benchmarks, I specify paramters for vectorized experiments too. but we don't have enough space to show the vectorized only experiments (we could replace the graphs). Not sure if I should take it out} \ana{I think I got this.}
+
+%\ishaq{TODO: go through description again, and add why each benchmark may be important from MPC/private-learning/distributed-computing perspective}
+
+\begin{enumerate}
+    \item {\em Biometric Matching:} Server has a database S of {\tt N} records, each record's dimension is {\tt D}. Client submits a query C, client and server compute the closest record to C in an MPC. We use {\tt N=128} for {\em both} and {\tt N=4096} for {\em vec}. {\tt D} is fixed at 4.
+    
+    % \item {\em Biometric Matching (Fast)} is the faster instantiation taken from \cite{Demmler:2015}. Parameters are same as above.
+    
+    \item {\em Convex Hull:} Given a polygon of {\tt N} vertices (split between Alice and Bob), convex hull is computed in an MPC. It is adapted from \cite{Farzan:2021}. We use {\tt N=32} for {\em both} experiment and {\tt N=256} for {\em vec} experiment.
+    
+    \item {\em Count 102:} Alice has a string of length {\tt N} of symbols, Bob has a regular expression of the form 1(0*)2, together they compute number of substrings that match the regular expression. It is adapted from \cite{Farzan:2021}. We use {\tt N=1024} for {\em both} and {\tt N=4096} for {\em vec}.
+    
+    \item {\em Count 10:} Same as {\em Count 102} except now the regular expression is of the form 1(0+). Parameters are same as above.
+    
+    \item {\em Cryptonets Max Pooling:} Given a matrix of $\mathtt{rows}\times\mathtt{cols}$ elements that are split between Alice and Bob, they compute the max pooling subroutine of the cryptonet benchmark\cite{Dowlin:2016}. We use {\tt rows=64, cols=64} for {\em both} experiment.
+
+    \item {\em Database Join:} given two databases with {\tt A} and {\tt B} 2-element records, compute cross join. We use {\tt A=B=32} for {\em both} and {\tt A=B=64} for {\em vec}.
+    
+    \item {\em Database Variance} given a database of {\tt len} records, compute variance. %\ishaq{Ben/Ana: Please correct the description, I don't know what this benchmark is} 
+    We use {\tt len=512} for {\em both} and {\tt len=4096} for {\em vec}.
+    
+    \item {\em Histogram:} Given {\tt N} 5-star ratings, compute their histogram, taken from \cite{Ishaq:2019, Farzan:2021}. We use {\tt N=512} for {\em both} and {\tt N=4096} for {\em vec}.
+
+    \item {\em Inner Product:} given two vectors, each of {\tt N} elements, compute their inner product. We use {\tt N=512} for {\em both} and {\tt N=4096} for {\em vec}.
+
+    \item {\em k-means Iteration:} performs the iteration subroutine of k-means database clustering operation \cite{Jagannathan:2005, Vaidya:2003}. Here {\tt len1} is the size of input data, and {\tt len2} is the number of clusters. We use {\tt len1=32, len2=5} for {\em both} and {\tt len1=256, len2=8} for {\em vec}. %\ishaq{Ana/Ben: please update description} \ana{I think that's it?}
+    
+    \item {\em Longest 102:} Similar to {\em Count 102} except that it computes the largest substring matching the regular expression. We use same parameters as {\em Count 102}, adapted from \cite{Farzan:2021}.
+    
+    \item {\em Max Distance b/w Symbols} Alice has a string of {\tt N} symbols and Bob has some symbol {\tt 0}. The MPC computes the maximum distance between {\tt 0}s in the string. We adapted it from \cite{Farzan:2021}. We use {\tt N=1024} for {\em both} and {\tt N=2048} for {\em vec}.
+    
+    \item {\em Minimal Points} Given a set of {\tt N} points (split between Alice and Bob), a set of minimal points is computed i.e. there is no other point that has both a lower x and y coordinate, adapted from \cite{Farzan:2021}. We use {\tt N=32} for {\em both} and {\tt N=64} for {\em vec}.
+    
+    \item {\em MNIST ReLU} given an input of ${\tt outer}\times{\tt inner}$ elements, executes the MNIST ReLU subroutine. We use {\tt inner=512} for {\em both} and {\tt inner=2048} for {\em vec}. {\tt outer} is fixed at 16. %\ishaq{Ben/Ana, please update} \ana{Don't know what to do...}
+    
+    \item {\em Private Set Intersection (PSI)} Alice holds set S1 with size {\tt SA}, Bob holds set S2 with size {\tt SB}, together they compute intersection of their sets. We use {\tt SA=SB=128} for {\em both} and {\tt SA=SB=1024} for {\em vec}.
+\end{enumerate}
+
+\subsection{Results and Analysis}\label{sec:result_analysis}
+
+   \begin{table*}[htbp]
+       \centering
+       \caption{Vectorized vs Non-Vectorized Comparison, times in seconds (in LAN setting where applicable), Communication in MiB, Numbers in 1000s, values rounded to nearest integer, benchmark names ending in {\em V} are vectorized.}
+       \label{table:metrics}
+       \rowcolors{5}{}{gray!10}
+       \tabcolsep3pt
+       \begin{tabular}{lrrrrrrrrrrrr}
+           \toprule
+           {} & \multicolumn{6}{c}{\textbf{GMW}} & \multicolumn{6}{c}{\textbf{BMR}} \\
+            \cmidrule(r){2-7} \cmidrule(r){8-13} \\
+            {\bf Benchmark} & Online & Setup & \# Gates & Circ Gen & \# Msgs & Comm. &  Online & Setup & \# Gates & Circ Gen & \# Msgs & Comm. \\
+          \midrule
+            Biometric Matching & 146 & 16 & 1,784 & 119 & 1,413 & 140 & 89 & 263 & 1,595 & 139 & 2,716 & 312\\
+            Biometric Matching (V) & 12 & 4 & 34 & 2 & 28 & 14 & 2 & 13 & 30 & 4 & 61 & 130\\
+            \midrule
+            Convex Hull & 48 & 6 & 551 & 40 & 516 & 51 & 28 & 72 & 494 & 39 & 695 & 80\\
+            Convex Hull (V) & 0 & 1 & 2 & 0 & 1 & 4 & 0 & 2 & 1 & 1 & 2 & 32\\
+            \midrule
+            Count 102 & 79 & 6 & 418 & 35 & 525 & 52 & 15 & 62 & 269 & 33 & 785 & 92\\
+            Count 102 (V) & 71 & 5 & 316 & 24 & 332 & 34 & 11 & 30 & 167 & 16 & 304 & 59\\
+            \midrule
+            Count 10s & 79 & 6 & 419 & 35 & 525 & 52 & 14 & 62 & 270 & 33 & 785 & 92\\
+            Count 10s (V) & 71 & 4 & 316 & 24 & 332 & 34 & 11 & 29 & 167 & 16 & 304 & 59\\
+            \midrule
+            Cryptonets (Max Pooling) & 50 & 11 & 688 & 46 & 554 & 55 & 36 & 89 & 608 & 51 & 898 & 110\\
+            Cryptonets (Max Pooling) (V) & 1 & 1 & 7 & 1 & 2 & 5 & 2 & 4 & 7 & 2 & 12 & 49\\
+            \midrule
+            Database Join & 70 & 8 & 433 & 48 & 790 & 80 & 19 & 229 & 458 & 119 & 3,518 & 427\\
+            Database Join (V) & 54 & 6 & 320 & 35 & 575 & 61 & 16 & 112 & 320 & 57 & 1,457 & 285\\
+            \midrule
+            Database Variance & 166 & 18 & 2,009 & 135 & 1,639 & 163 & 95 & 269 & 1,708 & 145 & 2,795 & 320\\
+            Database Variance (V) & 37 & 6 & 321 & 24 & 334 & 43 & 10 & 30 & 170 & 13 & 178 & 141\\
+            \midrule
+            Histogram & 94 & 10 & 862 & 68 & 979 & 97 & 27 & 94 & 491 & 51 & 1,132 & 135\\
+            Histogram (V) & 33 & 5 & 166 & 16 & 164 & 23 & 7 & 17 & 92 & 13 & 154 & 68\\
+            \midrule
+            Inner Product & 127 & 15 & 1,675 & 108 & 1,308 & 130 & 83 & 250 & 1,526 & 134 & 2,623 & 301\\
+            Inner Product (V) & 16 & 5 & 158 & 12 & 165 & 25 & 6 & 18 & 83 & 7 & 86 & 127\\
+            \midrule
+            k-means & 108 & 12 & 1,333 & 88 & 1,090 & 108 & 63 & 185 & 1,141 & 99 & 1,958 & 225\\
+            k-means (V) & 6 & 3 & 47 & 4 & 43 & 12 & 2 & 11 & 32 & 4 & 54 & 95\\
+            \midrule
+            Longest 102 & 93 & 7 & 650 & 52 & 713 & 71 & 26 & 93 & 475 & 49 & 1,091 & 128\\
+            Longest 102 (V) & 169 & 6 & 544 & 41 & 519 & 53 & 25 & 60 & 369 & 33 & 605 & 95\\
+            \midrule
+            Max. Dist. b/w Symbols & 71 & 8 & 572 & 43 & 576 & 57 & 24 & 69 & 397 & 38 & 748 & 89\\
+            Max. Dist. b/w Symbols (V) & 166 & 7 & 538 & 39 & 512 & 51 & 24 & 57 & 363 & 32 & 589 & 78\\
+            \midrule
+            Minimal Points & 35 & 5 & 458 & 31 & 369 & 37 & 24 & 46 & 401 & 26 & 347 & 40\\
+            Minimal Points (V) & 0 & 1 & 1 & 0 & 1 & 3 & 0 & 1 & 1 & 0 & 1 & 16\\
+            \midrule
+            MNIST ReLU & 132 & 31 & 1,843 & 126 & 1,483 & 152 & 98 & 247 & 1,630 & 135 & 2,401 & 298\\
+            MNIST ReLU (V) & 3 & 3 & 25 & 3 & 9 & 17 & 5 & 11 & 25 & 5 & 33 & 136\\
+            \midrule
+            Private Set Intersection & 95 & 9 & 558 & 59 & 1,049 & 104 & 22 & 186 & 591 & 96 & 2,639 & 302\\
+            Private Set Intersection (V) & 1 & 2 & 1 & 2 & 1 & 8 & 1 & 8 & 2 & 4 & 2 & 122\\
+          \bottomrule
+       \end{tabular}
+       \label{table:metrics}
+   \end{table*}
+
+\begin{figure*}[htbp]
+\centering
+%\resizebox{7in}{!}{\input{graphs/lan/all-hist-OnlineSetupTimesec}}
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-OnlineSetupTimesec}}
+\caption{Circuit Evaluation Time (Setup + Online) of Benchmarks}
+\label{fig:graph_all_eval_time}
+\end{figure*}
+
+A detailed summary of the effects of vectorization on various benchmarks is presented in \cref{table:metrics}. We show circuit evaluation times in \cref{fig:graph_all_eval_time}. In terms of amenability to vectorization, we divide benchmarks into 3 categories: 1) {\it High:} these include convex hull, cryptonets max pooling, minimal points and private set intersection. These benchmarks are highly parallelizable and see 25x to 70x speedup in BMR, and 30x to 55x in GMW protocol. 2) {\it Medium:} these include biometric matching, DB Variance, histogram, inner product, k-means iteration and MNIST ReLU. These benchmarks have non-parallelizable phases e.g. the summing phase of inner product and biometric matching. Still, most computation is parallelizable and it results in speedup from 5x to 25x in BMR, and 2x to 25x in GMW protocol. 3) {\it Low:} these include the Database Join and the regular expression benchmarks (count 102, count 10, longest 102 and max distance between symbols). There is less parallelizable computation in these programs, thus the speedup is lower. We see a speedup from 1.1x to 2x in BMR. In GMW, DB Join, Count 102 and Count 10s see speedup from 1.1x to 1.3x. However, longest102 and max distance between symbols suffer a slowdown of 0.5x. There is opportunity for vectorization in these benchmarks according to our analytical model, particularly, a there is a large EQ that is vectorized, although a large portion of the loop cannot be vectorized. We observed that transformation to vectorized code increased multiplicative depth and, the negative effect of increased depth is more noticeable in a round-based protocol like GMW. The cause of the increase is not clear --- we conjecture that MOTION performs optimizations over the non-vectorized loop body that decreases depth; also, EQ is relatively inexpensive in Boolean GMW and BMR compared to ADD and MUL, which also de-emphasizes the benefit of vectorization. We propose a simple heuristic although we do leave all the benchmarks in the table: if the transformation increases circuit depth beyond some threshold (e.g. more than 10\% of the original circuit), we can reject the transformation. %Nevertheless, we show these graphs here for the sake of completeness and to highlight that vectorization is not always reduce run time. 
+Note that in some settings it may still be desirable to vectorize e.g. in data constrained environments. As shown in \cref{fig:graph_comm_size}, vectorization results in reduced communication (fewer bits are transferred).
+
+We present evaluation for communication size in \cref{fig:graph_comm_size}, circuit generation time in \cref{fig:graph_circ_gen_time}, number of gates in \cref{fig:graph_total_gates} and online time and setup time in \cref{fig:graph_online_time} and \cref{fig:graph_setup_time} respectively. %\ishaq{Ana: Let me know if I should add more substance.} \ana{It's good!}
+
+
+\begin{figure}[htbp]
+\centering
+\resizebox{0.7\columnwidth}{!}{\input{graphs/lan/biometric-hist-OnlineSetupTimesec}}
+\caption{Biometric Matching Circuit Evaluation Time, x-axis lists database size}
+\label{fig:graph_biometric_eval_time}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\resizebox{0.7\columnwidth}{!}{\input{graphs/lan/biometric-hist-CommunicationMiB}}
+\caption{Biometric Matching Communication Size, x-axis lists database size}
+\label{fig:graph_biometic_comm_size}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\resizebox{0.7\columnwidth}{!}{\input{graphs/lan/biometric-hist-CircuitGenerationTimesec}}
+\caption{Biometric Matching Circuit Generation Time, x-axis lists database size}
+\label{fig:graph_biometic_circ_gen_time}
+\end{figure}
+
+We look closely at the Biometric Matching benchmark: circuit evaluation in~\cref{fig:graph_biometric_eval_time}, communication size in \cref{fig:graph_biometic_comm_size} and circuit generation time in~\cref{fig:graph_biometic_circ_gen_time}. For input size beyond {\tt N=128} the memory usage exceeds available memory and prevents circuit generation. Consequently, non-vectorized bars are missing beyond this threshold. Notice that vectorization improves all metrics. %A database of size {\tt N=128} is smaller than any real world use case, therefore lets use it as baseline for improvement. 
+Comparing performance improvement between BMR and GMW, we see more speedup for BMR (23x vs 10x), GMW gets more communication size reduction (10x vs 2.5x) and circuit generation sees a speedup of 35x and 45x for BMR and GMW respectively. 
+
+
+
+\begin{figure}[htbp]
+\centering
+\resizebox{0.7\columnwidth}{!}{\input{graphs/comparison-hist-OnlineSetupTimesec}}
+\caption{LAN vs. WAN: Circuit Evaluation Time Comparison}
+\label{fig:graph_comparison_eval_time}
+\end{figure}
+
+Since our vectorization framework is network agnostic, it produces the same circuit for both LAN and WAN. This means that the number of gates and communication size remain the same. Moreover, time for circuit generation, which is a local operation, also remains unchanged. Setup and Online times, however, increase due to lower bandwidth and higher latency of the WAN. Indeed, this is what we observe in \cref{fig:graph_comparison_eval_time}.
+
+\begin{figure*}[htbp]
+\centering
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-CommunicationMiB}}
+\caption{Communication Size of Benchmarks}
+\label{fig:graph_comm_size}
+\end{figure*}
+
+
+\begin{figure*}[htbp]
+\centering
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-CircuitGenerationTimesec}}
+\caption{Circuit Generation Time of Benchmarks}
+\label{fig:graph_circ_gen_time}
+\end{figure*}
+
+\begin{figure*}[htbp]
+\centering
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-TotalGates}}
+\caption{Number of Gates of Benchmarks}
+\label{fig:graph_total_gates}
+\end{figure*}
+
+\begin{figure*}[htbp]
+\centering
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-OnlineTimesec}}
+\caption{Online Time of Benchmarks}
+\label{fig:graph_online_time}
+\end{figure*}
+
+\begin{figure*}[htbp]
+\centering
+\resizebox{0.7\textwidth}{!}{\input{graphs/lan/all-hist-SetupTimesec}}
+\caption{Setup Time of Benchmarks}
+\label{fig:graph_setup_time}
+\end{figure*}
+
+\subsection{Comparison with MOTION-native Inner Product}
+
+%We conclude the . 
+Finally, we compared our automatically generated routine for Inner Product with the manually SIMD-ified MOTION-native routine in the distribution. 
+We were surprised that we were an order of magnitude slower in Boolean GMW as our circuit ran a significantly larger 
+number of communication rounds. Upon investigation, it turned out that the vectorized multiplications were essentially the same, 
+however, our addition loop incurred significant cost (ADD is non-local and expensive in Boolean GMW). The MOTION-native loop ran 
+{\sf result += mult\_unsimdified[i];} while our loop generated and ran {\sf result[i] = result[i-1] + mult\_unsimdified[i];} recall that the scalar expansion
+is an artifact of our vectorization. We rewrote the accumulation (manually, for testing purposes) and that led to the comparable speedup!
+
+MOTION's compiler performs analysis that informs circuit generation and the example illustrates the power of the analysis. In the above example, 
+MOTION does the standard divide-and-conquer accumulation. The poor performance of our loop is not a limitation of our approach, but it could be a 
+limitation of our current implementation. Recall that the next phase of Vectorization, in~\secref{sec:vectorization}, which we have not implemented yet, gets rid of redundant 
+dimensions and generates {\sf if (i!=0) \{ result\_prev = result; \} result = result\_prev + mult\_unsimdified[i]}. And while it is unrealistic to expect that MOTION's static analysis 
+will detect the associative accumulation in the scalar expansion code, it is realistic to expect that it will in the above only slightly more complex code. 
+It still might lead to confusion in the static analysis as analysis on the AST is difficult (unfortunately, we ran out of time and did not experiment further).
+%Interestingly, the non-vectorized version, which is the literal translation of inner product does not appear to benefit from any optimizations. 
+
+We conjecture that MPC Source, a straight-forward representation, will not only enable detection of general associative loops, but also allow 
+for program synthesis to increase opportunities for divide-and-conquer parallelization~\cite{Farzan:2021}; we leave this as future work. 
+
+The most closely related work, HyCC~\cite{CCS:BDKKS18}, is a mixing compiler that focuses on mixed protocols, while we run vectorization within a single protocol. 
+The paper only provides data for Boolean and Yao for a version of Biometric matching on $N=1000$; it does provide a lot of data on mixed protocol executions.
+Again, we estimate we are about an order of magnitude slower, which is likely due to the same issue as Inner Product --- the computation of $\mathit{min}$ can be optimized. 
+
+
+
+%\ana{Ana todo: Discuss why we are slower than HyCC --- because of ad-hoc div-and-conquer optimizations. Have to summarize what Ben and I figured out yesterday.}
+
+%\ana{If we can add that our cost model works great (it does!), that would be great but probably won't have time...}
