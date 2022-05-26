@@ -2,7 +2,7 @@
 %
 % acm templates v1.57 (sigconf template)
 %
-\documentclass[sigconf, screen, review, anonymous, natbib=false, dvipsnames, table]{acmart}
+\documentclass[sigconf, screen, review, natbib=false, dvipsnames, table]{acmart}
 %\documentclass[sigconf, screen, natbib=false, dvipsnames, table]{acmart}
 \settopmatter{printacmref=false}
 \renewcommand\footnotetextcopyrightpermission[1]{}
@@ -157,8 +157,9 @@
 % Of note is the shared affiliation of the first two authors, and the "authornote" and "authornotemark" commands
 % used to denote shared contribution to the research.
 
-\author{Benjamin Levy}
-\email{levyb3@rpi.edu}
+\author{Benjamin Levy and Ben Sherman}
+\authornote{Joint first authors.}
+\email{{levyb3,shermb}@rpi.edu}
 \affiliation{%
     \institution{Rensselaer Polytechnic Institute}
     %\streetaddress{1 Th{\o}rv{\"a}ld Circle}
@@ -167,15 +168,15 @@
     %\country{Iceland}
 }
 
-\author{Benjamin Sherman}
-\email{shermb@rpi.edu}
-\affiliation{%
-    \institution{Rensselaer Polytechnic Institute}
-    %\streetaddress{1 Th{\o}rv{\"a}ld Circle}
-    \city{Troy}
-    \state{New York}
-    %\country{Iceland}
-}
+%\author{Benjamin Sherman}
+%\email{shermb@rpi.edu}
+%\affiliation{%
+%    \institution{Rensselaer Polytechnic Institute}
+%    %\streetaddress{1 Th{\o}rv{\"a}ld Circle}
+%    \city{Troy}
+%    \state{New York}
+%    %\country{Iceland}
+%}
 
 \author{Muhammad Ishaq}
 %\authornote{This work was done in part while the author was at RPI.}
@@ -302,7 +303,8 @@ In this work, we formalize the MPC Source intermediate language and advance the 
 %
 % This command processes the author and affiliation and title information and builds
 % the first part of the formatted document.
-\maketitle
+\maketitle 
+\renewcommand{\shortauthors}{Levy and Sherman et al.}
 %\thispagestyle{empty}
 
 % Intro Section
@@ -352,7 +354,7 @@ We are excited about the opportunities for future work --- integration with prot
 \bibliographystyle{plain}
 %\bibliography{c:/trink/Doc/MyTexFiles/texrefs}
 %\bibliography{mybib,library,library1,library2,library3,library_ana}
-\bibliography{library_ana,crypto_crossref}
+\bibliography{library_ana}
 
 
 % that's all folks

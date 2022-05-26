@@ -219,9 +219,9 @@ It still might lead to confusion in the static analysis as analysis on the AST i
 We conjecture that MPC Source, a straight-forward representation, will not only enable detection of general associative loops, but also allow 
 for program synthesis to increase opportunities for divide-and-conquer parallelization~\cite{Farzan:2021}; we leave this as future work. 
 
-The most closely related work, HyCC~\cite{CCS:BDKKS18}, is a mixing compiler that focuses on mixed protocols, while we run vectorization within a single protocol. 
-The paper only provides data for Boolean and Yao for a version of Biometric matching on $N=1000$; it does provide a lot of data on mixed protocol executions.
-Again, we estimate we are about an order of magnitude slower, which is likely due to the same issue as Inner Product --- the computation of $\mathit{min}$ can be optimized. 
+%The most closely related work, HyCC~\cite{Buscher:2018}, is a mixing compiler that focuses on mixed protocols, while we run vectorization within a single protocol. 
+%The paper only provides data for Boolean and Yao for a version of Biometric matching on $N=1000$; it does provide a lot of data on mixed protocol executions.
+%Again, we estimate we are about an order of magnitude slower, which is likely due to the same issue as Inner Product --- the computation of $\mathit{min}$ can be optimized. 
 
 
 

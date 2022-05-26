@@ -11,7 +11,7 @@ and we build upon existing work on scalar expansion and classical loop vectoriza
 our algorithm is unique as it works on the MPC Source SSA-form representation. We posit that vectorization 
 over MPC Source is a new problem that warrants a new look, in part because of MPC's unique linear 
 structure and in part because vectorization meshes in with other MPC-specific optimizations in non-trivial ways
-(other works have explored manual vectorization and protocol mixing in an ad-hoc way, e.g.,~\cite{NDSS:DemSchZoh15,CCS:BDKKS18,Ishaq:2019}).
+(other works have explored manual vectorization and protocol mixing in an ad-hoc way, e.g.,~\cite{Demmler:2015,Buscher:2018,Ishaq:2019}).
 
 \secref{sec:dependence} describes our dependence analysis and ~\secref{sec:expansion} describes scalar expansion,
 which lifts scalars (and arrays) to the corresponding loop dimensionality to create opportunities for vectorization. 

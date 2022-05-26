@@ -3,10 +3,10 @@
 
 \paragraph{MPC languages and compilers.}
 
-Languages and compilers for secure computation have seen significant attention and advances in recent years. The early MPC compilers Fairplay~\cite{CCS:BenNisPin08},
-and Sharemind~\cite{ESORICS:BogLauWil08} were followed by PICCO~\cite{CCS:ZhaSteBla13}, Obliv-C~\cite{Zahur:2015}, TinyGarble~\cite{SP:SHSSK15},
-Wystiria~\cite{SP:RasHamHic14}, and others. A new generation of MPC compilers
-includes SPDZ/SCALE-MAMBA/MP-SPDZ~\cite{Keller:2020} and the ABY/HyCC/MOTION~\cite{NDSS:DemSchZoh15,CCS:BDKKS18,Braun:2022} frameworks.
+Languages and compilers for secure computation have seen significant attention and advances in recent years. The early MPC compilers Fairplay~\cite{Ben-David:2008},
+and Sharemind~\cite{Bogdanov:2008} were followed by PICCO~\cite{Zhang:2013}, Obliv-C~\cite{Zahur:2015}, TinyGarble~\cite{Songhori:2015},
+Wystiria~\cite{Rastogi:2014}, and others. A new generation of MPC compilers
+includes SPDZ/SCALE-MAMBA/MP-SPDZ~\cite{Keller:2020} and the ABY/HyCC/MOTION~\cite{Demmler:2015,Buscher:2018b,Braun:2022} frameworks.
 These two families are the state-of-the art and
 are actively developed. Another recent development is Viaduct, a functional language and compiler that supports a range of secure computation
 frameworks, including MPC and ZKP. Hastings et el. present a review of compiler frameworks~\cite{Hastings:2019}.
@@ -26,10 +26,14 @@ compiler frameworks provides a library of MPC primitives; the programmer writes 
 different protocols and allow for mixing, but notably, they leave it to the programer to assign different protocols to different parts of the
 computation and perform share conversion accordingly. In addition, MOTION provides SIMD primitives, which allows for efficient execution
 of MPC operations, but again, using SIMD primitives is the responsibility of the programer. There is interest in frameworks for automatic mixing,
-e.g., \cite{CCS:BDKKS18,Ishaq:2019,Fang:2022}.
+e.g., \cite{Buscher:2018b,Ishaq:2019,Fang:2022}.
 
-Other works, e.g., Obliv-C~\cite{Zahur:2015}, Wystiria~\cite{SP:RasHamHic14} and Viaduct~\cite{Acay:2021} focus on higher-level language design, particularly information-flow systems that
-restrict flow between secure and insecure parts of the program.
+Other works, e.g., Obliv-C~\cite{Zahur:2015}, Wystiria~\cite{Rastogi:2014} and Viaduct~\cite{Acay:2021} focus on higher-level language design, particularly information-flow systems that
+restrict flow between secure and insecure parts of the program. ObliVM~\cite{Liu:2015} has similar goals to ours --- it optimizes oblivious (i.e., secure) source code into an efficient garbled circuit.
+Our work complements ObliVM, in the sense that while ObliVM relies on programmer annotations such as map-reduce constructs, we automatically detect opportunities for optimization at 
+an intermediate level of representation. We have implemented vectorization, however, divide-and-conquer is a natural next step. Ozdemir et al.~\cite{Ozdemir:2020} develop CirC, an IR with  
+backends into zero-knowledge proof primitives as well as SMT primitives. Our work focuses on MPC, which CirC does not support yet. MPC Source is a higher level of representation than CirC, e.g., it does not unroll loops, thus presenting a smaller-size input program suitable for vectorization and scalable program analysis. Overall, we view our work and CirC as orthogonal --- we are focusing on analysis and optimization while CirC focuses on infrastructure. 
+% \ana{Add oblivm here plus the CicC work.}
 
 %\ana{Add discussion on HyCC/Buscher here. 1. Formalization, reasoning about correctness of transformation. Source-to-source cannot handle if-then-else vs. MPC Source.}
 %Key ideas such as ${\sf insecure} <: {\sf secure}$ qualifier systems are similar to the ideas we
@@ -37,7 +41,7 @@ restrict flow between secure and insecure parts of the program.
 %intraprocedural IMP-MPC syntax and semantics into the \emph{interprocedural} case, our interest and focus lie primarily in the ``machine-independent'' optimizations
 %thrust of the proposal.
 
-HyCC~\cite{CCS:BDKKS18} is a compiler from C Source into ABY circuits. It does source-to-source compilation with the key goal to decompose the 
+HyCC~\cite{Buscher:2018b} is a compiler from C Source into ABY circuits. It does source-to-source compilation with the key goal to decompose the 
 program into modules and then assign protocols to modules. In contrast, we focus on MPC Source-level optimizations, specifically vectorization, although we envision 
 future optimizations as well. We formalize MPC Source and reasoning about transformations, which we conjecture is more tractable than reasoning over
 the higher-level AST. On the other hand, HyCC does inter-procedural optimizations, while our analysis is intra-procedural. We will explore context-sensitive inter-procedural 
