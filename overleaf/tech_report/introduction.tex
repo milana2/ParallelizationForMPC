@@ -54,13 +54,16 @@ throughput~\cite{Demmler:2015, Araki:2018, Braun:2022}. It enables MPC Source-le
 
 Our second contribution is an analytical model for cost estimation of amortized schedules. Originally, we hoped that optimal scheduling (under our model, which essentially minimizes the length of the schedule) was tractable, as the problem appeared simpler than the classical scheduling problem. Unfortunately, we show that optimal scheduling is NP-hard via a reduction to the Shortest Common Supersequence (SCS) problem. Cost modeling is important as it drives not only vectorization but optimizations such as protocol mixing and scheduling as well~\cite{Buscher:2018b}.
 
-Our most important contribution is the implementation and evaluation of the compiler framework. We demonstrate expressivity of the source language by running the compiler on 16 programs with interleaved if- and for-statements; these include classical MPC benchmarks such as PSI and Biometric matching, as well as kMeans, Histogram, and other examples from the literature. 
+Our most important contribution is the implementation and evaluation of the compiler framework. 
+We demonstrate expressivity of the source language by running the compiler on 16 programs with interleaved if- and for-statements; these include classical MPC benchmarks such as PSI and Biometric matching, as well as kMeans, Histogram, and other examples from the literature. 
 Our compiler takes the routine and generated \emph{non-vectorized} MOTION code (from MPC Source on the picture above). It then optimizes MPC Source and generates 
 \emph{vectorized} MOTION code (from Optimized MPC Source). We then run the two versions using Boolean GMW and the BMR protocols. (MOTION, which is designed for 
 protocol mixing, supports Arithmetic GMW, however, it does not implement Comparison (CMP) and Multiplexing (MUX) as they would be rather inefficient.)
 In our experiments vectorized code exhibits 24x improvement on average in circuit generation time for Boolean GMW (20x for BMR), 7x reduction 
-in communication (2x), 97x reduction in number of gates (91x), 4x improvement in setup time (23x) and 21x improvement in online time (18x).
+in communication (2x), 97x reduction in number of gates (91x), 4x improvement in setup time in the LAN setting (23x) and 21x improvement in online time, again in the LAN setting (18x).
 %\ana{Summarize results.}
+
+The compiler can be found at~\url{https://github.com/milana2/ParallelizationForMPC} where~\url{https://github.com/milana2/ParallelizationForMPC/tree/gh-pages} shows experiments on small input sizes and details the different stages of the compiler. 
 
 Our results emphasize the importance of backend-independent optimizations --- vectorization (described in this work) and protocol mixing (tackled in previous works~\cite{Buscher:2018b,Ishaq:2019, Fang:2022}) are two optimizations readily available at the level of MPC Source. We believe that our work can lead to future work on backend-independent compilation and optimization, ushering new MPC optimizations and combinations of optimizations in the vein of standard compilers, and thus bringing MPC programming technology closer to practice and wider applicability.
 
