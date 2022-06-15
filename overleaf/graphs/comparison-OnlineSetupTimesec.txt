@@ -1,4 +1,0 @@
-x	"Benchmark"	"GMW LAN"	"GMW WAN"	"BMR LAN"	"BMR WAN"	"Input Label"
-1	"Biometric Matching"	483	1710	465	1299	"D: 4, N: 4096"
-1	"Inner Product"	163	456	175	581	"N: 4096"
-1	"Longest 102"	701	3430	336	1162	"N: 4096"
