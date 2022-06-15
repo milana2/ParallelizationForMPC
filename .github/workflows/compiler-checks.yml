@@ -54,14 +54,8 @@ jobs:
 
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Set up ccache
-        uses: hendrikmuhs/ccache-action@v1
-        with:
-          key: ${{ matrix.python-version }}
       - name: Build example applications
         working-directory: compiler
         env:
           CXX: g++-10
-          CMAKE_C_COMPILER_LAUNCHER: ccache
-          CMAKE_CXX_COMPILER_LAUNCHER: ccache
         run: ./run_tests.py --test-example-apps

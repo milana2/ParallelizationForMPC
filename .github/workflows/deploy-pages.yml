@@ -33,13 +33,9 @@ jobs:
             libssl-dev
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Set up ccache
-        uses: hendrikmuhs/ccache-action@v1
       - name: Build results markdown
         env:
           CXX: g++-10
-          CMAKE_C_COMPILER_LAUNCHER: ccache
-          CMAKE_CXX_COMPILER_LAUNCHER: ccache
         run: ./compiler/make_results_markdown.py static
       - name: Build paper
         run: |
