@@ -62,8 +62,10 @@ CircuitStats collect_stats(const BackendPointer backend)
 
     // Perform a breadth-first traversal of the circuit, collecting data as we go
     std::queue<std::pair<const WirePointer, const std::int64_t>> queue;
-    for (const auto &inp : backend->GetInputGates()) {
-        queue.push(std::make_pair(nullptr, inp->GetId()));
+    for (const auto &gate : backend->GetRegister()->GetGates()) {
+        if (dynamic_cast<InputGate *>(&*gate)) {
+            queue.push(std::make_pair(nullptr, gate->GetId()));
+        }
     }
 
     while (!queue.empty()) {
@@ -147,8 +149,10 @@ CircuitStats collect_stats(const BackendPointer backend)
 
     std::queue<std::int64_t> write_queue;
     std::queue<std::int64_t> read_queue;
-    for (const auto &gate : backend->GetInputGates()) {
-        read_queue.push(gate->GetId());
+    for (const auto &gate : backend->GetRegister()->GetGates()) {
+        if (dynamic_cast<InputGate *>(&*gate)) {
+            read_queue.push(gate->GetId());
+        }
     }
 
     stats.depth = 0;
