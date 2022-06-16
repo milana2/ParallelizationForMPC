@@ -17,8 +17,26 @@ from tests.benchmark import run_benchmark
 
 def cfg_to_image(G: networkx.DiGraph, path: str):
     """Write a PNG image of the control flow graph in `G` to `path`."""
+
     # The node labels must be unique for pydot to consider nodes to be separate
     G = networkx.convert_node_labels_to_integers(G, label_attribute="label")
+
+    # Avoid this error in nx_pydot:
+    #     ValueError: Node names and attributes should not contain ":" unless they are quoted with "".
+    #     For example the string 'attribute:data1' should be written as '"attribute:data1"'.
+    #     Please refer https://github.com/pydot/pydot/issues/258
+    for node in G.nodes:
+        G.nodes[node]["label"] = f'"{G.nodes[node]["label"]}"'
+
+    for edge in G.edges:
+        # Avoid this error in nx_pydot:
+        #     TypeError: argument of type 'BranchKind' is not iterable
+        G.edges[edge]["label"] = str(G.edges[edge]["label"])
+
+        # Avoid this error in nx_pydot:
+        #     TypeError: argument of type 'int' is not iterable
+        del G.edges[edge]["ident"]
+
     G.graph["node"] = {"shape": "box", "fontname": "monospace"}
     dot = networkx.nx_pydot.to_pydot(G)
     dot.write(path, format="png")
