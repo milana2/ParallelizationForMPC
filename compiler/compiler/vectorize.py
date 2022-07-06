@@ -1487,7 +1487,7 @@ def _basic_vectorization_phase_2(
     return output, phi_renames
 
 
-def clean_phi_renames(
+def _clean_phi_renames(
     stmts: list[llc.Statement], phi_renames: dict[llc.Var, llc.Var]
 ) -> list[llc.Statement]:
     cleaned_stmts: list[llc.Statement] = []
@@ -1499,7 +1499,7 @@ def clean_phi_renames(
         # If this is a for loop, we must recurse into it to keep track of removed
         # phi nodes inside the loop
         elif isinstance(stmt, llc.For):
-            new_body = clean_phi_renames(stmt.body, phi_renames)
+            new_body = _clean_phi_renames(stmt.body, phi_renames)
             cleaned_stmts.append(dc.replace(stmt, body=new_body))
 
         # Otherwise, add the statement to the cleaned output after replacing
@@ -1570,7 +1570,7 @@ def basic_vectorization_phase_2(
 
     # Now that we've restructured the fuction based on phi closures, we need to clean up
     # the phi nodes which are marked for removal
-    final_body = clean_phi_renames(function.body, phi_renames)
+    final_body = _clean_phi_renames(function.body, phi_renames)
     function = llc.Function(
         name=function.name,
         parameters=function.parameters,
