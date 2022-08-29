@@ -6,53 +6,38 @@ import struct
 import json
 import socket
 
+
 @dataclass
 class StatsForInputConfig:
     label: str
-    gmw_p0: BenchmarkOutput
-    gmw_p1: BenchmarkOutput
-    gmw_vec_p0: BenchmarkOutput
-    gmw_vec_p1: BenchmarkOutput
-    bmr_p0: BenchmarkOutput
-    bmr_p1: BenchmarkOutput
-    bmr_vec_p0: BenchmarkOutput
-    bmr_vec_p1: BenchmarkOutput
+    gmw: list[BenchmarkOutput]
+    gmw_vec: list[BenchmarkOutput]
+    bmr: list[BenchmarkOutput]
+    bmr_vec: list[BenchmarkOutput]
 
     @classmethod
     def from_dictionary(cls, params):
         label = params['label']
-        gmw_p0 = params['gmw_p0']
-        gmw_p1 = params['gmw_p1']
-        gmw_vec_p0 = params['gmw_vec_p0']
-        gmw_vec_p1 = params['gmw_vec_p1']
-        bmr_p0 = params['bmr_p0']
-        bmr_p1 = params['bmr_p1']
-        bmr_vec_p0 = params['bmr_vec_p0']
-        bmr_vec_p1 = params['bmr_vec_p1']
+        gmw = params['gmw']
+        gmw_vec = params['gmw_vec']
+        bmr = params['bmr']
+        bmr_vec = params['bmr_vec']
 
         return cls(
             label=label,
-            gmw_p0=gmw_p0,
-            gmw_p1=gmw_p1,
-            gmw_vec_p0=gmw_vec_p0,
-            gmw_vec_p1=gmw_vec_p1,
-            bmr_p0=bmr_p0,
-            bmr_p1=bmr_p1,
-            bmr_vec_p0=bmr_vec_p0,
-            bmr_vec_p1=bmr_vec_p1
-            )
+            gmw=gmw,
+            gmw_vec=gmw_vec,
+            bmr=bmr,
+            bmr_vec=bmr_vec
+        )
 
     def to_dictionary(self):
         return {
             'label': self.label,
-            'gmw_p0': self.gmw_p0,
-            'gmw_p1': self.gmw_p1,
-            'gmw_vec_p0': self.gmw_vec_p0,
-            'gmw_vec_p1': self.gmw_vec_p1,
-            'bmr_p0': self.bmr_p0,
-            'bmr_p1': self.bmr_p1,
-            'bmr_vec_p0': self.bmr_vec_p0,
-            'bmr_vec_p1': self.bmr_vec_p1,
+            'gmw': self.gmw,
+            'gmw_vec': self.gmw_vec,
+            'bmr': self.bmr,
+            'bmr_vec': self.bmr_vec,
         }
 
 
@@ -68,7 +53,7 @@ class StatsForTask:
         return cls(
             label=label,
             input_configs=input_configs
-            )
+        )
 
     def to_dictionary(self):
         return {'label': self.label,
@@ -77,18 +62,22 @@ class StatsForTask:
 
 
 @dataclass
-class GetAddressReq:
+class PartyReadyReq:
+    id: int
 
     @classmethod
     def from_dictionary(cls, params):
-        return cls()
+        id = params['id']
+        return cls(id=id)
 
     def to_dictionary(self):
-        return {}
+        return {'id': self.id
+                }
+
 
 @dataclass
 class GetAddressResp:
-    client_address: (str, int) # (address, port)
+    client_address: (str, int)  # (address, port)
 
     @classmethod
     def from_dictionary(cls, params):
@@ -96,17 +85,17 @@ class GetAddressResp:
 
         return cls(
             client_address=client_address,
-            )
+        )
 
     def to_dictionary(self):
         return {
             'client_address': self.client_address,
         }
 
+
 @dataclass
 class RunBenchmarkReq:
-    party0_mpc_addr: str
-    party1_mpc_addr: str
+    party_addrs: list[str]
     cmd_args: list[str]
     benchmark_name: str
     protocol: str
@@ -114,26 +103,23 @@ class RunBenchmarkReq:
 
     @classmethod
     def from_dictionary(cls, params):
-        party0_mpc_addr = params['party0_mpc_addr']
-        party1_mpc_addr = params['party1_mpc_addr']
+        party_addrs = params['party_addrs']
         cmd_args = params['cmd_args']
         benchmark_name = params['benchmark_name']
         protocol = params['protocol']
         vectorized = params['vectorized']
 
         return cls(
-            party0_mpc_addr=party0_mpc_addr,
-            party1_mpc_addr=party1_mpc_addr,
+            party_addrs=party_addrs,
             cmd_args=cmd_args,
             benchmark_name=benchmark_name,
             protocol=protocol,
             vectorized=vectorized
-            )
+        )
 
     def to_dictionary(self):
         return {
-            'party0_mpc_addr': self.party0_mpc_addr,
-            'party1_mpc_addr': self.party1_mpc_addr,
+            'party_addrs': self.party_addrs,
             'cmd_args': self.cmd_args,
             'benchmark_name': self.benchmark_name,
             'protocol': self.protocol,
@@ -143,6 +129,7 @@ class RunBenchmarkReq:
 
 def json_serialize(obj):
     return json.dumps(obj, default=_to_json)
+
 
 def json_deserialize(json_str):
     return json.loads(json_str, object_hook=_from_json)
@@ -172,12 +159,13 @@ def write_message(conn, obj):
     buf_to_write = struct.pack("!i", msg_size) + msg
     conn.sendall(buf_to_write)
 
+
 # --- Private Functions --
 
 def _to_json(python_object):
     if isinstance(python_object, TimingDatapoint):
-        return  {'__class__': 'TimingDatapoint',
-                 '__value__': python_object.to_dictionary()}
+        return {'__class__': 'TimingDatapoint',
+                '__value__': python_object.to_dictionary()}
     elif isinstance(python_object, CommunicationStatistics):
         return {'__class__': 'CommunicationStatistics',
                 '__value__': python_object.to_dictionary()}
@@ -199,8 +187,8 @@ def _to_json(python_object):
     elif isinstance(python_object, RunBenchmarkReq):
         return {'__class__': 'RunBenchmarkReq',
                 '__value__': python_object.to_dictionary()}
-    elif isinstance(python_object, GetAddressReq):
-        return {'__class__': 'GetAddressReq',
+    elif isinstance(python_object, PartyReadyReq):
+        return {'__class__': 'PartyReadyReq',
                 '__value__': python_object.to_dictionary()}
     elif isinstance(python_object, GetAddressResp):
         return {'__class__': 'GetAddressResp',
@@ -227,15 +215,15 @@ def _from_json(json_object):
             return StatsForInputConfig.from_dictionary(json_object['__value__'])
         elif json_object['__class__'] == 'RunBenchmarkReq':
             return RunBenchmarkReq.from_dictionary(json_object['__value__'])
-        elif json_object['__class__'] == 'GetAddressReq':
-            return GetAddressReq.from_dictionary(json_object['__value__'])
+        elif json_object['__class__'] == 'PartyReadyReq':
+            return PartyReadyReq.from_dictionary(json_object['__value__'])
         elif json_object['__class__'] == 'GetAddressResp':
             return GetAddressResp.from_dictionary(json_object['__value__'])
 
     return json_object
 
 
-def _read_socket_buf(conn, n):
+def _read_socket_buf(conn: socket, n: int):
     buf = b''
     while len(buf) < n:
         new_data = conn.recv(n - len(buf))
@@ -243,7 +231,3 @@ def _read_socket_buf(conn, n):
             return None
         buf += new_data
     return buf
-
-
-
-

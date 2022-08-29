@@ -16,7 +16,6 @@ class BenchmarkOutput:
     circuit_stats: statistics.CircuitStatistics
     circuit_file: Optional[str] = None
 
-
     @classmethod
     def from_dictionary(cls, params):
         name = params["name"]
@@ -52,26 +51,26 @@ class BenchmarkOutput:
     @classmethod
     def by_accumulating_readings(cls, a, b):
         return cls(
-           name = a.name,
-           output = a.output,
-           timing_stats = statistics.TimingStatistics.by_accumulating_readings(
-            a.timing_stats, b.timing_stats
+            name=a.name,
+            output=a.output,
+            timing_stats=statistics.TimingStatistics.by_accumulating_readings(
+                a.timing_stats, b.timing_stats
             ),
-           circuit_stats = statistics.CircuitStatistics.by_accumulating_readings(
-            a.circuit_stats, b.circuit_stats
+            circuit_stats=statistics.CircuitStatistics.by_accumulating_readings(
+                a.circuit_stats, b.circuit_stats
             )
         )
 
 
 def run_benchmark(
-    benchmark_name: str,
-    benchmark_path: str,
-    protocol: str,
-    vectorized=True,
-    timeout=600,
-    cmd_args=[],
-    compile=True,
-    continue_on_error=False,
+        benchmark_name: str,
+        benchmark_path: str,
+        protocol: str,
+        vectorized=True,
+        timeout=600,
+        cmd_args=[],
+        compile=True,
+        continue_on_error=False,
 ) -> Optional[tuple[BenchmarkOutput, BenchmarkOutput]]:
     input_fname = os.path.join(benchmark_path, "input.py")
 
@@ -112,34 +111,34 @@ def run_benchmark(
     # Run both parties
     exe_name = os.path.join(app_path, "build", benchmark_name)
     with subprocess.Popen(
-        [
-            exe_name,
-            "--parties",
-            "0,127.0.0.1,2300",
-            "1,127.0.0.1,2301",
-            "--my-id",
-            "0",
-        ]
-        + cmd_args,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        cwd=party0_dir,
-    ) as party0:
-        with subprocess.Popen(
             [
                 exe_name,
                 "--parties",
                 "0,127.0.0.1,2300",
                 "1,127.0.0.1,2301",
                 "--my-id",
-                "1",
+                "0",
             ]
             + cmd_args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            cwd=party1_dir,
+            cwd=party0_dir,
+    ) as party0:
+        with subprocess.Popen(
+                [
+                    exe_name,
+                    "--parties",
+                    "0,127.0.0.1,2300",
+                    "1,127.0.0.1,2301",
+                    "--my-id",
+                    "1",
+                ]
+                + cmd_args,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                cwd=party1_dir,
         ) as party1:
             try:
                 party0_stdout_raw, party0_stderr = party0.communicate(timeout)
@@ -200,8 +199,8 @@ def run_benchmark(
 
 
 def run_benchmark_for_party(
-    myid: str, party0_mpc_addr: str, party1_mpc_addr: str, benchmark_name: str, benchmark_path: str, protocol: str, vectorized,
-    timeout:int, cmd_args: list[str]
+        myid: str, party_addrs: list[str], benchmark_name: str, benchmark_path: str, protocol: str, vectorized,
+        timeout: int, cmd_args: list[str]
 ) -> BenchmarkOutput:
     # Create directories for output and MOTION logs
     app_path = os.path.join(
@@ -214,18 +213,19 @@ def run_benchmark_for_party(
 
     exe_name = os.path.join(app_path, "build", benchmark_name)
     with subprocess.Popen(
-        [
-            exe_name,
-            "--parties",
-            party0_mpc_addr,
-            party1_mpc_addr,
-            "--my-id",
-            myid,
-        ] + cmd_args,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        cwd=party_dir,
+            [
+                exe_name,
+                "--parties"
+            ] +
+            party_addrs +
+            [
+                "--my-id",
+                myid,
+            ] + cmd_args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            cwd=party_dir,
     ) as party:
         try:
             party_stdout_raw, party_stderr = party.communicate(timeout)
@@ -238,7 +238,7 @@ def run_benchmark_for_party(
         with open(os.path.join(party_dir, "stderr"), "w") as f:
             f.write(party_stderr)
 
-        if(party.returncode != 0):
+        if (party.returncode != 0):
             print("party.returncode: {}".format(party.returncode))
             return None
 
@@ -253,15 +253,15 @@ def run_benchmark_for_party(
         )
 
         return BenchmarkOutput(
-                name=benchmark_name,
-                output=party_output,
-                timing_stats=party_timing_stats,
-                circuit_stats=party_circuit_stats,
-            )
+            name=benchmark_name,
+            output=party_output,
+            timing_stats=party_timing_stats,
+            circuit_stats=party_circuit_stats,
+        )
 
 
 def compile_benchmark(
-    benchmark_name: str, benchmark_path: str, protocol: str, vectorized: bool
+        benchmark_name: str, benchmark_path: str, protocol: str, vectorized: bool
 ) -> str:
     input_fname = os.path.join(benchmark_path, "input.py")
 
@@ -287,5 +287,3 @@ def compile_benchmark(
     )
 
     return app_path
-
-
