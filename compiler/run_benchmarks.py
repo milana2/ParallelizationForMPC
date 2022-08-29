@@ -831,9 +831,12 @@ def run_client_role(myid, address):
                 test_case_dir.path, msg.protocol, msg.vectorized, None, msg.cmd_args
             )
             write_message(server_sock, resp)
+        elif msg is None:
+            log.info("Server closed connection!")
+            break
         else:
             log.error("Invalid message from the server: {}".format(msg))
-            server_sock.close()
+            break
 
 
 def get_x_label_for_benchmark(name):

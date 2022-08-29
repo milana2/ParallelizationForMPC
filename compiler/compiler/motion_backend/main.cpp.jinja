@@ -18,7 +18,7 @@
 
 namespace program_options = boost::program_options;
 
-const std::regex kPartyArgRegex("([01]),([^,]+),(\\d{1,5})");
+const std::regex kPartyArgRegex("(\\d{1,4}),([^,]+),(\\d{1,5})");
 
 // We need to implement the below operator to let Boost support default
 // values for vectors.
@@ -99,9 +99,9 @@ program_options::variables_map parse_options(const int argc, const char *const a
     } else {
         const std::vector<std::string> other_parties{
             user_options["parties"].as<std::vector<std::string>>()};
-        if (other_parties.size() != 2)
+       /* if (other_parties.size() != 2)
             throw std::runtime_error(
-                fmt::format("Incorrect number of parties {} (expected 2)", other_parties.size()));
+                fmt::format("Incorrect number of parties {} (expected 2)", other_parties.size()));*/
         std::string parties("Other parties: ");
         for (auto &party : other_parties) {
             if (!std::regex_match(party, kPartyArgRegex)) {
