@@ -1,24 +1,15 @@
-import datetime
+import logging.handlers
+import os
+import random
+import socket
+import subprocess
 from argparse import ArgumentParser
 from dataclasses import dataclass
-import os
-import sys
-import subprocess
-
-import logging
-import logging.handlers
-import random
-import json
-import socket
-
-
-import compiler
 
 from tests import context as test_context
 from tests.benchmark import run_benchmark, compile_benchmark, run_benchmark_for_party, BenchmarkOutput
-
+from utils import PartyReadyReq
 from utils import json_serialize, json_deserialize, StatsForInputConfig, StatsForTask, RunBenchmarkReq
-from utils import PartyReadyReq, GetAddressResp
 from utils import read_message, write_message
 
 SERVER_PORT = 42142
@@ -797,11 +788,6 @@ def run_server_role(id, address, num_parties):
         all_stats.append(task_stats)
         log.info("task {} DONE".format(task_stats.label))
     all_stats.append(task_stats)
-    now = datetime.datetime.now()
-    file_path = os.path.join(FILE_DIR, "all_stats-{}.json".format(now))
-    with open(file_path, "w", encoding='utf-8') as f:
-        json_str = json_serialize(task_stats)
-        f.write(json_str)
     for p in ready_parties.values():
         if p.id == server.id:
             continue
