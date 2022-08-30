@@ -802,7 +802,7 @@ def run_server_role(id, address, num_parties):
     with open(file_path, "w", encoding='utf-8') as f:
         json_str = json_serialize(task_stats)
         f.write(json_str)
-    for p in ready_parties:
+    for p in ready_parties.values():
         if p.id == server.id:
             continue
         p.conn.close()
