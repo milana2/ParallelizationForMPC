@@ -884,12 +884,12 @@ def ratio(a, b):
     return 0
 
 
-def generate_graph_for_attr(all_stats, get_val, get_sd, y_label, dir):
+def generate_graph_for_attr(all_stats, get_val, get_sd, y_label, dir, party_index):
     y_label_simple = ''.join(c for c in y_label if c.isalnum())
     for task_stat in all_stats:
-        fname = "{}-{}.txt".format(task_stat.label, y_label_simple)
-        hist_graph_file = "{}-hist-{}{}".format(task_stat.label, y_label_simple, GRAPH_EXT)
-        line_graph_file = "{}-line-{}{}".format(task_stat.label, y_label_simple, GRAPH_EXT)
+        fname = "{}-p{}-{}.txt".format(task_stat.label, party_index, y_label_simple)
+        hist_graph_file = "{}-hist-p{}-{}{}".format(task_stat.label, party_index, y_label_simple, GRAPH_EXT)
+        line_graph_file = "{}-line-p{}-{}{}".format(task_stat.label, party_index, y_label_simple, GRAPH_EXT)
         file_path = os.path.join(dir, fname)
         with open(file_path, mode='w', encoding='utf-8') as f:
             line = '\t'.join(['x',
@@ -922,12 +922,12 @@ def generate_graph_for_attr(all_stats, get_val, get_sd, y_label, dir):
                     label = parts[1]
 
 
-                nv_gmw = get_val(i.gmw_p0)
-                v_gmw  = get_val(i.gmw_vec_p0)
+                nv_gmw = get_val(i.gmw[party_index])
+                v_gmw  = get_val(i.gmw_vec[party_index])
                 r_gmw  = ratio(nv_gmw, v_gmw)
 
-                nv_bmr = get_val(i.bmr_p0)
-                v_bmr  = get_val(i.bmr_vec_p0)
+                nv_bmr = get_val(i.bmr[party_index])
+                v_bmr  = get_val(i.bmr_vec[party_index])
                 r_bmr  = ratio(nv_bmr, v_bmr)
 
                 vals = [x, '"' + label + '"',
@@ -936,10 +936,10 @@ def generate_graph_for_attr(all_stats, get_val, get_sd, y_label, dir):
                         r_gmw, r_bmr]
 
                 if get_sd is not None:
-                    nv_gmw_sd = get_sd(i.gmw_p0)
-                    v_gmw_sd = get_sd(i.gmw_vec_p0)
-                    nv_bmr_sd = get_sd(i.bmr_p0)
-                    v_bmr_sd = get_sd(i.bmr_vec_p0)
+                    nv_gmw_sd = get_sd(i.gmw[party_index])
+                    v_gmw_sd = get_sd(i.gmw_vec[party_index])
+                    nv_bmr_sd = get_sd(i.bmr[party_index])
+                    v_bmr_sd = get_sd(i.bmr_vec[party_index])
 
                     vals = [x, '"' + label + '"',
                         nv_gmw, nv_gmw_sd, v_gmw, v_gmw_sd,
@@ -961,11 +961,11 @@ def generate_graph_for_attr(all_stats, get_val, get_sd, y_label, dir):
         # run_gnuplot(line_script, file_path, line_graph_file, task_stat.label, 
         #     y_label, dir, other_args = [])
 
-def generate_cumulative_graph_for_attr(all_stats, get_val, get_sd, y_label, dir):
+def generate_cumulative_graph_for_attr(all_stats, get_val, get_sd, y_label, dir, party_index):
     y_label_simple = ''.join(c for c in y_label if c.isalnum())
-    fname = "all-{}.txt".format(y_label_simple)
-    hist_graph_file = "all-hist-{}{}".format(y_label_simple, GRAPH_EXT)
-    line_graph_file = "all-line-{}{}".format(y_label_simple, GRAPH_EXT)
+    fname = "all-p{}-{}.txt".format(party_index, y_label_simple)
+    hist_graph_file = "all-hist-p{}-{}{}".format(party_index, y_label_simple, GRAPH_EXT)
+    line_graph_file = "all-line-p{}-{}{}".format(party_index, y_label_simple, GRAPH_EXT)
     file_path = os.path.join(dir, fname)
     with open(file_path, mode='w', encoding='utf-8') as f:
         line = '\t'.join(['x',
@@ -995,14 +995,14 @@ def generate_cumulative_graph_for_attr(all_stats, get_val, get_sd, y_label, dir)
             label = get_x_label_for_benchmark(task_stat.label)
             for i in range(len(task_stat.input_configs)-1, -1, -1):
                 input = task_stat.input_configs[i]
-                if input.gmw_p0 is not None and input.gmw_vec_p0 is not None and \
-                    input.bmr_p0 is not None and input.bmr_vec_p0 is not None:
-                    nv_gmw = get_val(input.gmw_p0)
-                    v_gmw  = get_val(input.gmw_vec_p0)
+                if input.gmw[party_index] is not None and input.gmw_vec[party_index] is not None and \
+                    input.bmr[party_index] is not None and input.bmr_vec[party_index] is not None:
+                    nv_gmw = get_val(input.gmw[party_index])
+                    v_gmw  = get_val(input.gmw_vec[party_index])
                     r_gmw  = ratio(nv_gmw, v_gmw)
 
-                    nv_bmr = get_val(input.bmr_p0)
-                    v_bmr  = get_val(input.bmr_vec_p0)
+                    nv_bmr = get_val(input.bmr[party_index])
+                    v_bmr  = get_val(input.bmr_vec[party_index])
                     r_bmr  = ratio(nv_bmr, v_bmr)
 
                     vals = [x, '"' + label + '"',
@@ -1011,10 +1011,10 @@ def generate_cumulative_graph_for_attr(all_stats, get_val, get_sd, y_label, dir)
                         r_gmw, r_bmr]
 
                     if get_sd is not None:
-                        nv_gmw_sd = get_sd(input.gmw_p0)
-                        v_gmw_sd = get_sd(input.gmw_vec_p0)
-                        nv_bmr_sd = get_sd(input.bmr_p0)
-                        v_bmr_sd = get_sd(input.bmr_vec_p0)
+                        nv_gmw_sd = get_sd(input.gmw[party_index])
+                        v_gmw_sd = get_sd(input.gmw_vec[party_index])
+                        nv_bmr_sd = get_sd(input.bmr[party_index])
+                        v_bmr_sd = get_sd(input.bmr_vec[party_index])
 
                         vals = [x, '"' + label + '"',
                             nv_gmw, nv_gmw_sd, v_gmw, v_gmw_sd,
@@ -1038,35 +1038,39 @@ def generate_cumulative_graph_for_attr(all_stats, get_val, get_sd, y_label, dir)
     # run_gnuplot(line_script, file_path, line_graph_file, title, y_label, dir, other_args = [])
 
 
-def generate_single_network_graphs(all_stats, dir):
+def generate_single_network_graphs(all_stats, dir, party_index):
     log.info("generating graphs for {} benchmarks in {}".format(len(all_stats), dir))
 
     get_num_gates = lambda x: x.circuit_stats.num_gates if x is not None else 0
-    generate_graph_for_attr(all_stats, get_num_gates, None, 'Total Gates', dir)
-    generate_cumulative_graph_for_attr(all_stats, get_num_gates, None, 'Total Gates', dir)
+    generate_graph_for_attr(all_stats, get_num_gates, None, 'Total Gates', dir, party_index)
+    generate_cumulative_graph_for_attr(all_stats, get_num_gates, None, 'Total Gates', dir, party_index)
 
     get_circ_gen_time = lambda x: (x.circuit_stats.circuit_gen_time/1000) if x is not None else 0
-    generate_graph_for_attr(all_stats, get_circ_gen_time, None, 'Circuit Generation Time (sec)', dir)
-    generate_cumulative_graph_for_attr(all_stats, get_circ_gen_time, None, 'Circuit Generation Time (sec)', dir)
+    generate_graph_for_attr(all_stats, get_circ_gen_time, None, 'Circuit Generation Time (sec)', dir, party_index)
+    generate_cumulative_graph_for_attr(all_stats, get_circ_gen_time, None, 'Circuit Generation Time (sec)', dir,
+                                       party_index)
 
     get_online_time = lambda x: (x.timing_stats.gates_online.mean/1000) if x is not None else 0
     get_online_time_sd = lambda x: (x.timing_stats.gates_online.stddev/1000) if x is not None else 0
-    generate_graph_for_attr(all_stats, get_online_time, get_online_time_sd, 'Online Time (sec)', dir)
-    generate_cumulative_graph_for_attr(all_stats, get_online_time, get_online_time_sd, 'Online Time (sec)', dir)
+    generate_graph_for_attr(all_stats, get_online_time, get_online_time_sd, 'Online Time (sec)', dir, party_index)
+    generate_cumulative_graph_for_attr(all_stats, get_online_time, get_online_time_sd, 'Online Time (sec)', dir,
+                                       party_index)
 
     get_setup_time = lambda x: ((x.timing_stats.gates_setup.mean + x.timing_stats.preprocess_total.mean)/1000) if x is not None else 0
     get_setup_time_sd = lambda x: ((x.timing_stats.gates_setup.stddev + x.timing_stats.preprocess_total.stddev)/1000) if x is not None else 0
-    generate_graph_for_attr(all_stats, get_setup_time, get_setup_time_sd, 'Setup Time (sec)', dir)
-    generate_cumulative_graph_for_attr(all_stats, get_setup_time, get_setup_time_sd, 'Setup Time (sec)', dir)
+    generate_graph_for_attr(all_stats, get_setup_time, get_setup_time_sd, 'Setup Time (sec)', dir, party_index)
+    generate_cumulative_graph_for_attr(all_stats, get_setup_time, get_setup_time_sd, 'Setup Time (sec)', dir,
+                                       party_index)
 
     get_eval_time = lambda x: (x.timing_stats.circuit_evaluation.mean/1000) if x is not None else 0
     get_eval_time_sd = lambda x: (x.timing_stats.circuit_evaluation.stddev/1000) if x is not None else 0
-    generate_graph_for_attr(all_stats, get_eval_time, get_eval_time_sd, 'Online + Setup Time (sec)', dir)
-    generate_cumulative_graph_for_attr(all_stats, get_eval_time, get_eval_time_sd, 'Online + Setup Time (sec)', dir)
+    generate_graph_for_attr(all_stats, get_eval_time, get_eval_time_sd, 'Online + Setup Time (sec)', dir, party_index)
+    generate_cumulative_graph_for_attr(all_stats, get_eval_time, get_eval_time_sd, 'Online + Setup Time (sec)', dir,
+                                       party_index)
 
     get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
-    generate_graph_for_attr(all_stats, get_send_size, None, 'Communication (MiB)', dir)
-    generate_cumulative_graph_for_attr(all_stats, get_send_size, None, 'Communication (MiB)', dir)
+    generate_graph_for_attr(all_stats, get_send_size, None, 'Communication (MiB)', dir, party_index)
+    generate_cumulative_graph_for_attr(all_stats, get_send_size, None, 'Communication (MiB)', dir, party_index)
 
     # Not needed
     # get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
@@ -1074,20 +1078,20 @@ def generate_single_network_graphs(all_stats, dir):
     # generate_cumulative_graph_for_attr(all_stats, get_recv_size, 'Received Data (MiB)', dir)
 
 
-def get_benchmark_stats(all_stats, benchmark_name, input_label):
+def get_benchmark_stats(all_stats, benchmark_name, input_label, party_index):
     for task_stat in all_stats:
         if task_stat.label == benchmark_name:
             for i in range(len(task_stat.input_configs)-1, -1, -1):
                 input = task_stat.input_configs[i]
                 if input.label == input_label:
-                    if input.gmw_vec_p0 is not None and input.bmr_vec_p0 is not None:
+                    if input.gmw_vec[party_index] is not None and input.bmr_vec[party_index] is not None:
                         return input
     return None
 
-def generate_comparison_graphs(lan_stats, wan_stats, get_val, y_label, dir):
+def generate_comparison_graphs(lan_stats, wan_stats, get_val, y_label, dir, party_index):
     y_label_simple = ''.join(c for c in y_label if c.isalnum())
-    data_file = "comparison-{}.txt".format(y_label_simple)
-    graph_file = "comparison-hist-{}{}".format(y_label_simple, GRAPH_EXT)
+    data_file = "comparison-p{}-{}.txt".format(party_index, y_label_simple)
+    graph_file = "comparison-hist-p{}-{}{}".format(party_index, y_label_simple, GRAPH_EXT)
     # line_graph_file = "all-line {}{}".format(y_label, GRAPH_EXT)
     data_file_path = os.path.join(dir, data_file)
     with open(data_file_path, mode='w', encoding='utf-8') as f:
@@ -1101,13 +1105,13 @@ def generate_comparison_graphs(lan_stats, wan_stats, get_val, y_label, dir):
 
             for i in range(len(lan_task_stat.input_configs)-1, -1, -1):
                 lan_input = lan_task_stat.input_configs[i]
-                if lan_input.gmw_vec_p0 is not None and lan_input.bmr_vec_p0 is not None:
-                    wan_input = get_benchmark_stats(wan_stats, lan_task_stat.label, lan_input.label)
+                if lan_input.gmw_vec[party_index] is not None and lan_input.bmr_vec[party_index] is not None:
+                    wan_input = get_benchmark_stats(wan_stats, lan_task_stat.label, lan_input.label, party_index)
                     if wan_input is not None:
-                        gmw_lan = get_val(lan_input.gmw_vec_p0)
-                        gmw_wan  = get_val(wan_input.gmw_vec_p0)
-                        bmr_lan = get_val(lan_input.bmr_vec_p0)
-                        bmr_wan  = get_val(wan_input.bmr_vec_p0)
+                        gmw_lan = get_val(lan_input.gmw_vec[party_index])
+                        gmw_wan  = get_val(wan_input.gmw_vec[party_index])
+                        bmr_lan = get_val(lan_input.bmr_vec[party_index])
+                        bmr_wan  = get_val(wan_input.bmr_vec[party_index])
 
                         vals = list(
                             map(str,
@@ -1131,7 +1135,7 @@ def generate_comparison_graphs(lan_stats, wan_stats, get_val, y_label, dir):
     # run_gnuplot(hist_script, bmrfile_path, bmr_hist_graph_file, bmr_title, y_label, dir, other_args = [])
     # run_gnuplot(line_script, file_path, line_graph_file, title, y_label, dir, other_args = [])
 
-def gen_latex_table(all_stats):
+def gen_latex_table(all_stats, party_index):
     print('\n\n')
     for task_stats in all_stats:
         if(task_stats.label == 'biometric_fast'):
@@ -1139,13 +1143,13 @@ def gen_latex_table(all_stats):
         label = get_x_label_for_benchmark(task_stats.label)
         for i in range(len(task_stats.input_configs)-1, -1, -1):
             input = task_stats.input_configs[i]
-            if input.gmw_p0 is not None and input.gmw_vec_p0 is not None and \
-                input.bmr_p0 is not None and input.bmr_vec_p0 is not None:
+            if input.gmw[party_index] is not None and input.gmw_vec[party_index] is not None and \
+                input.bmr[party_index] is not None and input.bmr_vec[party_index] is not None:
 
-                a_ts = input.gmw_p0.timing_stats
-                a_cs = input.gmw_p0.circuit_stats
-                b_ts = input.bmr_p0.timing_stats
-                b_cs = input.bmr_p0.circuit_stats
+                a_ts = input.gmw[party_index].timing_stats
+                a_cs = input.gmw[party_index].circuit_stats
+                b_ts = input.bmr[party_index].timing_stats
+                b_cs = input.bmr[party_index].circuit_stats
 
                 vals1 = [label,
                   "{:,.0f}".format(round(a_ts.gates_online.mean/1000)),
@@ -1164,10 +1168,10 @@ def gen_latex_table(all_stats):
                 ]
 
 
-                c_ts = input.gmw_vec_p0.timing_stats
-                c_cs = input.gmw_vec_p0.circuit_stats
-                d_ts = input.bmr_vec_p0.timing_stats
-                d_cs = input.bmr_vec_p0.circuit_stats
+                c_ts = input.gmw_vec[party_index].timing_stats
+                c_cs = input.gmw_vec[party_index].circuit_stats
+                d_ts = input.bmr_vec[party_index].timing_stats
+                d_cs = input.bmr_vec[party_index].circuit_stats
 
                 vals2 = [label + " (V)",
                   "{:,.0f}".format(round(c_ts.gates_online.mean/1000)),
@@ -1192,7 +1196,8 @@ def gen_latex_table(all_stats):
                 print('\\midrule')
                 break
 
-def generate_graphs(lan, wan):
+
+def generate_graphs(lan, wan, party_index):
     if lan is not True and wan is not True:
         log.error("Need to specify at least one of LAN or WAN directories for source data")
         return
@@ -1218,8 +1223,8 @@ def generate_graphs(lan, wan):
                 json_str = f.read()
                 file_stats = json_deserialize(json_str)
                 lan_stats.append(file_stats)
-        # gen_latex_table(lan_stats)
-        generate_single_network_graphs(lan_stats, LAN_GRAPHS_DIR)
+        # gen_latex_table(lan_stats, party_index=0)
+        generate_single_network_graphs(lan_stats, LAN_GRAPHS_DIR, party_index)
 
     if wan is True:
         for f in wan_files:
@@ -1229,32 +1234,32 @@ def generate_graphs(lan, wan):
                 json_str = f.read()
                 file_stats = json_deserialize(json_str)
                 wan_stats.append(file_stats)
-        generate_single_network_graphs(wan_stats, WAN_GRAPHS_DIR)
+        generate_single_network_graphs(wan_stats, WAN_GRAPHS_DIR, party_index)
 
     if lan is True and wan is True:
         get_num_gates = lambda x: x.circuit_stats.num_gates if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_num_gates, 'Total Gates',
-            COMPARISON_GRAPHS_DIR)
+            COMPARISON_GRAPHS_DIR, party_index)
 
         get_circ_gen_time = lambda x: int(x.circuit_stats.circuit_gen_time/1000) if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_circ_gen_time,
-            'Circuit Generation Time (sec)', COMPARISON_GRAPHS_DIR)
+            'Circuit Generation Time (sec)', COMPARISON_GRAPHS_DIR, party_index)
 
         get_online_time = lambda x: int(x.timing_stats.circuit_evaluation.mean/1000) if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_online_time, 'Online + Setup Time (sec)',
-            COMPARISON_GRAPHS_DIR)
+            COMPARISON_GRAPHS_DIR, party_index)
 
         get_online_time = lambda x: int(x.timing_stats.gates_online.mean/1000) if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_online_time, 'Online Time (sec)',
-            COMPARISON_GRAPHS_DIR)
+            COMPARISON_GRAPHS_DIR, party_index)
 
         get_setup_time = lambda x: int((x.timing_stats.gates_setup.mean+x.timing_stats.preprocess_total.mean)/1000) if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_setup_time, 'Setup Time (sec)',
-            COMPARISON_GRAPHS_DIR)
+            COMPARISON_GRAPHS_DIR, party_index)
 
         get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_send_size, 'Communication (MiB)',
-            COMPARISON_GRAPHS_DIR)
+            COMPARISON_GRAPHS_DIR, party_index)
 
         # get_recv_size = lambda x: x.timing_stats.communication.recv_size if x is not None else 0
         # generate_comparison_graphs(lan_stats, wan_stats, get_recv_size, 'Received Data (MiB)',
@@ -1290,10 +1295,14 @@ if __name__ == "__main__":
         help="compile all benchmarks",
     )
 
+    parser.add_argument('-p', '--party_index', type=int, default=0,
+                        help="index of the party to generate graphs for (default=0)",
+                        )
+
     args = parser.parse_args()
 
     if args.graphs:
-        generate_graphs(args.lan, args.wan)
+        generate_graphs(args.lan, args.wan, args.party_index)
     elif args.compile:
         compile_all_benchmarks()
     else:
