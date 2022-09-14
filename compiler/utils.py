@@ -18,10 +18,26 @@ class StatsForInputConfig:
     @classmethod
     def from_dictionary(cls, params):
         label = params['label']
-        gmw = params['gmw']
-        gmw_vec = params['gmw_vec']
-        bmr = params['bmr']
-        bmr_vec = params['bmr_vec']
+
+        if 'gmw' in params:
+            gmw = params['gmw']
+        else:
+            gmw = [params['gmw_p0'], params['gmw_p1']]
+
+        if 'gmw_vec' in params:
+            gmw_vec = params['gmw_vec']
+        else:
+            gmw_vec = [params['gmw_vec_p0'], params['gmw_vec_p1']]
+
+        if 'bmr' in params:
+            bmr = params['bmr']
+        else:
+            bmr = [params['bmr_p0'], params['bmr_p1']]
+
+        if 'bmr_vec' in params:
+            bmr_vec = params['bmr_vec']
+        else:
+            bmr_vec = [params['bmr_vec_p0'], params['bmr_vec_p1']]
 
         return cls(
             label=label,

@@ -404,7 +404,7 @@ class CircuitStatistics:
         num_simd_gates = params["num_simd_gates"]
         num_nonsimd_gates = params["num_nonsimd_gates"]
         circuit_gen_time = params["circuit_gen_time"]
-        depth = params["depth"]
+        depth = params["depth"] if "depth" in params else -1
         return cls(
             num_gates=num_gates,
             num_inputs=num_inputs,
