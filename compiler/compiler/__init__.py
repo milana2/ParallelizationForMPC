@@ -111,7 +111,8 @@ def compile(
         print()
 
     if out_dir:
-        if protocol not in motion_backend.VALID_PROTOCOLS:
+        if protocol not in motion_backend.VALID_PROTOCOLS and \
+                (protocol != "ArithmeticGmw" or out_dir.find("inner_product") == -1):
             raise ValueError(
                 f"Invalid protocol: {protocol}. Valid protocols are: {motion_backend.VALID_PROTOCOLS}"
             )

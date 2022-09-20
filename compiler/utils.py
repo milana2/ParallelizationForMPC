@@ -14,6 +14,8 @@ class StatsForInputConfig:
     gmw_vec: list[BenchmarkOutput]
     bmr: list[BenchmarkOutput]
     bmr_vec: list[BenchmarkOutput]
+    arith: list[BenchmarkOutput]
+    arith_vec: list[BenchmarkOutput]
 
     @classmethod
     def from_dictionary(cls, params):
@@ -39,22 +41,42 @@ class StatsForInputConfig:
         else:
             bmr_vec = [params['bmr_vec_p0'], params['bmr_vec_p1']]
 
+        if 'arith' in params:
+            arith = params['arith']
+        else:
+            arith = []
+
+        if 'arith_vec' in params:
+            arith_vec = params['arith_vec']
+        else:
+            arith_vec = []
+
         return cls(
             label=label,
             gmw=gmw,
             gmw_vec=gmw_vec,
             bmr=bmr,
-            bmr_vec=bmr_vec
+            bmr_vec=bmr_vec,
+            arith=arith,
+            arith_vec=arith_vec
         )
 
     def to_dictionary(self):
-        return {
+        d = {
             'label': self.label,
             'gmw': self.gmw,
             'gmw_vec': self.gmw_vec,
             'bmr': self.bmr,
             'bmr_vec': self.bmr_vec,
         }
+
+        if len(self.arith) > 0:
+            d['arith'] = self.arith
+
+        if len(self.arith_vec) > 0:
+            d['arith_vec'] = self.arith_vec
+
+        return d
 
 
 @dataclass
