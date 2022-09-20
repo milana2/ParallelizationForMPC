@@ -651,9 +651,6 @@ def compile_all_benchmarks():
         compile_benchmark(test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True)
         compile_benchmark(test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, False)
         compile_benchmark(test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, True)
-        if test_case_dir.name == "inner_product":
-            compile_benchmark(test_case_dir.name, test_case_dir.path, "ArithmeticGmw", False)
-            compile_benchmark(test_case_dir.name, test_case_dir.path, "ArithmeticGmw", True)
 
 
 @dataclass
@@ -710,11 +707,8 @@ def run_server_role(id, address, num_parties):
         for args in all_args:
             log.info("\n{} - arguments: {}".format(test_case_dir.name, args.args))
 
-            protocol_stats: list[list[BenchmarkOutput]] = []
-            target_protocols = [GMW_PROTOCOL, BMR_PROTOCOL]
-            if test_case_dir.name == "inner_product":
-                target_protocols.append("ArithmeticGmw")
-            for protocol in target_protocols:
+            protocol_stats: list[BenchmarkOutput] = []
+            for protocol in [GMW_PROTOCOL, BMR_PROTOCOL]:
                 for vectorized in [False, True]:
                     if i > non_vec_up_to and vectorized is False:
                         blank_output = [None] * num_parties
@@ -786,13 +780,7 @@ def run_server_role(id, address, num_parties):
                 log.warning("{}, {} No version ran on this iteration.".format(test_case_dir.name,
                                                                               args.label))
             else:
-                if len(protocol_stats) == 6:
-                    input_stats = StatsForInputConfig(label=args.label, gmw=gmw, gmw_vec=gmw_vec, bmr=bmr,
-                                                      bmr_vec=bmr_vec, arith=protocol_stats[4],
-                                                      arith_vec=protocol_stats[5])
-                else:
-                    input_stats = StatsForInputConfig(label=args.label, gmw=gmw, gmw_vec=gmw_vec, bmr=bmr,
-                                                      bmr_vec=bmr_vec)
+                input_stats = StatsForInputConfig(label=args.label, gmw=gmw, gmw_vec=gmw_vec, bmr=bmr, bmr_vec=bmr_vec)
                 update_benchmark_json(task_stats=task_stats, input_stats=input_stats)
 
             i += 1
