@@ -14,8 +14,6 @@ class BenchmarkOutput:
     output: str
     timing_stats: statistics.TimingStatistics
     circuit_stats: statistics.CircuitStatistics
-    circuit_file: Optional[str] = None
-
 
     @classmethod
     def from_dictionary(cls, params):
@@ -23,7 +21,6 @@ class BenchmarkOutput:
         output = params["output"]
         timing_stats = params["timing_stats"]
         circuit_stats = params["circuit_stats"]
-        circuit_file = params.get("circuit_file")
 
         return cls(
             name=name,
@@ -33,21 +30,12 @@ class BenchmarkOutput:
         )
 
     def to_dictionary(self):
-        if self.circuit_file:
-            return {
-                "name": self.name,
-                "output": self.output,
-                "timing_stats": self.timing_stats,
-                "circuit_stats": self.circuit_stats,
-                "circuit_file": self.circuit_file,
-            }
-        else:
-            return {
-                "name": self.name,
-                "output": self.output,
-                "timing_stats": self.timing_stats,
-                "circuit_stats": self.circuit_stats,
-            }
+        return {
+            "name": self.name,
+            "output": self.output,
+            "timing_stats": self.timing_stats,
+            "circuit_stats": self.circuit_stats,
+        }
 
     @classmethod
     def by_accumulating_readings(cls, a, b):
@@ -187,14 +175,12 @@ def run_benchmark(
                     output=party0_output,
                     timing_stats=party0_timing_stats,
                     circuit_stats=party0_circuit_stats,
-                    circuit_file=os.path.join(party0_dir, "circuit.dot"),
                 ),
                 BenchmarkOutput(
                     name=benchmark_name,
                     output=party1_output,
                     timing_stats=party1_timing_stats,
                     circuit_stats=party1_circuit_stats,
-                    circuit_file=os.path.join(party1_dir, "circuit.dot"),
                 ),
             )
 
