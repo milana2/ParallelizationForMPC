@@ -36,6 +36,7 @@ jobs:
       - name: Build results markdown
         env:
           CXX: g++-10
+          CMAKE_CXX_STANDARD: 20
         run: ./compiler/make_results_markdown.py static
       - name: Build paper
         run: |
