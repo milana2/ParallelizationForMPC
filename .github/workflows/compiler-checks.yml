@@ -58,4 +58,5 @@ jobs:
         working-directory: compiler
         env:
           CXX: g++-10
+          CMAKE_CXX_STANDARD: 20
         run: ./run_tests.py --test-example-apps
