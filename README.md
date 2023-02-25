@@ -7,7 +7,7 @@
 1. Install Ubuntu dependencies with
    ```sh
    sudo apt-get update
-   sudo apt-get install g++-10 make git python3 python3-pip cmake libssl-dev libboost-program-options-dev graphviz
+   sudo apt-get install build-essential make git python3 python3-pip cmake libssl-dev libboost-program-options-dev graphviz
    ```
 2. Clone the repo (the `--recursive` is required for the MOTION submodule)
    ```sh

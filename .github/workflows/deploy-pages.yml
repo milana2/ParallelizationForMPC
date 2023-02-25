@@ -19,7 +19,8 @@ jobs:
       - name: Install dependencies
         working-directory: compiler
         run: |
-          DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
+          sudo apt-get update
+          sudo apt-get -y install \
             graphviz \
             texlive-base \
             texlive-latex-extra \
@@ -27,16 +28,13 @@ jobs:
             texlive-publishers \
             texlive-science \
             cmake \
-            g++-10 \
+            build-essential \
             make \
             libboost-all-dev \
             libssl-dev
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Build results markdown
-        env:
-          CXX: g++-10
-          CMAKE_CXX_STANDARD: 20
         run: ./compiler/make_results_markdown.py static
       - name: Build paper
         run: |
