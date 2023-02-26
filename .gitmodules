@@ -1,3 +1,3 @@
-[submodule "MOTION"]
-	path = MOTION
+[submodule "backend_submodules/MOTION"]
+	path = backend_submodules/MOTION
 	url = https://github.com/encryptogroup/MOTION

@@ -3,7 +3,7 @@ import dataclasses as dc
 from textwrap import indent
 from typing import Optional, Union
 
-from ..ast_shared import (
+from ...ast_shared import (
     BinOpKind,
     Constant,
     DataType,
@@ -19,7 +19,7 @@ from ..ast_shared import (
     VarVisibility,
     VectorizedAccess,
 )
-from ..tac_cfg import (
+from ...tac_cfg import (
     Assign,
     AssignRHS,
     BinOp,
@@ -32,9 +32,9 @@ from ..tac_cfg import (
     LiftExpr,
     DropDim,
 )
-from ..util import assert_never
-from ..loop_linear_code import For, Phi, Return
-from ..type_analysis import type_assign_expr, PLAINTEXT_INT
+from ...util import assert_never
+from ...loop_linear_code import For, Phi, Return
+from ...type_analysis import type_assign_expr, PLAINTEXT_INT
 
 
 @dc.dataclass(frozen=True)

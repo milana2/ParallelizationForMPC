@@ -6,12 +6,12 @@ import shutil
 from textwrap import indent
 from typing import TypedDict, Union
 
-from ..ast_shared import VectorizedAccess
+from ...ast_shared import VectorizedAccess
 
-from ..util import assert_never
-from ..loop_linear_code import Function, Statement, Phi, Assign, For, Return
-from ..type_analysis import TypeEnv, VarVisibility, Constant, DataType
-from .. import tac_cfg, ast_shared
+from ...util import assert_never
+from ...loop_linear_code import Function, Statement, Phi, Assign, For, Return
+from ...type_analysis import TypeEnv, VarVisibility, Constant, DataType
+from ... import tac_cfg, ast_shared
 
 from .low_level_rendering import (
     RenderContext,
@@ -253,7 +253,7 @@ def render_application(
     func: Function, type_env: TypeEnv, params: OutputParams, ran_vectorization: bool
 ) -> None:
     template_dir = os.path.abspath(os.path.dirname(__file__))
-    project_root = os.path.abspath(os.path.join(template_dir, "..", "..", ".."))
+    project_root = os.path.abspath(os.path.join(template_dir, "..", "..", "..", ".."))
 
     template_loader = FileSystemLoader(os.path.abspath(os.path.dirname(__file__)))
     template_env = Environment(loader=template_loader)
@@ -298,7 +298,7 @@ def render_application(
 
     rendered_cmakelists = cmakelists_template.render(
         app_name=func.name,
-        motion_dir=os.path.join(project_root, "MOTION"),
+        motion_dir=os.path.join(project_root, "backend_submodules", "MOTION"),
         cpp_files=["main.cpp", "collect_stats.cpp"],
     )
 

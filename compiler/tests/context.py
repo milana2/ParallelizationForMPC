@@ -4,7 +4,7 @@ TESTS_DIR = os.path.dirname(__file__)
 
 STAGES_DIR = os.path.join(TESTS_DIR, "stages")
 
-RUN_EXAMPLE_APPS = False
+BACKEND = None
 
 SKIPPED_TESTS = [
     # These benchmarks will always be skipped (they're essentially pseudocode)

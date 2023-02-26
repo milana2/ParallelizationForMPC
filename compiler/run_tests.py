@@ -13,13 +13,13 @@ if __name__ == "__main__":
         help="Regenerate test output to match the current compiler output",
     )
     parser.add_argument(
-        "--test-example-apps",
-        action="store_true",
-        help="Test that the example apps compile and run",
+        "--test-backend",
+        choices=["motion"],
+        help="Test that the example apps compile and run with the given backend",
     )
     args = parser.parse_args()
 
-    test_context.RUN_EXAMPLE_APPS = args.test_example_apps
+    test_context.BACKEND = args.test_backend
 
     if args.regenerate:
         regenerate_stages()

@@ -56,7 +56,7 @@ jobs:
           pip install -r requirements.txt
       - name: Build example applications
         working-directory: compiler
-        run: ./run_tests.py --test-example-apps
+        run: ./run_tests.py --test-backend motion
 
   results-page:
     runs-on: ubuntu-latest
