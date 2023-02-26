@@ -50,13 +50,10 @@ jobs:
         working-directory: compiler
         run: |
           sudo apt-get update
-          sudo apt-get -y install cmake g++-10 make libboost-all-dev libssl-dev
+          sudo apt-get -y install build-essential make git cmake libssl-dev libboost-program-options-dev graphviz
 
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Build example applications
         working-directory: compiler
-        env:
-          CXX: g++-10
-          CMAKE_CXX_STANDARD: 20
         run: ./run_tests.py --test-example-apps

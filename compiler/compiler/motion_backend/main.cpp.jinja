@@ -217,7 +217,7 @@ int main(const int argc, const char *const argv[])
 
     encrypto::motion::AccumulatedCommunicationStatistics accumulated_communication_statistics;
     accumulated_communication_statistics.Add(
-        party->GetCommunicationLayer().GetTransportStatistics());
+        party->GetBackend()->GetCommunicationLayer().GetTransportStatistics());
 
     std::cerr << encrypto::motion::PrintStatistics("{{ benchmark_name }}", accumulated_statistics,
                                                    accumulated_communication_statistics)

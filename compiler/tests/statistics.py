@@ -186,6 +186,7 @@ class TimingStatistics:
     sb_setup: TimingDatapoint
     base_ots: TimingDatapoint
     ot_extension_setup: TimingDatapoint
+    kk13_ot_extension_setup: TimingDatapoint
 
     preprocess_total: TimingDatapoint
     gates_setup: TimingDatapoint
@@ -328,7 +329,7 @@ def parse_timing_data(lines: list[str]) -> TimingStatistics:
 
     assert is_thin_boundary(lines[10])
 
-    # lines[11..18] == "[DATAPOINT NAME] [MEAN] ms [MEDIAN] ms [STDDEV] ms" # (with padding for columns)
+    # lines[11..19] == "[DATAPOINT NAME] [MEAN] ms [MEDIAN] ms [STDDEV] ms" # (with padding for columns)
     mt_presetup = parse_datapoint(lines[11])
     assert mt_presetup.datapoint_name == "MT Presetup"
     mt_setup = parse_datapoint(lines[12])
@@ -345,28 +346,30 @@ def parse_timing_data(lines: list[str]) -> TimingStatistics:
     assert base_ots.datapoint_name == "Base OTs"
     ot_extension_setup = parse_datapoint(lines[18])
     assert ot_extension_setup.datapoint_name == "OT Extension Setup"
+    kk13_ot_extension_setup = parse_datapoint(lines[19])
+    assert kk13_ot_extension_setup.datapoint_name == "KK13 OT Extension Setup"
 
-    assert is_thin_boundary(lines[19])
+    assert is_thin_boundary(lines[20])
 
-    # lines[20..22] == "[DATAPOINT NAME] [MEAN] ms [MEDIAN] ms [STDDEV] ms" # (with padding for columns)
-    preprocess_total = parse_datapoint(lines[20])
+    # lines[21..23] == "[DATAPOINT NAME] [MEAN] ms [MEDIAN] ms [STDDEV] ms" # (with padding for columns)
+    preprocess_total = parse_datapoint(lines[21])
     assert preprocess_total.datapoint_name == "Preprocessing Total"
-    gates_setup = parse_datapoint(lines[21])
+    gates_setup = parse_datapoint(lines[22])
     assert gates_setup.datapoint_name == "Gates Setup"
-    gates_online = parse_datapoint(lines[22])
+    gates_online = parse_datapoint(lines[23])
     assert gates_online.datapoint_name == "Gates Online"
 
-    assert is_thin_boundary(lines[23])
-    # lines[24] == "Circuit evaluation: [MEAN] ms [MEDIAN] ms [STDDEV] ms" # (with padding for columns)
-    circuit_evaluation = parse_datapoint(lines[24])
+    assert is_thin_boundary(lines[24])
+    # lines[25] == "Circuit evaluation: [MEAN] ms [MEDIAN] ms [STDDEV] ms" # (with padding for columns)
+    circuit_evaluation = parse_datapoint(lines[25])
     assert circuit_evaluation.datapoint_name == "Circuit Evaluation"
 
-    assert is_thick_boundary(lines[25])
+    assert is_thick_boundary(lines[26])
 
-    assert lines[26] == "Communication with each other party:"
-    communication = parse_communication_statistics(lines[27], lines[28])
+    assert lines[27] == "Communication with each other party:"
+    communication = parse_communication_statistics(lines[28], lines[29])
 
-    assert is_thick_boundary(lines[29])
+    assert is_thick_boundary(lines[30])
 
     return TimingStatistics(
         num_iterations=num_iterations,
@@ -378,6 +381,7 @@ def parse_timing_data(lines: list[str]) -> TimingStatistics:
         sb_setup=sb_setup,
         base_ots=base_ots,
         ot_extension_setup=ot_extension_setup,
+        kk13_ot_extension_setup=kk13_ot_extension_setup,
         preprocess_total=preprocess_total,
         gates_setup=gates_setup,
         gates_online=gates_online,
