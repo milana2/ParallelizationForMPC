@@ -57,3 +57,27 @@ jobs:
       - name: Build example applications
         working-directory: compiler
         run: ./run_tests.py --test-example-apps
+
+  results-page:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        working-directory: compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install build-essential make git cmake libssl-dev libboost-program-options-dev graphviz
+
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Build results page
+        run: ./compiler/make_results_markdown.py results
