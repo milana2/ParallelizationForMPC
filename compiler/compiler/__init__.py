@@ -12,15 +12,14 @@ from .ssa_to_loop_linear_code import ssa_to_loop_linear_code
 from .dep_graph import DepGraph
 from .type_analysis import type_check
 from . import loop_linear_code
-from .backends.motion import render_function as motion_render_function
-from .backends.motion import render_application as motion_render_application
-from .backends.motion import VALID_PROTOCOLS as MOTION_VALID_PROTOCOLS
+from .backends import Backend
 from . import vectorize
 
 
 def compile(
     filename: str,
     text: str,
+    backend: Backend,
     quiet: bool = True,
     run_vectorization: bool = True,
     out_dir: Optional[str] = None,
@@ -106,19 +105,19 @@ def compile(
             print(type_env)
             print()
 
-    motion_code = motion_render_function(linear, type_env, run_vectorization)
+    motion_code = backend.render_function(linear, type_env, run_vectorization)
     if not quiet:
         print("Motion code:")
         print(motion_code)
         print()
 
     if out_dir:
-        if protocol not in MOTION_VALID_PROTOCOLS:
+        if protocol not in backend.valid_protocols():
             raise ValueError(
-                f"Invalid protocol: {protocol}. Valid protocols are: {MOTION_VALID_PROTOCOLS}"
+                f"Invalid protocol: {protocol}. Valid protocols are: {backend.valid_protocols()}"
             )
 
-        motion_render_application(
+        backend.render_application(
             linear,
             type_env,
             {"out_dir": out_dir, "overwrite": overwrite_out_dir, "protocol": protocol},

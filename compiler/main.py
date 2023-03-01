@@ -2,6 +2,7 @@
 import argparse
 
 import compiler
+from compiler.backends import Backend
 
 
 def parse_args():
@@ -25,6 +26,12 @@ def parse_args():
         "--protocol",
         help="Protocol to use when running benchmarks",
     )
+    parser.add_argument(
+        "--backend",
+        type=Backend,
+        choices=list(Backend),
+        help="The MPC backend to target",
+    )
     return parser.parse_args()
 
 
@@ -33,6 +40,7 @@ if __name__ == "__main__":
     compiler.compile(
         args.input.name,
         args.input.read(),
+        args.backend,
         args.quiet,
         True,  # Only output vectorized code when invoked from the command line
         args.out_dir,
