@@ -38,6 +38,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10"]
+        mpc-backend: ["MOTION", "MP-SPDZ"]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -60,7 +61,7 @@ jobs:
           pip install -r requirements.txt
       - name: Build example applications
         working-directory: compiler
-        run: ./run_tests.py --test-backend motion
+        run: ./run_tests.py --test-backend ${{ matrix.mpc-backend }}
 
   results-page:
     runs-on: ubuntu-latest
