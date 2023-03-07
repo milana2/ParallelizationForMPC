@@ -1,3 +1,6 @@
 [submodule "backend_submodules/MOTION"]
 	path = backend_submodules/MOTION
 	url = https://github.com/encryptogroup/MOTION
+[submodule "backend_submodules/MP-SPDZ"]
+	path = backend_submodules/MP-SPDZ
+	url = https://github.com/data61/MP-SPDZ
