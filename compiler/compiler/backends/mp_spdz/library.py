@@ -6,6 +6,7 @@ and it provides some functions common to all generated MP-SPDZ programs
 
 import typing
 import math
+import itertools
 
 
 T = typing.TypeVar("T")
@@ -21,7 +22,7 @@ def get_dim_indices(dim_sizes: list[int], index: int) -> list[int]:
     return dim_idxs
 
 
-def lift(expr: typing.Callable[[list[int]], T], dim_sizes: list[int]) -> list[T]:
+def lift(expr: typing.Callable[[list[int]], T], dim_sizes: list[int]) -> MultiArray:
     """
     Maps @p expr to an array specified by the provided dimensions.
 
@@ -32,31 +33,29 @@ def lift(expr: typing.Callable[[list[int]], T], dim_sizes: list[int]) -> list[T]
     @returns The lifted array.
     """
 
-    return [
-        expr(get_dim_indices(dim_sizes, index)) for index in range(math.prod(dim_sizes))
-    ]
+    a = MultiArray(dim_sizes, sint)
+    all_indices = [range(size) for size in dim_sizes]
+    for index in itertools.product(*all_indices):
+        a.get(index) = expr(index)
+    return a
 
 
-def drop_dim(arr: list[T], dim_sizes: list[int]) -> list[T]:
+def drop_dim(arr: MultiArray) -> MultiArray:
     """
     Drops the last dimension from @p arr, retaining the last element of each
       slice of that dimension.
 
     :param arr        The array to drop the last dimension from.
-    :param dim_sizes  The size of each dimension in @p arr.
 
     :returns A copy of @p arr with the last dimension dropped.
     """
 
-    dropped_size = len(arr) // dim_sizes[-1]
-    dropped = []
+    dropped_shape = arr.shape[:-1]
+    dropped = MultiArray(dropped_shape, sint)
 
-    for i in range(dropped_size):
-        in_idx = i
-        for dim_size in dim_sizes[:-1]:
-            in_idx *= dim_size
-        in_idx += dim_sizes[-1] - 1
-        dropped.append(arr[in_idx])
+    all_indices = [range(size) for size in dropped_shape]
+    for index in itertools.product(*all_indices):
+        dropped.get(index) = arr.get(list(index) + [-1])
 
     return dropped
 
@@ -86,3 +85,17 @@ def vectorized_access(
             bucket.append(arr[i])
 
     return bucket
+
+
+# Compute the slice of an array.
+def vectorized_assign(
+    target: list[T],
+    dim_sizes: list[int],
+    vectorized_dims: list[bool],
+    idxs: list[int],
+    unvectorized_source: list[T],
+) -> None:
+    # For each element in the unvectorized representation, find the corresponding index in the
+    # target array and assign the value.
+    for i, source_value in enumerate(unvectorized_source):
+        target_dim_idxs = get_dim_indices(dim_sizes, i)

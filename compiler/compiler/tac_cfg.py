@@ -96,6 +96,9 @@ class VectorizedUpdate:
         return f"VectorizedUpdate({self.array}, [{idxs}], {self.value})"
 
 
+AssignLHS = Union[Var, VectorizedAccess]
+
+
 AssignRHS = Union[
     Atom,
     Subscript,
@@ -173,7 +176,7 @@ def assign_rhs_accessed_vars(rhs: AssignRHS) -> list[Var]:
 
 @dataclass(eq=False)
 class Assign:
-    lhs: Union[Var, VectorizedAccess]
+    lhs: AssignLHS
     rhs: AssignRHS
 
     def __hash__(self):

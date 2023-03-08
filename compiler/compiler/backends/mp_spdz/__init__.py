@@ -1,6 +1,6 @@
 import os
-
-from compiler.compiler.ast_shared import BinOpKind
+from textwrap import indent
+from typing import Union
 
 from ...util import assert_never
 from ...loop_linear_code import (
@@ -12,9 +12,10 @@ from ...loop_linear_code import (
     Return,
     Update,
     VectorizedAccess,
+    VectorizedUpdate,
     Var,
-    AssignRHS,
     BinOp,
+    BinOpKind,
     SubscriptIndexBinOp,
     List,
     Tuple,
@@ -26,29 +27,41 @@ from ...loop_linear_code import (
     SubscriptIndexBinOp,
     SubscriptIndexUnaryOp,
     Atom,
+    LiftExpr,
+    DropDim,
 )
-from ...type_analysis import TypeEnv, VarVisibility, Constant, DataType
+from ...type_analysis import TypeEnv, Constant
 
 
-def render_var(var: Var) -> str:
-    return str(var).replace("!", "_")
+def render_var(var: Var, var_mappings: dict[Var, str]) -> str:
+    try:
+        return var_mappings[var]
+    except KeyError:
+        return str(var).replace("!", "_")
 
 
-def render_atom(atom: Atom) -> str:
+def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
+    num_dims = len(v.dim_sizes)
+    idxs = v.idx_vars
+    slice_indices: list[str] = []
+    for dim in range(num_dims):
+        if v.vectorized_dims[dim]:
+            slice_indices.append("None")
+        else:
+            slice_indices.append(render_var(idxs[0], var_mappings))
+            idxs = idxs[1:]
+    array = render_var(v.array, var_mappings)
+    slice = ", ".join(slice_indices)
+    return f"{array}.get_vector_by_indices({slice})"
+
+
+def render_atom(atom: Atom, var_mappings: dict[Var, str]) -> str:
     if isinstance(atom, Var):
-        return render_var(atom)
+        return render_var(atom, var_mappings)
     elif isinstance(atom, Constant):
         return str(atom)
     elif isinstance(atom, VectorizedAccess):
-        array = render_var(atom.array)
-        dim_sizes = (
-            "["
-            + ", ".join([render_atom(dim_size) for dim_size in atom.dim_sizes])
-            + "]"
-        )
-        idxs = "[" + ", ".join([render_var(idx) for idx in atom.idx_vars]) + "]"
-        vectorized_dims = str(list(atom.vectorized_dims))
-        return f"vectorized_access({array}, {dim_sizes}, {vectorized_dims}, {idxs})"
+        return render_vectorized_access(atom, var_mappings)
     else:
         assert_never(atom)
 
@@ -71,75 +84,109 @@ def render_unary_op_kind(op: UnaryOpKind) -> str:
         assert_never(op)
 
 
-def render_subscript_index(index: SubscriptIndex) -> str:
+def render_subscript_index(index: SubscriptIndex, var_mappings: dict[Var, str]) -> str:
     if isinstance(index, (Var, Constant)):
-        return render_atom(index)
+        return render_atom(index, var_mappings)
     elif isinstance(index, SubscriptIndexBinOp):
-        left = render_subscript_index(index.left)
+        left = render_subscript_index(index.left, var_mappings)
         operator = render_bin_op_kind(index.operator)
-        right = render_subscript_index(index.right)
+        right = render_subscript_index(index.right, var_mappings)
         return f"({left} {operator} {right})"
     elif isinstance(index, SubscriptIndexUnaryOp):
         operator = render_unary_op_kind(index.operator)
-        operand = render_subscript_index(index.operand)
+        operand = render_subscript_index(index.operand, var_mappings)
         return f"({operator}{operand})"
     else:
         assert_never(index)
 
 
-def render_assign_rhs(expr: AssignRHS) -> str:
-    if isinstance(expr, (BinOp, SubscriptIndexBinOp)):
-        left = render_assign_rhs(expr.left)
-        right = render_assign_rhs(expr.right)
-        return f"({left} {expr.operator} {right})"
-    elif isinstance(expr, (Var, Constant, VectorizedAccess)):
-        return render_atom(expr)
-    elif isinstance(expr, List):
-        items = [render_assign_rhs(item) for item in expr.items]
+def render_lift_expr(lift: LiftExpr) -> str:
+    assert not isinstance(lift.expr, (Update, VectorizedUpdate))
+    expr = render_assign_rhs(
+        lift.expr,
+        {var: f"indices[{index}]" for index, (var, _) in enumerate(lift.dims)},
+    )
+    dim_sizes = ", ".join([render_atom(size, dict()) for (_, size) in lift.dims])
+    return f"lift(lambda indices: {expr}, [{dim_sizes}])"
+
+
+def render_assign_rhs(
+    arhs: Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux, LiftExpr, DropDim],
+    var_mappings: dict[Var, str],
+) -> str:
+    if isinstance(arhs, BinOp):
+        left = render_assign_rhs(arhs.left, var_mappings)
+        right = render_assign_rhs(arhs.right, var_mappings)
+        return f"({left} {arhs.operator} {right})"
+    elif isinstance(arhs, (Var, Constant, VectorizedAccess)):
+        return render_atom(arhs, var_mappings)
+    elif isinstance(arhs, List):
+        items = [render_assign_rhs(item, var_mappings) for item in arhs.items]
         comma_separated_items = ", ".join(items)
         return f"[{comma_separated_items}]"
-    elif isinstance(expr, Tuple):
-        items = [render_assign_rhs(item) + "," for item in expr.items]
+    elif isinstance(arhs, Tuple):
+        items = [render_assign_rhs(item, var_mappings) + "," for item in arhs.items]
         return f"({items})"
-    elif isinstance(expr, Mux):
-        condition = render_assign_rhs(expr.condition)
-        true_value = render_assign_rhs(expr.true_value)
-        false_value = render_assign_rhs(expr.false_value)
+    elif isinstance(arhs, Mux):
+        condition = render_assign_rhs(arhs.condition, var_mappings)
+        true_value = render_assign_rhs(arhs.true_value, var_mappings)
+        false_value = render_assign_rhs(arhs.false_value, var_mappings)
         return f"{condition}.if_else({true_value}, {false_value})"
-    elif isinstance(expr, UnaryOp):
-        operator = render_unary_op_kind(expr.operator)
-        operand = render_assign_rhs(expr.operand)
+    elif isinstance(arhs, UnaryOp):
+        operator = render_unary_op_kind(arhs.operator)
+        operand = render_assign_rhs(arhs.operand, var_mappings)
         return f"({operator}{operand})"
-    elif isinstance(expr, Subscript):
-        array = render_assign_rhs(expr.array)
-        index = render_subscript_index(expr.index)
+    elif isinstance(arhs, Subscript):
+        array = render_assign_rhs(arhs.array, var_mappings)
+        index = render_subscript_index(arhs.index, var_mappings)
         return f"({array}[{index}])"
-    elif isinstance(expr, Update):
-        array = render_var(expr.array)
-        index = render_subscript_index(expr.index)
-        value = render_atom(expr.value)
-        return f"({array}[:{index}] + [{value}] + {array}[{index}+1:])"
+    elif isinstance(arhs, LiftExpr):
+        return render_lift_expr(arhs)
+    elif isinstance(arhs, DropDim):
+        array = render_var(arhs.array, var_mappings)
+        return f"drop_dim({array})"
     else:
-        return assert_never(expr)
+        return assert_never(arhs)
 
 
 def render_statement(stmt: Statement) -> str:
     if isinstance(stmt, Phi):
-        pass
+        return ""
     elif isinstance(stmt, Assign):
-        # If we're assigning to a vectorized value, use a specialized function for this.
-        if isinstance(stmt.lhs, VectorizedAccess):
-            pass
-        elif isinstance(stmt.rhs, Update):
-            pass
+        lhs = render_atom(stmt.lhs, dict())
+        if isinstance(stmt.rhs, Update):
+            array = render_var(stmt.rhs.array, dict())
+            index = render_subscript_index(stmt.rhs.index, dict())
+            value = render_atom(stmt.rhs.value, dict())
+            return f"{array}[{index}] = {value}; {lhs} = {array}"
+        elif isinstance(stmt.rhs, VectorizedUpdate):
+            access = render_vectorized_access(
+                VectorizedAccess(
+                    array=stmt.rhs.array,
+                    dim_sizes=stmt.rhs.dim_sizes,
+                    vectorized_dims=stmt.rhs.vectorized_dims,
+                    idx_vars=stmt.rhs.idx_vars,
+                ),
+                dict(),
+            )
+            value = render_atom(stmt.rhs.value, dict())
+            array = render_var(stmt.rhs.array, dict())
+            return f"{access} = {value}; {lhs} = {array}"
         else:
-            lhs = render_var(stmt.lhs)
-            rhs = render_assign_rhs(stmt.rhs)
+            rhs = render_assign_rhs(stmt.rhs, dict())
             return f"{lhs} = {rhs}"
     elif isinstance(stmt, For):
-        pass
+        counter = render_var(stmt.counter, dict())
+        bound_low = render_atom(stmt.bound_low, dict())
+        bound_high = render_atom(stmt.bound_high, dict())
+        body = indent(
+            "\n".join([str(render_statement(body_stmt)) for body_stmt in stmt.body]),
+            "    ",
+        )
+        return f"for {counter} in range({bound_low}, {bound_high}):\n{body}"
     elif isinstance(stmt, Return):
-        pass
+        value = render_var(stmt.value, dict())
+        return f"return {value}"
     else:
         assert_never(stmt)
 

@@ -17,6 +17,7 @@ from .ast_shared import (
 from .tac_cfg import (
     BinOp,
     UnaryOp,
+    AssignLHS,
     AssignRHS,
     Subscript,
     Assign,
@@ -42,9 +43,9 @@ from .util import assert_never
 
 @dataclass(eq=False)
 class Phi:
-    lhs: Union[Var, VectorizedAccess]
-    rhs_false: Union[Var, VectorizedAccess]
-    rhs_true: Union[Var, VectorizedAccess]
+    lhs: AssignLHS
+    rhs_false: AssignLHS
+    rhs_true: AssignLHS
     targetless: bool = False
     removed: bool = False
 

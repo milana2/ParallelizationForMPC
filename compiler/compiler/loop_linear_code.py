@@ -9,6 +9,7 @@ from .ssa import (
     Phi,
     Assign,
     LoopBound,
+    AssignLHS,
     AssignRHS,
     Constant,
     Subscript,
