@@ -1,20 +1,20 @@
 max_dist_1 = 0
 current_dist_1 = 0
-_6_0.get_vector_by_indices(None) = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-_7_0.get_vector_by_indices(None) = lift(lambda indices: Sym_0, [N_0])
+_6_0.assign_vector_by_indices(lift(lambda indices: (Seq_0[indices[0]]), [N_0]), None)
+_7_0.assign_vector_by_indices(lift(lambda indices: Sym_0, [N_0]), None)
 current_dist_4 = 0
-_4_0.get_vector_by_indices(None) = lift(lambda indices: max_dist_1, [N_0])
-_5_0.get_vector_by_indices(None) = lift(lambda indices: current_dist_1, [N_0])
-_1_2.get_vector_by_indices(None) = (_6_0.get_vector_by_indices(None) == _7_0.get_vector_by_indices(None))
-_2_2.get_vector_by_indices(None) = (~_1_2.get_vector_by_indices(None))
+_4_0.assign_vector_by_indices(lift(lambda indices: max_dist_1, [N_0]), None)
+_5_0.assign_vector_by_indices(lift(lambda indices: current_dist_1, [N_0]), None)
+_1_2.assign_vector_by_indices((_6_0.get_vector_by_indices(None) == _7_0.get_vector_by_indices(None)), None)
+_2_2.assign_vector_by_indices((~_1_2.get_vector_by_indices(None)), None)
 for _9_0 in range(0, N_0):
 
-    current_dist_3.get_vector_by_indices(_9_0) = (current_dist_2.get_vector_by_indices(_9_0) + 1)
-    current_dist_5.get_vector_by_indices(_9_0) = _2_2.get_vector_by_indices(_9_0).if_else(current_dist_3.get_vector_by_indices(_9_0), current_dist_4)
-max_dist_3.get_vector_by_indices(None) = current_dist_5.get_vector_by_indices(None)
+    current_dist_3.assign_vector_by_indices((current_dist_2.get_vector_by_indices(_9_0) + 1), _9_0)
+    current_dist_5.assign_vector_by_indices(_2_2.get_vector_by_indices(_9_0).if_else(current_dist_3.get_vector_by_indices(_9_0), current_dist_4), _9_0)
+max_dist_3.assign_vector_by_indices(current_dist_5.get_vector_by_indices(None), None)
 for _10_0 in range(0, N_0):
 
-    _3_2.get_vector_by_indices(_10_0) = (current_dist_5.get_vector_by_indices(_10_0) > max_dist_2.get_vector_by_indices(_10_0))
-    max_dist_4.get_vector_by_indices(_10_0) = _3_2.get_vector_by_indices(_10_0).if_else(max_dist_3.get_vector_by_indices(_10_0), max_dist_2.get_vector_by_indices(_10_0))
+    _3_2.assign_vector_by_indices((current_dist_5.get_vector_by_indices(_10_0) > max_dist_2.get_vector_by_indices(_10_0)), _10_0)
+    max_dist_4.assign_vector_by_indices(_3_2.get_vector_by_indices(_10_0).if_else(max_dist_3.get_vector_by_indices(_10_0), max_dist_2.get_vector_by_indices(_10_0)), _10_0)
 _8_0 = drop_dim(max_dist_4{N_0}[])
 return _8_0

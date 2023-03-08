@@ -1,34 +1,34 @@
 min_index_1 = 0
-_4_0.get_vector_by_indices(None) = lift(lambda indices: differences_0, [N_0])
-_5_0.get_vector_by_indices(None) = lift(lambda indices: (S_sqr_sum_0[indices[0]]), [N_0])
-_6_0.get_vector_by_indices(None) = lift(lambda indices: C_sqr_sum_0, [N_0])
+_4_0.assign_vector_by_indices(lift(lambda indices: differences_0, [N_0]), None)
+_5_0.assign_vector_by_indices(lift(lambda indices: (S_sqr_sum_0[indices[0]]), [N_0]), None)
+_6_0.assign_vector_by_indices(lift(lambda indices: C_sqr_sum_0, [N_0]), None)
 two_a_b_2 = 0
-_8_0.get_vector_by_indices(None, None) = lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0])
-_9_0.get_vector_by_indices(None, None) = lift(lambda indices: (two_C_0[indices[1]]), [N_0, D_0])
+_8_0.assign_vector_by_indices(lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0]), None, None)
+_9_0.assign_vector_by_indices(lift(lambda indices: (two_C_0[indices[1]]), [N_0, D_0]), None, None)
 min_index_3 = 0
 min_diff_1 = 99999
-_16_0.get_vector_by_indices(None) = lift(lambda indices: indices[0], [N_0])
-_3_0.get_vector_by_indices(None) = lift(lambda indices: min_index_1, [N_0])
-a_sqr_plus_b_sqr_2.get_vector_by_indices(None) = (_5_0.get_vector_by_indices(None) + _6_0.get_vector_by_indices(None))
-_7_0.get_vector_by_indices(None, None) = lift(lambda indices: two_a_b_2, [N_0, D_0])
-tmp_3.get_vector_by_indices(None, None) = (_8_0.get_vector_by_indices(None, None) * _9_0.get_vector_by_indices(None, None))
-_11_0.get_vector_by_indices(None) = lift(lambda indices: min_diff_1, [N_0])
+_16_0.assign_vector_by_indices(lift(lambda indices: indices[0], [N_0]), None)
+_3_0.assign_vector_by_indices(lift(lambda indices: min_index_1, [N_0]), None)
+a_sqr_plus_b_sqr_2.assign_vector_by_indices((_5_0.get_vector_by_indices(None) + _6_0.get_vector_by_indices(None)), None)
+_7_0.assign_vector_by_indices(lift(lambda indices: two_a_b_2, [N_0, D_0]), None, None)
+tmp_3.assign_vector_by_indices((_8_0.get_vector_by_indices(None, None) * _9_0.get_vector_by_indices(None, None)), None, None)
+_11_0.assign_vector_by_indices(lift(lambda indices: min_diff_1, [N_0]), None)
 for _15_0 in range(0, N_0):
 
 for _14_0 in range(0, D_0):
 
-    two_a_b_4.get_vector_by_indices(None, i_1) = (two_a_b_3.get_vector_by_indices(None, i_1) + tmp_3.get_vector_by_indices(None, i_1))
-_10_0.get_vector_by_indices(None) = drop_dim(two_a_b_4{N_0, D_0}[])
-this_diff_2.get_vector_by_indices(None) = (a_sqr_plus_b_sqr_2.get_vector_by_indices(None) - _10_0.get_vector_by_indices(None))
+    two_a_b_4.assign_vector_by_indices((two_a_b_3.get_vector_by_indices(None, i_1) + tmp_3.get_vector_by_indices(None, i_1)), None, i_1)
+_10_0.assign_vector_by_indices(drop_dim(two_a_b_4{N_0, D_0}[]), None)
+this_diff_2.assign_vector_by_indices((a_sqr_plus_b_sqr_2.get_vector_by_indices(None) - _10_0.get_vector_by_indices(None)), None)
 _4_0{N_0}[].get_vector_by_indices(None) = this_diff_2.get_vector_by_indices(None); differences_2.get_vector_by_indices(None) = _4_0{N_0}[]
-min_diff_3.get_vector_by_indices(None) = differences_2.get_vector_by_indices(None)
+min_diff_3.assign_vector_by_indices(differences_2.get_vector_by_indices(None), None)
 for _17_0 in range(0, N_0):
 
-    _1_2.get_vector_by_indices(_17_0) = (differences_2.get_vector_by_indices(_17_0) < min_diff_2.get_vector_by_indices(_17_0))
-    min_diff_4.get_vector_by_indices(_17_0) = _1_2.get_vector_by_indices(_17_0).if_else(min_diff_3.get_vector_by_indices(_17_0), min_diff_2.get_vector_by_indices(_17_0))
+    _1_2.assign_vector_by_indices((differences_2.get_vector_by_indices(_17_0) < min_diff_2.get_vector_by_indices(_17_0)), _17_0)
+    min_diff_4.assign_vector_by_indices(_1_2.get_vector_by_indices(_17_0).if_else(min_diff_3.get_vector_by_indices(_17_0), min_diff_2.get_vector_by_indices(_17_0)), _17_0)
 for _18_0 in range(0, N_0):
 
-    min_index_6.get_vector_by_indices(_18_0) = _1_2.get_vector_by_indices(_18_0).if_else(_16_0.get_vector_by_indices(_18_0), min_index_4.get_vector_by_indices(_18_0))
+    min_index_6.assign_vector_by_indices(_1_2.get_vector_by_indices(_18_0).if_else(_16_0.get_vector_by_indices(_18_0), min_index_4.get_vector_by_indices(_18_0)), _18_0)
 _12_0 = drop_dim(min_diff_4{N_0}[])
 _13_0 = drop_dim(min_index_6{N_0}[])
 _2_1 = (['_12_0,', '_13_0,'])
