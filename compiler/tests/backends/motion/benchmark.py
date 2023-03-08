@@ -5,6 +5,7 @@ import subprocess
 from typing import Optional
 
 import compiler
+from compiler.backends import Backend
 from . import statistics
 
 
@@ -73,7 +74,14 @@ def run_benchmark(
 
     if compile:
         compiler.compile(
-            f"{benchmark_name}.py", input_py, True, vectorized, app_path, True, protocol
+            f"{benchmark_name}.py",
+            input_py,
+            Backend.MOTION,
+            True,
+            vectorized,
+            app_path,
+            True,
+            protocol,
         )
 
         subprocess.run(
@@ -259,7 +267,14 @@ def compile_benchmark(
     )
 
     compiler.compile(
-        f"{benchmark_name}.py", input_py, True, vectorized, app_path, True, protocol
+        f"{benchmark_name}.py",
+        input_py,
+        Backend.MOTION,
+        True,
+        vectorized,
+        app_path,
+        True,
+        protocol,
     )
 
     subprocess.run(
