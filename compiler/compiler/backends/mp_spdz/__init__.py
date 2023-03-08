@@ -236,5 +236,5 @@ def render_application(
     func: Function, type_env: TypeEnv, params: dict[str, Any], ran_vectorization: bool
 ) -> None:
     func_rendered = render_function(func, type_env, ran_vectorization)
-    with open(params["out_path"], "w") as file:
+    with open(params["out_dir"], "w") as file:
         file.write(func_rendered + "\n")
