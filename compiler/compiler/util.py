@@ -27,9 +27,8 @@ def replace_pattern(expr: E, pattern: P, replacement: P, include_return=True) ->
                 replace_pattern(e, pattern, replacement, include_return) for e in expr
             ),
         )
-    elif not dc.is_dataclass(expr):
-        return expr
-    else:
+    elif dc.is_dataclass(expr):
+        assert not isinstance(expr, type)
         new_params = {
             field.name: getattr(expr, field.name)
             if (not include_return and field.name == "return_value")
@@ -38,7 +37,9 @@ def replace_pattern(expr: E, pattern: P, replacement: P, include_return=True) ->
             )
             for field in dc.fields(expr)
         }
-        return dc.replace(expr, **new_params)
+        return cast(E, dc.replace(expr, **new_params))
+    else:
+        return expr
 
 
 def partially_ordered_sort(elems: list[E], ordering: Callable[[E, E], int]) -> list[E]:
