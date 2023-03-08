@@ -87,7 +87,6 @@ def render_vectorized_access_slice(
         else:
             slice_indices.append(render_var(idxs[0], var_mappings))
             idxs = idxs[1:]
-    assert idxs == []
     return ", ".join(slice_indices)
 
 
