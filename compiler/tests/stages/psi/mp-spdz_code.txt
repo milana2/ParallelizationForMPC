@@ -13,5 +13,5 @@ for _8_0 in range(0, SB_0):
     flag_5.assign_vector_by_indices(_1_3.get_vector_by_indices(None, i_1).if_else(flag_4, flag_3.get_vector_by_indices(None, i_1)), None, i_1)
 _7_0.assign_vector_by_indices(drop_dim(flag_5{SA_0, SB_0}[]), None)
 val_4.assign_vector_by_indices(_7_0.get_vector_by_indices(None).if_else(val_3.get_vector_by_indices(None), val_2.get_vector_by_indices(None)), None)
-_2_0{SA_0}[].get_vector_by_indices(None) = val_4.get_vector_by_indices(None); result_2.get_vector_by_indices(None) = _2_0{SA_0}[]
+_2_0.get_vector_by_indices(None).assign_vector_by_indices(val_4.get_vector_by_indices(None), None); result_2.assign_vector_by_indices(_2_0{SA_0}[].get_vector_by_indices(None), None)
 return result_2

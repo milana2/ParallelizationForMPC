@@ -97,7 +97,7 @@ def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) 
 
 
 def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) -> str:
-    array = render_var(lhs.array, dict())
+    array = render_atom(lhs.array, dict())
     slice = render_vectorized_access_slice(lhs, dict())
     value = render_assign_rhs(rhs, dict())
     return f"{array}.assign_vector_by_indices({value}, {slice})"
@@ -208,18 +208,18 @@ def render_statement(stmt: Statement) -> str:
             value = render_atom(stmt.rhs.value, dict())
             return f"{array}[{index}] = {value}; {lhs} = {array}"
         elif isinstance(stmt.rhs, VectorizedUpdate):
-            access = render_vectorized_access(
-                VectorizedAccess(
-                    array=stmt.rhs.array,
-                    dim_sizes=stmt.rhs.dim_sizes,
-                    vectorized_dims=stmt.rhs.vectorized_dims,
-                    idx_vars=stmt.rhs.idx_vars,
-                ),
-                dict(),
+            rhs = VectorizedAccess(
+                array=stmt.rhs.array,
+                dim_sizes=stmt.rhs.dim_sizes,
+                vectorized_dims=stmt.rhs.vectorized_dims,
+                idx_vars=stmt.rhs.idx_vars,
             )
-            value = render_atom(stmt.rhs.value, dict())
-            array = render_var(stmt.rhs.array, dict())
-            return f"{access} = {value}; {lhs} = {array}"
+            assign1 = render_vectorized_assign(
+                lhs=rhs,
+                rhs=stmt.rhs.value,
+            )
+            assign2 = render_statement(Assign(lhs=stmt.lhs, rhs=rhs))
+            return f"{assign1}; {assign2}"
         elif isinstance(stmt.lhs, VectorizedAccess):
             return render_vectorized_assign(stmt.lhs, stmt.rhs)
         else:

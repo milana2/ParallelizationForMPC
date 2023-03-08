@@ -22,7 +22,7 @@ _15_0.assign_vector_by_indices(drop_dim(bx_4{N_0, N_0}[]), None)
 _6_2.assign_vector_by_indices((~_15_0.get_vector_by_indices(None)), None)
 val_X_4.assign_vector_by_indices(_6_2.get_vector_by_indices(None).if_else(val_X_3.get_vector_by_indices(None), val_X_2.get_vector_by_indices(None)), None)
 val_Y_4.assign_vector_by_indices(_6_2.get_vector_by_indices(None).if_else(val_Y_3.get_vector_by_indices(None), val_Y_2.get_vector_by_indices(None)), None)
-_8_0{N_0}[].get_vector_by_indices(None) = val_X_4.get_vector_by_indices(None); result_X_2.get_vector_by_indices(None) = _8_0{N_0}[]
-_9_0{N_0}[].get_vector_by_indices(None) = val_Y_4.get_vector_by_indices(None); result_Y_2.get_vector_by_indices(None) = _9_0{N_0}[]
+_8_0.get_vector_by_indices(None).assign_vector_by_indices(val_X_4.get_vector_by_indices(None), None); result_X_2.assign_vector_by_indices(_8_0{N_0}[].get_vector_by_indices(None), None)
+_9_0.get_vector_by_indices(None).assign_vector_by_indices(val_Y_4.get_vector_by_indices(None), None); result_Y_2.assign_vector_by_indices(_9_0{N_0}[].get_vector_by_indices(None), None)
 _7_1 = (['result_X_2,', 'result_Y_2,'])
 return _7_1

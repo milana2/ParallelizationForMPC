@@ -31,7 +31,7 @@ _20_0.assign_vector_by_indices(drop_dim(is_hull_5{N_0, N_0}[]), None)
 is_hull_6.assign_vector_by_indices(_3_2.get_vector_by_indices(None).if_else(_20_0.get_vector_by_indices(None), is_hull_2), None)
 val_X_4.assign_vector_by_indices(is_hull_6.get_vector_by_indices(None).if_else(val_X_3.get_vector_by_indices(None), val_X_2.get_vector_by_indices(None)), None)
 val_Y_4.assign_vector_by_indices(is_hull_6.get_vector_by_indices(None).if_else(val_Y_3.get_vector_by_indices(None), val_Y_2.get_vector_by_indices(None)), None)
-_11_0{N_0}[].get_vector_by_indices(None) = val_X_4.get_vector_by_indices(None); result_X_2.get_vector_by_indices(None) = _11_0{N_0}[]
-_12_0{N_0}[].get_vector_by_indices(None) = val_Y_4.get_vector_by_indices(None); result_Y_2.get_vector_by_indices(None) = _12_0{N_0}[]
+_11_0.get_vector_by_indices(None).assign_vector_by_indices(val_X_4.get_vector_by_indices(None), None); result_X_2.assign_vector_by_indices(_11_0{N_0}[].get_vector_by_indices(None), None)
+_12_0.get_vector_by_indices(None).assign_vector_by_indices(val_Y_4.get_vector_by_indices(None), None); result_Y_2.assign_vector_by_indices(_12_0{N_0}[].get_vector_by_indices(None), None)
 _10_1 = (['result_X_2,', 'result_Y_2,'])
 return _10_1

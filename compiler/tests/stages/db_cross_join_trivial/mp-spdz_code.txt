@@ -18,5 +18,5 @@ v_6.assign_vector_by_indices(_13_0.get_vector_by_indices(None, None, None).if_el
 v_8.assign_vector_by_indices(_14_0.get_vector_by_indices(None, None, None).if_else(v_7.get_vector_by_indices(None, None, None), v_6.get_vector_by_indices(None, None, None)), None, None, None)
 v_10.assign_vector_by_indices(_15_0.get_vector_by_indices(None, None, None).if_else(v_9.get_vector_by_indices(None, None, None), v_8.get_vector_by_indices(None, None, None)), None, None, None)
 v_11.assign_vector_by_indices(_1_4.get_vector_by_indices(None, None, None).if_else(v_10.get_vector_by_indices(None, None, None), v_4), None, None, None)
-_7_0{LEN_A_0, LEN_B_0, 3}[].get_vector_by_indices(None, None, None) = v_11.get_vector_by_indices(None, None, None); res_4.get_vector_by_indices(None, None, None) = _7_0{LEN_A_0, LEN_B_0, 3}[]
+_7_0.get_vector_by_indices(None, None, None).assign_vector_by_indices(v_11.get_vector_by_indices(None, None, None), None, None, None); res_4.assign_vector_by_indices(_7_0{LEN_A_0, LEN_B_0, 3}[].get_vector_by_indices(None, None, None), None, None, None)
 return res_4

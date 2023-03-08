@@ -13,7 +13,7 @@ exp_1 = (_4_0 / len_0)
 _7_0.assign_vector_by_indices(lift(lambda indices: exp_1, [len_0]), None)
 dist_2.assign_vector_by_indices((_6_0.get_vector_by_indices(None) - _7_0.get_vector_by_indices(None)), None)
 _1_2.assign_vector_by_indices((dist_2.get_vector_by_indices(None) * dist_2.get_vector_by_indices(None)), None)
-_5_0{LEN_0}[].get_vector_by_indices(None) = _1_2.get_vector_by_indices(None); V_2.get_vector_by_indices(None) = _5_0{LEN_0}[]
+_5_0.get_vector_by_indices(None).assign_vector_by_indices(_1_2.get_vector_by_indices(None), None); V_2.assign_vector_by_indices(_5_0{LEN_0}[].get_vector_by_indices(None), None)
 for _11_0 in range(0, len_0):
 
     res_3.assign_vector_by_indices((res_2.get_vector_by_indices(_11_0) + V_2.get_vector_by_indices(_11_0)), _11_0)
