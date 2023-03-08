@@ -8,7 +8,7 @@ import compiler
 from compiler.backends import Backend
 
 from . import context as test_context
-from .backends.motion.benchmark import run_benchmark
+from .backends import run_benchmark
 
 
 class StagesTestCase(unittest.TestCase):
@@ -93,26 +93,35 @@ class StagesTestCase(unittest.TestCase):
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
             if test_case_dir.name in test_context.SKIPPED_TESTS:
                 continue
-            for protocol in compiler.backends.motion.VALID_PROTOCOLS:
+            expected_output = get_test_case_expected_output(test_case_dir.path)
+            for protocol in test_context.BACKEND.valid_protocols():
                 for vectorized in (True, False):
-                    input_fname = os.path.join(test_case_dir.path, "input.py")
-
-                    # Collect expected output
-                    proc = subprocess.run(
-                        [sys.executable, input_fname],
-                        check=True,
-                        stdout=subprocess.PIPE,
-                        text=True,
-                    )
-                    expected_output = proc.stdout
-
                     party0, party1 = run_benchmark(
-                        test_case_dir.name, test_case_dir.path, protocol, vectorized
+                        test_context.BACKEND,
+                        test_case_dir.name,
+                        test_case_dir.path,
+                        protocol,
+                        vectorized,
                     )
-
                     self.assertEqual(party0.output.strip(), party1.output.strip())
                     self.assertEqual(party0.output.strip(), expected_output.strip())
                     self.assertEqual(party1.output.strip(), expected_output.strip())
+
+
+def get_test_case_expected_output(test_case_dir: str) -> str:
+    """
+    Run the benchmark file in a Python interpreter to get the expected output
+    for the test inputs.
+    """
+
+    input_fname = os.path.join(test_case_dir, "input.py")
+    proc = subprocess.run(
+        [sys.executable, input_fname],
+        check=True,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    return proc.stdout
 
 
 def regenerate_stages():

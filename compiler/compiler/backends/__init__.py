@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 from typing import Any
 
@@ -45,3 +46,9 @@ class Backend(Enum):
             return []
         else:
             assert_never(self)
+
+    def submodule_path(self) -> str:
+        project_root = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..")
+        )
+        return os.path.join(project_root, "backend_submodules", self.value)

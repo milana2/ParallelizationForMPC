@@ -6,8 +6,10 @@ import shutil
 from textwrap import indent
 from typing import Any, Union
 
+
 from ...ast_shared import VectorizedAccess
 
+from .. import Backend
 from ...util import assert_never
 from ...loop_linear_code import Function, Statement, Phi, Assign, For, Return
 from ...type_analysis import TypeEnv, VarVisibility, Constant, DataType
@@ -292,7 +294,7 @@ def render_application(
 
     rendered_cmakelists = cmakelists_template.render(
         app_name=func.name,
-        motion_dir=os.path.join(project_root, "backend_submodules", "MOTION"),
+        motion_dir=Backend.MOTION.submodule_path(),
         cpp_files=["main.cpp", "collect_stats.cpp"],
     )
 
