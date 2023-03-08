@@ -43,7 +43,7 @@ class Backend(Enum):
         if self is Backend.MOTION:
             return motion.VALID_PROTOCOLS
         elif self is Backend.MP_SPDZ:
-            return []
+            return mp_spdz.VALID_PROTOCOLS
         else:
             assert_never(self)
 

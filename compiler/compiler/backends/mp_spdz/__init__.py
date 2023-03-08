@@ -33,6 +33,36 @@ from ...loop_linear_code import (
 from ...type_analysis import TypeEnv, Constant
 
 
+VALID_PROTOCOLS = [
+    "mascot",
+    "lowgear",
+    "highgear",
+    "spdz2k",
+    "tiny",
+    "tinier",
+    "bmr",
+    "cowgear",
+    "chaigear",
+    "semi",
+    "hemi",
+    "temi",
+    "soho",
+    "semi2k",
+    "semibin",
+    "yao-gc",
+    "yao-bmr",
+    "shamir",
+    "rep3",
+    "ps",
+    "sy",
+    "brain",
+    "ccd",
+    "atlas",
+    "rep4",
+    "dealer",
+]
+
+
 def render_var(var: Var, var_mappings: dict[Var, str]) -> str:
     try:
         return var_mappings[var]
