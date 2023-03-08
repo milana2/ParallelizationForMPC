@@ -5,7 +5,7 @@ import subprocess
 import unittest
 
 import compiler
-import compiler.backends.motion
+from compiler.backends import Backend
 
 from . import context as test_context
 from .backends.motion.benchmark import run_benchmark
@@ -80,10 +80,11 @@ class StagesTestCase(unittest.TestCase):
             self.assertEqual(str(loop_linear), stages["vectorized_linear.txt"])
             self.assertEqual(str(type_env), stages["vectorized_type_env.txt"])
 
-            motion_code = compiler.backends.motion.render_function(
-                loop_linear, type_env, True
-            )
-            self.assertEqual(str(motion_code), stages["motion_code.txt"])
+            for backend in Backend:
+                backend_code = backend.render_function(loop_linear, type_env, True)
+                self.assertEqual(
+                    str(backend_code), stages[f"{backend}_code.txt".lower()]
+                )
 
     def test_example_apps(self):
         if test_context.BACKEND is None:
@@ -188,8 +189,9 @@ def regenerate_stages():
         with open(os.path.join(test_case_dir, "vectorized_type_env.txt"), "w") as f:
             f.write(f"{type_env}\n")
 
-        motion_code = compiler.backends.motion.render_function(
-            loop_linear, type_env, True
-        )
-        with open(os.path.join(test_case_dir, "motion_code.txt"), "w") as f:
-            f.write(f"{motion_code}\n")
+        for backend in Backend:
+            backend_code = backend.render_function(loop_linear, type_env, True)
+            with open(
+                os.path.join(test_case_dir, f"{backend}_code.txt".lower()), "w"
+            ) as f:
+                f.write(f"{backend_code}\n")

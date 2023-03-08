@@ -1,10 +1,13 @@
 import os
+from typing import Optional
+
+from compiler.backends import Backend
 
 TESTS_DIR = os.path.dirname(__file__)
 
 STAGES_DIR = os.path.join(TESTS_DIR, "stages")
 
-BACKEND = None
+BACKEND: Optional[Backend] = None
 
 SKIPPED_TESTS = [
     # These benchmarks will always be skipped (they're essentially pseudocode)
