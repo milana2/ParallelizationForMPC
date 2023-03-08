@@ -1,6 +1,6 @@
 import os
 from textwrap import indent
-from typing import Union
+from typing import Any, Union
 
 from ...util import assert_never
 from ...loop_linear_code import (
@@ -76,9 +76,9 @@ def render_bin_op_kind(op: BinOpKind) -> str:
 
 
 def render_unary_op_kind(op: UnaryOpKind) -> str:
-    if op == UnaryOpKind.NEGATE:
+    if op is UnaryOpKind.NEGATE:
         return "-"
-    elif op == UnaryOpKind.NOT:
+    elif op is UnaryOpKind.NOT:
         return "~"
     else:
         assert_never(op)
@@ -195,15 +195,16 @@ def render_statements(stmts: list[Statement]) -> str:
     return "\n".join(render_statement(stmt) for stmt in stmts)
 
 
-def render_application(
-    func: Function, type_env: TypeEnv, ran_vectorization: bool
-) -> None:
-    project_root = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "..", "..", "..")
-    )
-
-    assert isinstance(func.body[-1], Return)
-    return_type = type_env[func.body[-1].value]
-
+def render_function(func: Function, type_env: TypeEnv, ran_vectorization: bool) -> str:
     params = ", ".join(str(param.var) for param in func.parameters)
-    func_def = f"def {func.name}({params}):"
+    body = indent(render_statements(func.body), "    ")
+    func_def = f"def {func.name}({params}):\n{body}"
+    return render_statements(func.body)
+
+
+def render_application(
+    func: Function, type_env: TypeEnv, params: dict[str, Any], ran_vectorization: bool
+) -> None:
+    func_rendered = render_function(func, type_env, ran_vectorization)
+    with open(params["out_path"], "w") as file:
+        file.write(func_rendered + "\n")

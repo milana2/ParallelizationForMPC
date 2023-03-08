@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Any
 
 from . import motion, mp_spdz
 from ..loop_linear_code import Function
@@ -16,9 +17,9 @@ class Backend(Enum):
     def render_function(
         self, func: Function, type_env: TypeEnv, ran_vectorization: bool
     ) -> str:
-        if self == Backend.MOTION:
+        if self is Backend.MOTION:
             return motion.render_function(func, type_env, ran_vectorization)
-        elif self == Backend.MP_SPDZ:
+        elif self is Backend.MP_SPDZ:
             return mp_spdz.render_function(func, type_env, ran_vectorization)
         else:
             assert_never(self)
@@ -27,20 +28,20 @@ class Backend(Enum):
         self,
         func: Function,
         type_env: TypeEnv,
-        params: dict[str, str],
+        params: dict[str, Any],
         ran_vectorization: bool,
     ) -> None:
-        if self == Backend.MOTION:
+        if self is Backend.MOTION:
             return motion.render_application(func, type_env, params, ran_vectorization)
-        elif self == Backend.MP_SPDZ:
+        elif self is Backend.MP_SPDZ:
             return mp_spdz.render_application(func, type_env, params, ran_vectorization)
         else:
             assert_never(self)
 
     def valid_protocols(self) -> list[str]:
-        if self == Backend.MOTION:
+        if self is Backend.MOTION:
             return motion.VALID_PROTOCOLS
-        elif self == Backend.MP_SPDZ:
+        elif self is Backend.MP_SPDZ:
             return []
         else:
             assert_never(self)

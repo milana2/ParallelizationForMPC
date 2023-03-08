@@ -4,7 +4,7 @@ from jinja2 import Environment, FileSystemLoader  # type: ignore
 import os
 import shutil
 from textwrap import indent
-from typing import TypedDict, Union
+from typing import Any, Union
 
 from ...ast_shared import VectorizedAccess
 
@@ -23,12 +23,6 @@ from .low_level_rendering import (
 )
 
 VALID_PROTOCOLS = ["BooleanGmw", "Bmr"]
-
-
-class OutputParams(TypedDict):
-    out_dir: str
-    overwrite: bool
-    protocol: str
 
 
 def _render_prototype(func: Function, type_env: TypeEnv) -> str:
@@ -250,7 +244,7 @@ def render_function(func: Function, type_env: TypeEnv, ran_vectorization: bool) 
 
 
 def render_application(
-    func: Function, type_env: TypeEnv, params: OutputParams, ran_vectorization: bool
+    func: Function, type_env: TypeEnv, params: dict[str, Any], ran_vectorization: bool
 ) -> None:
     template_dir = os.path.abspath(os.path.dirname(__file__))
     project_root = os.path.abspath(os.path.join(template_dir, "..", "..", "..", ".."))
