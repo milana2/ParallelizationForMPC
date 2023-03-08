@@ -208,17 +208,17 @@ def render_statement(stmt: Statement) -> str:
             value = render_atom(stmt.rhs.value, dict())
             return f"{array}[{index}] = {value}; {lhs} = {array}"
         elif isinstance(stmt.rhs, VectorizedUpdate):
-            rhs = VectorizedAccess(
+            rhs_array_access = VectorizedAccess(
                 array=stmt.rhs.array,
                 dim_sizes=stmt.rhs.dim_sizes,
                 vectorized_dims=stmt.rhs.vectorized_dims,
                 idx_vars=stmt.rhs.idx_vars,
             )
             assign1 = render_vectorized_assign(
-                lhs=rhs,
+                lhs=rhs_array_access,
                 rhs=stmt.rhs.value,
             )
-            assign2 = render_statement(Assign(lhs=stmt.lhs, rhs=rhs))
+            assign2 = render_statement(Assign(lhs=stmt.lhs, rhs=rhs_array_access))
             return f"{assign1}; {assign2}"
         elif isinstance(stmt.lhs, VectorizedAccess):
             return render_vectorized_assign(stmt.lhs, stmt.rhs)
