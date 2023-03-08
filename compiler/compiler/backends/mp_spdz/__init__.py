@@ -33,6 +33,11 @@ from ...loop_linear_code import (
 from ...type_analysis import TypeEnv, Constant
 
 
+UpdatelessAssignRHS = Union[
+    Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux, LiftExpr, DropDim
+]
+
+
 VALID_PROTOCOLS = [
     "mascot",
     "lowgear",
@@ -70,7 +75,9 @@ def render_var(var: Var, var_mappings: dict[Var, str]) -> str:
         return str(var).replace("!", "_")
 
 
-def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
+def render_vectorized_access_slice(
+    v: VectorizedAccess, var_mappings: dict[Var, str]
+) -> str:
     num_dims = len(v.dim_sizes)
     idxs = v.idx_vars
     slice_indices: list[str] = []
@@ -80,9 +87,21 @@ def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) 
         else:
             slice_indices.append(render_var(idxs[0], var_mappings))
             idxs = idxs[1:]
+    assert idxs == []
+    return ", ".join(slice_indices)
+
+
+def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
     array = render_var(v.array, var_mappings)
-    slice = ", ".join(slice_indices)
+    slice = render_vectorized_access_slice(v, var_mappings)
     return f"{array}.get_vector_by_indices({slice})"
+
+
+def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) -> str:
+    array = render_var(lhs.array, dict())
+    slice = render_vectorized_access_slice(lhs, dict())
+    value = render_assign_rhs(rhs, dict())
+    return f"{array}.assign_vector_by_indices({value}, {slice})"
 
 
 def render_atom(atom: Atom, var_mappings: dict[Var, str]) -> str:
@@ -141,7 +160,7 @@ def render_lift_expr(lift: LiftExpr) -> str:
 
 
 def render_assign_rhs(
-    arhs: Union[Atom, Subscript, BinOp, UnaryOp, List, Tuple, Mux, LiftExpr, DropDim],
+    arhs: UpdatelessAssignRHS,
     var_mappings: dict[Var, str],
 ) -> str:
     if isinstance(arhs, BinOp):
@@ -202,6 +221,8 @@ def render_statement(stmt: Statement) -> str:
             value = render_atom(stmt.rhs.value, dict())
             array = render_var(stmt.rhs.array, dict())
             return f"{access} = {value}; {lhs} = {array}"
+        elif isinstance(stmt.lhs, VectorizedAccess):
+            return render_vectorized_assign(stmt.lhs, stmt.rhs)
         else:
             rhs = render_assign_rhs(stmt.rhs, dict())
             return f"{lhs} = {rhs}"
