@@ -191,7 +191,12 @@ def render_assign_rhs(
     elif isinstance(arhs, LiftExpr):
         return render_lift_expr(arhs)
     elif isinstance(arhs, DropDim):
-        array = render_var(arhs.array, var_mappings)
+        if isinstance(arhs.array, VectorizedAccess):
+            assert all(arhs.array.vectorized_dims)
+            array_var = arhs.array.array
+        else:
+            array_var = arhs.array
+        array = render_var(array_var, var_mappings)
         return f"drop_dim({array})"
     else:
         return assert_never(arhs)

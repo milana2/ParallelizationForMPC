@@ -10,5 +10,5 @@ for _8_0 in range(0, N_0):
     val_3.assign_vector_by_indices((result_2.get_vector_by_indices(None, i_1) + _7_0.get_vector_by_indices(None, i_1)), None, i_1)
     val_5.assign_vector_by_indices(_1_3.get_vector_by_indices(None, i_1).if_else(val_3.get_vector_by_indices(None, i_1), val_4.get_vector_by_indices(None, i_1)), None, i_1)
     result_2.get_vector_by_indices(None, i_1).assign_vector_by_indices(val_5.get_vector_by_indices(None, i_1), None, i_1); result_3.assign_vector_by_indices(result_2{NUM_BINS_0}[_8_0].get_vector_by_indices(None, i_1), None, i_1)
-_3_0.assign_vector_by_indices(drop_dim(result_3{NUM_BINS_0, N_0}[]), None)
+_3_0.assign_vector_by_indices(drop_dim(result_3), None)
 return _3_0

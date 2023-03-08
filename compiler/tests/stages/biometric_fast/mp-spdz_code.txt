@@ -18,7 +18,7 @@ for _15_0 in range(0, N_0):
 for _14_0 in range(0, D_0):
 
     two_a_b_4.assign_vector_by_indices((two_a_b_3.get_vector_by_indices(None, i_1) + tmp_3.get_vector_by_indices(None, i_1)), None, i_1)
-_10_0.assign_vector_by_indices(drop_dim(two_a_b_4{N_0, D_0}[]), None)
+_10_0.assign_vector_by_indices(drop_dim(two_a_b_4), None)
 this_diff_2.assign_vector_by_indices((a_sqr_plus_b_sqr_2.get_vector_by_indices(None) - _10_0.get_vector_by_indices(None)), None)
 _4_0.get_vector_by_indices(None).assign_vector_by_indices(this_diff_2.get_vector_by_indices(None), None); differences_2.assign_vector_by_indices(_4_0{N_0}[].get_vector_by_indices(None), None)
 min_diff_3.assign_vector_by_indices(differences_2.get_vector_by_indices(None), None)
@@ -29,7 +29,7 @@ for _17_0 in range(0, N_0):
 for _18_0 in range(0, N_0):
 
     min_index_6.assign_vector_by_indices(_1_2.get_vector_by_indices(_18_0).if_else(_16_0.get_vector_by_indices(_18_0), min_index_4.get_vector_by_indices(_18_0)), _18_0)
-_12_0 = drop_dim(min_diff_4{N_0}[])
-_13_0 = drop_dim(min_index_6{N_0}[])
+_12_0 = drop_dim(min_diff_4)
+_13_0 = drop_dim(min_index_6)
 _2_1 = (['_12_0,', '_13_0,'])
 return _2_1

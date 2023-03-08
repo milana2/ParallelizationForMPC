@@ -16,5 +16,5 @@ for _10_0 in range(0, N_0):
 
     _3_2.assign_vector_by_indices((current_dist_5.get_vector_by_indices(_10_0) > max_dist_2.get_vector_by_indices(_10_0)), _10_0)
     max_dist_4.assign_vector_by_indices(_3_2.get_vector_by_indices(_10_0).if_else(max_dist_3.get_vector_by_indices(_10_0), max_dist_2.get_vector_by_indices(_10_0)), _10_0)
-_8_0 = drop_dim(max_dist_4{N_0}[])
+_8_0 = drop_dim(max_dist_4)
 return _8_0

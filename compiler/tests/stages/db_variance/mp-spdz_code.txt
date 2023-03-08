@@ -8,7 +8,7 @@ _8_0.assign_vector_by_indices(lift(lambda indices: res_1, [len_0]), None)
 for _10_0 in range(0, len_0):
 
     sum_3.assign_vector_by_indices((sum_2.get_vector_by_indices(_10_0) + _3_0.get_vector_by_indices(_10_0)), _10_0)
-_4_0 = drop_dim(sum_3{LEN_0}[])
+_4_0 = drop_dim(sum_3)
 exp_1 = (_4_0 / len_0)
 _7_0.assign_vector_by_indices(lift(lambda indices: exp_1, [len_0]), None)
 dist_2.assign_vector_by_indices((_6_0.get_vector_by_indices(None) - _7_0.get_vector_by_indices(None)), None)
@@ -17,6 +17,6 @@ _5_0.get_vector_by_indices(None).assign_vector_by_indices(_1_2.get_vector_by_ind
 for _11_0 in range(0, len_0):
 
     res_3.assign_vector_by_indices((res_2.get_vector_by_indices(_11_0) + V_2.get_vector_by_indices(_11_0)), _11_0)
-_9_0 = drop_dim(res_3{LEN_0}[])
+_9_0 = drop_dim(res_3)
 variance_1 = (_9_0 / len_0)
 return variance_1

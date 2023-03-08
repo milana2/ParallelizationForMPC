@@ -25,5 +25,5 @@ for _18_0 in range(0, N_0):
 
     c_3.assign_vector_by_indices((c_2.get_vector_by_indices(_18_0) + 1), _18_0)
     c_4.assign_vector_by_indices(_3_2.get_vector_by_indices(_18_0).if_else(c_3.get_vector_by_indices(_18_0), c_2.get_vector_by_indices(_18_0)), _18_0)
-_15_0 = drop_dim(c_4{N_0}[])
+_15_0 = drop_dim(c_4)
 return _15_0

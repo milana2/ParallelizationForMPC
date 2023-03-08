@@ -18,7 +18,7 @@ _5_3.assign_vector_by_indices((_3_3.get_vector_by_indices(None, None) and _4_3.g
 for _18_0 in range(0, N_0):
 
     bx_4.assign_vector_by_indices((bx_3.get_vector_by_indices(None, i_1) or _5_3.get_vector_by_indices(None, i_1)), None, i_1)
-_15_0.assign_vector_by_indices(drop_dim(bx_4{N_0, N_0}[]), None)
+_15_0.assign_vector_by_indices(drop_dim(bx_4), None)
 _6_2.assign_vector_by_indices((~_15_0.get_vector_by_indices(None)), None)
 val_X_4.assign_vector_by_indices(_6_2.get_vector_by_indices(None).if_else(val_X_3.get_vector_by_indices(None), val_X_2.get_vector_by_indices(None)), None)
 val_Y_4.assign_vector_by_indices(_6_2.get_vector_by_indices(None).if_else(val_Y_3.get_vector_by_indices(None), val_Y_2.get_vector_by_indices(None)), None)

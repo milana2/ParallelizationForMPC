@@ -12,8 +12,8 @@ p_3.assign_vector_by_indices((d_3.get_vector_by_indices(None, None) * d_3.get_ve
 for _12_0 in range(0, D_0):
 
     sum_4.assign_vector_by_indices((sum_3.get_vector_by_indices(None, i_1) + p_3.get_vector_by_indices(None, i_1)), None, i_1)
-_8_0.assign_vector_by_indices(drop_dim(sum_4{N_0, D_0}[]), None)
-_9_0.assign_vector_by_indices(drop_dim(sum_4{N_0, D_0}[]), None)
+_8_0.assign_vector_by_indices(drop_dim(sum_4), None)
+_9_0.assign_vector_by_indices(drop_dim(sum_4), None)
 min_sum_3.assign_vector_by_indices(_9_0.get_vector_by_indices(None), None)
 for _14_0 in range(0, N_0):
 
@@ -22,7 +22,7 @@ for _14_0 in range(0, N_0):
 for _15_0 in range(0, N_0):
 
     min_index_4.assign_vector_by_indices(_1_2.get_vector_by_indices(_15_0).if_else(_13_0.get_vector_by_indices(_15_0), min_index_2.get_vector_by_indices(_15_0)), _15_0)
-_10_0 = drop_dim(min_sum_4{N_0}[])
-_11_0 = drop_dim(min_index_4{N_0}[])
+_10_0 = drop_dim(min_sum_4)
+_11_0 = drop_dim(min_index_4)
 _2_1 = (['_10_0,', '_11_0,'])
 return _2_1

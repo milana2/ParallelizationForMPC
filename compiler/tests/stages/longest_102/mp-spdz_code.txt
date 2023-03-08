@@ -30,5 +30,5 @@ for _21_0 in range(0, N_0):
     _7_2.assign_vector_by_indices((max_len_2.get_vector_by_indices(_21_0) < length_5.get_vector_by_indices(_21_0)), _21_0)
     _8_2.assign_vector_by_indices((s1_2.get_vector_by_indices(_21_0) and _7_2.get_vector_by_indices(_21_0)), _21_0)
     max_len_4.assign_vector_by_indices(_8_2.get_vector_by_indices(_21_0).if_else(max_len_3.get_vector_by_indices(_21_0), max_len_2.get_vector_by_indices(_21_0)), _21_0)
-_18_0 = drop_dim(max_len_4{N_0}[])
+_18_0 = drop_dim(max_len_4)
 return _18_0

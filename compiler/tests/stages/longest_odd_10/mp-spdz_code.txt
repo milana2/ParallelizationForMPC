@@ -28,5 +28,5 @@ for _18_0 in range(0, N_0):
     _6_2.assign_vector_by_indices((current_length_6.get_vector_by_indices(_18_0) > max_length_2.get_vector_by_indices(_18_0)), _18_0)
     _7_2.assign_vector_by_indices((_5_2.get_vector_by_indices(_18_0) and _6_2.get_vector_by_indices(_18_0)), _18_0)
     max_length_4.assign_vector_by_indices(_7_2.get_vector_by_indices(_18_0).if_else(max_length_3.get_vector_by_indices(_18_0), max_length_2.get_vector_by_indices(_18_0)), _18_0)
-_15_0 = drop_dim(max_length_4{N_0}[])
+_15_0 = drop_dim(max_length_4)
 return _15_0

@@ -6,5 +6,5 @@ temp_2.assign_vector_by_indices((_2_0.get_vector_by_indices(None) * _3_0.get_vec
 for _5_0 in range(0, N_0):
 
     sum_3.assign_vector_by_indices((sum_2.get_vector_by_indices(_5_0) + temp_2.get_vector_by_indices(_5_0)), _5_0)
-_4_0 = drop_dim(sum_3{N_0}[])
+_4_0 = drop_dim(sum_3)
 return _4_0
