@@ -1,0 +1,14 @@
+_2_0.get_vector_by_indices(None) = lift(lambda indices: result_0, [num_bins_0])
+_5_0.get_vector_by_indices(None, None) = lift(lambda indices: (A_0[indices[1]]), [num_bins_0, N_0])
+_6_0.get_vector_by_indices(None, None) = lift(lambda indices: indices[0], [num_bins_0, N_0])
+_7_0.get_vector_by_indices(None, None) = lift(lambda indices: (B_0[indices[1]]), [num_bins_0, N_0])
+_4_0.get_vector_by_indices(None, None) = lift(lambda indices: _2_0.get_vector_by_indices(None), [num_bins_0, N_0])
+_1_3.get_vector_by_indices(None, None) = (_5_0.get_vector_by_indices(None, None) == _6_0.get_vector_by_indices(None, None))
+for _8_0 in range(0, N_0):
+
+    val_4.get_vector_by_indices(None, i_1) = result_2.get_vector_by_indices(None, i_1)
+    val_3.get_vector_by_indices(None, i_1) = (result_2.get_vector_by_indices(None, i_1) + _7_0.get_vector_by_indices(None, i_1))
+    val_5.get_vector_by_indices(None, i_1) = _1_3.get_vector_by_indices(None, i_1).if_else(val_3.get_vector_by_indices(None, i_1), val_4.get_vector_by_indices(None, i_1))
+    result_2{NUM_BINS_0}[_8_0].get_vector_by_indices(None, i_1) = val_5.get_vector_by_indices(None, i_1); result_3.get_vector_by_indices(None, i_1) = result_2{NUM_BINS_0}[_8_0]
+_3_0.get_vector_by_indices(None) = drop_dim(result_3{NUM_BINS_0, N_0}[])
+return _3_0

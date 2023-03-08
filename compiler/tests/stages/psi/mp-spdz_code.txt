@@ -1,0 +1,17 @@
+_2_0.get_vector_by_indices(None) = lift(lambda indices: result_0, [SA_0])
+_6_0.get_vector_by_indices(None) = lift(lambda indices: (A_0[indices[0]]), [SA_0])
+flag_2 = False
+_4_0.get_vector_by_indices(None, None) = lift(lambda indices: (A_0[indices[0]]), [SA_0, SB_0])
+_5_0.get_vector_by_indices(None, None) = lift(lambda indices: (B_0[indices[1]]), [SA_0, SB_0])
+flag_4 = True
+val_2.get_vector_by_indices(None) = _2_0.get_vector_by_indices(None)
+val_3.get_vector_by_indices(None) = _6_0.get_vector_by_indices(None)
+_3_0.get_vector_by_indices(None, None) = lift(lambda indices: flag_2, [SA_0, SB_0])
+_1_3.get_vector_by_indices(None, None) = (_4_0.get_vector_by_indices(None, None) == _5_0.get_vector_by_indices(None, None))
+for _8_0 in range(0, SB_0):
+
+    flag_5.get_vector_by_indices(None, i_1) = _1_3.get_vector_by_indices(None, i_1).if_else(flag_4, flag_3.get_vector_by_indices(None, i_1))
+_7_0.get_vector_by_indices(None) = drop_dim(flag_5{SA_0, SB_0}[])
+val_4.get_vector_by_indices(None) = _7_0.get_vector_by_indices(None).if_else(val_3.get_vector_by_indices(None), val_2.get_vector_by_indices(None))
+_2_0{SA_0}[].get_vector_by_indices(None) = val_4.get_vector_by_indices(None); result_2.get_vector_by_indices(None) = _2_0{SA_0}[]
+return result_2

@@ -1,0 +1,37 @@
+_11_0.get_vector_by_indices(None) = lift(lambda indices: result_X_0, [N_0])
+_12_0.get_vector_by_indices(None) = lift(lambda indices: result_Y_0, [N_0])
+_13_0.get_vector_by_indices(None) = lift(lambda indices: (X_coords_0[indices[0]]), [N_0])
+_14_0.get_vector_by_indices(None) = lift(lambda indices: (Y_coords_0[indices[0]]), [N_0])
+is_hull_2 = True
+_16_0.get_vector_by_indices(None, None) = lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0])
+_17_0.get_vector_by_indices(None, None) = lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0])
+is_hull_4 = False
+val_X_2.get_vector_by_indices(None) = _11_0.get_vector_by_indices(None)
+val_Y_2.get_vector_by_indices(None) = _12_0.get_vector_by_indices(None)
+p1_X_2.get_vector_by_indices(None) = _13_0.get_vector_by_indices(None)
+p1_Y_2.get_vector_by_indices(None) = _14_0.get_vector_by_indices(None)
+_15_0.get_vector_by_indices(None, None) = lift(lambda indices: is_hull_2, [N_0, N_0])
+p2_X_3.get_vector_by_indices(None, None) = _16_0.get_vector_by_indices(None, None)
+p2_Y_3.get_vector_by_indices(None, None) = _17_0.get_vector_by_indices(None, None)
+_1_2.get_vector_by_indices(None) = (p1_X_2.get_vector_by_indices(None) <= 0)
+_18_0.get_vector_by_indices(None, None) = lift(lambda indices: p1_X_2.get_vector_by_indices(None), [N_0, N_0])
+val_X_3.get_vector_by_indices(None) = p1_X_2.get_vector_by_indices(None)
+_2_2.get_vector_by_indices(None) = (p1_Y_2.get_vector_by_indices(None) >= 0)
+_19_0.get_vector_by_indices(None, None) = lift(lambda indices: p1_Y_2.get_vector_by_indices(None), [N_0, N_0])
+val_Y_3.get_vector_by_indices(None) = p1_Y_2.get_vector_by_indices(None)
+_6_3.get_vector_by_indices(None, None) = (_18_0.get_vector_by_indices(None, None) <= p2_X_3.get_vector_by_indices(None, None))
+_3_2.get_vector_by_indices(None) = (_1_2.get_vector_by_indices(None) and _2_2.get_vector_by_indices(None))
+_7_3.get_vector_by_indices(None, None) = (_19_0.get_vector_by_indices(None, None) >= p2_Y_3.get_vector_by_indices(None, None))
+_8_3.get_vector_by_indices(None, None) = (_6_3.get_vector_by_indices(None, None) or _7_3.get_vector_by_indices(None, None))
+_9_3.get_vector_by_indices(None, None) = (~_8_3.get_vector_by_indices(None, None))
+for _21_0 in range(0, N_0):
+
+    is_hull_5.get_vector_by_indices(None, i_1) = _9_3.get_vector_by_indices(None, i_1).if_else(is_hull_4, is_hull_3.get_vector_by_indices(None, i_1))
+_20_0.get_vector_by_indices(None) = drop_dim(is_hull_5{N_0, N_0}[])
+is_hull_6.get_vector_by_indices(None) = _3_2.get_vector_by_indices(None).if_else(_20_0.get_vector_by_indices(None), is_hull_2)
+val_X_4.get_vector_by_indices(None) = is_hull_6.get_vector_by_indices(None).if_else(val_X_3.get_vector_by_indices(None), val_X_2.get_vector_by_indices(None))
+val_Y_4.get_vector_by_indices(None) = is_hull_6.get_vector_by_indices(None).if_else(val_Y_3.get_vector_by_indices(None), val_Y_2.get_vector_by_indices(None))
+_11_0{N_0}[].get_vector_by_indices(None) = val_X_4.get_vector_by_indices(None); result_X_2.get_vector_by_indices(None) = _11_0{N_0}[]
+_12_0{N_0}[].get_vector_by_indices(None) = val_Y_4.get_vector_by_indices(None); result_Y_2.get_vector_by_indices(None) = _12_0{N_0}[]
+_10_1 = (['result_X_2,', 'result_Y_2,'])
+return _10_1

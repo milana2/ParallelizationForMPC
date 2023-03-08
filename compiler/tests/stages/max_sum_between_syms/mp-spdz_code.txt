@@ -1,0 +1,21 @@
+max_sum_1 = 0
+current_sum_1 = 0
+_6_0.get_vector_by_indices(None) = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+_7_0.get_vector_by_indices(None) = lift(lambda indices: Sym_0, [N_0])
+_8_0.get_vector_by_indices(None) = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+current_sum_4 = 0
+_4_0.get_vector_by_indices(None) = lift(lambda indices: max_sum_1, [N_0])
+_5_0.get_vector_by_indices(None) = lift(lambda indices: current_sum_1, [N_0])
+_1_2.get_vector_by_indices(None) = (_6_0.get_vector_by_indices(None) == _7_0.get_vector_by_indices(None))
+_2_2.get_vector_by_indices(None) = (~_1_2.get_vector_by_indices(None))
+for _10_0 in range(0, N_0):
+
+    current_sum_3.get_vector_by_indices(_10_0) = (current_sum_2.get_vector_by_indices(_10_0) + _8_0.get_vector_by_indices(_10_0))
+    current_sum_5.get_vector_by_indices(_10_0) = _2_2.get_vector_by_indices(_10_0).if_else(current_sum_3.get_vector_by_indices(_10_0), current_sum_4)
+max_sum_3.get_vector_by_indices(None) = current_sum_5.get_vector_by_indices(None)
+for _11_0 in range(0, N_0):
+
+    _3_2.get_vector_by_indices(_11_0) = (current_sum_5.get_vector_by_indices(_11_0) > max_sum_2.get_vector_by_indices(_11_0))
+    max_sum_4.get_vector_by_indices(_11_0) = _3_2.get_vector_by_indices(_11_0).if_else(max_sum_3.get_vector_by_indices(_11_0), max_sum_2.get_vector_by_indices(_11_0))
+_9_0 = drop_dim(max_sum_4{N_0}[])
+return _9_0

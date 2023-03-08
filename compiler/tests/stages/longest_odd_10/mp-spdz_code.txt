@@ -1,0 +1,32 @@
+current_length_1 = 0
+max_length_1 = 0
+s2_1 = False
+_11_0.get_vector_by_indices(None) = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+_12_0.get_vector_by_indices(None) = lift(lambda indices: (Syms_0[1]), [N_0])
+_13_0.get_vector_by_indices(None) = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+_14_0.get_vector_by_indices(None) = lift(lambda indices: (Syms_0[0]), [N_0])
+current_length_4 = 0
+_8_0.get_vector_by_indices(None) = lift(lambda indices: current_length_1, [N_0])
+_9_0.get_vector_by_indices(None) = lift(lambda indices: max_length_1, [N_0])
+_10_0.get_vector_by_indices(None) = lift(lambda indices: s2_1, [N_0])
+_1_2.get_vector_by_indices(None) = (_11_0.get_vector_by_indices(None) == _12_0.get_vector_by_indices(None))
+s2_3.get_vector_by_indices(None) = (_13_0.get_vector_by_indices(None) == _14_0.get_vector_by_indices(None))
+for _16_0 in range(0, N_0):
+
+s1_2.get_vector_by_indices(None) = (s2_2.get_vector_by_indices(None) and _1_2.get_vector_by_indices(None))
+_2_2.get_vector_by_indices(None) = (~s2_2.get_vector_by_indices(None))
+for _17_0 in range(0, N_0):
+
+    current_length_5.get_vector_by_indices(_17_0) = _2_2.get_vector_by_indices(_17_0).if_else(current_length_4, current_length_2.get_vector_by_indices(_17_0))
+    current_length_3.get_vector_by_indices(_17_0) = (current_length_2.get_vector_by_indices(_17_0) + 1)
+    current_length_6.get_vector_by_indices(_17_0) = s1_2.get_vector_by_indices(_17_0).if_else(current_length_3.get_vector_by_indices(_17_0), current_length_5.get_vector_by_indices(_17_0))
+_4_2.get_vector_by_indices(None) = (current_length_6.get_vector_by_indices(None) & 1)
+max_length_3.get_vector_by_indices(None) = current_length_6.get_vector_by_indices(None)
+_5_2.get_vector_by_indices(None) = (_4_2.get_vector_by_indices(None) == 1)
+for _18_0 in range(0, N_0):
+
+    _6_2.get_vector_by_indices(_18_0) = (current_length_6.get_vector_by_indices(_18_0) > max_length_2.get_vector_by_indices(_18_0))
+    _7_2.get_vector_by_indices(_18_0) = (_5_2.get_vector_by_indices(_18_0) and _6_2.get_vector_by_indices(_18_0))
+    max_length_4.get_vector_by_indices(_18_0) = _7_2.get_vector_by_indices(_18_0).if_else(max_length_3.get_vector_by_indices(_18_0), max_length_2.get_vector_by_indices(_18_0))
+_15_0 = drop_dim(max_length_4{N_0}[])
+return _15_0

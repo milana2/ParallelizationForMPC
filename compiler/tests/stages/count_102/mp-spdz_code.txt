@@ -1,0 +1,24 @@
+s0_1 = False
+c_1 = 0
+_9_0.get_vector_by_indices(None) = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+_10_0.get_vector_by_indices(None) = lift(lambda indices: (Syms_0[2]), [N_0])
+_11_0.get_vector_by_indices(None) = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+_12_0.get_vector_by_indices(None) = lift(lambda indices: (Syms_0[1]), [N_0])
+_13_0.get_vector_by_indices(None) = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+_14_0.get_vector_by_indices(None) = lift(lambda indices: (Syms_0[0]), [N_0])
+_7_0.get_vector_by_indices(None) = lift(lambda indices: s0_1, [N_0])
+_8_0.get_vector_by_indices(None) = lift(lambda indices: c_1, [N_0])
+_1_2.get_vector_by_indices(None) = (_9_0.get_vector_by_indices(None) == _10_0.get_vector_by_indices(None))
+_3_2.get_vector_by_indices(None) = (_11_0.get_vector_by_indices(None) == _12_0.get_vector_by_indices(None))
+_5_2.get_vector_by_indices(None) = (_13_0.get_vector_by_indices(None) == _14_0.get_vector_by_indices(None))
+for _16_0 in range(0, N_0):
+
+    _6_2.get_vector_by_indices(_16_0) = (s0_2.get_vector_by_indices(_16_0) and _5_2.get_vector_by_indices(_16_0))
+    s0_3.get_vector_by_indices(_16_0) = (_3_2.get_vector_by_indices(_16_0) or _6_2.get_vector_by_indices(_16_0))
+_2_2.get_vector_by_indices(None) = (s0_2.get_vector_by_indices(None) and _1_2.get_vector_by_indices(None))
+for _17_0 in range(0, N_0):
+
+    c_3.get_vector_by_indices(_17_0) = (c_2.get_vector_by_indices(_17_0) + 1)
+    c_4.get_vector_by_indices(_17_0) = _2_2.get_vector_by_indices(_17_0).if_else(c_3.get_vector_by_indices(_17_0), c_2.get_vector_by_indices(_17_0))
+_15_0 = drop_dim(c_4{N_0}[])
+return _15_0

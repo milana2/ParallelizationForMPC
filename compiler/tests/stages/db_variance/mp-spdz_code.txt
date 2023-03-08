@@ -1,0 +1,22 @@
+sum_1 = 0
+_3_0.get_vector_by_indices(None) = lift(lambda indices: (A_0[indices[0]]), [len_0])
+_5_0.get_vector_by_indices(None) = lift(lambda indices: V_0, [len_0])
+_6_0.get_vector_by_indices(None) = lift(lambda indices: (A_0[indices[0]]), [len_0])
+res_1 = 0
+_2_0.get_vector_by_indices(None) = lift(lambda indices: sum_1, [len_0])
+_8_0.get_vector_by_indices(None) = lift(lambda indices: res_1, [len_0])
+for _10_0 in range(0, len_0):
+
+    sum_3.get_vector_by_indices(_10_0) = (sum_2.get_vector_by_indices(_10_0) + _3_0.get_vector_by_indices(_10_0))
+_4_0 = drop_dim(sum_3{LEN_0}[])
+exp_1 = (_4_0 / len_0)
+_7_0.get_vector_by_indices(None) = lift(lambda indices: exp_1, [len_0])
+dist_2.get_vector_by_indices(None) = (_6_0.get_vector_by_indices(None) - _7_0.get_vector_by_indices(None))
+_1_2.get_vector_by_indices(None) = (dist_2.get_vector_by_indices(None) * dist_2.get_vector_by_indices(None))
+_5_0{LEN_0}[].get_vector_by_indices(None) = _1_2.get_vector_by_indices(None); V_2.get_vector_by_indices(None) = _5_0{LEN_0}[]
+for _11_0 in range(0, len_0):
+
+    res_3.get_vector_by_indices(_11_0) = (res_2.get_vector_by_indices(_11_0) + V_2.get_vector_by_indices(_11_0))
+_9_0 = drop_dim(res_3{LEN_0}[])
+variance_1 = (_9_0 / len_0)
+return variance_1

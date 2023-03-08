@@ -1,0 +1,10 @@
+_2_0.get_vector_by_indices(None, None) = lift(lambda indices: OUTPUT_res_0, [len_outer_0, len_inner_0])
+_4_0.get_vector_by_indices(None, None) = lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0])
+_5_0.get_vector_by_indices(None, None) = lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0])
+val_3 = 1
+_3_0.get_vector_by_indices(None, None) = lift(lambda indices: _2_0.get_vector_by_indices(None, None), [len_outer_0, len_inner_0])
+_1_3.get_vector_by_indices(None, None) = (_4_0.get_vector_by_indices(None, None) > 1)
+val_4.get_vector_by_indices(None, None) = _5_0.get_vector_by_indices(None, None)
+val_5.get_vector_by_indices(None, None) = _1_3.get_vector_by_indices(None, None).if_else(val_4.get_vector_by_indices(None, None), val_3)
+_3_0{LEN_OUTER_0, LEN_INNER_0}[].get_vector_by_indices(None, None) = val_5.get_vector_by_indices(None, None); OUTPUT_res_3.get_vector_by_indices(None, None) = _3_0{LEN_OUTER_0, LEN_INNER_0}[]
+return OUTPUT_res_3
