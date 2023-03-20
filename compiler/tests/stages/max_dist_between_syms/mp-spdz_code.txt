@@ -24,12 +24,20 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
     _1_2[:] = (_6_0[:] == _7_0[:])
     _2_2[:] = (~_1_2[:])
     for _9_0 in range(0, N_0):
-
+        # Set ϕ value
+        if _9_0 == 0:
+            current_dist_2[_9_0] = _5_0[_9_0]
+        else:
+            current_dist_2[_9_0] = current_dist_5[(_9_0 - 1)]
         current_dist_3[_9_0] = (current_dist_2[_9_0] + 1)
         current_dist_5[_9_0] = _2_2[_9_0].if_else(current_dist_3[_9_0], current_dist_4)
     max_dist_3[:] = current_dist_5[:]
     for _10_0 in range(0, N_0):
-
+        # Set ϕ value
+        if _10_0 == 0:
+            max_dist_2[_10_0] = _4_0[_10_0]
+        else:
+            max_dist_2[_10_0] = max_dist_4[(_10_0 - 1)]
         _3_2[_10_0] = (current_dist_5[_10_0] > max_dist_2[_10_0])
         max_dist_4[_10_0] = _3_2[_10_0].if_else(max_dist_3[_10_0], max_dist_2[_10_0])
     _8_0 = drop_dim(max_dist_4)

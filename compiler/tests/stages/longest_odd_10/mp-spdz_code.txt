@@ -38,11 +38,19 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
     _1_2[:] = (_11_0[:] == _12_0[:])
     s2_3[:] = (_13_0[:] == _14_0[:])
     for _16_0 in range(0, N_0):
-
+        # Set ϕ value
+        if _16_0 == 0:
+            s2_2[_16_0] = _10_0[_16_0]
+        else:
+            s2_2[_16_0] = s2_3[(_16_0 - 1)]
     s1_2[:] = (s2_2[:] and _1_2[:])
     _2_2[:] = (~s2_2[:])
     for _17_0 in range(0, N_0):
-
+        # Set ϕ value
+        if _17_0 == 0:
+            current_length_2[_17_0] = _8_0[_17_0]
+        else:
+            current_length_2[_17_0] = current_length_6[(_17_0 - 1)]
         current_length_5[_17_0] = _2_2[_17_0].if_else(current_length_4, current_length_2[_17_0])
         current_length_3[_17_0] = (current_length_2[_17_0] + 1)
         current_length_6[_17_0] = s1_2[_17_0].if_else(current_length_3[_17_0], current_length_5[_17_0])
@@ -50,7 +58,11 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
     max_length_3[:] = current_length_6[:]
     _5_2[:] = (_4_2[:] == 1)
     for _18_0 in range(0, N_0):
-
+        # Set ϕ value
+        if _18_0 == 0:
+            max_length_2[_18_0] = _9_0[_18_0]
+        else:
+            max_length_2[_18_0] = max_length_4[(_18_0 - 1)]
         _6_2[_18_0] = (current_length_6[_18_0] > max_length_2[_18_0])
         _7_2[_18_0] = (_5_2[_18_0] and _6_2[_18_0])
         max_length_4[_18_0] = _7_2[_18_0].if_else(max_length_3[_18_0], max_length_2[_18_0])

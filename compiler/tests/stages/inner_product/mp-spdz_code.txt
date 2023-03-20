@@ -13,7 +13,11 @@ def inner_product(A_0, B_0, N_0):
     _1_0[:] = lift(lambda indices: sint(sum_1), [N_0])
     temp_2[:] = (_2_0[:] * _3_0[:])
     for _5_0 in range(0, N_0):
-
+        # Set ϕ value
+        if _5_0 == 0:
+            sum_2[_5_0] = _1_0[_5_0]
+        else:
+            sum_2[_5_0] = sum_3[(_5_0 - 1)]
         sum_3[_5_0] = (sum_2[_5_0] + temp_2[_5_0])
     _4_0 = drop_dim(sum_3)
     return _4_0

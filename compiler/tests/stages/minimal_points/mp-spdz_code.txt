@@ -43,7 +43,11 @@ def minimal_points(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     _4_3.assign_vector_by_indices(((_13_0.get_vector_by_indices(None, None) < _14_0.get_vector_by_indices(None, None))).get_vector(), None, None)
     _5_3.assign_vector_by_indices(((_3_3.get_vector_by_indices(None, None) and _4_3.get_vector_by_indices(None, None))).get_vector(), None, None)
     for _18_0 in range(0, N_0):
-
+        # Set ϕ value
+        if _18_0 == 0:
+            bx_3.assign_vector_by_indices((_10_0.get_vector_by_indices(None, _18_0)).get_vector(), None, _18_0)
+        else:
+            bx_3.assign_vector_by_indices((bx_4.get_vector_by_indices(None, (_18_0 - 1))).get_vector(), None, _18_0)
         bx_4.assign_vector_by_indices(((bx_3.get_vector_by_indices(None, _18_0) or _5_3.get_vector_by_indices(None, _18_0))).get_vector(), None, _18_0)
     _15_0[:] = drop_dim(bx_4)
     _6_2[:] = (~_15_0[:])

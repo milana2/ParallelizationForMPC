@@ -1,6 +1,5 @@
-import os
 from textwrap import indent
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 from ...util import assert_never
 from ...loop_linear_code import (
@@ -165,7 +164,7 @@ def render_lift_expr(lift: LiftExpr) -> str:
         lift.expr,
         {var: f"indices[{index}]" for index, (var, _) in enumerate(lift.dims)},
     )
-    dim_sizes = ", ".join([render_atom(size, dict()) for (_, size) in lift.dims])
+    dim_sizes = ", ".join(render_atom(size, dict()) for (_, size) in lift.dims)
     return f"lift(lambda indices: sint({expr}), [{dim_sizes}])"
 
 
@@ -184,7 +183,7 @@ def render_assign_rhs(
         comma_separated_items = ", ".join(items)
         return f"[{comma_separated_items}]"
     elif isinstance(arhs, Tuple):
-        items = "".join([render_atom(item, var_mappings) + "," for item in arhs.items])
+        items = "".join(render_atom(item, var_mappings) + "," for item in arhs.items)
         return f"({items})"
     elif isinstance(arhs, Mux):
         condition = render_assign_rhs(arhs.condition, var_mappings)
@@ -213,9 +212,25 @@ def render_assign_rhs(
         return assert_never(arhs)
 
 
-def render_statement(stmt: Statement) -> str:
+def render_statement(stmt: Statement, containing_loop: Optional[For]) -> str:
     if isinstance(stmt, Phi):
-        return ""
+        assert containing_loop
+        assert isinstance(containing_loop.bound_low, Constant)
+        assert containing_loop.bound_low.value == 0
+        loop_counter = render_var(containing_loop.counter, dict())
+        phi_assign_false = render_statement(
+            Assign(lhs=stmt.lhs, rhs=stmt.rhs_false), None
+        )
+        phi_assign_true = render_statement(
+            Assign(lhs=stmt.lhs, rhs=stmt.rhs_true), None
+        )
+        return (
+            f"# Set ϕ value\n"
+            + f"if {loop_counter} == 0:\n"
+            + f"    {phi_assign_false}\n"
+            + f"else:\n"
+            + f"    {phi_assign_true}"
+        )
     elif isinstance(stmt, Assign):
         lhs = render_atom(stmt.lhs, dict())
         if isinstance(stmt.rhs, Update):
@@ -234,7 +249,9 @@ def render_statement(stmt: Statement) -> str:
                 lhs=rhs_array_access,
                 rhs=stmt.rhs.value,
             )
-            assign2 = render_statement(Assign(lhs=stmt.lhs, rhs=rhs_array_access))
+            assign2 = render_statement(
+                Assign(lhs=stmt.lhs, rhs=rhs_array_access), containing_loop
+            )
             return f"{assign1}; {assign2}"
         elif isinstance(stmt.lhs, VectorizedAccess):
             return render_vectorized_assign(stmt.lhs, stmt.rhs)
@@ -245,10 +262,7 @@ def render_statement(stmt: Statement) -> str:
         counter = render_var(stmt.counter, dict())
         bound_low = render_atom(stmt.bound_low, dict())
         bound_high = render_atom(stmt.bound_high, dict())
-        body = indent(
-            "\n".join([str(render_statement(body_stmt)) for body_stmt in stmt.body]),
-            "    ",
-        )
+        body = indent(render_statements(stmt.body, stmt), "    ")
         return f"for {counter} in range({bound_low}, {bound_high}):\n{body}"
     elif isinstance(stmt, Return):
         value = render_var(stmt.value, dict())
@@ -257,8 +271,8 @@ def render_statement(stmt: Statement) -> str:
         assert_never(stmt)
 
 
-def render_statements(stmts: list[Statement]) -> str:
-    return "\n".join(render_statement(stmt) for stmt in stmts)
+def render_statements(stmts: list[Statement], containing_loop: Optional[For]) -> str:
+    return "\n".join(render_statement(stmt, containing_loop) for stmt in stmts)
 
 
 def render_shared_array_decl(var: Var, dim_sizes: list[LoopBound]) -> str:
@@ -282,7 +296,7 @@ def render_shared_array_decls(type_env: TypeEnv) -> str:
 def render_function(func: Function, type_env: TypeEnv, ran_vectorization: bool) -> str:
     params = ", ".join(render_var(param.var, dict()) for param in func.parameters)
     shared_array_decls = indent(render_shared_array_decls(type_env), "    ")
-    func_body = indent(render_statements(func.body), "    ")
+    func_body = indent(render_statements(func.body, None), "    ")
     return (
         f"def {func.name}({params}):\n"
         + "    # Shared array declarations\n"

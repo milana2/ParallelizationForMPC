@@ -22,7 +22,11 @@ def db_variance(A_0, V_0, len_0):
     _2_0[:] = lift(lambda indices: sint(sum_1), [len_0])
     _8_0[:] = lift(lambda indices: sint(res_1), [len_0])
     for _10_0 in range(0, len_0):
-
+        # Set ϕ value
+        if _10_0 == 0:
+            sum_2[_10_0] = _2_0[_10_0]
+        else:
+            sum_2[_10_0] = sum_3[(_10_0 - 1)]
         sum_3[_10_0] = (sum_2[_10_0] + _3_0[_10_0])
     _4_0 = drop_dim(sum_3)
     exp_1 = (_4_0 / len_0)
@@ -31,7 +35,11 @@ def db_variance(A_0, V_0, len_0):
     _1_2[:] = (dist_2[:] * dist_2[:])
     _5_0[:][:] = _1_2[:]; V_2[:] = _5_0{LEN_0}[][:]
     for _11_0 in range(0, len_0):
-
+        # Set ϕ value
+        if _11_0 == 0:
+            res_2[_11_0] = _8_0[_11_0]
+        else:
+            res_2[_11_0] = res_3[(_11_0 - 1)]
         res_3[_11_0] = (res_2[_11_0] + V_2[_11_0])
     _9_0 = drop_dim(res_3)
     variance_1 = (_9_0 / len_0)
