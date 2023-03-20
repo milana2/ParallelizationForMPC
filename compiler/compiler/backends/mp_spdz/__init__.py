@@ -328,6 +328,41 @@ def render_load_args(func: Function) -> str:
     return "\n".join(ret)
 
 
+def render_default_arg(arg: Parameter) -> str:
+    var = render_var(arg.var, dict())
+    dims = arg.var_type.dims
+    value = arg.default_values[0]
+    if dims == 0:
+        if arg.var_type.is_plaintext():
+            return f"{var} = {value}"
+        else:
+            return f"{var} = sint({value})"
+    else:
+        assert dims == 1
+        return f"{var} = {value}; {var} = lift(lambda indices: {var}[indices[0]], [len({var})])"
+
+
+def render_default_args(func: Function) -> str:
+    return "\n".join(render_default_arg(arg) for arg in func.parameters)
+
+
+def render_set_args(func: Function) -> str:
+    has_defaults = all(len(arg.default_values) >= 1 for arg in func.parameters)
+    if has_defaults:
+        return "\n".join(
+            [
+                "try:",
+                "    # Load input arguments",
+                indent(render_load_args(func), "    "),
+                "except:",
+                "    # Use default arguments",
+                indent(render_default_args(func), "    "),
+            ]
+        )
+    else:
+        return render_load_args(func)
+
+
 def render_args(func: Function) -> str:
     return ", ".join(render_var(arg.var, dict()) for arg in func.parameters)
 
@@ -336,7 +371,7 @@ def render_application(
     func: Function, type_env: TypeEnv, params: dict[str, Any], ran_vectorization: bool
 ) -> None:
     func_rendered = render_function(func, type_env, ran_vectorization)
-    load_args = render_load_args(func)
+    set_args = render_set_args(func)
     args = render_args(func)
     app_rendered = (
         "from vectorization_library import *\n"
@@ -345,10 +380,10 @@ def render_application(
         + f"{func_rendered}\n"
         + "\n"
         + "\n"
-        + "# Load arguments\n"
-        + f"{load_args}\n"
+        + "# Set arguments\n"
+        + f"{set_args}\n"
         + "\n"
-        + f"print_ln('OUTPUT %s', reveal_full({func.name}({args})))"
+        + f"print_ln('OUTPUT %s', str(reveal_full({func.name}({args}))))"
     )
     with open(params["out_dir"], "w") as file:
         file.write(app_rendered + "\n")
