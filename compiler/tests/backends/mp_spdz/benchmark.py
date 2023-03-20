@@ -1,3 +1,4 @@
+import shutil
 import os
 import subprocess
 from typing import Optional
@@ -32,10 +33,28 @@ def run_benchmark(
         protocol,
     )
 
-    subprocess.run(["make", "setup"], cwd=submodule_path, check=True)
+    # Copy vectorization library so compiled programs can use it
+    shutil.copyfile(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "..",
+            "compiler",
+            "backends",
+            "mp_spdz",
+            "library.py",
+        ),
+        os.path.join(submodule_path, "vectorization_library.py"),
+    )
+
+    # subprocess.run(["make", "setup"], cwd=submodule_path, check=True)
 
     player_data_dir = os.path.join(submodule_path, "Player-Data")
-    os.mkdir(player_data_dir)
+    try:
+        os.mkdir(player_data_dir)
+    except FileExistsError:
+        pass
     with open(os.path.join(player_data_dir, "Input-P0-0"), "w") as f:
         f.write("1 2 3 4")
     with open(os.path.join(player_data_dir, "Input-P1-0"), "w") as f:

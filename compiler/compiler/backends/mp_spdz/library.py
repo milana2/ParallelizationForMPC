@@ -7,11 +7,14 @@ and it provides some functions common to all generated MP-SPDZ programs
 import typing
 import itertools
 
-from Compiler.types import MultiArray, sint
+from Compiler.types import Array, MultiArray, sint
+
+
+T = typing.TypeVar("T")
 
 
 def lift(
-    expr: typing.Callable[[tuple[int, ...]], typing.Any], dim_sizes: list[int]
+    expr: typing.Callable[[tuple[int, ...]], sint], dim_sizes: list[int]
 ) -> MultiArray:
     """
     Maps @p expr to an array specified by the provided dimensions.
@@ -23,10 +26,14 @@ def lift(
     @returns The lifted array.
     """
 
-    a = MultiArray(dim_sizes, sint)
+    a = sint.Tensor(dim_sizes)
     all_indices = [range(size) for size in dim_sizes]
     for index in itertools.product(*all_indices):
-        a.assign_vector_by_indices(expr(index), index)
+        if isinstance(a, Array):
+            assert len(index) == 1
+            a[index[0]] = expr(index)
+        else:
+            a.assign_vector_by_indices(expr(index), *index)
     return a
 
 
@@ -46,7 +53,7 @@ def drop_dim(arr: MultiArray) -> MultiArray:
     all_indices = [range(size) for size in dropped_shape]
     for index in itertools.product(*all_indices):
         dropped.assign_vector_by_indices(
-            arr.get_vector_by_indices(list(index) + [-1]), index
+            arr.get_vector_by_indices(list(index) + [-1]), *index
         )
 
     return dropped

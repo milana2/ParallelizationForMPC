@@ -29,6 +29,7 @@ from ...loop_linear_code import (
     Atom,
     LiftExpr,
     DropDim,
+    LoopBound,
 )
 from ...type_analysis import TypeEnv, Constant
 
@@ -98,9 +99,16 @@ def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) 
 
 def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) -> str:
     array = render_atom(lhs.array, dict())
-    slice = render_vectorized_access_slice(lhs, dict())
     value = render_assign_rhs(rhs, dict())
-    return f"{array}.assign_vector_by_indices({value}, {slice})"
+    if len(lhs.dim_sizes) == 1:
+        if lhs.vectorized_dims[0]:
+            slice = ":"
+        else:
+            slice = render_var(lhs.idx_vars[0], dict())
+        return f"{array}[{slice}] = {value}"
+    else:
+        slice = render_vectorized_access_slice(lhs, dict())
+        return f"{array}.assign_vector_by_indices(({value}).get_vector(), {slice})"
 
 
 def render_atom(atom: Atom, var_mappings: dict[Var, str]) -> str:
@@ -155,7 +163,7 @@ def render_lift_expr(lift: LiftExpr) -> str:
         {var: f"indices[{index}]" for index, (var, _) in enumerate(lift.dims)},
     )
     dim_sizes = ", ".join([render_atom(size, dict()) for (_, size) in lift.dims])
-    return f"lift(lambda indices: {expr}, [{dim_sizes}])"
+    return f"lift(lambda indices: sint({expr}), [{dim_sizes}])"
 
 
 def render_assign_rhs(
@@ -250,16 +258,47 @@ def render_statements(stmts: list[Statement]) -> str:
     return "\n".join(render_statement(stmt) for stmt in stmts)
 
 
+def render_shared_array_decl(var: Var, dim_sizes: list[LoopBound]) -> str:
+    var_rendered = render_var(var, dict())
+    dim_sizes_rendered = ", ".join(
+        [render_atom(dim_size, dict()) for dim_size in dim_sizes]
+    )
+    return f"{var_rendered} = sint.Tensor([{dim_sizes_rendered}])"
+
+
+def render_shared_array_decls(type_env: TypeEnv) -> str:
+    return "\n".join(
+        [
+            render_shared_array_decl(var, var_type.dim_sizes)
+            for var, var_type in sorted(type_env.items(), key=lambda x: str(x[0]))
+            if var_type.dim_sizes is not None and var_type.dim_sizes != []
+        ]
+    )
+
+
 def render_function(func: Function, type_env: TypeEnv, ran_vectorization: bool) -> str:
-    params = ", ".join(str(param.var) for param in func.parameters)
-    body = indent(render_statements(func.body), "    ")
-    func_def = f"def {func.name}({params}):\n{body}"
-    return render_statements(func.body)
+    params = ", ".join(render_var(param.var, dict()) for param in func.parameters)
+    shared_array_decls = indent(render_shared_array_decls(type_env), "    ")
+    func_body = indent(render_statements(func.body), "    ")
+    return (
+        f"def {func.name}({params}):\n"
+        + "    # Shared array declarations\n"
+        + f"{shared_array_decls}\n"
+        + "    # Function body\n"
+        + f"{func_body}"
+    )
 
 
 def render_application(
     func: Function, type_env: TypeEnv, params: dict[str, Any], ran_vectorization: bool
 ) -> None:
     func_rendered = render_function(func, type_env, ran_vectorization)
+    app_rendered = (
+        "from vectorization_library import *\n"
+        + "\n"
+        + f"{func_rendered}\n"
+        + "\n"
+        + "biometric([1, 2, 3, 4], 4, [4, 5, 2, 10, 2, 120, 4, 10, 99, 88, 77, 66, 55, 44, 33, 22], 4)"
+    )
     with open(params["out_dir"], "w") as file:
-        file.write(func_rendered + "\n")
+        file.write(app_rendered + "\n")
