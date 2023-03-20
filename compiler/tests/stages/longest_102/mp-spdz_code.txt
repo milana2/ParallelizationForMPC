@@ -1,34 +1,62 @@
-s0_1 = False
-max_len_1 = 0
-length_1 = 0
-_12_0.assign_vector_by_indices(lift(lambda indices: (Seq_0[indices[0]]), [N_0]), None)
-_13_0.assign_vector_by_indices(lift(lambda indices: (Syms_0[2]), [N_0]), None)
-_14_0.assign_vector_by_indices(lift(lambda indices: (Seq_0[indices[0]]), [N_0]), None)
-_15_0.assign_vector_by_indices(lift(lambda indices: (Syms_0[1]), [N_0]), None)
-_16_0.assign_vector_by_indices(lift(lambda indices: (Seq_0[indices[0]]), [N_0]), None)
-_17_0.assign_vector_by_indices(lift(lambda indices: (Syms_0[0]), [N_0]), None)
-length_4 = 0
-_9_0.assign_vector_by_indices(lift(lambda indices: s0_1, [N_0]), None)
-_10_0.assign_vector_by_indices(lift(lambda indices: max_len_1, [N_0]), None)
-_11_0.assign_vector_by_indices(lift(lambda indices: length_1, [N_0]), None)
-_1_2.assign_vector_by_indices((_12_0.get_vector_by_indices(None) == _13_0.get_vector_by_indices(None)), None)
-_2_2.assign_vector_by_indices((_14_0.get_vector_by_indices(None) == _15_0.get_vector_by_indices(None)), None)
-_4_2.assign_vector_by_indices((_16_0.get_vector_by_indices(None) == _17_0.get_vector_by_indices(None)), None)
-for _19_0 in range(0, N_0):
+def longest_102(Seq_0, N_0, Syms_0):
+    # Shared array declarations
+    _1_2 = sint.Tensor([N_0])
+    _10_0 = sint.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _12_0 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _14_0 = sint.Tensor([N_0])
+    _15_0 = sint.Tensor([N_0])
+    _16_0 = sint.Tensor([N_0])
+    _17_0 = sint.Tensor([N_0])
+    _2_2 = sint.Tensor([N_0])
+    _4_2 = sint.Tensor([N_0])
+    _5_2 = sint.Tensor([N_0])
+    _6_2 = sint.Tensor([N_0])
+    _7_2 = sint.Tensor([N_0])
+    _8_2 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    length_2 = sint.Tensor([N_0])
+    length_3 = sint.Tensor([N_0])
+    length_5 = sint.Tensor([N_0])
+    max_len_2 = sint.Tensor([N_0])
+    max_len_3 = sint.Tensor([N_0])
+    max_len_4 = sint.Tensor([N_0])
+    s0_2 = sint.Tensor([N_0])
+    s0_3 = sint.Tensor([N_0])
+    s1_2 = sint.Tensor([N_0])
+    # Function body
+    s0_1 = False
+    max_len_1 = 0
+    length_1 = 0
+    _12_0[:] = lift(lambda indices: sint((Seq_0[indices[0]])), [N_0])
+    _13_0[:] = lift(lambda indices: sint((Syms_0[2])), [N_0])
+    _14_0[:] = lift(lambda indices: sint((Seq_0[indices[0]])), [N_0])
+    _15_0[:] = lift(lambda indices: sint((Syms_0[1])), [N_0])
+    _16_0[:] = lift(lambda indices: sint((Seq_0[indices[0]])), [N_0])
+    _17_0[:] = lift(lambda indices: sint((Syms_0[0])), [N_0])
+    length_4 = 0
+    _9_0[:] = lift(lambda indices: sint(s0_1), [N_0])
+    _10_0[:] = lift(lambda indices: sint(max_len_1), [N_0])
+    _11_0[:] = lift(lambda indices: sint(length_1), [N_0])
+    _1_2[:] = (_12_0[:] == _13_0[:])
+    _2_2[:] = (_14_0[:] == _15_0[:])
+    _4_2[:] = (_16_0[:] == _17_0[:])
+    for _19_0 in range(0, N_0):
 
-    _5_2.assign_vector_by_indices((s0_2.get_vector_by_indices(_19_0) and _4_2.get_vector_by_indices(_19_0)), _19_0)
-    s0_3.assign_vector_by_indices((_2_2.get_vector_by_indices(_19_0) or _5_2.get_vector_by_indices(_19_0)), _19_0)
-s1_2.assign_vector_by_indices((s0_2.get_vector_by_indices(None) and _1_2.get_vector_by_indices(None)), None)
-_6_2.assign_vector_by_indices((s1_2.get_vector_by_indices(None) or s0_3.get_vector_by_indices(None)), None)
-for _20_0 in range(0, N_0):
+        _5_2[_19_0] = (s0_2[_19_0] and _4_2[_19_0])
+        s0_3[_19_0] = (_2_2[_19_0] or _5_2[_19_0])
+    s1_2[:] = (s0_2[:] and _1_2[:])
+    _6_2[:] = (s1_2[:] or s0_3[:])
+    for _20_0 in range(0, N_0):
 
-    length_3.assign_vector_by_indices((length_2.get_vector_by_indices(_20_0) + 1), _20_0)
-    length_5.assign_vector_by_indices(_6_2.get_vector_by_indices(_20_0).if_else(length_3.get_vector_by_indices(_20_0), length_4), _20_0)
-max_len_3.assign_vector_by_indices(length_5.get_vector_by_indices(None), None)
-for _21_0 in range(0, N_0):
+        length_3[_20_0] = (length_2[_20_0] + 1)
+        length_5[_20_0] = _6_2[_20_0].if_else(length_3[_20_0], length_4)
+    max_len_3[:] = length_5[:]
+    for _21_0 in range(0, N_0):
 
-    _7_2.assign_vector_by_indices((max_len_2.get_vector_by_indices(_21_0) < length_5.get_vector_by_indices(_21_0)), _21_0)
-    _8_2.assign_vector_by_indices((s1_2.get_vector_by_indices(_21_0) and _7_2.get_vector_by_indices(_21_0)), _21_0)
-    max_len_4.assign_vector_by_indices(_8_2.get_vector_by_indices(_21_0).if_else(max_len_3.get_vector_by_indices(_21_0), max_len_2.get_vector_by_indices(_21_0)), _21_0)
-_18_0 = drop_dim(max_len_4)
-return _18_0
+        _7_2[_21_0] = (max_len_2[_21_0] < length_5[_21_0])
+        _8_2[_21_0] = (s1_2[_21_0] and _7_2[_21_0])
+        max_len_4[_21_0] = _8_2[_21_0].if_else(max_len_3[_21_0], max_len_2[_21_0])
+    _18_0 = drop_dim(max_len_4)
+    return _18_0

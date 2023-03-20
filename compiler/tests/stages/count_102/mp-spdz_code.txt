@@ -1,24 +1,45 @@
-s0_1 = False
-c_1 = 0
-_9_0.assign_vector_by_indices(lift(lambda indices: (Seq_0[indices[0]]), [N_0]), None)
-_10_0.assign_vector_by_indices(lift(lambda indices: (Syms_0[2]), [N_0]), None)
-_11_0.assign_vector_by_indices(lift(lambda indices: (Seq_0[indices[0]]), [N_0]), None)
-_12_0.assign_vector_by_indices(lift(lambda indices: (Syms_0[1]), [N_0]), None)
-_13_0.assign_vector_by_indices(lift(lambda indices: (Seq_0[indices[0]]), [N_0]), None)
-_14_0.assign_vector_by_indices(lift(lambda indices: (Syms_0[0]), [N_0]), None)
-_7_0.assign_vector_by_indices(lift(lambda indices: s0_1, [N_0]), None)
-_8_0.assign_vector_by_indices(lift(lambda indices: c_1, [N_0]), None)
-_1_2.assign_vector_by_indices((_9_0.get_vector_by_indices(None) == _10_0.get_vector_by_indices(None)), None)
-_3_2.assign_vector_by_indices((_11_0.get_vector_by_indices(None) == _12_0.get_vector_by_indices(None)), None)
-_5_2.assign_vector_by_indices((_13_0.get_vector_by_indices(None) == _14_0.get_vector_by_indices(None)), None)
-for _16_0 in range(0, N_0):
+def count_102(Seq_0, N_0, Syms_0):
+    # Shared array declarations
+    _1_2 = sint.Tensor([N_0])
+    _10_0 = sint.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _12_0 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _14_0 = sint.Tensor([N_0])
+    _2_2 = sint.Tensor([N_0])
+    _3_2 = sint.Tensor([N_0])
+    _5_2 = sint.Tensor([N_0])
+    _6_2 = sint.Tensor([N_0])
+    _7_0 = sint.Tensor([N_0])
+    _8_0 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    c_2 = sint.Tensor([N_0])
+    c_3 = sint.Tensor([N_0])
+    c_4 = sint.Tensor([N_0])
+    s0_2 = sint.Tensor([N_0])
+    s0_3 = sint.Tensor([N_0])
+    # Function body
+    s0_1 = False
+    c_1 = 0
+    _9_0[:] = lift(lambda indices: sint((Seq_0[indices[0]])), [N_0])
+    _10_0[:] = lift(lambda indices: sint((Syms_0[2])), [N_0])
+    _11_0[:] = lift(lambda indices: sint((Seq_0[indices[0]])), [N_0])
+    _12_0[:] = lift(lambda indices: sint((Syms_0[1])), [N_0])
+    _13_0[:] = lift(lambda indices: sint((Seq_0[indices[0]])), [N_0])
+    _14_0[:] = lift(lambda indices: sint((Syms_0[0])), [N_0])
+    _7_0[:] = lift(lambda indices: sint(s0_1), [N_0])
+    _8_0[:] = lift(lambda indices: sint(c_1), [N_0])
+    _1_2[:] = (_9_0[:] == _10_0[:])
+    _3_2[:] = (_11_0[:] == _12_0[:])
+    _5_2[:] = (_13_0[:] == _14_0[:])
+    for _16_0 in range(0, N_0):
 
-    _6_2.assign_vector_by_indices((s0_2.get_vector_by_indices(_16_0) and _5_2.get_vector_by_indices(_16_0)), _16_0)
-    s0_3.assign_vector_by_indices((_3_2.get_vector_by_indices(_16_0) or _6_2.get_vector_by_indices(_16_0)), _16_0)
-_2_2.assign_vector_by_indices((s0_2.get_vector_by_indices(None) and _1_2.get_vector_by_indices(None)), None)
-for _17_0 in range(0, N_0):
+        _6_2[_16_0] = (s0_2[_16_0] and _5_2[_16_0])
+        s0_3[_16_0] = (_3_2[_16_0] or _6_2[_16_0])
+    _2_2[:] = (s0_2[:] and _1_2[:])
+    for _17_0 in range(0, N_0):
 
-    c_3.assign_vector_by_indices((c_2.get_vector_by_indices(_17_0) + 1), _17_0)
-    c_4.assign_vector_by_indices(_2_2.get_vector_by_indices(_17_0).if_else(c_3.get_vector_by_indices(_17_0), c_2.get_vector_by_indices(_17_0)), _17_0)
-_15_0 = drop_dim(c_4)
-return _15_0
+        c_3[_17_0] = (c_2[_17_0] + 1)
+        c_4[_17_0] = _2_2[_17_0].if_else(c_3[_17_0], c_2[_17_0])
+    _15_0 = drop_dim(c_4)
+    return _15_0

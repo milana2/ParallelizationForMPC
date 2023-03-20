@@ -1,28 +1,49 @@
-min_sum_1 = 10000
-min_index_1 = 0
-sum_2 = 0
-_6_0.assign_vector_by_indices(lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0]), None, None)
-_7_0.assign_vector_by_indices(lift(lambda indices: (C_0[indices[1]]), [N_0, D_0]), None, None)
-_13_0.assign_vector_by_indices(lift(lambda indices: indices[0], [N_0]), None)
-_3_0.assign_vector_by_indices(lift(lambda indices: min_sum_1, [N_0]), None)
-_4_0.assign_vector_by_indices(lift(lambda indices: min_index_1, [N_0]), None)
-_5_0.assign_vector_by_indices(lift(lambda indices: sum_2, [N_0, D_0]), None, None)
-d_3.assign_vector_by_indices((_6_0.get_vector_by_indices(None, None) - _7_0.get_vector_by_indices(None, None)), None, None)
-p_3.assign_vector_by_indices((d_3.get_vector_by_indices(None, None) * d_3.get_vector_by_indices(None, None)), None, None)
-for _12_0 in range(0, D_0):
+def biometric(C_0, D_0, S_0, N_0):
+    # Shared array declarations
+    _1_2 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _3_0 = sint.Tensor([N_0])
+    _4_0 = sint.Tensor([N_0])
+    _5_0 = sint.Tensor([N_0, D_0])
+    _6_0 = sint.Tensor([N_0, D_0])
+    _7_0 = sint.Tensor([N_0, D_0])
+    _8_0 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    d_3 = sint.Tensor([N_0, D_0])
+    min_index_2 = sint.Tensor([N_0])
+    min_index_4 = sint.Tensor([N_0])
+    min_sum_2 = sint.Tensor([N_0])
+    min_sum_3 = sint.Tensor([N_0])
+    min_sum_4 = sint.Tensor([N_0])
+    p_3 = sint.Tensor([N_0, D_0])
+    sum_3 = sint.Tensor([N_0, D_0])
+    sum_4 = sint.Tensor([N_0, D_0])
+    # Function body
+    min_sum_1 = 10000
+    min_index_1 = 0
+    sum_2 = 0
+    _6_0.assign_vector_by_indices((lift(lambda indices: sint((S_0[((indices[0] * D_0) + indices[1])])), [N_0, D_0])).get_vector(), None, None)
+    _7_0.assign_vector_by_indices((lift(lambda indices: sint((C_0[indices[1]])), [N_0, D_0])).get_vector(), None, None)
+    _13_0[:] = lift(lambda indices: sint(indices[0]), [N_0])
+    _3_0[:] = lift(lambda indices: sint(min_sum_1), [N_0])
+    _4_0[:] = lift(lambda indices: sint(min_index_1), [N_0])
+    _5_0.assign_vector_by_indices((lift(lambda indices: sint(sum_2), [N_0, D_0])).get_vector(), None, None)
+    d_3.assign_vector_by_indices(((_6_0.get_vector_by_indices(None, None) - _7_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    p_3.assign_vector_by_indices(((d_3.get_vector_by_indices(None, None) * d_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    for _12_0 in range(0, D_0):
 
-    sum_4.assign_vector_by_indices((sum_3.get_vector_by_indices(None, i_1) + p_3.get_vector_by_indices(None, i_1)), None, i_1)
-_8_0.assign_vector_by_indices(drop_dim(sum_4), None)
-_9_0.assign_vector_by_indices(drop_dim(sum_4), None)
-min_sum_3.assign_vector_by_indices(_9_0.get_vector_by_indices(None), None)
-for _14_0 in range(0, N_0):
+        sum_4.assign_vector_by_indices(((sum_3.get_vector_by_indices(None, _12_0) + p_3.get_vector_by_indices(None, _12_0))).get_vector(), None, _12_0)
+    _8_0[:] = drop_dim(sum_4)
+    _9_0[:] = drop_dim(sum_4)
+    min_sum_3[:] = _9_0[:]
+    for _14_0 in range(0, N_0):
 
-    _1_2.assign_vector_by_indices((_8_0.get_vector_by_indices(_14_0) < min_sum_2.get_vector_by_indices(_14_0)), _14_0)
-    min_sum_4.assign_vector_by_indices(_1_2.get_vector_by_indices(_14_0).if_else(min_sum_3.get_vector_by_indices(_14_0), min_sum_2.get_vector_by_indices(_14_0)), _14_0)
-for _15_0 in range(0, N_0):
+        _1_2[_14_0] = (_8_0[_14_0] < min_sum_2[_14_0])
+        min_sum_4[_14_0] = _1_2[_14_0].if_else(min_sum_3[_14_0], min_sum_2[_14_0])
+    for _15_0 in range(0, N_0):
 
-    min_index_4.assign_vector_by_indices(_1_2.get_vector_by_indices(_15_0).if_else(_13_0.get_vector_by_indices(_15_0), min_index_2.get_vector_by_indices(_15_0)), _15_0)
-_10_0 = drop_dim(min_sum_4)
-_11_0 = drop_dim(min_index_4)
-_2_1 = (['_10_0,', '_11_0,'])
-return _2_1
+        min_index_4[_15_0] = _1_2[_15_0].if_else(_13_0[_15_0], min_index_2[_15_0])
+    _10_0 = drop_dim(min_sum_4)
+    _11_0 = drop_dim(min_index_4)
+    _2_1 = (_10_0,_11_0,)
+    return _2_1

@@ -1,28 +1,55 @@
-_8_0.assign_vector_by_indices(lift(lambda indices: result_X_0, [N_0]), None)
-_9_0.assign_vector_by_indices(lift(lambda indices: result_Y_0, [N_0]), None)
-_16_0.assign_vector_by_indices(lift(lambda indices: (X_coords_0[indices[0]]), [N_0]), None)
-_17_0.assign_vector_by_indices(lift(lambda indices: (Y_coords_0[indices[0]]), [N_0]), None)
-bx_2 = False
-_11_0.assign_vector_by_indices(lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0]), None, None)
-_12_0.assign_vector_by_indices(lift(lambda indices: (X_coords_0[indices[0]]), [N_0, N_0]), None, None)
-_13_0.assign_vector_by_indices(lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0]), None, None)
-_14_0.assign_vector_by_indices(lift(lambda indices: (Y_coords_0[indices[0]]), [N_0, N_0]), None, None)
-val_X_2.assign_vector_by_indices(_8_0.get_vector_by_indices(None), None)
-val_Y_2.assign_vector_by_indices(_9_0.get_vector_by_indices(None), None)
-val_X_3.assign_vector_by_indices(_16_0.get_vector_by_indices(None), None)
-val_Y_3.assign_vector_by_indices(_17_0.get_vector_by_indices(None), None)
-_10_0.assign_vector_by_indices(lift(lambda indices: bx_2, [N_0, N_0]), None, None)
-_3_3.assign_vector_by_indices((_11_0.get_vector_by_indices(None, None) < _12_0.get_vector_by_indices(None, None)), None, None)
-_4_3.assign_vector_by_indices((_13_0.get_vector_by_indices(None, None) < _14_0.get_vector_by_indices(None, None)), None, None)
-_5_3.assign_vector_by_indices((_3_3.get_vector_by_indices(None, None) and _4_3.get_vector_by_indices(None, None)), None, None)
-for _18_0 in range(0, N_0):
+def minimal_points(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
+    # Shared array declarations
+    _10_0 = sint.Tensor([N_0, N_0])
+    _11_0 = sint.Tensor([N_0, N_0])
+    _12_0 = sint.Tensor([N_0, N_0])
+    _13_0 = sint.Tensor([N_0, N_0])
+    _14_0 = sint.Tensor([N_0, N_0])
+    _15_0 = sint.Tensor([N_0])
+    _16_0 = sint.Tensor([N_0])
+    _17_0 = sint.Tensor([N_0])
+    _3_3 = sint.Tensor([N_0, N_0])
+    _4_3 = sint.Tensor([N_0, N_0])
+    _5_3 = sint.Tensor([N_0, N_0])
+    _6_2 = sint.Tensor([N_0])
+    _8_0 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    bx_3 = sint.Tensor([N_0, N_0])
+    bx_4 = sint.Tensor([N_0, N_0])
+    result_X_2 = sint.Tensor([N_0])
+    result_Y_2 = sint.Tensor([N_0])
+    val_X_2 = sint.Tensor([N_0])
+    val_X_3 = sint.Tensor([N_0])
+    val_X_4 = sint.Tensor([N_0])
+    val_Y_2 = sint.Tensor([N_0])
+    val_Y_3 = sint.Tensor([N_0])
+    val_Y_4 = sint.Tensor([N_0])
+    # Function body
+    _8_0[:] = lift(lambda indices: sint(result_X_0), [N_0])
+    _9_0[:] = lift(lambda indices: sint(result_Y_0), [N_0])
+    _16_0[:] = lift(lambda indices: sint((X_coords_0[indices[0]])), [N_0])
+    _17_0[:] = lift(lambda indices: sint((Y_coords_0[indices[0]])), [N_0])
+    bx_2 = False
+    _11_0.assign_vector_by_indices((lift(lambda indices: sint((X_coords_0[indices[1]])), [N_0, N_0])).get_vector(), None, None)
+    _12_0.assign_vector_by_indices((lift(lambda indices: sint((X_coords_0[indices[0]])), [N_0, N_0])).get_vector(), None, None)
+    _13_0.assign_vector_by_indices((lift(lambda indices: sint((Y_coords_0[indices[1]])), [N_0, N_0])).get_vector(), None, None)
+    _14_0.assign_vector_by_indices((lift(lambda indices: sint((Y_coords_0[indices[0]])), [N_0, N_0])).get_vector(), None, None)
+    val_X_2[:] = _8_0[:]
+    val_Y_2[:] = _9_0[:]
+    val_X_3[:] = _16_0[:]
+    val_Y_3[:] = _17_0[:]
+    _10_0.assign_vector_by_indices((lift(lambda indices: sint(bx_2), [N_0, N_0])).get_vector(), None, None)
+    _3_3.assign_vector_by_indices(((_11_0.get_vector_by_indices(None, None) < _12_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _4_3.assign_vector_by_indices(((_13_0.get_vector_by_indices(None, None) < _14_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _5_3.assign_vector_by_indices(((_3_3.get_vector_by_indices(None, None) and _4_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    for _18_0 in range(0, N_0):
 
-    bx_4.assign_vector_by_indices((bx_3.get_vector_by_indices(None, i_1) or _5_3.get_vector_by_indices(None, i_1)), None, i_1)
-_15_0.assign_vector_by_indices(drop_dim(bx_4), None)
-_6_2.assign_vector_by_indices((~_15_0.get_vector_by_indices(None)), None)
-val_X_4.assign_vector_by_indices(_6_2.get_vector_by_indices(None).if_else(val_X_3.get_vector_by_indices(None), val_X_2.get_vector_by_indices(None)), None)
-val_Y_4.assign_vector_by_indices(_6_2.get_vector_by_indices(None).if_else(val_Y_3.get_vector_by_indices(None), val_Y_2.get_vector_by_indices(None)), None)
-_8_0.get_vector_by_indices(None).assign_vector_by_indices(val_X_4.get_vector_by_indices(None), None); result_X_2.assign_vector_by_indices(_8_0{N_0}[].get_vector_by_indices(None), None)
-_9_0.get_vector_by_indices(None).assign_vector_by_indices(val_Y_4.get_vector_by_indices(None), None); result_Y_2.assign_vector_by_indices(_9_0{N_0}[].get_vector_by_indices(None), None)
-_7_1 = (['result_X_2,', 'result_Y_2,'])
-return _7_1
+        bx_4.assign_vector_by_indices(((bx_3.get_vector_by_indices(None, _18_0) or _5_3.get_vector_by_indices(None, _18_0))).get_vector(), None, _18_0)
+    _15_0[:] = drop_dim(bx_4)
+    _6_2[:] = (~_15_0[:])
+    val_X_4[:] = _6_2[:].if_else(val_X_3[:], val_X_2[:])
+    val_Y_4[:] = _6_2[:].if_else(val_Y_3[:], val_Y_2[:])
+    _8_0[:][:] = val_X_4[:]; result_X_2[:] = _8_0{N_0}[][:]
+    _9_0[:][:] = val_Y_4[:]; result_Y_2[:] = _9_0{N_0}[][:]
+    _7_1 = (result_X_2,result_Y_2,)
+    return _7_1

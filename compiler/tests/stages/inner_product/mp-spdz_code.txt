@@ -1,10 +1,19 @@
-sum_1 = 0
-_2_0.assign_vector_by_indices(lift(lambda indices: (A_0[indices[0]]), [N_0]), None)
-_3_0.assign_vector_by_indices(lift(lambda indices: (B_0[indices[0]]), [N_0]), None)
-_1_0.assign_vector_by_indices(lift(lambda indices: sum_1, [N_0]), None)
-temp_2.assign_vector_by_indices((_2_0.get_vector_by_indices(None) * _3_0.get_vector_by_indices(None)), None)
-for _5_0 in range(0, N_0):
+def inner_product(A_0, B_0, N_0):
+    # Shared array declarations
+    _1_0 = sint.Tensor([N_0])
+    _2_0 = sint.Tensor([N_0])
+    _3_0 = sint.Tensor([N_0])
+    sum_2 = sint.Tensor([N_0])
+    sum_3 = sint.Tensor([N_0])
+    temp_2 = sint.Tensor([N_0])
+    # Function body
+    sum_1 = 0
+    _2_0[:] = lift(lambda indices: sint((A_0[indices[0]])), [N_0])
+    _3_0[:] = lift(lambda indices: sint((B_0[indices[0]])), [N_0])
+    _1_0[:] = lift(lambda indices: sint(sum_1), [N_0])
+    temp_2[:] = (_2_0[:] * _3_0[:])
+    for _5_0 in range(0, N_0):
 
-    sum_3.assign_vector_by_indices((sum_2.get_vector_by_indices(_5_0) + temp_2.get_vector_by_indices(_5_0)), _5_0)
-_4_0 = drop_dim(sum_3)
-return _4_0
+        sum_3[_5_0] = (sum_2[_5_0] + temp_2[_5_0])
+    _4_0 = drop_dim(sum_3)
+    return _4_0

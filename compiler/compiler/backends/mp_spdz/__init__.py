@@ -76,38 +76,41 @@ def render_var(var: Var, var_mappings: dict[Var, str]) -> str:
         return str(var).replace("!", "_")
 
 
-def render_vectorized_access_slice(
-    v: VectorizedAccess, var_mappings: dict[Var, str]
-) -> str:
-    num_dims = len(v.dim_sizes)
-    idxs = v.idx_vars
-    slice_indices: list[str] = []
-    for dim in range(num_dims):
-        if v.vectorized_dims[dim]:
-            slice_indices.append("None")
-        else:
-            slice_indices.append(render_var(idxs[0], var_mappings))
-            idxs = idxs[1:]
-    return ", ".join(slice_indices)
+def render_array_slice(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
+    assert len(v.dim_sizes) == 1
+    if v.vectorized_dims[0]:
+        return ":"
+    else:
+        return render_var(v.idx_vars[0], var_mappings)
+
+
+def render_multi_array_slice(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
+    return ", ".join(
+        [
+            "None" if vectorized else render_var(var, var_mappings)
+            for vectorized, var in zip(v.vectorized_dims, v.idx_vars)
+        ]
+    )
 
 
 def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
     array = render_var(v.array, var_mappings)
-    slice = render_vectorized_access_slice(v, var_mappings)
-    return f"{array}.get_vector_by_indices({slice})"
+    if len(v.dim_sizes) == 1:
+        slice = render_array_slice(v, var_mappings)
+        return f"{array}[{slice}]"
+    else:
+        slice = render_multi_array_slice(v, var_mappings)
+        return f"{array}.get_vector_by_indices({slice})"
 
 
 def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) -> str:
     array = render_atom(lhs.array, dict())
     value = render_assign_rhs(rhs, dict())
     if len(lhs.dim_sizes) == 1:
-        if lhs.vectorized_dims[0]:
-            slice = ":"
-        else:
-            slice = render_var(lhs.idx_vars[0], dict())
+        slice = render_array_slice(lhs, dict())
         return f"{array}[{slice}] = {value}"
     else:
-        slice = render_vectorized_access_slice(lhs, dict())
+        slice = render_multi_array_slice(lhs, dict())
         return f"{array}.assign_vector_by_indices(({value}).get_vector(), {slice})"
 
 
@@ -177,11 +180,11 @@ def render_assign_rhs(
     elif isinstance(arhs, (Var, Constant, VectorizedAccess)):
         return render_atom(arhs, var_mappings)
     elif isinstance(arhs, List):
-        items = [render_assign_rhs(item, var_mappings) for item in arhs.items]
+        items = [render_atom(item, var_mappings) for item in arhs.items]
         comma_separated_items = ", ".join(items)
         return f"[{comma_separated_items}]"
     elif isinstance(arhs, Tuple):
-        items = [render_assign_rhs(item, var_mappings) + "," for item in arhs.items]
+        items = "".join([render_atom(item, var_mappings) + "," for item in arhs.items])
         return f"({items})"
     elif isinstance(arhs, Mux):
         condition = render_assign_rhs(arhs.condition, var_mappings)

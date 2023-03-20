@@ -7,15 +7,26 @@ and it provides some functions common to all generated MP-SPDZ programs
 import typing
 import itertools
 
-from Compiler.types import Array, MultiArray, sint
+from Compiler.types import Array, Matrix, MultiArray, sint
+
+
+TensorType = typing.Union[Array, Matrix, MultiArray]
 
 
 T = typing.TypeVar("T")
 
 
+def assign_tensor(tensor: TensorType, index: tuple[int], value: sint) -> None:
+    if isinstance(tensor, Array):
+        assert len(index) == 1
+        tensor[index[0]] = value
+    else:
+        tensor.assign_vector_by_indices(value, *index)
+
+
 def lift(
     expr: typing.Callable[[tuple[int, ...]], sint], dim_sizes: list[int]
-) -> MultiArray:
+) -> TensorType:
     """
     Maps @p expr to an array specified by the provided dimensions.
 
@@ -29,15 +40,11 @@ def lift(
     a = sint.Tensor(dim_sizes)
     all_indices = [range(size) for size in dim_sizes]
     for index in itertools.product(*all_indices):
-        if isinstance(a, Array):
-            assert len(index) == 1
-            a[index[0]] = expr(index)
-        else:
-            a.assign_vector_by_indices(expr(index), *index)
+        assign_tensor(a, index, expr(index))
     return a
 
 
-def drop_dim(arr: MultiArray) -> MultiArray:
+def drop_dim(arr: MultiArray) -> typing.Union[sint, TensorType]:
     """
     Drops the last dimension from @p arr, retaining the last element of each
       slice of that dimension.
@@ -48,26 +55,13 @@ def drop_dim(arr: MultiArray) -> MultiArray:
     """
 
     dropped_shape = arr.shape[:-1]
-    dropped = MultiArray(dropped_shape, sint)
+    if len(dropped_shape) == 0:
+        return arr[-1]
+    else:
+        dropped = sint.Tensor(dropped_shape)
 
-    all_indices = [range(size) for size in dropped_shape]
-    for index in itertools.product(*all_indices):
-        dropped.assign_vector_by_indices(
-            arr.get_vector_by_indices(list(index) + [-1]), *index
-        )
+        all_indices = [range(size) for size in dropped_shape]
+        for index in itertools.product(*all_indices):
+            assign_tensor(dropped, index, arr.get_vector_by_indices(*index + (-1,)))
 
-    return dropped
-
-
-# Compute the slice of an array.
-def vectorized_assign(
-    target: list[T],
-    dim_sizes: list[int],
-    vectorized_dims: list[bool],
-    idxs: list[int],
-    unvectorized_source: list[T],
-) -> None:
-    # For each element in the unvectorized representation, find the corresponding index in the
-    # target array and assign the value.
-    for i, source_value in enumerate(unvectorized_source):
-        target_dim_idxs = get_dim_indices(dim_sizes, i)
+        return dropped
