@@ -383,7 +383,7 @@ def render_application(
         + "# Set arguments\n"
         + f"{set_args}\n"
         + "\n"
-        + f"print_ln('OUTPUT %s', str(reveal_full({func.name}({args}))))"
+        + f"print_ln('OUTPUT %s', reveal_full({func.name}({args})))"
     )
     with open(params["out_dir"], "w") as file:
         file.write(app_rendered + "\n")
