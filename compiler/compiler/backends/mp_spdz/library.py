@@ -55,13 +55,18 @@ def drop_dim(arr: MultiArray) -> typing.Union[sint, TensorType]:
     """
 
     dropped_shape = arr.shape[:-1]
+    dropped_dim_size = arr.shape[-1]
     if len(dropped_shape) == 0:
-        return arr[-1]
+        return arr[0]
     else:
         dropped = sint.Tensor(dropped_shape)
 
         all_indices = [range(size) for size in dropped_shape]
         for index in itertools.product(*all_indices):
-            assign_tensor(dropped, index, arr.get_vector_by_indices(*index + (-1,)))
+            assign_tensor(
+                dropped,
+                index,
+                arr.get_vector_by_indices(*index + (dropped_dim_size - 1,)),
+            )
 
         return dropped
