@@ -138,13 +138,13 @@ def run_benchmark(
             cwd=party1_dir,
         ) as party1:
             try:
-                party0_stdout_raw, party0_stderr = party0.communicate(timeout)
-                party1_stdout_raw, party1_stderr = party1.communicate(timeout)
+                party0_stdout_raw, party0_stderr = party0.communicate(timeout=timeout)
+                party1_stdout_raw, party1_stderr = party1.communicate(timeout=timeout)
             except subprocess.TimeoutExpired:
                 party0.kill()
                 party1.kill()
-                party0_stdout_raw, party0_stderr = party0.communicate(timeout)
-                party1_stdout_raw, party1_stderr = party1.communicate(timeout)
+                party0_stdout_raw, party0_stderr = party0.communicate(timeout=timeout)
+                party1_stdout_raw, party1_stderr = party1.communicate(timeout=timeout)
 
             with open(os.path.join(party0_dir, "stdout"), "w") as f:
                 f.write(party0_stdout_raw)

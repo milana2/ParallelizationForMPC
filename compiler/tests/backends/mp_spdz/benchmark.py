@@ -12,7 +12,8 @@ def run_benchmark(
     benchmark_path: str,
     protocol: str,
     vectorized=True,
-) -> Optional[tuple[str, str]]:
+    timeout=600,
+) -> str:
     input_fname = os.path.join(benchmark_path, "input.py")
 
     with open(input_fname, "r") as f:
@@ -55,8 +56,15 @@ def run_benchmark(
         with open(setup_indicator_path, "w") as _:
             pass
 
-    subprocess.run(
+    p = subprocess.Popen(
         ["Scripts/compile-run.py", "-E", "mascot", "benchmark"],
         cwd=submodule_path,
-        check=True,
+        stdout=subprocess.PIPE,
+        text=True,
     )
+    stdout, _ = p.communicate(timeout=timeout)
+    assert p.returncode == 0
+    lines = stdout.split("\n")
+    tag = "MPC BENCHMARK OUTPUT "
+    line = next(line for line in lines if line.startswith(tag))
+    return line[len(tag) :]

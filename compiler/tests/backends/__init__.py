@@ -23,8 +23,9 @@ def run_benchmark(
             party0, party1 = result
             return (party0.output, party1.output)
     elif backend is Backend.MP_SPDZ:
-        return mp_spdz_run_benchmark(
+        output = mp_spdz_run_benchmark(
             benchmark_name, benchmark_path, protocol, vectorized
         )
+        return (output, output)
     else:
         assert_never(backend)

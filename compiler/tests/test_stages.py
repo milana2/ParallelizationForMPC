@@ -96,16 +96,18 @@ class StagesTestCase(unittest.TestCase):
             expected_output = get_test_case_expected_output(test_case_dir.path)
             for protocol in test_context.BACKEND.valid_protocols():
                 for vectorized in (True, False):
-                    party0, party1 = run_benchmark(
+                    output = run_benchmark(
                         test_context.BACKEND,
                         test_case_dir.name,
                         test_case_dir.path,
                         protocol,
                         vectorized,
                     )
-                    self.assertEqual(party0.output.strip(), party1.output.strip())
-                    self.assertEqual(party0.output.strip(), expected_output.strip())
-                    self.assertEqual(party1.output.strip(), expected_output.strip())
+                    assert output
+                    party0, party1 = output
+                    self.assertEqual(party0.strip(), party1.strip())
+                    self.assertEqual(party0.strip(), expected_output.strip())
+                    self.assertEqual(party1.strip(), expected_output.strip())
 
 
 def get_test_case_expected_output(test_case_dir: str) -> str:
