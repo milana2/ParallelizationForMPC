@@ -19,7 +19,7 @@ from . import vectorize
 def compile(
     filename: str,
     text: str,
-    backend: Backend,
+    backend: Optional[Backend],
     quiet: bool = True,
     run_vectorization: bool = True,
     out_dir: Optional[str] = None,
@@ -105,21 +105,26 @@ def compile(
             print(type_env)
             print()
 
-    motion_code = backend.render_function(linear, type_env, run_vectorization)
-    if not quiet:
-        print("Motion code:")
-        print(motion_code)
-        print()
+    if backend:
+        backend_code = backend.render_function(linear, type_env, run_vectorization)
+        if not quiet:
+            print("Backend code:")
+            print(backend_code)
+            print()
 
-    if out_dir:
-        if protocol not in backend.valid_protocols():
-            raise ValueError(
-                f"Invalid protocol: {protocol}. Valid protocols are: {backend.valid_protocols()}"
+        if out_dir:
+            if protocol not in backend.valid_protocols():
+                raise ValueError(
+                    f"Invalid protocol: {protocol}. Valid protocols are: {backend.valid_protocols()}"
+                )
+
+            backend.render_application(
+                linear,
+                type_env,
+                {
+                    "out_dir": out_dir,
+                    "overwrite": overwrite_out_dir,
+                    "protocol": protocol,
+                },
+                run_vectorization,
             )
-
-        backend.render_application(
-            linear,
-            type_env,
-            {"out_dir": out_dir, "overwrite": overwrite_out_dir, "protocol": protocol},
-            run_vectorization,
-        )
