@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 
 from ...util import assert_never
 from ...loop_linear_code import (
+    Parameter,
     Function,
     Statement,
     Phi,
@@ -306,16 +307,48 @@ def render_function(func: Function, type_env: TypeEnv, ran_vectorization: bool) 
     )
 
 
+def render_load_args(func: Function) -> str:
+    ret = []
+    program_args_index = 1
+    for arg in func.parameters:
+        var = render_var(arg.var, dict())
+        party = arg.party_idx or 0
+        dims = arg.var_type.dims
+        if dims == 0:
+            if arg.var_type.is_plaintext():
+                ret.append(f"{var} = int(program.args[{program_args_index}])")
+                program_args_index += 1
+            else:
+                ret.append(f"{var} = sint.get_input_from({party})")
+        else:
+            assert dims == 1
+            ret.append(f"{var} = sint.Array(int(program.args[{program_args_index}]))")
+            ret.append(f"{var}.input_from({party})")
+            program_args_index += 1
+    return "\n".join(ret)
+
+
+def render_args(func: Function) -> str:
+    return ", ".join(render_var(arg.var, dict()) for arg in func.parameters)
+
+
 def render_application(
     func: Function, type_env: TypeEnv, params: dict[str, Any], ran_vectorization: bool
 ) -> None:
     func_rendered = render_function(func, type_env, ran_vectorization)
+    load_args = render_load_args(func)
+    args = render_args(func)
     app_rendered = (
         "from vectorization_library import *\n"
         + "\n"
+        + "\n"
         + f"{func_rendered}\n"
         + "\n"
-        + f"print_ln('OUTPUT %s', reveal_full({func.name}()))"
+        + "\n"
+        + "# Load arguments\n"
+        + f"{load_args}\n"
+        + "\n"
+        + f"print_ln('OUTPUT %s', reveal_full({func.name}({args})))"
     )
     with open(params["out_dir"], "w") as file:
         file.write(app_rendered + "\n")
