@@ -1,7 +1,6 @@
 import shutil
 import os
 import subprocess
-from typing import Optional
 
 import compiler
 from compiler.backends import Backend

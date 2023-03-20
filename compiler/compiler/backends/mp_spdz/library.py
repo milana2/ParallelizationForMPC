@@ -7,6 +7,7 @@ and it provides some functions common to all generated MP-SPDZ programs
 import typing
 import itertools
 
+from Compiler.library import print_str
 from Compiler.types import Array, Matrix, MultiArray, sint
 
 
@@ -77,12 +78,27 @@ def drop_dim(arr: MultiArray) -> typing.Union[sint, TensorType]:
         return dropped
 
 
-def reveal_full(x: RevealableType) -> RevealedType:
-    if isinstance(x, sint):
-        return x.reveal()
-    elif isinstance(x, list):
-        return [reveal_full(item) for item in x]
-    elif isinstance(x, tuple):
-        return tuple(reveal_full(item) for item in x)
-    else:
-        raise ValueError("Tried to reveal unknown type")
+def mpc_print_result(x: RevealableType) -> None:
+    def rec(x: RevealableType) -> None:
+        if isinstance(x, sint):
+            print_str("%s", x.reveal())
+        elif isinstance(x, list):
+            print_str("[")
+            for i, item in enumerate(x):
+                if i != 0:
+                    print_str(", ")
+                rec(item)
+            print_str("]")
+        elif isinstance(x, tuple):
+            print_str("(")
+            for i, item in enumerate(x):
+                if i != 0:
+                    print_str(", ")
+                rec(item)
+            print_str(")")
+        else:
+            raise ValueError("Tried to print unknown type")
+
+    print_str("MPC BENCHMARK OUTPUT ")
+    rec(x)
+    print_str("\n")
