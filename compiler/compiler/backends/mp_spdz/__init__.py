@@ -315,7 +315,7 @@ def render_application(
         + "\n"
         + f"{func_rendered}\n"
         + "\n"
-        + "biometric([1, 2, 3, 4], 4, [4, 5, 2, 10, 2, 120, 4, 10, 99, 88, 77, 66, 55, 44, 33, 22], 4)"
+        + f"print_ln('OUTPUT %s', reveal_full({func.name}()))"
     )
     with open(params["out_dir"], "w") as file:
         file.write(app_rendered + "\n")

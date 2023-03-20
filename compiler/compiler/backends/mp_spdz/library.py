@@ -12,6 +12,11 @@ from Compiler.types import Array, Matrix, MultiArray, sint
 
 TensorType = typing.Union[Array, Matrix, MultiArray]
 
+RevealableType = typing.Union[
+    sint, list["RevealableType"], tuple["RevealableType", ...]
+]
+
+RevealedType = typing.Union[int, list["RevealedType"], tuple["RevealedType", ...]]
 
 T = typing.TypeVar("T")
 
@@ -70,3 +75,14 @@ def drop_dim(arr: MultiArray) -> typing.Union[sint, TensorType]:
             )
 
         return dropped
+
+
+def reveal_full(x: RevealableType) -> RevealedType:
+    if isinstance(x, sint):
+        return x.reveal()
+    elif isinstance(x, list):
+        return [reveal_full(item) for item in x]
+    elif isinstance(x, tuple):
+        return tuple(reveal_full(item) for item in x)
+    else:
+        raise ValueError("Tried to reveal unknown type")
