@@ -48,7 +48,12 @@ def run_benchmark(
         os.path.join(submodule_path, "vectorization_library.py"),
     )
 
-    # subprocess.run(["make", "setup"], cwd=submodule_path, check=True)
+    # Write an indicator file when running `make setup` so it only needs to run once
+    setup_indicator_path = os.path.join(submodule_path, ".ran-make-setup")
+    if not os.path.exists(setup_indicator_path):
+        subprocess.run(["make", "setup"], cwd=submodule_path, check=True)
+        with open(setup_indicator_path, "w") as _:
+            pass
 
     subprocess.run(
         ["Scripts/compile-run.py", "-E", "mascot", "benchmark"],
