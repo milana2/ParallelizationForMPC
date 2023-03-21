@@ -213,6 +213,14 @@ def render_assign_rhs(
         return assert_never(arhs)
 
 
+def render_loop_exit_phi(loop: For) -> str:
+    return "\n".join(
+        render_statement(Assign(lhs=phi.lhs, rhs=phi.rhs_true), None)
+        for phi in loop.body
+        if isinstance(phi, Phi)
+    )
+
+
 def render_statement(stmt: Statement, containing_loop: Optional[For]) -> str:
     if isinstance(stmt, Phi):
         assert containing_loop
@@ -264,7 +272,13 @@ def render_statement(stmt: Statement, containing_loop: Optional[For]) -> str:
         bound_low = render_atom(stmt.bound_low, dict())
         bound_high = render_atom(stmt.bound_high, dict())
         body = indent(render_statements(stmt.body, stmt), "    ")
-        return f"for {counter} in range({bound_low}, {bound_high}):\n{body}"
+        exit_phi = render_loop_exit_phi(stmt)
+        return (
+            f"for {counter} in range({bound_low}, {bound_high}):\n"
+            + f"{body}\n"
+            + "# Loop exit ϕ values\n"
+            + exit_phi
+        )
     elif isinstance(stmt, Return):
         value = render_var(stmt.value, dict())
         return f"return {value}"

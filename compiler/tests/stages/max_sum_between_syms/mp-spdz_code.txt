@@ -33,6 +33,8 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
             current_sum_2[_10_0] = current_sum_5[(_10_0 - 1)]
         current_sum_3[_10_0] = (current_sum_2[_10_0] + _8_0[_10_0])
         current_sum_5[_10_0] = _2_2[_10_0].if_else(current_sum_3[_10_0], current_sum_4)
+    # Loop exit ϕ values
+    current_sum_2[_10_0] = current_sum_5[(_10_0 - 1)]
     max_sum_3[:] = current_sum_5[:]
     for _11_0 in range(0, N_0):
         # Set ϕ value
@@ -42,5 +44,7 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
             max_sum_2[_11_0] = max_sum_4[(_11_0 - 1)]
         _3_2[_11_0] = (current_sum_5[_11_0] > max_sum_2[_11_0])
         max_sum_4[_11_0] = _3_2[_11_0].if_else(max_sum_3[_11_0], max_sum_2[_11_0])
+    # Loop exit ϕ values
+    max_sum_2[_11_0] = max_sum_4[(_11_0 - 1)]
     _9_0 = drop_dim(max_sum_4)
     return _9_0

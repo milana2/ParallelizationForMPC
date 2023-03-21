@@ -31,6 +31,8 @@ def psi(A_0, SA_0, B_0, SB_0, result_0):
         else:
             flag_3.assign_vector_by_indices((flag_5.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
         flag_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, _8_0).if_else(flag_4, flag_3.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
+    # Loop exit ϕ values
+    flag_3.assign_vector_by_indices((flag_5.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
     _7_0[:] = drop_dim(flag_5)
     val_4[:] = _7_0[:].if_else(val_3[:], val_2[:])
     _2_0[:][:] = val_4[:]; result_2[:] = _2_0{SA_0}[][:]

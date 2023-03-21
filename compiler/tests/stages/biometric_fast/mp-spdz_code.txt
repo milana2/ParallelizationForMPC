@@ -45,6 +45,8 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
             min_index_2[_15_0] = _3_0[_15_0]
         else:
             min_index_2[_15_0] = min_index_3
+    # Loop exit ϕ values
+    min_index_2[_15_0] = min_index_3
     for _14_0 in range(0, D_0):
         # Set ϕ value
         if _14_0 == 0:
@@ -52,6 +54,8 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
         else:
             two_a_b_3.assign_vector_by_indices((two_a_b_4.get_vector_by_indices(None, (_14_0 - 1))).get_vector(), None, _14_0)
         two_a_b_4.assign_vector_by_indices(((two_a_b_3.get_vector_by_indices(None, _14_0) + tmp_3.get_vector_by_indices(None, _14_0))).get_vector(), None, _14_0)
+    # Loop exit ϕ values
+    two_a_b_3.assign_vector_by_indices((two_a_b_4.get_vector_by_indices(None, (_14_0 - 1))).get_vector(), None, _14_0)
     _10_0[:] = drop_dim(two_a_b_4)
     this_diff_2[:] = (a_sqr_plus_b_sqr_2[:] - _10_0[:])
     _4_0[:][:] = this_diff_2[:]; differences_2[:] = _4_0{N_0}[][:]
@@ -64,6 +68,8 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
             min_diff_2[_17_0] = min_diff_4[(_17_0 - 1)]
         _1_2[_17_0] = (differences_2[_17_0] < min_diff_2[_17_0])
         min_diff_4[_17_0] = _1_2[_17_0].if_else(min_diff_3[_17_0], min_diff_2[_17_0])
+    # Loop exit ϕ values
+    min_diff_2[_17_0] = min_diff_4[(_17_0 - 1)]
     for _18_0 in range(0, N_0):
         # Set ϕ value
         if _18_0 == 0:
@@ -71,6 +77,8 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
         else:
             min_index_4[_18_0] = min_index_6[(_18_0 - 1)]
         min_index_6[_18_0] = _1_2[_18_0].if_else(_16_0[_18_0], min_index_4[_18_0])
+    # Loop exit ϕ values
+    min_index_4[_18_0] = min_index_6[(_18_0 - 1)]
     _12_0 = drop_dim(min_diff_4)
     _13_0 = drop_dim(min_index_6)
     _2_1 = (_12_0,_13_0,)

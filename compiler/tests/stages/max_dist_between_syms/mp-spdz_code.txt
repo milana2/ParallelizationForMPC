@@ -31,6 +31,8 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
             current_dist_2[_9_0] = current_dist_5[(_9_0 - 1)]
         current_dist_3[_9_0] = (current_dist_2[_9_0] + 1)
         current_dist_5[_9_0] = _2_2[_9_0].if_else(current_dist_3[_9_0], current_dist_4)
+    # Loop exit ϕ values
+    current_dist_2[_9_0] = current_dist_5[(_9_0 - 1)]
     max_dist_3[:] = current_dist_5[:]
     for _10_0 in range(0, N_0):
         # Set ϕ value
@@ -40,5 +42,7 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
             max_dist_2[_10_0] = max_dist_4[(_10_0 - 1)]
         _3_2[_10_0] = (current_dist_5[_10_0] > max_dist_2[_10_0])
         max_dist_4[_10_0] = _3_2[_10_0].if_else(max_dist_3[_10_0], max_dist_2[_10_0])
+    # Loop exit ϕ values
+    max_dist_2[_10_0] = max_dist_4[(_10_0 - 1)]
     _8_0 = drop_dim(max_dist_4)
     return _8_0

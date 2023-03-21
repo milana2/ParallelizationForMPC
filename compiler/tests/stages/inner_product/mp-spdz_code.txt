@@ -19,5 +19,7 @@ def inner_product(A_0, B_0, N_0):
         else:
             sum_2[_5_0] = sum_3[(_5_0 - 1)]
         sum_3[_5_0] = (sum_2[_5_0] + temp_2[_5_0])
+    # Loop exit ϕ values
+    sum_2[_5_0] = sum_3[(_5_0 - 1)]
     _4_0 = drop_dim(sum_3)
     return _4_0

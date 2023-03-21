@@ -29,5 +29,7 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
         val_3.assign_vector_by_indices(((result_2.get_vector_by_indices(None, _8_0) + _7_0.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
         val_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, _8_0).if_else(val_3.get_vector_by_indices(None, _8_0), val_4.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
         result_2.get_vector_by_indices(None, _8_0).assign_vector_by_indices((val_5.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0); result_3.assign_vector_by_indices((result_2{NUM_BINS_0}[_8_0].get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
+    # Loop exit ϕ values
+    result_2.assign_vector_by_indices((result_3.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
     _3_0[:] = drop_dim(result_3)
     return _3_0

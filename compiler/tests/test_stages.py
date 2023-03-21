@@ -98,7 +98,7 @@ class StagesTestCase(unittest.TestCase):
             expected_output = get_test_case_expected_output(test_case_dir.path)
             for protocol in test_context.BACKEND.valid_protocols():
                 print(f"    Protocol {protocol}...")
-                for vectorized in (True,):
+                for vectorized in (True, False):
                     output = run_benchmark(
                         test_context.BACKEND,
                         name,
