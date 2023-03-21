@@ -46,7 +46,7 @@ VALID_PROTOCOLS = [
     "spdz2k",
     "tiny",
     "tinier",
-    "bmr",
+    # "bmr", # Error: make: *** No rule to make target 'bmr-party.x'.
     "cowgear",
     "chaigear",
     "semi",
