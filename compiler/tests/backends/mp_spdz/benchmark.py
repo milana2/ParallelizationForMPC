@@ -56,7 +56,7 @@ def run_benchmark(
             pass
 
     p = subprocess.Popen(
-        ["Scripts/compile-run.py", "-E", "mascot", "benchmark"],
+        ["Scripts/compile-run.py", "-E", protocol, "benchmark"],
         cwd=submodule_path,
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
