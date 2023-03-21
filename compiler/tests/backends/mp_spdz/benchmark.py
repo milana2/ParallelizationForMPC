@@ -59,6 +59,7 @@ def run_benchmark(
         ["Scripts/compile-run.py", "-E", "mascot", "benchmark"],
         cwd=submodule_path,
         stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
         text=True,
     )
     stdout, _ = p.communicate(timeout=timeout)

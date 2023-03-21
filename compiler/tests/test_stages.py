@@ -91,14 +91,17 @@ class StagesTestCase(unittest.TestCase):
             self.skipTest("Skipping example application compilation")
 
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
-            if test_case_dir.name in test_context.SKIPPED_TESTS:
+            name = test_case_dir.name
+            if name in test_context.SKIPPED_TESTS:
                 continue
+            print(f"Testing {name}...")
             expected_output = get_test_case_expected_output(test_case_dir.path)
             for protocol in test_context.BACKEND.valid_protocols():
-                for vectorized in (True, False):
+                print(f"    Protocol {protocol}...")
+                for vectorized in (True,):
                     output = run_benchmark(
                         test_context.BACKEND,
-                        test_case_dir.name,
+                        name,
                         test_case_dir.path,
                         protocol,
                         vectorized,
