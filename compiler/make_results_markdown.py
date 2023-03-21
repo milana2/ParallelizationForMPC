@@ -12,7 +12,8 @@ import compiler.loop_linear_code as llc
 from compiler.type_analysis import TypeEnv
 from compiler.util import assert_never
 from tests.context import STAGES_DIR, SKIPPED_TESTS
-from tests.backends.motion.benchmark import run_benchmark
+from tests.backends.motion.benchmark import run_benchmark as motion_run_benchmark
+from tests.backends import Backend
 
 
 def cfg_to_image(G: networkx.DiGraph, path: str):
@@ -109,8 +110,8 @@ def type_env_to_table(type_env: TypeEnv) -> str:
 
 
 def build_benchmark_tables(circuits_path: str) -> str:
-    table = "## Benchmark Data\n"
-    for protocol in compiler.backends.motion.VALID_PROTOCOLS:
+    table = "## MOTION Benchmark Data\n"
+    for protocol in compiler.backend.motion_backend.VALID_PROTOCOLS:
         table += f"\n### {protocol}\n"
 
         table += "| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |\n"
@@ -124,7 +125,7 @@ def build_benchmark_tables(circuits_path: str) -> str:
 
             for vectorized in (True, False):
                 try:
-                    data, _ = run_benchmark(
+                    data, _ = motion_run_benchmark(
                         test_case_dir.name, test_case_dir.path, protocol, vectorized
                     )
                 except Exception as e:
@@ -265,11 +266,16 @@ def main():
         md += "#### Type Environment After Vectorization\n"
         md += f"{type_env_to_table(type_env)}\n"
 
-        motion_code = compiler.backends.motion.render_function(
-            loop_linear_code, type_env, True
-        )
-        md += "#### Motion code\n"
-        md += f"```cpp\n{motion_code}\n```\n"
+        for backend in Backend:
+            if backend is Backend.MOTION:
+                lang = "cpp"
+            elif backend is Backend.MP_SPDZ:
+                lang = "py"
+            else:
+                lang = ""
+            backend_code = backend.render_function(loop_linear_code, type_env, True)
+            md += f"#### {backend} code\n"
+            md += f"```{lang}\n{backend_code}\n```\n"
 
     md_path = os.path.join(args.path, "README.md")
     with open(md_path, "w") as f:
