@@ -180,9 +180,9 @@ def render_assign_rhs(
     elif isinstance(arhs, (Var, Constant, VectorizedAccess)):
         return render_atom(arhs, var_mappings)
     elif isinstance(arhs, List):
-        items = [render_atom(item, var_mappings) for item in arhs.items]
-        comma_separated_items = ", ".join(items)
-        return f"[{comma_separated_items}]"
+        items_list = [render_atom(item, var_mappings) for item in arhs.items]
+        items = ", ".join(items_list)
+        return f"[{items}]"
     elif isinstance(arhs, Tuple):
         items = "".join(render_atom(item, var_mappings) + "," for item in arhs.items)
         return f"({items})"
