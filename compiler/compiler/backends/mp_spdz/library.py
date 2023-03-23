@@ -80,7 +80,7 @@ def drop_dim(arr: MultiArray) -> typing.Union[sint, TensorType]:
     dropped_shape = arr.shape[:-1]
     dropped_dim_size = arr.shape[-1]
     if len(dropped_shape) == 0:
-        return arr[0]
+        return arr[-1]
     else:
         dropped = sint.Tensor(dropped_shape)
 
