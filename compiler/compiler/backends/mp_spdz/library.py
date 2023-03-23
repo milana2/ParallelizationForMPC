@@ -31,7 +31,11 @@ def assign_tensor(tensor: TensorType, index: tuple[int], value: sint) -> None:
 
 
 def lift(
-    expr: typing.Callable[[tuple[int, ...]], sint], dim_sizes: list[int]
+    expr: typing.Union[
+        typing.Callable[[tuple[int, ...]], typing.Union[int, sint]],
+        typing.Callable[[tuple[int, ...]], Array],
+    ],
+    dim_sizes: list[int],
 ) -> TensorType:
     """
     Maps @p expr to an array specified by the provided dimensions.
@@ -43,11 +47,24 @@ def lift(
     @returns The lifted array.
     """
 
-    a = sint.Tensor(dim_sizes)
-    all_indices = [range(size) for size in dim_sizes]
-    for index in itertools.product(*all_indices):
-        assign_tensor(a, index, expr(index))
-    return a
+    zero_index = tuple(0 for _ in dim_sizes)
+    first_value = expr(zero_index)
+    if isinstance(first_value, (int, sint)):
+        a = sint.Tensor(dim_sizes)
+        all_indices = [range(size) for size in dim_sizes]
+        for index in itertools.product(*all_indices):
+            value = sint(expr(index))
+            assign_tensor(a, index, value)
+        return a
+    else:
+        assert isinstance(first_value, Array), type(first_value)
+        source_array = first_value
+        assert dim_sizes[0] <= len(source_array)
+        lifted_array = sint.Tensor(dim_sizes)
+        all_indices = [range(size) for size in dim_sizes]
+        for index in itertools.product(*all_indices):
+            assign_tensor(lifted_array, index, source_array[index[-1]])
+        return lifted_array
 
 
 def drop_dim(arr: MultiArray) -> typing.Union[sint, TensorType]:

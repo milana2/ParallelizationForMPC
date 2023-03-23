@@ -1,5 +1,6 @@
 from textwrap import indent
 from typing import Any, Optional, Union
+import dataclasses as dc
 
 from ...util import assert_never
 from ...loop_linear_code import (
@@ -93,7 +94,16 @@ def render_multi_array_slice(v: VectorizedAccess, var_mappings: dict[Var, str]) 
     )
 
 
+def normalize_vectorized_access(v: VectorizedAccess) -> VectorizedAccess:
+    array = v.array
+    while isinstance(array, VectorizedAccess):
+        assert all(array.vectorized_dims)
+        array = array.array
+    return dc.replace(v, array=array)
+
+
 def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
+    v = normalize_vectorized_access(v)
     array = render_var(v.array, var_mappings)
     if len(v.dim_sizes) == 1:
         slice = render_array_slice(v, var_mappings)
@@ -104,7 +114,8 @@ def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) 
 
 
 def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) -> str:
-    array = render_atom(lhs.array, dict())
+    lhs = normalize_vectorized_access(lhs)
+    array = render_var(lhs.array, dict())
     value = render_assign_rhs(rhs, dict())
     if len(lhs.dim_sizes) == 1:
         slice = render_array_slice(lhs, dict())
@@ -166,7 +177,7 @@ def render_lift_expr(lift: LiftExpr) -> str:
         {var: f"indices[{index}]" for index, (var, _) in enumerate(lift.dims)},
     )
     dim_sizes = ", ".join(render_atom(size, dict()) for (_, size) in lift.dims)
-    return f"lift(lambda indices: sint({expr}), [{dim_sizes}])"
+    return f"lift(lambda indices: {expr}, [{dim_sizes}])"
 
 
 def render_assign_rhs(
@@ -175,8 +186,9 @@ def render_assign_rhs(
 ) -> str:
     if isinstance(arhs, BinOp):
         left = render_assign_rhs(arhs.left, var_mappings)
+        operator = render_bin_op_kind(arhs.operator)
         right = render_assign_rhs(arhs.right, var_mappings)
-        return f"({left} {arhs.operator} {right})"
+        return f"({left} {operator} {right})"
     elif isinstance(arhs, (Var, Constant, VectorizedAccess)):
         return render_atom(arhs, var_mappings)
     elif isinstance(arhs, List):
