@@ -97,7 +97,7 @@ def drop_dim(arr: MultiArray) -> typing.Union[sint, TensorType]:
 
 def mpc_print_result(x: RevealableType) -> None:
     def rec(x: RevealableType) -> None:
-        if isinstance(x, (sint, Array)):
+        if isinstance(x, (sint, Array, Matrix)):
             print_str("%s", x.reveal())
         elif isinstance(x, list):
             print_str("[")
