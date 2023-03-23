@@ -59,11 +59,11 @@ def run_benchmark(
         ["Scripts/compile-run.py", "-E", protocol, "benchmark"],
         cwd=submodule_path,
         stdout=subprocess.PIPE,
-        stderr=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
         text=True,
     )
-    stdout, _ = p.communicate(timeout=timeout)
-    assert p.returncode == 0
+    stdout, stderr = p.communicate(timeout=timeout)
+    assert p.returncode == 0, stderr
     lines = stdout.split("\n")
     tag = "MPC BENCHMARK OUTPUT "
     line = next(line for line in lines if line.startswith(tag))
