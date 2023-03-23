@@ -125,11 +125,24 @@ def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) ->
         return f"{array}.assign_vector_by_indices(({value}).get_vector(), {slice})"
 
 
-def render_atom(atom: Atom, var_mappings: dict[Var, str]) -> str:
+def render_constant(c: Constant, make_shared: bool) -> str:
+    v = c.value
+    if make_shared:
+        if isinstance(v, bool):
+            return f"sintbit({v})"
+        elif isinstance(v, int):
+            return f"sint({v})"
+        else:
+            assert_never(v)
+    else:
+        return str(v)
+
+
+def render_atom(atom: Atom, make_shared: bool, var_mappings: dict[Var, str]) -> str:
     if isinstance(atom, Var):
         return render_var(atom, var_mappings)
     elif isinstance(atom, Constant):
-        return str(atom)
+        return render_constant(atom, make_shared)
     elif isinstance(atom, VectorizedAccess):
         return render_vectorized_access(atom, var_mappings)
     else:
@@ -156,7 +169,7 @@ def render_unary_op_kind(op: UnaryOpKind, operand: str) -> str:
 
 def render_subscript_index(index: SubscriptIndex, var_mappings: dict[Var, str]) -> str:
     if isinstance(index, (Var, Constant)):
-        return render_atom(index, var_mappings)
+        return render_atom(index, False, var_mappings)
     elif isinstance(index, SubscriptIndexBinOp):
         left = render_subscript_index(index.left, var_mappings)
         operator = render_bin_op_kind(index.operator)
@@ -176,7 +189,7 @@ def render_lift_expr(lift: LiftExpr) -> str:
         lift.expr,
         {var: f"indices[{index}]" for index, (var, _) in enumerate(lift.dims)},
     )
-    dim_sizes = ", ".join(render_atom(size, dict()) for (_, size) in lift.dims)
+    dim_sizes = ", ".join(render_atom(size, False, dict()) for (_, size) in lift.dims)
     return f"lift(lambda indices: {expr}, [{dim_sizes}])"
 
 
@@ -190,13 +203,15 @@ def render_assign_rhs(
         right = render_assign_rhs(arhs.right, var_mappings)
         return f"({left} {operator} {right})"
     elif isinstance(arhs, (Var, Constant, VectorizedAccess)):
-        return render_atom(arhs, var_mappings)
+        return render_atom(arhs, True, var_mappings)
     elif isinstance(arhs, List):
-        items_list = [render_atom(item, var_mappings) for item in arhs.items]
+        items_list = [render_atom(item, True, var_mappings) for item in arhs.items]
         items = ", ".join(items_list)
         return f"[{items}]"
     elif isinstance(arhs, Tuple):
-        items = "".join(render_atom(item, var_mappings) + "," for item in arhs.items)
+        items = "".join(
+            render_atom(item, True, var_mappings) + "," for item in arhs.items
+        )
         return f"({items})"
     elif isinstance(arhs, Mux):
         condition = render_assign_rhs(arhs.condition, var_mappings)
@@ -253,11 +268,11 @@ def render_statement(stmt: Statement, containing_loop: Optional[For]) -> str:
             + f"    {phi_assign_true}"
         )
     elif isinstance(stmt, Assign):
-        lhs = render_atom(stmt.lhs, dict())
+        lhs = render_atom(stmt.lhs, False, dict())
         if isinstance(stmt.rhs, Update):
             array = render_var(stmt.rhs.array, dict())
             index = render_subscript_index(stmt.rhs.index, dict())
-            value = render_atom(stmt.rhs.value, dict())
+            value = render_atom(stmt.rhs.value, True, dict())
             return f"{array}[{index}] = {value}; {lhs} = {array}"
         elif isinstance(stmt.rhs, VectorizedUpdate):
             rhs_array_access = VectorizedAccess(
@@ -281,8 +296,8 @@ def render_statement(stmt: Statement, containing_loop: Optional[For]) -> str:
             return f"{lhs} = {rhs}"
     elif isinstance(stmt, For):
         counter = render_var(stmt.counter, dict())
-        bound_low = render_atom(stmt.bound_low, dict())
-        bound_high = render_atom(stmt.bound_high, dict())
+        bound_low = render_atom(stmt.bound_low, False, dict())
+        bound_high = render_atom(stmt.bound_high, False, dict())
         body = indent(render_statements(stmt.body, stmt), "    ")
         exit_phi = render_loop_exit_phi(stmt)
         return (
@@ -307,7 +322,7 @@ def render_shared_array_decl(
 ) -> str:
     var_rendered = render_var(var, dict())
     dim_sizes_rendered = ", ".join(
-        [render_atom(dim_size, dict()) for dim_size in dim_sizes]
+        [render_atom(dim_size, False, dict()) for dim_size in dim_sizes]
     )
     if datatype in (DataType.INT, None):
         element_type = "sint"
