@@ -9,6 +9,7 @@ import pydot
 
 import compiler
 import compiler.loop_linear_code as llc
+import compiler.backends
 from compiler.type_analysis import TypeEnv
 from compiler.util import assert_never
 from tests.context import STAGES_DIR, SKIPPED_TESTS
@@ -111,7 +112,7 @@ def type_env_to_table(type_env: TypeEnv) -> str:
 
 def build_benchmark_tables(circuits_path: str) -> str:
     table = "## MOTION Benchmark Data\n"
-    for protocol in compiler.backend.motion_backend.VALID_PROTOCOLS:
+    for protocol in compiler.backends.motion.VALID_PROTOCOLS:
         table += f"\n### {protocol}\n"
 
         table += "| Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |\n"
