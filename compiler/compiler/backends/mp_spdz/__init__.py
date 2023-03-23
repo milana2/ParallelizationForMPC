@@ -32,7 +32,7 @@ from ...loop_linear_code import (
     DropDim,
     LoopBound,
 )
-from ...type_analysis import TypeEnv, Constant
+from ...type_analysis import TypeEnv, Constant, DataType
 
 
 UpdatelessAssignRHS = Union[
@@ -302,18 +302,27 @@ def render_statements(stmts: list[Statement], containing_loop: Optional[For]) ->
     return "\n".join(render_statement(stmt, containing_loop) for stmt in stmts)
 
 
-def render_shared_array_decl(var: Var, dim_sizes: list[LoopBound]) -> str:
+def render_shared_array_decl(
+    var: Var, datatype: Optional[DataType], dim_sizes: list[LoopBound]
+) -> str:
     var_rendered = render_var(var, dict())
     dim_sizes_rendered = ", ".join(
         [render_atom(dim_size, dict()) for dim_size in dim_sizes]
     )
-    return f"{var_rendered} = sint.Tensor([{dim_sizes_rendered}])"
+    if datatype in (DataType.INT, None):
+        element_type = "sint"
+    elif datatype is DataType.BOOL:
+        element_type = "sintbit"
+    else:
+        raise ValueError("Unsupported array element type")
+
+    return f"{var_rendered} = {element_type}.Tensor([{dim_sizes_rendered}])"
 
 
 def render_shared_array_decls(type_env: TypeEnv) -> str:
     return "\n".join(
         [
-            render_shared_array_decl(var, var_type.dim_sizes)
+            render_shared_array_decl(var, var_type.datatype, var_type.dim_sizes)
             for var, var_type in sorted(type_env.items(), key=lambda x: str(x[0]))
             if var_type.dim_sizes is not None and var_type.dim_sizes != []
         ]
