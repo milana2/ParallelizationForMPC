@@ -97,7 +97,7 @@ def drop_dim(arr: MultiArray) -> typing.Union[sint, TensorType]:
 
 def mpc_print_result(x: RevealableType) -> None:
     def rec(x: RevealableType) -> None:
-        if isinstance(x, sint):
+        if isinstance(x, (sint, Array)):
             print_str("%s", x.reveal())
         elif isinstance(x, list):
             print_str("[")
@@ -114,7 +114,7 @@ def mpc_print_result(x: RevealableType) -> None:
                 rec(item)
             print_str(")")
         else:
-            raise ValueError("Tried to print unknown type")
+            raise ValueError(f"Tried to print unknown type {type(x)}")
 
     print_str("MPC BENCHMARK OUTPUT ")
     rec(x)

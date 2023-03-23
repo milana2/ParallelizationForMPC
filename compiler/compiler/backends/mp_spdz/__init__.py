@@ -145,11 +145,11 @@ def render_bin_op_kind(op: BinOpKind) -> str:
         return str(op)
 
 
-def render_unary_op_kind(op: UnaryOpKind) -> str:
+def render_unary_op_kind(op: UnaryOpKind, operand: str) -> str:
     if op is UnaryOpKind.NEGATE:
-        return "-"
+        return f"-{operand}"
     elif op is UnaryOpKind.NOT:
-        return "~"
+        return f"{operand}.if_else(0, 1)"
     else:
         assert_never(op)
 
@@ -163,9 +163,9 @@ def render_subscript_index(index: SubscriptIndex, var_mappings: dict[Var, str]) 
         right = render_subscript_index(index.right, var_mappings)
         return f"({left} {operator} {right})"
     elif isinstance(index, SubscriptIndexUnaryOp):
-        operator = render_unary_op_kind(index.operator)
         operand = render_subscript_index(index.operand, var_mappings)
-        return f"({operator}{operand})"
+        expr = render_unary_op_kind(index.operator, operand)
+        return f"({expr})"
     else:
         assert_never(index)
 
@@ -204,9 +204,9 @@ def render_assign_rhs(
         false_value = render_assign_rhs(arhs.false_value, var_mappings)
         return f"{condition}.if_else({true_value}, {false_value})"
     elif isinstance(arhs, UnaryOp):
-        operator = render_unary_op_kind(arhs.operator)
         operand = render_assign_rhs(arhs.operand, var_mappings)
-        return f"({operator}{operand})"
+        expr = render_unary_op_kind(arhs.operator, operand)
+        return f"({expr})"
     elif isinstance(arhs, Subscript):
         array = render_assign_rhs(arhs.array, var_mappings)
         index = render_subscript_index(arhs.index, var_mappings)
