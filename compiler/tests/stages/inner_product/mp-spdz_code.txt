@@ -7,10 +7,10 @@ def inner_product(A_0, B_0, N_0):
     sum_3 = sint.Tensor([N_0])
     temp_2 = sint.Tensor([N_0])
     # Function body
-    sum_1 = 0
-    _2_0[:] = lift(lambda indices: sint((A_0[indices[0]])), [N_0])
-    _3_0[:] = lift(lambda indices: sint((B_0[indices[0]])), [N_0])
-    _1_0[:] = lift(lambda indices: sint(sum_1), [N_0])
+    sum_1 = sint(0)
+    _2_0[:] = lift(lambda indices: (A_0[indices[0]]), [N_0])
+    _3_0[:] = lift(lambda indices: (B_0[indices[0]]), [N_0])
+    _1_0[:] = lift(lambda indices: sum_1, [N_0])
     temp_2[:] = (_2_0[:] * _3_0[:])
     for _5_0 in range(0, N_0):
         # Set ϕ value

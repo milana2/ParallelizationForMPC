@@ -1,39 +1,39 @@
 def count_123(Seq_0, N_0, Syms_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
+    _1_2 = sintbit.Tensor([N_0])
     _10_0 = sint.Tensor([N_0])
     _11_0 = sint.Tensor([N_0])
     _12_0 = sint.Tensor([N_0])
     _13_0 = sint.Tensor([N_0])
     _14_0 = sint.Tensor([N_0])
-    _2_2 = sint.Tensor([N_0])
-    _3_2 = sint.Tensor([N_0])
-    _4_2 = sint.Tensor([N_0])
-    _5_2 = sint.Tensor([N_0])
-    _6_0 = sint.Tensor([N_0])
-    _7_0 = sint.Tensor([N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _3_2 = sintbit.Tensor([N_0])
+    _4_2 = sintbit.Tensor([N_0])
+    _5_2 = sintbit.Tensor([N_0])
+    _6_0 = sintbit.Tensor([N_0])
+    _7_0 = sintbit.Tensor([N_0])
     _8_0 = sint.Tensor([N_0])
     _9_0 = sint.Tensor([N_0])
     c_2 = sint.Tensor([N_0])
     c_3 = sint.Tensor([N_0])
     c_4 = sint.Tensor([N_0])
-    s1_2 = sint.Tensor([N_0])
-    s1_3 = sint.Tensor([N_0])
-    s2_2 = sint.Tensor([N_0])
-    s2_3 = sint.Tensor([N_0])
+    s1_2 = sintbit.Tensor([N_0])
+    s1_3 = sintbit.Tensor([N_0])
+    s2_2 = sintbit.Tensor([N_0])
+    s2_3 = sintbit.Tensor([N_0])
     # Function body
-    s1_1 = False
-    s2_1 = False
-    c_1 = 0
-    _9_0[:] = lift(lambda indices: sint((Seq_0[indices[0]])), [N_0])
-    _10_0[:] = lift(lambda indices: sint((Syms_0[2])), [N_0])
-    _11_0[:] = lift(lambda indices: sint((Seq_0[indices[0]])), [N_0])
-    _12_0[:] = lift(lambda indices: sint((Syms_0[1])), [N_0])
-    _13_0[:] = lift(lambda indices: sint((Seq_0[indices[0]])), [N_0])
-    _14_0[:] = lift(lambda indices: sint((Syms_0[0])), [N_0])
-    _6_0[:] = lift(lambda indices: sint(s1_1), [N_0])
-    _7_0[:] = lift(lambda indices: sint(s2_1), [N_0])
-    _8_0[:] = lift(lambda indices: sint(c_1), [N_0])
+    s1_1 = sintbit(False)
+    s2_1 = sintbit(False)
+    c_1 = sint(0)
+    _9_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _10_0[:] = lift(lambda indices: (Syms_0[2]), [N_0])
+    _11_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _12_0[:] = lift(lambda indices: (Syms_0[1]), [N_0])
+    _13_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _14_0[:] = lift(lambda indices: (Syms_0[0]), [N_0])
+    _6_0[:] = lift(lambda indices: s1_1, [N_0])
+    _7_0[:] = lift(lambda indices: s2_1, [N_0])
+    _8_0[:] = lift(lambda indices: c_1, [N_0])
     _1_2[:] = (_9_0[:] == _10_0[:])
     _4_2[:] = (_11_0[:] == _12_0[:])
     s1_3[:] = (_13_0[:] == _14_0[:])
@@ -51,19 +51,19 @@ def count_123(Seq_0, N_0, Syms_0):
             s2_2[_17_0] = _7_0[_17_0]
         else:
             s2_2[_17_0] = s2_3[(_17_0 - 1)]
-        _5_2[_17_0] = (s1_2[_17_0] or s2_2[_17_0])
-        s2_3[_17_0] = (_4_2[_17_0] and _5_2[_17_0])
+        _5_2[_17_0] = (s1_2[_17_0] | s2_2[_17_0])
+        s2_3[_17_0] = (_4_2[_17_0] & _5_2[_17_0])
     # Loop exit ϕ values
     s2_2[_17_0] = s2_3[(_17_0 - 1)]
-    _2_2[:] = (s2_2[:] or s1_2[:])
-    _3_2[:] = (_1_2[:] and _2_2[:])
+    _2_2[:] = (s2_2[:] | s1_2[:])
+    _3_2[:] = (_1_2[:] & _2_2[:])
     for _18_0 in range(0, N_0):
         # Set ϕ value
         if _18_0 == 0:
             c_2[_18_0] = _8_0[_18_0]
         else:
             c_2[_18_0] = c_4[(_18_0 - 1)]
-        c_3[_18_0] = (c_2[_18_0] + 1)
+        c_3[_18_0] = (c_2[_18_0] + sint(1))
         c_4[_18_0] = _3_2[_18_0].if_else(c_3[_18_0], c_2[_18_0])
     # Loop exit ϕ values
     c_2[_18_0] = c_4[(_18_0 - 1)]
