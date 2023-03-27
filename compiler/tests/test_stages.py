@@ -19,7 +19,7 @@ class StagesTestCase(unittest.TestCase):
             self.skipTest("Only verifying output of example applications")
 
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
-            if test_case_dir.name in test_context.SKIPPED_TESTS:
+            if test_case_dir.name in test_context.SKIPPED_TESTS[None]:
                 continue
 
             print(f"Testing {test_case_dir.name}...")
@@ -92,7 +92,10 @@ class StagesTestCase(unittest.TestCase):
 
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
             name = test_case_dir.name
-            if name in test_context.SKIPPED_TESTS:
+            if name in (
+                test_context.SKIPPED_TESTS[None]
+                + test_context.SKIPPED_TESTS[test_context.BACKEND]
+            ):
                 continue
             print(f"Testing {name}...")
             expected_output = get_test_case_expected_output(test_case_dir.path)
@@ -131,7 +134,7 @@ def get_test_case_expected_output(test_case_dir: str) -> str:
 
 def regenerate_stages():
     for test_case_dir in os.scandir(test_context.STAGES_DIR):
-        if test_case_dir.name in test_context.SKIPPED_TESTS:
+        if test_case_dir.name in test_context.SKIPPED_TESTS[None]:
             continue
 
         print(f"Regenerating {test_case_dir.name}...")

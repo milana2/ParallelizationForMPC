@@ -554,7 +554,7 @@ def print_benchmark_data(all_stats):
 def run_paper_benchmarks():
     all_stats = []
     for test_case_dir in os.scandir(test_context.STAGES_DIR):
-        if test_case_dir.name in test_context.SKIPPED_TESTS:
+        if test_case_dir.name in test_context.SKIPPED_TESTS[None]:
                 continue
 
         all_args, non_vec_up_to = get_inputs(test_case_dir.name)
@@ -648,7 +648,7 @@ def run_paper_benchmarks():
 
 def compile_all_benchmarks():
     for test_case_dir in os.scandir(test_context.STAGES_DIR):
-        if test_case_dir.name in test_context.SKIPPED_TESTS:
+        if test_case_dir.name in test_context.SKIPPED_TESTS[None]:
                 continue
         all_args, non_vec_up_to = get_inputs(test_case_dir.name)
         if len(all_args) == 0:
@@ -710,7 +710,7 @@ def run_client_role(address):
     
     all_stats = []
     for test_case_dir in os.scandir(test_context.STAGES_DIR):
-        if test_case_dir.name in test_context.SKIPPED_TESTS:
+        if test_case_dir.name in test_context.SKIPPED_TESTS[None]:
                 continue
 
         all_args, non_vec_up_to = get_inputs(test_case_dir.name)

@@ -121,7 +121,9 @@ def build_benchmark_tables(circuits_path: str) -> str:
         for test_case_dir in sorted(
             os.scandir(STAGES_DIR), key=lambda entry: entry.name
         ):
-            if test_case_dir.name in SKIPPED_TESTS:
+            if test_case_dir.name in (
+                SKIPPED_TESTS[None] + SKIPPED_TESTS[Backend.MOTION]
+            ):
                 continue
 
             for vectorized in (True, False):
@@ -172,7 +174,7 @@ def main():
 
     md += "## Compiler stages with different benchmarks\n"
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
-        if test_case_dir.name in SKIPPED_TESTS:
+        if test_case_dir.name in SKIPPED_TESTS[None]:
             continue
 
         md += f"### `{test_case_dir.name}`\n"
