@@ -97,8 +97,10 @@ def render_multi_array_slice(v: VectorizedAccess, var_mappings: dict[Var, str]) 
 def normalize_vectorized_access(v: VectorizedAccess) -> VectorizedAccess:
     array = v.array
     while isinstance(array, VectorizedAccess):
-        assert all(array.vectorized_dims)
-        array = array.array
+        if all(array.vectorized_dims):
+            array = array.array
+        else:
+            array = Var("(TODO: fix this case)")
     return dc.replace(v, array=array)
 
 

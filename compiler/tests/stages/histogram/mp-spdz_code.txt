@@ -1,6 +1,6 @@
 def histogram(A_0, B_0, N_0, num_bins_0, result_0):
     # Shared array declarations
-    _1_3 = sint.Tensor([num_bins_0, N_0])
+    _1_3 = sintbit.Tensor([num_bins_0, N_0])
     _2_0 = sint.Tensor([num_bins_0])
     _3_0 = sint.Tensor([num_bins_0])
     _4_0 = sint.Tensor([num_bins_0, N_0])
@@ -13,11 +13,11 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
     val_4 = sint.Tensor([num_bins_0, N_0])
     val_5 = sint.Tensor([num_bins_0, N_0])
     # Function body
-    _2_0[:] = lift(lambda indices: sint(result_0), [num_bins_0])
-    _5_0.assign_vector_by_indices((lift(lambda indices: sint((A_0[indices[1]])), [num_bins_0, N_0])).get_vector(), None, None)
-    _6_0.assign_vector_by_indices((lift(lambda indices: sint(indices[0]), [num_bins_0, N_0])).get_vector(), None, None)
-    _7_0.assign_vector_by_indices((lift(lambda indices: sint((B_0[indices[1]])), [num_bins_0, N_0])).get_vector(), None, None)
-    _4_0.assign_vector_by_indices((lift(lambda indices: sint(_2_0[:]), [num_bins_0, N_0])).get_vector(), None, None)
+    _2_0[:] = lift(lambda indices: result_0, [num_bins_0])
+    _5_0.assign_vector_by_indices((lift(lambda indices: (A_0[indices[1]]), [num_bins_0, N_0])).get_vector(), None, None)
+    _6_0.assign_vector_by_indices((lift(lambda indices: indices[0], [num_bins_0, N_0])).get_vector(), None, None)
+    _7_0.assign_vector_by_indices((lift(lambda indices: (B_0[indices[1]]), [num_bins_0, N_0])).get_vector(), None, None)
+    _4_0.assign_vector_by_indices((lift(lambda indices: _2_0[:], [num_bins_0, N_0])).get_vector(), None, None)
     _1_3.assign_vector_by_indices(((_5_0.get_vector_by_indices(None, None) == _6_0.get_vector_by_indices(None, None))).get_vector(), None, None)
     for _8_0 in range(0, N_0):
         # Set ϕ value
@@ -28,7 +28,7 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
         val_4.assign_vector_by_indices((result_2.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
         val_3.assign_vector_by_indices(((result_2.get_vector_by_indices(None, _8_0) + _7_0.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
         val_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, _8_0).if_else(val_3.get_vector_by_indices(None, _8_0), val_4.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
-        result_2.get_vector_by_indices(None, _8_0).assign_vector_by_indices((val_5.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0); result_3.assign_vector_by_indices((result_2{NUM_BINS_0}[_8_0].get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
+        (TODO: fix this case).assign_vector_by_indices((val_5.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0); result_3.assign_vector_by_indices(((TODO: fix this case).get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
     # Loop exit ϕ values
     result_2.assign_vector_by_indices((result_3.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
     _3_0[:] = drop_dim(result_3)
