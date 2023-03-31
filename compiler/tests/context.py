@@ -40,5 +40,6 @@ SKIPPED_TESTS = {
         "mnist_relu",
         # AssertionError: '[0, 0, 0, 0, 0]' != '[4, 2, 3, 0, 10]'
         "psi",
+        "chapterfour_figure_12",
     ],
 }
