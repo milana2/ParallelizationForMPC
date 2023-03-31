@@ -1,0 +1,69 @@
+def count_10s(Seq_0, N_0, Syms_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _10_0 = sint.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _12_0 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _3_2 = sintbit.Tensor([N_0])
+    _4_2 = sintbit.Tensor([N_0])
+    _5_0 = sintbit.Tensor([N_0])
+    _6_0 = sintbit.Tensor([N_0])
+    _7_0 = sint.Tensor([N_0])
+    _8_0 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    s0_2 = sintbit.Tensor([N_0])
+    s0_3 = sintbit.Tensor([N_0])
+    s1_2 = sintbit.Tensor([N_0])
+    s1_3 = sintbit.Tensor([N_0])
+    scount_2 = sint.Tensor([N_0])
+    scount_3 = sint.Tensor([N_0])
+    scount_4 = sint.Tensor([N_0])
+    # Function body
+    s0_1 = sintbit(False)
+    s1_1 = sintbit(False)
+    scount_1 = sint(0)
+    _8_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _9_0[:] = lift(lambda indices: (Syms_0[0]), [N_0])
+    _10_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _11_0[:] = lift(lambda indices: (Syms_0[0]), [N_0])
+    _12_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _13_0[:] = lift(lambda indices: (Syms_0[1]), [N_0])
+    _5_0[:] = lift(lambda indices: s0_1, [N_0])
+    _6_0[:] = lift(lambda indices: s1_1, [N_0])
+    _7_0[:] = lift(lambda indices: scount_1, [N_0])
+    _1_2[:] = (_8_0[:] != _9_0[:])
+    _3_2[:] = (_10_0[:] == _11_0[:])
+    s0_3[:] = (_12_0[:] == _13_0[:])
+    for _15_0 in range(0, N_0):
+        # Set ϕ value
+        if _15_0 == 0:
+            s0_2[_15_0] = _5_0[_15_0]
+        else:
+            s0_2[_15_0] = s0_3[(_15_0 - 1)]
+    # Loop exit ϕ values
+    s0_2[_15_0] = s0_3[(_15_0 - 1)]
+    for _16_0 in range(0, N_0):
+        # Set ϕ value
+        if _16_0 == 0:
+            s1_2[_16_0] = _6_0[_16_0]
+        else:
+            s1_2[_16_0] = s1_3[(_16_0 - 1)]
+        _4_2[_16_0] = (s0_2[_16_0] | s1_2[_16_0])
+        s1_3[_16_0] = (_3_2[_16_0] & _4_2[_16_0])
+    # Loop exit ϕ values
+    s1_2[_16_0] = s1_3[(_16_0 - 1)]
+    _2_2[:] = (s1_2[:] & _1_2[:])
+    for _17_0 in range(0, N_0):
+        # Set ϕ value
+        if _17_0 == 0:
+            scount_2[_17_0] = _7_0[_17_0]
+        else:
+            scount_2[_17_0] = scount_4[(_17_0 - 1)]
+        scount_3[_17_0] = (scount_2[_17_0] + sint(1))
+        scount_4[_17_0] = _2_2[_17_0].if_else(scount_3[_17_0], scount_2[_17_0])
+    # Loop exit ϕ values
+    scount_2[_17_0] = scount_4[(_17_0 - 1)]
+    _14_0 = drop_dim(scount_4)
+    return _14_0

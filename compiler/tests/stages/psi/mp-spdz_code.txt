@@ -1,0 +1,39 @@
+def psi(A_0, SA_0, B_0, SB_0, result_0):
+    # Shared array declarations
+    _1_3 = sintbit.Tensor([SA_0, SB_0])
+    _2_0 = sint.Tensor([SA_0])
+    _3_0 = sintbit.Tensor([SA_0, SB_0])
+    _4_0 = sint.Tensor([SA_0, SB_0])
+    _5_0 = sint.Tensor([SA_0, SB_0])
+    _6_0 = sint.Tensor([SA_0])
+    _7_0 = sintbit.Tensor([SA_0])
+    flag_3 = sintbit.Tensor([SA_0, SB_0])
+    flag_5 = sintbit.Tensor([SA_0, SB_0])
+    result_2 = sint.Tensor([SA_0])
+    val_2 = sint.Tensor([SA_0])
+    val_3 = sint.Tensor([SA_0])
+    val_4 = sint.Tensor([SA_0])
+    # Function body
+    _2_0[:] = lift(lambda indices: result_0, [SA_0])
+    _6_0[:] = lift(lambda indices: (A_0[indices[0]]), [SA_0])
+    flag_2 = sintbit(False)
+    _4_0.assign_vector_by_indices((lift(lambda indices: (A_0[indices[0]]), [SA_0, SB_0])).get_vector(), None, None)
+    _5_0.assign_vector_by_indices((lift(lambda indices: (B_0[indices[1]]), [SA_0, SB_0])).get_vector(), None, None)
+    flag_4 = sintbit(True)
+    val_2[:] = _2_0[:]
+    val_3[:] = _6_0[:]
+    _3_0.assign_vector_by_indices((lift(lambda indices: flag_2, [SA_0, SB_0])).get_vector(), None, None)
+    _1_3.assign_vector_by_indices(((_4_0.get_vector_by_indices(None, None) == _5_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    for _8_0 in range(0, SB_0):
+        # Set ϕ value
+        if _8_0 == 0:
+            flag_3.assign_vector_by_indices((_3_0.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
+        else:
+            flag_3.assign_vector_by_indices((flag_5.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
+        flag_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, _8_0).if_else(flag_4, flag_3.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
+    # Loop exit ϕ values
+    flag_3.assign_vector_by_indices((flag_5.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
+    _7_0[:] = drop_dim(flag_5)
+    val_4[:] = _7_0[:].if_else(val_3[:], val_2[:])
+    _2_0[:] = val_4[:]; result_2[:] = _2_0[:]
+    return result_2

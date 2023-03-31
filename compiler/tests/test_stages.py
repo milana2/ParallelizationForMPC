@@ -5,10 +5,10 @@ import subprocess
 import unittest
 
 import compiler
-import compiler.backends.motion
+from compiler.backends import Backend
 
 from . import context as test_context
-from .backends.motion.benchmark import run_benchmark
+from .backends import run_benchmark
 
 
 class StagesTestCase(unittest.TestCase):
@@ -19,7 +19,7 @@ class StagesTestCase(unittest.TestCase):
             self.skipTest("Only verifying output of example applications")
 
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
-            if test_case_dir.name in test_context.SKIPPED_TESTS:
+            if test_case_dir.name in test_context.SKIPPED_TESTS[None]:
                 continue
 
             print(f"Testing {test_case_dir.name}...")
@@ -80,43 +80,61 @@ class StagesTestCase(unittest.TestCase):
             self.assertEqual(str(loop_linear), stages["vectorized_linear.txt"])
             self.assertEqual(str(type_env), stages["vectorized_type_env.txt"])
 
-            motion_code = compiler.backends.motion.render_function(
-                loop_linear, type_env, True
-            )
-            self.assertEqual(str(motion_code), stages["motion_code.txt"])
+            for backend in Backend:
+                backend_code = backend.render_function(loop_linear, type_env, True)
+                self.assertEqual(
+                    str(backend_code), stages[f"{backend}_code.txt".lower()]
+                )
 
     def test_example_apps(self):
         if test_context.BACKEND is None:
             self.skipTest("Skipping example application compilation")
 
         for test_case_dir in os.scandir(test_context.STAGES_DIR):
-            if test_case_dir.name in test_context.SKIPPED_TESTS:
+            name = test_case_dir.name
+            if name in (
+                test_context.SKIPPED_TESTS[None]
+                + test_context.SKIPPED_TESTS[test_context.BACKEND]
+            ):
                 continue
-            for protocol in compiler.backends.motion.VALID_PROTOCOLS:
+            print(f"Testing {name}...")
+            expected_output = get_test_case_expected_output(test_case_dir.path)
+            for protocol in test_context.BACKEND.valid_protocols():
+                print(f"    Protocol {protocol}...")
                 for vectorized in (True, False):
-                    input_fname = os.path.join(test_case_dir.path, "input.py")
-
-                    # Collect expected output
-                    proc = subprocess.run(
-                        [sys.executable, input_fname],
-                        check=True,
-                        stdout=subprocess.PIPE,
-                        text=True,
+                    output = run_benchmark(
+                        test_context.BACKEND,
+                        name,
+                        test_case_dir.path,
+                        protocol,
+                        vectorized,
                     )
-                    expected_output = proc.stdout
+                    assert output
+                    party0, party1 = output
+                    self.assertEqual(party0.strip(), party1.strip())
+                    self.assertEqual(party0.strip(), expected_output.strip())
+                    self.assertEqual(party1.strip(), expected_output.strip())
 
-                    party0, party1 = run_benchmark(
-                        test_case_dir.name, test_case_dir.path, protocol, vectorized
-                    )
 
-                    self.assertEqual(party0.output.strip(), party1.output.strip())
-                    self.assertEqual(party0.output.strip(), expected_output.strip())
-                    self.assertEqual(party1.output.strip(), expected_output.strip())
+def get_test_case_expected_output(test_case_dir: str) -> str:
+    """
+    Run the benchmark file in a Python interpreter to get the expected output
+    for the test inputs.
+    """
+
+    input_fname = os.path.join(test_case_dir, "input.py")
+    proc = subprocess.run(
+        [sys.executable, input_fname],
+        check=True,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    return proc.stdout
 
 
 def regenerate_stages():
     for test_case_dir in os.scandir(test_context.STAGES_DIR):
-        if test_case_dir.name in test_context.SKIPPED_TESTS:
+        if test_case_dir.name in test_context.SKIPPED_TESTS[None]:
             continue
 
         print(f"Regenerating {test_case_dir.name}...")
@@ -188,8 +206,9 @@ def regenerate_stages():
         with open(os.path.join(test_case_dir, "vectorized_type_env.txt"), "w") as f:
             f.write(f"{type_env}\n")
 
-        motion_code = compiler.backends.motion.render_function(
-            loop_linear, type_env, True
-        )
-        with open(os.path.join(test_case_dir, "motion_code.txt"), "w") as f:
-            f.write(f"{motion_code}\n")
+        for backend in Backend:
+            backend_code = backend.render_function(loop_linear, type_env, True)
+            with open(
+                os.path.join(test_case_dir, f"{backend}_code.txt".lower()), "w"
+            ) as f:
+                f.write(f"{backend_code}\n")

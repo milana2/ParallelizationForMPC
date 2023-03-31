@@ -9,10 +9,13 @@ import pydot
 
 import compiler
 import compiler.loop_linear_code as llc
+import compiler.backends
 from compiler.type_analysis import TypeEnv
 from compiler.util import assert_never
 from tests.context import STAGES_DIR, SKIPPED_TESTS
-from tests.backends.motion.benchmark import run_benchmark
+from tests.backends.motion.benchmark import run_benchmark as motion_run_benchmark
+from tests.backends.mp_spdz.benchmark import run_benchmark as spdz_run_benchmark
+from tests.backends import Backend
 
 
 def cfg_to_image(G: networkx.DiGraph, path: str):
@@ -108,8 +111,8 @@ def type_env_to_table(type_env: TypeEnv) -> str:
     )
 
 
-def build_benchmark_tables(circuits_path: str) -> str:
-    table = "## Benchmark Data\n"
+def build_motion_benchmark_tables(circuits_path: str) -> str:
+    table = "## MOTION Benchmark Data\n"
     for protocol in compiler.backends.motion.VALID_PROTOCOLS:
         table += f"\n### {protocol}\n"
 
@@ -119,14 +122,18 @@ def build_benchmark_tables(circuits_path: str) -> str:
         for test_case_dir in sorted(
             os.scandir(STAGES_DIR), key=lambda entry: entry.name
         ):
-            if test_case_dir.name in SKIPPED_TESTS:
+            if test_case_dir.name in (
+                SKIPPED_TESTS[None] + SKIPPED_TESTS[Backend.MOTION]
+            ):
                 continue
 
             for vectorized in (True, False):
                 try:
-                    data, _ = run_benchmark(
+                    maybe_data = motion_run_benchmark(
                         test_case_dir.name, test_case_dir.path, protocol, vectorized
                     )
+                    assert maybe_data is not None
+                    data, _ = maybe_data
                 except Exception as e:
                     print(
                         f"Skipping {test_case_dir.name} (vectorized={vectorized}) due to error: {e}"
@@ -152,6 +159,44 @@ def build_benchmark_tables(circuits_path: str) -> str:
     return table
 
 
+def build_spdz_benchmark_tables() -> str:
+    table = "## MP-SPDZ Benchmark Data\n"
+    for protocol in compiler.backends.mp_spdz.VALID_PROTOCOLS:
+        table += f"\n### {protocol.title()} protocol\n"
+
+        table += "| Benchmark | Time (seconds) | Data sent (MB) | # Rounds | Global data sent (MB) |\n"
+        table += "| - | - | - | - | - |\n"
+
+        for test_case_dir in sorted(
+            os.scandir(STAGES_DIR), key=lambda entry: entry.name
+        ):
+            if test_case_dir.name in (
+                SKIPPED_TESTS[None] + SKIPPED_TESTS[Backend.MP_SPDZ]
+            ):
+                continue
+
+            print(test_case_dir.name)
+
+            for vectorized in (True, False):
+                data = spdz_run_benchmark(
+                    test_case_dir.name, test_case_dir.path, protocol, vectorized
+                )
+
+                table += "|"
+                table += (
+                    test_case_dir.name
+                    + (" (Non-Vectorized)" if not vectorized else "")
+                    + "|"
+                )
+                table += str(data.time_seconds) + "|"
+                table += str(data.data_sent_mb) + "|"
+                table += str(data.rounds) + "|"
+                table += str(data.global_data_sent_mb) + "|"
+                table += "\n"
+
+    return table
+
+
 def main():
     parser = ArgumentParser(
         description="Generate a markdown file with results of the compiler on benchmarks"
@@ -166,11 +211,12 @@ def main():
     md = "# Compiler results data\n"
     md = "## [View the current version of the paper here](paper_SIMD.pdf)\n"
 
-    md += build_benchmark_tables(circuits_path) + "\n"
+    md += build_motion_benchmark_tables(circuits_path) + "\n"
+    md += build_spdz_benchmark_tables() + "\n"
 
     md += "## Compiler stages with different benchmarks\n"
     for test_case_dir in sorted(os.scandir(STAGES_DIR), key=lambda entry: entry.name):
-        if test_case_dir.name in SKIPPED_TESTS:
+        if test_case_dir.name in SKIPPED_TESTS[None]:
             continue
 
         md += f"### `{test_case_dir.name}`\n"
@@ -265,11 +311,16 @@ def main():
         md += "#### Type Environment After Vectorization\n"
         md += f"{type_env_to_table(type_env)}\n"
 
-        motion_code = compiler.backends.motion.render_function(
-            loop_linear_code, type_env, True
-        )
-        md += "#### Motion code\n"
-        md += f"```cpp\n{motion_code}\n```\n"
+        for backend in Backend:
+            if backend is Backend.MOTION:
+                lang = "cpp"
+            elif backend is Backend.MP_SPDZ:
+                lang = "py"
+            else:
+                lang = ""
+            backend_code = backend.render_function(loop_linear_code, type_env, True)
+            md += f"#### {backend} code\n"
+            md += f"```{lang}\n{backend_code}\n```\n"
 
     md_path = os.path.join(args.path, "README.md")
     with open(md_path, "w") as f:

@@ -38,6 +38,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.10"]
+        mpc-backend: ["MOTION", "MP-SPDZ"]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -54,13 +55,22 @@ jobs:
           sudo rm -rf /usr/local
 
           sudo apt-get update
-          sudo apt-get -y install build-essential make git cmake libssl-dev libboost-program-options-dev graphviz
+
+          case ${{ matrix.mpc-backend }} in
+            MOTION)
+              sudo apt-get -y install build-essential make git cmake libssl-dev libboost-program-options-dev
+              ;;
+
+            MP-SPDZ)
+              sudo apt-get -y install automake build-essential clang cmake git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 texinfo yasm
+              ;;
+          esac
 
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Build example applications
         working-directory: compiler
-        run: ./run_tests.py --test-backend motion
+        run: ./run_tests.py --test-backend ${{ matrix.mpc-backend }}
 
   results-page:
     runs-on: ubuntu-latest
@@ -83,7 +93,14 @@ jobs:
           sudo rm -rf /usr/local
 
           sudo apt-get update
-          sudo apt-get -y install build-essential make git cmake libssl-dev libboost-program-options-dev graphviz
+
+          # Install MOTION dependencies
+          sudo apt-get -y install build-essential make git cmake libssl-dev libboost-program-options-dev
+
+          # Install MP-SPDZ dependencies
+          sudo apt-get -y install automake build-essential clang cmake git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 texinfo yasm
+
+          sudo apt-get -y install graphviz
 
           python -m pip install --upgrade pip
           pip install -r requirements.txt

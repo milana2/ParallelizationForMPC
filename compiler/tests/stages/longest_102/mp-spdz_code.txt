@@ -1,0 +1,80 @@
+def longest_102(Seq_0, N_0, Syms_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _10_0 = sint.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _12_0 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _14_0 = sint.Tensor([N_0])
+    _15_0 = sint.Tensor([N_0])
+    _16_0 = sint.Tensor([N_0])
+    _17_0 = sint.Tensor([N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _4_2 = sintbit.Tensor([N_0])
+    _5_2 = sintbit.Tensor([N_0])
+    _6_2 = sintbit.Tensor([N_0])
+    _7_2 = sintbit.Tensor([N_0])
+    _8_2 = sintbit.Tensor([N_0])
+    _9_0 = sintbit.Tensor([N_0])
+    length_2 = sint.Tensor([N_0])
+    length_3 = sint.Tensor([N_0])
+    length_5 = sint.Tensor([N_0])
+    max_len_2 = sint.Tensor([N_0])
+    max_len_3 = sint.Tensor([N_0])
+    max_len_4 = sint.Tensor([N_0])
+    s0_2 = sintbit.Tensor([N_0])
+    s0_3 = sintbit.Tensor([N_0])
+    s1_2 = sintbit.Tensor([N_0])
+    # Function body
+    s0_1 = sintbit(False)
+    max_len_1 = sint(0)
+    length_1 = sint(0)
+    _12_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _13_0[:] = lift(lambda indices: (Syms_0[2]), [N_0])
+    _14_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _15_0[:] = lift(lambda indices: (Syms_0[1]), [N_0])
+    _16_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _17_0[:] = lift(lambda indices: (Syms_0[0]), [N_0])
+    length_4 = sint(0)
+    _9_0[:] = lift(lambda indices: s0_1, [N_0])
+    _10_0[:] = lift(lambda indices: max_len_1, [N_0])
+    _11_0[:] = lift(lambda indices: length_1, [N_0])
+    _1_2[:] = (_12_0[:] == _13_0[:])
+    _2_2[:] = (_14_0[:] == _15_0[:])
+    _4_2[:] = (_16_0[:] == _17_0[:])
+    for _19_0 in range(0, N_0):
+        # Set ϕ value
+        if _19_0 == 0:
+            s0_2[_19_0] = _9_0[_19_0]
+        else:
+            s0_2[_19_0] = s0_3[(_19_0 - 1)]
+        _5_2[_19_0] = (s0_2[_19_0] & _4_2[_19_0])
+        s0_3[_19_0] = (_2_2[_19_0] | _5_2[_19_0])
+    # Loop exit ϕ values
+    s0_2[_19_0] = s0_3[(_19_0 - 1)]
+    s1_2[:] = (s0_2[:] & _1_2[:])
+    _6_2[:] = (s1_2[:] | s0_3[:])
+    for _20_0 in range(0, N_0):
+        # Set ϕ value
+        if _20_0 == 0:
+            length_2[_20_0] = _11_0[_20_0]
+        else:
+            length_2[_20_0] = length_5[(_20_0 - 1)]
+        length_3[_20_0] = (length_2[_20_0] + sint(1))
+        length_5[_20_0] = _6_2[_20_0].if_else(length_3[_20_0], length_4)
+    # Loop exit ϕ values
+    length_2[_20_0] = length_5[(_20_0 - 1)]
+    max_len_3[:] = length_5[:]
+    for _21_0 in range(0, N_0):
+        # Set ϕ value
+        if _21_0 == 0:
+            max_len_2[_21_0] = _10_0[_21_0]
+        else:
+            max_len_2[_21_0] = max_len_4[(_21_0 - 1)]
+        _7_2[_21_0] = (max_len_2[_21_0] < length_5[_21_0])
+        _8_2[_21_0] = (s1_2[_21_0] & _7_2[_21_0])
+        max_len_4[_21_0] = _8_2[_21_0].if_else(max_len_3[_21_0], max_len_2[_21_0])
+    # Loop exit ϕ values
+    max_len_2[_21_0] = max_len_4[(_21_0 - 1)]
+    _18_0 = drop_dim(max_len_4)
+    return _18_0

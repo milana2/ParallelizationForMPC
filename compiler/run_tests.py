@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 
 from tests import run_tests, regenerate_stages
 from tests import context as test_context
+from compiler.backends import Backend
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -14,7 +15,8 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--test-backend",
-        choices=["motion"],
+        type=Backend,
+        choices=list(Backend),
         help="Test that the example apps compile and run with the given backend",
     )
     args = parser.parse_args()
