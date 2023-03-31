@@ -1,89 +1,115 @@
 ## [View the current version of the paper here](paper_SIMD.pdf)
-## Benchmark Data
+## MOTION Benchmark Data
 
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|10003|8354|1649|4947|0.615 MiB |4946|0.615 MiB |3242.526 ms |384.0 ms |
-|biometric (Non-Vectorized)|105250|0|105250|47073|2.704 MiB |47072|2.704 MiB |11504.409 ms |3986.0 ms |
-|biometric_fast|10638|8975|1663|5265|0.611 MiB |5264|0.611 MiB |3463.664 ms |413.0 ms |
-|biometric_fast (Non-Vectorized)|99903|0|99903|44529|2.558 MiB |44528|2.558 MiB |11144.441 ms |3745.0 ms |
-|chapterfour_figure_12|805|0|805|752|0.048 MiB |751|0.048 MiB |407.408 ms |30.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|805|0|805|752|0.048 MiB |751|0.048 MiB |387.459 ms |32.0 ms |
-|convex_hull|2122|2071|51|1381|0.122 MiB |1380|0.122 MiB |814.304 ms |85.0 ms |
-|convex_hull (Non-Vectorized)|12112|0|12112|6265|0.364 MiB |6264|0.364 MiB |1777.306 ms |465.0 ms |
-|count_102|6610|297|6313|3820|0.237 MiB |3819|0.237 MiB |3651.305 ms |269.0 ms |
-|count_102 (Non-Vectorized)|9188|0|9188|5512|0.321 MiB |5511|0.321 MiB |2798.872 ms |357.0 ms |
-|count_10s|4720|298|4422|2848|0.177 MiB |2847|0.177 MiB |2383.028 ms |178.0 ms |
-|count_10s (Non-Vectorized)|6440|0|6440|3976|0.233 MiB |3975|0.233 MiB |2013.672 ms |250.0 ms |
-|count_123|4729|305|4424|2850|0.177 MiB |2849|0.177 MiB |2501.583 ms |185.0 ms |
-|count_123 (Non-Vectorized)|6476|0|6476|3990|0.234 MiB |3989|0.233 MiB |2162.489 ms |248.0 ms |
-|cryptonets_max_pooling|1357|1221|136|951|0.139 MiB |950|0.138 MiB |1054.804 ms |58.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|24124|0|24124|11211|0.647 MiB |11210|0.647 MiB |2962.014 ms |961.0 ms |
-|db_cross_join_trivial|21906|119|21787|14486|0.877 MiB |14485|0.876 MiB |3768.022 ms |886.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|29201|0|29201|19666|1.132 MiB |19665|1.132 MiB |3919.805 ms |1174.0 ms |
-|db_variance|29520|5864|23656|13646|0.926 MiB |13645|0.926 MiB |55056.825 ms |1132.0 ms |
-|db_variance (Non-Vectorized)|70507|0|70507|31524|1.812 MiB |31523|1.812 MiB |56607.525 ms |2743.0 ms |
-|histogram|5250|5131|119|3018|0.276 MiB |3017|0.276 MiB |2336.789 ms |221.0 ms |
-|histogram (Non-Vectorized)|28668|0|28668|15676|0.903 MiB |15675|0.903 MiB |4394.568 ms |1115.0 ms |
-|inner_product|7075|5207|1868|3582|0.245 MiB |3581|0.245 MiB |1701.707 ms |276.0 ms |
-|inner_product (Non-Vectorized)|17478|0|17478|8054|0.467 MiB |8053|0.467 MiB |2556.798 ms |689.0 ms |
-|longest_102|10651|306|10345|5642|0.341 MiB |5641|0.341 MiB |6948.551 ms |418.0 ms |
-|longest_102 (Non-Vectorized)|13278|0|13278|7352|0.426 MiB |7351|0.426 MiB |4098.255 ms |515.0 ms |
-|longest_odd_10|8520|305|8215|4614|0.283 MiB |4613|0.283 MiB |5185.77 ms |329.0 ms |
-|longest_odd_10 (Non-Vectorized)|10543|0|10543|5944|0.349 MiB |5943|0.349 MiB |3420.642 ms |408.0 ms |
-|max_dist_between_syms|8278|101|8177|4454|0.263 MiB |4453|0.263 MiB |4481.013 ms |355.0 ms |
-|max_dist_between_syms (Non-Vectorized)|8941|0|8941|4888|0.285 MiB |4887|0.285 MiB |2931.962 ms |350.0 ms |
-|max_sum_between_syms|8277|101|8176|4454|0.263 MiB |4453|0.263 MiB |4432.249 ms |318.0 ms |
-|max_sum_between_syms (Non-Vectorized)|8940|0|8940|4888|0.285 MiB |4887|0.285 MiB |2938.488 ms |349.0 ms |
-|minimal_points|890|851|39|765|0.071 MiB |764|0.071 MiB |606.347 ms |34.0 ms |
-|minimal_points (Non-Vectorized)|7292|0|7292|3649|0.214 MiB |3648|0.214 MiB |1114.878 ms |280.0 ms |
-|mnist_relu|1016|408|608|771|0.33 MiB |770|0.33 MiB |450.754 ms |62.0 ms |
-|mnist_relu (Non-Vectorized)|80603|0|80603|36591|2.101 MiB |36590|2.101 MiB |8989.098 ms |3103.0 ms |
-|psi|186|140|46|474|0.05 MiB |473|0.05 MiB |624.435 ms |7.0 ms |
-|psi (Non-Vectorized)|3391|0|3391|2646|0.157 MiB |2645|0.157 MiB |831.066 ms |131.0 ms |
+|biometric|10003|8354|1649|4947|0.615 MiB |4946|0.615 MiB |3328.571 ms |585.0 ms |
+|biometric (Non-Vectorized)|105250|0|105250|47073|2.704 MiB |47072|2.704 MiB |14865.903 ms |7791.0 ms |
+|biometric_fast|10638|8975|1663|5265|0.611 MiB |5264|0.611 MiB |3790.382 ms |663.0 ms |
+|biometric_fast (Non-Vectorized)|99903|0|99903|44529|2.558 MiB |44528|2.558 MiB |15566.516 ms |7419.0 ms |
+|chapterfour_figure_12|805|0|805|752|0.048 MiB |751|0.048 MiB |386.23 ms |50.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|805|0|805|752|0.048 MiB |751|0.048 MiB |403.719 ms |44.0 ms |
+|convex_hull|2122|2071|51|1381|0.122 MiB |1380|0.122 MiB |1020.372 ms |123.0 ms |
+|convex_hull (Non-Vectorized)|12112|0|12112|6265|0.364 MiB |6264|0.364 MiB |2341.847 ms |752.0 ms |
+|count_102|6610|297|6313|3820|0.237 MiB |3819|0.237 MiB |3682.805 ms |373.0 ms |
+|count_102 (Non-Vectorized)|9188|0|9188|5512|0.321 MiB |5511|0.321 MiB |2979.269 ms |525.0 ms |
+|count_10s|4720|298|4422|2848|0.177 MiB |2847|0.177 MiB |2440.009 ms |263.0 ms |
+|count_10s (Non-Vectorized)|6440|0|6440|3976|0.233 MiB |3975|0.233 MiB |2341.858 ms |442.0 ms |
+|count_123|4729|305|4424|2850|0.177 MiB |2849|0.177 MiB |2554.052 ms |318.0 ms |
+|count_123 (Non-Vectorized)|6476|0|6476|3990|0.234 MiB |3989|0.233 MiB |2168.916 ms |444.0 ms |
+|cryptonets_max_pooling|1357|1221|136|951|0.139 MiB |950|0.138 MiB |1065.033 ms |93.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|24124|0|24124|11211|0.647 MiB |11210|0.647 MiB |3964.106 ms |1560.0 ms |
+|db_cross_join_trivial|21906|119|21787|14486|0.877 MiB |14485|0.876 MiB |4352.963 ms |1468.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|29201|0|29201|19666|1.132 MiB |19665|1.132 MiB |6133.496 ms |1987.0 ms |
+|db_variance|29520|5864|23656|13646|0.926 MiB |13645|0.926 MiB |55578.385 ms |1846.0 ms |
+|db_variance (Non-Vectorized)|70507|0|70507|31524|1.812 MiB |31523|1.812 MiB |60150.015 ms |5489.0 ms |
+|histogram|5250|5131|119|3018|0.276 MiB |3017|0.276 MiB |2359.229 ms |341.0 ms |
+|histogram (Non-Vectorized)|28668|0|28668|15676|0.903 MiB |15675|0.903 MiB |5374.394 ms |1686.0 ms |
+|inner_product|7075|5207|1868|3582|0.245 MiB |3581|0.245 MiB |1840.632 ms |470.0 ms |
+|inner_product (Non-Vectorized)|17478|0|17478|8054|0.467 MiB |8053|0.467 MiB |2951.288 ms |1067.0 ms |
+|longest_102|10651|306|10345|5642|0.341 MiB |5641|0.341 MiB |7012.639 ms |621.0 ms |
+|longest_102 (Non-Vectorized)|13278|0|13278|7352|0.426 MiB |7351|0.426 MiB |4786.095 ms |874.0 ms |
+|longest_odd_10|8520|305|8215|4614|0.283 MiB |4613|0.283 MiB |5174.954 ms |518.0 ms |
+|longest_odd_10 (Non-Vectorized)|10543|0|10543|5944|0.349 MiB |5943|0.349 MiB |3393.809 ms |630.0 ms |
+|max_dist_between_syms|8278|101|8177|4454|0.263 MiB |4453|0.263 MiB |4675.358 ms |499.0 ms |
+|max_dist_between_syms (Non-Vectorized)|8941|0|8941|4888|0.285 MiB |4887|0.285 MiB |3216.023 ms |538.0 ms |
+|max_sum_between_syms|8277|101|8176|4454|0.263 MiB |4453|0.263 MiB |4532.977 ms |501.0 ms |
+|max_sum_between_syms (Non-Vectorized)|8940|0|8940|4888|0.285 MiB |4887|0.285 MiB |3118.406 ms |525.0 ms |
+|minimal_points|890|851|39|765|0.071 MiB |764|0.071 MiB |613.499 ms |54.0 ms |
+|minimal_points (Non-Vectorized)|7292|0|7292|3649|0.214 MiB |3648|0.214 MiB |1483.342 ms |438.0 ms |
+|mnist_relu|1016|408|608|771|0.33 MiB |770|0.33 MiB |510.275 ms |65.0 ms |
+|mnist_relu (Non-Vectorized)|80603|0|80603|36591|2.101 MiB |36590|2.101 MiB |11455.752 ms |4821.0 ms |
+|psi|186|140|46|474|0.05 MiB |473|0.05 MiB |622.97 ms |12.0 ms |
+|psi (Non-Vectorized)|3391|0|3391|2646|0.157 MiB |2645|0.157 MiB |1194.651 ms |211.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4490|3647|843|7843|4.37 MiB |7846|4.37 MiB |513.355 ms |465.0 ms |
-|biometric (Non-Vectorized)|51452|0|51452|86503|8.263 MiB |86506|8.263 MiB |4771.636 ms |5494.0 ms |
-|biometric_fast|4660|3803|857|8019|4.327 MiB |8019|4.327 MiB |485.391 ms |478.0 ms |
-|biometric_fast (Non-Vectorized)|49849|0|49849|85284|8.151 MiB |85284|8.151 MiB |5849.657 ms |4498.0 ms |
-|chapterfour_figure_12|398|0|398|975|0.087 MiB |972|0.087 MiB |94.471 ms |36.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|398|0|398|975|0.087 MiB |972|0.087 MiB |79.139 ms |33.0 ms |
-|convex_hull|1056|999|57|1989|0.514 MiB |1984|0.514 MiB |160.244 ms |98.0 ms |
-|convex_hull (Non-Vectorized)|5650|0|5650|8995|0.861 MiB |8990|0.861 MiB |522.809 ms |479.0 ms |
-|count_102|1753|109|1644|3831|0.569 MiB |3819|0.569 MiB |184.346 ms |176.0 ms |
-|count_102 (Non-Vectorized)|2639|0|2639|8061|0.779 MiB |8049|0.778 MiB |274.0 ms |326.0 ms |
-|count_10s|1264|110|1154|2942|0.415 MiB |2932|0.414 MiB |193.307 ms |127.0 ms |
-|count_10s (Non-Vectorized)|1856|0|1856|5762|0.555 MiB |5752|0.554 MiB |179.514 ms |231.0 ms |
-|count_123|1271|115|1156|2948|0.417 MiB |2939|0.416 MiB |144.118 ms |131.0 ms |
-|count_123 (Non-Vectorized)|1878|0|1878|5798|0.558 MiB |5789|0.558 MiB |175.308 ms |231.0 ms |
-|cryptonets_max_pooling|765|609|156|1464|1.012 MiB |1399|1.008 MiB |112.735 ms |83.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|11904|0|11904|17937|1.827 MiB |17872|1.824 MiB |1495.27 ms |1012.0 ms |
-|db_cross_join_trivial|7977|65|7912|36652|6.318 MiB |36345|6.302 MiB |1233.024 ms |1443.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|11276|0|11276|86306|8.773 MiB |85999|8.757 MiB |1458.352 ms |2999.0 ms |
-|db_variance|13352|3017|10335|20698|3.612 MiB |20695|3.611 MiB |1683.394 ms |1136.0 ms |
-|db_variance (Non-Vectorized)|34410|0|34410|56538|5.389 MiB |56535|5.389 MiB |4023.874 ms |3001.0 ms |
-|histogram|1489|1365|124|2939|1.046 MiB |2891|1.043 MiB |243.89 ms |179.0 ms |
-|histogram (Non-Vectorized)|7673|0|7673|18072|1.795 MiB |18024|1.793 MiB |1090.199 ms |832.0 ms |
-|inner_product|3301|2827|474|5833|1.004 MiB |5830|1.004 MiB |314.341 ms |288.0 ms |
-|inner_product (Non-Vectorized)|8944|0|8944|15763|1.497 MiB |15760|1.496 MiB |906.381 ms |779.0 ms |
-|longest_102|3732|116|3616|6776|0.867 MiB |6764|0.866 MiB |477.949 ms |345.0 ms |
-|longest_102 (Non-Vectorized)|4649|0|4649|11051|1.079 MiB |11039|1.078 MiB |427.31 ms |506.0 ms |
-|longest_odd_10|2995|115|2880|6671|0.869 MiB |6660|0.868 MiB |297.8 ms |321.0 ms |
-|longest_odd_10 (Non-Vectorized)|3688|0|3688|10864|1.077 MiB |10853|1.076 MiB |382.78 ms |456.0 ms |
-|max_dist_between_syms|2881|39|2842|5152|0.559 MiB |5141|0.558 MiB |320.906 ms |267.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3110|0|3110|6237|0.612 MiB |6226|0.612 MiB |425.615 ms |329.0 ms |
-|max_sum_between_syms|2880|39|2841|5150|0.558 MiB |5140|0.557 MiB |315.971 ms |264.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3109|0|3109|6235|0.612 MiB |6225|0.611 MiB |385.611 ms |302.0 ms |
-|minimal_points|480|435|45|1015|0.244 MiB |1012|0.244 MiB |184.136 ms |42.0 ms |
-|minimal_points (Non-Vectorized)|3566|0|3566|4161|0.4 MiB |4158|0.4 MiB |441.189 ms |262.0 ms |
-|mnist_relu|1012|204|808|1484|3.215 MiB |1480|3.215 MiB |372.936 ms |130.0 ms |
-|mnist_relu (Non-Vectorized)|40003|0|40003|58995|6.06 MiB |58991|6.06 MiB |4266.195 ms |3413.0 ms |
-|psi|145|94|51|748|0.348 MiB |740|0.348 MiB |108.009 ms |21.0 ms |
-|psi (Non-Vectorized)|1306|0|1306|6674|0.641 MiB |6666|0.641 MiB |120.091 ms |235.0 ms |
+|biometric|4490|3647|843|7843|4.37 MiB |7846|4.37 MiB |894.469 ms |681.0 ms |
+|biometric (Non-Vectorized)|51452|0|51452|86503|8.263 MiB |86506|8.263 MiB |8690.944 ms |8167.0 ms |
+|biometric_fast|4660|3803|857|8019|4.327 MiB |8019|4.327 MiB |804.614 ms |753.0 ms |
+|biometric_fast (Non-Vectorized)|49849|0|49849|85284|8.151 MiB |85284|8.151 MiB |8367.138 ms |7414.0 ms |
+|chapterfour_figure_12|398|0|398|975|0.087 MiB |972|0.087 MiB |69.418 ms |56.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|398|0|398|975|0.087 MiB |972|0.087 MiB |61.984 ms |52.0 ms |
+|convex_hull|1056|999|57|1989|0.514 MiB |1984|0.514 MiB |185.612 ms |142.0 ms |
+|convex_hull (Non-Vectorized)|5650|0|5650|8995|0.861 MiB |8990|0.861 MiB |1104.384 ms |771.0 ms |
+|count_102|1753|109|1644|3831|0.569 MiB |3819|0.569 MiB |404.663 ms |299.0 ms |
+|count_102 (Non-Vectorized)|2639|0|2639|8061|0.779 MiB |8049|0.778 MiB |613.114 ms |528.0 ms |
+|count_10s|1264|110|1154|2942|0.415 MiB |2932|0.414 MiB |260.542 ms |187.0 ms |
+|count_10s (Non-Vectorized)|1856|0|1856|5762|0.555 MiB |5752|0.554 MiB |383.971 ms |377.0 ms |
+|count_123|1271|115|1156|2948|0.417 MiB |2939|0.416 MiB |234.514 ms |190.0 ms |
+|count_123 (Non-Vectorized)|1878|0|1878|5798|0.558 MiB |5789|0.558 MiB |371.204 ms |334.0 ms |
+|cryptonets_max_pooling|765|609|156|1464|1.012 MiB |1399|1.008 MiB |227.805 ms |122.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|11904|0|11904|17937|1.827 MiB |17872|1.824 MiB |2483.604 ms |1493.0 ms |
+|db_cross_join_trivial|7977|65|7912|36652|6.318 MiB |36345|6.302 MiB |1717.32 ms |2159.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|11276|0|11276|86306|8.773 MiB |85999|8.757 MiB |1667.042 ms |4354.0 ms |
+|db_variance|13352|3017|10335|20698|3.612 MiB |20695|3.611 MiB |3005.289 ms |1723.0 ms |
+|db_variance (Non-Vectorized)|34410|0|34410|56538|5.389 MiB |56535|5.389 MiB |6931.318 ms |6177.0 ms |
+|histogram|1489|1365|124|2939|1.046 MiB |2891|1.043 MiB |338.983 ms |241.0 ms |
+|histogram (Non-Vectorized)|7673|0|7673|18072|1.795 MiB |18024|1.793 MiB |1434.339 ms |1274.0 ms |
+|inner_product|3301|2827|474|5833|1.004 MiB |5830|1.004 MiB |582.703 ms |522.0 ms |
+|inner_product (Non-Vectorized)|8944|0|8944|15763|1.497 MiB |15760|1.496 MiB |1760.83 ms |1305.0 ms |
+|longest_102|3732|116|3616|6776|0.867 MiB |6764|0.866 MiB |720.709 ms |521.0 ms |
+|longest_102 (Non-Vectorized)|4649|0|4649|11051|1.079 MiB |11039|1.078 MiB |700.325 ms |728.0 ms |
+|longest_odd_10|2995|115|2880|6671|0.869 MiB |6660|0.868 MiB |585.542 ms |476.0 ms |
+|longest_odd_10 (Non-Vectorized)|3688|0|3688|10864|1.077 MiB |10853|1.076 MiB |548.457 ms |693.0 ms |
+|max_dist_between_syms|2881|39|2842|5152|0.559 MiB |5141|0.558 MiB |523.207 ms |391.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3110|0|3110|6237|0.612 MiB |6226|0.612 MiB |632.247 ms |516.0 ms |
+|max_sum_between_syms|2880|39|2841|5150|0.558 MiB |5140|0.557 MiB |622.42 ms |432.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3109|0|3109|6235|0.612 MiB |6225|0.611 MiB |546.439 ms |505.0 ms |
+|minimal_points|480|435|45|1015|0.244 MiB |1012|0.244 MiB |87.648 ms |63.0 ms |
+|minimal_points (Non-Vectorized)|3566|0|3566|4161|0.4 MiB |4158|0.4 MiB |601.16 ms |406.0 ms |
+|mnist_relu|1012|204|808|1484|3.215 MiB |1480|3.215 MiB |525.848 ms |169.0 ms |
+|mnist_relu (Non-Vectorized)|40003|0|40003|58995|6.06 MiB |58991|6.06 MiB |6870.83 ms |6069.0 ms |
+|psi|145|94|51|748|0.348 MiB |740|0.348 MiB |74.862 ms |27.0 ms |
+|psi (Non-Vectorized)|1306|0|1306|6674|0.641 MiB |6666|0.641 MiB |212.004 ms |363.0 ms |
+
+## MP-SPDZ Benchmark Data
+
+### Mascot protocol
+| Benchmark | Time (seconds) | Data sent (MB) | # Rounds | Global data sent (MB) |
+| - | - | - | - | - |
+|biometric|0.694619|39.0542|915|78.1084|
+|biometric (Non-Vectorized)|0.690015|39.0542|915|78.1084|
+|biometric_fast|0.66141|39.0542|915|78.1084|
+|biometric_fast (Non-Vectorized)|0.663804|39.0542|915|78.1084|
+|convex_hull|1.90547|117.123|1453|234.247|
+|convex_hull (Non-Vectorized)|2.00946|117.123|1459|234.247|
+|count_102|1.9533|117.124|1509|234.248|
+|count_102 (Non-Vectorized)|1.95684|117.124|1487|234.248|
+|count_10s|1.65366|97.5912|1341|195.182|
+|count_10s (Non-Vectorized)|1.61218|97.5912|1325|195.182|
+|count_123|1.6976|97.5914|1343|195.183|
+|count_123 (Non-Vectorized)|1.66108|97.5914|1327|195.183|
+|inner_product|0.629681|19.5237|683|39.0474|
+|inner_product (Non-Vectorized)|0.361673|19.5237|683|39.0474|
+|longest_102|2.81641|175.642|2173|351.285|
+|longest_102 (Non-Vectorized)|2.93225|175.642|2117|351.285|
+|max_dist_between_syms|1.30369|78.0821|1323|156.164|
+|max_dist_between_syms (Non-Vectorized)|1.33388|78.0821|1309|156.164|
+|max_sum_between_syms|1.35881|78.0821|1323|156.164|
+|max_sum_between_syms (Non-Vectorized)|1.25636|78.0821|1309|156.164|
 
 ## Compiler stages with different benchmarks
 ### `biometric`
@@ -294,7 +320,7 @@ def biometric(C!0: shared[list[int; ?]], D!0: plaintext[int], S!0: shared[list[i
 | `sum!2` | `plaintext[int]` |
 | `min_index!1` | `plaintext[int]` |
 | `min_sum!1` | `plaintext[int]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric(
@@ -422,6 +448,76 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
     return _2_1;
 
 }
+```
+#### MP-SPDZ code
+```py
+def biometric(C_0, D_0, S_0, N_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _3_0 = sint.Tensor([N_0])
+    _4_0 = sint.Tensor([N_0])
+    _5_0 = sint.Tensor([N_0, D_0])
+    _6_0 = sint.Tensor([N_0, D_0])
+    _7_0 = sint.Tensor([N_0, D_0])
+    _8_0 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    d_3 = sint.Tensor([N_0, D_0])
+    min_index_2 = sint.Tensor([N_0])
+    min_index_4 = sint.Tensor([N_0])
+    min_sum_2 = sint.Tensor([N_0])
+    min_sum_3 = sint.Tensor([N_0])
+    min_sum_4 = sint.Tensor([N_0])
+    p_3 = sint.Tensor([N_0, D_0])
+    sum_3 = sint.Tensor([N_0, D_0])
+    sum_4 = sint.Tensor([N_0, D_0])
+    # Function body
+    min_sum_1 = sint(10000)
+    min_index_1 = sint(0)
+    sum_2 = sint(0)
+    _6_0.assign_vector_by_indices((lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0])).get_vector(), None, None)
+    _7_0.assign_vector_by_indices((lift(lambda indices: (C_0[indices[1]]), [N_0, D_0])).get_vector(), None, None)
+    _13_0[:] = lift(lambda indices: indices[0], [N_0])
+    _3_0[:] = lift(lambda indices: min_sum_1, [N_0])
+    _4_0[:] = lift(lambda indices: min_index_1, [N_0])
+    _5_0.assign_vector_by_indices((lift(lambda indices: sum_2, [N_0, D_0])).get_vector(), None, None)
+    d_3.assign_vector_by_indices(((_6_0.get_vector_by_indices(None, None) - _7_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    p_3.assign_vector_by_indices(((d_3.get_vector_by_indices(None, None) * d_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    for _12_0 in range(0, D_0):
+        # Set ϕ value
+        if _12_0 == 0:
+            sum_3.assign_vector_by_indices((_5_0.get_vector_by_indices(None, _12_0)).get_vector(), None, _12_0)
+        else:
+            sum_3.assign_vector_by_indices((sum_4.get_vector_by_indices(None, (_12_0 - 1))).get_vector(), None, _12_0)
+        sum_4.assign_vector_by_indices(((sum_3.get_vector_by_indices(None, _12_0) + p_3.get_vector_by_indices(None, _12_0))).get_vector(), None, _12_0)
+    # Loop exit ϕ values
+    sum_3.assign_vector_by_indices((sum_4.get_vector_by_indices(None, (_12_0 - 1))).get_vector(), None, _12_0)
+    _8_0[:] = drop_dim(sum_4)
+    _9_0[:] = drop_dim(sum_4)
+    min_sum_3[:] = _9_0[:]
+    for _14_0 in range(0, N_0):
+        # Set ϕ value
+        if _14_0 == 0:
+            min_sum_2[_14_0] = _3_0[_14_0]
+        else:
+            min_sum_2[_14_0] = min_sum_4[(_14_0 - 1)]
+        _1_2[_14_0] = (_8_0[_14_0] < min_sum_2[_14_0])
+        min_sum_4[_14_0] = _1_2[_14_0].if_else(min_sum_3[_14_0], min_sum_2[_14_0])
+    # Loop exit ϕ values
+    min_sum_2[_14_0] = min_sum_4[(_14_0 - 1)]
+    for _15_0 in range(0, N_0):
+        # Set ϕ value
+        if _15_0 == 0:
+            min_index_2[_15_0] = _4_0[_15_0]
+        else:
+            min_index_2[_15_0] = min_index_4[(_15_0 - 1)]
+        min_index_4[_15_0] = _1_2[_15_0].if_else(_13_0[_15_0], min_index_2[_15_0])
+    # Loop exit ϕ values
+    min_index_2[_15_0] = min_index_4[(_15_0 - 1)]
+    _10_0 = drop_dim(min_sum_4)
+    _11_0 = drop_dim(min_index_4)
+    _2_1 = (_10_0,_11_0,)
+    return _2_1
 ```
 ### `biometric_fast`
 #### Input
@@ -716,7 +812,7 @@ def biometric_fast(D!0: plaintext[int], N!0: plaintext[int], C!0: shared[list[in
 | `!5!0` | `shared[list[int; (N!0)]]` |
 | `!4!0` | `shared[list[int; (N!0)]]` |
 | `min_index!1` | `plaintext[int]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsignedInteger> biometric_fast(
@@ -879,6 +975,94 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
 
 }
 ```
+#### MP-SPDZ code
+```py
+def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differences_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _10_0 = sint.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _16_0 = sint.Tensor([N_0])
+    _3_0 = sint.Tensor([N_0])
+    _4_0 = sint.Tensor([N_0])
+    _5_0 = sint.Tensor([N_0])
+    _6_0 = sint.Tensor([N_0])
+    _7_0 = sint.Tensor([N_0, D_0])
+    _8_0 = sint.Tensor([N_0, D_0])
+    _9_0 = sint.Tensor([N_0, D_0])
+    a_sqr_plus_b_sqr_2 = sint.Tensor([N_0])
+    differences_2 = sint.Tensor([N_0])
+    min_diff_2 = sint.Tensor([N_0])
+    min_diff_3 = sint.Tensor([N_0])
+    min_diff_4 = sint.Tensor([N_0])
+    min_index_2 = sint.Tensor([N_0])
+    min_index_4 = sint.Tensor([N_0])
+    min_index_6 = sint.Tensor([N_0])
+    this_diff_2 = sint.Tensor([N_0])
+    tmp_3 = sint.Tensor([N_0, D_0])
+    two_a_b_3 = sint.Tensor([N_0, D_0])
+    two_a_b_4 = sint.Tensor([N_0, D_0])
+    # Function body
+    min_index_1 = sint(0)
+    _4_0[:] = lift(lambda indices: differences_0, [N_0])
+    _5_0[:] = lift(lambda indices: (S_sqr_sum_0[indices[0]]), [N_0])
+    _6_0[:] = lift(lambda indices: C_sqr_sum_0, [N_0])
+    two_a_b_2 = sint(0)
+    _8_0.assign_vector_by_indices((lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0])).get_vector(), None, None)
+    _9_0.assign_vector_by_indices((lift(lambda indices: (two_C_0[indices[1]]), [N_0, D_0])).get_vector(), None, None)
+    min_index_3 = sint(0)
+    min_diff_1 = sint(99999)
+    _16_0[:] = lift(lambda indices: indices[0], [N_0])
+    _3_0[:] = lift(lambda indices: min_index_1, [N_0])
+    a_sqr_plus_b_sqr_2[:] = (_5_0[:] + _6_0[:])
+    _7_0.assign_vector_by_indices((lift(lambda indices: two_a_b_2, [N_0, D_0])).get_vector(), None, None)
+    tmp_3.assign_vector_by_indices(((_8_0.get_vector_by_indices(None, None) * _9_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _11_0[:] = lift(lambda indices: min_diff_1, [N_0])
+    for _15_0 in range(0, N_0):
+        # Set ϕ value
+        if _15_0 == 0:
+            min_index_2[_15_0] = _3_0[_15_0]
+        else:
+            min_index_2[_15_0] = min_index_3
+    # Loop exit ϕ values
+    min_index_2[_15_0] = min_index_3
+    for _14_0 in range(0, D_0):
+        # Set ϕ value
+        if _14_0 == 0:
+            two_a_b_3.assign_vector_by_indices((_7_0.get_vector_by_indices(None, _14_0)).get_vector(), None, _14_0)
+        else:
+            two_a_b_3.assign_vector_by_indices((two_a_b_4.get_vector_by_indices(None, (_14_0 - 1))).get_vector(), None, _14_0)
+        two_a_b_4.assign_vector_by_indices(((two_a_b_3.get_vector_by_indices(None, _14_0) + tmp_3.get_vector_by_indices(None, _14_0))).get_vector(), None, _14_0)
+    # Loop exit ϕ values
+    two_a_b_3.assign_vector_by_indices((two_a_b_4.get_vector_by_indices(None, (_14_0 - 1))).get_vector(), None, _14_0)
+    _10_0[:] = drop_dim(two_a_b_4)
+    this_diff_2[:] = (a_sqr_plus_b_sqr_2[:] - _10_0[:])
+    _4_0[:] = this_diff_2[:]; differences_2[:] = _4_0[:]
+    min_diff_3[:] = differences_2[:]
+    for _17_0 in range(0, N_0):
+        # Set ϕ value
+        if _17_0 == 0:
+            min_diff_2[_17_0] = _11_0[_17_0]
+        else:
+            min_diff_2[_17_0] = min_diff_4[(_17_0 - 1)]
+        _1_2[_17_0] = (differences_2[_17_0] < min_diff_2[_17_0])
+        min_diff_4[_17_0] = _1_2[_17_0].if_else(min_diff_3[_17_0], min_diff_2[_17_0])
+    # Loop exit ϕ values
+    min_diff_2[_17_0] = min_diff_4[(_17_0 - 1)]
+    for _18_0 in range(0, N_0):
+        # Set ϕ value
+        if _18_0 == 0:
+            min_index_4[_18_0] = min_index_2[_18_0]
+        else:
+            min_index_4[_18_0] = min_index_6[(_18_0 - 1)]
+        min_index_6[_18_0] = _1_2[_18_0].if_else(_16_0[_18_0], min_index_4[_18_0])
+    # Loop exit ϕ values
+    min_index_4[_18_0] = min_index_6[(_18_0 - 1)]
+    _12_0 = drop_dim(min_diff_4)
+    _13_0 = drop_dim(min_index_6)
+    _2_1 = (_12_0,_13_0,)
+    return _2_1
+```
 ### `chapterfour_figure_12`
 #### Input
 ```python
@@ -985,7 +1169,7 @@ def chapterfour_figure_12(x!0: shared[int], y!0: shared[int]) -> shared[int]:
 | `!2!1` | `shared[bool]` |
 | `!1!1` | `shared[bool]` |
 | `z!1` | `plaintext[int]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
@@ -1028,6 +1212,21 @@ encrypto::motion::SecureUnsignedInteger chapterfour_figure_12(
     return z_5;
 
 }
+```
+#### MP-SPDZ code
+```py
+def chapterfour_figure_12(x_0, y_0):
+    # Shared array declarations
+
+    # Function body
+    z_1 = sint(0)
+    _1_1 = (x_0 > sint(0))
+    _2_1 = (y_0 > sint(0))
+    z_3 = sint(0)
+    z_2 = sint(1)
+    z_4 = _2_1.if_else(z_2, z_3)
+    z_5 = _1_1.if_else(z_4, z_1)
+    return z_5
 ```
 ### `convex_hull`
 #### Input
@@ -1311,7 +1510,7 @@ def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?
 | `!13!0` | `shared[list[int; (N!0)]]` |
 | `!12!0` | `shared[list[int; (N!0)]]` |
 | `!11!0` | `shared[list[int; (N!0)]]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> convex_hull(
@@ -1429,6 +1628,87 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     return _10_1;
 
 }
+```
+#### MP-SPDZ code
+```py
+def convex_hull(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _12_0 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _14_0 = sint.Tensor([N_0])
+    _15_0 = sintbit.Tensor([N_0, N_0])
+    _16_0 = sint.Tensor([N_0, N_0])
+    _17_0 = sint.Tensor([N_0, N_0])
+    _18_0 = sint.Tensor([N_0, N_0])
+    _19_0 = sint.Tensor([N_0, N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _20_0 = sintbit.Tensor([N_0])
+    _3_2 = sintbit.Tensor([N_0])
+    _6_3 = sintbit.Tensor([N_0, N_0])
+    _7_3 = sintbit.Tensor([N_0, N_0])
+    _8_3 = sintbit.Tensor([N_0, N_0])
+    _9_3 = sintbit.Tensor([N_0, N_0])
+    is_hull_3 = sintbit.Tensor([N_0, N_0])
+    is_hull_5 = sintbit.Tensor([N_0, N_0])
+    is_hull_6 = sintbit.Tensor([N_0])
+    p1_X_2 = sint.Tensor([N_0])
+    p1_Y_2 = sint.Tensor([N_0])
+    p2_X_3 = sint.Tensor([N_0, N_0])
+    p2_Y_3 = sint.Tensor([N_0, N_0])
+    result_X_2 = sint.Tensor([N_0])
+    result_Y_2 = sint.Tensor([N_0])
+    val_X_2 = sint.Tensor([N_0])
+    val_X_3 = sint.Tensor([N_0])
+    val_X_4 = sint.Tensor([N_0])
+    val_Y_2 = sint.Tensor([N_0])
+    val_Y_3 = sint.Tensor([N_0])
+    val_Y_4 = sint.Tensor([N_0])
+    # Function body
+    _11_0[:] = lift(lambda indices: result_X_0, [N_0])
+    _12_0[:] = lift(lambda indices: result_Y_0, [N_0])
+    _13_0[:] = lift(lambda indices: (X_coords_0[indices[0]]), [N_0])
+    _14_0[:] = lift(lambda indices: (Y_coords_0[indices[0]]), [N_0])
+    is_hull_2 = sintbit(True)
+    _16_0.assign_vector_by_indices((lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0])).get_vector(), None, None)
+    _17_0.assign_vector_by_indices((lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0])).get_vector(), None, None)
+    is_hull_4 = sintbit(False)
+    val_X_2[:] = _11_0[:]
+    val_Y_2[:] = _12_0[:]
+    p1_X_2[:] = _13_0[:]
+    p1_Y_2[:] = _14_0[:]
+    _15_0.assign_vector_by_indices((lift(lambda indices: is_hull_2, [N_0, N_0])).get_vector(), None, None)
+    p2_X_3.assign_vector_by_indices((_16_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    p2_Y_3.assign_vector_by_indices((_17_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    _1_2[:] = (p1_X_2[:] <= sint(0))
+    _18_0.assign_vector_by_indices((lift(lambda indices: p1_X_2[:], [N_0, N_0])).get_vector(), None, None)
+    val_X_3[:] = p1_X_2[:]
+    _2_2[:] = (p1_Y_2[:] >= sint(0))
+    _19_0.assign_vector_by_indices((lift(lambda indices: p1_Y_2[:], [N_0, N_0])).get_vector(), None, None)
+    val_Y_3[:] = p1_Y_2[:]
+    _6_3.assign_vector_by_indices(((_18_0.get_vector_by_indices(None, None) <= p2_X_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _3_2[:] = (_1_2[:] & _2_2[:])
+    _7_3.assign_vector_by_indices(((_19_0.get_vector_by_indices(None, None) >= p2_Y_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _8_3.assign_vector_by_indices(((_6_3.get_vector_by_indices(None, None) | _7_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _9_3.assign_vector_by_indices(((_8_3.get_vector_by_indices(None, None).if_else(0, 1))).get_vector(), None, None)
+    for _21_0 in range(0, N_0):
+        # Set ϕ value
+        if _21_0 == 0:
+            is_hull_3.assign_vector_by_indices((_15_0.get_vector_by_indices(None, _21_0)).get_vector(), None, _21_0)
+        else:
+            is_hull_3.assign_vector_by_indices((is_hull_5.get_vector_by_indices(None, (_21_0 - 1))).get_vector(), None, _21_0)
+        is_hull_5.assign_vector_by_indices((_9_3.get_vector_by_indices(None, _21_0).if_else(is_hull_4, is_hull_3.get_vector_by_indices(None, _21_0))).get_vector(), None, _21_0)
+    # Loop exit ϕ values
+    is_hull_3.assign_vector_by_indices((is_hull_5.get_vector_by_indices(None, (_21_0 - 1))).get_vector(), None, _21_0)
+    _20_0[:] = drop_dim(is_hull_5)
+    is_hull_6[:] = _3_2[:].if_else(_20_0[:], is_hull_2)
+    val_X_4[:] = is_hull_6[:].if_else(val_X_3[:], val_X_2[:])
+    val_Y_4[:] = is_hull_6[:].if_else(val_Y_3[:], val_Y_2[:])
+    _11_0[:] = val_X_4[:]; result_X_2[:] = _11_0[:]
+    _12_0[:] = val_Y_4[:]; result_Y_2[:] = _12_0[:]
+    _10_1 = (result_X_2,result_Y_2,)
+    return _10_1
 ```
 ### `count_102`
 #### Input
@@ -1605,7 +1885,7 @@ def count_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `!9!0` | `shared[list[int; (N!0)]]` |
 | `c!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[bool]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_102(
@@ -1707,6 +1987,66 @@ encrypto::motion::SecureUnsignedInteger count_102(
     return _15_0;
 
 }
+```
+#### MP-SPDZ code
+```py
+def count_102(Seq_0, N_0, Syms_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _10_0 = sint.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _12_0 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _14_0 = sint.Tensor([N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _3_2 = sintbit.Tensor([N_0])
+    _5_2 = sintbit.Tensor([N_0])
+    _6_2 = sintbit.Tensor([N_0])
+    _7_0 = sintbit.Tensor([N_0])
+    _8_0 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    c_2 = sint.Tensor([N_0])
+    c_3 = sint.Tensor([N_0])
+    c_4 = sint.Tensor([N_0])
+    s0_2 = sintbit.Tensor([N_0])
+    s0_3 = sintbit.Tensor([N_0])
+    # Function body
+    s0_1 = sintbit(False)
+    c_1 = sint(0)
+    _9_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _10_0[:] = lift(lambda indices: (Syms_0[2]), [N_0])
+    _11_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _12_0[:] = lift(lambda indices: (Syms_0[1]), [N_0])
+    _13_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _14_0[:] = lift(lambda indices: (Syms_0[0]), [N_0])
+    _7_0[:] = lift(lambda indices: s0_1, [N_0])
+    _8_0[:] = lift(lambda indices: c_1, [N_0])
+    _1_2[:] = (_9_0[:] == _10_0[:])
+    _3_2[:] = (_11_0[:] == _12_0[:])
+    _5_2[:] = (_13_0[:] == _14_0[:])
+    for _16_0 in range(0, N_0):
+        # Set ϕ value
+        if _16_0 == 0:
+            s0_2[_16_0] = _7_0[_16_0]
+        else:
+            s0_2[_16_0] = s0_3[(_16_0 - 1)]
+        _6_2[_16_0] = (s0_2[_16_0] & _5_2[_16_0])
+        s0_3[_16_0] = (_3_2[_16_0] | _6_2[_16_0])
+    # Loop exit ϕ values
+    s0_2[_16_0] = s0_3[(_16_0 - 1)]
+    _2_2[:] = (s0_2[:] & _1_2[:])
+    for _17_0 in range(0, N_0):
+        # Set ϕ value
+        if _17_0 == 0:
+            c_2[_17_0] = _8_0[_17_0]
+        else:
+            c_2[_17_0] = c_4[(_17_0 - 1)]
+        c_3[_17_0] = (c_2[_17_0] + sint(1))
+        c_4[_17_0] = _2_2[_17_0].if_else(c_3[_17_0], c_2[_17_0])
+    # Loop exit ϕ values
+    c_2[_17_0] = c_4[(_17_0 - 1)]
+    _15_0 = drop_dim(c_4)
+    return _15_0
 ```
 ### `count_10s`
 #### Input
@@ -1902,7 +2242,7 @@ def count_10s(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `scount!1` | `plaintext[int]` |
 | `s1!1` | `plaintext[bool]` |
 | `s0!1` | `plaintext[bool]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_10s(
@@ -2028,6 +2368,78 @@ encrypto::motion::SecureUnsignedInteger count_10s(
     return _14_0;
 
 }
+```
+#### MP-SPDZ code
+```py
+def count_10s(Seq_0, N_0, Syms_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _10_0 = sint.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _12_0 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _3_2 = sintbit.Tensor([N_0])
+    _4_2 = sintbit.Tensor([N_0])
+    _5_0 = sintbit.Tensor([N_0])
+    _6_0 = sintbit.Tensor([N_0])
+    _7_0 = sint.Tensor([N_0])
+    _8_0 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    s0_2 = sintbit.Tensor([N_0])
+    s0_3 = sintbit.Tensor([N_0])
+    s1_2 = sintbit.Tensor([N_0])
+    s1_3 = sintbit.Tensor([N_0])
+    scount_2 = sint.Tensor([N_0])
+    scount_3 = sint.Tensor([N_0])
+    scount_4 = sint.Tensor([N_0])
+    # Function body
+    s0_1 = sintbit(False)
+    s1_1 = sintbit(False)
+    scount_1 = sint(0)
+    _8_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _9_0[:] = lift(lambda indices: (Syms_0[0]), [N_0])
+    _10_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _11_0[:] = lift(lambda indices: (Syms_0[0]), [N_0])
+    _12_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _13_0[:] = lift(lambda indices: (Syms_0[1]), [N_0])
+    _5_0[:] = lift(lambda indices: s0_1, [N_0])
+    _6_0[:] = lift(lambda indices: s1_1, [N_0])
+    _7_0[:] = lift(lambda indices: scount_1, [N_0])
+    _1_2[:] = (_8_0[:] != _9_0[:])
+    _3_2[:] = (_10_0[:] == _11_0[:])
+    s0_3[:] = (_12_0[:] == _13_0[:])
+    for _15_0 in range(0, N_0):
+        # Set ϕ value
+        if _15_0 == 0:
+            s0_2[_15_0] = _5_0[_15_0]
+        else:
+            s0_2[_15_0] = s0_3[(_15_0 - 1)]
+    # Loop exit ϕ values
+    s0_2[_15_0] = s0_3[(_15_0 - 1)]
+    for _16_0 in range(0, N_0):
+        # Set ϕ value
+        if _16_0 == 0:
+            s1_2[_16_0] = _6_0[_16_0]
+        else:
+            s1_2[_16_0] = s1_3[(_16_0 - 1)]
+        _4_2[_16_0] = (s0_2[_16_0] | s1_2[_16_0])
+        s1_3[_16_0] = (_3_2[_16_0] & _4_2[_16_0])
+    # Loop exit ϕ values
+    s1_2[_16_0] = s1_3[(_16_0 - 1)]
+    _2_2[:] = (s1_2[:] & _1_2[:])
+    for _17_0 in range(0, N_0):
+        # Set ϕ value
+        if _17_0 == 0:
+            scount_2[_17_0] = _7_0[_17_0]
+        else:
+            scount_2[_17_0] = scount_4[(_17_0 - 1)]
+        scount_3[_17_0] = (scount_2[_17_0] + sint(1))
+        scount_4[_17_0] = _2_2[_17_0].if_else(scount_3[_17_0], scount_2[_17_0])
+    # Loop exit ϕ values
+    scount_2[_17_0] = scount_4[(_17_0 - 1)]
+    _14_0 = drop_dim(scount_4)
+    return _14_0
 ```
 ### `count_123`
 #### Input
@@ -2230,7 +2642,7 @@ def count_123(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared[l
 | `c!1` | `plaintext[int]` |
 | `s2!1` | `plaintext[bool]` |
 | `s1!1` | `plaintext[bool]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger count_123(
@@ -2358,6 +2770,80 @@ encrypto::motion::SecureUnsignedInteger count_123(
     return _15_0;
 
 }
+```
+#### MP-SPDZ code
+```py
+def count_123(Seq_0, N_0, Syms_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _10_0 = sint.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _12_0 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _14_0 = sint.Tensor([N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _3_2 = sintbit.Tensor([N_0])
+    _4_2 = sintbit.Tensor([N_0])
+    _5_2 = sintbit.Tensor([N_0])
+    _6_0 = sintbit.Tensor([N_0])
+    _7_0 = sintbit.Tensor([N_0])
+    _8_0 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    c_2 = sint.Tensor([N_0])
+    c_3 = sint.Tensor([N_0])
+    c_4 = sint.Tensor([N_0])
+    s1_2 = sintbit.Tensor([N_0])
+    s1_3 = sintbit.Tensor([N_0])
+    s2_2 = sintbit.Tensor([N_0])
+    s2_3 = sintbit.Tensor([N_0])
+    # Function body
+    s1_1 = sintbit(False)
+    s2_1 = sintbit(False)
+    c_1 = sint(0)
+    _9_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _10_0[:] = lift(lambda indices: (Syms_0[2]), [N_0])
+    _11_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _12_0[:] = lift(lambda indices: (Syms_0[1]), [N_0])
+    _13_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _14_0[:] = lift(lambda indices: (Syms_0[0]), [N_0])
+    _6_0[:] = lift(lambda indices: s1_1, [N_0])
+    _7_0[:] = lift(lambda indices: s2_1, [N_0])
+    _8_0[:] = lift(lambda indices: c_1, [N_0])
+    _1_2[:] = (_9_0[:] == _10_0[:])
+    _4_2[:] = (_11_0[:] == _12_0[:])
+    s1_3[:] = (_13_0[:] == _14_0[:])
+    for _16_0 in range(0, N_0):
+        # Set ϕ value
+        if _16_0 == 0:
+            s1_2[_16_0] = _6_0[_16_0]
+        else:
+            s1_2[_16_0] = s1_3[(_16_0 - 1)]
+    # Loop exit ϕ values
+    s1_2[_16_0] = s1_3[(_16_0 - 1)]
+    for _17_0 in range(0, N_0):
+        # Set ϕ value
+        if _17_0 == 0:
+            s2_2[_17_0] = _7_0[_17_0]
+        else:
+            s2_2[_17_0] = s2_3[(_17_0 - 1)]
+        _5_2[_17_0] = (s1_2[_17_0] | s2_2[_17_0])
+        s2_3[_17_0] = (_4_2[_17_0] & _5_2[_17_0])
+    # Loop exit ϕ values
+    s2_2[_17_0] = s2_3[(_17_0 - 1)]
+    _2_2[:] = (s2_2[:] | s1_2[:])
+    _3_2[:] = (_1_2[:] & _2_2[:])
+    for _18_0 in range(0, N_0):
+        # Set ϕ value
+        if _18_0 == 0:
+            c_2[_18_0] = _8_0[_18_0]
+        else:
+            c_2[_18_0] = c_4[(_18_0 - 1)]
+        c_3[_18_0] = (c_2[_18_0] + sint(1))
+        c_4[_18_0] = _3_2[_18_0].if_else(c_3[_18_0], c_2[_18_0])
+    # Loop exit ϕ values
+    c_2[_18_0] = c_4[(_18_0 - 1)]
+    _15_0 = drop_dim(c_4)
+    return _15_0
 ```
 ### `cryptonets_max_pooling`
 #### Input
@@ -2580,7 +3066,7 @@ def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int],
 | `!7!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
 | `!6!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
 | `!4!0` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
@@ -2654,6 +3140,53 @@ std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
     return OUTPUT_res_3;
 
 }
+```
+#### MP-SPDZ code
+```py
+def cryptonets_max_pooling(vals_0, cols_0, rows_0, cols_res_0, rows_res_0, OUTPUT_res_0):
+    # Shared array declarations
+    _1_3 = sintbit.Tensor([rows_res_0, cols_res_0])
+    _10_0 = sint.Tensor([rows_res_0, cols_res_0])
+    _11_0 = sint.Tensor([rows_res_0, cols_res_0])
+    _12_0 = sint.Tensor([rows_res_0, cols_res_0])
+    _2_3 = sintbit.Tensor([rows_res_0, cols_res_0])
+    _3_3 = sintbit.Tensor([rows_res_0, cols_res_0])
+    _4_0 = sint.Tensor([rows_res_0, cols_res_0])
+    _5_0 = sint.Tensor([rows_res_0, cols_res_0])
+    _6_0 = sint.Tensor([rows_res_0, cols_res_0])
+    _7_0 = sint.Tensor([rows_res_0, cols_res_0])
+    _8_0 = sint.Tensor([rows_res_0, cols_res_0])
+    _9_0 = sint.Tensor([rows_res_0, cols_res_0])
+    OUTPUT_res_3 = sint.Tensor([rows_res_0, cols_res_0])
+    max_3 = sint.Tensor([rows_res_0, cols_res_0])
+    max_4 = sint.Tensor([rows_res_0, cols_res_0])
+    max_5 = sint.Tensor([rows_res_0, cols_res_0])
+    max_6 = sint.Tensor([rows_res_0, cols_res_0])
+    max_7 = sint.Tensor([rows_res_0, cols_res_0])
+    max_8 = sint.Tensor([rows_res_0, cols_res_0])
+    max_9 = sint.Tensor([rows_res_0, cols_res_0])
+    # Function body
+    _4_0.assign_vector_by_indices((lift(lambda indices: OUTPUT_res_0, [rows_res_0, cols_res_0])).get_vector(), None, None)
+    _6_0.assign_vector_by_indices((lift(lambda indices: (vals_0[(((indices[0] * 2) * cols_0) + (indices[1] * 2))]), [rows_res_0, cols_res_0])).get_vector(), None, None)
+    _7_0.assign_vector_by_indices((lift(lambda indices: (vals_0[((((indices[0] * 2) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0])).get_vector(), None, None)
+    _8_0.assign_vector_by_indices((lift(lambda indices: (vals_0[((((indices[0] * 2) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0])).get_vector(), None, None)
+    _9_0.assign_vector_by_indices((lift(lambda indices: (vals_0[((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2))]), [rows_res_0, cols_res_0])).get_vector(), None, None)
+    _10_0.assign_vector_by_indices((lift(lambda indices: (vals_0[((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2))]), [rows_res_0, cols_res_0])).get_vector(), None, None)
+    _11_0.assign_vector_by_indices((lift(lambda indices: (vals_0[(((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0])).get_vector(), None, None)
+    _12_0.assign_vector_by_indices((lift(lambda indices: (vals_0[(((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0])).get_vector(), None, None)
+    _5_0.assign_vector_by_indices((lift(lambda indices: _4_0.get_vector_by_indices(None, None), [rows_res_0, cols_res_0])).get_vector(), None, None)
+    max_3.assign_vector_by_indices((_6_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    max_4.assign_vector_by_indices((_8_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    max_6.assign_vector_by_indices((_10_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    max_8.assign_vector_by_indices((_12_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    _1_3.assign_vector_by_indices(((_7_0.get_vector_by_indices(None, None) > max_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    max_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, None).if_else(max_4.get_vector_by_indices(None, None), max_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _2_3.assign_vector_by_indices(((_9_0.get_vector_by_indices(None, None) > max_5.get_vector_by_indices(None, None))).get_vector(), None, None)
+    max_7.assign_vector_by_indices((_2_3.get_vector_by_indices(None, None).if_else(max_6.get_vector_by_indices(None, None), max_5.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _3_3.assign_vector_by_indices(((_11_0.get_vector_by_indices(None, None) > max_7.get_vector_by_indices(None, None))).get_vector(), None, None)
+    max_9.assign_vector_by_indices((_3_3.get_vector_by_indices(None, None).if_else(max_8.get_vector_by_indices(None, None), max_7.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _5_0.assign_vector_by_indices((max_9.get_vector_by_indices(None, None)).get_vector(), None, None); OUTPUT_res_3.assign_vector_by_indices((_5_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    return OUTPUT_res_3
 ```
 ### `db_cross_join_trivial`
 #### Input
@@ -2892,7 +3425,7 @@ def db_cross_join_trivial(A!0: shared[list[int; ?]], Len_A!0: plaintext[int], B!
 | `!9!0` | `shared[list[list[list[int; (Len_A!0)]; (Len_B!0)]; (3)]]` |
 | `!8!0` | `shared[list[list[list[int; (Len_A!0)]; (Len_B!0)]; (3)]]` |
 | `!5!0` | `shared[list[list[list[int; (Len_A!0)]; (Len_B!0)]; (3)]]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> db_cross_join_trivial(
@@ -2967,6 +3500,54 @@ std::vector<encrypto::motion::SecureUnsignedInteger> db_cross_join_trivial(
     return res_4;
 
 }
+```
+#### MP-SPDZ code
+```py
+def db_cross_join_trivial(A_0, Len_A_0, B_0, Len_B_0, res_0):
+    # Shared array declarations
+    _1_4 = sintbit.Tensor([Len_A_0, Len_B_0, 3])
+    _10_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    _11_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    _12_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    _13_0 = sintbit.Tensor([Len_A_0, Len_B_0, 3])
+    _14_0 = sintbit.Tensor([Len_A_0, Len_B_0, 3])
+    _15_0 = sintbit.Tensor([Len_A_0, Len_B_0, 3])
+    _5_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    _6_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    _7_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    _8_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    _9_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    res_4 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    v_10 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    v_11 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    v_5 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    v_6 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    v_7 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    v_8 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    v_9 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    # Function body
+    _5_0.assign_vector_by_indices((lift(lambda indices: res_0, [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    _8_0.assign_vector_by_indices((lift(lambda indices: (A_0[(indices[0] * 2)]), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    _9_0.assign_vector_by_indices((lift(lambda indices: (B_0[(indices[1] * 2)]), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    _10_0.assign_vector_by_indices((lift(lambda indices: (A_0[(indices[0] * 2)]), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    _11_0.assign_vector_by_indices((lift(lambda indices: (A_0[((indices[0] * 2) + 1)]), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    _12_0.assign_vector_by_indices((lift(lambda indices: (B_0[((indices[1] * 2) + 1)]), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    v_4 = sint(0)
+    _13_0.assign_vector_by_indices((lift(lambda indices: (indices[2] == sint(0)), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    _14_0.assign_vector_by_indices((lift(lambda indices: (indices[2] == sint(1)), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    _15_0.assign_vector_by_indices((lift(lambda indices: (indices[2] == sint(2)), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    _6_0.assign_vector_by_indices((lift(lambda indices: _5_0.get_vector_by_indices(None, None, None), [Len_A_0, Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    _1_4.assign_vector_by_indices(((_8_0.get_vector_by_indices(None, None, None) == _9_0.get_vector_by_indices(None, None, None))).get_vector(), None, None, None)
+    v_5.assign_vector_by_indices((_10_0.get_vector_by_indices(None, None, None)).get_vector(), None, None, None)
+    v_7.assign_vector_by_indices((_11_0.get_vector_by_indices(None, None, None)).get_vector(), None, None, None)
+    v_9.assign_vector_by_indices((_12_0.get_vector_by_indices(None, None, None)).get_vector(), None, None, None)
+    _7_0.assign_vector_by_indices((lift(lambda indices: _6_0.get_vector_by_indices(None, None, None), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    v_6.assign_vector_by_indices((_13_0.get_vector_by_indices(None, None, None).if_else(v_5.get_vector_by_indices(None, None, None), v_4)).get_vector(), None, None, None)
+    v_8.assign_vector_by_indices((_14_0.get_vector_by_indices(None, None, None).if_else(v_7.get_vector_by_indices(None, None, None), v_6.get_vector_by_indices(None, None, None))).get_vector(), None, None, None)
+    v_10.assign_vector_by_indices((_15_0.get_vector_by_indices(None, None, None).if_else(v_9.get_vector_by_indices(None, None, None), v_8.get_vector_by_indices(None, None, None))).get_vector(), None, None, None)
+    v_11.assign_vector_by_indices((_1_4.get_vector_by_indices(None, None, None).if_else(v_10.get_vector_by_indices(None, None, None), v_4)).get_vector(), None, None, None)
+    _7_0.assign_vector_by_indices((v_11.get_vector_by_indices(None, None, None)).get_vector(), None, None, None); res_4.assign_vector_by_indices((_7_0.get_vector_by_indices(None, None, None)).get_vector(), None, None, None)
+    return res_4
 ```
 ### `db_variance`
 #### Input
@@ -3159,7 +3740,7 @@ def db_variance(A!0: shared[list[int; ?]], V!0: shared[list[int; ?]], len!0: pla
 | `!5!0` | `shared[list[int; (len!0)]]` |
 | `!3!0` | `shared[list[int; (len!0)]]` |
 | `sum!1` | `plaintext[int]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger db_variance(
@@ -3255,6 +3836,59 @@ encrypto::motion::SecureUnsignedInteger db_variance(
     return variance_1;
 
 }
+```
+#### MP-SPDZ code
+```py
+def db_variance(A_0, V_0, len_0):
+    # Shared array declarations
+    _1_2 = sint.Tensor([len_0])
+    _2_0 = sint.Tensor([len_0])
+    _3_0 = sint.Tensor([len_0])
+    _5_0 = sint.Tensor([len_0])
+    _6_0 = sint.Tensor([len_0])
+    _7_0 = sint.Tensor([len_0])
+    _8_0 = sint.Tensor([len_0])
+    V_2 = sint.Tensor([len_0])
+    dist_2 = sint.Tensor([len_0])
+    res_2 = sint.Tensor([len_0])
+    res_3 = sint.Tensor([len_0])
+    sum_2 = sint.Tensor([len_0])
+    sum_3 = sint.Tensor([len_0])
+    # Function body
+    sum_1 = sint(0)
+    _3_0[:] = lift(lambda indices: (A_0[indices[0]]), [len_0])
+    _5_0[:] = lift(lambda indices: V_0, [len_0])
+    _6_0[:] = lift(lambda indices: (A_0[indices[0]]), [len_0])
+    res_1 = sint(0)
+    _2_0[:] = lift(lambda indices: sum_1, [len_0])
+    _8_0[:] = lift(lambda indices: res_1, [len_0])
+    for _10_0 in range(0, len_0):
+        # Set ϕ value
+        if _10_0 == 0:
+            sum_2[_10_0] = _2_0[_10_0]
+        else:
+            sum_2[_10_0] = sum_3[(_10_0 - 1)]
+        sum_3[_10_0] = (sum_2[_10_0] + _3_0[_10_0])
+    # Loop exit ϕ values
+    sum_2[_10_0] = sum_3[(_10_0 - 1)]
+    _4_0 = drop_dim(sum_3)
+    exp_1 = (_4_0 / len_0)
+    _7_0[:] = lift(lambda indices: exp_1, [len_0])
+    dist_2[:] = (_6_0[:] - _7_0[:])
+    _1_2[:] = (dist_2[:] * dist_2[:])
+    _5_0[:] = _1_2[:]; V_2[:] = _5_0[:]
+    for _11_0 in range(0, len_0):
+        # Set ϕ value
+        if _11_0 == 0:
+            res_2[_11_0] = _8_0[_11_0]
+        else:
+            res_2[_11_0] = res_3[(_11_0 - 1)]
+        res_3[_11_0] = (res_2[_11_0] + V_2[_11_0])
+    # Loop exit ϕ values
+    res_2[_11_0] = res_3[(_11_0 - 1)]
+    _9_0 = drop_dim(res_3)
+    variance_1 = (_9_0 / len_0)
+    return variance_1
 ```
 ### `histogram`
 #### Input
@@ -3415,7 +4049,7 @@ def histogram(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: plainte
 | `!6!0` | `shared[list[list[int; (num_bins!0)]; (N!0)]]` |
 | `!5!0` | `shared[list[list[int; (num_bins!0)]; (N!0)]]` |
 | `!2!0` | `shared[list[int; (num_bins!0)]]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
@@ -3485,6 +4119,44 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
     return _3_0;
 
 }
+```
+#### MP-SPDZ code
+```py
+def histogram(A_0, B_0, N_0, num_bins_0, result_0):
+    # Shared array declarations
+    _1_3 = sintbit.Tensor([num_bins_0, N_0])
+    _2_0 = sint.Tensor([num_bins_0])
+    _3_0 = sint.Tensor([num_bins_0])
+    _4_0 = sint.Tensor([num_bins_0, N_0])
+    _5_0 = sint.Tensor([num_bins_0, N_0])
+    _6_0 = sint.Tensor([num_bins_0, N_0])
+    _7_0 = sint.Tensor([num_bins_0, N_0])
+    result_2 = sint.Tensor([num_bins_0, N_0])
+    result_3 = sint.Tensor([num_bins_0, N_0])
+    val_3 = sint.Tensor([num_bins_0, N_0])
+    val_4 = sint.Tensor([num_bins_0, N_0])
+    val_5 = sint.Tensor([num_bins_0, N_0])
+    # Function body
+    _2_0[:] = lift(lambda indices: result_0, [num_bins_0])
+    _5_0.assign_vector_by_indices((lift(lambda indices: (A_0[indices[1]]), [num_bins_0, N_0])).get_vector(), None, None)
+    _6_0.assign_vector_by_indices((lift(lambda indices: indices[0], [num_bins_0, N_0])).get_vector(), None, None)
+    _7_0.assign_vector_by_indices((lift(lambda indices: (B_0[indices[1]]), [num_bins_0, N_0])).get_vector(), None, None)
+    _4_0.assign_vector_by_indices((lift(lambda indices: _2_0[:], [num_bins_0, N_0])).get_vector(), None, None)
+    _1_3.assign_vector_by_indices(((_5_0.get_vector_by_indices(None, None) == _6_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    for _8_0 in range(0, N_0):
+        # Set ϕ value
+        if _8_0 == 0:
+            result_2.assign_vector_by_indices((_4_0.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
+        else:
+            result_2.assign_vector_by_indices((result_3.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
+        val_4.assign_vector_by_indices((result_2.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
+        val_3.assign_vector_by_indices(((result_2.get_vector_by_indices(None, _8_0) + _7_0.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
+        val_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, _8_0).if_else(val_3.get_vector_by_indices(None, _8_0), val_4.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
+        (TODO: fix this case).assign_vector_by_indices((val_5.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0); result_3.assign_vector_by_indices(((TODO: fix this case).get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
+    # Loop exit ϕ values
+    result_2.assign_vector_by_indices((result_3.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
+    _3_0[:] = drop_dim(result_3)
+    return _3_0
 ```
 ### `inner_product`
 #### Input
@@ -3594,7 +4266,7 @@ def inner_product(A!0: shared[list[int; ?]], B!0: shared[list[int; ?]], N!0: pla
 | `!3!0` | `shared[list[int; (N!0)]]` |
 | `!2!0` | `shared[list[int; (N!0)]]` |
 | `sum!1` | `plaintext[int]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger inner_product(
@@ -3651,6 +4323,34 @@ encrypto::motion::SecureUnsignedInteger inner_product(
     return _4_0;
 
 }
+```
+#### MP-SPDZ code
+```py
+def inner_product(A_0, B_0, N_0):
+    # Shared array declarations
+    _1_0 = sint.Tensor([N_0])
+    _2_0 = sint.Tensor([N_0])
+    _3_0 = sint.Tensor([N_0])
+    sum_2 = sint.Tensor([N_0])
+    sum_3 = sint.Tensor([N_0])
+    temp_2 = sint.Tensor([N_0])
+    # Function body
+    sum_1 = sint(0)
+    _2_0[:] = lift(lambda indices: (A_0[indices[0]]), [N_0])
+    _3_0[:] = lift(lambda indices: (B_0[indices[0]]), [N_0])
+    _1_0[:] = lift(lambda indices: sum_1, [N_0])
+    temp_2[:] = (_2_0[:] * _3_0[:])
+    for _5_0 in range(0, N_0):
+        # Set ϕ value
+        if _5_0 == 0:
+            sum_2[_5_0] = _1_0[_5_0]
+        else:
+            sum_2[_5_0] = sum_3[(_5_0 - 1)]
+        sum_3[_5_0] = (sum_2[_5_0] + temp_2[_5_0])
+    # Loop exit ϕ values
+    sum_2[_5_0] = sum_3[(_5_0 - 1)]
+    _4_0 = drop_dim(sum_3)
+    return _4_0
 ```
 ### `longest_102`
 #### Input
@@ -3886,7 +4586,7 @@ def longest_102(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: shared
 | `length!1` | `plaintext[int]` |
 | `max_len!1` | `plaintext[int]` |
 | `s0!1` | `plaintext[bool]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_102(
@@ -4025,6 +4725,89 @@ encrypto::motion::SecureUnsignedInteger longest_102(
     return _18_0;
 
 }
+```
+#### MP-SPDZ code
+```py
+def longest_102(Seq_0, N_0, Syms_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _10_0 = sint.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _12_0 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _14_0 = sint.Tensor([N_0])
+    _15_0 = sint.Tensor([N_0])
+    _16_0 = sint.Tensor([N_0])
+    _17_0 = sint.Tensor([N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _4_2 = sintbit.Tensor([N_0])
+    _5_2 = sintbit.Tensor([N_0])
+    _6_2 = sintbit.Tensor([N_0])
+    _7_2 = sintbit.Tensor([N_0])
+    _8_2 = sintbit.Tensor([N_0])
+    _9_0 = sintbit.Tensor([N_0])
+    length_2 = sint.Tensor([N_0])
+    length_3 = sint.Tensor([N_0])
+    length_5 = sint.Tensor([N_0])
+    max_len_2 = sint.Tensor([N_0])
+    max_len_3 = sint.Tensor([N_0])
+    max_len_4 = sint.Tensor([N_0])
+    s0_2 = sintbit.Tensor([N_0])
+    s0_3 = sintbit.Tensor([N_0])
+    s1_2 = sintbit.Tensor([N_0])
+    # Function body
+    s0_1 = sintbit(False)
+    max_len_1 = sint(0)
+    length_1 = sint(0)
+    _12_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _13_0[:] = lift(lambda indices: (Syms_0[2]), [N_0])
+    _14_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _15_0[:] = lift(lambda indices: (Syms_0[1]), [N_0])
+    _16_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _17_0[:] = lift(lambda indices: (Syms_0[0]), [N_0])
+    length_4 = sint(0)
+    _9_0[:] = lift(lambda indices: s0_1, [N_0])
+    _10_0[:] = lift(lambda indices: max_len_1, [N_0])
+    _11_0[:] = lift(lambda indices: length_1, [N_0])
+    _1_2[:] = (_12_0[:] == _13_0[:])
+    _2_2[:] = (_14_0[:] == _15_0[:])
+    _4_2[:] = (_16_0[:] == _17_0[:])
+    for _19_0 in range(0, N_0):
+        # Set ϕ value
+        if _19_0 == 0:
+            s0_2[_19_0] = _9_0[_19_0]
+        else:
+            s0_2[_19_0] = s0_3[(_19_0 - 1)]
+        _5_2[_19_0] = (s0_2[_19_0] & _4_2[_19_0])
+        s0_3[_19_0] = (_2_2[_19_0] | _5_2[_19_0])
+    # Loop exit ϕ values
+    s0_2[_19_0] = s0_3[(_19_0 - 1)]
+    s1_2[:] = (s0_2[:] & _1_2[:])
+    _6_2[:] = (s1_2[:] | s0_3[:])
+    for _20_0 in range(0, N_0):
+        # Set ϕ value
+        if _20_0 == 0:
+            length_2[_20_0] = _11_0[_20_0]
+        else:
+            length_2[_20_0] = length_5[(_20_0 - 1)]
+        length_3[_20_0] = (length_2[_20_0] + sint(1))
+        length_5[_20_0] = _6_2[_20_0].if_else(length_3[_20_0], length_4)
+    # Loop exit ϕ values
+    length_2[_20_0] = length_5[(_20_0 - 1)]
+    max_len_3[:] = length_5[:]
+    for _21_0 in range(0, N_0):
+        # Set ϕ value
+        if _21_0 == 0:
+            max_len_2[_21_0] = _10_0[_21_0]
+        else:
+            max_len_2[_21_0] = max_len_4[(_21_0 - 1)]
+        _7_2[_21_0] = (max_len_2[_21_0] < length_5[_21_0])
+        _8_2[_21_0] = (s1_2[_21_0] & _7_2[_21_0])
+        max_len_4[_21_0] = _8_2[_21_0].if_else(max_len_3[_21_0], max_len_2[_21_0])
+    # Loop exit ϕ values
+    max_len_2[_21_0] = max_len_4[(_21_0 - 1)]
+    _18_0 = drop_dim(max_len_4)
+    return _18_0
 ```
 ### `longest_odd_10`
 #### Input
@@ -4258,7 +5041,7 @@ def longest_odd_10(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Syms!0: sha
 | `s2!1` | `plaintext[bool]` |
 | `max_length!1` | `plaintext[int]` |
 | `current_length!1` | `plaintext[int]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger longest_odd_10(
@@ -4394,6 +5177,85 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
     return _15_0;
 
 }
+```
+#### MP-SPDZ code
+```py
+def longest_odd_10(Seq_0, N_0, Syms_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _10_0 = sintbit.Tensor([N_0])
+    _11_0 = sint.Tensor([N_0])
+    _12_0 = sint.Tensor([N_0])
+    _13_0 = sint.Tensor([N_0])
+    _14_0 = sint.Tensor([N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _4_2 = sint.Tensor([N_0])
+    _5_2 = sintbit.Tensor([N_0])
+    _6_2 = sintbit.Tensor([N_0])
+    _7_2 = sintbit.Tensor([N_0])
+    _8_0 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    current_length_2 = sint.Tensor([N_0])
+    current_length_3 = sint.Tensor([N_0])
+    current_length_5 = sint.Tensor([N_0])
+    current_length_6 = sint.Tensor([N_0])
+    max_length_2 = sint.Tensor([N_0])
+    max_length_3 = sint.Tensor([N_0])
+    max_length_4 = sint.Tensor([N_0])
+    s1_2 = sintbit.Tensor([N_0])
+    s2_2 = sintbit.Tensor([N_0])
+    s2_3 = sintbit.Tensor([N_0])
+    # Function body
+    current_length_1 = sint(0)
+    max_length_1 = sint(0)
+    s2_1 = sintbit(False)
+    _11_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _12_0[:] = lift(lambda indices: (Syms_0[1]), [N_0])
+    _13_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _14_0[:] = lift(lambda indices: (Syms_0[0]), [N_0])
+    current_length_4 = sint(0)
+    _8_0[:] = lift(lambda indices: current_length_1, [N_0])
+    _9_0[:] = lift(lambda indices: max_length_1, [N_0])
+    _10_0[:] = lift(lambda indices: s2_1, [N_0])
+    _1_2[:] = (_11_0[:] == _12_0[:])
+    s2_3[:] = (_13_0[:] == _14_0[:])
+    for _16_0 in range(0, N_0):
+        # Set ϕ value
+        if _16_0 == 0:
+            s2_2[_16_0] = _10_0[_16_0]
+        else:
+            s2_2[_16_0] = s2_3[(_16_0 - 1)]
+    # Loop exit ϕ values
+    s2_2[_16_0] = s2_3[(_16_0 - 1)]
+    s1_2[:] = (s2_2[:] & _1_2[:])
+    _2_2[:] = (s2_2[:].if_else(0, 1))
+    for _17_0 in range(0, N_0):
+        # Set ϕ value
+        if _17_0 == 0:
+            current_length_2[_17_0] = _8_0[_17_0]
+        else:
+            current_length_2[_17_0] = current_length_6[(_17_0 - 1)]
+        current_length_5[_17_0] = _2_2[_17_0].if_else(current_length_4, current_length_2[_17_0])
+        current_length_3[_17_0] = (current_length_2[_17_0] + sint(1))
+        current_length_6[_17_0] = s1_2[_17_0].if_else(current_length_3[_17_0], current_length_5[_17_0])
+    # Loop exit ϕ values
+    current_length_2[_17_0] = current_length_6[(_17_0 - 1)]
+    _4_2[:] = (current_length_6[:] & sint(1))
+    max_length_3[:] = current_length_6[:]
+    _5_2[:] = (_4_2[:] == sint(1))
+    for _18_0 in range(0, N_0):
+        # Set ϕ value
+        if _18_0 == 0:
+            max_length_2[_18_0] = _9_0[_18_0]
+        else:
+            max_length_2[_18_0] = max_length_4[(_18_0 - 1)]
+        _6_2[_18_0] = (current_length_6[_18_0] > max_length_2[_18_0])
+        _7_2[_18_0] = (_5_2[_18_0] & _6_2[_18_0])
+        max_length_4[_18_0] = _7_2[_18_0].if_else(max_length_3[_18_0], max_length_2[_18_0])
+    # Loop exit ϕ values
+    max_length_2[_18_0] = max_length_4[(_18_0 - 1)]
+    _15_0 = drop_dim(max_length_4)
+    return _15_0
 ```
 ### `max_dist_between_syms`
 #### Input
@@ -4560,7 +5422,7 @@ def max_dist_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!
 | `!6!0` | `shared[list[int; (N!0)]]` |
 | `current_dist!1` | `plaintext[int]` |
 | `max_dist!1` | `plaintext[int]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
@@ -4655,6 +5517,57 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
     return _8_0;
 
 }
+```
+#### MP-SPDZ code
+```py
+def max_dist_between_syms(Seq_0, N_0, Sym_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _3_2 = sintbit.Tensor([N_0])
+    _4_0 = sint.Tensor([N_0])
+    _5_0 = sint.Tensor([N_0])
+    _6_0 = sint.Tensor([N_0])
+    _7_0 = sint.Tensor([N_0])
+    current_dist_2 = sint.Tensor([N_0])
+    current_dist_3 = sint.Tensor([N_0])
+    current_dist_5 = sint.Tensor([N_0])
+    max_dist_2 = sint.Tensor([N_0])
+    max_dist_3 = sint.Tensor([N_0])
+    max_dist_4 = sint.Tensor([N_0])
+    # Function body
+    max_dist_1 = sint(0)
+    current_dist_1 = sint(0)
+    _6_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _7_0[:] = lift(lambda indices: Sym_0, [N_0])
+    current_dist_4 = sint(0)
+    _4_0[:] = lift(lambda indices: max_dist_1, [N_0])
+    _5_0[:] = lift(lambda indices: current_dist_1, [N_0])
+    _1_2[:] = (_6_0[:] == _7_0[:])
+    _2_2[:] = (_1_2[:].if_else(0, 1))
+    for _9_0 in range(0, N_0):
+        # Set ϕ value
+        if _9_0 == 0:
+            current_dist_2[_9_0] = _5_0[_9_0]
+        else:
+            current_dist_2[_9_0] = current_dist_5[(_9_0 - 1)]
+        current_dist_3[_9_0] = (current_dist_2[_9_0] + sint(1))
+        current_dist_5[_9_0] = _2_2[_9_0].if_else(current_dist_3[_9_0], current_dist_4)
+    # Loop exit ϕ values
+    current_dist_2[_9_0] = current_dist_5[(_9_0 - 1)]
+    max_dist_3[:] = current_dist_5[:]
+    for _10_0 in range(0, N_0):
+        # Set ϕ value
+        if _10_0 == 0:
+            max_dist_2[_10_0] = _4_0[_10_0]
+        else:
+            max_dist_2[_10_0] = max_dist_4[(_10_0 - 1)]
+        _3_2[_10_0] = (current_dist_5[_10_0] > max_dist_2[_10_0])
+        max_dist_4[_10_0] = _3_2[_10_0].if_else(max_dist_3[_10_0], max_dist_2[_10_0])
+    # Loop exit ϕ values
+    max_dist_2[_10_0] = max_dist_4[(_10_0 - 1)]
+    _8_0 = drop_dim(max_dist_4)
+    return _8_0
 ```
 ### `max_sum_between_syms`
 #### Input
@@ -4824,7 +5737,7 @@ def max_sum_between_syms(Seq!0: shared[list[int; ?]], N!0: plaintext[int], Sym!0
 | `!6!0` | `shared[list[int; (N!0)]]` |
 | `current_sum!1` | `plaintext[int]` |
 | `max_sum!1` | `plaintext[int]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
@@ -4920,6 +5833,59 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
     return _9_0;
 
 }
+```
+#### MP-SPDZ code
+```py
+def max_sum_between_syms(Seq_0, N_0, Sym_0):
+    # Shared array declarations
+    _1_2 = sintbit.Tensor([N_0])
+    _2_2 = sintbit.Tensor([N_0])
+    _3_2 = sintbit.Tensor([N_0])
+    _4_0 = sint.Tensor([N_0])
+    _5_0 = sint.Tensor([N_0])
+    _6_0 = sint.Tensor([N_0])
+    _7_0 = sint.Tensor([N_0])
+    _8_0 = sint.Tensor([N_0])
+    current_sum_2 = sint.Tensor([N_0])
+    current_sum_3 = sint.Tensor([N_0])
+    current_sum_5 = sint.Tensor([N_0])
+    max_sum_2 = sint.Tensor([N_0])
+    max_sum_3 = sint.Tensor([N_0])
+    max_sum_4 = sint.Tensor([N_0])
+    # Function body
+    max_sum_1 = sint(0)
+    current_sum_1 = sint(0)
+    _6_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _7_0[:] = lift(lambda indices: Sym_0, [N_0])
+    _8_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    current_sum_4 = sint(0)
+    _4_0[:] = lift(lambda indices: max_sum_1, [N_0])
+    _5_0[:] = lift(lambda indices: current_sum_1, [N_0])
+    _1_2[:] = (_6_0[:] == _7_0[:])
+    _2_2[:] = (_1_2[:].if_else(0, 1))
+    for _10_0 in range(0, N_0):
+        # Set ϕ value
+        if _10_0 == 0:
+            current_sum_2[_10_0] = _5_0[_10_0]
+        else:
+            current_sum_2[_10_0] = current_sum_5[(_10_0 - 1)]
+        current_sum_3[_10_0] = (current_sum_2[_10_0] + _8_0[_10_0])
+        current_sum_5[_10_0] = _2_2[_10_0].if_else(current_sum_3[_10_0], current_sum_4)
+    # Loop exit ϕ values
+    current_sum_2[_10_0] = current_sum_5[(_10_0 - 1)]
+    max_sum_3[:] = current_sum_5[:]
+    for _11_0 in range(0, N_0):
+        # Set ϕ value
+        if _11_0 == 0:
+            max_sum_2[_11_0] = _4_0[_11_0]
+        else:
+            max_sum_2[_11_0] = max_sum_4[(_11_0 - 1)]
+        _3_2[_11_0] = (current_sum_5[_11_0] > max_sum_2[_11_0])
+        max_sum_4[_11_0] = _3_2[_11_0].if_else(max_sum_3[_11_0], max_sum_2[_11_0])
+    # Loop exit ϕ values
+    max_sum_2[_11_0] = max_sum_4[(_11_0 - 1)]
+    _9_0 = drop_dim(max_sum_4)
+    return _9_0
 ```
 ### `minimal_points`
 #### Input
@@ -5145,7 +6111,7 @@ def minimal_points(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int
 | `!16!0` | `shared[list[int; (N!0)]]` |
 | `!9!0` | `shared[list[int; (N!0)]]` |
 | `!8!0` | `shared[list[int; (N!0)]]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<encrypto::motion::SecureUnsignedInteger>> minimal_points(
@@ -5241,6 +6207,70 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     return _7_1;
 
 }
+```
+#### MP-SPDZ code
+```py
+def minimal_points(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
+    # Shared array declarations
+    _10_0 = sintbit.Tensor([N_0, N_0])
+    _11_0 = sint.Tensor([N_0, N_0])
+    _12_0 = sint.Tensor([N_0, N_0])
+    _13_0 = sint.Tensor([N_0, N_0])
+    _14_0 = sint.Tensor([N_0, N_0])
+    _15_0 = sintbit.Tensor([N_0])
+    _16_0 = sint.Tensor([N_0])
+    _17_0 = sint.Tensor([N_0])
+    _3_3 = sintbit.Tensor([N_0, N_0])
+    _4_3 = sintbit.Tensor([N_0, N_0])
+    _5_3 = sintbit.Tensor([N_0, N_0])
+    _6_2 = sintbit.Tensor([N_0])
+    _8_0 = sint.Tensor([N_0])
+    _9_0 = sint.Tensor([N_0])
+    bx_3 = sintbit.Tensor([N_0, N_0])
+    bx_4 = sintbit.Tensor([N_0, N_0])
+    result_X_2 = sint.Tensor([N_0])
+    result_Y_2 = sint.Tensor([N_0])
+    val_X_2 = sint.Tensor([N_0])
+    val_X_3 = sint.Tensor([N_0])
+    val_X_4 = sint.Tensor([N_0])
+    val_Y_2 = sint.Tensor([N_0])
+    val_Y_3 = sint.Tensor([N_0])
+    val_Y_4 = sint.Tensor([N_0])
+    # Function body
+    _8_0[:] = lift(lambda indices: result_X_0, [N_0])
+    _9_0[:] = lift(lambda indices: result_Y_0, [N_0])
+    _16_0[:] = lift(lambda indices: (X_coords_0[indices[0]]), [N_0])
+    _17_0[:] = lift(lambda indices: (Y_coords_0[indices[0]]), [N_0])
+    bx_2 = sintbit(False)
+    _11_0.assign_vector_by_indices((lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0])).get_vector(), None, None)
+    _12_0.assign_vector_by_indices((lift(lambda indices: (X_coords_0[indices[0]]), [N_0, N_0])).get_vector(), None, None)
+    _13_0.assign_vector_by_indices((lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0])).get_vector(), None, None)
+    _14_0.assign_vector_by_indices((lift(lambda indices: (Y_coords_0[indices[0]]), [N_0, N_0])).get_vector(), None, None)
+    val_X_2[:] = _8_0[:]
+    val_Y_2[:] = _9_0[:]
+    val_X_3[:] = _16_0[:]
+    val_Y_3[:] = _17_0[:]
+    _10_0.assign_vector_by_indices((lift(lambda indices: bx_2, [N_0, N_0])).get_vector(), None, None)
+    _3_3.assign_vector_by_indices(((_11_0.get_vector_by_indices(None, None) < _12_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _4_3.assign_vector_by_indices(((_13_0.get_vector_by_indices(None, None) < _14_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _5_3.assign_vector_by_indices(((_3_3.get_vector_by_indices(None, None) & _4_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    for _18_0 in range(0, N_0):
+        # Set ϕ value
+        if _18_0 == 0:
+            bx_3.assign_vector_by_indices((_10_0.get_vector_by_indices(None, _18_0)).get_vector(), None, _18_0)
+        else:
+            bx_3.assign_vector_by_indices((bx_4.get_vector_by_indices(None, (_18_0 - 1))).get_vector(), None, _18_0)
+        bx_4.assign_vector_by_indices(((bx_3.get_vector_by_indices(None, _18_0) | _5_3.get_vector_by_indices(None, _18_0))).get_vector(), None, _18_0)
+    # Loop exit ϕ values
+    bx_3.assign_vector_by_indices((bx_4.get_vector_by_indices(None, (_18_0 - 1))).get_vector(), None, _18_0)
+    _15_0[:] = drop_dim(bx_4)
+    _6_2[:] = (_15_0[:].if_else(0, 1))
+    val_X_4[:] = _6_2[:].if_else(val_X_3[:], val_X_2[:])
+    val_Y_4[:] = _6_2[:].if_else(val_Y_3[:], val_Y_2[:])
+    _8_0[:] = val_X_4[:]; result_X_2[:] = _8_0[:]
+    _9_0[:] = val_Y_4[:]; result_Y_2[:] = _9_0[:]
+    _7_1 = (result_X_2,result_Y_2,)
+    return _7_1
 ```
 ### `mnist_relu`
 #### Input
@@ -5380,7 +6410,7 @@ def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]]
 | `!5!0` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
 | `!4!0` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
 | `!2!0` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> mnist_relu(
@@ -5427,6 +6457,30 @@ std::vector<encrypto::motion::SecureUnsignedInteger> mnist_relu(
     return OUTPUT_res_3;
 
 }
+```
+#### MP-SPDZ code
+```py
+def mnist_relu(input_0, OUTPUT_res_0, len_outer_0, len_inner_0):
+    # Shared array declarations
+    _1_3 = sintbit.Tensor([len_outer_0, len_inner_0])
+    _2_0 = sint.Tensor([len_outer_0, len_inner_0])
+    _3_0 = sint.Tensor([len_outer_0, len_inner_0])
+    _4_0 = sint.Tensor([len_outer_0, len_inner_0])
+    _5_0 = sint.Tensor([len_outer_0, len_inner_0])
+    OUTPUT_res_3 = sint.Tensor([len_outer_0, len_inner_0])
+    val_4 = sint.Tensor([len_outer_0, len_inner_0])
+    val_5 = sint.Tensor([len_outer_0, len_inner_0])
+    # Function body
+    _2_0.assign_vector_by_indices((lift(lambda indices: OUTPUT_res_0, [len_outer_0, len_inner_0])).get_vector(), None, None)
+    _4_0.assign_vector_by_indices((lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0])).get_vector(), None, None)
+    _5_0.assign_vector_by_indices((lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0])).get_vector(), None, None)
+    val_3 = sint(1)
+    _3_0.assign_vector_by_indices((lift(lambda indices: _2_0.get_vector_by_indices(None, None), [len_outer_0, len_inner_0])).get_vector(), None, None)
+    _1_3.assign_vector_by_indices(((_4_0.get_vector_by_indices(None, None) > sint(1))).get_vector(), None, None)
+    val_4.assign_vector_by_indices((_5_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    val_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, None).if_else(val_4.get_vector_by_indices(None, None), val_3)).get_vector(), None, None)
+    _3_0.assign_vector_by_indices((val_5.get_vector_by_indices(None, None)).get_vector(), None, None); OUTPUT_res_3.assign_vector_by_indices((_3_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    return OUTPUT_res_3
 ```
 ### `psi`
 #### Input
@@ -5596,7 +6650,7 @@ def psi(A!0: shared[list[int; ?]], SA!0: plaintext[int], B!0: shared[list[int; ?
 | `flag!2` | `plaintext[bool]` |
 | `!6!0` | `shared[list[int; (SA!0)]]` |
 | `!2!0` | `shared[list[int; (SA!0)]]` |
-#### Motion code
+#### MOTION code
 ```cpp
 template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> psi(
@@ -5674,4 +6728,46 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
     return result_2;
 
 }
+```
+#### MP-SPDZ code
+```py
+def psi(A_0, SA_0, B_0, SB_0, result_0):
+    # Shared array declarations
+    _1_3 = sintbit.Tensor([SA_0, SB_0])
+    _2_0 = sint.Tensor([SA_0])
+    _3_0 = sintbit.Tensor([SA_0, SB_0])
+    _4_0 = sint.Tensor([SA_0, SB_0])
+    _5_0 = sint.Tensor([SA_0, SB_0])
+    _6_0 = sint.Tensor([SA_0])
+    _7_0 = sintbit.Tensor([SA_0])
+    flag_3 = sintbit.Tensor([SA_0, SB_0])
+    flag_5 = sintbit.Tensor([SA_0, SB_0])
+    result_2 = sint.Tensor([SA_0])
+    val_2 = sint.Tensor([SA_0])
+    val_3 = sint.Tensor([SA_0])
+    val_4 = sint.Tensor([SA_0])
+    # Function body
+    _2_0[:] = lift(lambda indices: result_0, [SA_0])
+    _6_0[:] = lift(lambda indices: (A_0[indices[0]]), [SA_0])
+    flag_2 = sintbit(False)
+    _4_0.assign_vector_by_indices((lift(lambda indices: (A_0[indices[0]]), [SA_0, SB_0])).get_vector(), None, None)
+    _5_0.assign_vector_by_indices((lift(lambda indices: (B_0[indices[1]]), [SA_0, SB_0])).get_vector(), None, None)
+    flag_4 = sintbit(True)
+    val_2[:] = _2_0[:]
+    val_3[:] = _6_0[:]
+    _3_0.assign_vector_by_indices((lift(lambda indices: flag_2, [SA_0, SB_0])).get_vector(), None, None)
+    _1_3.assign_vector_by_indices(((_4_0.get_vector_by_indices(None, None) == _5_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    for _8_0 in range(0, SB_0):
+        # Set ϕ value
+        if _8_0 == 0:
+            flag_3.assign_vector_by_indices((_3_0.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
+        else:
+            flag_3.assign_vector_by_indices((flag_5.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
+        flag_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, _8_0).if_else(flag_4, flag_3.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
+    # Loop exit ϕ values
+    flag_3.assign_vector_by_indices((flag_5.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
+    _7_0[:] = drop_dim(flag_5)
+    val_4[:] = _7_0[:].if_else(val_3[:], val_2[:])
+    _2_0[:] = val_4[:]; result_2[:] = _2_0[:]
+    return result_2
 ```
