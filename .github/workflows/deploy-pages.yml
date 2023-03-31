@@ -19,6 +19,10 @@ jobs:
       - name: Install dependencies
         working-directory: compiler
         run: |
+          # Remove software that the GitHub Actions image adds to base Ubuntu,
+          # to make CI errors easier to debug locally.
+          sudo rm -rf /usr/local
+
           sudo apt-get update
           sudo apt-get -y install \
             graphviz \
