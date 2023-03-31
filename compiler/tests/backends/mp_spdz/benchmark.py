@@ -1,9 +1,35 @@
 import shutil
 import os
 import subprocess
+import re
 
 import compiler
 from compiler.backends import Backend
+
+
+class BenchmarkOutput:
+    result: str
+    time_seconds: float
+    data_sent_mb: float
+    rounds: int
+    global_data_sent_mb: float
+
+    def __init__(self, stdout: str) -> None:
+        def parse(pattern: str) -> tuple[str, ...]:
+            m = re.search(rf"^\s*{pattern}\s*$", stdout, re.MULTILINE)
+            assert m is not None, repr(stdout)
+            return m.groups()
+
+        self.result = parse(r"MPC BENCHMARK OUTPUT (.+)")[0]
+        self.time_seconds = float(parse(r"Time = (.+) seconds")[0])
+        data_sent_mb, rounds = parse(
+            r"Data sent = (.+) MB in ~(.+) rounds \(party 0; use '-v' for more details\)",
+        )
+        self.data_sent_mb = float(data_sent_mb)
+        self.rounds = int(rounds)
+        self.global_data_sent_mb = float(
+            parse(r"Global data sent = (.+) MB \(all parties\)")[0]
+        )
 
 
 def run_benchmark(
@@ -12,7 +38,7 @@ def run_benchmark(
     protocol: str,
     vectorized=True,
     timeout=600,
-) -> str:
+) -> BenchmarkOutput:
     input_fname = os.path.join(benchmark_path, "input.py")
 
     with open(input_fname, "r") as f:
@@ -64,7 +90,4 @@ def run_benchmark(
     )
     stdout, stderr = p.communicate(timeout=timeout)
     assert p.returncode == 0, stderr
-    lines = stdout.split("\n")
-    tag = "MPC BENCHMARK OUTPUT "
-    line = next(line for line in lines if line.startswith(tag))
-    return line[len(tag) :]
+    return BenchmarkOutput(stdout)
