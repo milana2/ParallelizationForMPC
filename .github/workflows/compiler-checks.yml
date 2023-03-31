@@ -93,7 +93,14 @@ jobs:
           sudo rm -rf /usr/local
 
           sudo apt-get update
-          sudo apt-get -y install build-essential make git cmake libssl-dev libboost-program-options-dev graphviz
+
+          # Install MOTION dependencies
+          sudo apt-get -y install build-essential make git cmake libssl-dev libboost-program-options-dev
+
+          # Install MP-SPDZ dependencies
+          sudo apt-get -y install automake build-essential clang cmake git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 texinfo yasm
+
+          sudo apt-get -y install graphviz
 
           python -m pip install --upgrade pip
           pip install -r requirements.txt

@@ -24,18 +24,22 @@ jobs:
           sudo rm -rf /usr/local
 
           sudo apt-get update
+
+          # Install MOTION dependencies
+          sudo apt-get -y install build-essential make git cmake libssl-dev libboost-program-options-dev
+
+          # Install MP-SPDZ dependencies
+          sudo apt-get -y install automake build-essential clang cmake git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 texinfo yasm
+
+          sudo apt-get -y install graphviz
+
+          # Install LaTeX dependencies
           sudo apt-get -y install \
-            graphviz \
             texlive-base \
             texlive-latex-extra \
             texlive-bibtex-extra \
             texlive-publishers \
-            texlive-science \
-            cmake \
-            build-essential \
-            make \
-            libboost-all-dev \
-            libssl-dev
+            texlive-science
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Build results markdown
