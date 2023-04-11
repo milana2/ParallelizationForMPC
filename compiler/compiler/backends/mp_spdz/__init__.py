@@ -131,7 +131,7 @@ def render_constant(c: Constant, make_shared: bool) -> str:
     v = c.value
     if make_shared:
         if isinstance(v, bool):
-            return f"sintbit({v})"
+            return f"sint({v})"
         elif isinstance(v, int):
             return f"sint({v})"
         else:
@@ -192,7 +192,7 @@ def render_lift_expr(lift: LiftExpr) -> str:
         {var: f"indices[{index}]" for index, (var, _) in enumerate(lift.dims)},
     )
     dim_sizes = ", ".join(render_atom(size, False, dict()) for (_, size) in lift.dims)
-    return f"lift(lambda indices: {expr}, [{dim_sizes}])"
+    return f"_v.lift(lambda indices: {expr}, [{dim_sizes}])"
 
 
 def render_assign_rhs(
@@ -237,7 +237,7 @@ def render_assign_rhs(
         else:
             array_var = arhs.array
         array = render_var(array_var, var_mappings)
-        return f"drop_dim({array})"
+        return f"_v.drop_dim({array})"
     else:
         return assert_never(arhs)
 
@@ -329,7 +329,7 @@ def render_shared_array_decl(
     if datatype in (DataType.INT, None):
         element_type = "sint"
     elif datatype is DataType.BOOL:
-        element_type = "sintbit"
+        element_type = "sint"
     else:
         raise ValueError("Unsupported array element type")
 
@@ -391,7 +391,7 @@ def render_default_arg(arg: Parameter) -> str:
             return f"{var} = sint({value})"
     else:
         assert dims == 1
-        return f"{var} = {value}; {var} = lift(lambda indices: {var}[indices[0]], [len({var})])"
+        return f"{var} = {value}; {var} = _v.lift(lambda indices: {var}[indices[0]], [len({var})])"
 
 
 def render_default_args(func: Function) -> str:
@@ -426,7 +426,8 @@ def render_application(
     set_args = render_set_args(func)
     args = render_args(func)
     app_rendered = (
-        "from vectorization_library import *\n"
+        "import vectorization_library as _v\n"
+        + "_v.sint = sint # Boolean protocols use specialized sint\n"
         + "\n"
         + "\n"
         + f"{func_rendered}\n"
@@ -435,7 +436,7 @@ def render_application(
         + "# Set arguments\n"
         + f"{set_args}\n"
         + "\n"
-        + f"mpc_print_result({func.name}({args}))"
+        + f"_v.mpc_print_result({func.name}({args}))"
     )
     with open(params["out_dir"], "w") as file:
         file.write(app_rendered + "\n")

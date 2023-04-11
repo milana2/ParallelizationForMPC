@@ -1,8 +1,8 @@
 def max_dist_between_syms(Seq_0, N_0, Sym_0):
     # Shared array declarations
-    _1_2 = sintbit.Tensor([N_0])
-    _2_2 = sintbit.Tensor([N_0])
-    _3_2 = sintbit.Tensor([N_0])
+    _1_2 = sint.Tensor([N_0])
+    _2_2 = sint.Tensor([N_0])
+    _3_2 = sint.Tensor([N_0])
     _4_0 = sint.Tensor([N_0])
     _5_0 = sint.Tensor([N_0])
     _6_0 = sint.Tensor([N_0])
@@ -16,11 +16,11 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
     # Function body
     max_dist_1 = sint(0)
     current_dist_1 = sint(0)
-    _6_0[:] = lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _7_0[:] = lift(lambda indices: Sym_0, [N_0])
+    _6_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _7_0[:] = _v.lift(lambda indices: Sym_0, [N_0])
     current_dist_4 = sint(0)
-    _4_0[:] = lift(lambda indices: max_dist_1, [N_0])
-    _5_0[:] = lift(lambda indices: current_dist_1, [N_0])
+    _4_0[:] = _v.lift(lambda indices: max_dist_1, [N_0])
+    _5_0[:] = _v.lift(lambda indices: current_dist_1, [N_0])
     _1_2[:] = (_6_0[:] == _7_0[:])
     _2_2[:] = (_1_2[:].if_else(0, 1))
     for _9_0 in range(0, N_0):
@@ -44,5 +44,5 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
         max_dist_4[_10_0] = _3_2[_10_0].if_else(max_dist_3[_10_0], max_dist_2[_10_0])
     # Loop exit ϕ values
     max_dist_2[_10_0] = max_dist_4[(_10_0 - 1)]
-    _8_0 = drop_dim(max_dist_4)
+    _8_0 = _v.drop_dim(max_dist_4)
     return _8_0
