@@ -55,9 +55,9 @@ def convex_hull(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     _19_0.assign_vector_by_indices((_v.lift(lambda indices: p1_Y_2[:], [N_0, N_0])).get_vector(), None, None)
     val_Y_3[:] = p1_Y_2[:]
     _6_3.assign_vector_by_indices(((_18_0.get_vector_by_indices(None, None) <= p2_X_3.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _3_2[:] = (_1_2[:] & _2_2[:])
+    _3_2[:] = _1_2[:].bit_and(_2_2[:])
     _7_3.assign_vector_by_indices(((_19_0.get_vector_by_indices(None, None) >= p2_Y_3.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _8_3.assign_vector_by_indices(((_6_3.get_vector_by_indices(None, None) | _7_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _8_3.assign_vector_by_indices((_v.OR(_6_3.get_vector_by_indices(None, None), _7_3.get_vector_by_indices(None, None))).get_vector(), None, None)
     _9_3.assign_vector_by_indices(((_8_3.get_vector_by_indices(None, None).if_else(0, 1))).get_vector(), None, None)
     for _21_0 in range(0, N_0):
         # Set ϕ value

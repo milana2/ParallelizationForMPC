@@ -45,7 +45,7 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
             s2_2[_16_0] = s2_3[(_16_0 - 1)]
     # Loop exit ϕ values
     s2_2[_16_0] = s2_3[(_16_0 - 1)]
-    s1_2[:] = (s2_2[:] & _1_2[:])
+    s1_2[:] = s2_2[:].bit_and(_1_2[:])
     _2_2[:] = (s2_2[:].if_else(0, 1))
     for _17_0 in range(0, N_0):
         # Set ϕ value
@@ -68,7 +68,7 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
         else:
             max_length_2[_18_0] = max_length_4[(_18_0 - 1)]
         _6_2[_18_0] = (current_length_6[_18_0] > max_length_2[_18_0])
-        _7_2[_18_0] = (_5_2[_18_0] & _6_2[_18_0])
+        _7_2[_18_0] = _5_2[_18_0].bit_and(_6_2[_18_0])
         max_length_4[_18_0] = _7_2[_18_0].if_else(max_length_3[_18_0], max_length_2[_18_0])
     # Loop exit ϕ values
     max_length_2[_18_0] = max_length_4[(_18_0 - 1)]

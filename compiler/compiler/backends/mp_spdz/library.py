@@ -9,6 +9,7 @@ import itertools
 
 from Compiler.library import print_str
 from Compiler.types import Array, Matrix, MultiArray, sint
+from Compiler.util import OR
 
 
 TensorType = typing.Union[Array, Matrix, MultiArray]

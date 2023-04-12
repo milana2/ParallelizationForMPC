@@ -41,14 +41,14 @@ def minimal_points(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     _10_0.assign_vector_by_indices((_v.lift(lambda indices: bx_2, [N_0, N_0])).get_vector(), None, None)
     _3_3.assign_vector_by_indices(((_11_0.get_vector_by_indices(None, None) < _12_0.get_vector_by_indices(None, None))).get_vector(), None, None)
     _4_3.assign_vector_by_indices(((_13_0.get_vector_by_indices(None, None) < _14_0.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _5_3.assign_vector_by_indices(((_3_3.get_vector_by_indices(None, None) & _4_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _5_3.assign_vector_by_indices((_3_3.get_vector_by_indices(None, None).bit_and(_4_3.get_vector_by_indices(None, None))).get_vector(), None, None)
     for _18_0 in range(0, N_0):
         # Set ϕ value
         if _18_0 == 0:
             bx_3.assign_vector_by_indices((_10_0.get_vector_by_indices(None, _18_0)).get_vector(), None, _18_0)
         else:
             bx_3.assign_vector_by_indices((bx_4.get_vector_by_indices(None, (_18_0 - 1))).get_vector(), None, _18_0)
-        bx_4.assign_vector_by_indices(((bx_3.get_vector_by_indices(None, _18_0) | _5_3.get_vector_by_indices(None, _18_0))).get_vector(), None, _18_0)
+        bx_4.assign_vector_by_indices((_v.OR(bx_3.get_vector_by_indices(None, _18_0), _5_3.get_vector_by_indices(None, _18_0))).get_vector(), None, _18_0)
     # Loop exit ϕ values
     bx_3.assign_vector_by_indices((bx_4.get_vector_by_indices(None, (_18_0 - 1))).get_vector(), None, _18_0)
     _15_0[:] = _v.drop_dim(bx_4)

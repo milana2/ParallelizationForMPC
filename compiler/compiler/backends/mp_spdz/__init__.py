@@ -151,13 +151,13 @@ def render_atom(atom: Atom, make_shared: bool, var_mappings: dict[Var, str]) -> 
         assert_never(atom)
 
 
-def render_bin_op_kind(op: BinOpKind) -> str:
+def render_bin_op(left: str, op: BinOpKind, right: str) -> str:
     if op == BinOpKind.AND:
-        return "&"
+        return f"{left}.bit_and({right})"
     elif op == BinOpKind.OR:
-        return "|"
+        return f"_v.OR({left}, {right})"
     else:
-        return str(op)
+        return f"({left} {op} {right})"
 
 
 def render_unary_op_kind(op: UnaryOpKind, operand: str) -> str:
@@ -174,9 +174,8 @@ def render_subscript_index(index: SubscriptIndex, var_mappings: dict[Var, str]) 
         return render_atom(index, False, var_mappings)
     elif isinstance(index, SubscriptIndexBinOp):
         left = render_subscript_index(index.left, var_mappings)
-        operator = render_bin_op_kind(index.operator)
         right = render_subscript_index(index.right, var_mappings)
-        return f"({left} {operator} {right})"
+        return render_bin_op(left, index.operator, right)
     elif isinstance(index, SubscriptIndexUnaryOp):
         operand = render_subscript_index(index.operand, var_mappings)
         expr = render_unary_op_kind(index.operator, operand)
@@ -201,9 +200,8 @@ def render_assign_rhs(
 ) -> str:
     if isinstance(arhs, BinOp):
         left = render_assign_rhs(arhs.left, var_mappings)
-        operator = render_bin_op_kind(arhs.operator)
         right = render_assign_rhs(arhs.right, var_mappings)
-        return f"({left} {operator} {right})"
+        return render_bin_op(left, arhs.operator, right)
     elif isinstance(arhs, (Var, Constant, VectorizedAccess)):
         return render_atom(arhs, True, var_mappings)
     elif isinstance(arhs, List):
