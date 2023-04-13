@@ -55,7 +55,7 @@ VALID_PROTOCOLS = [
     # "temi",
     # "soho",
     # "semi2k",
-    # "semibin",
+    "semi-bin",
     # "yao-gc",
     # "yao-bmr",
     # "shamir",
@@ -112,7 +112,7 @@ def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) 
         return f"{array}[{slice}]"
     else:
         slice = render_multi_array_slice(v, var_mappings)
-        return f"{array}.get_vector_by_indices({slice})"
+        return f"_v.vectorized_access({array}, [{slice}])"
 
 
 def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) -> str:
@@ -124,14 +124,14 @@ def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) ->
         return f"{array}[{slice}] = {value}"
     else:
         slice = render_multi_array_slice(lhs, dict())
-        return f"{array}.assign_vector_by_indices(({value}).get_vector(), {slice})"
+        return f"_v.vectorized_assign({array}, [{slice}], {value})"
 
 
 def render_constant(c: Constant, make_shared: bool) -> str:
     v = c.value
     if make_shared:
         if isinstance(v, bool):
-            return f"sint({v})"
+            return f"_v.sbool({v})"
         elif isinstance(v, int):
             return f"sint({v})"
         else:
@@ -155,7 +155,7 @@ def render_bin_op(left: str, op: BinOpKind, right: str) -> str:
     if op == BinOpKind.AND:
         return f"{left}.bit_and({right})"
     elif op == BinOpKind.OR:
-        return f"_v.OR({left}, {right})"
+        return f"OR({left}, {right})"
     else:
         return f"({left} {op} {right})"
 
@@ -164,7 +164,7 @@ def render_unary_op_kind(op: UnaryOpKind, operand: str) -> str:
     if op is UnaryOpKind.NEGATE:
         return f"-{operand}"
     elif op is UnaryOpKind.NOT:
-        return f"{operand}.if_else(0, 1)"
+        return f"{operand}.bit_not()"
     else:
         assert_never(op)
 
@@ -191,7 +191,7 @@ def render_lift_expr(lift: LiftExpr) -> str:
         {var: f"indices[{index}]" for index, (var, _) in enumerate(lift.dims)},
     )
     dim_sizes = ", ".join(render_atom(size, False, dict()) for (_, size) in lift.dims)
-    return f"_v.lift(lambda indices: {expr}, [{dim_sizes}])"
+    return f"_v.lift(lambda indices: {expr}, [{dim_sizes}]).get_vector()"
 
 
 def render_assign_rhs(
@@ -327,7 +327,7 @@ def render_shared_array_decl(
     if datatype in (DataType.INT, None):
         element_type = "sint"
     elif datatype is DataType.BOOL:
-        element_type = "sint"
+        element_type = "_v.sbool"
     else:
         raise ValueError("Unsupported array element type")
 
@@ -424,8 +424,9 @@ def render_application(
     set_args = render_set_args(func)
     args = render_args(func)
     app_rendered = (
-        "import vectorization_library as _v\n"
-        + "_v.sint = sint # Boolean protocols use specialized sint\n"
+        "from vectorization_library import VectorizationLibrary\n"
+        + "_v = VectorizationLibrary(globals())\n"
+        + "from Compiler.util import OR\n"
         + "\n"
         + "\n"
         + f"{func_rendered}\n"

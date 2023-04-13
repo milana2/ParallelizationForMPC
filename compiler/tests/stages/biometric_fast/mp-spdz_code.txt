@@ -1,6 +1,6 @@
 def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differences_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
     _10_0 = sint.Tensor([N_0])
     _11_0 = sint.Tensor([N_0])
     _16_0 = sint.Tensor([N_0])
@@ -25,20 +25,20 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
     two_a_b_4 = sint.Tensor([N_0, D_0])
     # Function body
     min_index_1 = sint(0)
-    _4_0[:] = _v.lift(lambda indices: differences_0, [N_0])
-    _5_0[:] = _v.lift(lambda indices: (S_sqr_sum_0[indices[0]]), [N_0])
-    _6_0[:] = _v.lift(lambda indices: C_sqr_sum_0, [N_0])
+    _4_0[:] = _v.lift(lambda indices: differences_0, [N_0]).get_vector()
+    _5_0[:] = _v.lift(lambda indices: (S_sqr_sum_0[indices[0]]), [N_0]).get_vector()
+    _6_0[:] = _v.lift(lambda indices: C_sqr_sum_0, [N_0]).get_vector()
     two_a_b_2 = sint(0)
-    _8_0.assign_vector_by_indices((_v.lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0])).get_vector(), None, None)
-    _9_0.assign_vector_by_indices((_v.lift(lambda indices: (two_C_0[indices[1]]), [N_0, D_0])).get_vector(), None, None)
+    _v.vectorized_assign(_8_0, [None, None], _v.lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0]).get_vector())
+    _v.vectorized_assign(_9_0, [None, None], _v.lift(lambda indices: (two_C_0[indices[1]]), [N_0, D_0]).get_vector())
     min_index_3 = sint(0)
     min_diff_1 = sint(99999)
-    _16_0[:] = _v.lift(lambda indices: indices[0], [N_0])
-    _3_0[:] = _v.lift(lambda indices: min_index_1, [N_0])
+    _16_0[:] = _v.lift(lambda indices: indices[0], [N_0]).get_vector()
+    _3_0[:] = _v.lift(lambda indices: min_index_1, [N_0]).get_vector()
     a_sqr_plus_b_sqr_2[:] = (_5_0[:] + _6_0[:])
-    _7_0.assign_vector_by_indices((_v.lift(lambda indices: two_a_b_2, [N_0, D_0])).get_vector(), None, None)
-    tmp_3.assign_vector_by_indices(((_8_0.get_vector_by_indices(None, None) * _9_0.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _11_0[:] = _v.lift(lambda indices: min_diff_1, [N_0])
+    _v.vectorized_assign(_7_0, [None, None], _v.lift(lambda indices: two_a_b_2, [N_0, D_0]).get_vector())
+    _v.vectorized_assign(tmp_3, [None, None], (_v.vectorized_access(_8_0, [None, None]) * _v.vectorized_access(_9_0, [None, None])))
+    _11_0[:] = _v.lift(lambda indices: min_diff_1, [N_0]).get_vector()
     for _15_0 in range(0, N_0):
         # Set ϕ value
         if _15_0 == 0:
@@ -50,12 +50,12 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
     for _14_0 in range(0, D_0):
         # Set ϕ value
         if _14_0 == 0:
-            two_a_b_3.assign_vector_by_indices((_7_0.get_vector_by_indices(None, _14_0)).get_vector(), None, _14_0)
+            _v.vectorized_assign(two_a_b_3, [None, _14_0], _v.vectorized_access(_7_0, [None, _14_0]))
         else:
-            two_a_b_3.assign_vector_by_indices((two_a_b_4.get_vector_by_indices(None, (_14_0 - 1))).get_vector(), None, _14_0)
-        two_a_b_4.assign_vector_by_indices(((two_a_b_3.get_vector_by_indices(None, _14_0) + tmp_3.get_vector_by_indices(None, _14_0))).get_vector(), None, _14_0)
+            _v.vectorized_assign(two_a_b_3, [None, _14_0], _v.vectorized_access(two_a_b_4, [None, (_14_0 - 1)]))
+        _v.vectorized_assign(two_a_b_4, [None, _14_0], (_v.vectorized_access(two_a_b_3, [None, _14_0]) + _v.vectorized_access(tmp_3, [None, _14_0])))
     # Loop exit ϕ values
-    two_a_b_3.assign_vector_by_indices((two_a_b_4.get_vector_by_indices(None, (_14_0 - 1))).get_vector(), None, _14_0)
+    _v.vectorized_assign(two_a_b_3, [None, _14_0], _v.vectorized_access(two_a_b_4, [None, (_14_0 - 1)]))
     _10_0[:] = _v.drop_dim(two_a_b_4)
     this_diff_2[:] = (a_sqr_plus_b_sqr_2[:] - _10_0[:])
     _4_0[:] = this_diff_2[:]; differences_2[:] = _4_0[:]

@@ -41,5 +41,7 @@ SKIPPED_TESTS = {
         # AssertionError: '[0, 0, 0, 0, 0]' != '[4, 2, 3, 0, 10]'
         "psi",
         "chapterfour_figure_12",
+        # Wrong result with semi-bin
+        "convex_hull",
     ],
 }

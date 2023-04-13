@@ -11,7 +11,6 @@ class BenchmarkOutput:
     result: str
     time_seconds: float
     data_sent_mb: float
-    rounds: int
     global_data_sent_mb: float
 
     def __init__(self, stdout: str) -> None:
@@ -22,11 +21,7 @@ class BenchmarkOutput:
 
         self.result = parse(r"MPC BENCHMARK OUTPUT (.+)")[0]
         self.time_seconds = float(parse(r"Time = (.+) seconds")[0])
-        data_sent_mb, rounds = parse(
-            r"Data sent = (.+) MB in ~(.+) rounds \(party 0; use '-v' for more details\)",
-        )
-        self.data_sent_mb = float(data_sent_mb)
-        self.rounds = int(rounds)
+        self.data_sent_mb = float(parse(r"Data sent = (.+) MB.*")[0])
         self.global_data_sent_mb = float(
             parse(r"Global data sent = (.+) MB \(all parties\)")[0]
         )

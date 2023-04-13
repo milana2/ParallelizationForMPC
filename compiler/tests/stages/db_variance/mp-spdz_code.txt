@@ -15,12 +15,12 @@ def db_variance(A_0, V_0, len_0):
     sum_3 = sint.Tensor([len_0])
     # Function body
     sum_1 = sint(0)
-    _3_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [len_0])
-    _5_0[:] = _v.lift(lambda indices: V_0, [len_0])
-    _6_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [len_0])
+    _3_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [len_0]).get_vector()
+    _5_0[:] = _v.lift(lambda indices: V_0, [len_0]).get_vector()
+    _6_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [len_0]).get_vector()
     res_1 = sint(0)
-    _2_0[:] = _v.lift(lambda indices: sum_1, [len_0])
-    _8_0[:] = _v.lift(lambda indices: res_1, [len_0])
+    _2_0[:] = _v.lift(lambda indices: sum_1, [len_0]).get_vector()
+    _8_0[:] = _v.lift(lambda indices: res_1, [len_0]).get_vector()
     for _10_0 in range(0, len_0):
         # Set ϕ value
         if _10_0 == 0:
@@ -32,7 +32,7 @@ def db_variance(A_0, V_0, len_0):
     sum_2[_10_0] = sum_3[(_10_0 - 1)]
     _4_0 = _v.drop_dim(sum_3)
     exp_1 = (_4_0 / len_0)
-    _7_0[:] = _v.lift(lambda indices: exp_1, [len_0])
+    _7_0[:] = _v.lift(lambda indices: exp_1, [len_0]).get_vector()
     dist_2[:] = (_6_0[:] - _7_0[:])
     _1_2[:] = (dist_2[:] * dist_2[:])
     _5_0[:] = _1_2[:]; V_2[:] = _5_0[:]

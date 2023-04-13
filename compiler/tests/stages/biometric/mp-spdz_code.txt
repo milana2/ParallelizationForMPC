@@ -1,6 +1,6 @@
 def biometric(C_0, D_0, S_0, N_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
     _13_0 = sint.Tensor([N_0])
     _3_0 = sint.Tensor([N_0])
     _4_0 = sint.Tensor([N_0])
@@ -22,23 +22,23 @@ def biometric(C_0, D_0, S_0, N_0):
     min_sum_1 = sint(10000)
     min_index_1 = sint(0)
     sum_2 = sint(0)
-    _6_0.assign_vector_by_indices((_v.lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0])).get_vector(), None, None)
-    _7_0.assign_vector_by_indices((_v.lift(lambda indices: (C_0[indices[1]]), [N_0, D_0])).get_vector(), None, None)
-    _13_0[:] = _v.lift(lambda indices: indices[0], [N_0])
-    _3_0[:] = _v.lift(lambda indices: min_sum_1, [N_0])
-    _4_0[:] = _v.lift(lambda indices: min_index_1, [N_0])
-    _5_0.assign_vector_by_indices((_v.lift(lambda indices: sum_2, [N_0, D_0])).get_vector(), None, None)
-    d_3.assign_vector_by_indices(((_6_0.get_vector_by_indices(None, None) - _7_0.get_vector_by_indices(None, None))).get_vector(), None, None)
-    p_3.assign_vector_by_indices(((d_3.get_vector_by_indices(None, None) * d_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _v.vectorized_assign(_6_0, [None, None], _v.lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0]).get_vector())
+    _v.vectorized_assign(_7_0, [None, None], _v.lift(lambda indices: (C_0[indices[1]]), [N_0, D_0]).get_vector())
+    _13_0[:] = _v.lift(lambda indices: indices[0], [N_0]).get_vector()
+    _3_0[:] = _v.lift(lambda indices: min_sum_1, [N_0]).get_vector()
+    _4_0[:] = _v.lift(lambda indices: min_index_1, [N_0]).get_vector()
+    _v.vectorized_assign(_5_0, [None, None], _v.lift(lambda indices: sum_2, [N_0, D_0]).get_vector())
+    _v.vectorized_assign(d_3, [None, None], (_v.vectorized_access(_6_0, [None, None]) - _v.vectorized_access(_7_0, [None, None])))
+    _v.vectorized_assign(p_3, [None, None], (_v.vectorized_access(d_3, [None, None]) * _v.vectorized_access(d_3, [None, None])))
     for _12_0 in range(0, D_0):
         # Set ϕ value
         if _12_0 == 0:
-            sum_3.assign_vector_by_indices((_5_0.get_vector_by_indices(None, _12_0)).get_vector(), None, _12_0)
+            _v.vectorized_assign(sum_3, [None, _12_0], _v.vectorized_access(_5_0, [None, _12_0]))
         else:
-            sum_3.assign_vector_by_indices((sum_4.get_vector_by_indices(None, (_12_0 - 1))).get_vector(), None, _12_0)
-        sum_4.assign_vector_by_indices(((sum_3.get_vector_by_indices(None, _12_0) + p_3.get_vector_by_indices(None, _12_0))).get_vector(), None, _12_0)
+            _v.vectorized_assign(sum_3, [None, _12_0], _v.vectorized_access(sum_4, [None, (_12_0 - 1)]))
+        _v.vectorized_assign(sum_4, [None, _12_0], (_v.vectorized_access(sum_3, [None, _12_0]) + _v.vectorized_access(p_3, [None, _12_0])))
     # Loop exit ϕ values
-    sum_3.assign_vector_by_indices((sum_4.get_vector_by_indices(None, (_12_0 - 1))).get_vector(), None, _12_0)
+    _v.vectorized_assign(sum_3, [None, _12_0], _v.vectorized_access(sum_4, [None, (_12_0 - 1)]))
     _8_0[:] = _v.drop_dim(sum_4)
     _9_0[:] = _v.drop_dim(sum_4)
     min_sum_3[:] = _9_0[:]

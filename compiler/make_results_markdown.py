@@ -164,8 +164,10 @@ def build_spdz_benchmark_tables() -> str:
     for protocol in compiler.backends.mp_spdz.VALID_PROTOCOLS:
         table += f"\n### {protocol.title()} protocol\n"
 
-        table += "| Benchmark | Time (seconds) | Data sent (MB) | # Rounds | Global data sent (MB) |\n"
-        table += "| - | - | - | - | - |\n"
+        table += (
+            "| Benchmark | Time (seconds) | Data sent (MB) | Global data sent (MB) |\n"
+        )
+        table += "| - | - | - | - |\n"
 
         for test_case_dir in sorted(
             os.scandir(STAGES_DIR), key=lambda entry: entry.name
@@ -190,7 +192,6 @@ def build_spdz_benchmark_tables() -> str:
                 )
                 table += str(data.time_seconds) + "|"
                 table += str(data.data_sent_mb) + "|"
-                table += str(data.rounds) + "|"
                 table += str(data.global_data_sent_mb) + "|"
                 table += "\n"
 

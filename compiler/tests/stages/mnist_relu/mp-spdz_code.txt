@@ -1,6 +1,6 @@
 def mnist_relu(input_0, OUTPUT_res_0, len_outer_0, len_inner_0):
     # Shared array declarations
-    _1_3 = sint.Tensor([len_outer_0, len_inner_0])
+    _1_3 = _v.sbool.Tensor([len_outer_0, len_inner_0])
     _2_0 = sint.Tensor([len_outer_0, len_inner_0])
     _3_0 = sint.Tensor([len_outer_0, len_inner_0])
     _4_0 = sint.Tensor([len_outer_0, len_inner_0])
@@ -9,13 +9,13 @@ def mnist_relu(input_0, OUTPUT_res_0, len_outer_0, len_inner_0):
     val_4 = sint.Tensor([len_outer_0, len_inner_0])
     val_5 = sint.Tensor([len_outer_0, len_inner_0])
     # Function body
-    _2_0.assign_vector_by_indices((_v.lift(lambda indices: OUTPUT_res_0, [len_outer_0, len_inner_0])).get_vector(), None, None)
-    _4_0.assign_vector_by_indices((_v.lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0])).get_vector(), None, None)
-    _5_0.assign_vector_by_indices((_v.lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0])).get_vector(), None, None)
+    _v.vectorized_assign(_2_0, [None, None], _v.lift(lambda indices: OUTPUT_res_0, [len_outer_0, len_inner_0]).get_vector())
+    _v.vectorized_assign(_4_0, [None, None], _v.lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0]).get_vector())
+    _v.vectorized_assign(_5_0, [None, None], _v.lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0]).get_vector())
     val_3 = sint(1)
-    _3_0.assign_vector_by_indices((_v.lift(lambda indices: _2_0.get_vector_by_indices(None, None), [len_outer_0, len_inner_0])).get_vector(), None, None)
-    _1_3.assign_vector_by_indices(((_4_0.get_vector_by_indices(None, None) > sint(1))).get_vector(), None, None)
-    val_4.assign_vector_by_indices((_5_0.get_vector_by_indices(None, None)).get_vector(), None, None)
-    val_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, None).if_else(val_4.get_vector_by_indices(None, None), val_3)).get_vector(), None, None)
-    _3_0.assign_vector_by_indices((val_5.get_vector_by_indices(None, None)).get_vector(), None, None); OUTPUT_res_3.assign_vector_by_indices((_3_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    _v.vectorized_assign(_3_0, [None, None], _v.lift(lambda indices: _v.vectorized_access(_2_0, [None, None]), [len_outer_0, len_inner_0]).get_vector())
+    _v.vectorized_assign(_1_3, [None, None], (_v.vectorized_access(_4_0, [None, None]) > sint(1)))
+    _v.vectorized_assign(val_4, [None, None], _v.vectorized_access(_5_0, [None, None]))
+    _v.vectorized_assign(val_5, [None, None], _v.vectorized_access(_1_3, [None, None]).if_else(_v.vectorized_access(val_4, [None, None]), val_3))
+    _v.vectorized_assign(_3_0, [None, None], _v.vectorized_access(val_5, [None, None])); _v.vectorized_assign(OUTPUT_res_3, [None, None], _v.vectorized_access(_3_0, [None, None]))
     return OUTPUT_res_3
