@@ -7,7 +7,7 @@
 1. Install Ubuntu dependencies
    ```sh
    sudo apt-get update
-   sudo apt-get install graphviz
+   sudo apt-get install graphviz python3 python3-pip
    ```
 
    MOTION dependencies:
