@@ -11,7 +11,6 @@ class BenchmarkOutput:
     result: str
     time_seconds: float
     data_sent_mb: float
-    global_data_sent_mb: float
 
     def __init__(self, stdout: str) -> None:
         def parse(pattern: str) -> tuple[str, ...]:
@@ -22,9 +21,19 @@ class BenchmarkOutput:
         self.result = parse(r"MPC BENCHMARK OUTPUT (.+)")[0]
         self.time_seconds = float(parse(r"Time = (.+) seconds")[0])
         self.data_sent_mb = float(parse(r"Data sent = (.+) MB.*")[0])
-        self.global_data_sent_mb = float(
-            parse(r"Global data sent = (.+) MB \(all parties\)")[0]
-        )
+
+
+def bmr_workaround() -> None:
+    """
+    Workaround to get `make semi-bmr-party.x` to succeed
+    """
+    from glob import glob
+
+    submodule_path = Backend.MP_SPDZ.submodule_path()
+    targets = [
+        p.replace(".cpp", ".o") for p in glob("BMR/**/*.cpp", root_dir=submodule_path)
+    ]
+    subprocess.run(["make", "--"] + targets, cwd=submodule_path, check=True)
 
 
 def run_benchmark(
@@ -75,6 +84,9 @@ def run_benchmark(
         subprocess.run(["make", "setup"], cwd=submodule_path, check=True)
         with open(setup_indicator_path, "w") as _:
             pass
+
+    if "bmr" in protocol:
+        bmr_workaround()
 
     p = subprocess.Popen(
         ["Scripts/compile-run.py", "-E", protocol, "benchmark"],
