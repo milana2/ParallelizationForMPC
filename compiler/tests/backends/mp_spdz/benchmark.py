@@ -32,7 +32,7 @@ def run_benchmark(
     benchmark_path: str,
     protocol: str,
     vectorized=True,
-    timeout=600,
+    timeout=60 * 60,
 ) -> BenchmarkOutput:
     input_fname = os.path.join(benchmark_path, "input.py")
 
