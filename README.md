@@ -4,12 +4,22 @@
 
 ## Setup instructions (Ubuntu)
 
-1. Install Ubuntu dependencies with
+1. Install Ubuntu dependencies
    ```sh
    sudo apt-get update
-   sudo apt-get install build-essential make git python3 python3-pip cmake libssl-dev libboost-program-options-dev graphviz
+   sudo apt-get install graphviz
    ```
-2. Clone the repo (the `--recursive` is required for the MOTION submodule)
+
+   MOTION dependencies:
+   ```sh
+   sudo apt-get install build-essential make git cmake libssl-dev libboost-program-options-dev
+   ```
+
+   MP-SPDZ dependencies:
+   ```sh
+   sudo apt-get install automake build-essential clang cmake git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 texinfo yasm
+   ```
+2. Clone the repo (the `--recursive` is required for the backend submodules)
    ```sh
    git clone --recursive https://github.com/milana2/ParallelizationForMPC.git
    ```
