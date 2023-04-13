@@ -4,112 +4,132 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|10003|8354|1649|4947|0.615 MiB |4946|0.615 MiB |3631.743 ms |598.0 ms |
-|biometric (Non-Vectorized)|105250|0|105250|47073|2.704 MiB |47072|2.704 MiB |17612.718 ms |6460.0 ms |
-|biometric_fast|10638|8975|1663|5265|0.611 MiB |5264|0.611 MiB |3782.424 ms |625.0 ms |
-|biometric_fast (Non-Vectorized)|99903|0|99903|44529|2.558 MiB |44528|2.558 MiB |14133.529 ms |7010.0 ms |
-|chapterfour_figure_12|805|0|805|752|0.048 MiB |751|0.048 MiB |454.306 ms |51.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|805|0|805|752|0.048 MiB |751|0.048 MiB |399.363 ms |51.0 ms |
-|convex_hull|2122|2071|51|1381|0.122 MiB |1380|0.122 MiB |852.941 ms |128.0 ms |
-|convex_hull (Non-Vectorized)|12112|0|12112|6265|0.364 MiB |6264|0.364 MiB |2577.65 ms |728.0 ms |
-|count_102|6610|297|6313|3820|0.237 MiB |3819|0.237 MiB |3800.441 ms |404.0 ms |
-|count_102 (Non-Vectorized)|9188|0|9188|5512|0.321 MiB |5511|0.321 MiB |3088.837 ms |569.0 ms |
-|count_10s|4720|298|4422|2848|0.177 MiB |2847|0.177 MiB |2474.848 ms |286.0 ms |
-|count_10s (Non-Vectorized)|6440|0|6440|3976|0.233 MiB |3975|0.233 MiB |2217.588 ms |396.0 ms |
-|count_123|4729|305|4424|2850|0.177 MiB |2849|0.177 MiB |2785.165 ms |268.0 ms |
-|count_123 (Non-Vectorized)|6476|0|6476|3990|0.234 MiB |3989|0.233 MiB |2466.042 ms |404.0 ms |
-|cryptonets_max_pooling|1357|1221|136|951|0.139 MiB |950|0.138 MiB |1029.127 ms |93.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|24124|0|24124|11211|0.647 MiB |11210|0.647 MiB |4141.989 ms |1371.0 ms |
-|db_cross_join_trivial|21906|119|21787|14486|0.877 MiB |14485|0.876 MiB |4228.77 ms |1368.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|29201|0|29201|19666|1.132 MiB |19665|1.132 MiB |5600.498 ms |1748.0 ms |
-|db_variance|29520|5864|23656|13646|0.926 MiB |13645|0.926 MiB |55795.3 ms |1791.0 ms |
-|db_variance (Non-Vectorized)|70507|0|70507|31524|1.812 MiB |31523|1.812 MiB |59512.082 ms |4305.0 ms |
-|histogram|5250|5131|119|3018|0.276 MiB |3017|0.276 MiB |2420.299 ms |317.0 ms |
-|histogram (Non-Vectorized)|28668|0|28668|15676|0.903 MiB |15675|0.903 MiB |5976.709 ms |1844.0 ms |
-|inner_product|7075|5207|1868|3582|0.245 MiB |3581|0.245 MiB |1861.015 ms |415.0 ms |
-|inner_product (Non-Vectorized)|17478|0|17478|8054|0.467 MiB |8053|0.467 MiB |2990.927 ms |1173.0 ms |
-|longest_102|10651|306|10345|5642|0.341 MiB |5641|0.341 MiB |6997.881 ms |679.0 ms |
-|longest_102 (Non-Vectorized)|13278|0|13278|7352|0.426 MiB |7351|0.426 MiB |4705.663 ms |947.0 ms |
-|longest_odd_10|8520|305|8215|4614|0.283 MiB |4613|0.283 MiB |5377.121 ms |511.0 ms |
-|longest_odd_10 (Non-Vectorized)|10543|0|10543|5944|0.349 MiB |5943|0.349 MiB |3719.231 ms |677.0 ms |
-|max_dist_between_syms|8278|101|8177|4454|0.263 MiB |4453|0.263 MiB |4992.056 ms |514.0 ms |
-|max_dist_between_syms (Non-Vectorized)|8941|0|8941|4888|0.285 MiB |4887|0.285 MiB |3134.945 ms |567.0 ms |
-|max_sum_between_syms|8277|101|8176|4454|0.263 MiB |4453|0.263 MiB |4506.152 ms |469.0 ms |
-|max_sum_between_syms (Non-Vectorized)|8940|0|8940|4888|0.285 MiB |4887|0.285 MiB |3114.357 ms |550.0 ms |
-|minimal_points|890|851|39|765|0.071 MiB |764|0.071 MiB |576.627 ms |54.0 ms |
-|minimal_points (Non-Vectorized)|7292|0|7292|3649|0.214 MiB |3648|0.214 MiB |1429.367 ms |468.0 ms |
-|mnist_relu|1016|408|608|771|0.33 MiB |770|0.33 MiB |397.39 ms |65.0 ms |
-|mnist_relu (Non-Vectorized)|80603|0|80603|36591|2.101 MiB |36590|2.101 MiB |11256.212 ms |6082.0 ms |
-|psi|186|140|46|474|0.05 MiB |473|0.05 MiB |627.675 ms |11.0 ms |
-|psi (Non-Vectorized)|3391|0|3391|2646|0.157 MiB |2645|0.157 MiB |1108.581 ms |205.0 ms |
+|biometric|10003|8354|1649|4947|0.615 MiB |4946|0.615 MiB |3331.672 ms |343.0 ms |
+|biometric (Non-Vectorized)|105250|0|105250|47073|2.704 MiB |47072|2.704 MiB |11880.536 ms |3601.0 ms |
+|biometric_fast|10638|8975|1663|5265|0.611 MiB |5264|0.611 MiB |3542.871 ms |405.0 ms |
+|biometric_fast (Non-Vectorized)|99903|0|99903|44529|2.558 MiB |44528|2.558 MiB |10771.87 ms |3787.0 ms |
+|chapterfour_figure_12|805|0|805|752|0.048 MiB |751|0.048 MiB |423.343 ms |31.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|805|0|805|752|0.048 MiB |751|0.048 MiB |423.525 ms |28.0 ms |
+|convex_hull|2122|2071|51|1381|0.122 MiB |1380|0.122 MiB |847.236 ms |85.0 ms |
+|convex_hull (Non-Vectorized)|12112|0|12112|6265|0.364 MiB |6264|0.364 MiB |1722.099 ms |456.0 ms |
+|count_102|6610|297|6313|3820|0.237 MiB |3819|0.237 MiB |2759.926 ms |251.0 ms |
+|count_102 (Non-Vectorized)|9188|0|9188|5512|0.321 MiB |5511|0.321 MiB |2870.926 ms |317.0 ms |
+|count_10s|4720|298|4422|2848|0.177 MiB |2847|0.177 MiB |2471.192 ms |161.0 ms |
+|count_10s (Non-Vectorized)|6440|0|6440|3976|0.233 MiB |3975|0.233 MiB |2255.062 ms |248.0 ms |
+|count_123|4729|305|4424|2850|0.177 MiB |2849|0.177 MiB |2551.725 ms |180.0 ms |
+|count_123 (Non-Vectorized)|6476|0|6476|3990|0.234 MiB |3989|0.233 MiB |2031.324 ms |213.0 ms |
+|cryptonets_max_pooling|1357|1221|136|951|0.139 MiB |950|0.138 MiB |978.252 ms |58.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|24124|0|24124|11211|0.647 MiB |11210|0.647 MiB |3041.368 ms |823.0 ms |
+|db_cross_join_trivial|21906|119|21787|14486|0.877 MiB |14485|0.876 MiB |3006.812 ms |871.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|29201|0|29201|19666|1.132 MiB |19665|1.132 MiB |4422.97 ms |1151.0 ms |
+|db_variance|29520|5864|23656|13646|0.926 MiB |13645|0.926 MiB |55022.576 ms |1103.0 ms |
+|db_variance (Non-Vectorized)|70507|0|70507|31524|1.812 MiB |31523|1.812 MiB |57494.922 ms |2669.0 ms |
+|histogram|5250|5131|119|3018|0.276 MiB |3017|0.276 MiB |2331.32 ms |219.0 ms |
+|histogram (Non-Vectorized)|28668|0|28668|15676|0.903 MiB |15675|0.903 MiB |3794.111 ms |960.0 ms |
+|inner_product|7075|5207|1868|3582|0.245 MiB |3581|0.245 MiB |1549.157 ms |232.0 ms |
+|inner_product (Non-Vectorized)|17478|0|17478|8054|0.467 MiB |8053|0.467 MiB |2640.963 ms |656.0 ms |
+|longest_102|10651|306|10345|5642|0.341 MiB |5641|0.341 MiB |7040.98 ms |414.0 ms |
+|longest_102 (Non-Vectorized)|13278|0|13278|7352|0.426 MiB |7351|0.426 MiB |4129.894 ms |498.0 ms |
+|longest_odd_10|8520|305|8215|4614|0.283 MiB |4613|0.283 MiB |5101.461 ms |327.0 ms |
+|longest_odd_10 (Non-Vectorized)|10543|0|10543|5944|0.349 MiB |5943|0.349 MiB |3471.655 ms |405.0 ms |
+|max_dist_between_syms|8278|101|8177|4454|0.263 MiB |4453|0.263 MiB |4449.486 ms |324.0 ms |
+|max_dist_between_syms (Non-Vectorized)|8941|0|8941|4888|0.285 MiB |4887|0.285 MiB |2813.105 ms |301.0 ms |
+|max_sum_between_syms|8277|101|8176|4454|0.263 MiB |4453|0.263 MiB |4432.795 ms |317.0 ms |
+|max_sum_between_syms (Non-Vectorized)|8940|0|8940|4888|0.285 MiB |4887|0.285 MiB |3059.407 ms |342.0 ms |
+|minimal_points|890|851|39|765|0.071 MiB |764|0.071 MiB |569.26 ms |37.0 ms |
+|minimal_points (Non-Vectorized)|7292|0|7292|3649|0.214 MiB |3648|0.214 MiB |1153.009 ms |278.0 ms |
+|mnist_relu|1016|408|608|771|0.33 MiB |770|0.33 MiB |448.677 ms |54.0 ms |
+|mnist_relu (Non-Vectorized)|80603|0|80603|36591|2.101 MiB |36590|2.101 MiB |8271.547 ms |2748.0 ms |
+|psi|186|140|46|474|0.05 MiB |473|0.05 MiB |589.207 ms |7.0 ms |
+|psi (Non-Vectorized)|3391|0|3391|2646|0.157 MiB |2645|0.157 MiB |914.531 ms |113.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4490|3647|843|7843|4.37 MiB |7846|4.37 MiB |889.679 ms |714.0 ms |
-|biometric (Non-Vectorized)|51452|0|51452|86503|8.263 MiB |86506|8.263 MiB |8583.733 ms |8415.0 ms |
-|biometric_fast|4660|3803|857|8019|4.327 MiB |8019|4.327 MiB |969.971 ms |681.0 ms |
-|biometric_fast (Non-Vectorized)|49849|0|49849|85284|8.151 MiB |85284|8.151 MiB |8452.799 ms |8028.0 ms |
-|chapterfour_figure_12|398|0|398|975|0.087 MiB |972|0.087 MiB |94.061 ms |47.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|398|0|398|975|0.087 MiB |972|0.087 MiB |55.111 ms |49.0 ms |
-|convex_hull|1056|999|57|1989|0.514 MiB |1984|0.514 MiB |275.213 ms |142.0 ms |
-|convex_hull (Non-Vectorized)|5650|0|5650|8995|0.861 MiB |8990|0.861 MiB |1071.251 ms |761.0 ms |
-|count_102|1753|109|1644|3831|0.569 MiB |3819|0.569 MiB |379.037 ms |306.0 ms |
-|count_102 (Non-Vectorized)|2639|0|2639|8061|0.779 MiB |8049|0.778 MiB |534.696 ms |525.0 ms |
-|count_10s|1264|110|1154|2942|0.415 MiB |2932|0.414 MiB |240.261 ms |201.0 ms |
-|count_10s (Non-Vectorized)|1856|0|1856|5762|0.555 MiB |5752|0.554 MiB |432.634 ms |362.0 ms |
-|count_123|1271|115|1156|2948|0.417 MiB |2939|0.416 MiB |242.302 ms |223.0 ms |
-|count_123 (Non-Vectorized)|1878|0|1878|5798|0.558 MiB |5789|0.558 MiB |337.043 ms |354.0 ms |
-|cryptonets_max_pooling|765|609|156|1464|1.012 MiB |1399|1.008 MiB |205.471 ms |115.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|11904|0|11904|17937|1.827 MiB |17872|1.824 MiB |2303.35 ms |1642.0 ms |
-|db_cross_join_trivial|7977|65|7912|36652|6.318 MiB |36345|6.302 MiB |1756.057 ms |2171.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|11276|0|11276|86306|8.773 MiB |85999|8.757 MiB |1939.273 ms |4620.0 ms |
-|db_variance|13352|3017|10335|20698|3.612 MiB |20695|3.611 MiB |2734.618 ms |1828.0 ms |
-|db_variance (Non-Vectorized)|34410|0|34410|56538|5.389 MiB |56535|5.389 MiB |5533.251 ms |6118.0 ms |
-|histogram|1489|1365|124|2939|1.046 MiB |2891|1.043 MiB |367.959 ms |247.0 ms |
-|histogram (Non-Vectorized)|7673|0|7673|18072|1.795 MiB |18024|1.793 MiB |1397.328 ms |1413.0 ms |
-|inner_product|3301|2827|474|5833|1.004 MiB |5830|1.004 MiB |710.763 ms |464.0 ms |
-|inner_product (Non-Vectorized)|8944|0|8944|15763|1.497 MiB |15760|1.496 MiB |1882.596 ms |1253.0 ms |
-|longest_102|3732|116|3616|6776|0.867 MiB |6764|0.866 MiB |616.02 ms |581.0 ms |
-|longest_102 (Non-Vectorized)|4649|0|4649|11051|1.079 MiB |11039|1.078 MiB |713.276 ms |844.0 ms |
-|longest_odd_10|2995|115|2880|6671|0.869 MiB |6660|0.868 MiB |623.033 ms |491.0 ms |
-|longest_odd_10 (Non-Vectorized)|3688|0|3688|10864|1.077 MiB |10853|1.076 MiB |736.047 ms |704.0 ms |
-|max_dist_between_syms|2881|39|2842|5152|0.559 MiB |5141|0.558 MiB |518.901 ms |423.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3110|0|3110|6237|0.612 MiB |6226|0.612 MiB |580.107 ms |432.0 ms |
-|max_sum_between_syms|2880|39|2841|5150|0.558 MiB |5140|0.557 MiB |583.764 ms |400.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3109|0|3109|6235|0.612 MiB |6225|0.611 MiB |555.751 ms |492.0 ms |
-|minimal_points|480|435|45|1015|0.244 MiB |1012|0.244 MiB |91.058 ms |59.0 ms |
-|minimal_points (Non-Vectorized)|3566|0|3566|4161|0.4 MiB |4158|0.4 MiB |708.465 ms |422.0 ms |
-|mnist_relu|1012|204|808|1484|3.215 MiB |1480|3.215 MiB |488.819 ms |151.0 ms |
-|mnist_relu (Non-Vectorized)|40003|0|40003|58995|6.06 MiB |58991|6.06 MiB |8836.909 ms |6439.0 ms |
-|psi|145|94|51|748|0.348 MiB |740|0.348 MiB |106.726 ms |28.0 ms |
-|psi (Non-Vectorized)|1306|0|1306|6674|0.641 MiB |6666|0.641 MiB |156.932 ms |365.0 ms |
+|biometric|4490|3647|843|7843|4.37 MiB |7846|4.37 MiB |499.981 ms |411.0 ms |
+|biometric (Non-Vectorized)|51452|0|51452|86503|8.263 MiB |86506|8.263 MiB |5177.122 ms |4851.0 ms |
+|biometric_fast|4660|3803|857|8019|4.327 MiB |8019|4.327 MiB |682.58 ms |478.0 ms |
+|biometric_fast (Non-Vectorized)|49849|0|49849|85284|8.151 MiB |85284|8.151 MiB |4755.3 ms |4325.0 ms |
+|chapterfour_figure_12|398|0|398|975|0.087 MiB |972|0.087 MiB |63.32 ms |29.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|398|0|398|975|0.087 MiB |972|0.087 MiB |38.909 ms |34.0 ms |
+|convex_hull|1056|999|57|1989|0.514 MiB |1984|0.514 MiB |148.776 ms |89.0 ms |
+|convex_hull (Non-Vectorized)|5650|0|5650|8995|0.861 MiB |8990|0.861 MiB |727.472 ms |472.0 ms |
+|count_102|1753|109|1644|3831|0.569 MiB |3819|0.569 MiB |185.643 ms |157.0 ms |
+|count_102 (Non-Vectorized)|2639|0|2639|8061|0.779 MiB |8049|0.778 MiB |341.953 ms |321.0 ms |
+|count_10s|1264|110|1154|2942|0.415 MiB |2932|0.414 MiB |133.785 ms |140.0 ms |
+|count_10s (Non-Vectorized)|1856|0|1856|5762|0.555 MiB |5752|0.554 MiB |199.755 ms |224.0 ms |
+|count_123|1271|115|1156|2948|0.417 MiB |2939|0.416 MiB |158.198 ms |112.0 ms |
+|count_123 (Non-Vectorized)|1878|0|1878|5798|0.558 MiB |5789|0.558 MiB |145.98 ms |223.0 ms |
+|cryptonets_max_pooling|765|609|156|1464|1.012 MiB |1399|1.008 MiB |170.308 ms |73.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|11904|0|11904|17937|1.827 MiB |17872|1.824 MiB |1382.896 ms |999.0 ms |
+|db_cross_join_trivial|7977|65|7912|36652|6.318 MiB |36345|6.302 MiB |1046.323 ms |1271.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|11276|0|11276|86306|8.773 MiB |85999|8.757 MiB |1172.351 ms |2992.0 ms |
+|db_variance|13352|3017|10335|20698|3.612 MiB |20695|3.611 MiB |1214.017 ms |993.0 ms |
+|db_variance (Non-Vectorized)|34410|0|34410|56538|5.389 MiB |56535|5.389 MiB |4024.451 ms |2999.0 ms |
+|histogram|1489|1365|124|2939|1.046 MiB |2891|1.043 MiB |274.327 ms |156.0 ms |
+|histogram (Non-Vectorized)|7673|0|7673|18072|1.795 MiB |18024|1.793 MiB |913.624 ms |829.0 ms |
+|inner_product|3301|2827|474|5833|1.004 MiB |5830|1.004 MiB |331.277 ms |285.0 ms |
+|inner_product (Non-Vectorized)|8944|0|8944|15763|1.497 MiB |15760|1.496 MiB |961.952 ms |698.0 ms |
+|longest_102|3732|116|3616|6776|0.867 MiB |6764|0.866 MiB |578.466 ms |350.0 ms |
+|longest_102 (Non-Vectorized)|4649|0|4649|11051|1.079 MiB |11039|1.078 MiB |487.407 ms |489.0 ms |
+|longest_odd_10|2995|115|2880|6671|0.869 MiB |6660|0.868 MiB |322.965 ms |316.0 ms |
+|longest_odd_10 (Non-Vectorized)|3688|0|3688|10864|1.077 MiB |10853|1.076 MiB |362.814 ms |456.0 ms |
+|max_dist_between_syms|2881|39|2842|5152|0.559 MiB |5141|0.558 MiB |308.397 ms |261.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3110|0|3110|6237|0.612 MiB |6226|0.612 MiB |358.635 ms |303.0 ms |
+|max_sum_between_syms|2880|39|2841|5150|0.558 MiB |5140|0.557 MiB |379.57 ms |232.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3109|0|3109|6235|0.612 MiB |6225|0.611 MiB |337.549 ms |310.0 ms |
+|minimal_points|480|435|45|1015|0.244 MiB |1012|0.244 MiB |70.817 ms |41.0 ms |
+|minimal_points (Non-Vectorized)|3566|0|3566|4161|0.4 MiB |4158|0.4 MiB |403.52 ms |259.0 ms |
+|mnist_relu|1012|204|808|1484|3.215 MiB |1480|3.215 MiB |372.029 ms |116.0 ms |
+|mnist_relu (Non-Vectorized)|40003|0|40003|58995|6.06 MiB |58991|6.06 MiB |3892.84 ms |3674.0 ms |
+|psi|145|94|51|748|0.348 MiB |740|0.348 MiB |104.853 ms |22.0 ms |
+|psi (Non-Vectorized)|1306|0|1306|6674|0.641 MiB |6666|0.641 MiB |123.524 ms |222.0 ms |
 
 ## MP-SPDZ Benchmark Data
 
 ### Mascot protocol
-| Benchmark | Time (seconds) | Data sent (MB) | # Rounds | Global data sent (MB) |
-| - | - | - | - | - |
-|biometric|0.741102|39.0542|915|78.1084|
-|biometric (Non-Vectorized)|0.718934|39.0542|915|78.1084|
-|biometric_fast|0.73949|39.0542|915|78.1084|
-|biometric_fast (Non-Vectorized)|0.68055|39.0542|915|78.1084|
-|convex_hull|1.99312|117.123|1453|234.247|
-|convex_hull (Non-Vectorized)|1.9145|117.123|1459|234.247|
-|count_102|1.9778|117.124|1509|234.248|
-|count_102 (Non-Vectorized)|1.99293|117.124|1487|234.248|
-|count_10s|1.67635|97.5912|1341|195.182|
-|count_10s (Non-Vectorized)|1.67823|97.5912|1325|195.182|
-|count_123|2.01423|97.5914|1343|195.183|
-|count_123 (Non-Vectorized)|1.61655|97.5914|1327|195.183|
-|inner_product|0.340536|19.5237|683|39.0474|
-|inner_product (Non-Vectorized)|0.371928|19.5237|683|39.0474|
-|longest_102|2.9405|175.642|2173|351.285|
-|longest_102 (Non-Vectorized)|2.92839|175.642|2117|351.285|
-|max_dist_between_syms|1.27049|78.0821|1323|156.164|
-|max_dist_between_syms (Non-Vectorized)|1.32363|78.0821|1309|156.164|
-|max_sum_between_syms|1.2559|78.0821|1323|156.164|
-|max_sum_between_syms (Non-Vectorized)|1.39935|78.0821|1309|156.164|
+| Benchmark | Time (seconds) | Data sent (MB) | Global data sent (MB) |
+| - | - | - | - |
+|biometric|0.647511|39.0542|78.1084|
+|biometric (Non-Vectorized)|0.548515|39.0542|78.1084|
+|biometric_fast|0.530926|39.0542|78.1084|
+|biometric_fast (Non-Vectorized)|0.541595|39.0542|78.1084|
+|count_102|1.61735|117.124|234.248|
+|count_102 (Non-Vectorized)|1.56341|117.124|234.248|
+|count_10s|1.38139|97.5912|195.182|
+|count_10s (Non-Vectorized)|1.34115|97.5912|195.182|
+|count_123|1.31843|97.5914|195.183|
+|count_123 (Non-Vectorized)|1.30309|97.5914|195.183|
+|inner_product|0.277685|19.5237|39.0474|
+|inner_product (Non-Vectorized)|0.282026|19.5237|39.0474|
+|longest_102|2.31365|175.642|351.285|
+|longest_102 (Non-Vectorized)|2.43564|175.642|351.285|
+|max_dist_between_syms|1.05483|78.0821|156.164|
+|max_dist_between_syms (Non-Vectorized)|1.0471|78.0821|156.164|
+|max_sum_between_syms|1.06617|78.0821|156.164|
+|max_sum_between_syms (Non-Vectorized)|1.06995|78.0821|156.164|
+
+### Semi-Bin protocol
+| Benchmark | Time (seconds) | Data sent (MB) | Global data sent (MB) |
+| - | - | - | - |
+|biometric|0.37173|21.827|43.6539|
+|biometric (Non-Vectorized)|0.149563|6.19655|12.3931|
+|biometric_fast|0.401695|21.8285|43.6571|
+|biometric_fast (Non-Vectorized)|0.154132|6.15066|12.3013|
+|count_102|0.166212|5.80719|11.6144|
+|count_102 (Non-Vectorized)|0.171486|5.82073|11.6415|
+|count_10s|0.199251|5.80067|11.6013|
+|count_10s (Non-Vectorized)|0.154194|5.80969|11.6194|
+|count_123|0.153616|5.80073|11.6015|
+|count_123 (Non-Vectorized)|0.170817|5.81014|11.6203|
+|inner_product|0.386714|21.8062|43.6125|
+|inner_product (Non-Vectorized)|0.170766|5.84671|11.6934|
+|longest_102|0.188513|5.82262|11.6452|
+|longest_102 (Non-Vectorized)|0.156384|5.83673|11.6735|
+|max_dist_between_syms|0.176118|5.81335|11.6267|
+|max_dist_between_syms (Non-Vectorized)|0.15995|5.81683|11.6337|
+|max_sum_between_syms|0.167446|5.81335|11.6267|
+|max_sum_between_syms (Non-Vectorized)|0.168434|5.81683|11.6337|
 
 ## Compiler stages with different benchmarks
 ### `biometric`
@@ -453,7 +473,7 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
 ```py
 def biometric(C_0, D_0, S_0, N_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
     _13_0 = sint.Tensor([N_0])
     _3_0 = sint.Tensor([N_0])
     _4_0 = sint.Tensor([N_0])
@@ -475,23 +495,23 @@ def biometric(C_0, D_0, S_0, N_0):
     min_sum_1 = sint(10000)
     min_index_1 = sint(0)
     sum_2 = sint(0)
-    _6_0.assign_vector_by_indices((_v.lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0])).get_vector(), None, None)
-    _7_0.assign_vector_by_indices((_v.lift(lambda indices: (C_0[indices[1]]), [N_0, D_0])).get_vector(), None, None)
-    _13_0[:] = _v.lift(lambda indices: indices[0], [N_0])
-    _3_0[:] = _v.lift(lambda indices: min_sum_1, [N_0])
-    _4_0[:] = _v.lift(lambda indices: min_index_1, [N_0])
-    _5_0.assign_vector_by_indices((_v.lift(lambda indices: sum_2, [N_0, D_0])).get_vector(), None, None)
-    d_3.assign_vector_by_indices(((_6_0.get_vector_by_indices(None, None) - _7_0.get_vector_by_indices(None, None))).get_vector(), None, None)
-    p_3.assign_vector_by_indices(((d_3.get_vector_by_indices(None, None) * d_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _v.vectorized_assign(_6_0, [None, None], _v.lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0]).get_vector())
+    _v.vectorized_assign(_7_0, [None, None], _v.lift(lambda indices: (C_0[indices[1]]), [N_0, D_0]).get_vector())
+    _13_0[:] = _v.lift(lambda indices: indices[0], [N_0]).get_vector()
+    _3_0[:] = _v.lift(lambda indices: min_sum_1, [N_0]).get_vector()
+    _4_0[:] = _v.lift(lambda indices: min_index_1, [N_0]).get_vector()
+    _v.vectorized_assign(_5_0, [None, None], _v.lift(lambda indices: sum_2, [N_0, D_0]).get_vector())
+    _v.vectorized_assign(d_3, [None, None], (_v.vectorized_access(_6_0, [None, None]) - _v.vectorized_access(_7_0, [None, None])))
+    _v.vectorized_assign(p_3, [None, None], (_v.vectorized_access(d_3, [None, None]) * _v.vectorized_access(d_3, [None, None])))
     for _12_0 in range(0, D_0):
         # Set ϕ value
         if _12_0 == 0:
-            sum_3.assign_vector_by_indices((_5_0.get_vector_by_indices(None, _12_0)).get_vector(), None, _12_0)
+            _v.vectorized_assign(sum_3, [None, _12_0], _v.vectorized_access(_5_0, [None, _12_0]))
         else:
-            sum_3.assign_vector_by_indices((sum_4.get_vector_by_indices(None, (_12_0 - 1))).get_vector(), None, _12_0)
-        sum_4.assign_vector_by_indices(((sum_3.get_vector_by_indices(None, _12_0) + p_3.get_vector_by_indices(None, _12_0))).get_vector(), None, _12_0)
+            _v.vectorized_assign(sum_3, [None, _12_0], _v.vectorized_access(sum_4, [None, (_12_0 - 1)]))
+        _v.vectorized_assign(sum_4, [None, _12_0], (_v.vectorized_access(sum_3, [None, _12_0]) + _v.vectorized_access(p_3, [None, _12_0])))
     # Loop exit ϕ values
-    sum_3.assign_vector_by_indices((sum_4.get_vector_by_indices(None, (_12_0 - 1))).get_vector(), None, _12_0)
+    _v.vectorized_assign(sum_3, [None, _12_0], _v.vectorized_access(sum_4, [None, (_12_0 - 1)]))
     _8_0[:] = _v.drop_dim(sum_4)
     _9_0[:] = _v.drop_dim(sum_4)
     min_sum_3[:] = _9_0[:]
@@ -979,7 +999,7 @@ std::tuple<encrypto::motion::SecureUnsignedInteger, encrypto::motion::SecureUnsi
 ```py
 def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differences_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
     _10_0 = sint.Tensor([N_0])
     _11_0 = sint.Tensor([N_0])
     _16_0 = sint.Tensor([N_0])
@@ -1004,20 +1024,20 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
     two_a_b_4 = sint.Tensor([N_0, D_0])
     # Function body
     min_index_1 = sint(0)
-    _4_0[:] = _v.lift(lambda indices: differences_0, [N_0])
-    _5_0[:] = _v.lift(lambda indices: (S_sqr_sum_0[indices[0]]), [N_0])
-    _6_0[:] = _v.lift(lambda indices: C_sqr_sum_0, [N_0])
+    _4_0[:] = _v.lift(lambda indices: differences_0, [N_0]).get_vector()
+    _5_0[:] = _v.lift(lambda indices: (S_sqr_sum_0[indices[0]]), [N_0]).get_vector()
+    _6_0[:] = _v.lift(lambda indices: C_sqr_sum_0, [N_0]).get_vector()
     two_a_b_2 = sint(0)
-    _8_0.assign_vector_by_indices((_v.lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0])).get_vector(), None, None)
-    _9_0.assign_vector_by_indices((_v.lift(lambda indices: (two_C_0[indices[1]]), [N_0, D_0])).get_vector(), None, None)
+    _v.vectorized_assign(_8_0, [None, None], _v.lift(lambda indices: (S_0[((indices[0] * D_0) + indices[1])]), [N_0, D_0]).get_vector())
+    _v.vectorized_assign(_9_0, [None, None], _v.lift(lambda indices: (two_C_0[indices[1]]), [N_0, D_0]).get_vector())
     min_index_3 = sint(0)
     min_diff_1 = sint(99999)
-    _16_0[:] = _v.lift(lambda indices: indices[0], [N_0])
-    _3_0[:] = _v.lift(lambda indices: min_index_1, [N_0])
+    _16_0[:] = _v.lift(lambda indices: indices[0], [N_0]).get_vector()
+    _3_0[:] = _v.lift(lambda indices: min_index_1, [N_0]).get_vector()
     a_sqr_plus_b_sqr_2[:] = (_5_0[:] + _6_0[:])
-    _7_0.assign_vector_by_indices((_v.lift(lambda indices: two_a_b_2, [N_0, D_0])).get_vector(), None, None)
-    tmp_3.assign_vector_by_indices(((_8_0.get_vector_by_indices(None, None) * _9_0.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _11_0[:] = _v.lift(lambda indices: min_diff_1, [N_0])
+    _v.vectorized_assign(_7_0, [None, None], _v.lift(lambda indices: two_a_b_2, [N_0, D_0]).get_vector())
+    _v.vectorized_assign(tmp_3, [None, None], (_v.vectorized_access(_8_0, [None, None]) * _v.vectorized_access(_9_0, [None, None])))
+    _11_0[:] = _v.lift(lambda indices: min_diff_1, [N_0]).get_vector()
     for _15_0 in range(0, N_0):
         # Set ϕ value
         if _15_0 == 0:
@@ -1029,12 +1049,12 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
     for _14_0 in range(0, D_0):
         # Set ϕ value
         if _14_0 == 0:
-            two_a_b_3.assign_vector_by_indices((_7_0.get_vector_by_indices(None, _14_0)).get_vector(), None, _14_0)
+            _v.vectorized_assign(two_a_b_3, [None, _14_0], _v.vectorized_access(_7_0, [None, _14_0]))
         else:
-            two_a_b_3.assign_vector_by_indices((two_a_b_4.get_vector_by_indices(None, (_14_0 - 1))).get_vector(), None, _14_0)
-        two_a_b_4.assign_vector_by_indices(((two_a_b_3.get_vector_by_indices(None, _14_0) + tmp_3.get_vector_by_indices(None, _14_0))).get_vector(), None, _14_0)
+            _v.vectorized_assign(two_a_b_3, [None, _14_0], _v.vectorized_access(two_a_b_4, [None, (_14_0 - 1)]))
+        _v.vectorized_assign(two_a_b_4, [None, _14_0], (_v.vectorized_access(two_a_b_3, [None, _14_0]) + _v.vectorized_access(tmp_3, [None, _14_0])))
     # Loop exit ϕ values
-    two_a_b_3.assign_vector_by_indices((two_a_b_4.get_vector_by_indices(None, (_14_0 - 1))).get_vector(), None, _14_0)
+    _v.vectorized_assign(two_a_b_3, [None, _14_0], _v.vectorized_access(two_a_b_4, [None, (_14_0 - 1)]))
     _10_0[:] = _v.drop_dim(two_a_b_4)
     this_diff_2[:] = (a_sqr_plus_b_sqr_2[:] - _10_0[:])
     _4_0[:] = this_diff_2[:]; differences_2[:] = _4_0[:]
@@ -1633,26 +1653,26 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
 ```py
 def convex_hull(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
     _11_0 = sint.Tensor([N_0])
     _12_0 = sint.Tensor([N_0])
     _13_0 = sint.Tensor([N_0])
     _14_0 = sint.Tensor([N_0])
-    _15_0 = sint.Tensor([N_0, N_0])
+    _15_0 = _v.sbool.Tensor([N_0, N_0])
     _16_0 = sint.Tensor([N_0, N_0])
     _17_0 = sint.Tensor([N_0, N_0])
     _18_0 = sint.Tensor([N_0, N_0])
     _19_0 = sint.Tensor([N_0, N_0])
-    _2_2 = sint.Tensor([N_0])
-    _20_0 = sint.Tensor([N_0])
-    _3_2 = sint.Tensor([N_0])
-    _6_3 = sint.Tensor([N_0, N_0])
-    _7_3 = sint.Tensor([N_0, N_0])
-    _8_3 = sint.Tensor([N_0, N_0])
-    _9_3 = sint.Tensor([N_0, N_0])
-    is_hull_3 = sint.Tensor([N_0, N_0])
-    is_hull_5 = sint.Tensor([N_0, N_0])
-    is_hull_6 = sint.Tensor([N_0])
+    _2_2 = _v.sbool.Tensor([N_0])
+    _20_0 = _v.sbool.Tensor([N_0])
+    _3_2 = _v.sbool.Tensor([N_0])
+    _6_3 = _v.sbool.Tensor([N_0, N_0])
+    _7_3 = _v.sbool.Tensor([N_0, N_0])
+    _8_3 = _v.sbool.Tensor([N_0, N_0])
+    _9_3 = _v.sbool.Tensor([N_0, N_0])
+    is_hull_3 = _v.sbool.Tensor([N_0, N_0])
+    is_hull_5 = _v.sbool.Tensor([N_0, N_0])
+    is_hull_6 = _v.sbool.Tensor([N_0])
     p1_X_2 = sint.Tensor([N_0])
     p1_Y_2 = sint.Tensor([N_0])
     p2_X_3 = sint.Tensor([N_0, N_0])
@@ -1666,41 +1686,41 @@ def convex_hull(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     val_Y_3 = sint.Tensor([N_0])
     val_Y_4 = sint.Tensor([N_0])
     # Function body
-    _11_0[:] = _v.lift(lambda indices: result_X_0, [N_0])
-    _12_0[:] = _v.lift(lambda indices: result_Y_0, [N_0])
-    _13_0[:] = _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0])
-    _14_0[:] = _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0])
-    is_hull_2 = sint(True)
-    _16_0.assign_vector_by_indices((_v.lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0])).get_vector(), None, None)
-    _17_0.assign_vector_by_indices((_v.lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0])).get_vector(), None, None)
-    is_hull_4 = sint(False)
+    _11_0[:] = _v.lift(lambda indices: result_X_0, [N_0]).get_vector()
+    _12_0[:] = _v.lift(lambda indices: result_Y_0, [N_0]).get_vector()
+    _13_0[:] = _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0]).get_vector()
+    _14_0[:] = _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0]).get_vector()
+    is_hull_2 = _v.sbool(True)
+    _v.vectorized_assign(_16_0, [None, None], _v.lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0]).get_vector())
+    _v.vectorized_assign(_17_0, [None, None], _v.lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0]).get_vector())
+    is_hull_4 = _v.sbool(False)
     val_X_2[:] = _11_0[:]
     val_Y_2[:] = _12_0[:]
     p1_X_2[:] = _13_0[:]
     p1_Y_2[:] = _14_0[:]
-    _15_0.assign_vector_by_indices((_v.lift(lambda indices: is_hull_2, [N_0, N_0])).get_vector(), None, None)
-    p2_X_3.assign_vector_by_indices((_16_0.get_vector_by_indices(None, None)).get_vector(), None, None)
-    p2_Y_3.assign_vector_by_indices((_17_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    _v.vectorized_assign(_15_0, [None, None], _v.lift(lambda indices: is_hull_2, [N_0, N_0]).get_vector())
+    _v.vectorized_assign(p2_X_3, [None, None], _v.vectorized_access(_16_0, [None, None]))
+    _v.vectorized_assign(p2_Y_3, [None, None], _v.vectorized_access(_17_0, [None, None]))
     _1_2[:] = (p1_X_2[:] <= sint(0))
-    _18_0.assign_vector_by_indices((_v.lift(lambda indices: p1_X_2[:], [N_0, N_0])).get_vector(), None, None)
+    _v.vectorized_assign(_18_0, [None, None], _v.lift(lambda indices: p1_X_2[:], [N_0, N_0]).get_vector())
     val_X_3[:] = p1_X_2[:]
     _2_2[:] = (p1_Y_2[:] >= sint(0))
-    _19_0.assign_vector_by_indices((_v.lift(lambda indices: p1_Y_2[:], [N_0, N_0])).get_vector(), None, None)
+    _v.vectorized_assign(_19_0, [None, None], _v.lift(lambda indices: p1_Y_2[:], [N_0, N_0]).get_vector())
     val_Y_3[:] = p1_Y_2[:]
-    _6_3.assign_vector_by_indices(((_18_0.get_vector_by_indices(None, None) <= p2_X_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _v.vectorized_assign(_6_3, [None, None], (_v.vectorized_access(_18_0, [None, None]) <= _v.vectorized_access(p2_X_3, [None, None])))
     _3_2[:] = _1_2[:].bit_and(_2_2[:])
-    _7_3.assign_vector_by_indices(((_19_0.get_vector_by_indices(None, None) >= p2_Y_3.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _8_3.assign_vector_by_indices((_v.OR(_6_3.get_vector_by_indices(None, None), _7_3.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _9_3.assign_vector_by_indices(((_8_3.get_vector_by_indices(None, None).if_else(0, 1))).get_vector(), None, None)
+    _v.vectorized_assign(_7_3, [None, None], (_v.vectorized_access(_19_0, [None, None]) >= _v.vectorized_access(p2_Y_3, [None, None])))
+    _v.vectorized_assign(_8_3, [None, None], OR(_v.vectorized_access(_6_3, [None, None]), _v.vectorized_access(_7_3, [None, None])))
+    _v.vectorized_assign(_9_3, [None, None], (_v.vectorized_access(_8_3, [None, None]).bit_not()))
     for _21_0 in range(0, N_0):
         # Set ϕ value
         if _21_0 == 0:
-            is_hull_3.assign_vector_by_indices((_15_0.get_vector_by_indices(None, _21_0)).get_vector(), None, _21_0)
+            _v.vectorized_assign(is_hull_3, [None, _21_0], _v.vectorized_access(_15_0, [None, _21_0]))
         else:
-            is_hull_3.assign_vector_by_indices((is_hull_5.get_vector_by_indices(None, (_21_0 - 1))).get_vector(), None, _21_0)
-        is_hull_5.assign_vector_by_indices((_9_3.get_vector_by_indices(None, _21_0).if_else(is_hull_4, is_hull_3.get_vector_by_indices(None, _21_0))).get_vector(), None, _21_0)
+            _v.vectorized_assign(is_hull_3, [None, _21_0], _v.vectorized_access(is_hull_5, [None, (_21_0 - 1)]))
+        _v.vectorized_assign(is_hull_5, [None, _21_0], _v.vectorized_access(_9_3, [None, _21_0]).if_else(is_hull_4, _v.vectorized_access(is_hull_3, [None, _21_0])))
     # Loop exit ϕ values
-    is_hull_3.assign_vector_by_indices((is_hull_5.get_vector_by_indices(None, (_21_0 - 1))).get_vector(), None, _21_0)
+    _v.vectorized_assign(is_hull_3, [None, _21_0], _v.vectorized_access(is_hull_5, [None, (_21_0 - 1)]))
     _20_0[:] = _v.drop_dim(is_hull_5)
     is_hull_6[:] = _3_2[:].if_else(_20_0[:], is_hull_2)
     val_X_4[:] = is_hull_6[:].if_else(val_X_3[:], val_X_2[:])
@@ -1992,35 +2012,35 @@ encrypto::motion::SecureUnsignedInteger count_102(
 ```py
 def count_102(Seq_0, N_0, Syms_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
     _10_0 = sint.Tensor([N_0])
     _11_0 = sint.Tensor([N_0])
     _12_0 = sint.Tensor([N_0])
     _13_0 = sint.Tensor([N_0])
     _14_0 = sint.Tensor([N_0])
-    _2_2 = sint.Tensor([N_0])
-    _3_2 = sint.Tensor([N_0])
-    _5_2 = sint.Tensor([N_0])
-    _6_2 = sint.Tensor([N_0])
-    _7_0 = sint.Tensor([N_0])
+    _2_2 = _v.sbool.Tensor([N_0])
+    _3_2 = _v.sbool.Tensor([N_0])
+    _5_2 = _v.sbool.Tensor([N_0])
+    _6_2 = _v.sbool.Tensor([N_0])
+    _7_0 = _v.sbool.Tensor([N_0])
     _8_0 = sint.Tensor([N_0])
     _9_0 = sint.Tensor([N_0])
     c_2 = sint.Tensor([N_0])
     c_3 = sint.Tensor([N_0])
     c_4 = sint.Tensor([N_0])
-    s0_2 = sint.Tensor([N_0])
-    s0_3 = sint.Tensor([N_0])
+    s0_2 = _v.sbool.Tensor([N_0])
+    s0_3 = _v.sbool.Tensor([N_0])
     # Function body
-    s0_1 = sint(False)
+    s0_1 = _v.sbool(False)
     c_1 = sint(0)
-    _9_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _10_0[:] = _v.lift(lambda indices: (Syms_0[2]), [N_0])
-    _11_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _12_0[:] = _v.lift(lambda indices: (Syms_0[1]), [N_0])
-    _13_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _14_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0])
-    _7_0[:] = _v.lift(lambda indices: s0_1, [N_0])
-    _8_0[:] = _v.lift(lambda indices: c_1, [N_0])
+    _9_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _10_0[:] = _v.lift(lambda indices: (Syms_0[2]), [N_0]).get_vector()
+    _11_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _12_0[:] = _v.lift(lambda indices: (Syms_0[1]), [N_0]).get_vector()
+    _13_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _14_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0]).get_vector()
+    _7_0[:] = _v.lift(lambda indices: s0_1, [N_0]).get_vector()
+    _8_0[:] = _v.lift(lambda indices: c_1, [N_0]).get_vector()
     _1_2[:] = (_9_0[:] == _10_0[:])
     _3_2[:] = (_11_0[:] == _12_0[:])
     _5_2[:] = (_13_0[:] == _14_0[:])
@@ -2031,7 +2051,7 @@ def count_102(Seq_0, N_0, Syms_0):
         else:
             s0_2[_16_0] = s0_3[(_16_0 - 1)]
         _6_2[_16_0] = s0_2[_16_0].bit_and(_5_2[_16_0])
-        s0_3[_16_0] = _v.OR(_3_2[_16_0], _6_2[_16_0])
+        s0_3[_16_0] = OR(_3_2[_16_0], _6_2[_16_0])
     # Loop exit ϕ values
     s0_2[_16_0] = s0_3[(_16_0 - 1)]
     _2_2[:] = s0_2[:].bit_and(_1_2[:])
@@ -2373,39 +2393,39 @@ encrypto::motion::SecureUnsignedInteger count_10s(
 ```py
 def count_10s(Seq_0, N_0, Syms_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
     _10_0 = sint.Tensor([N_0])
     _11_0 = sint.Tensor([N_0])
     _12_0 = sint.Tensor([N_0])
     _13_0 = sint.Tensor([N_0])
-    _2_2 = sint.Tensor([N_0])
-    _3_2 = sint.Tensor([N_0])
-    _4_2 = sint.Tensor([N_0])
-    _5_0 = sint.Tensor([N_0])
-    _6_0 = sint.Tensor([N_0])
+    _2_2 = _v.sbool.Tensor([N_0])
+    _3_2 = _v.sbool.Tensor([N_0])
+    _4_2 = _v.sbool.Tensor([N_0])
+    _5_0 = _v.sbool.Tensor([N_0])
+    _6_0 = _v.sbool.Tensor([N_0])
     _7_0 = sint.Tensor([N_0])
     _8_0 = sint.Tensor([N_0])
     _9_0 = sint.Tensor([N_0])
-    s0_2 = sint.Tensor([N_0])
-    s0_3 = sint.Tensor([N_0])
-    s1_2 = sint.Tensor([N_0])
-    s1_3 = sint.Tensor([N_0])
+    s0_2 = _v.sbool.Tensor([N_0])
+    s0_3 = _v.sbool.Tensor([N_0])
+    s1_2 = _v.sbool.Tensor([N_0])
+    s1_3 = _v.sbool.Tensor([N_0])
     scount_2 = sint.Tensor([N_0])
     scount_3 = sint.Tensor([N_0])
     scount_4 = sint.Tensor([N_0])
     # Function body
-    s0_1 = sint(False)
-    s1_1 = sint(False)
+    s0_1 = _v.sbool(False)
+    s1_1 = _v.sbool(False)
     scount_1 = sint(0)
-    _8_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _9_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0])
-    _10_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _11_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0])
-    _12_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _13_0[:] = _v.lift(lambda indices: (Syms_0[1]), [N_0])
-    _5_0[:] = _v.lift(lambda indices: s0_1, [N_0])
-    _6_0[:] = _v.lift(lambda indices: s1_1, [N_0])
-    _7_0[:] = _v.lift(lambda indices: scount_1, [N_0])
+    _8_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _9_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0]).get_vector()
+    _10_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _11_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0]).get_vector()
+    _12_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _13_0[:] = _v.lift(lambda indices: (Syms_0[1]), [N_0]).get_vector()
+    _5_0[:] = _v.lift(lambda indices: s0_1, [N_0]).get_vector()
+    _6_0[:] = _v.lift(lambda indices: s1_1, [N_0]).get_vector()
+    _7_0[:] = _v.lift(lambda indices: scount_1, [N_0]).get_vector()
     _1_2[:] = (_8_0[:] != _9_0[:])
     _3_2[:] = (_10_0[:] == _11_0[:])
     s0_3[:] = (_12_0[:] == _13_0[:])
@@ -2423,7 +2443,7 @@ def count_10s(Seq_0, N_0, Syms_0):
             s1_2[_16_0] = _6_0[_16_0]
         else:
             s1_2[_16_0] = s1_3[(_16_0 - 1)]
-        _4_2[_16_0] = _v.OR(s0_2[_16_0], s1_2[_16_0])
+        _4_2[_16_0] = OR(s0_2[_16_0], s1_2[_16_0])
         s1_3[_16_0] = _3_2[_16_0].bit_and(_4_2[_16_0])
     # Loop exit ϕ values
     s1_2[_16_0] = s1_3[(_16_0 - 1)]
@@ -2775,40 +2795,40 @@ encrypto::motion::SecureUnsignedInteger count_123(
 ```py
 def count_123(Seq_0, N_0, Syms_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
     _10_0 = sint.Tensor([N_0])
     _11_0 = sint.Tensor([N_0])
     _12_0 = sint.Tensor([N_0])
     _13_0 = sint.Tensor([N_0])
     _14_0 = sint.Tensor([N_0])
-    _2_2 = sint.Tensor([N_0])
-    _3_2 = sint.Tensor([N_0])
-    _4_2 = sint.Tensor([N_0])
-    _5_2 = sint.Tensor([N_0])
-    _6_0 = sint.Tensor([N_0])
-    _7_0 = sint.Tensor([N_0])
+    _2_2 = _v.sbool.Tensor([N_0])
+    _3_2 = _v.sbool.Tensor([N_0])
+    _4_2 = _v.sbool.Tensor([N_0])
+    _5_2 = _v.sbool.Tensor([N_0])
+    _6_0 = _v.sbool.Tensor([N_0])
+    _7_0 = _v.sbool.Tensor([N_0])
     _8_0 = sint.Tensor([N_0])
     _9_0 = sint.Tensor([N_0])
     c_2 = sint.Tensor([N_0])
     c_3 = sint.Tensor([N_0])
     c_4 = sint.Tensor([N_0])
-    s1_2 = sint.Tensor([N_0])
-    s1_3 = sint.Tensor([N_0])
-    s2_2 = sint.Tensor([N_0])
-    s2_3 = sint.Tensor([N_0])
+    s1_2 = _v.sbool.Tensor([N_0])
+    s1_3 = _v.sbool.Tensor([N_0])
+    s2_2 = _v.sbool.Tensor([N_0])
+    s2_3 = _v.sbool.Tensor([N_0])
     # Function body
-    s1_1 = sint(False)
-    s2_1 = sint(False)
+    s1_1 = _v.sbool(False)
+    s2_1 = _v.sbool(False)
     c_1 = sint(0)
-    _9_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _10_0[:] = _v.lift(lambda indices: (Syms_0[2]), [N_0])
-    _11_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _12_0[:] = _v.lift(lambda indices: (Syms_0[1]), [N_0])
-    _13_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _14_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0])
-    _6_0[:] = _v.lift(lambda indices: s1_1, [N_0])
-    _7_0[:] = _v.lift(lambda indices: s2_1, [N_0])
-    _8_0[:] = _v.lift(lambda indices: c_1, [N_0])
+    _9_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _10_0[:] = _v.lift(lambda indices: (Syms_0[2]), [N_0]).get_vector()
+    _11_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _12_0[:] = _v.lift(lambda indices: (Syms_0[1]), [N_0]).get_vector()
+    _13_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _14_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0]).get_vector()
+    _6_0[:] = _v.lift(lambda indices: s1_1, [N_0]).get_vector()
+    _7_0[:] = _v.lift(lambda indices: s2_1, [N_0]).get_vector()
+    _8_0[:] = _v.lift(lambda indices: c_1, [N_0]).get_vector()
     _1_2[:] = (_9_0[:] == _10_0[:])
     _4_2[:] = (_11_0[:] == _12_0[:])
     s1_3[:] = (_13_0[:] == _14_0[:])
@@ -2826,11 +2846,11 @@ def count_123(Seq_0, N_0, Syms_0):
             s2_2[_17_0] = _7_0[_17_0]
         else:
             s2_2[_17_0] = s2_3[(_17_0 - 1)]
-        _5_2[_17_0] = _v.OR(s1_2[_17_0], s2_2[_17_0])
+        _5_2[_17_0] = OR(s1_2[_17_0], s2_2[_17_0])
         s2_3[_17_0] = _4_2[_17_0].bit_and(_5_2[_17_0])
     # Loop exit ϕ values
     s2_2[_17_0] = s2_3[(_17_0 - 1)]
-    _2_2[:] = _v.OR(s2_2[:], s1_2[:])
+    _2_2[:] = OR(s2_2[:], s1_2[:])
     _3_2[:] = _1_2[:].bit_and(_2_2[:])
     for _18_0 in range(0, N_0):
         # Set ϕ value
@@ -3145,12 +3165,12 @@ std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
 ```py
 def cryptonets_max_pooling(vals_0, cols_0, rows_0, cols_res_0, rows_res_0, OUTPUT_res_0):
     # Shared array declarations
-    _1_3 = sint.Tensor([rows_res_0, cols_res_0])
+    _1_3 = _v.sbool.Tensor([rows_res_0, cols_res_0])
     _10_0 = sint.Tensor([rows_res_0, cols_res_0])
     _11_0 = sint.Tensor([rows_res_0, cols_res_0])
     _12_0 = sint.Tensor([rows_res_0, cols_res_0])
-    _2_3 = sint.Tensor([rows_res_0, cols_res_0])
-    _3_3 = sint.Tensor([rows_res_0, cols_res_0])
+    _2_3 = _v.sbool.Tensor([rows_res_0, cols_res_0])
+    _3_3 = _v.sbool.Tensor([rows_res_0, cols_res_0])
     _4_0 = sint.Tensor([rows_res_0, cols_res_0])
     _5_0 = sint.Tensor([rows_res_0, cols_res_0])
     _6_0 = sint.Tensor([rows_res_0, cols_res_0])
@@ -3166,26 +3186,26 @@ def cryptonets_max_pooling(vals_0, cols_0, rows_0, cols_res_0, rows_res_0, OUTPU
     max_8 = sint.Tensor([rows_res_0, cols_res_0])
     max_9 = sint.Tensor([rows_res_0, cols_res_0])
     # Function body
-    _4_0.assign_vector_by_indices((_v.lift(lambda indices: OUTPUT_res_0, [rows_res_0, cols_res_0])).get_vector(), None, None)
-    _6_0.assign_vector_by_indices((_v.lift(lambda indices: (vals_0[(((indices[0] * 2) * cols_0) + (indices[1] * 2))]), [rows_res_0, cols_res_0])).get_vector(), None, None)
-    _7_0.assign_vector_by_indices((_v.lift(lambda indices: (vals_0[((((indices[0] * 2) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0])).get_vector(), None, None)
-    _8_0.assign_vector_by_indices((_v.lift(lambda indices: (vals_0[((((indices[0] * 2) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0])).get_vector(), None, None)
-    _9_0.assign_vector_by_indices((_v.lift(lambda indices: (vals_0[((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2))]), [rows_res_0, cols_res_0])).get_vector(), None, None)
-    _10_0.assign_vector_by_indices((_v.lift(lambda indices: (vals_0[((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2))]), [rows_res_0, cols_res_0])).get_vector(), None, None)
-    _11_0.assign_vector_by_indices((_v.lift(lambda indices: (vals_0[(((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0])).get_vector(), None, None)
-    _12_0.assign_vector_by_indices((_v.lift(lambda indices: (vals_0[(((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0])).get_vector(), None, None)
-    _5_0.assign_vector_by_indices((_v.lift(lambda indices: _4_0.get_vector_by_indices(None, None), [rows_res_0, cols_res_0])).get_vector(), None, None)
-    max_3.assign_vector_by_indices((_6_0.get_vector_by_indices(None, None)).get_vector(), None, None)
-    max_4.assign_vector_by_indices((_8_0.get_vector_by_indices(None, None)).get_vector(), None, None)
-    max_6.assign_vector_by_indices((_10_0.get_vector_by_indices(None, None)).get_vector(), None, None)
-    max_8.assign_vector_by_indices((_12_0.get_vector_by_indices(None, None)).get_vector(), None, None)
-    _1_3.assign_vector_by_indices(((_7_0.get_vector_by_indices(None, None) > max_3.get_vector_by_indices(None, None))).get_vector(), None, None)
-    max_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, None).if_else(max_4.get_vector_by_indices(None, None), max_3.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _2_3.assign_vector_by_indices(((_9_0.get_vector_by_indices(None, None) > max_5.get_vector_by_indices(None, None))).get_vector(), None, None)
-    max_7.assign_vector_by_indices((_2_3.get_vector_by_indices(None, None).if_else(max_6.get_vector_by_indices(None, None), max_5.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _3_3.assign_vector_by_indices(((_11_0.get_vector_by_indices(None, None) > max_7.get_vector_by_indices(None, None))).get_vector(), None, None)
-    max_9.assign_vector_by_indices((_3_3.get_vector_by_indices(None, None).if_else(max_8.get_vector_by_indices(None, None), max_7.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _5_0.assign_vector_by_indices((max_9.get_vector_by_indices(None, None)).get_vector(), None, None); OUTPUT_res_3.assign_vector_by_indices((_5_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    _v.vectorized_assign(_4_0, [None, None], _v.lift(lambda indices: OUTPUT_res_0, [rows_res_0, cols_res_0]).get_vector())
+    _v.vectorized_assign(_6_0, [None, None], _v.lift(lambda indices: (vals_0[(((indices[0] * 2) * cols_0) + (indices[1] * 2))]), [rows_res_0, cols_res_0]).get_vector())
+    _v.vectorized_assign(_7_0, [None, None], _v.lift(lambda indices: (vals_0[((((indices[0] * 2) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0]).get_vector())
+    _v.vectorized_assign(_8_0, [None, None], _v.lift(lambda indices: (vals_0[((((indices[0] * 2) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0]).get_vector())
+    _v.vectorized_assign(_9_0, [None, None], _v.lift(lambda indices: (vals_0[((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2))]), [rows_res_0, cols_res_0]).get_vector())
+    _v.vectorized_assign(_10_0, [None, None], _v.lift(lambda indices: (vals_0[((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2))]), [rows_res_0, cols_res_0]).get_vector())
+    _v.vectorized_assign(_11_0, [None, None], _v.lift(lambda indices: (vals_0[(((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0]).get_vector())
+    _v.vectorized_assign(_12_0, [None, None], _v.lift(lambda indices: (vals_0[(((((indices[0] * 2) + 1) * cols_0) + (indices[1] * 2)) + 1)]), [rows_res_0, cols_res_0]).get_vector())
+    _v.vectorized_assign(_5_0, [None, None], _v.lift(lambda indices: _v.vectorized_access(_4_0, [None, None]), [rows_res_0, cols_res_0]).get_vector())
+    _v.vectorized_assign(max_3, [None, None], _v.vectorized_access(_6_0, [None, None]))
+    _v.vectorized_assign(max_4, [None, None], _v.vectorized_access(_8_0, [None, None]))
+    _v.vectorized_assign(max_6, [None, None], _v.vectorized_access(_10_0, [None, None]))
+    _v.vectorized_assign(max_8, [None, None], _v.vectorized_access(_12_0, [None, None]))
+    _v.vectorized_assign(_1_3, [None, None], (_v.vectorized_access(_7_0, [None, None]) > _v.vectorized_access(max_3, [None, None])))
+    _v.vectorized_assign(max_5, [None, None], _v.vectorized_access(_1_3, [None, None]).if_else(_v.vectorized_access(max_4, [None, None]), _v.vectorized_access(max_3, [None, None])))
+    _v.vectorized_assign(_2_3, [None, None], (_v.vectorized_access(_9_0, [None, None]) > _v.vectorized_access(max_5, [None, None])))
+    _v.vectorized_assign(max_7, [None, None], _v.vectorized_access(_2_3, [None, None]).if_else(_v.vectorized_access(max_6, [None, None]), _v.vectorized_access(max_5, [None, None])))
+    _v.vectorized_assign(_3_3, [None, None], (_v.vectorized_access(_11_0, [None, None]) > _v.vectorized_access(max_7, [None, None])))
+    _v.vectorized_assign(max_9, [None, None], _v.vectorized_access(_3_3, [None, None]).if_else(_v.vectorized_access(max_8, [None, None]), _v.vectorized_access(max_7, [None, None])))
+    _v.vectorized_assign(_5_0, [None, None], _v.vectorized_access(max_9, [None, None])); _v.vectorized_assign(OUTPUT_res_3, [None, None], _v.vectorized_access(_5_0, [None, None]))
     return OUTPUT_res_3
 ```
 ### `db_cross_join_trivial`
@@ -3505,13 +3525,13 @@ std::vector<encrypto::motion::SecureUnsignedInteger> db_cross_join_trivial(
 ```py
 def db_cross_join_trivial(A_0, Len_A_0, B_0, Len_B_0, res_0):
     # Shared array declarations
-    _1_4 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    _1_4 = _v.sbool.Tensor([Len_A_0, Len_B_0, 3])
     _10_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
     _11_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
     _12_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
-    _13_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
-    _14_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
-    _15_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
+    _13_0 = _v.sbool.Tensor([Len_A_0, Len_B_0, 3])
+    _14_0 = _v.sbool.Tensor([Len_A_0, Len_B_0, 3])
+    _15_0 = _v.sbool.Tensor([Len_A_0, Len_B_0, 3])
     _5_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
     _6_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
     _7_0 = sint.Tensor([Len_A_0, Len_B_0, 3])
@@ -3526,27 +3546,27 @@ def db_cross_join_trivial(A_0, Len_A_0, B_0, Len_B_0, res_0):
     v_8 = sint.Tensor([Len_A_0, Len_B_0, 3])
     v_9 = sint.Tensor([Len_A_0, Len_B_0, 3])
     # Function body
-    _5_0.assign_vector_by_indices((_v.lift(lambda indices: res_0, [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
-    _8_0.assign_vector_by_indices((_v.lift(lambda indices: (A_0[(indices[0] * 2)]), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
-    _9_0.assign_vector_by_indices((_v.lift(lambda indices: (B_0[(indices[1] * 2)]), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
-    _10_0.assign_vector_by_indices((_v.lift(lambda indices: (A_0[(indices[0] * 2)]), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
-    _11_0.assign_vector_by_indices((_v.lift(lambda indices: (A_0[((indices[0] * 2) + 1)]), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
-    _12_0.assign_vector_by_indices((_v.lift(lambda indices: (B_0[((indices[1] * 2) + 1)]), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
+    _v.vectorized_assign(_5_0, [None, None, None], _v.lift(lambda indices: res_0, [Len_A_0, Len_B_0, 3]).get_vector())
+    _v.vectorized_assign(_8_0, [None, None, None], _v.lift(lambda indices: (A_0[(indices[0] * 2)]), [Len_A_0, Len_B_0, 3]).get_vector())
+    _v.vectorized_assign(_9_0, [None, None, None], _v.lift(lambda indices: (B_0[(indices[1] * 2)]), [Len_A_0, Len_B_0, 3]).get_vector())
+    _v.vectorized_assign(_10_0, [None, None, None], _v.lift(lambda indices: (A_0[(indices[0] * 2)]), [Len_A_0, Len_B_0, 3]).get_vector())
+    _v.vectorized_assign(_11_0, [None, None, None], _v.lift(lambda indices: (A_0[((indices[0] * 2) + 1)]), [Len_A_0, Len_B_0, 3]).get_vector())
+    _v.vectorized_assign(_12_0, [None, None, None], _v.lift(lambda indices: (B_0[((indices[1] * 2) + 1)]), [Len_A_0, Len_B_0, 3]).get_vector())
     v_4 = sint(0)
-    _13_0.assign_vector_by_indices((_v.lift(lambda indices: (indices[2] == sint(0)), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
-    _14_0.assign_vector_by_indices((_v.lift(lambda indices: (indices[2] == sint(1)), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
-    _15_0.assign_vector_by_indices((_v.lift(lambda indices: (indices[2] == sint(2)), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
-    _6_0.assign_vector_by_indices((_v.lift(lambda indices: _5_0.get_vector_by_indices(None, None, None), [Len_A_0, Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
-    _1_4.assign_vector_by_indices(((_8_0.get_vector_by_indices(None, None, None) == _9_0.get_vector_by_indices(None, None, None))).get_vector(), None, None, None)
-    v_5.assign_vector_by_indices((_10_0.get_vector_by_indices(None, None, None)).get_vector(), None, None, None)
-    v_7.assign_vector_by_indices((_11_0.get_vector_by_indices(None, None, None)).get_vector(), None, None, None)
-    v_9.assign_vector_by_indices((_12_0.get_vector_by_indices(None, None, None)).get_vector(), None, None, None)
-    _7_0.assign_vector_by_indices((_v.lift(lambda indices: _6_0.get_vector_by_indices(None, None, None), [Len_A_0, Len_B_0, 3])).get_vector(), None, None, None)
-    v_6.assign_vector_by_indices((_13_0.get_vector_by_indices(None, None, None).if_else(v_5.get_vector_by_indices(None, None, None), v_4)).get_vector(), None, None, None)
-    v_8.assign_vector_by_indices((_14_0.get_vector_by_indices(None, None, None).if_else(v_7.get_vector_by_indices(None, None, None), v_6.get_vector_by_indices(None, None, None))).get_vector(), None, None, None)
-    v_10.assign_vector_by_indices((_15_0.get_vector_by_indices(None, None, None).if_else(v_9.get_vector_by_indices(None, None, None), v_8.get_vector_by_indices(None, None, None))).get_vector(), None, None, None)
-    v_11.assign_vector_by_indices((_1_4.get_vector_by_indices(None, None, None).if_else(v_10.get_vector_by_indices(None, None, None), v_4)).get_vector(), None, None, None)
-    _7_0.assign_vector_by_indices((v_11.get_vector_by_indices(None, None, None)).get_vector(), None, None, None); res_4.assign_vector_by_indices((_7_0.get_vector_by_indices(None, None, None)).get_vector(), None, None, None)
+    _v.vectorized_assign(_13_0, [None, None, None], _v.lift(lambda indices: (indices[2] == sint(0)), [Len_A_0, Len_B_0, 3]).get_vector())
+    _v.vectorized_assign(_14_0, [None, None, None], _v.lift(lambda indices: (indices[2] == sint(1)), [Len_A_0, Len_B_0, 3]).get_vector())
+    _v.vectorized_assign(_15_0, [None, None, None], _v.lift(lambda indices: (indices[2] == sint(2)), [Len_A_0, Len_B_0, 3]).get_vector())
+    _v.vectorized_assign(_6_0, [None, None, None], _v.lift(lambda indices: _v.vectorized_access(_5_0, [None, None, None]), [Len_A_0, Len_A_0, Len_B_0, 3]).get_vector())
+    _v.vectorized_assign(_1_4, [None, None, None], (_v.vectorized_access(_8_0, [None, None, None]) == _v.vectorized_access(_9_0, [None, None, None])))
+    _v.vectorized_assign(v_5, [None, None, None], _v.vectorized_access(_10_0, [None, None, None]))
+    _v.vectorized_assign(v_7, [None, None, None], _v.vectorized_access(_11_0, [None, None, None]))
+    _v.vectorized_assign(v_9, [None, None, None], _v.vectorized_access(_12_0, [None, None, None]))
+    _v.vectorized_assign(_7_0, [None, None, None], _v.lift(lambda indices: _v.vectorized_access(_6_0, [None, None, None]), [Len_A_0, Len_B_0, 3]).get_vector())
+    _v.vectorized_assign(v_6, [None, None, None], _v.vectorized_access(_13_0, [None, None, None]).if_else(_v.vectorized_access(v_5, [None, None, None]), v_4))
+    _v.vectorized_assign(v_8, [None, None, None], _v.vectorized_access(_14_0, [None, None, None]).if_else(_v.vectorized_access(v_7, [None, None, None]), _v.vectorized_access(v_6, [None, None, None])))
+    _v.vectorized_assign(v_10, [None, None, None], _v.vectorized_access(_15_0, [None, None, None]).if_else(_v.vectorized_access(v_9, [None, None, None]), _v.vectorized_access(v_8, [None, None, None])))
+    _v.vectorized_assign(v_11, [None, None, None], _v.vectorized_access(_1_4, [None, None, None]).if_else(_v.vectorized_access(v_10, [None, None, None]), v_4))
+    _v.vectorized_assign(_7_0, [None, None, None], _v.vectorized_access(v_11, [None, None, None])); _v.vectorized_assign(res_4, [None, None, None], _v.vectorized_access(_7_0, [None, None, None]))
     return res_4
 ```
 ### `db_variance`
@@ -3856,12 +3876,12 @@ def db_variance(A_0, V_0, len_0):
     sum_3 = sint.Tensor([len_0])
     # Function body
     sum_1 = sint(0)
-    _3_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [len_0])
-    _5_0[:] = _v.lift(lambda indices: V_0, [len_0])
-    _6_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [len_0])
+    _3_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [len_0]).get_vector()
+    _5_0[:] = _v.lift(lambda indices: V_0, [len_0]).get_vector()
+    _6_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [len_0]).get_vector()
     res_1 = sint(0)
-    _2_0[:] = _v.lift(lambda indices: sum_1, [len_0])
-    _8_0[:] = _v.lift(lambda indices: res_1, [len_0])
+    _2_0[:] = _v.lift(lambda indices: sum_1, [len_0]).get_vector()
+    _8_0[:] = _v.lift(lambda indices: res_1, [len_0]).get_vector()
     for _10_0 in range(0, len_0):
         # Set ϕ value
         if _10_0 == 0:
@@ -3873,7 +3893,7 @@ def db_variance(A_0, V_0, len_0):
     sum_2[_10_0] = sum_3[(_10_0 - 1)]
     _4_0 = _v.drop_dim(sum_3)
     exp_1 = (_4_0 / len_0)
-    _7_0[:] = _v.lift(lambda indices: exp_1, [len_0])
+    _7_0[:] = _v.lift(lambda indices: exp_1, [len_0]).get_vector()
     dist_2[:] = (_6_0[:] - _7_0[:])
     _1_2[:] = (dist_2[:] * dist_2[:])
     _5_0[:] = _1_2[:]; V_2[:] = _5_0[:]
@@ -4124,7 +4144,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> histogram(
 ```py
 def histogram(A_0, B_0, N_0, num_bins_0, result_0):
     # Shared array declarations
-    _1_3 = sint.Tensor([num_bins_0, N_0])
+    _1_3 = _v.sbool.Tensor([num_bins_0, N_0])
     _2_0 = sint.Tensor([num_bins_0])
     _3_0 = sint.Tensor([num_bins_0])
     _4_0 = sint.Tensor([num_bins_0, N_0])
@@ -4137,24 +4157,24 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
     val_4 = sint.Tensor([num_bins_0, N_0])
     val_5 = sint.Tensor([num_bins_0, N_0])
     # Function body
-    _2_0[:] = _v.lift(lambda indices: result_0, [num_bins_0])
-    _5_0.assign_vector_by_indices((_v.lift(lambda indices: (A_0[indices[1]]), [num_bins_0, N_0])).get_vector(), None, None)
-    _6_0.assign_vector_by_indices((_v.lift(lambda indices: indices[0], [num_bins_0, N_0])).get_vector(), None, None)
-    _7_0.assign_vector_by_indices((_v.lift(lambda indices: (B_0[indices[1]]), [num_bins_0, N_0])).get_vector(), None, None)
-    _4_0.assign_vector_by_indices((_v.lift(lambda indices: _2_0[:], [num_bins_0, N_0])).get_vector(), None, None)
-    _1_3.assign_vector_by_indices(((_5_0.get_vector_by_indices(None, None) == _6_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _2_0[:] = _v.lift(lambda indices: result_0, [num_bins_0]).get_vector()
+    _v.vectorized_assign(_5_0, [None, None], _v.lift(lambda indices: (A_0[indices[1]]), [num_bins_0, N_0]).get_vector())
+    _v.vectorized_assign(_6_0, [None, None], _v.lift(lambda indices: indices[0], [num_bins_0, N_0]).get_vector())
+    _v.vectorized_assign(_7_0, [None, None], _v.lift(lambda indices: (B_0[indices[1]]), [num_bins_0, N_0]).get_vector())
+    _v.vectorized_assign(_4_0, [None, None], _v.lift(lambda indices: _2_0[:], [num_bins_0, N_0]).get_vector())
+    _v.vectorized_assign(_1_3, [None, None], (_v.vectorized_access(_5_0, [None, None]) == _v.vectorized_access(_6_0, [None, None])))
     for _8_0 in range(0, N_0):
         # Set ϕ value
         if _8_0 == 0:
-            result_2.assign_vector_by_indices((_4_0.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
+            _v.vectorized_assign(result_2, [None, _8_0], _v.vectorized_access(_4_0, [None, _8_0]))
         else:
-            result_2.assign_vector_by_indices((result_3.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
-        val_4.assign_vector_by_indices((result_2.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
-        val_3.assign_vector_by_indices(((result_2.get_vector_by_indices(None, _8_0) + _7_0.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
-        val_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, _8_0).if_else(val_3.get_vector_by_indices(None, _8_0), val_4.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
-        (TODO: fix this case).assign_vector_by_indices((val_5.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0); result_3.assign_vector_by_indices(((TODO: fix this case).get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
+            _v.vectorized_assign(result_2, [None, _8_0], _v.vectorized_access(result_3, [None, (_8_0 - 1)]))
+        _v.vectorized_assign(val_4, [None, _8_0], _v.vectorized_access(result_2, [None, _8_0]))
+        _v.vectorized_assign(val_3, [None, _8_0], (_v.vectorized_access(result_2, [None, _8_0]) + _v.vectorized_access(_7_0, [None, _8_0])))
+        _v.vectorized_assign(val_5, [None, _8_0], _v.vectorized_access(_1_3, [None, _8_0]).if_else(_v.vectorized_access(val_3, [None, _8_0]), _v.vectorized_access(val_4, [None, _8_0])))
+        _v.vectorized_assign((TODO: fix this case), [None, _8_0], _v.vectorized_access(val_5, [None, _8_0])); _v.vectorized_assign(result_3, [None, _8_0], _v.vectorized_access((TODO: fix this case), [None, _8_0]))
     # Loop exit ϕ values
-    result_2.assign_vector_by_indices((result_3.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
+    _v.vectorized_assign(result_2, [None, _8_0], _v.vectorized_access(result_3, [None, (_8_0 - 1)]))
     _3_0[:] = _v.drop_dim(result_3)
     return _3_0
 ```
@@ -4336,9 +4356,9 @@ def inner_product(A_0, B_0, N_0):
     temp_2 = sint.Tensor([N_0])
     # Function body
     sum_1 = sint(0)
-    _2_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [N_0])
-    _3_0[:] = _v.lift(lambda indices: (B_0[indices[0]]), [N_0])
-    _1_0[:] = _v.lift(lambda indices: sum_1, [N_0])
+    _2_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [N_0]).get_vector()
+    _3_0[:] = _v.lift(lambda indices: (B_0[indices[0]]), [N_0]).get_vector()
+    _1_0[:] = _v.lift(lambda indices: sum_1, [N_0]).get_vector()
     temp_2[:] = (_2_0[:] * _3_0[:])
     for _5_0 in range(0, N_0):
         # Set ϕ value
@@ -4730,7 +4750,7 @@ encrypto::motion::SecureUnsignedInteger longest_102(
 ```py
 def longest_102(Seq_0, N_0, Syms_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
     _10_0 = sint.Tensor([N_0])
     _11_0 = sint.Tensor([N_0])
     _12_0 = sint.Tensor([N_0])
@@ -4739,36 +4759,36 @@ def longest_102(Seq_0, N_0, Syms_0):
     _15_0 = sint.Tensor([N_0])
     _16_0 = sint.Tensor([N_0])
     _17_0 = sint.Tensor([N_0])
-    _2_2 = sint.Tensor([N_0])
-    _4_2 = sint.Tensor([N_0])
-    _5_2 = sint.Tensor([N_0])
-    _6_2 = sint.Tensor([N_0])
-    _7_2 = sint.Tensor([N_0])
-    _8_2 = sint.Tensor([N_0])
-    _9_0 = sint.Tensor([N_0])
+    _2_2 = _v.sbool.Tensor([N_0])
+    _4_2 = _v.sbool.Tensor([N_0])
+    _5_2 = _v.sbool.Tensor([N_0])
+    _6_2 = _v.sbool.Tensor([N_0])
+    _7_2 = _v.sbool.Tensor([N_0])
+    _8_2 = _v.sbool.Tensor([N_0])
+    _9_0 = _v.sbool.Tensor([N_0])
     length_2 = sint.Tensor([N_0])
     length_3 = sint.Tensor([N_0])
     length_5 = sint.Tensor([N_0])
     max_len_2 = sint.Tensor([N_0])
     max_len_3 = sint.Tensor([N_0])
     max_len_4 = sint.Tensor([N_0])
-    s0_2 = sint.Tensor([N_0])
-    s0_3 = sint.Tensor([N_0])
-    s1_2 = sint.Tensor([N_0])
+    s0_2 = _v.sbool.Tensor([N_0])
+    s0_3 = _v.sbool.Tensor([N_0])
+    s1_2 = _v.sbool.Tensor([N_0])
     # Function body
-    s0_1 = sint(False)
+    s0_1 = _v.sbool(False)
     max_len_1 = sint(0)
     length_1 = sint(0)
-    _12_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _13_0[:] = _v.lift(lambda indices: (Syms_0[2]), [N_0])
-    _14_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _15_0[:] = _v.lift(lambda indices: (Syms_0[1]), [N_0])
-    _16_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _17_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0])
+    _12_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _13_0[:] = _v.lift(lambda indices: (Syms_0[2]), [N_0]).get_vector()
+    _14_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _15_0[:] = _v.lift(lambda indices: (Syms_0[1]), [N_0]).get_vector()
+    _16_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _17_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0]).get_vector()
     length_4 = sint(0)
-    _9_0[:] = _v.lift(lambda indices: s0_1, [N_0])
-    _10_0[:] = _v.lift(lambda indices: max_len_1, [N_0])
-    _11_0[:] = _v.lift(lambda indices: length_1, [N_0])
+    _9_0[:] = _v.lift(lambda indices: s0_1, [N_0]).get_vector()
+    _10_0[:] = _v.lift(lambda indices: max_len_1, [N_0]).get_vector()
+    _11_0[:] = _v.lift(lambda indices: length_1, [N_0]).get_vector()
     _1_2[:] = (_12_0[:] == _13_0[:])
     _2_2[:] = (_14_0[:] == _15_0[:])
     _4_2[:] = (_16_0[:] == _17_0[:])
@@ -4779,11 +4799,11 @@ def longest_102(Seq_0, N_0, Syms_0):
         else:
             s0_2[_19_0] = s0_3[(_19_0 - 1)]
         _5_2[_19_0] = s0_2[_19_0].bit_and(_4_2[_19_0])
-        s0_3[_19_0] = _v.OR(_2_2[_19_0], _5_2[_19_0])
+        s0_3[_19_0] = OR(_2_2[_19_0], _5_2[_19_0])
     # Loop exit ϕ values
     s0_2[_19_0] = s0_3[(_19_0 - 1)]
     s1_2[:] = s0_2[:].bit_and(_1_2[:])
-    _6_2[:] = _v.OR(s1_2[:], s0_3[:])
+    _6_2[:] = OR(s1_2[:], s0_3[:])
     for _20_0 in range(0, N_0):
         # Set ϕ value
         if _20_0 == 0:
@@ -5182,17 +5202,17 @@ encrypto::motion::SecureUnsignedInteger longest_odd_10(
 ```py
 def longest_odd_10(Seq_0, N_0, Syms_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
-    _10_0 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
+    _10_0 = _v.sbool.Tensor([N_0])
     _11_0 = sint.Tensor([N_0])
     _12_0 = sint.Tensor([N_0])
     _13_0 = sint.Tensor([N_0])
     _14_0 = sint.Tensor([N_0])
-    _2_2 = sint.Tensor([N_0])
+    _2_2 = _v.sbool.Tensor([N_0])
     _4_2 = sint.Tensor([N_0])
-    _5_2 = sint.Tensor([N_0])
-    _6_2 = sint.Tensor([N_0])
-    _7_2 = sint.Tensor([N_0])
+    _5_2 = _v.sbool.Tensor([N_0])
+    _6_2 = _v.sbool.Tensor([N_0])
+    _7_2 = _v.sbool.Tensor([N_0])
     _8_0 = sint.Tensor([N_0])
     _9_0 = sint.Tensor([N_0])
     current_length_2 = sint.Tensor([N_0])
@@ -5202,21 +5222,21 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
     max_length_2 = sint.Tensor([N_0])
     max_length_3 = sint.Tensor([N_0])
     max_length_4 = sint.Tensor([N_0])
-    s1_2 = sint.Tensor([N_0])
-    s2_2 = sint.Tensor([N_0])
-    s2_3 = sint.Tensor([N_0])
+    s1_2 = _v.sbool.Tensor([N_0])
+    s2_2 = _v.sbool.Tensor([N_0])
+    s2_3 = _v.sbool.Tensor([N_0])
     # Function body
     current_length_1 = sint(0)
     max_length_1 = sint(0)
-    s2_1 = sint(False)
-    _11_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _12_0[:] = _v.lift(lambda indices: (Syms_0[1]), [N_0])
-    _13_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _14_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0])
+    s2_1 = _v.sbool(False)
+    _11_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _12_0[:] = _v.lift(lambda indices: (Syms_0[1]), [N_0]).get_vector()
+    _13_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _14_0[:] = _v.lift(lambda indices: (Syms_0[0]), [N_0]).get_vector()
     current_length_4 = sint(0)
-    _8_0[:] = _v.lift(lambda indices: current_length_1, [N_0])
-    _9_0[:] = _v.lift(lambda indices: max_length_1, [N_0])
-    _10_0[:] = _v.lift(lambda indices: s2_1, [N_0])
+    _8_0[:] = _v.lift(lambda indices: current_length_1, [N_0]).get_vector()
+    _9_0[:] = _v.lift(lambda indices: max_length_1, [N_0]).get_vector()
+    _10_0[:] = _v.lift(lambda indices: s2_1, [N_0]).get_vector()
     _1_2[:] = (_11_0[:] == _12_0[:])
     s2_3[:] = (_13_0[:] == _14_0[:])
     for _16_0 in range(0, N_0):
@@ -5228,7 +5248,7 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
     # Loop exit ϕ values
     s2_2[_16_0] = s2_3[(_16_0 - 1)]
     s1_2[:] = s2_2[:].bit_and(_1_2[:])
-    _2_2[:] = (s2_2[:].if_else(0, 1))
+    _2_2[:] = (s2_2[:].bit_not())
     for _17_0 in range(0, N_0):
         # Set ϕ value
         if _17_0 == 0:
@@ -5522,9 +5542,9 @@ encrypto::motion::SecureUnsignedInteger max_dist_between_syms(
 ```py
 def max_dist_between_syms(Seq_0, N_0, Sym_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
-    _2_2 = sint.Tensor([N_0])
-    _3_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
+    _2_2 = _v.sbool.Tensor([N_0])
+    _3_2 = _v.sbool.Tensor([N_0])
     _4_0 = sint.Tensor([N_0])
     _5_0 = sint.Tensor([N_0])
     _6_0 = sint.Tensor([N_0])
@@ -5538,13 +5558,13 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
     # Function body
     max_dist_1 = sint(0)
     current_dist_1 = sint(0)
-    _6_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _7_0[:] = _v.lift(lambda indices: Sym_0, [N_0])
+    _6_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _7_0[:] = _v.lift(lambda indices: Sym_0, [N_0]).get_vector()
     current_dist_4 = sint(0)
-    _4_0[:] = _v.lift(lambda indices: max_dist_1, [N_0])
-    _5_0[:] = _v.lift(lambda indices: current_dist_1, [N_0])
+    _4_0[:] = _v.lift(lambda indices: max_dist_1, [N_0]).get_vector()
+    _5_0[:] = _v.lift(lambda indices: current_dist_1, [N_0]).get_vector()
     _1_2[:] = (_6_0[:] == _7_0[:])
-    _2_2[:] = (_1_2[:].if_else(0, 1))
+    _2_2[:] = (_1_2[:].bit_not())
     for _9_0 in range(0, N_0):
         # Set ϕ value
         if _9_0 == 0:
@@ -5838,9 +5858,9 @@ encrypto::motion::SecureUnsignedInteger max_sum_between_syms(
 ```py
 def max_sum_between_syms(Seq_0, N_0, Sym_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([N_0])
-    _2_2 = sint.Tensor([N_0])
-    _3_2 = sint.Tensor([N_0])
+    _1_2 = _v.sbool.Tensor([N_0])
+    _2_2 = _v.sbool.Tensor([N_0])
+    _3_2 = _v.sbool.Tensor([N_0])
     _4_0 = sint.Tensor([N_0])
     _5_0 = sint.Tensor([N_0])
     _6_0 = sint.Tensor([N_0])
@@ -5855,14 +5875,14 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
     # Function body
     max_sum_1 = sint(0)
     current_sum_1 = sint(0)
-    _6_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
-    _7_0[:] = _v.lift(lambda indices: Sym_0, [N_0])
-    _8_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _6_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
+    _7_0[:] = _v.lift(lambda indices: Sym_0, [N_0]).get_vector()
+    _8_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
     current_sum_4 = sint(0)
-    _4_0[:] = _v.lift(lambda indices: max_sum_1, [N_0])
-    _5_0[:] = _v.lift(lambda indices: current_sum_1, [N_0])
+    _4_0[:] = _v.lift(lambda indices: max_sum_1, [N_0]).get_vector()
+    _5_0[:] = _v.lift(lambda indices: current_sum_1, [N_0]).get_vector()
     _1_2[:] = (_6_0[:] == _7_0[:])
-    _2_2[:] = (_1_2[:].if_else(0, 1))
+    _2_2[:] = (_1_2[:].bit_not())
     for _10_0 in range(0, N_0):
         # Set ϕ value
         if _10_0 == 0:
@@ -6212,22 +6232,22 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
 ```py
 def minimal_points(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     # Shared array declarations
-    _10_0 = sint.Tensor([N_0, N_0])
+    _10_0 = _v.sbool.Tensor([N_0, N_0])
     _11_0 = sint.Tensor([N_0, N_0])
     _12_0 = sint.Tensor([N_0, N_0])
     _13_0 = sint.Tensor([N_0, N_0])
     _14_0 = sint.Tensor([N_0, N_0])
-    _15_0 = sint.Tensor([N_0])
+    _15_0 = _v.sbool.Tensor([N_0])
     _16_0 = sint.Tensor([N_0])
     _17_0 = sint.Tensor([N_0])
-    _3_3 = sint.Tensor([N_0, N_0])
-    _4_3 = sint.Tensor([N_0, N_0])
-    _5_3 = sint.Tensor([N_0, N_0])
-    _6_2 = sint.Tensor([N_0])
+    _3_3 = _v.sbool.Tensor([N_0, N_0])
+    _4_3 = _v.sbool.Tensor([N_0, N_0])
+    _5_3 = _v.sbool.Tensor([N_0, N_0])
+    _6_2 = _v.sbool.Tensor([N_0])
     _8_0 = sint.Tensor([N_0])
     _9_0 = sint.Tensor([N_0])
-    bx_3 = sint.Tensor([N_0, N_0])
-    bx_4 = sint.Tensor([N_0, N_0])
+    bx_3 = _v.sbool.Tensor([N_0, N_0])
+    bx_4 = _v.sbool.Tensor([N_0, N_0])
     result_X_2 = sint.Tensor([N_0])
     result_Y_2 = sint.Tensor([N_0])
     val_X_2 = sint.Tensor([N_0])
@@ -6237,34 +6257,34 @@ def minimal_points(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     val_Y_3 = sint.Tensor([N_0])
     val_Y_4 = sint.Tensor([N_0])
     # Function body
-    _8_0[:] = _v.lift(lambda indices: result_X_0, [N_0])
-    _9_0[:] = _v.lift(lambda indices: result_Y_0, [N_0])
-    _16_0[:] = _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0])
-    _17_0[:] = _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0])
-    bx_2 = sint(False)
-    _11_0.assign_vector_by_indices((_v.lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0])).get_vector(), None, None)
-    _12_0.assign_vector_by_indices((_v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0, N_0])).get_vector(), None, None)
-    _13_0.assign_vector_by_indices((_v.lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0])).get_vector(), None, None)
-    _14_0.assign_vector_by_indices((_v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0, N_0])).get_vector(), None, None)
+    _8_0[:] = _v.lift(lambda indices: result_X_0, [N_0]).get_vector()
+    _9_0[:] = _v.lift(lambda indices: result_Y_0, [N_0]).get_vector()
+    _16_0[:] = _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0]).get_vector()
+    _17_0[:] = _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0]).get_vector()
+    bx_2 = _v.sbool(False)
+    _v.vectorized_assign(_11_0, [None, None], _v.lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0]).get_vector())
+    _v.vectorized_assign(_12_0, [None, None], _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0, N_0]).get_vector())
+    _v.vectorized_assign(_13_0, [None, None], _v.lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0]).get_vector())
+    _v.vectorized_assign(_14_0, [None, None], _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0, N_0]).get_vector())
     val_X_2[:] = _8_0[:]
     val_Y_2[:] = _9_0[:]
     val_X_3[:] = _16_0[:]
     val_Y_3[:] = _17_0[:]
-    _10_0.assign_vector_by_indices((_v.lift(lambda indices: bx_2, [N_0, N_0])).get_vector(), None, None)
-    _3_3.assign_vector_by_indices(((_11_0.get_vector_by_indices(None, None) < _12_0.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _4_3.assign_vector_by_indices(((_13_0.get_vector_by_indices(None, None) < _14_0.get_vector_by_indices(None, None))).get_vector(), None, None)
-    _5_3.assign_vector_by_indices((_3_3.get_vector_by_indices(None, None).bit_and(_4_3.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _v.vectorized_assign(_10_0, [None, None], _v.lift(lambda indices: bx_2, [N_0, N_0]).get_vector())
+    _v.vectorized_assign(_3_3, [None, None], (_v.vectorized_access(_11_0, [None, None]) < _v.vectorized_access(_12_0, [None, None])))
+    _v.vectorized_assign(_4_3, [None, None], (_v.vectorized_access(_13_0, [None, None]) < _v.vectorized_access(_14_0, [None, None])))
+    _v.vectorized_assign(_5_3, [None, None], _v.vectorized_access(_3_3, [None, None]).bit_and(_v.vectorized_access(_4_3, [None, None])))
     for _18_0 in range(0, N_0):
         # Set ϕ value
         if _18_0 == 0:
-            bx_3.assign_vector_by_indices((_10_0.get_vector_by_indices(None, _18_0)).get_vector(), None, _18_0)
+            _v.vectorized_assign(bx_3, [None, _18_0], _v.vectorized_access(_10_0, [None, _18_0]))
         else:
-            bx_3.assign_vector_by_indices((bx_4.get_vector_by_indices(None, (_18_0 - 1))).get_vector(), None, _18_0)
-        bx_4.assign_vector_by_indices((_v.OR(bx_3.get_vector_by_indices(None, _18_0), _5_3.get_vector_by_indices(None, _18_0))).get_vector(), None, _18_0)
+            _v.vectorized_assign(bx_3, [None, _18_0], _v.vectorized_access(bx_4, [None, (_18_0 - 1)]))
+        _v.vectorized_assign(bx_4, [None, _18_0], OR(_v.vectorized_access(bx_3, [None, _18_0]), _v.vectorized_access(_5_3, [None, _18_0])))
     # Loop exit ϕ values
-    bx_3.assign_vector_by_indices((bx_4.get_vector_by_indices(None, (_18_0 - 1))).get_vector(), None, _18_0)
+    _v.vectorized_assign(bx_3, [None, _18_0], _v.vectorized_access(bx_4, [None, (_18_0 - 1)]))
     _15_0[:] = _v.drop_dim(bx_4)
-    _6_2[:] = (_15_0[:].if_else(0, 1))
+    _6_2[:] = (_15_0[:].bit_not())
     val_X_4[:] = _6_2[:].if_else(val_X_3[:], val_X_2[:])
     val_Y_4[:] = _6_2[:].if_else(val_Y_3[:], val_Y_2[:])
     _8_0[:] = val_X_4[:]; result_X_2[:] = _8_0[:]
@@ -6462,7 +6482,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> mnist_relu(
 ```py
 def mnist_relu(input_0, OUTPUT_res_0, len_outer_0, len_inner_0):
     # Shared array declarations
-    _1_3 = sint.Tensor([len_outer_0, len_inner_0])
+    _1_3 = _v.sbool.Tensor([len_outer_0, len_inner_0])
     _2_0 = sint.Tensor([len_outer_0, len_inner_0])
     _3_0 = sint.Tensor([len_outer_0, len_inner_0])
     _4_0 = sint.Tensor([len_outer_0, len_inner_0])
@@ -6471,15 +6491,15 @@ def mnist_relu(input_0, OUTPUT_res_0, len_outer_0, len_inner_0):
     val_4 = sint.Tensor([len_outer_0, len_inner_0])
     val_5 = sint.Tensor([len_outer_0, len_inner_0])
     # Function body
-    _2_0.assign_vector_by_indices((_v.lift(lambda indices: OUTPUT_res_0, [len_outer_0, len_inner_0])).get_vector(), None, None)
-    _4_0.assign_vector_by_indices((_v.lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0])).get_vector(), None, None)
-    _5_0.assign_vector_by_indices((_v.lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0])).get_vector(), None, None)
+    _v.vectorized_assign(_2_0, [None, None], _v.lift(lambda indices: OUTPUT_res_0, [len_outer_0, len_inner_0]).get_vector())
+    _v.vectorized_assign(_4_0, [None, None], _v.lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0]).get_vector())
+    _v.vectorized_assign(_5_0, [None, None], _v.lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0]).get_vector())
     val_3 = sint(1)
-    _3_0.assign_vector_by_indices((_v.lift(lambda indices: _2_0.get_vector_by_indices(None, None), [len_outer_0, len_inner_0])).get_vector(), None, None)
-    _1_3.assign_vector_by_indices(((_4_0.get_vector_by_indices(None, None) > sint(1))).get_vector(), None, None)
-    val_4.assign_vector_by_indices((_5_0.get_vector_by_indices(None, None)).get_vector(), None, None)
-    val_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, None).if_else(val_4.get_vector_by_indices(None, None), val_3)).get_vector(), None, None)
-    _3_0.assign_vector_by_indices((val_5.get_vector_by_indices(None, None)).get_vector(), None, None); OUTPUT_res_3.assign_vector_by_indices((_3_0.get_vector_by_indices(None, None)).get_vector(), None, None)
+    _v.vectorized_assign(_3_0, [None, None], _v.lift(lambda indices: _v.vectorized_access(_2_0, [None, None]), [len_outer_0, len_inner_0]).get_vector())
+    _v.vectorized_assign(_1_3, [None, None], (_v.vectorized_access(_4_0, [None, None]) > sint(1)))
+    _v.vectorized_assign(val_4, [None, None], _v.vectorized_access(_5_0, [None, None]))
+    _v.vectorized_assign(val_5, [None, None], _v.vectorized_access(_1_3, [None, None]).if_else(_v.vectorized_access(val_4, [None, None]), val_3))
+    _v.vectorized_assign(_3_0, [None, None], _v.vectorized_access(val_5, [None, None])); _v.vectorized_assign(OUTPUT_res_3, [None, None], _v.vectorized_access(_3_0, [None, None]))
     return OUTPUT_res_3
 ```
 ### `psi`
@@ -6733,39 +6753,39 @@ std::vector<encrypto::motion::SecureUnsignedInteger> psi(
 ```py
 def psi(A_0, SA_0, B_0, SB_0, result_0):
     # Shared array declarations
-    _1_3 = sint.Tensor([SA_0, SB_0])
+    _1_3 = _v.sbool.Tensor([SA_0, SB_0])
     _2_0 = sint.Tensor([SA_0])
-    _3_0 = sint.Tensor([SA_0, SB_0])
+    _3_0 = _v.sbool.Tensor([SA_0, SB_0])
     _4_0 = sint.Tensor([SA_0, SB_0])
     _5_0 = sint.Tensor([SA_0, SB_0])
     _6_0 = sint.Tensor([SA_0])
-    _7_0 = sint.Tensor([SA_0])
-    flag_3 = sint.Tensor([SA_0, SB_0])
-    flag_5 = sint.Tensor([SA_0, SB_0])
+    _7_0 = _v.sbool.Tensor([SA_0])
+    flag_3 = _v.sbool.Tensor([SA_0, SB_0])
+    flag_5 = _v.sbool.Tensor([SA_0, SB_0])
     result_2 = sint.Tensor([SA_0])
     val_2 = sint.Tensor([SA_0])
     val_3 = sint.Tensor([SA_0])
     val_4 = sint.Tensor([SA_0])
     # Function body
-    _2_0[:] = _v.lift(lambda indices: result_0, [SA_0])
-    _6_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [SA_0])
-    flag_2 = sint(False)
-    _4_0.assign_vector_by_indices((_v.lift(lambda indices: (A_0[indices[0]]), [SA_0, SB_0])).get_vector(), None, None)
-    _5_0.assign_vector_by_indices((_v.lift(lambda indices: (B_0[indices[1]]), [SA_0, SB_0])).get_vector(), None, None)
-    flag_4 = sint(True)
+    _2_0[:] = _v.lift(lambda indices: result_0, [SA_0]).get_vector()
+    _6_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [SA_0]).get_vector()
+    flag_2 = _v.sbool(False)
+    _v.vectorized_assign(_4_0, [None, None], _v.lift(lambda indices: (A_0[indices[0]]), [SA_0, SB_0]).get_vector())
+    _v.vectorized_assign(_5_0, [None, None], _v.lift(lambda indices: (B_0[indices[1]]), [SA_0, SB_0]).get_vector())
+    flag_4 = _v.sbool(True)
     val_2[:] = _2_0[:]
     val_3[:] = _6_0[:]
-    _3_0.assign_vector_by_indices((_v.lift(lambda indices: flag_2, [SA_0, SB_0])).get_vector(), None, None)
-    _1_3.assign_vector_by_indices(((_4_0.get_vector_by_indices(None, None) == _5_0.get_vector_by_indices(None, None))).get_vector(), None, None)
+    _v.vectorized_assign(_3_0, [None, None], _v.lift(lambda indices: flag_2, [SA_0, SB_0]).get_vector())
+    _v.vectorized_assign(_1_3, [None, None], (_v.vectorized_access(_4_0, [None, None]) == _v.vectorized_access(_5_0, [None, None])))
     for _8_0 in range(0, SB_0):
         # Set ϕ value
         if _8_0 == 0:
-            flag_3.assign_vector_by_indices((_3_0.get_vector_by_indices(None, _8_0)).get_vector(), None, _8_0)
+            _v.vectorized_assign(flag_3, [None, _8_0], _v.vectorized_access(_3_0, [None, _8_0]))
         else:
-            flag_3.assign_vector_by_indices((flag_5.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
-        flag_5.assign_vector_by_indices((_1_3.get_vector_by_indices(None, _8_0).if_else(flag_4, flag_3.get_vector_by_indices(None, _8_0))).get_vector(), None, _8_0)
+            _v.vectorized_assign(flag_3, [None, _8_0], _v.vectorized_access(flag_5, [None, (_8_0 - 1)]))
+        _v.vectorized_assign(flag_5, [None, _8_0], _v.vectorized_access(_1_3, [None, _8_0]).if_else(flag_4, _v.vectorized_access(flag_3, [None, _8_0])))
     # Loop exit ϕ values
-    flag_3.assign_vector_by_indices((flag_5.get_vector_by_indices(None, (_8_0 - 1))).get_vector(), None, _8_0)
+    _v.vectorized_assign(flag_3, [None, _8_0], _v.vectorized_access(flag_5, [None, (_8_0 - 1)]))
     _7_0[:] = _v.drop_dim(flag_5)
     val_4[:] = _7_0[:].if_else(val_3[:], val_2[:])
     _2_0[:] = val_4[:]; result_2[:] = _2_0[:]
