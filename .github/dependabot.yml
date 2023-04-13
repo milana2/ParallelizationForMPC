@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: gitsubmodule
-    directory: /backend_submodules
+    directory: /
     schedule:
       interval: daily
   - package-ecosystem: pip
