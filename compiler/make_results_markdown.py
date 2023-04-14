@@ -14,7 +14,11 @@ from compiler.type_analysis import TypeEnv
 from compiler.util import assert_never
 from tests.context import STAGES_DIR, SKIPPED_TESTS
 from tests.backends.motion.benchmark import run_benchmark as motion_run_benchmark
-from tests.backends.mp_spdz.benchmark import run_benchmark as spdz_run_benchmark
+from tests.backends.mp_spdz.benchmark import (
+    run_benchmark as spdz_run_benchmark,
+    get_compile_stats_arith as spdz_get_compile_stats_arith,
+    get_compile_stats_bin as spdz_get_compile_stats_bin,
+)
 from tests.backends import Backend
 
 
@@ -161,22 +165,63 @@ def build_motion_benchmark_tables(circuits_path: str) -> str:
 
 def build_spdz_benchmark_tables() -> str:
     table = "## MP-SPDZ Benchmark Data\n"
+
+    test_case_dirs = [
+        test_case_dir
+        for test_case_dir in sorted(
+            os.scandir(STAGES_DIR), key=lambda entry: entry.name
+        )
+        if test_case_dir.name
+        not in SKIPPED_TESTS[None] + SKIPPED_TESTS[Backend.MP_SPDZ]
+    ]
+
+    table += "### Arithmetic protocol compilation\n"
+    table += "| Benchmark | Compile time (seconds) | # int triples | # int opens | # VM rounds |\n"
+    table += "| - | - | - | - | - |\n"
+    for test_case_dir in test_case_dirs:
+        for vectorized in (True, False):
+            data = spdz_get_compile_stats_arith(
+                test_case_dir.name, test_case_dir.path, vectorized
+            )
+            table += "|"
+            table += (
+                test_case_dir.name
+                + (" (Non-Vectorized)" if not vectorized else "")
+                + "|"
+            )
+            table += str(round(data.time, ndigits=3)) + "|"
+            table += str(data.int_triples) + "|"
+            table += str(data.int_opens) + "|"
+            table += str(data.vm_rounds) + "|"
+            table += "\n"
+
+    binary = 32
+    table += f"### Binary protocol compilation ({binary} bit default)\n"
+    table += "| Benchmark | Compile time (seconds) | # bit triples | # VM rounds |\n"
+    table += "| - | - | - | - |\n"
+    for test_case_dir in test_case_dirs:
+        for vectorized in (True, False):
+            data = spdz_get_compile_stats_bin(
+                test_case_dir.name, test_case_dir.path, vectorized, binary
+            )
+            table += "|"
+            table += (
+                test_case_dir.name
+                + (" (Non-Vectorized)" if not vectorized else "")
+                + "|"
+            )
+            table += str(round(data.time, ndigits=3)) + "|"
+            table += str(data.bit_triples) + "|"
+            table += str(data.vm_rounds) + "|"
+            table += "\n"
+
     for protocol in compiler.backends.mp_spdz.VALID_PROTOCOLS:
         table += f"\n### {protocol.title()} protocol\n"
 
         table += "| Benchmark | Time (seconds) | Data sent (MB) |\n"
         table += "| - | - | - |\n"
 
-        for test_case_dir in sorted(
-            os.scandir(STAGES_DIR), key=lambda entry: entry.name
-        ):
-            if test_case_dir.name in (
-                SKIPPED_TESTS[None] + SKIPPED_TESTS[Backend.MP_SPDZ]
-            ):
-                continue
-
-            print(test_case_dir.name)
-
+        for test_case_dir in test_case_dirs:
             for vectorized in (True, False):
                 data = spdz_run_benchmark(
                     test_case_dir.name, test_case_dir.path, protocol, vectorized

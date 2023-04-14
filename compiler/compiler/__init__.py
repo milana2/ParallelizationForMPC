@@ -113,18 +113,17 @@ def compile(
             print()
 
         if out_dir:
-            if protocol not in backend.valid_protocols():
-                raise ValueError(
-                    f"Invalid protocol: {protocol}. Valid protocols are: {backend.valid_protocols()}"
-                )
+            render_params = {
+                "out_dir": out_dir,
+                "overwrite": overwrite_out_dir,
+            }
+            if protocol is not None:
+                if protocol not in backend.valid_protocols():
+                    raise ValueError(
+                        f"Invalid protocol: {protocol}. Valid protocols are: {backend.valid_protocols()}"
+                    )
+                render_params["protocol"] = protocol
 
             backend.render_application(
-                linear,
-                type_env,
-                {
-                    "out_dir": out_dir,
-                    "overwrite": overwrite_out_dir,
-                    "protocol": protocol,
-                },
-                run_vectorization,
+                linear, type_env, render_params, run_vectorization
             )
