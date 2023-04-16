@@ -43,5 +43,18 @@ SKIPPED_TESTS = {
         "chapterfour_figure_12",
         # Wrong result with semi-bin
         "convex_hull",
+        # ANA: These all work. Skipping just to test ideas
+        #"longest_102",
+        #"count_102",
+        #"longest_odd_10",
+        #"biometric_fast",
+        #"cryptonets_max_pooling",
+        #"max_dist_between_syms",
+        #"count_123",
+        #"max_sum_between_syms",
+        #"chapterfour_figure_12",
+        #"inner_product",
+        #"biometric",
+        #"count_10s"
     ],
 }
