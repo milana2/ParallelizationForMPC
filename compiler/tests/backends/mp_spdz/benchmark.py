@@ -162,6 +162,9 @@ def run_benchmark(
     set_up_spdz_compile(benchmark_name, benchmark_path, vectorized)
     submodule_path = Backend.MP_SPDZ.submodule_path()
 
+    print("RUNNING BENCH",benchmark_name,benchmark_path,submodule_path)    
+
+    
     # Write an indicator file when running `make setup` so it only needs to run once
     setup_indicator_path = os.path.join(submodule_path, ".ran-make-setup")
     if not os.path.exists(setup_indicator_path):
@@ -172,8 +175,24 @@ def run_benchmark(
     if "bmr" in protocol:
         bmr_workaround()
 
+    # Adding compile time stats
+    start_time = time()
     p = subprocess.Popen(
-        ["Scripts/compile-run.py", "-E", protocol, "benchmark"],
+	["./compile.py", "benchmark"] + ([] if protocol != "semi-bin" else ["-B", str(32)]),
+        cwd=submodule_path,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    stdout, stderr = p.communicate(timeout=600)
+    assert p.returncode == 0, stderr
+    end_time = time()
+    compile_time = end_time - start_time
+    print("COMPILE TIME --- %s seconds ---" % compile_time)
+    # End of compile time status
+    
+    p = subprocess.Popen(
+        ["Scripts/compile-run.py", "-v", "-E", protocol, "benchmark"],
         cwd=submodule_path,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -181,4 +200,5 @@ def run_benchmark(
     )
     stdout, stderr = p.communicate(timeout=timeout)
     assert p.returncode == 0, stderr
+    print(stdout)
     return BenchmarkOutput(stdout)
