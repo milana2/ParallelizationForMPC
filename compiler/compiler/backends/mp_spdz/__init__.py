@@ -41,20 +41,20 @@ UpdatelessAssignRHS = Union[
 
 
 VALID_PROTOCOLS = [
-    "mascot",
+    #"mascot",
     # "lowgear",
     # "highgear",
     # "spdz2k",
     # "tiny",
     # "tinier",
-    "semi-bmr",
+    #"semi-bmr",
     # "cowgear",
     # "chaigear",
-    "semi",
-    "hemi",
-    "temi",
-    "soho",
-    "semi2k",
+    #"semi",
+    #"hemi",
+    #"temi",
+    #"soho",
+    #"semi2k",
     "semi-bin",
     # "yao-gc",
     # "yao-bmr",
@@ -119,6 +119,9 @@ def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) ->
     lhs = normalize_vectorized_access(lhs)
     array = render_var(lhs.array, dict())
     value = render_assign_rhs(rhs, dict())
+    # TODO: Ana added these two lines.
+    if isinstance(rhs, LiftExpr):
+        return f"{array} = {value}"
     if len(lhs.dim_sizes) == 1:
         slice = render_array_slice(lhs, dict())
         return f"{array}[{slice}] = {value}"
@@ -191,7 +194,8 @@ def render_lift_expr(lift: LiftExpr) -> str:
         {var: f"indices[{index}]" for index, (var, _) in enumerate(lift.dims)},
     )
     dim_sizes = ", ".join(render_atom(size, False, dict()) for (_, size) in lift.dims)
-    return f"_v.lift(lambda indices: {expr}, [{dim_sizes}]).get_vector()"
+    #return f"_v.lift(lambda indices: {expr}, [{dim_sizes}]).get_vector()"
+    return f"_v.lift(lambda indices: {expr}, [{dim_sizes}])" 
 
 
 def render_assign_rhs(
