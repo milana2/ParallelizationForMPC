@@ -14,15 +14,15 @@ def psi(A_0, SA_0, B_0, SB_0, result_0):
     val_3 = sint.Tensor([SA_0])
     val_4 = sint.Tensor([SA_0])
     # Function body
-    _2_0[:] = _v.lift(lambda indices: result_0, [SA_0]).get_vector()
-    _6_0[:] = _v.lift(lambda indices: (A_0[indices[0]]), [SA_0]).get_vector()
+    _2_0 = _v.lift(lambda indices: result_0, [SA_0])
+    _6_0 = _v.lift(lambda indices: (A_0[indices[0]]), [SA_0])
     flag_2 = _v.sbool(False)
-    _v.vectorized_assign(_4_0, [None, None], _v.lift(lambda indices: (A_0[indices[0]]), [SA_0, SB_0]).get_vector())
-    _v.vectorized_assign(_5_0, [None, None], _v.lift(lambda indices: (B_0[indices[1]]), [SA_0, SB_0]).get_vector())
+    _4_0 = _v.lift(lambda indices: (A_0[indices[0]]), [SA_0, SB_0])
+    _5_0 = _v.lift(lambda indices: (B_0[indices[1]]), [SA_0, SB_0])
     flag_4 = _v.sbool(True)
     val_2[:] = _2_0[:]
     val_3[:] = _6_0[:]
-    _v.vectorized_assign(_3_0, [None, None], _v.lift(lambda indices: flag_2, [SA_0, SB_0]).get_vector())
+    _3_0 = _v.lift(lambda indices: flag_2, [SA_0, SB_0])
     _v.vectorized_assign(_1_3, [None, None], (_v.vectorized_access(_4_0, [None, None]) == _v.vectorized_access(_5_0, [None, None])))
     for _8_0 in range(0, SB_0):
         # Set ϕ value

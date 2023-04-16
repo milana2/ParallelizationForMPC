@@ -25,20 +25,20 @@ def minimal_points(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     val_Y_3 = sint.Tensor([N_0])
     val_Y_4 = sint.Tensor([N_0])
     # Function body
-    _8_0[:] = _v.lift(lambda indices: result_X_0, [N_0]).get_vector()
-    _9_0[:] = _v.lift(lambda indices: result_Y_0, [N_0]).get_vector()
-    _16_0[:] = _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0]).get_vector()
-    _17_0[:] = _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0]).get_vector()
+    _8_0 = _v.lift(lambda indices: result_X_0, [N_0])
+    _9_0 = _v.lift(lambda indices: result_Y_0, [N_0])
+    _16_0 = _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0])
+    _17_0 = _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0])
     bx_2 = _v.sbool(False)
-    _v.vectorized_assign(_11_0, [None, None], _v.lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0]).get_vector())
-    _v.vectorized_assign(_12_0, [None, None], _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0, N_0]).get_vector())
-    _v.vectorized_assign(_13_0, [None, None], _v.lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0]).get_vector())
-    _v.vectorized_assign(_14_0, [None, None], _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0, N_0]).get_vector())
+    _11_0 = _v.lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0])
+    _12_0 = _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0, N_0])
+    _13_0 = _v.lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0])
+    _14_0 = _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0, N_0])
     val_X_2[:] = _8_0[:]
     val_Y_2[:] = _9_0[:]
     val_X_3[:] = _16_0[:]
     val_Y_3[:] = _17_0[:]
-    _v.vectorized_assign(_10_0, [None, None], _v.lift(lambda indices: bx_2, [N_0, N_0]).get_vector())
+    _10_0 = _v.lift(lambda indices: bx_2, [N_0, N_0])
     _v.vectorized_assign(_3_3, [None, None], (_v.vectorized_access(_11_0, [None, None]) < _v.vectorized_access(_12_0, [None, None])))
     _v.vectorized_assign(_4_3, [None, None], (_v.vectorized_access(_13_0, [None, None]) < _v.vectorized_access(_14_0, [None, None])))
     _v.vectorized_assign(_5_3, [None, None], _v.vectorized_access(_3_3, [None, None]).bit_and(_v.vectorized_access(_4_3, [None, None])))

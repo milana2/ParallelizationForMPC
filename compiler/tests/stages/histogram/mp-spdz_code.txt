@@ -13,11 +13,11 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
     val_4 = sint.Tensor([num_bins_0, N_0])
     val_5 = sint.Tensor([num_bins_0, N_0])
     # Function body
-    _2_0[:] = _v.lift(lambda indices: result_0, [num_bins_0]).get_vector()
-    _v.vectorized_assign(_5_0, [None, None], _v.lift(lambda indices: (A_0[indices[1]]), [num_bins_0, N_0]).get_vector())
-    _v.vectorized_assign(_6_0, [None, None], _v.lift(lambda indices: indices[0], [num_bins_0, N_0]).get_vector())
-    _v.vectorized_assign(_7_0, [None, None], _v.lift(lambda indices: (B_0[indices[1]]), [num_bins_0, N_0]).get_vector())
-    _v.vectorized_assign(_4_0, [None, None], _v.lift(lambda indices: _2_0[:], [num_bins_0, N_0]).get_vector())
+    _2_0 = _v.lift(lambda indices: result_0, [num_bins_0])
+    _5_0 = _v.lift(lambda indices: (A_0[indices[1]]), [num_bins_0, N_0])
+    _6_0 = _v.lift(lambda indices: indices[0], [num_bins_0, N_0])
+    _7_0 = _v.lift(lambda indices: (B_0[indices[1]]), [num_bins_0, N_0])
+    _4_0 = _v.lift(lambda indices: _2_0[:], [num_bins_0, N_0])
     _v.vectorized_assign(_1_3, [None, None], (_v.vectorized_access(_5_0, [None, None]) == _v.vectorized_access(_6_0, [None, None])))
     for _8_0 in range(0, N_0):
         # Set ϕ value

@@ -33,26 +33,26 @@ def convex_hull(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     val_Y_3 = sint.Tensor([N_0])
     val_Y_4 = sint.Tensor([N_0])
     # Function body
-    _11_0[:] = _v.lift(lambda indices: result_X_0, [N_0]).get_vector()
-    _12_0[:] = _v.lift(lambda indices: result_Y_0, [N_0]).get_vector()
-    _13_0[:] = _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0]).get_vector()
-    _14_0[:] = _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0]).get_vector()
+    _11_0 = _v.lift(lambda indices: result_X_0, [N_0])
+    _12_0 = _v.lift(lambda indices: result_Y_0, [N_0])
+    _13_0 = _v.lift(lambda indices: (X_coords_0[indices[0]]), [N_0])
+    _14_0 = _v.lift(lambda indices: (Y_coords_0[indices[0]]), [N_0])
     is_hull_2 = _v.sbool(True)
-    _v.vectorized_assign(_16_0, [None, None], _v.lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0]).get_vector())
-    _v.vectorized_assign(_17_0, [None, None], _v.lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0]).get_vector())
+    _16_0 = _v.lift(lambda indices: (X_coords_0[indices[1]]), [N_0, N_0])
+    _17_0 = _v.lift(lambda indices: (Y_coords_0[indices[1]]), [N_0, N_0])
     is_hull_4 = _v.sbool(False)
     val_X_2[:] = _11_0[:]
     val_Y_2[:] = _12_0[:]
     p1_X_2[:] = _13_0[:]
     p1_Y_2[:] = _14_0[:]
-    _v.vectorized_assign(_15_0, [None, None], _v.lift(lambda indices: is_hull_2, [N_0, N_0]).get_vector())
+    _15_0 = _v.lift(lambda indices: is_hull_2, [N_0, N_0])
     _v.vectorized_assign(p2_X_3, [None, None], _v.vectorized_access(_16_0, [None, None]))
     _v.vectorized_assign(p2_Y_3, [None, None], _v.vectorized_access(_17_0, [None, None]))
     _1_2[:] = (p1_X_2[:] <= sint(0))
-    _v.vectorized_assign(_18_0, [None, None], _v.lift(lambda indices: p1_X_2[:], [N_0, N_0]).get_vector())
+    _18_0 = _v.lift(lambda indices: p1_X_2[:], [N_0, N_0])
     val_X_3[:] = p1_X_2[:]
     _2_2[:] = (p1_Y_2[:] >= sint(0))
-    _v.vectorized_assign(_19_0, [None, None], _v.lift(lambda indices: p1_Y_2[:], [N_0, N_0]).get_vector())
+    _19_0 = _v.lift(lambda indices: p1_Y_2[:], [N_0, N_0])
     val_Y_3[:] = p1_Y_2[:]
     _v.vectorized_assign(_6_3, [None, None], (_v.vectorized_access(_18_0, [None, None]) <= _v.vectorized_access(p2_X_3, [None, None])))
     _3_2[:] = _1_2[:].bit_and(_2_2[:])

@@ -16,11 +16,11 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
     # Function body
     max_dist_1 = sint(0)
     current_dist_1 = sint(0)
-    _6_0[:] = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0]).get_vector()
-    _7_0[:] = _v.lift(lambda indices: Sym_0, [N_0]).get_vector()
+    _6_0 = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
+    _7_0 = _v.lift(lambda indices: Sym_0, [N_0])
     current_dist_4 = sint(0)
-    _4_0[:] = _v.lift(lambda indices: max_dist_1, [N_0]).get_vector()
-    _5_0[:] = _v.lift(lambda indices: current_dist_1, [N_0]).get_vector()
+    _4_0 = _v.lift(lambda indices: max_dist_1, [N_0])
+    _5_0 = _v.lift(lambda indices: current_dist_1, [N_0])
     _1_2[:] = (_6_0[:] == _7_0[:])
     _2_2[:] = (_1_2[:].bit_not())
     for _9_0 in range(0, N_0):
