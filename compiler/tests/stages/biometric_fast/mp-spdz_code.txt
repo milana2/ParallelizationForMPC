@@ -1,28 +1,28 @@
 def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differences_0):
     # Shared array declarations
-    _1_2 = _v.sbool.Tensor([N_0])
-    _10_0 = sint.Tensor([N_0])
-    _11_0 = sint.Tensor([N_0])
-    _16_0 = sint.Tensor([N_0])
-    _3_0 = sint.Tensor([N_0])
-    _4_0 = sint.Tensor([N_0])
-    _5_0 = sint.Tensor([N_0])
-    _6_0 = sint.Tensor([N_0])
-    _7_0 = sint.Tensor([N_0, D_0])
-    _8_0 = sint.Tensor([N_0, D_0])
-    _9_0 = sint.Tensor([N_0, D_0])
-    a_sqr_plus_b_sqr_2 = sint.Tensor([N_0])
-    differences_2 = sint.Tensor([N_0])
-    min_diff_2 = sint.Tensor([N_0])
-    min_diff_3 = sint.Tensor([N_0])
-    min_diff_4 = sint.Tensor([N_0])
-    min_index_2 = sint.Tensor([N_0])
-    min_index_4 = sint.Tensor([N_0])
-    min_index_6 = sint.Tensor([N_0])
-    this_diff_2 = sint.Tensor([N_0])
-    tmp_3 = sint.Tensor([N_0, D_0])
-    two_a_b_3 = sint.Tensor([N_0, D_0])
-    two_a_b_4 = sint.Tensor([N_0, D_0])
+    _1_2 = [None] * (N_0)
+    _10_0 = [None] * (N_0)
+    _11_0 = [None] * (N_0)
+    _16_0 = [None] * (N_0)
+    _3_0 = [None] * (N_0)
+    _4_0 = [None] * (N_0)
+    _5_0 = [None] * (N_0)
+    _6_0 = [None] * (N_0)
+    _7_0 = [None] * (N_0 * D_0)
+    _8_0 = [None] * (N_0 * D_0)
+    _9_0 = [None] * (N_0 * D_0)
+    a_sqr_plus_b_sqr_2 = [None] * (N_0)
+    differences_2 = [None] * (N_0)
+    min_diff_2 = [None] * (N_0)
+    min_diff_3 = [None] * (N_0)
+    min_diff_4 = [None] * (N_0)
+    min_index_2 = [None] * (N_0)
+    min_index_4 = [None] * (N_0)
+    min_index_6 = [None] * (N_0)
+    this_diff_2 = [None] * (N_0)
+    tmp_3 = [None] * (N_0 * D_0)
+    two_a_b_3 = [None] * (N_0 * D_0)
+    two_a_b_4 = [None] * (N_0 * D_0)
     # Function body
     min_index_1 = sint(0)
     _4_0 = _v.lift(lambda indices: differences_0, [N_0])
@@ -35,51 +35,51 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
     min_diff_1 = sint(99999)
     _16_0 = _v.lift(lambda indices: indices[0], [N_0])
     _3_0 = _v.lift(lambda indices: min_index_1, [N_0])
-    a_sqr_plus_b_sqr_2[:] = (_5_0[:] + _6_0[:])
+    _v.vectorized_assign(a_sqr_plus_b_sqr_2, [N_0], [None], (_v.vectorized_access(_5_0, [N_0], [None]) + _v.vectorized_access(_6_0, [N_0], [None])))
     _7_0 = _v.lift(lambda indices: two_a_b_2, [N_0, D_0])
-    _v.vectorized_assign(tmp_3, [None, None], (_v.vectorized_access(_8_0, [None, None]) * _v.vectorized_access(_9_0, [None, None])))
+    _v.vectorized_assign(tmp_3, [N_0, D_0], [None, None], (_v.vectorized_access(_8_0, [N_0, D_0], [None, None]) * _v.vectorized_access(_9_0, [N_0, D_0], [None, None])))
     _11_0 = _v.lift(lambda indices: min_diff_1, [N_0])
     for _15_0 in range(0, N_0):
         # Set ϕ value
         if _15_0 == 0:
-            min_index_2[_15_0] = _3_0[_15_0]
+            _v.vectorized_assign(min_index_2, [N_0], [_15_0], _v.vectorized_access(_3_0, [N_0], [_15_0]))
         else:
-            min_index_2[_15_0] = min_index_3
+            _v.vectorized_assign(min_index_2, [N_0], [_15_0], min_index_3)
     # Loop exit ϕ values
-    min_index_2[_15_0] = min_index_3
+    _v.vectorized_assign(min_index_2, [N_0], [_15_0], min_index_3)
     for _14_0 in range(0, D_0):
         # Set ϕ value
         if _14_0 == 0:
-            _v.vectorized_assign(two_a_b_3, [None, _14_0], _v.vectorized_access(_7_0, [None, _14_0]))
+            _v.vectorized_assign(two_a_b_3, [N_0, D_0], [None, _14_0], _v.vectorized_access(_7_0, [N_0, D_0], [None, _14_0]))
         else:
-            _v.vectorized_assign(two_a_b_3, [None, _14_0], _v.vectorized_access(two_a_b_4, [None, (_14_0 - 1)]))
-        _v.vectorized_assign(two_a_b_4, [None, _14_0], (_v.vectorized_access(two_a_b_3, [None, _14_0]) + _v.vectorized_access(tmp_3, [None, _14_0])))
+            _v.vectorized_assign(two_a_b_3, [N_0, D_0], [None, _14_0], _v.vectorized_access(two_a_b_4, [N_0, D_0], [None, (_14_0 - 1)]))
+        _v.vectorized_assign(two_a_b_4, [N_0, D_0], [None, _14_0], (_v.vectorized_access(two_a_b_3, [N_0, D_0], [None, _14_0]) + _v.vectorized_access(tmp_3, [N_0, D_0], [None, _14_0])))
     # Loop exit ϕ values
-    _v.vectorized_assign(two_a_b_3, [None, _14_0], _v.vectorized_access(two_a_b_4, [None, (_14_0 - 1)]))
-    _10_0[:] = _v.drop_dim(two_a_b_4)
-    this_diff_2[:] = (a_sqr_plus_b_sqr_2[:] - _10_0[:])
-    _4_0[:] = this_diff_2[:]; differences_2[:] = _4_0[:]
-    min_diff_3[:] = differences_2[:]
+    _v.vectorized_assign(two_a_b_3, [N_0, D_0], [None, _14_0], _v.vectorized_access(two_a_b_4, [N_0, D_0], [None, (_14_0 - 1)]))
+    _v.vectorized_assign(_10_0, [N_0], [None], _v.drop_dim(two_a_b_4, [N_0, D_0]))
+    _v.vectorized_assign(this_diff_2, [N_0], [None], (_v.vectorized_access(a_sqr_plus_b_sqr_2, [N_0], [None]) - _v.vectorized_access(_10_0, [N_0], [None])))
+    _v.vectorized_assign(_4_0, [N_0], [None], _v.vectorized_access(this_diff_2, [N_0], [None])); _v.vectorized_assign(differences_2, [N_0], [None], _v.vectorized_access(_4_0, [N_0], [None]))
+    _v.vectorized_assign(min_diff_3, [N_0], [None], _v.vectorized_access(differences_2, [N_0], [None]))
     for _17_0 in range(0, N_0):
         # Set ϕ value
         if _17_0 == 0:
-            min_diff_2[_17_0] = _11_0[_17_0]
+            _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(_11_0, [N_0], [_17_0]))
         else:
-            min_diff_2[_17_0] = min_diff_4[(_17_0 - 1)]
-        _1_2[_17_0] = (differences_2[_17_0] < min_diff_2[_17_0])
-        min_diff_4[_17_0] = _1_2[_17_0].if_else(min_diff_3[_17_0], min_diff_2[_17_0])
+            _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(min_diff_4, [N_0], [(_17_0 - 1)]))
+        _v.vectorized_assign(_1_2, [N_0], [_17_0], (_v.vectorized_access(differences_2, [N_0], [_17_0]) < _v.vectorized_access(min_diff_2, [N_0], [_17_0])))
+        _v.vectorized_assign(min_diff_4, [N_0], [_17_0], _v.vectorized_access(_1_2, [N_0], [_17_0]).if_else(_v.vectorized_access(min_diff_3, [N_0], [_17_0]), _v.vectorized_access(min_diff_2, [N_0], [_17_0])))
     # Loop exit ϕ values
-    min_diff_2[_17_0] = min_diff_4[(_17_0 - 1)]
+    _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(min_diff_4, [N_0], [(_17_0 - 1)]))
     for _18_0 in range(0, N_0):
         # Set ϕ value
         if _18_0 == 0:
-            min_index_4[_18_0] = min_index_2[_18_0]
+            _v.vectorized_assign(min_index_4, [N_0], [_18_0], _v.vectorized_access(min_index_2, [N_0], [_18_0]))
         else:
-            min_index_4[_18_0] = min_index_6[(_18_0 - 1)]
-        min_index_6[_18_0] = _1_2[_18_0].if_else(_16_0[_18_0], min_index_4[_18_0])
+            _v.vectorized_assign(min_index_4, [N_0], [_18_0], _v.vectorized_access(min_index_6, [N_0], [(_18_0 - 1)]))
+        _v.vectorized_assign(min_index_6, [N_0], [_18_0], _v.vectorized_access(_1_2, [N_0], [_18_0]).if_else(_v.vectorized_access(_16_0, [N_0], [_18_0]), _v.vectorized_access(min_index_4, [N_0], [_18_0])))
     # Loop exit ϕ values
-    min_index_4[_18_0] = min_index_6[(_18_0 - 1)]
-    _12_0 = _v.drop_dim(min_diff_4)
-    _13_0 = _v.drop_dim(min_index_6)
+    _v.vectorized_assign(min_index_4, [N_0], [_18_0], _v.vectorized_access(min_index_6, [N_0], [(_18_0 - 1)]))
+    _12_0 = _v.drop_dim(min_diff_4, [N_0])
+    _13_0 = _v.drop_dim(min_index_6, [N_0])
     _2_1 = (_12_0,_13_0,)
     return _2_1

@@ -1,18 +1,18 @@
 def db_variance(A_0, V_0, len_0):
     # Shared array declarations
-    _1_2 = sint.Tensor([len_0])
-    _2_0 = sint.Tensor([len_0])
-    _3_0 = sint.Tensor([len_0])
-    _5_0 = sint.Tensor([len_0])
-    _6_0 = sint.Tensor([len_0])
-    _7_0 = sint.Tensor([len_0])
-    _8_0 = sint.Tensor([len_0])
-    V_2 = sint.Tensor([len_0])
-    dist_2 = sint.Tensor([len_0])
-    res_2 = sint.Tensor([len_0])
-    res_3 = sint.Tensor([len_0])
-    sum_2 = sint.Tensor([len_0])
-    sum_3 = sint.Tensor([len_0])
+    _1_2 = [None] * (len_0)
+    _2_0 = [None] * (len_0)
+    _3_0 = [None] * (len_0)
+    _5_0 = [None] * (len_0)
+    _6_0 = [None] * (len_0)
+    _7_0 = [None] * (len_0)
+    _8_0 = [None] * (len_0)
+    V_2 = [None] * (len_0)
+    dist_2 = [None] * (len_0)
+    res_2 = [None] * (len_0)
+    res_3 = [None] * (len_0)
+    sum_2 = [None] * (len_0)
+    sum_3 = [None] * (len_0)
     # Function body
     sum_1 = sint(0)
     _3_0 = _v.lift(lambda indices: (A_0[indices[0]]), [len_0])
@@ -24,27 +24,27 @@ def db_variance(A_0, V_0, len_0):
     for _10_0 in range(0, len_0):
         # Set ϕ value
         if _10_0 == 0:
-            sum_2[_10_0] = _2_0[_10_0]
+            _v.vectorized_assign(sum_2, [len_0], [_10_0], _v.vectorized_access(_2_0, [len_0], [_10_0]))
         else:
-            sum_2[_10_0] = sum_3[(_10_0 - 1)]
-        sum_3[_10_0] = (sum_2[_10_0] + _3_0[_10_0])
+            _v.vectorized_assign(sum_2, [len_0], [_10_0], _v.vectorized_access(sum_3, [len_0], [(_10_0 - 1)]))
+        _v.vectorized_assign(sum_3, [len_0], [_10_0], (_v.vectorized_access(sum_2, [len_0], [_10_0]) + _v.vectorized_access(_3_0, [len_0], [_10_0])))
     # Loop exit ϕ values
-    sum_2[_10_0] = sum_3[(_10_0 - 1)]
-    _4_0 = _v.drop_dim(sum_3)
+    _v.vectorized_assign(sum_2, [len_0], [_10_0], _v.vectorized_access(sum_3, [len_0], [(_10_0 - 1)]))
+    _4_0 = _v.drop_dim(sum_3, [len_0])
     exp_1 = (_4_0 / len_0)
     _7_0 = _v.lift(lambda indices: exp_1, [len_0])
-    dist_2[:] = (_6_0[:] - _7_0[:])
-    _1_2[:] = (dist_2[:] * dist_2[:])
-    _5_0[:] = _1_2[:]; V_2[:] = _5_0[:]
+    _v.vectorized_assign(dist_2, [len_0], [None], (_v.vectorized_access(_6_0, [len_0], [None]) - _v.vectorized_access(_7_0, [len_0], [None])))
+    _v.vectorized_assign(_1_2, [len_0], [None], (_v.vectorized_access(dist_2, [len_0], [None]) * _v.vectorized_access(dist_2, [len_0], [None])))
+    _v.vectorized_assign(_5_0, [len_0], [None], _v.vectorized_access(_1_2, [len_0], [None])); _v.vectorized_assign(V_2, [len_0], [None], _v.vectorized_access(_5_0, [len_0], [None]))
     for _11_0 in range(0, len_0):
         # Set ϕ value
         if _11_0 == 0:
-            res_2[_11_0] = _8_0[_11_0]
+            _v.vectorized_assign(res_2, [len_0], [_11_0], _v.vectorized_access(_8_0, [len_0], [_11_0]))
         else:
-            res_2[_11_0] = res_3[(_11_0 - 1)]
-        res_3[_11_0] = (res_2[_11_0] + V_2[_11_0])
+            _v.vectorized_assign(res_2, [len_0], [_11_0], _v.vectorized_access(res_3, [len_0], [(_11_0 - 1)]))
+        _v.vectorized_assign(res_3, [len_0], [_11_0], (_v.vectorized_access(res_2, [len_0], [_11_0]) + _v.vectorized_access(V_2, [len_0], [_11_0])))
     # Loop exit ϕ values
-    res_2[_11_0] = res_3[(_11_0 - 1)]
-    _9_0 = _v.drop_dim(res_3)
+    _v.vectorized_assign(res_2, [len_0], [_11_0], _v.vectorized_access(res_3, [len_0], [(_11_0 - 1)]))
+    _9_0 = _v.drop_dim(res_3, [len_0])
     variance_1 = (_9_0 / len_0)
     return variance_1

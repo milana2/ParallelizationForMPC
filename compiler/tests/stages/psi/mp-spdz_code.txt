@@ -1,18 +1,18 @@
 def psi(A_0, SA_0, B_0, SB_0, result_0):
     # Shared array declarations
-    _1_3 = _v.sbool.Tensor([SA_0, SB_0])
-    _2_0 = sint.Tensor([SA_0])
-    _3_0 = _v.sbool.Tensor([SA_0, SB_0])
-    _4_0 = sint.Tensor([SA_0, SB_0])
-    _5_0 = sint.Tensor([SA_0, SB_0])
-    _6_0 = sint.Tensor([SA_0])
-    _7_0 = _v.sbool.Tensor([SA_0])
-    flag_3 = _v.sbool.Tensor([SA_0, SB_0])
-    flag_5 = _v.sbool.Tensor([SA_0, SB_0])
-    result_2 = sint.Tensor([SA_0])
-    val_2 = sint.Tensor([SA_0])
-    val_3 = sint.Tensor([SA_0])
-    val_4 = sint.Tensor([SA_0])
+    _1_3 = [None] * (SA_0 * SB_0)
+    _2_0 = [None] * (SA_0)
+    _3_0 = [None] * (SA_0 * SB_0)
+    _4_0 = [None] * (SA_0 * SB_0)
+    _5_0 = [None] * (SA_0 * SB_0)
+    _6_0 = [None] * (SA_0)
+    _7_0 = [None] * (SA_0)
+    flag_3 = [None] * (SA_0 * SB_0)
+    flag_5 = [None] * (SA_0 * SB_0)
+    result_2 = [None] * (SA_0)
+    val_2 = [None] * (SA_0)
+    val_3 = [None] * (SA_0)
+    val_4 = [None] * (SA_0)
     # Function body
     _2_0 = _v.lift(lambda indices: result_0, [SA_0])
     _6_0 = _v.lift(lambda indices: (A_0[indices[0]]), [SA_0])
@@ -20,20 +20,20 @@ def psi(A_0, SA_0, B_0, SB_0, result_0):
     _4_0 = _v.lift(lambda indices: (A_0[indices[0]]), [SA_0, SB_0])
     _5_0 = _v.lift(lambda indices: (B_0[indices[1]]), [SA_0, SB_0])
     flag_4 = _v.sbool(True)
-    val_2[:] = _2_0[:]
-    val_3[:] = _6_0[:]
+    _v.vectorized_assign(val_2, [SA_0], [None], _v.vectorized_access(_2_0, [SA_0], [None]))
+    _v.vectorized_assign(val_3, [SA_0], [None], _v.vectorized_access(_6_0, [SA_0], [None]))
     _3_0 = _v.lift(lambda indices: flag_2, [SA_0, SB_0])
-    _v.vectorized_assign(_1_3, [None, None], (_v.vectorized_access(_4_0, [None, None]) == _v.vectorized_access(_5_0, [None, None])))
+    _v.vectorized_assign(_1_3, [SA_0, SB_0], [None, None], (_v.vectorized_access(_4_0, [SA_0, SB_0], [None, None]) == _v.vectorized_access(_5_0, [SA_0, SB_0], [None, None])))
     for _8_0 in range(0, SB_0):
         # Set ϕ value
         if _8_0 == 0:
-            _v.vectorized_assign(flag_3, [None, _8_0], _v.vectorized_access(_3_0, [None, _8_0]))
+            _v.vectorized_assign(flag_3, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(_3_0, [SA_0, SB_0], [None, _8_0]))
         else:
-            _v.vectorized_assign(flag_3, [None, _8_0], _v.vectorized_access(flag_5, [None, (_8_0 - 1)]))
-        _v.vectorized_assign(flag_5, [None, _8_0], _v.vectorized_access(_1_3, [None, _8_0]).if_else(flag_4, _v.vectorized_access(flag_3, [None, _8_0])))
+            _v.vectorized_assign(flag_3, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(flag_5, [SA_0, SB_0], [None, (_8_0 - 1)]))
+        _v.vectorized_assign(flag_5, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(_1_3, [SA_0, SB_0], [None, _8_0]).if_else(flag_4, _v.vectorized_access(flag_3, [SA_0, SB_0], [None, _8_0])))
     # Loop exit ϕ values
-    _v.vectorized_assign(flag_3, [None, _8_0], _v.vectorized_access(flag_5, [None, (_8_0 - 1)]))
-    _7_0[:] = _v.drop_dim(flag_5)
-    val_4[:] = _7_0[:].if_else(val_3[:], val_2[:])
-    _2_0[:] = val_4[:]; result_2[:] = _2_0[:]
+    _v.vectorized_assign(flag_3, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(flag_5, [SA_0, SB_0], [None, (_8_0 - 1)]))
+    _v.vectorized_assign(_7_0, [SA_0], [None], _v.drop_dim(flag_5, [SA_0, SB_0]))
+    _v.vectorized_assign(val_4, [SA_0], [None], _v.vectorized_access(_7_0, [SA_0], [None]).if_else(_v.vectorized_access(val_3, [SA_0], [None]), _v.vectorized_access(val_2, [SA_0], [None])))
+    _v.vectorized_assign(_2_0, [SA_0], [None], _v.vectorized_access(val_4, [SA_0], [None])); _v.vectorized_assign(result_2, [SA_0], [None], _v.vectorized_access(_2_0, [SA_0], [None]))
     return result_2

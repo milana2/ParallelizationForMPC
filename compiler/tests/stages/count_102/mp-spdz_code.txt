@@ -1,23 +1,23 @@
 def count_102(Seq_0, N_0, Syms_0):
     # Shared array declarations
-    _1_2 = _v.sbool.Tensor([N_0])
-    _10_0 = sint.Tensor([N_0])
-    _11_0 = sint.Tensor([N_0])
-    _12_0 = sint.Tensor([N_0])
-    _13_0 = sint.Tensor([N_0])
-    _14_0 = sint.Tensor([N_0])
-    _2_2 = _v.sbool.Tensor([N_0])
-    _3_2 = _v.sbool.Tensor([N_0])
-    _5_2 = _v.sbool.Tensor([N_0])
-    _6_2 = _v.sbool.Tensor([N_0])
-    _7_0 = _v.sbool.Tensor([N_0])
-    _8_0 = sint.Tensor([N_0])
-    _9_0 = sint.Tensor([N_0])
-    c_2 = sint.Tensor([N_0])
-    c_3 = sint.Tensor([N_0])
-    c_4 = sint.Tensor([N_0])
-    s0_2 = _v.sbool.Tensor([N_0])
-    s0_3 = _v.sbool.Tensor([N_0])
+    _1_2 = [None] * (N_0)
+    _10_0 = [None] * (N_0)
+    _11_0 = [None] * (N_0)
+    _12_0 = [None] * (N_0)
+    _13_0 = [None] * (N_0)
+    _14_0 = [None] * (N_0)
+    _2_2 = [None] * (N_0)
+    _3_2 = [None] * (N_0)
+    _5_2 = [None] * (N_0)
+    _6_2 = [None] * (N_0)
+    _7_0 = [None] * (N_0)
+    _8_0 = [None] * (N_0)
+    _9_0 = [None] * (N_0)
+    c_2 = [None] * (N_0)
+    c_3 = [None] * (N_0)
+    c_4 = [None] * (N_0)
+    s0_2 = [None] * (N_0)
+    s0_3 = [None] * (N_0)
     # Function body
     s0_1 = _v.sbool(False)
     c_1 = sint(0)
@@ -29,29 +29,29 @@ def count_102(Seq_0, N_0, Syms_0):
     _14_0 = _v.lift(lambda indices: (Syms_0[0]), [N_0])
     _7_0 = _v.lift(lambda indices: s0_1, [N_0])
     _8_0 = _v.lift(lambda indices: c_1, [N_0])
-    _1_2[:] = (_9_0[:] == _10_0[:])
-    _3_2[:] = (_11_0[:] == _12_0[:])
-    _5_2[:] = (_13_0[:] == _14_0[:])
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_9_0, [N_0], [None]) == _v.vectorized_access(_10_0, [N_0], [None])))
+    _v.vectorized_assign(_3_2, [N_0], [None], (_v.vectorized_access(_11_0, [N_0], [None]) == _v.vectorized_access(_12_0, [N_0], [None])))
+    _v.vectorized_assign(_5_2, [N_0], [None], (_v.vectorized_access(_13_0, [N_0], [None]) == _v.vectorized_access(_14_0, [N_0], [None])))
     for _16_0 in range(0, N_0):
         # Set ϕ value
         if _16_0 == 0:
-            s0_2[_16_0] = _7_0[_16_0]
+            _v.vectorized_assign(s0_2, [N_0], [_16_0], _v.vectorized_access(_7_0, [N_0], [_16_0]))
         else:
-            s0_2[_16_0] = s0_3[(_16_0 - 1)]
-        _6_2[_16_0] = s0_2[_16_0].bit_and(_5_2[_16_0])
-        s0_3[_16_0] = OR(_3_2[_16_0], _6_2[_16_0])
+            _v.vectorized_assign(s0_2, [N_0], [_16_0], _v.vectorized_access(s0_3, [N_0], [(_16_0 - 1)]))
+        _v.vectorized_assign(_6_2, [N_0], [_16_0], _v.vectorized_access(s0_2, [N_0], [_16_0]).bit_and(_v.vectorized_access(_5_2, [N_0], [_16_0])))
+        _v.vectorized_assign(s0_3, [N_0], [_16_0], OR(_v.vectorized_access(_3_2, [N_0], [_16_0]), _v.vectorized_access(_6_2, [N_0], [_16_0])))
     # Loop exit ϕ values
-    s0_2[_16_0] = s0_3[(_16_0 - 1)]
-    _2_2[:] = s0_2[:].bit_and(_1_2[:])
+    _v.vectorized_assign(s0_2, [N_0], [_16_0], _v.vectorized_access(s0_3, [N_0], [(_16_0 - 1)]))
+    _v.vectorized_assign(_2_2, [N_0], [None], _v.vectorized_access(s0_2, [N_0], [None]).bit_and(_v.vectorized_access(_1_2, [N_0], [None])))
     for _17_0 in range(0, N_0):
         # Set ϕ value
         if _17_0 == 0:
-            c_2[_17_0] = _8_0[_17_0]
+            _v.vectorized_assign(c_2, [N_0], [_17_0], _v.vectorized_access(_8_0, [N_0], [_17_0]))
         else:
-            c_2[_17_0] = c_4[(_17_0 - 1)]
-        c_3[_17_0] = (c_2[_17_0] + sint(1))
-        c_4[_17_0] = _2_2[_17_0].if_else(c_3[_17_0], c_2[_17_0])
+            _v.vectorized_assign(c_2, [N_0], [_17_0], _v.vectorized_access(c_4, [N_0], [(_17_0 - 1)]))
+        _v.vectorized_assign(c_3, [N_0], [_17_0], (_v.vectorized_access(c_2, [N_0], [_17_0]) + sint(1)))
+        _v.vectorized_assign(c_4, [N_0], [_17_0], _v.vectorized_access(_2_2, [N_0], [_17_0]).if_else(_v.vectorized_access(c_3, [N_0], [_17_0]), _v.vectorized_access(c_2, [N_0], [_17_0])))
     # Loop exit ϕ values
-    c_2[_17_0] = c_4[(_17_0 - 1)]
-    _15_0 = _v.drop_dim(c_4)
+    _v.vectorized_assign(c_2, [N_0], [_17_0], _v.vectorized_access(c_4, [N_0], [(_17_0 - 1)]))
+    _15_0 = _v.drop_dim(c_4, [N_0])
     return _15_0
