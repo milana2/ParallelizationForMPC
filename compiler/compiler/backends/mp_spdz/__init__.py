@@ -77,20 +77,24 @@ def render_var(var: Var, var_mappings: dict[Var, str]) -> str:
         return str(var).replace("!", "_")
 
 
-def render_array_slice(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
-    assert len(v.dim_sizes) == 1
-    if v.vectorized_dims[0]:
-        return ":"
-    else:
-        return render_var(v.idx_vars[0], var_mappings)
+def render_vec_indices(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
+    return (
+        "["
+        + ", ".join(
+            [
+                "None" if vectorized else render_var(var, var_mappings)
+                for vectorized, var in zip(v.vectorized_dims, v.idx_vars)
+            ]
+        )
+        + "]"
+    )
 
 
-def render_multi_array_slice(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
-    return ", ".join(
-        [
-            "None" if vectorized else render_var(var, var_mappings)
-            for vectorized, var in zip(v.vectorized_dims, v.idx_vars)
-        ]
+def render_array_shape(shape: tuple[LoopBound, ...]) -> str:
+    return (
+        "["
+        + ", ".join([render_atom(dim_size, False, dict()) for dim_size in shape])
+        + "]"
     )
 
 
@@ -107,12 +111,9 @@ def normalize_vectorized_access(v: VectorizedAccess) -> VectorizedAccess:
 def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
     v = normalize_vectorized_access(v)
     array = render_var(v.array, var_mappings)
-    if len(v.dim_sizes) == 1:
-        slice = render_array_slice(v, var_mappings)
-        return f"{array}[{slice}]"
-    else:
-        slice = render_multi_array_slice(v, var_mappings)
-        return f"_v.vectorized_access({array}, [{slice}])"
+    shape = render_array_shape(v.dim_sizes)
+    indices = render_vec_indices(v, var_mappings)
+    return f"_v.vectorized_access({array}, {shape}, {indices})"
 
 
 def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) -> str:
@@ -122,12 +123,9 @@ def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) ->
     # TODO: Ana added these two lines.
     if isinstance(rhs, LiftExpr):
         return f"{array} = {value}"
-    if len(lhs.dim_sizes) == 1:
-        slice = render_array_slice(lhs, dict())
-        return f"{array}[{slice}] = {value}"
-    else:
-        slice = render_multi_array_slice(lhs, dict())
-        return f"_v.vectorized_assign({array}, [{slice}], {value})"
+    shape = render_array_shape(lhs.dim_sizes)
+    indices = render_vec_indices(lhs, dict())
+    return f"_v.vectorized_assign({array}, {shape}, {indices}, {value})"
 
 
 def render_constant(c: Constant, make_shared: bool) -> str:
@@ -239,7 +237,8 @@ def render_assign_rhs(
         else:
             array_var = arhs.array
         array = render_var(array_var, var_mappings)
-        return f"_v.drop_dim({array})"
+        shape = render_array_shape(arhs.dims)
+        return f"_v.drop_dim({array}, {shape})"
     else:
         return assert_never(arhs)
 
@@ -325,17 +324,11 @@ def render_shared_array_decl(
     var: Var, datatype: Optional[DataType], dim_sizes: list[LoopBound]
 ) -> str:
     var_rendered = render_var(var, dict())
-    dim_sizes_rendered = ", ".join(
+    size_rendered = " * ".join(
         [render_atom(dim_size, False, dict()) for dim_size in dim_sizes]
     )
-    if datatype in (DataType.INT, None):
-        element_type = "sint"
-    elif datatype is DataType.BOOL:
-        element_type = "_v.sbool"
-    else:
-        raise ValueError("Unsupported array element type")
 
-    return f"{var_rendered} = {element_type}.Tensor([{dim_sizes_rendered}])"
+    return f"{var_rendered} = [None] * ({size_rendered})"
 
 
 def render_shared_array_decls(type_env: TypeEnv) -> str:

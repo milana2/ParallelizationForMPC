@@ -4,6 +4,7 @@ Instead, the MP-SPDZ program imports it,
 and it provides some functions common to all generated MP-SPDZ programs
 """
 
+import math
 import typing
 import itertools
 
@@ -21,59 +22,86 @@ def _expand_vectorized_indices(
 
 def _index_register_vector(vector, index):
     try:
-        return vector.elements()[index]
+        return type(vector)(vector.elements()[index])
     except AttributeError:
         return vector[index]
+
+
+def _unsimdify(vector):
+    if isinstance(vector, list):
+        return vector
+    elif vector.size == 1:
+        return [vector]
+    else:
+        try:
+            return [type(vector)(value) for value in vector.elements()]
+        except AttributeError:
+            return [vector[i] for i in range(vector.size)]
+
+
+def _compute_flat_index(index: list[int], shape: list[int]) -> int:
+    flat_index = 0
+    for dim_index, dim_size in zip(index, shape):
+        flat_index = flat_index * dim_size + dim_index
+    return flat_index
 
 
 class VectorizationLibrary:
     def __init__(self, globals):
         self._print_str = globals["print_str"]
-        self._Array = globals["Array"]
-        self._Matrix = globals["Matrix"]
-        self._MultiArray = globals["MultiArray"]
         self._sint = globals["sint"]
+        self._sbits = globals["sbits"]
 
         try:
             self.sbool = globals["sintbit"]
         except KeyError:
             self.sbool = globals["sbitintvec"].get_type(1)
 
-    def vectorized_access(self, array, indices: tuple[typing.Optional[int]]):
-        indices_full = _expand_vectorized_indices(array.shape, indices)
-        result_array = self._Array(len(indices_full), array.value_type)
-        for result_index, tensor_index in enumerate(indices_full):
-            result_array[result_index] = self.access_tensor(array, tensor_index)
-        return result_array.get_vector()
+    def _simdify(self, values: list):
+        first = values[0]
+        if len(values) == 1:
+            return first
+        element_type = self.sbool if isinstance(first, self.sbool) else self._sint
+        try:
+            return element_type(values)
+        except:
+            return element_type([self._sbits(value) for value in values])
+
+    def vectorized_access(
+        self, array: list, shape: list[int], indices: tuple[typing.Optional[int]]
+    ):
+        indices_full = _expand_vectorized_indices(shape, indices)
+        result_list = []
+        for tensor_index in indices_full:
+            result_list.append(self.access_tensor(array, tensor_index, shape))
+        return self._simdify(result_list)
 
     def vectorized_assign(
-        self, array, indices: tuple[typing.Optional[int]], value
+        self, array, shape: list[int], indices: tuple[typing.Optional[int]], value
     ) -> None:
-        indices_full = _expand_vectorized_indices(array.shape, indices)
-        assert len(indices_full) == value.size, (indices_full, value.size)
+        assert value is not None
+        indices_full = _expand_vectorized_indices(shape, indices)
+        value = _unsimdify(value)
+        assert len(indices_full) == len(value)
         for value_index, tensor_index in enumerate(indices_full):
-            value_elem = _index_register_vector(value, value_index)
-            self.assign_tensor(array, tensor_index, value_elem)
+            value_elem = value[value_index]
+            self.assign_tensor(array, tensor_index, shape, value_elem)
 
-    def access_tensor(self, array, indices: typing.Union[tuple[int], list[int]]):
-        a = array
-        for index in indices:
-            a = a[index]
-        return a
+    def access_tensor(
+        self, array: list, index: typing.Union[tuple[int], list[int]], shape: list[int]
+    ):
+        flat_index = _compute_flat_index(index, shape)
+        return array[flat_index]
 
     def assign_tensor(
-        self, tensor, index: typing.Union[list[int], tuple[int]], value
+        self,
+        tensor,
+        index: typing.Union[list[int], tuple[int]],
+        shape: list[int],
+        value,
     ) -> None:
-        if isinstance(tensor, self._Array):
-            assert len(index) == 1
-            tensor[index[0]] = value
-        else:
-            t = tensor
-            slices = [t]
-            for dim_index in index[:-1]:
-                t = t[dim_index]
-                slices.append(t)
-            t[index[-1]] = value
+        flat_index = _compute_flat_index(index, shape)
+        tensor[flat_index] = value
 
     def lift(
         self, expr: typing.Callable[[tuple[int, ...]], typing.Any], dim_sizes: list[int]
@@ -96,42 +124,42 @@ class VectorizationLibrary:
             value_type = (
                 self.sbool if isinstance(first_value, self.sbool) else self._sint
             )
-            a = value_type.Tensor(dim_sizes)
+            a = [None] * math.prod(dim_sizes)
             all_indices = [range(size) for size in dim_sizes]
             for index in itertools.product(*all_indices):
                 value = value_type(expr(index))
-                self.assign_tensor(a, index, value)
+                self.assign_tensor(a, index, dim_sizes, value)
             return a
         else:
-            assert isinstance(first_value, self._Array) or (
+            assert isinstance(first_value, list) or (
                 isinstance(first_value, (self._sint, self.sbool))
                 and first_value.size > 1
             ), type(first_value)
             source_array = first_value
             source_array_len = (
                 len(source_array)
-                if isinstance(first_value, self._Array)
+                if isinstance(first_value, list)
                 else source_array.size
             )
-            assert dim_sizes[0] <= source_array_len
+            assert dim_sizes[0] <= source_array_len, source_array
             value_type = (
-                first_value.value_type
-                if isinstance(first_value, self._Array)
+                type(first_value[0])
+                if isinstance(first_value, list)
                 else type(first_value)
             )
-            lifted_array = value_type.Tensor(dim_sizes)
+            lifted_array = [None] * math.prod(dim_sizes)
             all_indices = [range(size) for size in dim_sizes]
             for index in itertools.product(*all_indices):
                 last_index = index[-1]
                 source_array_elem = (
                     source_array[last_index]
-                    if isinstance(source_array, self._Array)
+                    if isinstance(source_array, list)
                     else _index_register_vector(source_array, last_index)
                 )
-                self.assign_tensor(lifted_array, index, source_array_elem)
+                self.assign_tensor(lifted_array, index, dim_sizes, source_array_elem)
             return lifted_array
 
-    def drop_dim(self, arr):
+    def drop_dim(self, arr: list, shape: list[int]) -> list:
         """
         Drops the last dimension from @p arr, retaining the last element of each
         slice of that dimension.
@@ -141,26 +169,27 @@ class VectorizationLibrary:
         :returns A copy of @p arr with the last dimension dropped.
         """
 
-        dropped_shape = arr.shape[:-1]
-        dropped_dim_size = arr.shape[-1]
+        dropped_shape = shape[:-1]
+        dropped_dim_size = shape[-1]
         if len(dropped_shape) == 0:
             return arr[-1]
         else:
-            dropped = arr.value_type.Tensor(dropped_shape)
+            dropped = [None] * math.prod(dropped_shape)
 
             all_indices = [range(size) for size in dropped_shape]
             for index in itertools.product(*all_indices):
                 self.assign_tensor(
                     dropped,
                     index,
-                    self.access_tensor(arr, index + (dropped_dim_size - 1,)),
+                    dropped_shape,
+                    self.access_tensor(arr, index + (dropped_dim_size - 1,), shape),
                 )
 
             return dropped
 
     def mpc_print_result(self, x) -> None:
         def rec(x) -> None:
-            if isinstance(x, (self._sint, self._Array, self._Matrix)):
+            if hasattr(x, "reveal"):
                 assert not isinstance(x, (list, tuple))
                 self._print_str("%s", x.reveal())
             elif isinstance(x, list):
