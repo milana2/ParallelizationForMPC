@@ -7,6 +7,7 @@ and it provides some functions common to all generated MP-SPDZ programs
 import math
 import typing
 import itertools
+import functools
 
 
 def _expand_vectorized_indices(
@@ -46,6 +47,28 @@ def _compute_flat_index(index: list[int], shape: list[int]) -> int:
     return flat_index
 
 
+class _SimdifyInput:
+    """
+    Wrapper class around lists of `sint`s
+
+    This overloads `__hash__` and `__eq__` so that it can be used with
+    `functools.cache` to cache the results of simdification.  The built-in
+    `__eq__` on `sint` can't be used because it compiles a comparison
+    instruction instead of checking whether the `sint`s are the same object.
+    """
+
+    def __init__(self, values: list) -> None:
+        self.values = values
+
+    def __hash__(self) -> int:
+        return hash(tuple(id(value) for value in self.values))
+
+    def __eq__(self, other) -> bool:
+        return len(self.values) == len(other.values) and all(
+            v is o for (v, o) in zip(self.values, other.values)
+        )
+
+
 class VectorizationLibrary:
     def __init__(self, globals):
         self._print_str = globals["print_str"]
@@ -57,7 +80,9 @@ class VectorizationLibrary:
         except KeyError:
             self.sbool = globals["sbitintvec"].get_type(1)
 
-    def _simdify(self, values: list):
+    @functools.cache
+    def _simdify(self, input: _SimdifyInput):
+        values = input.values
         first = values[0]
         if len(values) == 1:
             return first
@@ -74,7 +99,7 @@ class VectorizationLibrary:
         result_list = []
         for tensor_index in indices_full:
             result_list.append(self.access_tensor(array, tensor_index, shape))
-        return self._simdify(result_list)
+        return self._simdify(_SimdifyInput(result_list))
 
     def vectorized_assign(
         self, array, shape: list[int], indices: tuple[typing.Optional[int]], value
