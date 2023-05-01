@@ -6,3 +6,7 @@
 *.xml
 
 *.synctex
+
+.venv/
+*.pyc
+__pycache__/
