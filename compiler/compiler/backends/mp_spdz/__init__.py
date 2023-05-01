@@ -41,20 +41,20 @@ UpdatelessAssignRHS = Union[
 
 
 VALID_PROTOCOLS = [
-    "mascot",
+    #"mascot",
     # "lowgear",
     # "highgear",
     # "spdz2k",
     # "tiny",
     # "tinier",
-    "semi-bmr",
+    #"semi-bmr",
     # "cowgear",
     # "chaigear",
-    "semi",
-    "hemi",
-    "temi",
+    #"semi",
+    #"hemi",
+    #"temi",
     "soho",
-    "semi2k",
+    #"semi2k",
     "semi-bin",
     # "yao-gc",
     # "yao-bmr",
@@ -90,10 +90,10 @@ def render_vec_indices(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str
     )
 
 
-def render_array_shape(shape: tuple[LoopBound, ...]) -> str:
+def render_array_shape(shape: tuple[LoopBound, ...], simdify: bool = False) -> str:
     return (
         "["
-        + ", ".join([render_atom(dim_size, False, dict()) for dim_size in shape])
+        + ", ".join([render_atom(dim_size, False, dict(), simdify) for dim_size in shape])
         + "]"
     )
 
@@ -108,20 +108,23 @@ def normalize_vectorized_access(v: VectorizedAccess) -> VectorizedAccess:
     return dc.replace(v, array=array)
 
 
-def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str]) -> str:
+def render_vectorized_access(v: VectorizedAccess, var_mappings: dict[Var, str], simdify: bool = False) -> str:
     v = normalize_vectorized_access(v)
     array = render_var(v.array, var_mappings)
     shape = render_array_shape(v.dim_sizes)
     indices = render_vec_indices(v, var_mappings)
-    return f"_v.vectorized_access({array}, {shape}, {indices})"
-
+    if simdify:
+        return f"_v.vectorized_access_simd({array}, {shape}, {indices})"
+    else:
+        return f"_v.vectorized_access({array}, {shape}, {indices})"
+    
 
 def render_vectorized_assign(lhs: VectorizedAccess, rhs: UpdatelessAssignRHS) -> str:
     lhs = normalize_vectorized_access(lhs)
     array = render_var(lhs.array, dict())
     value = render_assign_rhs(rhs, dict())
     # TODO: Ana added these two lines.
-    if isinstance(rhs, LiftExpr):
+    if isinstance(rhs, LiftExpr): 
         return f"{array} = {value}"
     shape = render_array_shape(lhs.dim_sizes)
     indices = render_vec_indices(lhs, dict())
@@ -141,13 +144,13 @@ def render_constant(c: Constant, make_shared: bool) -> str:
         return str(v)
 
 
-def render_atom(atom: Atom, make_shared: bool, var_mappings: dict[Var, str]) -> str:
+def render_atom(atom: Atom, make_shared: bool, var_mappings: dict[Var, str], simdify: bool = False) -> str:
     if isinstance(atom, Var):
         return render_var(atom, var_mappings)
     elif isinstance(atom, Constant):
         return render_constant(atom, make_shared)
     elif isinstance(atom, VectorizedAccess):
-        return render_vectorized_access(atom, var_mappings)
+        return render_vectorized_access(atom, var_mappings, simdify)
     else:
         assert_never(atom)
 
@@ -199,20 +202,21 @@ def render_lift_expr(lift: LiftExpr) -> str:
 def render_assign_rhs(
     arhs: UpdatelessAssignRHS,
     var_mappings: dict[Var, str],
+    simdify: bool = False
 ) -> str:
     if isinstance(arhs, BinOp):
-        left = render_assign_rhs(arhs.left, var_mappings)
-        right = render_assign_rhs(arhs.right, var_mappings)
+        left = render_assign_rhs(arhs.left, var_mappings,simdify=True)
+        right = render_assign_rhs(arhs.right, var_mappings,simdify=True)
         return render_bin_op(left, arhs.operator, right)
     elif isinstance(arhs, (Var, Constant, VectorizedAccess)):
-        return render_atom(arhs, True, var_mappings)
+        return render_atom(arhs, True, var_mappings, simdify)
     elif isinstance(arhs, List):
         items_list = [render_atom(item, True, var_mappings) for item in arhs.items]
         items = ", ".join(items_list)
         return f"[{items}]"
     elif isinstance(arhs, Tuple):
         items = "".join(
-            render_atom(item, True, var_mappings) + "," for item in arhs.items
+            render_atom(item, True, var_mappings, simdify) + "," for item in arhs.items
         )
         return f"({items})"
     elif isinstance(arhs, Mux):
@@ -221,11 +225,11 @@ def render_assign_rhs(
         false_value = render_assign_rhs(arhs.false_value, var_mappings)
         return f"{condition}.if_else({true_value}, {false_value})"
     elif isinstance(arhs, UnaryOp):
-        operand = render_assign_rhs(arhs.operand, var_mappings)
+        operand = render_assign_rhs(arhs.operand, var_mappings,simdify=True)
         expr = render_unary_op_kind(arhs.operator, operand)
         return f"({expr})"
     elif isinstance(arhs, Subscript):
-        array = render_assign_rhs(arhs.array, var_mappings)
+        array = render_assign_rhs(arhs.array, var_mappings, simdify)
         index = render_subscript_index(arhs.index, var_mappings)
         return f"({array}[{index}])"
     elif isinstance(arhs, LiftExpr):
@@ -388,13 +392,17 @@ def render_load_args(func: Function) -> str:
         if dims == 0:
             if arg.var_type.is_plaintext():
                 ret.append(f"{var} = int(program.args[{program_args_index}])")
-                program_args_index += 1
+                #program_args_index += 1
             else:
                 ret.append(f"{var} = sint.get_input_from({party})")
+            program_args_index += 1     
         else:
             assert dims == 1
-            ret.append(f"{var} = sint.Array(int(program.args[{program_args_index}]))")
-            ret.append(f"{var}.input_from({party})")
+            if arg.var_type.is_plaintext():
+                ret.append(f"{var} = int(program.args[{program_args_index}])")
+            else:
+                ret.append(f"{var} = sint.Array(int(program.args[{program_args_index}]))")
+                ret.append(f"{var}.input_from({party})")
             program_args_index += 1
     return "\n".join(ret)
 

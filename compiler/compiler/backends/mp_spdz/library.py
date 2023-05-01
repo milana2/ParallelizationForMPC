@@ -87,11 +87,16 @@ class VectorizationLibrary:
         if len(values) == 1:
             return first
         element_type = self.sbool if isinstance(first, self.sbool) else self._sint
-
         try:
             return element_type(values)
         except:
             return element_type([self._sbits(value) for value in values])
+
+    def vectorized_access_simd(
+        self, array: list, shape: list[int], indices: tuple[typing.Optional[int]]
+    ):
+        result_list = self.vectorized_access(array, shape, indices)
+        return self._simdify(_SimdifyInput(result_list))
 
     def vectorized_access(
         self, array: list, shape: list[int], indices: tuple[typing.Optional[int]]
@@ -100,7 +105,7 @@ class VectorizationLibrary:
         result_list = []
         for tensor_index in indices_full:
             result_list.append(self.access_tensor(array, tensor_index, shape))
-        return self._simdify(_SimdifyInput(result_list))
+        return result_list
 
     def vectorized_assign(
         self, array, shape: list[int], indices: tuple[typing.Optional[int]], value
