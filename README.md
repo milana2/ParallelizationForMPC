@@ -4,306 +4,392 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|10003|8354|1649|4947|0.615 MiB |4946|0.615 MiB |3403.167 ms |402.0 ms |
-|biometric (Non-Vectorized)|105250|0|105250|47073|2.704 MiB |47072|2.704 MiB |11714.855 ms |4378.0 ms |
-|biometric_fast|10638|8975|1663|5265|0.611 MiB |5264|0.611 MiB |3511.188 ms |397.0 ms |
-|biometric_fast (Non-Vectorized)|99903|0|99903|44529|2.558 MiB |44528|2.558 MiB |11969.96 ms |3896.0 ms |
-|chapterfour_figure_12|805|0|805|752|0.048 MiB |751|0.048 MiB |383.284 ms |32.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|805|0|805|752|0.048 MiB |751|0.048 MiB |463.724 ms |33.0 ms |
-|convex_hull|2122|2071|51|1381|0.122 MiB |1380|0.122 MiB |778.953 ms |89.0 ms |
-|convex_hull (Non-Vectorized)|12112|0|12112|6265|0.364 MiB |6264|0.364 MiB |1892.37 ms |481.0 ms |
-|count_102|6610|297|6313|3820|0.237 MiB |3819|0.237 MiB |3635.429 ms |247.0 ms |
-|count_102 (Non-Vectorized)|9188|0|9188|5512|0.321 MiB |5511|0.321 MiB |3106.973 ms |390.0 ms |
-|count_10s|4720|298|4422|2848|0.177 MiB |2847|0.177 MiB |2585.582 ms |184.0 ms |
-|count_10s (Non-Vectorized)|6440|0|6440|3976|0.233 MiB |3975|0.233 MiB |2183.405 ms |240.0 ms |
-|count_123|4729|305|4424|2850|0.177 MiB |2849|0.177 MiB |2530.033 ms |183.0 ms |
-|count_123 (Non-Vectorized)|6476|0|6476|3990|0.234 MiB |3989|0.233 MiB |1993.44 ms |266.0 ms |
-|cryptonets_max_pooling|1357|1221|136|951|0.139 MiB |950|0.138 MiB |988.949 ms |63.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|24124|0|24124|11211|0.647 MiB |11210|0.647 MiB |3297.448 ms |934.0 ms |
-|db_cross_join_trivial|21906|119|21787|14486|0.877 MiB |14485|0.876 MiB |3455.533 ms |863.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|29201|0|29201|19666|1.132 MiB |19665|1.132 MiB |4034.557 ms |1114.0 ms |
-|db_variance|29520|5864|23656|13646|0.926 MiB |13645|0.926 MiB |55528.139 ms |1144.0 ms |
-|db_variance (Non-Vectorized)|70507|0|70507|31524|1.812 MiB |31523|1.812 MiB |56414.374 ms |2621.0 ms |
-|histogram|5250|5131|119|3018|0.276 MiB |3017|0.276 MiB |2367.196 ms |205.0 ms |
-|histogram (Non-Vectorized)|28668|0|28668|15676|0.903 MiB |15675|0.903 MiB |4332.765 ms |1090.0 ms |
-|inner_product|7075|5207|1868|3582|0.245 MiB |3581|0.245 MiB |1528.52 ms |260.0 ms |
-|inner_product (Non-Vectorized)|17478|0|17478|8054|0.467 MiB |8053|0.467 MiB |2258.194 ms |688.0 ms |
-|longest_102|10651|306|10345|5642|0.341 MiB |5641|0.341 MiB |6825.346 ms |412.0 ms |
-|longest_102 (Non-Vectorized)|13278|0|13278|7352|0.426 MiB |7351|0.426 MiB |4644.291 ms |562.0 ms |
-|longest_odd_10|8520|305|8215|4614|0.283 MiB |4613|0.283 MiB |5224.281 ms |394.0 ms |
-|longest_odd_10 (Non-Vectorized)|10543|0|10543|5944|0.349 MiB |5943|0.349 MiB |3515.822 ms |478.0 ms |
-|max_dist_between_syms|8278|101|8177|4454|0.263 MiB |4453|0.263 MiB |4458.195 ms |363.0 ms |
-|max_dist_between_syms (Non-Vectorized)|8941|0|8941|4888|0.285 MiB |4887|0.285 MiB |2916.287 ms |427.0 ms |
-|max_sum_between_syms|8277|101|8176|4454|0.263 MiB |4453|0.263 MiB |4486.045 ms |382.0 ms |
-|max_sum_between_syms (Non-Vectorized)|8940|0|8940|4888|0.285 MiB |4887|0.285 MiB |2997.892 ms |409.0 ms |
-|minimal_points|890|851|39|765|0.071 MiB |764|0.071 MiB |614.937 ms |40.0 ms |
-|minimal_points (Non-Vectorized)|7292|0|7292|3649|0.214 MiB |3648|0.214 MiB |1333.167 ms |322.0 ms |
-|mnist_relu|1016|408|608|771|0.33 MiB |770|0.33 MiB |479.764 ms |68.0 ms |
-|mnist_relu (Non-Vectorized)|80603|0|80603|36591|2.101 MiB |36590|2.101 MiB |9169.937 ms |3552.0 ms |
-|psi|186|140|46|474|0.05 MiB |473|0.05 MiB |622.755 ms |8.0 ms |
-|psi (Non-Vectorized)|3391|0|3391|2646|0.157 MiB |2645|0.157 MiB |845.018 ms |137.0 ms |
+|biometric|10003|8354|1649|4947|0.615 MiB |4946|0.615 MiB |3418.398 ms |392.0 ms |
+|biometric (Non-Vectorized)|105250|0|105250|47073|2.704 MiB |47072|2.704 MiB |12287.362 ms |4060.0 ms |
+|biometric_fast|10638|8975|1663|5265|0.611 MiB |5264|0.611 MiB |3505.602 ms |415.0 ms |
+|biometric_fast (Non-Vectorized)|99903|0|99903|44529|2.558 MiB |44528|2.558 MiB |11017.913 ms |3786.0 ms |
+|chapterfour_figure_12|805|0|805|752|0.048 MiB |751|0.048 MiB |401.208 ms |31.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|805|0|805|752|0.048 MiB |751|0.048 MiB |400.645 ms |32.0 ms |
+|convex_hull|2122|2071|51|1381|0.122 MiB |1380|0.122 MiB |824.976 ms |83.0 ms |
+|convex_hull (Non-Vectorized)|12112|0|12112|6265|0.364 MiB |6264|0.364 MiB |1901.204 ms |480.0 ms |
+|count_102|6610|297|6313|3820|0.237 MiB |3819|0.237 MiB |3668.512 ms |252.0 ms |
+|count_102 (Non-Vectorized)|9188|0|9188|5512|0.321 MiB |5511|0.321 MiB |2900.738 ms |362.0 ms |
+|count_10s|4720|298|4422|2848|0.177 MiB |2847|0.177 MiB |2491.786 ms |183.0 ms |
+|count_10s (Non-Vectorized)|6440|0|6440|3976|0.233 MiB |3975|0.233 MiB |1934.674 ms |246.0 ms |
+|count_123|4729|305|4424|2850|0.177 MiB |2849|0.177 MiB |2502.698 ms |182.0 ms |
+|count_123 (Non-Vectorized)|6476|0|6476|3990|0.234 MiB |3989|0.233 MiB |2021.583 ms |243.0 ms |
+|cryptonets_max_pooling|1357|1221|136|951|0.139 MiB |950|0.138 MiB |1000.171 ms |57.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|24124|0|24124|11211|0.647 MiB |11210|0.647 MiB |3109.499 ms |937.0 ms |
+|db_cross_join_trivial|21906|119|21787|14486|0.877 MiB |14485|0.876 MiB |3117.691 ms |876.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|29201|0|29201|19666|1.132 MiB |19665|1.132 MiB |4345.544 ms |1158.0 ms |
+|db_variance|29520|5864|23656|13646|0.926 MiB |13645|0.926 MiB |55030.305 ms |1123.0 ms |
+|db_variance (Non-Vectorized)|70507|0|70507|31524|1.812 MiB |31523|1.812 MiB |57112.451 ms |2697.0 ms |
+|histogram|5250|5131|119|3018|0.276 MiB |3017|0.276 MiB |2308.146 ms |216.0 ms |
+|histogram (Non-Vectorized)|28668|0|28668|15676|0.903 MiB |15675|0.903 MiB |4429.462 ms |1089.0 ms |
+|inner_product|7075|5207|1868|3582|0.245 MiB |3581|0.245 MiB |1762.016 ms |274.0 ms |
+|inner_product (Non-Vectorized)|17478|0|17478|8054|0.467 MiB |8053|0.467 MiB |2385.941 ms |677.0 ms |
+|longest_102|10651|306|10345|5642|0.341 MiB |5641|0.341 MiB |7025.043 ms |443.0 ms |
+|longest_102 (Non-Vectorized)|13278|0|13278|7352|0.426 MiB |7351|0.426 MiB |4273.407 ms |558.0 ms |
+|longest_odd_10|8520|305|8215|4614|0.283 MiB |4613|0.283 MiB |5081.729 ms |334.0 ms |
+|longest_odd_10 (Non-Vectorized)|10543|0|10543|5944|0.349 MiB |5943|0.349 MiB |3436.396 ms |407.0 ms |
+|max_dist_between_syms|8278|101|8177|4454|0.263 MiB |4453|0.263 MiB |4551.144 ms |325.0 ms |
+|max_dist_between_syms (Non-Vectorized)|8941|0|8941|4888|0.285 MiB |4887|0.285 MiB |2856.568 ms |342.0 ms |
+|max_sum_between_syms|8277|101|8176|4454|0.263 MiB |4453|0.263 MiB |4505.469 ms |317.0 ms |
+|max_sum_between_syms (Non-Vectorized)|8940|0|8940|4888|0.285 MiB |4887|0.285 MiB |2803.767 ms |348.0 ms |
+|minimal_points|890|851|39|765|0.071 MiB |764|0.071 MiB |706.894 ms |34.0 ms |
+|minimal_points (Non-Vectorized)|7292|0|7292|3649|0.214 MiB |3648|0.214 MiB |1177.417 ms |285.0 ms |
+|mnist_relu|1016|408|608|771|0.33 MiB |770|0.33 MiB |462.471 ms |61.0 ms |
+|mnist_relu (Non-Vectorized)|80603|0|80603|36591|2.101 MiB |36590|2.101 MiB |8283.694 ms |3141.0 ms |
+|psi|186|140|46|474|0.05 MiB |473|0.05 MiB |626.607 ms |7.0 ms |
+|psi (Non-Vectorized)|3391|0|3391|2646|0.157 MiB |2645|0.157 MiB |914.569 ms |129.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4490|3647|843|7843|4.37 MiB |7846|4.37 MiB |549.795 ms |497.0 ms |
-|biometric (Non-Vectorized)|51452|0|51452|86503|8.263 MiB |86506|8.263 MiB |6279.5 ms |4376.0 ms |
-|biometric_fast|4660|3803|857|8019|4.327 MiB |8019|4.327 MiB |545.757 ms |464.0 ms |
-|biometric_fast (Non-Vectorized)|49849|0|49849|85284|8.151 MiB |85284|8.151 MiB |4673.2 ms |4621.0 ms |
-|chapterfour_figure_12|398|0|398|975|0.087 MiB |972|0.087 MiB |35.812 ms |35.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|398|0|398|975|0.087 MiB |972|0.087 MiB |35.165 ms |33.0 ms |
-|convex_hull|1056|999|57|1989|0.514 MiB |1984|0.514 MiB |159.032 ms |106.0 ms |
-|convex_hull (Non-Vectorized)|5650|0|5650|8995|0.861 MiB |8990|0.861 MiB |534.844 ms |466.0 ms |
-|count_102|1753|109|1644|3831|0.569 MiB |3819|0.569 MiB |192.44 ms |181.0 ms |
-|count_102 (Non-Vectorized)|2639|0|2639|8061|0.779 MiB |8049|0.778 MiB |274.978 ms |328.0 ms |
-|count_10s|1264|110|1154|2942|0.415 MiB |2932|0.414 MiB |171.302 ms |124.0 ms |
-|count_10s (Non-Vectorized)|1856|0|1856|5762|0.555 MiB |5752|0.554 MiB |174.654 ms |234.0 ms |
-|count_123|1271|115|1156|2948|0.417 MiB |2939|0.416 MiB |175.63 ms |121.0 ms |
-|count_123 (Non-Vectorized)|1878|0|1878|5798|0.558 MiB |5789|0.558 MiB |165.609 ms |231.0 ms |
-|cryptonets_max_pooling|765|609|156|1464|1.012 MiB |1399|1.008 MiB |138.304 ms |78.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|11904|0|11904|17937|1.827 MiB |17872|1.824 MiB |1450.605 ms |975.0 ms |
-|db_cross_join_trivial|7977|65|7912|36652|6.318 MiB |36345|6.302 MiB |1001.127 ms |1457.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|11276|0|11276|86306|8.773 MiB |85999|8.757 MiB |1562.685 ms |2941.0 ms |
-|db_variance|13352|3017|10335|20698|3.612 MiB |20695|3.611 MiB |1657.573 ms |1146.0 ms |
-|db_variance (Non-Vectorized)|34410|0|34410|56538|5.389 MiB |56535|5.389 MiB |4052.644 ms |2939.0 ms |
-|histogram|1489|1365|124|2939|1.046 MiB |2891|1.043 MiB |230.942 ms |173.0 ms |
-|histogram (Non-Vectorized)|7673|0|7673|18072|1.795 MiB |18024|1.793 MiB |1101.515 ms |846.0 ms |
-|inner_product|3301|2827|474|5833|1.004 MiB |5830|1.004 MiB |350.269 ms |275.0 ms |
-|inner_product (Non-Vectorized)|8944|0|8944|15763|1.497 MiB |15760|1.496 MiB |847.812 ms |811.0 ms |
-|longest_102|3732|116|3616|6776|0.867 MiB |6764|0.866 MiB |425.142 ms |349.0 ms |
-|longest_102 (Non-Vectorized)|4649|0|4649|11051|1.079 MiB |11039|1.078 MiB |556.661 ms |560.0 ms |
-|longest_odd_10|2995|115|2880|6671|0.869 MiB |6660|0.868 MiB |409.162 ms |389.0 ms |
-|longest_odd_10 (Non-Vectorized)|3688|0|3688|10864|1.077 MiB |10853|1.076 MiB |435.437 ms |561.0 ms |
-|max_dist_between_syms|2881|39|2842|5152|0.559 MiB |5141|0.558 MiB |423.251 ms |318.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3110|0|3110|6237|0.612 MiB |6226|0.612 MiB |499.047 ms |365.0 ms |
-|max_sum_between_syms|2880|39|2841|5150|0.558 MiB |5140|0.557 MiB |404.537 ms |326.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3109|0|3109|6235|0.612 MiB |6225|0.611 MiB |391.876 ms |374.0 ms |
-|minimal_points|480|435|45|1015|0.244 MiB |1012|0.244 MiB |75.939 ms |51.0 ms |
-|minimal_points (Non-Vectorized)|3566|0|3566|4161|0.4 MiB |4158|0.4 MiB |543.934 ms |310.0 ms |
-|mnist_relu|1012|204|808|1484|3.215 MiB |1480|3.215 MiB |498.492 ms |152.0 ms |
-|mnist_relu (Non-Vectorized)|40003|0|40003|58995|6.06 MiB |58991|6.06 MiB |5249.008 ms |4197.0 ms |
-|psi|145|94|51|748|0.348 MiB |740|0.348 MiB |79.724 ms |29.0 ms |
-|psi (Non-Vectorized)|1306|0|1306|6674|0.641 MiB |6666|0.641 MiB |153.312 ms |273.0 ms |
+|biometric|4490|3647|843|7843|4.37 MiB |7846|4.37 MiB |500.772 ms |472.0 ms |
+|biometric (Non-Vectorized)|51452|0|51452|86503|8.263 MiB |86506|8.263 MiB |5405.399 ms |5506.0 ms |
+|biometric_fast|4660|3803|857|8019|4.327 MiB |8019|4.327 MiB |627.522 ms |475.0 ms |
+|biometric_fast (Non-Vectorized)|49849|0|49849|85284|8.151 MiB |85284|8.151 MiB |5256.924 ms |5386.0 ms |
+|chapterfour_figure_12|398|0|398|975|0.087 MiB |972|0.087 MiB |93.324 ms |34.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|398|0|398|975|0.087 MiB |972|0.087 MiB |66.001 ms |33.0 ms |
+|convex_hull|1056|999|57|1989|0.514 MiB |1984|0.514 MiB |106.623 ms |101.0 ms |
+|convex_hull (Non-Vectorized)|5650|0|5650|8995|0.861 MiB |8990|0.861 MiB |640.734 ms |469.0 ms |
+|count_102|1753|109|1644|3831|0.569 MiB |3819|0.569 MiB |238.049 ms |178.0 ms |
+|count_102 (Non-Vectorized)|2639|0|2639|8061|0.779 MiB |8049|0.778 MiB |258.505 ms |327.0 ms |
+|count_10s|1264|110|1154|2942|0.415 MiB |2932|0.414 MiB |160.502 ms |129.0 ms |
+|count_10s (Non-Vectorized)|1856|0|1856|5762|0.555 MiB |5752|0.554 MiB |161.544 ms |228.0 ms |
+|count_123|1271|115|1156|2948|0.417 MiB |2939|0.416 MiB |153.46 ms |129.0 ms |
+|count_123 (Non-Vectorized)|1878|0|1878|5798|0.558 MiB |5789|0.558 MiB |166.221 ms |229.0 ms |
+|cryptonets_max_pooling|765|609|156|1464|1.012 MiB |1399|1.008 MiB |126.056 ms |81.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|11904|0|11904|17937|1.827 MiB |17872|1.824 MiB |1325.784 ms |998.0 ms |
+|db_cross_join_trivial|7977|65|7912|36652|6.318 MiB |36345|6.302 MiB |1143.094 ms |1447.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|11276|0|11276|86306|8.773 MiB |85999|8.757 MiB |1846.535 ms |3028.0 ms |
+|db_variance|13352|3017|10335|20698|3.612 MiB |20695|3.611 MiB |1624.571 ms |1140.0 ms |
+|db_variance (Non-Vectorized)|34410|0|34410|56538|5.389 MiB |56535|5.389 MiB |3839.293 ms |3001.0 ms |
+|histogram|1489|1365|124|2939|1.046 MiB |2891|1.043 MiB |227.707 ms |177.0 ms |
+|histogram (Non-Vectorized)|7673|0|7673|18072|1.795 MiB |18024|1.793 MiB |1113.504 ms |827.0 ms |
+|inner_product|3301|2827|474|5833|1.004 MiB |5830|1.004 MiB |350.671 ms |290.0 ms |
+|inner_product (Non-Vectorized)|8944|0|8944|15763|1.497 MiB |15760|1.496 MiB |989.017 ms |794.0 ms |
+|longest_102|3732|116|3616|6776|0.867 MiB |6764|0.866 MiB |515.992 ms |349.0 ms |
+|longest_102 (Non-Vectorized)|4649|0|4649|11051|1.079 MiB |11039|1.078 MiB |477.887 ms |499.0 ms |
+|longest_odd_10|2995|115|2880|6671|0.869 MiB |6660|0.868 MiB |321.12 ms |317.0 ms |
+|longest_odd_10 (Non-Vectorized)|3688|0|3688|10864|1.077 MiB |10853|1.076 MiB |487.829 ms |459.0 ms |
+|max_dist_between_syms|2881|39|2842|5152|0.559 MiB |5141|0.558 MiB |359.233 ms |262.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3110|0|3110|6237|0.612 MiB |6226|0.612 MiB |344.99 ms |396.0 ms |
+|max_sum_between_syms|2880|39|2841|5150|0.558 MiB |5140|0.557 MiB |367.736 ms |275.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3109|0|3109|6235|0.612 MiB |6225|0.611 MiB |447.642 ms |338.0 ms |
+|minimal_points|480|435|45|1015|0.244 MiB |1012|0.244 MiB |84.486 ms |55.0 ms |
+|minimal_points (Non-Vectorized)|3566|0|3566|4161|0.4 MiB |4158|0.4 MiB |386.43 ms |293.0 ms |
+|mnist_relu|1012|204|808|1484|3.215 MiB |1480|3.215 MiB |492.085 ms |139.0 ms |
+|mnist_relu (Non-Vectorized)|40003|0|40003|58995|6.06 MiB |58991|6.06 MiB |5204.546 ms |3597.0 ms |
+|psi|145|94|51|748|0.348 MiB |740|0.348 MiB |64.902 ms |20.0 ms |
+|psi (Non-Vectorized)|1306|0|1306|6674|0.641 MiB |6666|0.641 MiB |175.085 ms |228.0 ms |
 
 ## MP-SPDZ Benchmark Data
 ### Arithmetic protocol compilation
 | Benchmark | Compile time (seconds) | # int triples | # int opens | # VM rounds |
 | - | - | - | - | - |
-|biometric|0.629|504|6|34|
-|biometric (Non-Vectorized)|0.329|504|6|34|
-|biometric_fast|0.35|504|6|34|
-|biometric_fast (Non-Vectorized)|0.341|504|6|34|
-|count_102|0.235|1930|31|39|
-|count_102 (Non-Vectorized)|0.219|1930|31|28|
-|count_10s|0.219|1351|22|30|
-|count_10s (Non-Vectorized)|0.211|1351|22|22|
-|count_123|0.223|1358|22|31|
-|count_123 (Non-Vectorized)|0.214|1358|22|23|
-|inner_product|0.118|3|1|2|
-|inner_product (Non-Vectorized)|0.109|3|1|2|
-|longest_102|0.697|3160|41|130|
-|longest_102 (Non-Vectorized)|0.7|3160|41|102|
-|max_dist_between_syms|0.59|1480|17|80|
-|max_dist_between_syms (Non-Vectorized)|0.582|1480|17|73|
-|max_sum_between_syms|0.596|1480|17|80|
-|max_sum_between_syms (Non-Vectorized)|0.595|1480|17|73|
+|biometric|0.556|504|6|34|
+|biometric (Non-Vectorized)|0.273|504|6|34|
+|biometric_fast|0.288|504|6|34|
+|biometric_fast (Non-Vectorized)|0.274|504|6|34|
+|convex_hull|0.199|2910|30|14|
+|convex_hull (Non-Vectorized)|0.192|2910|30|14|
+|count_102|0.189|1930|31|39|
+|count_102 (Non-Vectorized)|0.185|1930|31|28|
+|count_10s|0.189|1351|22|30|
+|count_10s (Non-Vectorized)|0.18|1351|22|22|
+|count_123|0.192|1358|22|31|
+|count_123 (Non-Vectorized)|0.179|1358|22|23|
+|cryptonets_max_pooling|0.291|7260|80|25|
+|cryptonets_max_pooling (Non-Vectorized)|0.274|7260|80|25|
+|db_cross_join_trivial|0.443|19389|378|12|
+|db_cross_join_trivial (Non-Vectorized)|0.377|19200|375|12|
+|inner_product|0.098|3|1|2|
+|inner_product (Non-Vectorized)|0.095|3|1|2|
+|longest_102|0.579|3160|41|130|
+|longest_102 (Non-Vectorized)|0.566|3160|41|102|
+|max_dist_between_syms|0.491|1480|17|80|
+|max_dist_between_syms (Non-Vectorized)|0.488|1480|17|73|
+|max_sum_between_syms|0.491|1480|17|80|
+|max_sum_between_syms (Non-Vectorized)|0.487|1480|17|73|
+|minimal_points|0.194|2184|24|13|
+|minimal_points (Non-Vectorized)|0.182|2184|24|13|
+|mnist_relu|0.391|24200|400|9|
+|mnist_relu (Non-Vectorized)|0.356|24200|400|9|
+|psi|0.195|2245|40|16|
+|psi (Non-Vectorized)|0.189|2245|40|16|
 ### Binary protocol compilation (32 bit default)
 | Benchmark | Compile time (seconds) | # bit triples | # VM rounds |
 | - | - | - | - |
-|biometric|1.082|25788|95|
-|biometric (Non-Vectorized)|9.453|25788|72|
-|biometric_fast|1.175|22920|104|
-|biometric_fast (Non-Vectorized)|8.587|22920|74|
-|count_102|0.794|2300|79|
-|count_102 (Non-Vectorized)|0.969|2300|61|
-|count_10s|0.602|1610|66|
-|count_10s (Non-Vectorized)|0.703|1610|55|
-|count_123|0.639|1638|67|
-|count_123 (Non-Vectorized)|0.689|1638|55|
-|inner_product|0.562|3924|46|
-|inner_product (Non-Vectorized)|1.261|3924|39|
-|longest_102|1.142|3300|154|
-|longest_102 (Non-Vectorized)|1.296|3300|94|
-|max_dist_between_syms|0.897|2056|106|
-|max_dist_between_syms (Non-Vectorized)|0.89|2056|72|
-|max_sum_between_syms|0.865|2056|106|
-|max_sum_between_syms (Non-Vectorized)|0.866|2056|72|
+|biometric|0.899|25788|95|
+|biometric (Non-Vectorized)|8.358|25788|72|
+|biometric_fast|0.986|22920|104|
+|biometric_fast (Non-Vectorized)|7.461|22920|74|
+|convex_hull|0.542|5439|30|
+|convex_hull (Non-Vectorized)|0.62|1755|13|
+|count_102|0.658|2300|79|
+|count_102 (Non-Vectorized)|0.806|2300|61|
+|count_10s|0.499|1610|66|
+|count_10s (Non-Vectorized)|0.583|1610|55|
+|count_123|0.521|1638|67|
+|count_123 (Non-Vectorized)|0.586|1638|55|
+|cryptonets_max_pooling|1.21|5700|22|
+|cryptonets_max_pooling (Non-Vectorized)|2.03|5700|22|
+|db_cross_join_trivial|10.72|18993|10|
+|db_cross_join_trivial (Non-Vectorized)|5.825|18900|10|
+|inner_product|0.491|3924|46|
+|inner_product (Non-Vectorized)|1.109|3924|39|
+|longest_102|0.977|3300|154|
+|longest_102 (Non-Vectorized)|1.095|3300|94|
+|max_dist_between_syms|0.729|2056|106|
+|max_dist_between_syms (Non-Vectorized)|0.737|2056|72|
+|max_sum_between_syms|0.711|2056|106|
+|max_sum_between_syms (Non-Vectorized)|0.717|2056|72|
+|minimal_points|0.327|1650|12|
+|minimal_points (Non-Vectorized)|0.501|1371|12|
+|mnist_relu|9.203|19000|8|
+|mnist_relu (Non-Vectorized)|8.509|19000|8|
+|psi|0.29|1280|14|
+|psi (Non-Vectorized)|0.421|1280|14|
 
 ### Mascot protocol
 | Benchmark | Time (seconds) | Data sent (MB) |
 | - | - | - |
-|biometric|0.726442|39.0542|
-|biometric (Non-Vectorized)|0.672469|39.0542|
-|biometric_fast|0.699954|39.0542|
-|biometric_fast (Non-Vectorized)|0.696899|39.0542|
-|count_102|1.96059|117.124|
-|count_102 (Non-Vectorized)|1.93762|117.124|
-|count_10s|1.55524|97.5912|
-|count_10s (Non-Vectorized)|1.6082|97.5912|
-|count_123|1.58678|97.5914|
-|count_123 (Non-Vectorized)|1.59991|97.5914|
-|inner_product|0.363907|19.5237|
-|inner_product (Non-Vectorized)|0.344067|19.5237|
-|longest_102|2.83683|175.642|
-|longest_102 (Non-Vectorized)|2.77802|175.642|
-|max_dist_between_syms|1.32582|78.0821|
-|max_dist_between_syms (Non-Vectorized)|1.30991|78.0821|
-|max_sum_between_syms|1.31557|78.0821|
-|max_sum_between_syms (Non-Vectorized)|1.32431|78.0821|
-
-### Semi-Bmr protocol
-| Benchmark | Time (seconds) | Data sent (MB) |
-| - | - | - |
-|biometric|5.91109|728.81|
-|biometric (Non-Vectorized)|6.00122|728.81|
-|biometric_fast|5.28984|647.489|
-|biometric_fast (Non-Vectorized)|5.16825|647.489|
-|count_102|0.528815|65.6899|
-|count_102 (Non-Vectorized)|0.544374|65.6899|
-|count_10s|0.379795|46.9119|
-|count_10s (Non-Vectorized)|0.409936|46.9119|
-|count_123|0.387136|46.9235|
-|count_123 (Non-Vectorized)|0.373195|46.9235|
-|inner_product|0.933158|112.593|
-|inner_product (Non-Vectorized)|0.947381|112.593|
-|longest_102|0.723384|93.8424|
-|longest_102 (Non-Vectorized)|0.764726|93.8424|
-|max_dist_between_syms|0.460231|59.4247|
-|max_dist_between_syms (Non-Vectorized)|0.448477|59.4247|
-|max_sum_between_syms|0.488528|59.4247|
-|max_sum_between_syms (Non-Vectorized)|0.496413|59.4247|
+|biometric|0.558416|39.0542|
+|biometric (Non-Vectorized)|0.546769|39.0542|
+|biometric_fast|0.553222|39.0542|
+|biometric_fast (Non-Vectorized)|0.560921|39.0542|
+|convex_hull|1.54168|117.123|
+|convex_hull (Non-Vectorized)|1.54176|117.123|
+|count_102|1.59564|117.124|
+|count_102 (Non-Vectorized)|1.63691|117.124|
+|count_10s|1.33622|97.5912|
+|count_10s (Non-Vectorized)|1.34276|97.5912|
+|count_123|1.2852|97.5914|
+|count_123 (Non-Vectorized)|1.33647|97.5914|
+|cryptonets_max_pooling|3.88878|292.729|
+|cryptonets_max_pooling (Non-Vectorized)|3.75327|292.729|
+|db_cross_join_trivial|13.903|1014.76|
+|db_cross_join_trivial (Non-Vectorized)|13.0713|1014.75|
+|inner_product|0.281476|19.5237|
+|inner_product (Non-Vectorized)|0.295648|19.5237|
+|longest_102|2.33265|175.642|
+|longest_102 (Non-Vectorized)|2.31927|175.642|
+|max_dist_between_syms|1.13308|78.0821|
+|max_dist_between_syms (Non-Vectorized)|1.10794|78.0821|
+|max_sum_between_syms|1.08687|78.0821|
+|max_sum_between_syms (Non-Vectorized)|1.04591|78.0821|
+|minimal_points|1.41591|97.5859|
+|minimal_points (Non-Vectorized)|1.25679|97.5859|
+|mnist_relu|11.444|897.666|
+|mnist_relu (Non-Vectorized)|11.2984|897.666|
+|psi|1.83266|136.616|
+|psi (Non-Vectorized)|1.80063|136.616|
 
 ### Semi protocol
 | Benchmark | Time (seconds) | Data sent (MB) |
 | - | - | - |
-|biometric|0.122939|4.72907|
-|biometric (Non-Vectorized)|0.119382|4.72907|
-|biometric_fast|0.129154|4.72907|
-|biometric_fast (Non-Vectorized)|0.139089|4.72907|
-|count_102|0.177457|7.85694|
-|count_102 (Non-Vectorized)|0.234108|7.85694|
-|count_10s|0.181293|7.83826|
-|count_10s (Non-Vectorized)|0.19075|7.83826|
-|count_123|0.179405|7.83849|
-|count_123 (Non-Vectorized)|0.178145|7.83849|
-|inner_product|0.0741504|3.11142|
-|inner_product (Non-Vectorized)|0.0695223|3.11142|
-|longest_102|0.268729|14.0601|
-|longest_102 (Non-Vectorized)|0.276828|14.0601|
-|max_dist_between_syms|0.180801|7.84231|
-|max_dist_between_syms (Non-Vectorized)|0.18472|7.84231|
-|max_sum_between_syms|0.188198|7.84231|
-|max_sum_between_syms (Non-Vectorized)|0.178982|7.84231|
+|biometric|0.104428|4.72907|
+|biometric (Non-Vectorized)|0.113738|4.72907|
+|biometric_fast|0.114946|4.72907|
+|biometric_fast (Non-Vectorized)|0.107013|4.72907|
+|convex_hull|0.192806|10.9701|
+|convex_hull (Non-Vectorized)|0.188741|10.9701|
+|count_102|0.151205|7.85694|
+|count_102 (Non-Vectorized)|0.15943|7.85694|
+|count_10s|0.14216|7.83826|
+|count_10s (Non-Vectorized)|0.152194|7.83826|
+|count_123|0.163538|7.83849|
+|count_123 (Non-Vectorized)|0.145386|7.83849|
+|cryptonets_max_pooling|0.381445|26.5193|
+|cryptonets_max_pooling (Non-Vectorized)|0.394289|26.5193|
+|db_cross_join_trivial|0.817343|63.8941|
+|db_cross_join_trivial (Non-Vectorized)|0.789708|63.888|
+|inner_product|0.0573921|3.11142|
+|inner_product (Non-Vectorized)|0.0623044|3.11142|
+|longest_102|0.226822|14.0601|
+|longest_102 (Non-Vectorized)|0.23082|14.0601|
+|max_dist_between_syms|0.150492|7.84231|
+|max_dist_between_syms (Non-Vectorized)|0.148802|7.84231|
+|max_sum_between_syms|0.156751|7.84231|
+|max_sum_between_syms (Non-Vectorized)|0.163193|7.84231|
+|minimal_points|0.182836|10.9468|
+|minimal_points (Non-Vectorized)|0.18175|10.9468|
+|mnist_relu|1.02306|79.4576|
+|mnist_relu (Non-Vectorized)|0.971261|79.4576|
+|psi|0.186757|10.949|
+|psi (Non-Vectorized)|0.185899|10.949|
 
 ### Hemi protocol
 | Benchmark | Time (seconds) | Data sent (MB) |
 | - | - | - |
-|biometric|0.249977|3.21055|
-|biometric (Non-Vectorized)|0.252767|3.21055|
-|biometric_fast|0.24928|3.21055|
-|biometric_fast (Non-Vectorized)|0.261701|3.21055|
-|count_102|0.25143|3.25659|
-|count_102 (Non-Vectorized)|0.247965|3.25659|
-|count_10s|0.255954|3.23791|
-|count_10s (Non-Vectorized)|0.251059|3.23791|
-|count_123|0.25349|3.23814|
-|count_123 (Non-Vectorized)|0.248477|3.23814|
-|inner_product|0.185643|1.58308|
-|inner_product (Non-Vectorized)|0.175934|1.58308|
-|longest_102|0.271997|3.29611|
-|longest_102 (Non-Vectorized)|0.264473|3.29611|
-|max_dist_between_syms|0.255965|3.24196|
-|max_dist_between_syms (Non-Vectorized)|0.2786|3.24196|
-|max_sum_between_syms|0.270255|3.24196|
-|max_sum_between_syms (Non-Vectorized)|0.251458|3.24196|
+|biometric|0.201938|3.21055|
+|biometric (Non-Vectorized)|0.205796|3.21055|
+|biometric_fast|0.203015|3.21055|
+|biometric_fast (Non-Vectorized)|0.204587|3.21055|
+|convex_hull|0.21143|3.28793|
+|convex_hull (Non-Vectorized)|0.208789|3.28793|
+|count_102|0.224217|3.25659|
+|count_102 (Non-Vectorized)|0.212802|3.25659|
+|count_10s|0.228913|3.23791|
+|count_10s (Non-Vectorized)|0.214419|3.23791|
+|count_123|0.209401|3.23814|
+|count_123 (Non-Vectorized)|0.20753|3.23814|
+|cryptonets_max_pooling|0.217042|3.42793|
+|cryptonets_max_pooling (Non-Vectorized)|0.222812|3.42793|
+|db_cross_join_trivial|0.451857|6.96711|
+|db_cross_join_trivial (Non-Vectorized)|0.444153|6.96101|
+|inner_product|0.150006|1.58308|
+|inner_product (Non-Vectorized)|0.149533|1.58308|
+|longest_102|0.211787|3.29611|
+|longest_102 (Non-Vectorized)|0.210373|3.29611|
+|max_dist_between_syms|0.210115|3.24196|
+|max_dist_between_syms (Non-Vectorized)|0.20997|3.24196|
+|max_sum_between_syms|0.209809|3.24196|
+|max_sum_between_syms (Non-Vectorized)|0.215307|3.24196|
+|minimal_points|0.220684|3.2646|
+|minimal_points (Non-Vectorized)|0.210061|3.2646|
+|mnist_relu|0.453184|7.12141|
+|mnist_relu (Non-Vectorized)|0.449281|7.12141|
+|psi|0.206792|3.26681|
+|psi (Non-Vectorized)|0.209317|3.26681|
 
 ### Temi protocol
 | Benchmark | Time (seconds) | Data sent (MB) |
 | - | - | - |
-|biometric|0.172999|2.02039|
-|biometric (Non-Vectorized)|0.171557|2.02036|
-|biometric_fast|0.182433|2.02032|
-|biometric_fast (Non-Vectorized)|0.178811|2.02038|
-|count_102|0.28351|2.16233|
-|count_102 (Non-Vectorized)|0.286053|2.16234|
-|count_10s|0.242418|2.11174|
-|count_10s (Non-Vectorized)|0.247434|2.11171|
-|count_123|0.238245|2.11197|
-|count_123 (Non-Vectorized)|0.243565|2.11194|
-|inner_product|0.133992|1.97223|
-|inner_product (Non-Vectorized)|0.139694|1.97216|
-|longest_102|0.302217|2.23393|
-|longest_102 (Non-Vectorized)|0.311326|2.23386|
-|max_dist_between_syms|0.208743|2.08369|
-|max_dist_between_syms (Non-Vectorized)|0.207762|2.08369|
-|max_sum_between_syms|0.229922|2.08374|
-|max_sum_between_syms (Non-Vectorized)|0.21925|2.08368|
+|biometric|0.154041|2.02034|
+|biometric (Non-Vectorized)|0.151753|2.02033|
+|biometric_fast|0.141386|2.0205|
+|biometric_fast (Non-Vectorized)|0.141396|2.02035|
+|convex_hull|0.199991|2.16163|
+|convex_hull (Non-Vectorized)|0.200485|2.16165|
+|count_102|0.222926|2.1624|
+|count_102 (Non-Vectorized)|0.217385|2.16239|
+|count_10s|0.192528|2.11169|
+|count_10s (Non-Vectorized)|0.189936|2.11164|
+|count_123|0.197636|2.11187|
+|count_123 (Non-Vectorized)|0.193482|2.11198|
+|cryptonets_max_pooling|0.404815|4.39192|
+|cryptonets_max_pooling (Non-Vectorized)|0.413605|4.39188|
+|db_cross_join_trivial|1.57754|15.3961|
+|db_cross_join_trivial (Non-Vectorized)|1.56744|15.3899|
+|inner_product|0.115059|1.97221|
+|inner_product (Non-Vectorized)|0.123014|1.97225|
+|longest_102|0.25326|2.23387|
+|longest_102 (Non-Vectorized)|0.246669|2.23386|
+|max_dist_between_syms|0.165847|2.0838|
+|max_dist_between_syms (Non-Vectorized)|0.166627|2.0837|
+|max_sum_between_syms|0.172781|2.08366|
+|max_sum_between_syms (Non-Vectorized)|0.166246|2.08369|
+|minimal_points|0.170287|2.10642|
+|minimal_points (Non-Vectorized)|0.164678|2.10641|
+|mnist_relu|1.1927|13.2361|
+|mnist_relu (Non-Vectorized)|1.1738|13.236|
+|psi|0.222269|2.17256|
+|psi (Non-Vectorized)|0.222621|2.17255|
 
 ### Soho protocol
 | Benchmark | Time (seconds) | Data sent (MB) |
 | - | - | - |
-|biometric|1.24949|8.65234|
-|biometric (Non-Vectorized)|1.24234|8.65237|
-|biometric_fast|1.2777|8.6525|
-|biometric_fast (Non-Vectorized)|1.23879|8.65258|
-|count_102|1.34778|8.74666|
-|count_102 (Non-Vectorized)|1.35837|8.74656|
-|count_10s|1.34072|8.71169|
-|count_10s (Non-Vectorized)|1.33281|8.71182|
-|count_123|1.32196|8.71205|
-|count_123 (Non-Vectorized)|1.35285|8.71212|
-|inner_product|0.687426|5.49492|
-|inner_product (Non-Vectorized)|0.684956|5.49495|
-|longest_102|1.38963|8.80204|
-|longest_102 (Non-Vectorized)|1.41858|8.80209|
-|max_dist_between_syms|1.29993|8.69985|
-|max_dist_between_syms (Non-Vectorized)|1.29913|8.70011|
-|max_sum_between_syms|1.28616|8.69992|
-|max_sum_between_syms (Non-Vectorized)|1.28774|8.69979|
+|biometric|1.01393|8.6525|
+|biometric (Non-Vectorized)|1.01554|8.65247|
+|biometric_fast|1.02781|8.65233|
+|biometric_fast (Non-Vectorized)|1.01953|8.65252|
+|convex_hull|1.10135|8.76192|
+|convex_hull (Non-Vectorized)|1.09696|8.76174|
+|count_102|1.09647|8.74658|
+|count_102 (Non-Vectorized)|1.09577|8.7466|
+|count_10s|1.07633|8.7119|
+|count_10s (Non-Vectorized)|1.07663|8.71169|
+|count_123|1.07831|8.71208|
+|count_123 (Non-Vectorized)|1.06613|8.71191|
+|cryptonets_max_pooling|1.17307|8.96582|
+|cryptonets_max_pooling (Non-Vectorized)|1.18107|8.96583|
+|db_cross_join_trivial|2.77359|18.3693|
+|db_cross_join_trivial (Non-Vectorized)|2.79028|18.3631|
+|inner_product|0.578726|5.49497|
+|inner_product (Non-Vectorized)|0.568846|5.49497|
+|longest_102|1.14714|8.80202|
+|longest_102 (Non-Vectorized)|1.14859|8.80204|
+|max_dist_between_syms|1.05094|8.69997|
+|max_dist_between_syms (Non-Vectorized)|1.03856|8.69985|
+|max_sum_between_syms|1.05157|8.69978|
+|max_sum_between_syms (Non-Vectorized)|1.04183|8.69993|
+|minimal_points|1.04219|8.72259|
+|minimal_points (Non-Vectorized)|1.04299|8.72244|
+|mnist_relu|2.49968|18.3475|
+|mnist_relu (Non-Vectorized)|2.51759|18.3475|
+|psi|1.09707|8.7567|
+|psi (Non-Vectorized)|1.09826|8.75692|
 
 ### Semi2K protocol
 | Benchmark | Time (seconds) | Data sent (MB) |
 | - | - | - |
-|biometric|0.0776426|2.46142|
-|biometric (Non-Vectorized)|0.0799203|2.46142|
-|biometric_fast|0.0649732|2.46142|
-|biometric_fast (Non-Vectorized)|0.0725791|2.46142|
-|count_102|0.069502|2.45468|
-|count_102 (Non-Vectorized)|0.0727732|2.45468|
-|count_10s|0.0630707|2.45449|
-|count_10s (Non-Vectorized)|0.0663167|2.45449|
-|count_123|0.0819698|2.4546|
-|count_123 (Non-Vectorized)|0.086572|2.4546|
-|inner_product|0.0221543|1.06337|
-|inner_product (Non-Vectorized)|0.0287165|1.06337|
-|longest_102|0.0791262|2.4842|
-|longest_102 (Non-Vectorized)|0.0721015|2.4842|
-|max_dist_between_syms|0.0736719|2.47753|
-|max_dist_between_syms (Non-Vectorized)|0.0682757|2.47753|
-|max_sum_between_syms|0.0665972|2.47753|
-|max_sum_between_syms (Non-Vectorized)|0.0797931|2.47753|
+|biometric|0.0676081|2.46142|
+|biometric (Non-Vectorized)|0.0594402|2.46142|
+|biometric_fast|0.0666445|2.46142|
+|biometric_fast (Non-Vectorized)|0.0626533|2.46142|
+|convex_hull|0.0662088|2.45283|
+|convex_hull (Non-Vectorized)|0.0657168|2.45283|
+|count_102|0.0612455|2.45468|
+|count_102 (Non-Vectorized)|0.0560972|2.45468|
+|count_10s|0.0576272|2.45449|
+|count_10s (Non-Vectorized)|0.0523911|2.45449|
+|count_123|0.0530552|2.4546|
+|count_123 (Non-Vectorized)|0.0652682|2.4546|
+|cryptonets_max_pooling|0.0591821|2.45923|
+|cryptonets_max_pooling (Non-Vectorized)|0.0659563|2.45923|
+|db_cross_join_trivial|0.0631647|3.06379|
+|db_cross_join_trivial (Non-Vectorized)|0.0643715|3.06379|
+|inner_product|0.02171|1.06337|
+|inner_product (Non-Vectorized)|0.0250322|1.06337|
+|longest_102|0.0633309|2.4842|
+|longest_102 (Non-Vectorized)|0.0659799|2.4842|
+|max_dist_between_syms|0.0625757|2.47753|
+|max_dist_between_syms (Non-Vectorized)|0.0658938|2.47753|
+|max_sum_between_syms|0.0576341|2.47753|
+|max_sum_between_syms (Non-Vectorized)|0.0598023|2.47753|
+|minimal_points|0.061764|2.45274|
+|minimal_points (Non-Vectorized)|0.0613758|2.45274|
+|mnist_relu|0.0555232|2.46582|
+|mnist_relu (Non-Vectorized)|0.0546871|2.46582|
+|psi|0.0564541|2.45471|
+|psi (Non-Vectorized)|0.0609746|2.45471|
 
 ### Semi-Bin protocol
 | Benchmark | Time (seconds) | Data sent (MB) |
 | - | - | - |
-|biometric|0.487246|21.827|
-|biometric (Non-Vectorized)|0.200918|6.19655|
-|biometric_fast|0.452353|21.8285|
-|biometric_fast (Non-Vectorized)|0.193609|6.15066|
-|count_102|0.170749|5.80719|
-|count_102 (Non-Vectorized)|0.197199|5.82073|
-|count_10s|0.206107|5.80067|
-|count_10s (Non-Vectorized)|0.173294|5.80969|
-|count_123|0.196664|5.80073|
-|count_123 (Non-Vectorized)|0.208876|5.81014|
-|inner_product|0.406983|21.8062|
-|inner_product (Non-Vectorized)|0.182188|5.84671|
-|longest_102|0.209473|5.82262|
-|longest_102 (Non-Vectorized)|0.199561|5.83673|
-|max_dist_between_syms|0.171175|5.81335|
-|max_dist_between_syms (Non-Vectorized)|0.215415|5.81683|
-|max_sum_between_syms|0.190245|5.81335|
-|max_sum_between_syms (Non-Vectorized)|0.185073|5.81683|
+|biometric|0.366433|21.827|
+|biometric (Non-Vectorized)|0.160901|6.19655|
+|biometric_fast|0.384185|21.8285|
+|biometric_fast (Non-Vectorized)|0.148858|6.15066|
+|convex_hull|0.153132|5.79823|
+|convex_hull (Non-Vectorized)|0.157582|5.81205|
+|count_102|0.158914|5.80719|
+|count_102 (Non-Vectorized)|0.160981|5.82073|
+|count_10s|0.145701|5.80067|
+|count_10s (Non-Vectorized)|0.149306|5.80969|
+|count_123|0.149533|5.80073|
+|count_123 (Non-Vectorized)|0.156958|5.81014|
+|cryptonets_max_pooling|0.157811|5.81783|
+|cryptonets_max_pooling (Non-Vectorized)|0.162104|5.87528|
+|db_cross_join_trivial|0.151901|6.0522|
+|db_cross_join_trivial (Non-Vectorized)|0.156789|6.08692|
+|inner_product|0.366183|21.8062|
+|inner_product (Non-Vectorized)|0.158455|5.84671|
+|longest_102|0.156933|5.82262|
+|longest_102 (Non-Vectorized)|0.161464|5.83673|
+|max_dist_between_syms|0.149901|5.81335|
+|max_dist_between_syms (Non-Vectorized)|0.161325|5.81683|
+|max_sum_between_syms|0.158534|5.81335|
+|max_sum_between_syms (Non-Vectorized)|0.169761|5.81683|
+|minimal_points|0.157864|5.78976|
+|minimal_points (Non-Vectorized)|0.163844|5.80591|
+|mnist_relu|0.156297|5.89195|
+|mnist_relu (Non-Vectorized)|0.170512|6.08952|
+|psi|0.149118|5.78758|
+|psi (Non-Vectorized)|0.150623|5.80444|
 
 ## Compiler stages with different benchmarks
 ### `biometric`
@@ -696,7 +782,7 @@ def biometric(C_0, D_0, S_0, N_0):
         else:
             _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(min_sum_4, [N_0], [(_14_0 - 1)]))
         _v.vectorized_assign(_1_2, [N_0], [_14_0], (_v.vectorized_access(_8_0, [N_0], [_14_0]) < _v.vectorized_access(min_sum_2, [N_0], [_14_0])))
-        _v.vectorized_assign(min_sum_4, [N_0], [_14_0], _v.vectorized_access(_1_2, [N_0], [_14_0]).if_else(_v.vectorized_access(min_sum_3, [N_0], [_14_0]), _v.vectorized_access(min_sum_2, [N_0], [_14_0])))
+        _v.iterative_mux(min_sum_4,_1_2,min_sum_3,min_sum_2,[N_0],[_14_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(min_sum_4, [N_0], [(_14_0 - 1)]))
     for _15_0 in range(0, N_0):
@@ -705,7 +791,7 @@ def biometric(C_0, D_0, S_0, N_0):
             _v.vectorized_assign(min_index_2, [N_0], [_15_0], _v.vectorized_access(_4_0, [N_0], [_15_0]))
         else:
             _v.vectorized_assign(min_index_2, [N_0], [_15_0], _v.vectorized_access(min_index_4, [N_0], [(_15_0 - 1)]))
-        _v.vectorized_assign(min_index_4, [N_0], [_15_0], _v.vectorized_access(_1_2, [N_0], [_15_0]).if_else(_v.vectorized_access(_13_0, [N_0], [_15_0]), _v.vectorized_access(min_index_2, [N_0], [_15_0])))
+        _v.iterative_mux(min_index_4,_1_2,_13_0,min_index_2,[N_0],[_15_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_index_2, [N_0], [_15_0], _v.vectorized_access(min_index_4, [N_0], [(_15_0 - 1)]))
     _10_0 = _v.drop_dim(min_sum_4, [N_0])
@@ -1240,7 +1326,7 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
         else:
             _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(min_diff_4, [N_0], [(_17_0 - 1)]))
         _v.vectorized_assign(_1_2, [N_0], [_17_0], (_v.vectorized_access(differences_2, [N_0], [_17_0]) < _v.vectorized_access(min_diff_2, [N_0], [_17_0])))
-        _v.vectorized_assign(min_diff_4, [N_0], [_17_0], _v.vectorized_access(_1_2, [N_0], [_17_0]).if_else(_v.vectorized_access(min_diff_3, [N_0], [_17_0]), _v.vectorized_access(min_diff_2, [N_0], [_17_0])))
+        _v.iterative_mux(min_diff_4,_1_2,min_diff_3,min_diff_2,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(min_diff_4, [N_0], [(_17_0 - 1)]))
     for _18_0 in range(0, N_0):
@@ -1249,7 +1335,7 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
             _v.vectorized_assign(min_index_4, [N_0], [_18_0], _v.vectorized_access(min_index_2, [N_0], [_18_0]))
         else:
             _v.vectorized_assign(min_index_4, [N_0], [_18_0], _v.vectorized_access(min_index_6, [N_0], [(_18_0 - 1)]))
-        _v.vectorized_assign(min_index_6, [N_0], [_18_0], _v.vectorized_access(_1_2, [N_0], [_18_0]).if_else(_v.vectorized_access(_16_0, [N_0], [_18_0]), _v.vectorized_access(min_index_4, [N_0], [_18_0])))
+        _v.iterative_mux(min_index_6,_1_2,_16_0,min_index_4,[N_0],[_18_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_index_4, [N_0], [_18_0], _v.vectorized_access(min_index_6, [N_0], [(_18_0 - 1)]))
     _12_0 = _v.drop_dim(min_diff_4, [N_0])
@@ -1892,13 +1978,13 @@ def convex_hull(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
             _v.vectorized_assign(is_hull_3, [N_0, N_0], [None, _21_0], _v.vectorized_access(_15_0, [N_0, N_0], [None, _21_0]))
         else:
             _v.vectorized_assign(is_hull_3, [N_0, N_0], [None, _21_0], _v.vectorized_access(is_hull_5, [N_0, N_0], [None, (_21_0 - 1)]))
-        _v.vectorized_assign(is_hull_5, [N_0, N_0], [None, _21_0], _v.vectorized_access(_9_3, [N_0, N_0], [None, _21_0]).if_else(is_hull_4, _v.vectorized_access(is_hull_3, [N_0, N_0], [None, _21_0])))
+        _v.iterative_mux(is_hull_5,_9_3,is_hull_4,is_hull_3,[N_0, N_0],[None, _21_0])
     # Loop exit ϕ values
     _v.vectorized_assign(is_hull_3, [N_0, N_0], [None, _21_0], _v.vectorized_access(is_hull_5, [N_0, N_0], [None, (_21_0 - 1)]))
     _v.vectorized_assign(_20_0, [N_0], [None], _v.drop_dim(is_hull_5, [N_0, N_0]))
-    _v.vectorized_assign(is_hull_6, [N_0], [None], _v.vectorized_access(_3_2, [N_0], [None]).if_else(_v.vectorized_access(_20_0, [N_0], [None]), is_hull_2))
-    _v.vectorized_assign(val_X_4, [N_0], [None], _v.vectorized_access(is_hull_6, [N_0], [None]).if_else(_v.vectorized_access(val_X_3, [N_0], [None]), _v.vectorized_access(val_X_2, [N_0], [None])))
-    _v.vectorized_assign(val_Y_4, [N_0], [None], _v.vectorized_access(is_hull_6, [N_0], [None]).if_else(_v.vectorized_access(val_Y_3, [N_0], [None]), _v.vectorized_access(val_Y_2, [N_0], [None])))
+    _v.iterative_mux(is_hull_6,_3_2,_20_0,is_hull_2,[N_0],[None])
+    _v.iterative_mux(val_X_4,is_hull_6,val_X_3,val_X_2,[N_0],[None])
+    _v.iterative_mux(val_Y_4,is_hull_6,val_Y_3,val_Y_2,[N_0],[None])
     _v.vectorized_assign(_11_0, [N_0], [None], _v.vectorized_access(val_X_4, [N_0], [None])); _v.vectorized_assign(result_X_2, [N_0], [None], _v.vectorized_access(_11_0, [N_0], [None]))
     _v.vectorized_assign(_12_0, [N_0], [None], _v.vectorized_access(val_Y_4, [N_0], [None])); _v.vectorized_assign(result_Y_2, [N_0], [None], _v.vectorized_access(_12_0, [N_0], [None]))
     _10_1 = (result_X_2,result_Y_2,)
@@ -2236,7 +2322,7 @@ def count_102(Seq_0, N_0, Syms_0):
         else:
             _v.vectorized_assign(c_2, [N_0], [_17_0], _v.vectorized_access(c_4, [N_0], [(_17_0 - 1)]))
         _v.vectorized_assign(c_3, [N_0], [_17_0], (_v.vectorized_access(c_2, [N_0], [_17_0]) + sint(1)))
-        _v.vectorized_assign(c_4, [N_0], [_17_0], _v.vectorized_access(_2_2, [N_0], [_17_0]).if_else(_v.vectorized_access(c_3, [N_0], [_17_0]), _v.vectorized_access(c_2, [N_0], [_17_0])))
+        _v.iterative_mux(c_4,_2_2,c_3,c_2,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(c_2, [N_0], [_17_0], _v.vectorized_access(c_4, [N_0], [(_17_0 - 1)]))
     _15_0 = _v.drop_dim(c_4, [N_0])
@@ -2629,7 +2715,7 @@ def count_10s(Seq_0, N_0, Syms_0):
         else:
             _v.vectorized_assign(scount_2, [N_0], [_17_0], _v.vectorized_access(scount_4, [N_0], [(_17_0 - 1)]))
         _v.vectorized_assign(scount_3, [N_0], [_17_0], (_v.vectorized_access(scount_2, [N_0], [_17_0]) + sint(1)))
-        _v.vectorized_assign(scount_4, [N_0], [_17_0], _v.vectorized_access(_2_2, [N_0], [_17_0]).if_else(_v.vectorized_access(scount_3, [N_0], [_17_0]), _v.vectorized_access(scount_2, [N_0], [_17_0])))
+        _v.iterative_mux(scount_4,_2_2,scount_3,scount_2,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(scount_2, [N_0], [_17_0], _v.vectorized_access(scount_4, [N_0], [(_17_0 - 1)]))
     _14_0 = _v.drop_dim(scount_4, [N_0])
@@ -3033,7 +3119,7 @@ def count_123(Seq_0, N_0, Syms_0):
         else:
             _v.vectorized_assign(c_2, [N_0], [_18_0], _v.vectorized_access(c_4, [N_0], [(_18_0 - 1)]))
         _v.vectorized_assign(c_3, [N_0], [_18_0], (_v.vectorized_access(c_2, [N_0], [_18_0]) + sint(1)))
-        _v.vectorized_assign(c_4, [N_0], [_18_0], _v.vectorized_access(_3_2, [N_0], [_18_0]).if_else(_v.vectorized_access(c_3, [N_0], [_18_0]), _v.vectorized_access(c_2, [N_0], [_18_0])))
+        _v.iterative_mux(c_4,_3_2,c_3,c_2,[N_0],[_18_0])
     # Loop exit ϕ values
     _v.vectorized_assign(c_2, [N_0], [_18_0], _v.vectorized_access(c_4, [N_0], [(_18_0 - 1)]))
     _15_0 = _v.drop_dim(c_4, [N_0])
@@ -3374,11 +3460,11 @@ def cryptonets_max_pooling(vals_0, cols_0, rows_0, cols_res_0, rows_res_0, OUTPU
     _v.vectorized_assign(max_6, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_10_0, [rows_res_0, cols_res_0], [None, None]))
     _v.vectorized_assign(max_8, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_12_0, [rows_res_0, cols_res_0], [None, None]))
     _v.vectorized_assign(_1_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access(_7_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access(max_3, [rows_res_0, cols_res_0], [None, None])))
-    _v.vectorized_assign(max_5, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_1_3, [rows_res_0, cols_res_0], [None, None]).if_else(_v.vectorized_access(max_4, [rows_res_0, cols_res_0], [None, None]), _v.vectorized_access(max_3, [rows_res_0, cols_res_0], [None, None])))
+    _v.iterative_mux(max_5,_1_3,max_4,max_3,[rows_res_0, cols_res_0],[None, None])
     _v.vectorized_assign(_2_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access(_9_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access(max_5, [rows_res_0, cols_res_0], [None, None])))
-    _v.vectorized_assign(max_7, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_2_3, [rows_res_0, cols_res_0], [None, None]).if_else(_v.vectorized_access(max_6, [rows_res_0, cols_res_0], [None, None]), _v.vectorized_access(max_5, [rows_res_0, cols_res_0], [None, None])))
+    _v.iterative_mux(max_7,_2_3,max_6,max_5,[rows_res_0, cols_res_0],[None, None])
     _v.vectorized_assign(_3_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access(_11_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access(max_7, [rows_res_0, cols_res_0], [None, None])))
-    _v.vectorized_assign(max_9, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_3_3, [rows_res_0, cols_res_0], [None, None]).if_else(_v.vectorized_access(max_8, [rows_res_0, cols_res_0], [None, None]), _v.vectorized_access(max_7, [rows_res_0, cols_res_0], [None, None])))
+    _v.iterative_mux(max_9,_3_3,max_8,max_7,[rows_res_0, cols_res_0],[None, None])
     _v.vectorized_assign(_5_0, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(max_9, [rows_res_0, cols_res_0], [None, None])); _v.vectorized_assign(OUTPUT_res_3, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_5_0, [rows_res_0, cols_res_0], [None, None]))
     return OUTPUT_res_3
 ```
@@ -3736,10 +3822,10 @@ def db_cross_join_trivial(A_0, Len_A_0, B_0, Len_B_0, res_0):
     _v.vectorized_assign(v_7, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(_11_0, [Len_A_0, Len_B_0, 3], [None, None, None]))
     _v.vectorized_assign(v_9, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(_12_0, [Len_A_0, Len_B_0, 3], [None, None, None]))
     _7_0 = _v.lift(lambda indices: _v.vectorized_access(_6_0, [Len_A_0, Len_B_0, 3], [None, None, None]), [Len_A_0, Len_B_0, 3])
-    _v.vectorized_assign(v_6, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(_13_0, [Len_A_0, Len_B_0, 3], [None, None, None]).if_else(_v.vectorized_access(v_5, [Len_A_0, Len_B_0, 3], [None, None, None]), v_4))
-    _v.vectorized_assign(v_8, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(_14_0, [Len_A_0, Len_B_0, 3], [None, None, None]).if_else(_v.vectorized_access(v_7, [Len_A_0, Len_B_0, 3], [None, None, None]), _v.vectorized_access(v_6, [Len_A_0, Len_B_0, 3], [None, None, None])))
-    _v.vectorized_assign(v_10, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(_15_0, [Len_A_0, Len_B_0, 3], [None, None, None]).if_else(_v.vectorized_access(v_9, [Len_A_0, Len_B_0, 3], [None, None, None]), _v.vectorized_access(v_8, [Len_A_0, Len_B_0, 3], [None, None, None])))
-    _v.vectorized_assign(v_11, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(_1_4, [Len_A_0, Len_B_0, 3], [None, None, None]).if_else(_v.vectorized_access(v_10, [Len_A_0, Len_B_0, 3], [None, None, None]), v_4))
+    _v.iterative_mux(v_6,_13_0,v_5,v_4,[Len_A_0, Len_B_0, 3],[None, None, None])
+    _v.iterative_mux(v_8,_14_0,v_7,v_6,[Len_A_0, Len_B_0, 3],[None, None, None])
+    _v.iterative_mux(v_10,_15_0,v_9,v_8,[Len_A_0, Len_B_0, 3],[None, None, None])
+    _v.iterative_mux(v_11,_1_4,v_10,v_4,[Len_A_0, Len_B_0, 3],[None, None, None])
     _v.vectorized_assign(_7_0, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(v_11, [Len_A_0, Len_B_0, 3], [None, None, None])); _v.vectorized_assign(res_4, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(_7_0, [Len_A_0, Len_B_0, 3], [None, None, None]))
     return res_4
 ```
@@ -4345,7 +4431,7 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
             _v.vectorized_assign(result_2, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(result_3, [num_bins_0, N_0], [None, (_8_0 - 1)]))
         _v.vectorized_assign(val_4, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(result_2, [num_bins_0, N_0], [None, _8_0]))
         _v.vectorized_assign(val_3, [num_bins_0, N_0], [None, _8_0], (_v.vectorized_access(result_2, [num_bins_0, N_0], [None, _8_0]) + _v.vectorized_access(_7_0, [num_bins_0, N_0], [None, _8_0])))
-        _v.vectorized_assign(val_5, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(_1_3, [num_bins_0, N_0], [None, _8_0]).if_else(_v.vectorized_access(val_3, [num_bins_0, N_0], [None, _8_0]), _v.vectorized_access(val_4, [num_bins_0, N_0], [None, _8_0])))
+        _v.iterative_mux(val_5,_1_3,val_3,val_4,[num_bins_0, N_0],[None, _8_0])
         _v.vectorized_assign((TODO: fix this case), [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(val_5, [num_bins_0, N_0], [None, _8_0])); _v.vectorized_assign(result_3, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access((TODO: fix this case), [num_bins_0, N_0], [None, _8_0]))
     # Loop exit ϕ values
     _v.vectorized_assign(result_2, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(result_3, [num_bins_0, N_0], [None, (_8_0 - 1)]))
@@ -4985,7 +5071,7 @@ def longest_102(Seq_0, N_0, Syms_0):
         else:
             _v.vectorized_assign(length_2, [N_0], [_20_0], _v.vectorized_access(length_5, [N_0], [(_20_0 - 1)]))
         _v.vectorized_assign(length_3, [N_0], [_20_0], (_v.vectorized_access(length_2, [N_0], [_20_0]) + sint(1)))
-        _v.vectorized_assign(length_5, [N_0], [_20_0], _v.vectorized_access(_6_2, [N_0], [_20_0]).if_else(_v.vectorized_access(length_3, [N_0], [_20_0]), length_4))
+        _v.iterative_mux(length_5,_6_2,length_3,length_4,[N_0],[_20_0])
     # Loop exit ϕ values
     _v.vectorized_assign(length_2, [N_0], [_20_0], _v.vectorized_access(length_5, [N_0], [(_20_0 - 1)]))
     _v.vectorized_assign(max_len_3, [N_0], [None], _v.vectorized_access(length_5, [N_0], [None]))
@@ -4997,7 +5083,7 @@ def longest_102(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(max_len_2, [N_0], [_21_0], _v.vectorized_access(max_len_4, [N_0], [(_21_0 - 1)]))
         _v.vectorized_assign(_7_2, [N_0], [_21_0], (_v.vectorized_access(max_len_2, [N_0], [_21_0]) < _v.vectorized_access(length_5, [N_0], [_21_0])))
         _v.vectorized_assign(_8_2, [N_0], [_21_0], _v.vectorized_access(s1_2, [N_0], [_21_0]).bit_and(_v.vectorized_access(_7_2, [N_0], [_21_0])))
-        _v.vectorized_assign(max_len_4, [N_0], [_21_0], _v.vectorized_access(_8_2, [N_0], [_21_0]).if_else(_v.vectorized_access(max_len_3, [N_0], [_21_0]), _v.vectorized_access(max_len_2, [N_0], [_21_0])))
+        _v.iterative_mux(max_len_4,_8_2,max_len_3,max_len_2,[N_0],[_21_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_len_2, [N_0], [_21_0], _v.vectorized_access(max_len_4, [N_0], [(_21_0 - 1)]))
     _18_0 = _v.drop_dim(max_len_4, [N_0])
@@ -5429,9 +5515,9 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(current_length_2, [N_0], [_17_0], _v.vectorized_access(_8_0, [N_0], [_17_0]))
         else:
             _v.vectorized_assign(current_length_2, [N_0], [_17_0], _v.vectorized_access(current_length_6, [N_0], [(_17_0 - 1)]))
-        _v.vectorized_assign(current_length_5, [N_0], [_17_0], _v.vectorized_access(_2_2, [N_0], [_17_0]).if_else(current_length_4, _v.vectorized_access(current_length_2, [N_0], [_17_0])))
+        _v.iterative_mux(current_length_5,_2_2,current_length_4,current_length_2,[N_0],[_17_0])
         _v.vectorized_assign(current_length_3, [N_0], [_17_0], (_v.vectorized_access(current_length_2, [N_0], [_17_0]) + sint(1)))
-        _v.vectorized_assign(current_length_6, [N_0], [_17_0], _v.vectorized_access(s1_2, [N_0], [_17_0]).if_else(_v.vectorized_access(current_length_3, [N_0], [_17_0]), _v.vectorized_access(current_length_5, [N_0], [_17_0])))
+        _v.iterative_mux(current_length_6,s1_2,current_length_3,current_length_5,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_length_2, [N_0], [_17_0], _v.vectorized_access(current_length_6, [N_0], [(_17_0 - 1)]))
     _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access(current_length_6, [N_0], [None]) & sint(1)))
@@ -5445,7 +5531,7 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(max_length_2, [N_0], [_18_0], _v.vectorized_access(max_length_4, [N_0], [(_18_0 - 1)]))
         _v.vectorized_assign(_6_2, [N_0], [_18_0], (_v.vectorized_access(current_length_6, [N_0], [_18_0]) > _v.vectorized_access(max_length_2, [N_0], [_18_0])))
         _v.vectorized_assign(_7_2, [N_0], [_18_0], _v.vectorized_access(_5_2, [N_0], [_18_0]).bit_and(_v.vectorized_access(_6_2, [N_0], [_18_0])))
-        _v.vectorized_assign(max_length_4, [N_0], [_18_0], _v.vectorized_access(_7_2, [N_0], [_18_0]).if_else(_v.vectorized_access(max_length_3, [N_0], [_18_0]), _v.vectorized_access(max_length_2, [N_0], [_18_0])))
+        _v.iterative_mux(max_length_4,_7_2,max_length_3,max_length_2,[N_0],[_18_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_length_2, [N_0], [_18_0], _v.vectorized_access(max_length_4, [N_0], [(_18_0 - 1)]))
     _15_0 = _v.drop_dim(max_length_4, [N_0])
@@ -5746,7 +5832,7 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
         else:
             _v.vectorized_assign(current_dist_2, [N_0], [_9_0], _v.vectorized_access(current_dist_5, [N_0], [(_9_0 - 1)]))
         _v.vectorized_assign(current_dist_3, [N_0], [_9_0], (_v.vectorized_access(current_dist_2, [N_0], [_9_0]) + sint(1)))
-        _v.vectorized_assign(current_dist_5, [N_0], [_9_0], _v.vectorized_access(_2_2, [N_0], [_9_0]).if_else(_v.vectorized_access(current_dist_3, [N_0], [_9_0]), current_dist_4))
+        _v.iterative_mux(current_dist_5,_2_2,current_dist_3,current_dist_4,[N_0],[_9_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_dist_2, [N_0], [_9_0], _v.vectorized_access(current_dist_5, [N_0], [(_9_0 - 1)]))
     _v.vectorized_assign(max_dist_3, [N_0], [None], _v.vectorized_access(current_dist_5, [N_0], [None]))
@@ -5757,7 +5843,7 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
         else:
             _v.vectorized_assign(max_dist_2, [N_0], [_10_0], _v.vectorized_access(max_dist_4, [N_0], [(_10_0 - 1)]))
         _v.vectorized_assign(_3_2, [N_0], [_10_0], (_v.vectorized_access(current_dist_5, [N_0], [_10_0]) > _v.vectorized_access(max_dist_2, [N_0], [_10_0])))
-        _v.vectorized_assign(max_dist_4, [N_0], [_10_0], _v.vectorized_access(_3_2, [N_0], [_10_0]).if_else(_v.vectorized_access(max_dist_3, [N_0], [_10_0]), _v.vectorized_access(max_dist_2, [N_0], [_10_0])))
+        _v.iterative_mux(max_dist_4,_3_2,max_dist_3,max_dist_2,[N_0],[_10_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_dist_2, [N_0], [_10_0], _v.vectorized_access(max_dist_4, [N_0], [(_10_0 - 1)]))
     _8_0 = _v.drop_dim(max_dist_4, [N_0])
@@ -6064,7 +6150,7 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
         else:
             _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(current_sum_5, [N_0], [(_10_0 - 1)]))
         _v.vectorized_assign(current_sum_3, [N_0], [_10_0], (_v.vectorized_access(current_sum_2, [N_0], [_10_0]) + _v.vectorized_access(_8_0, [N_0], [_10_0])))
-        _v.vectorized_assign(current_sum_5, [N_0], [_10_0], _v.vectorized_access(_2_2, [N_0], [_10_0]).if_else(_v.vectorized_access(current_sum_3, [N_0], [_10_0]), current_sum_4))
+        _v.iterative_mux(current_sum_5,_2_2,current_sum_3,current_sum_4,[N_0],[_10_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(current_sum_5, [N_0], [(_10_0 - 1)]))
     _v.vectorized_assign(max_sum_3, [N_0], [None], _v.vectorized_access(current_sum_5, [N_0], [None]))
@@ -6075,7 +6161,7 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
         else:
             _v.vectorized_assign(max_sum_2, [N_0], [_11_0], _v.vectorized_access(max_sum_4, [N_0], [(_11_0 - 1)]))
         _v.vectorized_assign(_3_2, [N_0], [_11_0], (_v.vectorized_access(current_sum_5, [N_0], [_11_0]) > _v.vectorized_access(max_sum_2, [N_0], [_11_0])))
-        _v.vectorized_assign(max_sum_4, [N_0], [_11_0], _v.vectorized_access(_3_2, [N_0], [_11_0]).if_else(_v.vectorized_access(max_sum_3, [N_0], [_11_0]), _v.vectorized_access(max_sum_2, [N_0], [_11_0])))
+        _v.iterative_mux(max_sum_4,_3_2,max_sum_3,max_sum_2,[N_0],[_11_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_sum_2, [N_0], [_11_0], _v.vectorized_access(max_sum_4, [N_0], [(_11_0 - 1)]))
     _9_0 = _v.drop_dim(max_sum_4, [N_0])
@@ -6459,8 +6545,8 @@ def minimal_points(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     _v.vectorized_assign(bx_3, [N_0, N_0], [None, _18_0], _v.vectorized_access(bx_4, [N_0, N_0], [None, (_18_0 - 1)]))
     _v.vectorized_assign(_15_0, [N_0], [None], _v.drop_dim(bx_4, [N_0, N_0]))
     _v.vectorized_assign(_6_2, [N_0], [None], (_v.vectorized_access(_15_0, [N_0], [None]).bit_not()))
-    _v.vectorized_assign(val_X_4, [N_0], [None], _v.vectorized_access(_6_2, [N_0], [None]).if_else(_v.vectorized_access(val_X_3, [N_0], [None]), _v.vectorized_access(val_X_2, [N_0], [None])))
-    _v.vectorized_assign(val_Y_4, [N_0], [None], _v.vectorized_access(_6_2, [N_0], [None]).if_else(_v.vectorized_access(val_Y_3, [N_0], [None]), _v.vectorized_access(val_Y_2, [N_0], [None])))
+    _v.iterative_mux(val_X_4,_6_2,val_X_3,val_X_2,[N_0],[None])
+    _v.iterative_mux(val_Y_4,_6_2,val_Y_3,val_Y_2,[N_0],[None])
     _v.vectorized_assign(_8_0, [N_0], [None], _v.vectorized_access(val_X_4, [N_0], [None])); _v.vectorized_assign(result_X_2, [N_0], [None], _v.vectorized_access(_8_0, [N_0], [None]))
     _v.vectorized_assign(_9_0, [N_0], [None], _v.vectorized_access(val_Y_4, [N_0], [None])); _v.vectorized_assign(result_Y_2, [N_0], [None], _v.vectorized_access(_9_0, [N_0], [None]))
     _7_1 = (result_X_2,result_Y_2,)
@@ -6672,7 +6758,7 @@ def mnist_relu(input_0, OUTPUT_res_0, len_outer_0, len_inner_0):
     _3_0 = _v.lift(lambda indices: _v.vectorized_access(_2_0, [len_outer_0, len_inner_0], [None, None]), [len_outer_0, len_inner_0])
     _v.vectorized_assign(_1_3, [len_outer_0, len_inner_0], [None, None], (_v.vectorized_access(_4_0, [len_outer_0, len_inner_0], [None, None]) > sint(1)))
     _v.vectorized_assign(val_4, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(_5_0, [len_outer_0, len_inner_0], [None, None]))
-    _v.vectorized_assign(val_5, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(_1_3, [len_outer_0, len_inner_0], [None, None]).if_else(_v.vectorized_access(val_4, [len_outer_0, len_inner_0], [None, None]), val_3))
+    _v.iterative_mux(val_5,_1_3,val_4,val_3,[len_outer_0, len_inner_0],[None, None])
     _v.vectorized_assign(_3_0, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(val_5, [len_outer_0, len_inner_0], [None, None])); _v.vectorized_assign(OUTPUT_res_3, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(_3_0, [len_outer_0, len_inner_0], [None, None]))
     return OUTPUT_res_3
 ```
@@ -6957,11 +7043,11 @@ def psi(A_0, SA_0, B_0, SB_0, result_0):
             _v.vectorized_assign(flag_3, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(_3_0, [SA_0, SB_0], [None, _8_0]))
         else:
             _v.vectorized_assign(flag_3, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(flag_5, [SA_0, SB_0], [None, (_8_0 - 1)]))
-        _v.vectorized_assign(flag_5, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(_1_3, [SA_0, SB_0], [None, _8_0]).if_else(flag_4, _v.vectorized_access(flag_3, [SA_0, SB_0], [None, _8_0])))
+        _v.iterative_mux(flag_5,_1_3,flag_4,flag_3,[SA_0, SB_0],[None, _8_0])
     # Loop exit ϕ values
     _v.vectorized_assign(flag_3, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(flag_5, [SA_0, SB_0], [None, (_8_0 - 1)]))
     _v.vectorized_assign(_7_0, [SA_0], [None], _v.drop_dim(flag_5, [SA_0, SB_0]))
-    _v.vectorized_assign(val_4, [SA_0], [None], _v.vectorized_access(_7_0, [SA_0], [None]).if_else(_v.vectorized_access(val_3, [SA_0], [None]), _v.vectorized_access(val_2, [SA_0], [None])))
+    _v.iterative_mux(val_4,_7_0,val_3,val_2,[SA_0],[None])
     _v.vectorized_assign(_2_0, [SA_0], [None], _v.vectorized_access(val_4, [SA_0], [None])); _v.vectorized_assign(result_2, [SA_0], [None], _v.vectorized_access(_2_0, [SA_0], [None]))
     return result_2
 ```
