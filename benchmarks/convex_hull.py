@@ -5,8 +5,8 @@ def convex_hull(
     X_coords: shared[list[int]],
     Y_coords: shared[list[int]],
     N: int,
-    result_X: shared[list[int]],
-    result_Y: shared[list[int]],
+    result_X: list[int],
+    result_Y: list[int],
 ) -> tuple[shared[list[int]], shared[list[int]]]:
     for i in range(0, N):
         is_hull = True

@@ -33,7 +33,7 @@ def cryptonets_max_pooling(
     rows: int,
     cols_res: int,
     rows_res: int,
-    OUTPUT_res: shared[list[int]],
+    OUTPUT_res: list[int],
 ) -> shared[list[int]]:
     for i in range(rows_res):
         for j in range(cols_res):
