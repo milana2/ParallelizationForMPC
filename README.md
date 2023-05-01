@@ -4,426 +4,222 @@
 ### BooleanGmw
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|10003|8354|1649|4947|0.615 MiB |4946|0.615 MiB |3216.41 ms |384.0 ms |
-|biometric (Non-Vectorized)|105250|0|105250|47073|2.704 MiB |47072|2.704 MiB |10133.012 ms |4764.0 ms |
-|biometric_fast|10638|8975|1663|5265|0.611 MiB |5264|0.611 MiB |3670.096 ms |413.0 ms |
-|biometric_fast (Non-Vectorized)|99903|0|99903|44529|2.558 MiB |44528|2.558 MiB |11832.917 ms |3806.0 ms |
-|chapterfour_figure_12|805|0|805|752|0.048 MiB |751|0.048 MiB |415.623 ms |31.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|805|0|805|752|0.048 MiB |751|0.048 MiB |355.435 ms |32.0 ms |
-|convex_hull|2122|2071|51|1381|0.122 MiB |1380|0.122 MiB |744.072 ms |84.0 ms |
-|convex_hull (Non-Vectorized)|12112|0|12112|6265|0.364 MiB |6264|0.364 MiB |1711.361 ms |470.0 ms |
-|count_102|6610|297|6313|3820|0.237 MiB |3819|0.237 MiB |3610.645 ms |258.0 ms |
-|count_102 (Non-Vectorized)|9188|0|9188|5512|0.321 MiB |5511|0.321 MiB |3040.659 ms |351.0 ms |
-|count_10s|4720|298|4422|2848|0.177 MiB |2847|0.177 MiB |2495.267 ms |184.0 ms |
-|count_10s (Non-Vectorized)|6440|0|6440|3976|0.233 MiB |3975|0.233 MiB |2029.611 ms |247.0 ms |
-|count_123|4729|305|4424|2850|0.177 MiB |2849|0.177 MiB |2566.39 ms |183.0 ms |
-|count_123 (Non-Vectorized)|6476|0|6476|3990|0.234 MiB |3989|0.233 MiB |2208.016 ms |246.0 ms |
-|cryptonets_max_pooling|1357|1221|136|951|0.139 MiB |950|0.138 MiB |988.268 ms |58.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|24124|0|24124|11211|0.647 MiB |11210|0.647 MiB |2783.815 ms |935.0 ms |
-|db_cross_join_trivial|21906|119|21787|14486|0.877 MiB |14485|0.876 MiB |2986.352 ms |887.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|29201|0|29201|19666|1.132 MiB |19665|1.132 MiB |4248.823 ms |1158.0 ms |
-|db_variance|29520|5864|23656|13646|0.926 MiB |13645|0.926 MiB |54790.194 ms |1119.0 ms |
-|db_variance (Non-Vectorized)|70507|0|70507|31524|1.812 MiB |31523|1.812 MiB |57376.776 ms |2682.0 ms |
-|histogram|5250|5131|119|3018|0.276 MiB |3017|0.276 MiB |2192.484 ms |218.0 ms |
-|histogram (Non-Vectorized)|28668|0|28668|15676|0.903 MiB |15675|0.903 MiB |4169.211 ms |1242.0 ms |
-|inner_product|7075|5207|1868|3582|0.245 MiB |3581|0.245 MiB |1793.51 ms |267.0 ms |
-|inner_product (Non-Vectorized)|17478|0|17478|8054|0.467 MiB |8053|0.467 MiB |2374.17 ms |672.0 ms |
-|longest_102|10651|306|10345|5642|0.341 MiB |5641|0.341 MiB |7009.949 ms |411.0 ms |
-|longest_102 (Non-Vectorized)|13278|0|13278|7352|0.426 MiB |7351|0.426 MiB |4156.062 ms |516.0 ms |
-|longest_odd_10|8520|305|8215|4614|0.283 MiB |4613|0.283 MiB |5191.885 ms |333.0 ms |
-|longest_odd_10 (Non-Vectorized)|10543|0|10543|5944|0.349 MiB |5943|0.349 MiB |3183.021 ms |408.0 ms |
-|max_dist_between_syms|8278|101|8177|4454|0.263 MiB |4453|0.263 MiB |4466.901 ms |319.0 ms |
-|max_dist_between_syms (Non-Vectorized)|8941|0|8941|4888|0.285 MiB |4887|0.285 MiB |2845.232 ms |348.0 ms |
-|max_sum_between_syms|8277|101|8176|4454|0.263 MiB |4453|0.263 MiB |4427.381 ms |320.0 ms |
-|max_sum_between_syms (Non-Vectorized)|8940|0|8940|4888|0.285 MiB |4887|0.285 MiB |3017.759 ms |347.0 ms |
-|minimal_points|890|851|39|765|0.071 MiB |764|0.071 MiB |573.167 ms |34.0 ms |
-|minimal_points (Non-Vectorized)|7292|0|7292|3649|0.214 MiB |3648|0.214 MiB |1132.461 ms |282.0 ms |
-|mnist_relu|1016|408|608|771|0.33 MiB |770|0.33 MiB |480.939 ms |59.0 ms |
-|mnist_relu (Non-Vectorized)|80603|0|80603|36591|2.101 MiB |36590|2.101 MiB |8134.723 ms |3566.0 ms |
-|psi|186|140|46|474|0.05 MiB |473|0.05 MiB |611.422 ms |8.0 ms |
-|psi (Non-Vectorized)|3391|0|3391|2646|0.157 MiB |2645|0.157 MiB |935.469 ms |130.0 ms |
+|biometric|10003|8354|1649|4947|0.615 MiB |4946|0.615 MiB |3414.078 ms |427.0 ms |
+|biometric (Non-Vectorized)|105250|0|105250|47073|2.704 MiB |47072|2.704 MiB |13344.882 ms |4664.0 ms |
+|biometric_fast|10638|8975|1663|5265|0.611 MiB |5264|0.611 MiB |3840.132 ms |474.0 ms |
+|biometric_fast (Non-Vectorized)|99903|0|99903|44529|2.558 MiB |44528|2.558 MiB |13374.087 ms |4441.0 ms |
+|chapterfour_figure_12|805|0|805|752|0.048 MiB |751|0.048 MiB |376.283 ms |36.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|805|0|805|752|0.048 MiB |751|0.048 MiB |481.721 ms |35.0 ms |
+|convex_hull|2122|2071|51|1381|0.122 MiB |1380|0.122 MiB |876.751 ms |87.0 ms |
+|convex_hull (Non-Vectorized)|12112|0|12112|6265|0.364 MiB |6264|0.364 MiB |1942.753 ms |535.0 ms |
+|count_102|6610|297|6313|3820|0.237 MiB |3819|0.237 MiB |3754.057 ms |282.0 ms |
+|count_102 (Non-Vectorized)|9188|0|9188|5512|0.321 MiB |5511|0.321 MiB |2998.866 ms |406.0 ms |
+|count_10s|4720|298|4422|2848|0.177 MiB |2847|0.177 MiB |2514.108 ms |185.0 ms |
+|count_10s (Non-Vectorized)|6440|0|6440|3976|0.233 MiB |3975|0.233 MiB |2223.826 ms |285.0 ms |
+|count_123|4729|305|4424|2850|0.177 MiB |2849|0.177 MiB |2450.512 ms |199.0 ms |
+|count_123 (Non-Vectorized)|6476|0|6476|3990|0.234 MiB |3989|0.233 MiB |2075.511 ms |256.0 ms |
+|cryptonets_max_pooling|1357|1221|136|951|0.139 MiB |950|0.138 MiB |1075.709 ms |63.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|24124|0|24124|11211|0.647 MiB |11210|0.647 MiB |2985.527 ms |1003.0 ms |
+|db_cross_join_trivial|21906|119|21787|14486|0.877 MiB |14485|0.876 MiB |3382.533 ms |1001.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|29201|0|29201|19666|1.132 MiB |19665|1.132 MiB |4777.73 ms |1406.0 ms |
+|db_variance|29520|5864|23656|13646|0.926 MiB |13645|0.926 MiB |55007.354 ms |1268.0 ms |
+|db_variance (Non-Vectorized)|70507|0|70507|31524|1.812 MiB |31523|1.812 MiB |58941.442 ms |3121.0 ms |
+|histogram|5250|5131|119|3018|0.276 MiB |3017|0.276 MiB |2287.786 ms |241.0 ms |
+|histogram (Non-Vectorized)|28668|0|28668|15676|0.903 MiB |15675|0.903 MiB |4771.507 ms |1190.0 ms |
+|inner_product|7075|5207|1868|3582|0.245 MiB |3581|0.245 MiB |1790.857 ms |302.0 ms |
+|inner_product (Non-Vectorized)|17478|0|17478|8054|0.467 MiB |8053|0.467 MiB |2667.58 ms |762.0 ms |
+|longest_102|10651|306|10345|5642|0.341 MiB |5641|0.341 MiB |6997.306 ms |459.0 ms |
+|longest_102 (Non-Vectorized)|13278|0|13278|7352|0.426 MiB |7351|0.426 MiB |4548.846 ms |603.0 ms |
+|longest_odd_10|8520|305|8215|4614|0.283 MiB |4613|0.283 MiB |5285.929 ms |417.0 ms |
+|longest_odd_10 (Non-Vectorized)|10543|0|10543|5944|0.349 MiB |5943|0.349 MiB |3382.099 ms |510.0 ms |
+|max_dist_between_syms|8278|101|8177|4454|0.263 MiB |4453|0.263 MiB |4496.263 ms |387.0 ms |
+|max_dist_between_syms (Non-Vectorized)|8941|0|8941|4888|0.285 MiB |4887|0.285 MiB |3122.836 ms |416.0 ms |
+|max_sum_between_syms|8277|101|8176|4454|0.263 MiB |4453|0.263 MiB |4600.985 ms |407.0 ms |
+|max_sum_between_syms (Non-Vectorized)|8940|0|8940|4888|0.285 MiB |4887|0.285 MiB |3162.599 ms |399.0 ms |
+|minimal_points|890|851|39|765|0.071 MiB |764|0.071 MiB |670.798 ms |40.0 ms |
+|minimal_points (Non-Vectorized)|7292|0|7292|3649|0.214 MiB |3648|0.214 MiB |1381.871 ms |329.0 ms |
+|mnist_relu|1016|408|608|771|0.33 MiB |770|0.33 MiB |530.33 ms |101.0 ms |
+|mnist_relu (Non-Vectorized)|80603|0|80603|36591|2.101 MiB |36590|2.101 MiB |10018.459 ms |3701.0 ms |
+|psi|186|140|46|474|0.05 MiB |473|0.05 MiB |623.658 ms |9.0 ms |
+|psi (Non-Vectorized)|3391|0|3391|2646|0.157 MiB |2645|0.157 MiB |1096.552 ms |153.0 ms |
 
 ### Bmr
 | Benchmark | Total # Gates | # SIMD gates | # Non-SIMD gates | # messages sent (party 0) | Sent size (party 0) | # messages received (party 0) | Received Size (party 0) | Runtime | Circuit Generation Time |
 | - | - | - | - | - | - | - | - | - | - |
-|biometric|4490|3647|843|7843|4.37 MiB |7846|4.37 MiB |487.905 ms |462.0 ms |
-|biometric (Non-Vectorized)|51452|0|51452|86503|8.263 MiB |86506|8.263 MiB |4867.084 ms |4482.0 ms |
-|biometric_fast|4660|3803|857|8019|4.327 MiB |8019|4.327 MiB |484.363 ms |471.0 ms |
-|biometric_fast (Non-Vectorized)|49849|0|49849|85284|8.151 MiB |85284|8.151 MiB |4828.161 ms |4433.0 ms |
-|chapterfour_figure_12|398|0|398|975|0.087 MiB |972|0.087 MiB |39.092 ms |34.0 ms |
-|chapterfour_figure_12 (Non-Vectorized)|398|0|398|975|0.087 MiB |972|0.087 MiB |97.283 ms |34.0 ms |
-|convex_hull|1056|999|57|1989|0.514 MiB |1984|0.514 MiB |198.39 ms |100.0 ms |
-|convex_hull (Non-Vectorized)|5650|0|5650|8995|0.861 MiB |8990|0.861 MiB |554.428 ms |482.0 ms |
-|count_102|1753|109|1644|3831|0.569 MiB |3819|0.569 MiB |180.92 ms |176.0 ms |
-|count_102 (Non-Vectorized)|2639|0|2639|8061|0.779 MiB |8049|0.778 MiB |233.083 ms |325.0 ms |
-|count_10s|1264|110|1154|2942|0.415 MiB |2932|0.414 MiB |133.362 ms |130.0 ms |
-|count_10s (Non-Vectorized)|1856|0|1856|5762|0.555 MiB |5752|0.554 MiB |158.795 ms |229.0 ms |
-|count_123|1271|115|1156|2948|0.417 MiB |2939|0.416 MiB |119.888 ms |129.0 ms |
-|count_123 (Non-Vectorized)|1878|0|1878|5798|0.558 MiB |5789|0.558 MiB |190.894 ms |232.0 ms |
-|cryptonets_max_pooling|765|609|156|1464|1.012 MiB |1399|1.008 MiB |195.897 ms |82.0 ms |
-|cryptonets_max_pooling (Non-Vectorized)|11904|0|11904|17937|1.827 MiB |17872|1.824 MiB |1444.81 ms |1008.0 ms |
-|db_cross_join_trivial|7977|65|7912|36652|6.318 MiB |36345|6.302 MiB |1502.8 ms |1441.0 ms |
-|db_cross_join_trivial (Non-Vectorized)|11276|0|11276|86306|8.773 MiB |85999|8.757 MiB |1112.59 ms |3645.0 ms |
-|db_variance|13352|3017|10335|20698|3.612 MiB |20695|3.611 MiB |1569.448 ms |1132.0 ms |
-|db_variance (Non-Vectorized)|34410|0|34410|56538|5.389 MiB |56535|5.389 MiB |3363.694 ms |3287.0 ms |
-|histogram|1489|1365|124|2939|1.046 MiB |2891|1.043 MiB |199.099 ms |177.0 ms |
-|histogram (Non-Vectorized)|7673|0|7673|18072|1.795 MiB |18024|1.793 MiB |1099.675 ms |829.0 ms |
-|inner_product|3301|2827|474|5833|1.004 MiB |5830|1.004 MiB |289.253 ms |288.0 ms |
-|inner_product (Non-Vectorized)|8944|0|8944|15763|1.497 MiB |15760|1.496 MiB |1067.606 ms |794.0 ms |
-|longest_102|3732|116|3616|6776|0.867 MiB |6764|0.866 MiB |438.022 ms |349.0 ms |
-|longest_102 (Non-Vectorized)|4649|0|4649|11051|1.079 MiB |11039|1.078 MiB |428.132 ms |499.0 ms |
-|longest_odd_10|2995|115|2880|6671|0.869 MiB |6660|0.868 MiB |340.37 ms |317.0 ms |
-|longest_odd_10 (Non-Vectorized)|3688|0|3688|10864|1.077 MiB |10853|1.076 MiB |495.776 ms |455.0 ms |
-|max_dist_between_syms|2881|39|2842|5152|0.559 MiB |5141|0.558 MiB |293.272 ms |264.0 ms |
-|max_dist_between_syms (Non-Vectorized)|3110|0|3110|6237|0.612 MiB |6226|0.612 MiB |344.523 ms |300.0 ms |
-|max_sum_between_syms|2880|39|2841|5150|0.558 MiB |5140|0.557 MiB |263.041 ms |264.0 ms |
-|max_sum_between_syms (Non-Vectorized)|3109|0|3109|6235|0.612 MiB |6225|0.611 MiB |435.839 ms |303.0 ms |
-|minimal_points|480|435|45|1015|0.244 MiB |1012|0.244 MiB |93.882 ms |41.0 ms |
-|minimal_points (Non-Vectorized)|3566|0|3566|4161|0.4 MiB |4158|0.4 MiB |394.836 ms |259.0 ms |
-|mnist_relu|1012|204|808|1484|3.215 MiB |1480|3.215 MiB |387.338 ms |125.0 ms |
-|mnist_relu (Non-Vectorized)|40003|0|40003|58995|6.06 MiB |58991|6.06 MiB |4418.68 ms |3707.0 ms |
-|psi|145|94|51|748|0.348 MiB |740|0.348 MiB |103.047 ms |20.0 ms |
-|psi (Non-Vectorized)|1306|0|1306|6674|0.641 MiB |6666|0.641 MiB |112.173 ms |227.0 ms |
+|biometric|4490|3647|843|7843|4.37 MiB |7846|4.37 MiB |807.133 ms |525.0 ms |
+|biometric (Non-Vectorized)|51452|0|51452|86503|8.263 MiB |86506|8.263 MiB |6011.218 ms |5214.0 ms |
+|biometric_fast|4660|3803|857|8019|4.327 MiB |8019|4.327 MiB |706.572 ms |567.0 ms |
+|biometric_fast (Non-Vectorized)|49849|0|49849|85284|8.151 MiB |85284|8.151 MiB |5815.203 ms |5125.0 ms |
+|chapterfour_figure_12|398|0|398|975|0.087 MiB |972|0.087 MiB |62.461 ms |39.0 ms |
+|chapterfour_figure_12 (Non-Vectorized)|398|0|398|975|0.087 MiB |972|0.087 MiB |104.405 ms |34.0 ms |
+|convex_hull|1056|999|57|1992|0.514 MiB |1981|0.513 MiB |139.97 ms |114.0 ms |
+|convex_hull (Non-Vectorized)|5650|0|5650|8998|0.861 MiB |8987|0.861 MiB |879.947 ms |568.0 ms |
+|count_102|1753|109|1644|3831|0.569 MiB |3819|0.569 MiB |258.967 ms |198.0 ms |
+|count_102 (Non-Vectorized)|2639|0|2639|8061|0.779 MiB |8049|0.778 MiB |302.181 ms |364.0 ms |
+|count_10s|1264|110|1154|2942|0.415 MiB |2932|0.414 MiB |215.757 ms |139.0 ms |
+|count_10s (Non-Vectorized)|1856|0|1856|5762|0.555 MiB |5752|0.554 MiB |191.591 ms |264.0 ms |
+|count_123|1271|115|1156|2948|0.417 MiB |2939|0.416 MiB |142.207 ms |127.0 ms |
+|count_123 (Non-Vectorized)|1878|0|1878|5798|0.558 MiB |5789|0.558 MiB |202.256 ms |277.0 ms |
+|cryptonets_max_pooling|765|609|156|1484|1.013 MiB |1379|1.007 MiB |177.015 ms |90.0 ms |
+|cryptonets_max_pooling (Non-Vectorized)|11904|0|11904|17957|1.828 MiB |17852|1.823 MiB |1285.193 ms |1081.0 ms |
+|db_cross_join_trivial|7977|65|7912|36652|6.318 MiB |36345|6.302 MiB |1589.7 ms |1585.0 ms |
+|db_cross_join_trivial (Non-Vectorized)|11276|0|11276|86306|8.773 MiB |85999|8.757 MiB |1734.399 ms |3379.0 ms |
+|db_variance|13352|3017|10335|20698|3.612 MiB |20695|3.611 MiB |1635.963 ms |1278.0 ms |
+|db_variance (Non-Vectorized)|34410|0|34410|56538|5.389 MiB |56535|5.389 MiB |3981.016 ms |3301.0 ms |
+|histogram|1489|1365|124|2939|1.046 MiB |2891|1.043 MiB |279.077 ms |203.0 ms |
+|histogram (Non-Vectorized)|7673|0|7673|18072|1.795 MiB |18024|1.793 MiB |1080.636 ms |950.0 ms |
+|inner_product|3301|2827|474|5833|1.004 MiB |5830|1.004 MiB |355.558 ms |333.0 ms |
+|inner_product (Non-Vectorized)|8944|0|8944|15763|1.497 MiB |15760|1.496 MiB |975.589 ms |948.0 ms |
+|longest_102|3732|116|3616|6776|0.867 MiB |6764|0.866 MiB |458.347 ms |375.0 ms |
+|longest_102 (Non-Vectorized)|4649|0|4649|11051|1.079 MiB |11039|1.078 MiB |523.486 ms |598.0 ms |
+|longest_odd_10|2995|115|2880|6671|0.869 MiB |6660|0.868 MiB |393.046 ms |359.0 ms |
+|longest_odd_10 (Non-Vectorized)|3688|0|3688|10864|1.077 MiB |10853|1.076 MiB |447.246 ms |440.0 ms |
+|max_dist_between_syms|2881|39|2842|5152|0.559 MiB |5141|0.558 MiB |353.9 ms |312.0 ms |
+|max_dist_between_syms (Non-Vectorized)|3110|0|3110|6237|0.612 MiB |6226|0.612 MiB |415.278 ms |346.0 ms |
+|max_sum_between_syms|2880|39|2841|5150|0.558 MiB |5140|0.557 MiB |453.754 ms |314.0 ms |
+|max_sum_between_syms (Non-Vectorized)|3109|0|3109|6235|0.612 MiB |6225|0.611 MiB |414.582 ms |352.0 ms |
+|minimal_points|480|435|45|1015|0.244 MiB |1012|0.244 MiB |104.957 ms |44.0 ms |
+|minimal_points (Non-Vectorized)|3566|0|3566|4161|0.4 MiB |4158|0.4 MiB |452.297 ms |282.0 ms |
+|mnist_relu|1012|204|808|1684|3.225 MiB |1280|3.205 MiB |463.713 ms |156.0 ms |
+|mnist_relu (Non-Vectorized)|40003|0|40003|59195|6.07 MiB |58791|6.05 MiB |4432.345 ms |5017.0 ms |
+|psi|145|94|51|748|0.348 MiB |740|0.348 MiB |64.887 ms |24.0 ms |
+|psi (Non-Vectorized)|1306|0|1306|6674|0.641 MiB |6666|0.641 MiB |107.567 ms |260.0 ms |
 
 ## MP-SPDZ Benchmark Data
 ### Arithmetic protocol compilation
 | Benchmark | Compile time (seconds) | # int triples | # int opens | # VM rounds |
 | - | - | - | - | - |
-|biometric|0.516|504|6|34|
-|biometric (Non-Vectorized)|0.266|504|6|34|
-|biometric_fast|0.281|504|6|34|
-|biometric_fast (Non-Vectorized)|0.265|504|6|34|
-|convex_hull|0.189|2910|30|14|
-|convex_hull (Non-Vectorized)|0.182|2910|30|14|
-|count_102|0.184|1930|31|39|
-|count_102 (Non-Vectorized)|0.174|1930|31|28|
-|count_10s|0.174|1351|22|30|
-|count_10s (Non-Vectorized)|0.169|1351|22|22|
-|count_123|0.177|1358|22|31|
-|count_123 (Non-Vectorized)|0.172|1358|22|23|
-|cryptonets_max_pooling|0.278|7260|80|25|
-|cryptonets_max_pooling (Non-Vectorized)|0.263|7260|80|25|
-|db_cross_join_trivial|0.417|19389|378|12|
-|db_cross_join_trivial (Non-Vectorized)|0.36|19200|375|12|
-|inner_product|0.09|3|1|2|
-|inner_product (Non-Vectorized)|0.089|3|1|2|
-|longest_102|0.554|3160|41|130|
-|longest_102 (Non-Vectorized)|0.555|3160|41|102|
-|max_dist_between_syms|0.478|1480|17|80|
-|max_dist_between_syms (Non-Vectorized)|0.469|1480|17|73|
-|max_sum_between_syms|0.476|1480|17|80|
-|max_sum_between_syms (Non-Vectorized)|0.467|1480|17|73|
-|minimal_points|0.189|2184|24|13|
-|minimal_points (Non-Vectorized)|0.177|2184|24|13|
-|mnist_relu|0.378|24200|400|9|
-|mnist_relu (Non-Vectorized)|0.342|24200|400|9|
-|psi|0.189|2245|40|16|
-|psi (Non-Vectorized)|0.182|2245|40|16|
+|biometric|0.513|504|6|34|
+|biometric (Non-Vectorized)|0.309|504|6|34|
+|biometric_fast|0.321|504|6|34|
+|biometric_fast (Non-Vectorized)|0.3|504|6|34|
+|convex_hull|0.204|2910|30|14|
+|convex_hull (Non-Vectorized)|0.219|2910|30|14|
+|count_102|0.208|1930|31|39|
+|count_102 (Non-Vectorized)|0.201|1930|31|28|
+|count_10s|0.206|1351|22|30|
+|count_10s (Non-Vectorized)|0.197|1351|22|22|
+|count_123|0.205|1358|22|31|
+|count_123 (Non-Vectorized)|0.204|1358|22|23|
+|cryptonets_max_pooling|0.322|7260|80|25|
+|cryptonets_max_pooling (Non-Vectorized)|0.307|7260|80|25|
+|db_cross_join_trivial|0.455|19389|378|12|
+|db_cross_join_trivial (Non-Vectorized)|0.42|19200|375|12|
+|inner_product|0.105|3|1|2|
+|inner_product (Non-Vectorized)|0.103|3|1|2|
+|longest_102|0.65|3160|41|130|
+|longest_102 (Non-Vectorized)|0.642|3160|41|102|
+|max_dist_between_syms|0.572|1480|17|80|
+|max_dist_between_syms (Non-Vectorized)|0.566|1480|17|73|
+|max_sum_between_syms|0.542|1480|17|80|
+|max_sum_between_syms (Non-Vectorized)|0.539|1480|17|73|
+|minimal_points|0.205|2184|24|13|
+|minimal_points (Non-Vectorized)|0.204|2184|24|13|
+|mnist_relu|0.37|24200|400|9|
+|mnist_relu (Non-Vectorized)|0.374|24200|400|9|
+|psi|0.219|2245|40|16|
+|psi (Non-Vectorized)|0.222|2245|40|16|
 ### Binary protocol compilation (32 bit default)
 | Benchmark | Compile time (seconds) | # bit triples | # VM rounds |
 | - | - | - | - |
-|biometric|0.843|25788|95|
-|biometric (Non-Vectorized)|7.011|25788|72|
-|biometric_fast|0.909|22920|104|
-|biometric_fast (Non-Vectorized)|6.337|22920|74|
-|convex_hull|0.512|5439|30|
-|convex_hull (Non-Vectorized)|0.588|1755|13|
-|count_102|0.62|2300|79|
-|count_102 (Non-Vectorized)|0.75|2300|61|
-|count_10s|0.469|1610|66|
-|count_10s (Non-Vectorized)|0.543|1610|55|
-|count_123|0.491|1638|67|
-|count_123 (Non-Vectorized)|0.555|1638|55|
-|cryptonets_max_pooling|1.118|5700|22|
-|cryptonets_max_pooling (Non-Vectorized)|1.813|5700|22|
-|db_cross_join_trivial|9.37|18993|10|
-|db_cross_join_trivial (Non-Vectorized)|5.069|18900|10|
-|inner_product|0.463|3924|46|
-|inner_product (Non-Vectorized)|1.026|3924|39|
-|longest_102|0.912|3300|154|
-|longest_102 (Non-Vectorized)|1.031|3300|94|
-|max_dist_between_syms|0.677|2056|106|
-|max_dist_between_syms (Non-Vectorized)|0.697|2056|72|
-|max_sum_between_syms|0.669|2056|106|
-|max_sum_between_syms (Non-Vectorized)|0.69|2056|72|
-|minimal_points|0.313|1650|12|
-|minimal_points (Non-Vectorized)|0.47|1371|12|
-|mnist_relu|8.143|19000|8|
-|mnist_relu (Non-Vectorized)|7.468|19000|8|
-|psi|0.278|1280|14|
-|psi (Non-Vectorized)|0.401|1280|14|
-
-### Mascot protocol
-| Benchmark | Time (seconds) | Data sent (MB) |
-| - | - | - |
-|biometric|0.571401|39.0542|
-|biometric (Non-Vectorized)|0.528027|39.0542|
-|biometric_fast|0.510103|39.0542|
-|biometric_fast (Non-Vectorized)|0.507004|39.0542|
-|convex_hull|1.38921|117.123|
-|convex_hull (Non-Vectorized)|1.36267|117.123|
-|count_102|1.44519|117.124|
-|count_102 (Non-Vectorized)|1.5565|117.124|
-|count_10s|1.16196|97.5912|
-|count_10s (Non-Vectorized)|1.17803|97.5912|
-|count_123|1.16081|97.5914|
-|count_123 (Non-Vectorized)|1.21134|97.5914|
-|cryptonets_max_pooling|3.95142|292.729|
-|cryptonets_max_pooling (Non-Vectorized)|3.42635|292.729|
-|db_cross_join_trivial|11.7911|1014.76|
-|db_cross_join_trivial (Non-Vectorized)|11.7548|1014.75|
-|inner_product|0.265051|19.5237|
-|inner_product (Non-Vectorized)|0.251321|19.5237|
-|longest_102|2.05934|175.642|
-|longest_102 (Non-Vectorized)|2.11039|175.642|
-|max_dist_between_syms|1.01652|78.0821|
-|max_dist_between_syms (Non-Vectorized)|1.03868|78.0821|
-|max_sum_between_syms|0.945937|78.0821|
-|max_sum_between_syms (Non-Vectorized)|0.937296|78.0821|
-|minimal_points|1.13191|97.5859|
-|minimal_points (Non-Vectorized)|1.17711|97.5859|
-|mnist_relu|10.0967|897.666|
-|mnist_relu (Non-Vectorized)|10.1331|897.666|
-|psi|1.62209|136.616|
-|psi (Non-Vectorized)|1.65004|136.616|
-
-### Semi-Bmr protocol
-| Benchmark | Time (seconds) | Data sent (MB) |
-| - | - | - |
-|biometric|3.66715|728.81|
-|biometric (Non-Vectorized)|3.63343|728.81|
-|biometric_fast|3.2208|647.489|
-|biometric_fast (Non-Vectorized)|3.22355|647.489|
-|convex_hull|0.831547|153.29|
-|convex_hull (Non-Vectorized)|0.264549|50.0566|
-|count_102|0.355601|65.6899|
-|count_102 (Non-Vectorized)|0.351147|65.6899|
-|count_10s|0.245281|46.9119|
-|count_10s (Non-Vectorized)|0.248548|46.9119|
-|count_123|0.251427|46.9235|
-|count_123 (Non-Vectorized)|0.235416|46.9235|
-|cryptonets_max_pooling|0.900273|162.651|
-|cryptonets_max_pooling (Non-Vectorized)|0.870788|162.651|
-|db_cross_join_trivial|2.88457|534.947|
-|db_cross_join_trivial (Non-Vectorized)|2.67141|534.908|
-|inner_product|0.538944|112.593|
-|inner_product (Non-Vectorized)|0.597724|112.593|
-|longest_102|0.46285|93.8424|
-|longest_102 (Non-Vectorized)|0.466029|93.8424|
-|max_dist_between_syms|0.296332|59.4247|
-|max_dist_between_syms (Non-Vectorized)|0.294969|59.4247|
-|max_sum_between_syms|0.294079|59.4247|
-|max_sum_between_syms (Non-Vectorized)|0.323096|59.4247|
-|minimal_points|0.261995|46.9311|
-|minimal_points (Non-Vectorized)|0.232212|40.6513|
-|mnist_relu|3.1211|535.014|
-|mnist_relu (Non-Vectorized)|2.87412|535.014|
-|psi|0.208518|37.5311|
-|psi (Non-Vectorized)|0.226072|37.5311|
-
-### Semi protocol
-| Benchmark | Time (seconds) | Data sent (MB) |
-| - | - | - |
-|biometric|0.0937801|4.72907|
-|biometric (Non-Vectorized)|0.0965957|4.72907|
-|biometric_fast|0.0965473|4.72907|
-|biometric_fast (Non-Vectorized)|0.0982356|4.72907|
-|convex_hull|0.159535|10.9701|
-|convex_hull (Non-Vectorized)|0.160548|10.9701|
-|count_102|0.139654|7.85694|
-|count_102 (Non-Vectorized)|0.132191|7.85694|
-|count_10s|0.137645|7.83826|
-|count_10s (Non-Vectorized)|0.139781|7.83826|
-|count_123|0.14638|7.83849|
-|count_123 (Non-Vectorized)|0.128024|7.83849|
-|cryptonets_max_pooling|0.331987|26.5193|
-|cryptonets_max_pooling (Non-Vectorized)|0.330611|26.5193|
-|db_cross_join_trivial|0.711765|63.8941|
-|db_cross_join_trivial (Non-Vectorized)|0.707564|63.888|
-|inner_product|0.0523695|3.11142|
-|inner_product (Non-Vectorized)|0.0551773|3.11142|
-|longest_102|0.199593|14.0601|
-|longest_102 (Non-Vectorized)|0.199226|14.0601|
-|max_dist_between_syms|0.13694|7.84231|
-|max_dist_between_syms (Non-Vectorized)|0.139037|7.84231|
-|max_sum_between_syms|0.133234|7.84231|
-|max_sum_between_syms (Non-Vectorized)|0.132436|7.84231|
-|minimal_points|0.15983|10.9468|
-|minimal_points (Non-Vectorized)|0.164561|10.9468|
-|mnist_relu|0.889891|79.4576|
-|mnist_relu (Non-Vectorized)|0.894283|79.4576|
-|psi|0.165286|10.949|
-|psi (Non-Vectorized)|0.159458|10.949|
-
-### Hemi protocol
-| Benchmark | Time (seconds) | Data sent (MB) |
-| - | - | - |
-|biometric|0.195957|3.21055|
-|biometric (Non-Vectorized)|0.196456|3.21055|
-|biometric_fast|0.190755|3.21055|
-|biometric_fast (Non-Vectorized)|0.194485|3.21055|
-|convex_hull|0.209565|3.28793|
-|convex_hull (Non-Vectorized)|0.226682|3.28793|
-|count_102|0.202835|3.25659|
-|count_102 (Non-Vectorized)|0.202302|3.25659|
-|count_10s|0.199526|3.23791|
-|count_10s (Non-Vectorized)|0.218952|3.23791|
-|count_123|0.197514|3.23814|
-|count_123 (Non-Vectorized)|0.191931|3.23814|
-|cryptonets_max_pooling|0.198005|3.42793|
-|cryptonets_max_pooling (Non-Vectorized)|0.197906|3.42793|
-|db_cross_join_trivial|0.430591|6.96711|
-|db_cross_join_trivial (Non-Vectorized)|0.429656|6.96101|
-|inner_product|0.142496|1.58308|
-|inner_product (Non-Vectorized)|0.144403|1.58308|
-|longest_102|0.205439|3.29611|
-|longest_102 (Non-Vectorized)|0.208193|3.29611|
-|max_dist_between_syms|0.198333|3.24196|
-|max_dist_between_syms (Non-Vectorized)|0.210635|3.24196|
-|max_sum_between_syms|0.200757|3.24196|
-|max_sum_between_syms (Non-Vectorized)|0.198171|3.24196|
-|minimal_points|0.202608|3.2646|
-|minimal_points (Non-Vectorized)|0.202097|3.2646|
-|mnist_relu|0.434651|7.12141|
-|mnist_relu (Non-Vectorized)|0.430261|7.12141|
-|psi|0.202291|3.26681|
-|psi (Non-Vectorized)|0.198644|3.26681|
-
-### Temi protocol
-| Benchmark | Time (seconds) | Data sent (MB) |
-| - | - | - |
-|biometric|0.134415|2.02035|
-|biometric (Non-Vectorized)|0.133911|2.02029|
-|biometric_fast|0.13812|2.02028|
-|biometric_fast (Non-Vectorized)|0.137989|2.0203|
-|convex_hull|0.188808|2.16171|
-|convex_hull (Non-Vectorized)|0.353131|2.16179|
-|count_102|0.213824|2.16238|
-|count_102 (Non-Vectorized)|0.208594|2.16232|
-|count_10s|0.184908|2.11162|
-|count_10s (Non-Vectorized)|0.184339|2.1116|
-|count_123|0.185|2.11191|
-|count_123 (Non-Vectorized)|0.179908|2.11191|
-|cryptonets_max_pooling|0.380405|4.39187|
-|cryptonets_max_pooling (Non-Vectorized)|0.381207|4.39194|
-|db_cross_join_trivial|1.47661|15.3961|
-|db_cross_join_trivial (Non-Vectorized)|1.47686|15.3899|
-|inner_product|0.108954|1.97222|
-|inner_product (Non-Vectorized)|0.114795|1.97219|
-|longest_102|0.234475|2.23379|
-|longest_102 (Non-Vectorized)|0.254428|2.23385|
-|max_dist_between_syms|0.159831|2.08371|
-|max_dist_between_syms (Non-Vectorized)|0.166132|2.08381|
-|max_sum_between_syms|0.163839|2.08369|
-|max_sum_between_syms (Non-Vectorized)|0.164011|2.08372|
-|minimal_points|0.160418|2.10634|
-|minimal_points (Non-Vectorized)|0.163986|2.10636|
-|mnist_relu|1.12127|13.236|
-|mnist_relu (Non-Vectorized)|1.11574|13.2361|
-|psi|0.20352|2.17263|
-|psi (Non-Vectorized)|0.208111|2.17259|
+|biometric|0.957|25788|95|
+|biometric (Non-Vectorized)|9.026|25788|72|
+|biometric_fast|1.01|22920|104|
+|biometric_fast (Non-Vectorized)|8.155|22920|74|
+|convex_hull|0.475|5439|30|
+|convex_hull (Non-Vectorized)|0.724|1755|13|
+|count_102|0.752|2300|79|
+|count_102 (Non-Vectorized)|0.915|2300|61|
+|count_10s|0.56|1610|66|
+|count_10s (Non-Vectorized)|0.639|1610|55|
+|count_123|0.575|1638|67|
+|count_123 (Non-Vectorized)|0.647|1638|55|
+|cryptonets_max_pooling|1.038|5700|22|
+|cryptonets_max_pooling (Non-Vectorized)|2.215|5700|22|
+|db_cross_join_trivial|5.493|18993|10|
+|db_cross_join_trivial (Non-Vectorized)|6.447|18900|10|
+|inner_product|0.509|3924|46|
+|inner_product (Non-Vectorized)|1.21|3924|39|
+|longest_102|1.071|3300|112|
+|longest_102 (Non-Vectorized)|1.262|3300|94|
+|max_dist_between_syms|0.768|2056|72|
+|max_dist_between_syms (Non-Vectorized)|0.819|2056|72|
+|max_sum_between_syms|0.76|2056|72|
+|max_sum_between_syms (Non-Vectorized)|0.796|2056|72|
+|minimal_points|0.305|1650|12|
+|minimal_points (Non-Vectorized)|0.559|1371|12|
+|mnist_relu|3.322|19000|8|
+|mnist_relu (Non-Vectorized)|9.049|19000|8|
+|psi|0.254|1280|14|
+|psi (Non-Vectorized)|0.474|1280|14|
 
 ### Soho protocol
 | Benchmark | Time (seconds) | Data sent (MB) |
 | - | - | - |
-|biometric|0.994147|8.65253|
-|biometric (Non-Vectorized)|0.991471|8.65235|
-|biometric_fast|0.987029|8.65251|
-|biometric_fast (Non-Vectorized)|0.985218|8.65238|
-|convex_hull|1.06684|8.76186|
-|convex_hull (Non-Vectorized)|1.06666|8.76186|
-|count_102|1.08368|8.74645|
-|count_102 (Non-Vectorized)|1.05912|8.74661|
-|count_10s|1.03856|8.71186|
-|count_10s (Non-Vectorized)|1.03932|8.71178|
-|count_123|1.03695|8.71208|
-|count_123 (Non-Vectorized)|1.03104|8.71223|
-|cryptonets_max_pooling|1.13408|8.96578|
-|cryptonets_max_pooling (Non-Vectorized)|1.13236|8.96585|
-|db_cross_join_trivial|2.64498|18.3692|
-|db_cross_join_trivial (Non-Vectorized)|2.65159|18.3632|
-|inner_product|0.54632|5.49489|
-|inner_product (Non-Vectorized)|0.545716|5.49486|
-|longest_102|1.12977|8.80208|
-|longest_102 (Non-Vectorized)|1.10554|8.80221|
-|max_dist_between_syms|1.0135|8.69993|
-|max_dist_between_syms (Non-Vectorized)|1.01749|8.69983|
-|max_sum_between_syms|1.01342|8.69974|
-|max_sum_between_syms (Non-Vectorized)|1.01618|8.69991|
-|minimal_points|1.01067|8.72251|
-|minimal_points (Non-Vectorized)|1.01276|8.72257|
-|mnist_relu|2.40212|18.3476|
-|mnist_relu (Non-Vectorized)|2.38768|18.3475|
-|psi|1.06298|8.75666|
-|psi (Non-Vectorized)|1.05866|8.75671|
-
-### Semi2K protocol
-| Benchmark | Time (seconds) | Data sent (MB) |
-| - | - | - |
-|biometric|0.0598996|2.46142|
-|biometric (Non-Vectorized)|0.0531377|2.46142|
-|biometric_fast|0.0521327|2.46142|
-|biometric_fast (Non-Vectorized)|0.0800071|2.46142|
-|convex_hull|0.0470936|2.45283|
-|convex_hull (Non-Vectorized)|0.0499462|2.45283|
-|count_102|0.0460292|2.45468|
-|count_102 (Non-Vectorized)|0.0460034|2.45468|
-|count_10s|0.0447392|2.45449|
-|count_10s (Non-Vectorized)|0.0528326|2.45449|
-|count_123|0.0445496|2.4546|
-|count_123 (Non-Vectorized)|0.0518189|2.4546|
-|cryptonets_max_pooling|0.051977|2.45923|
-|cryptonets_max_pooling (Non-Vectorized)|0.045848|2.45923|
-|db_cross_join_trivial|0.0607367|3.06379|
-|db_cross_join_trivial (Non-Vectorized)|0.0558994|3.06379|
-|inner_product|0.0193211|1.06337|
-|inner_product (Non-Vectorized)|0.016685|1.06337|
-|longest_102|0.0533174|2.4842|
-|longest_102 (Non-Vectorized)|0.0574922|2.4842|
-|max_dist_between_syms|0.0563898|2.47753|
-|max_dist_between_syms (Non-Vectorized)|0.0468565|2.47753|
-|max_sum_between_syms|0.0578595|2.47753|
-|max_sum_between_syms (Non-Vectorized)|0.0521856|2.47753|
-|minimal_points|0.050727|2.45274|
-|minimal_points (Non-Vectorized)|0.0514971|2.45274|
-|mnist_relu|0.0525522|2.46582|
-|mnist_relu (Non-Vectorized)|0.0539414|2.46582|
-|psi|0.0469844|2.45471|
-|psi (Non-Vectorized)|0.0458072|2.45471|
+|biometric|1.2015|8.65243|
+|biometric (Non-Vectorized)|1.19212|8.65264|
+|biometric_fast|1.17208|8.65242|
+|biometric_fast (Non-Vectorized)|1.15411|8.65245|
+|convex_hull|1.26037|8.76201|
+|convex_hull (Non-Vectorized)|1.25563|8.76178|
+|count_102|1.22765|8.74655|
+|count_102 (Non-Vectorized)|1.25119|8.74651|
+|count_10s|1.22549|8.71178|
+|count_10s (Non-Vectorized)|1.19758|8.71193|
+|count_123|1.22769|8.71208|
+|count_123 (Non-Vectorized)|1.23667|8.7121|
+|cryptonets_max_pooling|1.38103|8.96583|
+|cryptonets_max_pooling (Non-Vectorized)|1.74904|8.96587|
+|db_cross_join_trivial|3.09625|18.3692|
+|db_cross_join_trivial (Non-Vectorized)|3.05372|18.3629|
+|inner_product|0.638267|5.49486|
+|inner_product (Non-Vectorized)|0.617828|5.49502|
+|longest_102|1.26126|8.80203|
+|longest_102 (Non-Vectorized)|1.2712|8.80189|
+|max_dist_between_syms|1.15655|8.6998|
+|max_dist_between_syms (Non-Vectorized)|1.16746|8.6999|
+|max_sum_between_syms|1.11904|8.70011|
+|max_sum_between_syms (Non-Vectorized)|1.12475|8.69989|
+|minimal_points|1.13493|8.72255|
+|minimal_points (Non-Vectorized)|1.12713|8.72253|
+|mnist_relu|2.76581|18.3475|
+|mnist_relu (Non-Vectorized)|2.68835|18.3476|
+|psi|1.2005|8.75669|
+|psi (Non-Vectorized)|1.21092|8.75672|
 
 ### Semi-Bin protocol
 | Benchmark | Time (seconds) | Data sent (MB) |
 | - | - | - |
-|biometric|0.300836|21.827|
-|biometric (Non-Vectorized)|0.122425|6.19655|
-|biometric_fast|0.308067|21.8285|
-|biometric_fast (Non-Vectorized)|0.130837|6.15066|
-|convex_hull|0.124741|5.79823|
-|convex_hull (Non-Vectorized)|0.121481|5.81205|
-|count_102|0.121898|5.80719|
-|count_102 (Non-Vectorized)|0.134851|5.82073|
-|count_10s|0.128229|5.80067|
-|count_10s (Non-Vectorized)|0.13268|5.80969|
-|count_123|0.132858|5.80073|
-|count_123 (Non-Vectorized)|0.126162|5.81014|
-|cryptonets_max_pooling|0.126509|5.81783|
-|cryptonets_max_pooling (Non-Vectorized)|0.130112|5.87528|
-|db_cross_join_trivial|0.140333|6.0522|
-|db_cross_join_trivial (Non-Vectorized)|0.137905|6.08692|
-|inner_product|0.277531|21.8062|
-|inner_product (Non-Vectorized)|0.130972|5.84671|
-|longest_102|0.126528|5.82262|
-|longest_102 (Non-Vectorized)|0.126423|5.83673|
-|max_dist_between_syms|0.130612|5.81335|
-|max_dist_between_syms (Non-Vectorized)|0.148086|5.81683|
-|max_sum_between_syms|0.119752|5.81335|
-|max_sum_between_syms (Non-Vectorized)|0.127247|5.81683|
-|minimal_points|0.124533|5.78976|
-|minimal_points (Non-Vectorized)|0.124213|5.80591|
-|mnist_relu|0.125975|5.89195|
-|mnist_relu (Non-Vectorized)|0.138338|6.08952|
-|psi|0.12542|5.78758|
-|psi (Non-Vectorized)|0.119472|5.80444|
+|biometric|0.500666|21.827|
+|biometric (Non-Vectorized)|0.183715|6.19655|
+|biometric_fast|0.446767|21.8285|
+|biometric_fast (Non-Vectorized)|0.162024|6.15066|
+|convex_hull|0.171564|5.79823|
+|convex_hull (Non-Vectorized)|0.171515|5.81205|
+|count_102|0.192708|5.80719|
+|count_102 (Non-Vectorized)|0.17004|5.82073|
+|count_10s|0.163697|5.80067|
+|count_10s (Non-Vectorized)|0.195663|5.80969|
+|count_123|0.188531|5.80073|
+|count_123 (Non-Vectorized)|0.175586|5.81014|
+|cryptonets_max_pooling|0.173191|5.81783|
+|cryptonets_max_pooling (Non-Vectorized)|0.180517|5.87528|
+|db_cross_join_trivial|0.188356|6.0522|
+|db_cross_join_trivial (Non-Vectorized)|0.196472|6.08692|
+|inner_product|0.409699|21.8062|
+|inner_product (Non-Vectorized)|0.173003|5.84671|
+|longest_102|0.176817|5.82262|
+|longest_102 (Non-Vectorized)|0.184692|5.83673|
+|max_dist_between_syms|0.166155|5.81335|
+|max_dist_between_syms (Non-Vectorized)|0.170719|5.81683|
+|max_sum_between_syms|0.180073|5.81335|
+|max_sum_between_syms (Non-Vectorized)|0.18726|5.81683|
+|minimal_points|0.174737|5.78976|
+|minimal_points (Non-Vectorized)|0.173134|5.80591|
+|mnist_relu|0.165487|5.89195|
+|mnist_relu (Non-Vectorized)|0.169815|6.08952|
+|psi|0.185256|5.78758|
+|psi (Non-Vectorized)|0.164411|5.80444|
 
 ## Compiler stages with different benchmarks
 ### `biometric`
@@ -795,15 +591,15 @@ def biometric(C_0, D_0, S_0, N_0):
     _3_0 = _v.lift(lambda indices: min_sum_1, [N_0])
     _4_0 = _v.lift(lambda indices: min_index_1, [N_0])
     _5_0 = _v.lift(lambda indices: sum_2, [N_0, D_0])
-    _v.vectorized_assign(d_3, [N_0, D_0], [None, None], (_v.vectorized_access(_6_0, [N_0, D_0], [None, None]) - _v.vectorized_access(_7_0, [N_0, D_0], [None, None])))
-    _v.vectorized_assign(p_3, [N_0, D_0], [None, None], (_v.vectorized_access(d_3, [N_0, D_0], [None, None]) * _v.vectorized_access(d_3, [N_0, D_0], [None, None])))
+    _v.vectorized_assign(d_3, [N_0, D_0], [None, None], (_v.vectorized_access_simd(_6_0, [N_0, D_0], [None, None]) - _v.vectorized_access_simd(_7_0, [N_0, D_0], [None, None])))
+    _v.vectorized_assign(p_3, [N_0, D_0], [None, None], (_v.vectorized_access_simd(d_3, [N_0, D_0], [None, None]) * _v.vectorized_access_simd(d_3, [N_0, D_0], [None, None])))
     for _12_0 in range(0, D_0):
         # Set ϕ value
         if _12_0 == 0:
             _v.vectorized_assign(sum_3, [N_0, D_0], [None, _12_0], _v.vectorized_access(_5_0, [N_0, D_0], [None, _12_0]))
         else:
             _v.vectorized_assign(sum_3, [N_0, D_0], [None, _12_0], _v.vectorized_access(sum_4, [N_0, D_0], [None, (_12_0 - 1)]))
-        _v.vectorized_assign(sum_4, [N_0, D_0], [None, _12_0], (_v.vectorized_access(sum_3, [N_0, D_0], [None, _12_0]) + _v.vectorized_access(p_3, [N_0, D_0], [None, _12_0])))
+        _v.vectorized_assign(sum_4, [N_0, D_0], [None, _12_0], (_v.vectorized_access_simd(sum_3, [N_0, D_0], [None, _12_0]) + _v.vectorized_access_simd(p_3, [N_0, D_0], [None, _12_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(sum_3, [N_0, D_0], [None, _12_0], _v.vectorized_access(sum_4, [N_0, D_0], [None, (_12_0 - 1)]))
     _v.vectorized_assign(_8_0, [N_0], [None], _v.drop_dim(sum_4, [N_0, D_0]))
@@ -815,7 +611,7 @@ def biometric(C_0, D_0, S_0, N_0):
             _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(_3_0, [N_0], [_14_0]))
         else:
             _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(min_sum_4, [N_0], [(_14_0 - 1)]))
-        _v.vectorized_assign(_1_2, [N_0], [_14_0], (_v.vectorized_access(_8_0, [N_0], [_14_0]) < _v.vectorized_access(min_sum_2, [N_0], [_14_0])))
+        _v.vectorized_assign(_1_2, [N_0], [_14_0], (_v.vectorized_access_simd(_8_0, [N_0], [_14_0]) < _v.vectorized_access_simd(min_sum_2, [N_0], [_14_0])))
         _v.iterative_mux(min_sum_4,_1_2,min_sum_3,min_sum_2,[N_0],[_14_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(min_sum_4, [N_0], [(_14_0 - 1)]))
@@ -1328,9 +1124,9 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
     min_diff_1 = sint(99999)
     _16_0 = _v.lift(lambda indices: indices[0], [N_0])
     _3_0 = _v.lift(lambda indices: min_index_1, [N_0])
-    _v.vectorized_assign(a_sqr_plus_b_sqr_2, [N_0], [None], (_v.vectorized_access(_5_0, [N_0], [None]) + _v.vectorized_access(_6_0, [N_0], [None])))
+    _v.vectorized_assign(a_sqr_plus_b_sqr_2, [N_0], [None], (_v.vectorized_access_simd(_5_0, [N_0], [None]) + _v.vectorized_access_simd(_6_0, [N_0], [None])))
     _7_0 = _v.lift(lambda indices: two_a_b_2, [N_0, D_0])
-    _v.vectorized_assign(tmp_3, [N_0, D_0], [None, None], (_v.vectorized_access(_8_0, [N_0, D_0], [None, None]) * _v.vectorized_access(_9_0, [N_0, D_0], [None, None])))
+    _v.vectorized_assign(tmp_3, [N_0, D_0], [None, None], (_v.vectorized_access_simd(_8_0, [N_0, D_0], [None, None]) * _v.vectorized_access_simd(_9_0, [N_0, D_0], [None, None])))
     _11_0 = _v.lift(lambda indices: min_diff_1, [N_0])
     for _15_0 in range(0, N_0):
         # Set ϕ value
@@ -1346,11 +1142,11 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
             _v.vectorized_assign(two_a_b_3, [N_0, D_0], [None, _14_0], _v.vectorized_access(_7_0, [N_0, D_0], [None, _14_0]))
         else:
             _v.vectorized_assign(two_a_b_3, [N_0, D_0], [None, _14_0], _v.vectorized_access(two_a_b_4, [N_0, D_0], [None, (_14_0 - 1)]))
-        _v.vectorized_assign(two_a_b_4, [N_0, D_0], [None, _14_0], (_v.vectorized_access(two_a_b_3, [N_0, D_0], [None, _14_0]) + _v.vectorized_access(tmp_3, [N_0, D_0], [None, _14_0])))
+        _v.vectorized_assign(two_a_b_4, [N_0, D_0], [None, _14_0], (_v.vectorized_access_simd(two_a_b_3, [N_0, D_0], [None, _14_0]) + _v.vectorized_access_simd(tmp_3, [N_0, D_0], [None, _14_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(two_a_b_3, [N_0, D_0], [None, _14_0], _v.vectorized_access(two_a_b_4, [N_0, D_0], [None, (_14_0 - 1)]))
     _v.vectorized_assign(_10_0, [N_0], [None], _v.drop_dim(two_a_b_4, [N_0, D_0]))
-    _v.vectorized_assign(this_diff_2, [N_0], [None], (_v.vectorized_access(a_sqr_plus_b_sqr_2, [N_0], [None]) - _v.vectorized_access(_10_0, [N_0], [None])))
+    _v.vectorized_assign(this_diff_2, [N_0], [None], (_v.vectorized_access_simd(a_sqr_plus_b_sqr_2, [N_0], [None]) - _v.vectorized_access_simd(_10_0, [N_0], [None])))
     _v.vectorized_assign(_4_0, [N_0], [None], _v.vectorized_access(this_diff_2, [N_0], [None])); _v.vectorized_assign(differences_2, [N_0], [None], _v.vectorized_access(_4_0, [N_0], [None]))
     _v.vectorized_assign(min_diff_3, [N_0], [None], _v.vectorized_access(differences_2, [N_0], [None]))
     for _17_0 in range(0, N_0):
@@ -1359,7 +1155,7 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
             _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(_11_0, [N_0], [_17_0]))
         else:
             _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(min_diff_4, [N_0], [(_17_0 - 1)]))
-        _v.vectorized_assign(_1_2, [N_0], [_17_0], (_v.vectorized_access(differences_2, [N_0], [_17_0]) < _v.vectorized_access(min_diff_2, [N_0], [_17_0])))
+        _v.vectorized_assign(_1_2, [N_0], [_17_0], (_v.vectorized_access_simd(differences_2, [N_0], [_17_0]) < _v.vectorized_access_simd(min_diff_2, [N_0], [_17_0])))
         _v.iterative_mux(min_diff_4,_1_2,min_diff_3,min_diff_2,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(min_diff_4, [N_0], [(_17_0 - 1)]))
@@ -1552,8 +1348,8 @@ def convex_hull(
     X_coords: shared[list[int]],
     Y_coords: shared[list[int]],
     N: int,
-    result_X: shared[list[int]],
-    result_Y: shared[list[int]],
+    result_X: list[int],
+    result_Y: list[int],
 ) -> tuple[shared[list[int]], shared[list[int]]]:
     for i in range(0, N):
         is_hull = True
@@ -1588,7 +1384,7 @@ print(convex_hull(X_coords, Y_coords, 3, result_X, result_Y))
 ```
 #### Restricted AST
 ```python
-def convex_hull(X_coords: shared[list[int; ?]], Y_coords: shared[list[int; ?]], N: plaintext[int], result_X: shared[list[int; ?]], result_Y: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+def convex_hull(X_coords: shared[list[int; ?]], Y_coords: shared[list[int; ?]], N: plaintext[int], result_X: plaintext[list[int; ?]], result_Y: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
     for i: plaintext[int] in range(0, N):
         is_hull = True
         p1_X = X_coords[i]
@@ -1618,7 +1414,7 @@ def convex_hull(X_coords: shared[list[int; ?]], Y_coords: shared[list[int; ?]], 
 ![](images/convex_hull_dead_code_elim.png)
 #### Linear code with loops
 ```python
-def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: plaintext[list[int; ?]], result_Y!0: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
     for i!1 in range(0, N!0):
         result_X!1 = Φ(result_X!0, result_X!2)
         result_Y!1 = Φ(result_Y!0, result_Y!2)
@@ -1660,8 +1456,8 @@ def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?
 | `X_coords!0` | `shared[list[int; ?]]` |
 | `Y_coords!0` | `shared[list[int; ?]]` |
 | `N!0` | `plaintext[int]` |
-| `result_X!0` | `shared[list[int; ?]]` |
-| `result_Y!0` | `shared[list[int; ?]]` |
+| `result_X!0` | `plaintext[list[int; ?]]` |
+| `result_Y!0` | `plaintext[list[int; ?]]` |
 | `i!1` | `plaintext[int]` |
 | `j!1` | `plaintext[int]` |
 | `!10!1` | `tuple[shared[list[int; (N!0)]], shared[list[int; (N!0)]]]` |
@@ -1693,7 +1489,7 @@ def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?
 | `is_hull!2` | `plaintext[bool]` |
 #### Basic Vectorization Phase 1
 ```python
-def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: plaintext[list[int; ?]], result_Y!0: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
     !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))
     !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
     !13!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
@@ -1739,7 +1535,7 @@ def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?
 ![](images/convex_hull_bv_phase_1_dep_graph.png)
 #### Basic Vectorization Phase 2
 ```python
-def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: plaintext[list[int; ?]], result_Y!0: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
     !11!0{N!0}[] = lift(result_X!0, (i!1:N!0))
     !12!0{N!0}[] = lift(result_Y!0, (i!1:N!0))
     !13!0{N!0}[] = lift(X_coords!0[i!1], (i!1:N!0))
@@ -1786,8 +1582,8 @@ def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?
 | `X_coords!0` | `shared[list[int; ?]]` |
 | `Y_coords!0` | `shared[list[int; ?]]` |
 | `N!0` | `plaintext[int]` |
-| `result_X!0` | `shared[list[int; ?]]` |
-| `result_Y!0` | `shared[list[int; ?]]` |
+| `result_X!0` | `plaintext[list[int; ?]]` |
+| `result_Y!0` | `plaintext[list[int; ?]]` |
 | `!21!0` | `plaintext[int]` |
 | `!10!1` | `tuple[shared[list[int; (N!0)]], shared[list[int; (N!0)]]]` |
 | `result_Y!2` | `shared[list[int; (N!0)]]` |
@@ -1832,8 +1628,8 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
-    std::vector<encrypto::motion::SecureUnsignedInteger> result_X_0,
-    std::vector<encrypto::motion::SecureUnsignedInteger> result_Y_0
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_result_X_0,
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_result_Y_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::ShareWrapper> _1_2((_MPC_PLAINTEXT_N_0));
@@ -1865,7 +1661,9 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     std::vector<encrypto::motion::SecureUnsignedInteger> p1_Y_2((_MPC_PLAINTEXT_N_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> p2_X_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> p2_Y_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_X_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_X_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_Y_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_Y_2((_MPC_PLAINTEXT_N_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> val_X_2((_MPC_PLAINTEXT_N_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> val_X_3((_MPC_PLAINTEXT_N_0));
@@ -1887,6 +1685,10 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
 
     // Plaintext parameter assignments
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+    result_X_0.clear();
+    std::transform(_MPC_PLAINTEXT_result_X_0.begin(), _MPC_PLAINTEXT_result_X_0.end(), std::back_inserter(result_X_0), [&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });
+    result_Y_0.clear();
+    std::transform(_MPC_PLAINTEXT_result_Y_0.begin(), _MPC_PLAINTEXT_result_Y_0.end(), std::back_inserter(result_Y_0), [&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });
 
     // Function body
     vectorized_assign(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return result_X_0;}), {_MPC_PLAINTEXT_N_0}));
@@ -1995,17 +1797,17 @@ def convex_hull(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     _15_0 = _v.lift(lambda indices: is_hull_2, [N_0, N_0])
     _v.vectorized_assign(p2_X_3, [N_0, N_0], [None, None], _v.vectorized_access(_16_0, [N_0, N_0], [None, None]))
     _v.vectorized_assign(p2_Y_3, [N_0, N_0], [None, None], _v.vectorized_access(_17_0, [N_0, N_0], [None, None]))
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(p1_X_2, [N_0], [None]) <= sint(0)))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(p1_X_2, [N_0], [None]) <= sint(0)))
     _18_0 = _v.lift(lambda indices: _v.vectorized_access(p1_X_2, [N_0], [None]), [N_0, N_0])
     _v.vectorized_assign(val_X_3, [N_0], [None], _v.vectorized_access(p1_X_2, [N_0], [None]))
-    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access(p1_Y_2, [N_0], [None]) >= sint(0)))
+    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access_simd(p1_Y_2, [N_0], [None]) >= sint(0)))
     _19_0 = _v.lift(lambda indices: _v.vectorized_access(p1_Y_2, [N_0], [None]), [N_0, N_0])
     _v.vectorized_assign(val_Y_3, [N_0], [None], _v.vectorized_access(p1_Y_2, [N_0], [None]))
-    _v.vectorized_assign(_6_3, [N_0, N_0], [None, None], (_v.vectorized_access(_18_0, [N_0, N_0], [None, None]) <= _v.vectorized_access(p2_X_3, [N_0, N_0], [None, None])))
-    _v.vectorized_assign(_3_2, [N_0], [None], _v.vectorized_access(_1_2, [N_0], [None]).bit_and(_v.vectorized_access(_2_2, [N_0], [None])))
-    _v.vectorized_assign(_7_3, [N_0, N_0], [None, None], (_v.vectorized_access(_19_0, [N_0, N_0], [None, None]) >= _v.vectorized_access(p2_Y_3, [N_0, N_0], [None, None])))
-    _v.vectorized_assign(_8_3, [N_0, N_0], [None, None], OR(_v.vectorized_access(_6_3, [N_0, N_0], [None, None]), _v.vectorized_access(_7_3, [N_0, N_0], [None, None])))
-    _v.vectorized_assign(_9_3, [N_0, N_0], [None, None], (_v.vectorized_access(_8_3, [N_0, N_0], [None, None]).bit_not()))
+    _v.vectorized_assign(_6_3, [N_0, N_0], [None, None], (_v.vectorized_access_simd(_18_0, [N_0, N_0], [None, None]) <= _v.vectorized_access_simd(p2_X_3, [N_0, N_0], [None, None])))
+    _v.vectorized_assign(_3_2, [N_0], [None], _v.vectorized_access_simd(_1_2, [N_0], [None]).bit_and(_v.vectorized_access_simd(_2_2, [N_0], [None])))
+    _v.vectorized_assign(_7_3, [N_0, N_0], [None, None], (_v.vectorized_access_simd(_19_0, [N_0, N_0], [None, None]) >= _v.vectorized_access_simd(p2_Y_3, [N_0, N_0], [None, None])))
+    _v.vectorized_assign(_8_3, [N_0, N_0], [None, None], OR(_v.vectorized_access_simd(_6_3, [N_0, N_0], [None, None]), _v.vectorized_access_simd(_7_3, [N_0, N_0], [None, None])))
+    _v.vectorized_assign(_9_3, [N_0, N_0], [None, None], (_v.vectorized_access_simd(_8_3, [N_0, N_0], [None, None]).bit_not()))
     for _21_0 in range(0, N_0):
         # Set ϕ value
         if _21_0 == 0:
@@ -2335,27 +2137,27 @@ def count_102(Seq_0, N_0, Syms_0):
     _14_0 = _v.lift(lambda indices: (Syms_0[0]), [N_0])
     _7_0 = _v.lift(lambda indices: s0_1, [N_0])
     _8_0 = _v.lift(lambda indices: c_1, [N_0])
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_9_0, [N_0], [None]) == _v.vectorized_access(_10_0, [N_0], [None])))
-    _v.vectorized_assign(_3_2, [N_0], [None], (_v.vectorized_access(_11_0, [N_0], [None]) == _v.vectorized_access(_12_0, [N_0], [None])))
-    _v.vectorized_assign(_5_2, [N_0], [None], (_v.vectorized_access(_13_0, [N_0], [None]) == _v.vectorized_access(_14_0, [N_0], [None])))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_9_0, [N_0], [None]) == _v.vectorized_access_simd(_10_0, [N_0], [None])))
+    _v.vectorized_assign(_3_2, [N_0], [None], (_v.vectorized_access_simd(_11_0, [N_0], [None]) == _v.vectorized_access_simd(_12_0, [N_0], [None])))
+    _v.vectorized_assign(_5_2, [N_0], [None], (_v.vectorized_access_simd(_13_0, [N_0], [None]) == _v.vectorized_access_simd(_14_0, [N_0], [None])))
     for _16_0 in range(0, N_0):
         # Set ϕ value
         if _16_0 == 0:
             _v.vectorized_assign(s0_2, [N_0], [_16_0], _v.vectorized_access(_7_0, [N_0], [_16_0]))
         else:
             _v.vectorized_assign(s0_2, [N_0], [_16_0], _v.vectorized_access(s0_3, [N_0], [(_16_0 - 1)]))
-        _v.vectorized_assign(_6_2, [N_0], [_16_0], _v.vectorized_access(s0_2, [N_0], [_16_0]).bit_and(_v.vectorized_access(_5_2, [N_0], [_16_0])))
-        _v.vectorized_assign(s0_3, [N_0], [_16_0], OR(_v.vectorized_access(_3_2, [N_0], [_16_0]), _v.vectorized_access(_6_2, [N_0], [_16_0])))
+        _v.vectorized_assign(_6_2, [N_0], [_16_0], _v.vectorized_access_simd(s0_2, [N_0], [_16_0]).bit_and(_v.vectorized_access_simd(_5_2, [N_0], [_16_0])))
+        _v.vectorized_assign(s0_3, [N_0], [_16_0], OR(_v.vectorized_access_simd(_3_2, [N_0], [_16_0]), _v.vectorized_access_simd(_6_2, [N_0], [_16_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(s0_2, [N_0], [_16_0], _v.vectorized_access(s0_3, [N_0], [(_16_0 - 1)]))
-    _v.vectorized_assign(_2_2, [N_0], [None], _v.vectorized_access(s0_2, [N_0], [None]).bit_and(_v.vectorized_access(_1_2, [N_0], [None])))
+    _v.vectorized_assign(_2_2, [N_0], [None], _v.vectorized_access_simd(s0_2, [N_0], [None]).bit_and(_v.vectorized_access_simd(_1_2, [N_0], [None])))
     for _17_0 in range(0, N_0):
         # Set ϕ value
         if _17_0 == 0:
             _v.vectorized_assign(c_2, [N_0], [_17_0], _v.vectorized_access(_8_0, [N_0], [_17_0]))
         else:
             _v.vectorized_assign(c_2, [N_0], [_17_0], _v.vectorized_access(c_4, [N_0], [(_17_0 - 1)]))
-        _v.vectorized_assign(c_3, [N_0], [_17_0], (_v.vectorized_access(c_2, [N_0], [_17_0]) + sint(1)))
+        _v.vectorized_assign(c_3, [N_0], [_17_0], (_v.vectorized_access_simd(c_2, [N_0], [_17_0]) + sint(1)))
         _v.iterative_mux(c_4,_2_2,c_3,c_2,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(c_2, [N_0], [_17_0], _v.vectorized_access(c_4, [N_0], [(_17_0 - 1)]))
@@ -2720,9 +2522,9 @@ def count_10s(Seq_0, N_0, Syms_0):
     _5_0 = _v.lift(lambda indices: s0_1, [N_0])
     _6_0 = _v.lift(lambda indices: s1_1, [N_0])
     _7_0 = _v.lift(lambda indices: scount_1, [N_0])
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_8_0, [N_0], [None]) != _v.vectorized_access(_9_0, [N_0], [None])))
-    _v.vectorized_assign(_3_2, [N_0], [None], (_v.vectorized_access(_10_0, [N_0], [None]) == _v.vectorized_access(_11_0, [N_0], [None])))
-    _v.vectorized_assign(s0_3, [N_0], [None], (_v.vectorized_access(_12_0, [N_0], [None]) == _v.vectorized_access(_13_0, [N_0], [None])))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_8_0, [N_0], [None]) != _v.vectorized_access_simd(_9_0, [N_0], [None])))
+    _v.vectorized_assign(_3_2, [N_0], [None], (_v.vectorized_access_simd(_10_0, [N_0], [None]) == _v.vectorized_access_simd(_11_0, [N_0], [None])))
+    _v.vectorized_assign(s0_3, [N_0], [None], (_v.vectorized_access_simd(_12_0, [N_0], [None]) == _v.vectorized_access_simd(_13_0, [N_0], [None])))
     for _15_0 in range(0, N_0):
         # Set ϕ value
         if _15_0 == 0:
@@ -2737,18 +2539,18 @@ def count_10s(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(s1_2, [N_0], [_16_0], _v.vectorized_access(_6_0, [N_0], [_16_0]))
         else:
             _v.vectorized_assign(s1_2, [N_0], [_16_0], _v.vectorized_access(s1_3, [N_0], [(_16_0 - 1)]))
-        _v.vectorized_assign(_4_2, [N_0], [_16_0], OR(_v.vectorized_access(s0_2, [N_0], [_16_0]), _v.vectorized_access(s1_2, [N_0], [_16_0])))
-        _v.vectorized_assign(s1_3, [N_0], [_16_0], _v.vectorized_access(_3_2, [N_0], [_16_0]).bit_and(_v.vectorized_access(_4_2, [N_0], [_16_0])))
+        _v.vectorized_assign(_4_2, [N_0], [_16_0], OR(_v.vectorized_access_simd(s0_2, [N_0], [_16_0]), _v.vectorized_access_simd(s1_2, [N_0], [_16_0])))
+        _v.vectorized_assign(s1_3, [N_0], [_16_0], _v.vectorized_access_simd(_3_2, [N_0], [_16_0]).bit_and(_v.vectorized_access_simd(_4_2, [N_0], [_16_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(s1_2, [N_0], [_16_0], _v.vectorized_access(s1_3, [N_0], [(_16_0 - 1)]))
-    _v.vectorized_assign(_2_2, [N_0], [None], _v.vectorized_access(s1_2, [N_0], [None]).bit_and(_v.vectorized_access(_1_2, [N_0], [None])))
+    _v.vectorized_assign(_2_2, [N_0], [None], _v.vectorized_access_simd(s1_2, [N_0], [None]).bit_and(_v.vectorized_access_simd(_1_2, [N_0], [None])))
     for _17_0 in range(0, N_0):
         # Set ϕ value
         if _17_0 == 0:
             _v.vectorized_assign(scount_2, [N_0], [_17_0], _v.vectorized_access(_7_0, [N_0], [_17_0]))
         else:
             _v.vectorized_assign(scount_2, [N_0], [_17_0], _v.vectorized_access(scount_4, [N_0], [(_17_0 - 1)]))
-        _v.vectorized_assign(scount_3, [N_0], [_17_0], (_v.vectorized_access(scount_2, [N_0], [_17_0]) + sint(1)))
+        _v.vectorized_assign(scount_3, [N_0], [_17_0], (_v.vectorized_access_simd(scount_2, [N_0], [_17_0]) + sint(1)))
         _v.iterative_mux(scount_4,_2_2,scount_3,scount_2,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(scount_2, [N_0], [_17_0], _v.vectorized_access(scount_4, [N_0], [(_17_0 - 1)]))
@@ -3123,9 +2925,9 @@ def count_123(Seq_0, N_0, Syms_0):
     _6_0 = _v.lift(lambda indices: s1_1, [N_0])
     _7_0 = _v.lift(lambda indices: s2_1, [N_0])
     _8_0 = _v.lift(lambda indices: c_1, [N_0])
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_9_0, [N_0], [None]) == _v.vectorized_access(_10_0, [N_0], [None])))
-    _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access(_11_0, [N_0], [None]) == _v.vectorized_access(_12_0, [N_0], [None])))
-    _v.vectorized_assign(s1_3, [N_0], [None], (_v.vectorized_access(_13_0, [N_0], [None]) == _v.vectorized_access(_14_0, [N_0], [None])))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_9_0, [N_0], [None]) == _v.vectorized_access_simd(_10_0, [N_0], [None])))
+    _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access_simd(_11_0, [N_0], [None]) == _v.vectorized_access_simd(_12_0, [N_0], [None])))
+    _v.vectorized_assign(s1_3, [N_0], [None], (_v.vectorized_access_simd(_13_0, [N_0], [None]) == _v.vectorized_access_simd(_14_0, [N_0], [None])))
     for _16_0 in range(0, N_0):
         # Set ϕ value
         if _16_0 == 0:
@@ -3140,19 +2942,19 @@ def count_123(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(s2_2, [N_0], [_17_0], _v.vectorized_access(_7_0, [N_0], [_17_0]))
         else:
             _v.vectorized_assign(s2_2, [N_0], [_17_0], _v.vectorized_access(s2_3, [N_0], [(_17_0 - 1)]))
-        _v.vectorized_assign(_5_2, [N_0], [_17_0], OR(_v.vectorized_access(s1_2, [N_0], [_17_0]), _v.vectorized_access(s2_2, [N_0], [_17_0])))
-        _v.vectorized_assign(s2_3, [N_0], [_17_0], _v.vectorized_access(_4_2, [N_0], [_17_0]).bit_and(_v.vectorized_access(_5_2, [N_0], [_17_0])))
+        _v.vectorized_assign(_5_2, [N_0], [_17_0], OR(_v.vectorized_access_simd(s1_2, [N_0], [_17_0]), _v.vectorized_access_simd(s2_2, [N_0], [_17_0])))
+        _v.vectorized_assign(s2_3, [N_0], [_17_0], _v.vectorized_access_simd(_4_2, [N_0], [_17_0]).bit_and(_v.vectorized_access_simd(_5_2, [N_0], [_17_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(s2_2, [N_0], [_17_0], _v.vectorized_access(s2_3, [N_0], [(_17_0 - 1)]))
-    _v.vectorized_assign(_2_2, [N_0], [None], OR(_v.vectorized_access(s2_2, [N_0], [None]), _v.vectorized_access(s1_2, [N_0], [None])))
-    _v.vectorized_assign(_3_2, [N_0], [None], _v.vectorized_access(_1_2, [N_0], [None]).bit_and(_v.vectorized_access(_2_2, [N_0], [None])))
+    _v.vectorized_assign(_2_2, [N_0], [None], OR(_v.vectorized_access_simd(s2_2, [N_0], [None]), _v.vectorized_access_simd(s1_2, [N_0], [None])))
+    _v.vectorized_assign(_3_2, [N_0], [None], _v.vectorized_access_simd(_1_2, [N_0], [None]).bit_and(_v.vectorized_access_simd(_2_2, [N_0], [None])))
     for _18_0 in range(0, N_0):
         # Set ϕ value
         if _18_0 == 0:
             _v.vectorized_assign(c_2, [N_0], [_18_0], _v.vectorized_access(_8_0, [N_0], [_18_0]))
         else:
             _v.vectorized_assign(c_2, [N_0], [_18_0], _v.vectorized_access(c_4, [N_0], [(_18_0 - 1)]))
-        _v.vectorized_assign(c_3, [N_0], [_18_0], (_v.vectorized_access(c_2, [N_0], [_18_0]) + sint(1)))
+        _v.vectorized_assign(c_3, [N_0], [_18_0], (_v.vectorized_access_simd(c_2, [N_0], [_18_0]) + sint(1)))
         _v.iterative_mux(c_4,_3_2,c_3,c_2,[N_0],[_18_0])
     # Loop exit ϕ values
     _v.vectorized_assign(c_2, [N_0], [_18_0], _v.vectorized_access(c_4, [N_0], [(_18_0 - 1)]))
@@ -3197,7 +2999,7 @@ def cryptonets_max_pooling(
     rows: int,
     cols_res: int,
     rows_res: int,
-    OUTPUT_res: shared[list[int]],
+    OUTPUT_res: list[int],
 ) -> shared[list[int]]:
     for i in range(rows_res):
         for j in range(cols_res):
@@ -3224,7 +3026,7 @@ print(cryptonets_max_pooling(vals, cols, rows, cols_res, rows_res, OUTPUT_res))
 ```
 #### Restricted AST
 ```python
-def cryptonets_max_pooling(vals: shared[list[int; ?]], cols: plaintext[int], rows: plaintext[int], cols_res: plaintext[int], rows_res: plaintext[int], OUTPUT_res: shared[list[int; ?]]) -> shared[list[int; ?]]:
+def cryptonets_max_pooling(vals: shared[list[int; ?]], cols: plaintext[int], rows: plaintext[int], cols_res: plaintext[int], rows_res: plaintext[int], OUTPUT_res: plaintext[list[int; ?]]) -> shared[list[int; ?]]:
     for i: plaintext[int] in range(0, rows_res):
         for j: plaintext[int] in range(0, cols_res):
             max = vals[(((i * 2) * cols) + (j * 2))]
@@ -3247,7 +3049,7 @@ def cryptonets_max_pooling(vals: shared[list[int; ?]], cols: plaintext[int], row
 ![](images/cryptonets_max_pooling_dead_code_elim.png)
 #### Linear code with loops
 ```python
-def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
+def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: plaintext[list[int; ?]]) -> shared[list[int; ?]]:
     for i!1 in range(0, rows_res!0):
         OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
         for j!1 in range(0, cols_res!0):
@@ -3277,7 +3079,7 @@ def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int],
 | `rows!0` | `plaintext[int]` |
 | `cols_res!0` | `plaintext[int]` |
 | `rows_res!0` | `plaintext[int]` |
-| `OUTPUT_res!0` | `shared[list[int; ?]]` |
+| `OUTPUT_res!0` | `plaintext[list[int; ?]]` |
 | `i!1` | `plaintext[int]` |
 | `j!1` | `plaintext[int]` |
 | `OUTPUT_res!3` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
@@ -3295,7 +3097,7 @@ def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int],
 | `max!3` | `shared[int]` |
 #### Basic Vectorization Phase 1
 ```python
-def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
+def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: plaintext[list[int; ?]]) -> shared[list[int; ?]]:
     !4!0{ROWS_RES!0, COLS_RES!0}[] = lift(OUTPUT_res!0, (_:rows_res!0, _:cols_res!0))
     for i!1 in range(0, rows_res!0):
         OUTPUT_res!1{ROWS_RES!0, COLS_RES!0}[] = Φ(!4!0{ROWS_RES!0, COLS_RES!0}[], OUTPUT_res!2{ROWS_RES!0, COLS_RES!0}[]) (targetless)
@@ -3326,7 +3128,7 @@ def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int],
 ![](images/cryptonets_max_pooling_bv_phase_1_dep_graph.png)
 #### Basic Vectorization Phase 2
 ```python
-def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: shared[list[int; ?]]) -> shared[list[int; ?]]:
+def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int], rows!0: plaintext[int], cols_res!0: plaintext[int], rows_res!0: plaintext[int], OUTPUT_res!0: plaintext[list[int; ?]]) -> shared[list[int; ?]]:
     !4!0{ROWS_RES!0, COLS_RES!0}[] = lift(OUTPUT_res!0, (_:rows_res!0, _:cols_res!0))
     !6!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[(((i!1 * 2) * cols!0) + (j!1 * 2))], (i!1:rows_res!0, j!1:cols_res!0))
     !7!0{ROWS_RES!0, COLS_RES!0}[] = lift(vals!0[((((i!1 * 2) * cols!0) + (j!1 * 2)) + 1)], (i!1:rows_res!0, j!1:cols_res!0))
@@ -3359,7 +3161,7 @@ def cryptonets_max_pooling(vals!0: shared[list[int; ?]], cols!0: plaintext[int],
 | `rows!0` | `plaintext[int]` |
 | `cols_res!0` | `plaintext[int]` |
 | `rows_res!0` | `plaintext[int]` |
-| `OUTPUT_res!0` | `shared[list[int; ?]]` |
+| `OUTPUT_res!0` | `plaintext[list[int; ?]]` |
 | `OUTPUT_res!3` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
 | `max!9` | `shared[list[list[int; (rows_res!0)]; (cols_res!0)]]` |
 | `!3!3` | `shared[list[list[bool; (rows_res!0)]; (cols_res!0)]]` |
@@ -3390,7 +3192,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
     std::uint32_t _MPC_PLAINTEXT_rows_0,
     std::uint32_t _MPC_PLAINTEXT_cols_res_0,
     std::uint32_t _MPC_PLAINTEXT_rows_res_0,
-    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_0
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_OUTPUT_res_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::ShareWrapper> _1_3((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
@@ -3405,6 +3207,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
     std::vector<encrypto::motion::SecureUnsignedInteger> _7_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> _8_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> _9_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_3((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
     encrypto::motion::SecureUnsignedInteger cols_0;
     encrypto::motion::SecureUnsignedInteger cols_res_0;
@@ -3425,6 +3228,8 @@ std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
 
 
     // Plaintext parameter assignments
+    OUTPUT_res_0.clear();
+    std::transform(_MPC_PLAINTEXT_OUTPUT_res_0.begin(), _MPC_PLAINTEXT_OUTPUT_res_0.end(), std::back_inserter(OUTPUT_res_0), [&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });
     cols_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_cols_0), 0);
     cols_res_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_cols_res_0), 0);
     rows_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_rows_0), 0);
@@ -3493,11 +3298,11 @@ def cryptonets_max_pooling(vals_0, cols_0, rows_0, cols_res_0, rows_res_0, OUTPU
     _v.vectorized_assign(max_4, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_8_0, [rows_res_0, cols_res_0], [None, None]))
     _v.vectorized_assign(max_6, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_10_0, [rows_res_0, cols_res_0], [None, None]))
     _v.vectorized_assign(max_8, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_12_0, [rows_res_0, cols_res_0], [None, None]))
-    _v.vectorized_assign(_1_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access(_7_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access(max_3, [rows_res_0, cols_res_0], [None, None])))
+    _v.vectorized_assign(_1_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access_simd(_7_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access_simd(max_3, [rows_res_0, cols_res_0], [None, None])))
     _v.iterative_mux(max_5,_1_3,max_4,max_3,[rows_res_0, cols_res_0],[None, None])
-    _v.vectorized_assign(_2_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access(_9_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access(max_5, [rows_res_0, cols_res_0], [None, None])))
+    _v.vectorized_assign(_2_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access_simd(_9_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access_simd(max_5, [rows_res_0, cols_res_0], [None, None])))
     _v.iterative_mux(max_7,_2_3,max_6,max_5,[rows_res_0, cols_res_0],[None, None])
-    _v.vectorized_assign(_3_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access(_11_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access(max_7, [rows_res_0, cols_res_0], [None, None])))
+    _v.vectorized_assign(_3_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access_simd(_11_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access_simd(max_7, [rows_res_0, cols_res_0], [None, None])))
     _v.iterative_mux(max_9,_3_3,max_8,max_7,[rows_res_0, cols_res_0],[None, None])
     _v.vectorized_assign(_5_0, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(max_9, [rows_res_0, cols_res_0], [None, None])); _v.vectorized_assign(OUTPUT_res_3, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_5_0, [rows_res_0, cols_res_0], [None, None]))
     return OUTPUT_res_3
@@ -3851,7 +3656,7 @@ def db_cross_join_trivial(A_0, Len_A_0, B_0, Len_B_0, res_0):
     _14_0 = _v.lift(lambda indices: (indices[2] == sint(1)), [Len_A_0, Len_B_0, 3])
     _15_0 = _v.lift(lambda indices: (indices[2] == sint(2)), [Len_A_0, Len_B_0, 3])
     _6_0 = _v.lift(lambda indices: _v.vectorized_access(_5_0, [Len_A_0, Len_B_0, 3], [None, None, None]), [Len_A_0, Len_A_0, Len_B_0, 3])
-    _v.vectorized_assign(_1_4, [Len_A_0, Len_B_0, 3], [None, None, None], (_v.vectorized_access(_8_0, [Len_A_0, Len_B_0, 3], [None, None, None]) == _v.vectorized_access(_9_0, [Len_A_0, Len_B_0, 3], [None, None, None])))
+    _v.vectorized_assign(_1_4, [Len_A_0, Len_B_0, 3], [None, None, None], (_v.vectorized_access_simd(_8_0, [Len_A_0, Len_B_0, 3], [None, None, None]) == _v.vectorized_access_simd(_9_0, [Len_A_0, Len_B_0, 3], [None, None, None])))
     _v.vectorized_assign(v_5, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(_10_0, [Len_A_0, Len_B_0, 3], [None, None, None]))
     _v.vectorized_assign(v_7, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(_11_0, [Len_A_0, Len_B_0, 3], [None, None, None]))
     _v.vectorized_assign(v_9, [Len_A_0, Len_B_0, 3], [None, None, None], _v.vectorized_access(_12_0, [Len_A_0, Len_B_0, 3], [None, None, None]))
@@ -4182,14 +3987,14 @@ def db_variance(A_0, V_0, len_0):
             _v.vectorized_assign(sum_2, [len_0], [_10_0], _v.vectorized_access(_2_0, [len_0], [_10_0]))
         else:
             _v.vectorized_assign(sum_2, [len_0], [_10_0], _v.vectorized_access(sum_3, [len_0], [(_10_0 - 1)]))
-        _v.vectorized_assign(sum_3, [len_0], [_10_0], (_v.vectorized_access(sum_2, [len_0], [_10_0]) + _v.vectorized_access(_3_0, [len_0], [_10_0])))
+        _v.vectorized_assign(sum_3, [len_0], [_10_0], (_v.vectorized_access_simd(sum_2, [len_0], [_10_0]) + _v.vectorized_access_simd(_3_0, [len_0], [_10_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(sum_2, [len_0], [_10_0], _v.vectorized_access(sum_3, [len_0], [(_10_0 - 1)]))
     _4_0 = _v.drop_dim(sum_3, [len_0])
     exp_1 = (_4_0 / len_0)
     _7_0 = _v.lift(lambda indices: exp_1, [len_0])
-    _v.vectorized_assign(dist_2, [len_0], [None], (_v.vectorized_access(_6_0, [len_0], [None]) - _v.vectorized_access(_7_0, [len_0], [None])))
-    _v.vectorized_assign(_1_2, [len_0], [None], (_v.vectorized_access(dist_2, [len_0], [None]) * _v.vectorized_access(dist_2, [len_0], [None])))
+    _v.vectorized_assign(dist_2, [len_0], [None], (_v.vectorized_access_simd(_6_0, [len_0], [None]) - _v.vectorized_access_simd(_7_0, [len_0], [None])))
+    _v.vectorized_assign(_1_2, [len_0], [None], (_v.vectorized_access_simd(dist_2, [len_0], [None]) * _v.vectorized_access_simd(dist_2, [len_0], [None])))
     _v.vectorized_assign(_5_0, [len_0], [None], _v.vectorized_access(_1_2, [len_0], [None])); _v.vectorized_assign(V_2, [len_0], [None], _v.vectorized_access(_5_0, [len_0], [None]))
     for _11_0 in range(0, len_0):
         # Set ϕ value
@@ -4197,7 +4002,7 @@ def db_variance(A_0, V_0, len_0):
             _v.vectorized_assign(res_2, [len_0], [_11_0], _v.vectorized_access(_8_0, [len_0], [_11_0]))
         else:
             _v.vectorized_assign(res_2, [len_0], [_11_0], _v.vectorized_access(res_3, [len_0], [(_11_0 - 1)]))
-        _v.vectorized_assign(res_3, [len_0], [_11_0], (_v.vectorized_access(res_2, [len_0], [_11_0]) + _v.vectorized_access(V_2, [len_0], [_11_0])))
+        _v.vectorized_assign(res_3, [len_0], [_11_0], (_v.vectorized_access_simd(res_2, [len_0], [_11_0]) + _v.vectorized_access_simd(V_2, [len_0], [_11_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(res_2, [len_0], [_11_0], _v.vectorized_access(res_3, [len_0], [(_11_0 - 1)]))
     _9_0 = _v.drop_dim(res_3, [len_0])
@@ -4456,7 +4261,7 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
     _6_0 = _v.lift(lambda indices: indices[0], [num_bins_0, N_0])
     _7_0 = _v.lift(lambda indices: (B_0[indices[1]]), [num_bins_0, N_0])
     _4_0 = _v.lift(lambda indices: _v.vectorized_access(_2_0, [num_bins_0], [None]), [num_bins_0, N_0])
-    _v.vectorized_assign(_1_3, [num_bins_0, N_0], [None, None], (_v.vectorized_access(_5_0, [num_bins_0, N_0], [None, None]) == _v.vectorized_access(_6_0, [num_bins_0, N_0], [None, None])))
+    _v.vectorized_assign(_1_3, [num_bins_0, N_0], [None, None], (_v.vectorized_access_simd(_5_0, [num_bins_0, N_0], [None, None]) == _v.vectorized_access_simd(_6_0, [num_bins_0, N_0], [None, None])))
     for _8_0 in range(0, N_0):
         # Set ϕ value
         if _8_0 == 0:
@@ -4464,7 +4269,7 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
         else:
             _v.vectorized_assign(result_2, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(result_3, [num_bins_0, N_0], [None, (_8_0 - 1)]))
         _v.vectorized_assign(val_4, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(result_2, [num_bins_0, N_0], [None, _8_0]))
-        _v.vectorized_assign(val_3, [num_bins_0, N_0], [None, _8_0], (_v.vectorized_access(result_2, [num_bins_0, N_0], [None, _8_0]) + _v.vectorized_access(_7_0, [num_bins_0, N_0], [None, _8_0])))
+        _v.vectorized_assign(val_3, [num_bins_0, N_0], [None, _8_0], (_v.vectorized_access_simd(result_2, [num_bins_0, N_0], [None, _8_0]) + _v.vectorized_access_simd(_7_0, [num_bins_0, N_0], [None, _8_0])))
         _v.iterative_mux(val_5,_1_3,val_3,val_4,[num_bins_0, N_0],[None, _8_0])
         _v.vectorized_assign((TODO: fix this case), [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(val_5, [num_bins_0, N_0], [None, _8_0])); _v.vectorized_assign(result_3, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access((TODO: fix this case), [num_bins_0, N_0], [None, _8_0]))
     # Loop exit ϕ values
@@ -4653,14 +4458,14 @@ def inner_product(A_0, B_0, N_0):
     _2_0 = _v.lift(lambda indices: (A_0[indices[0]]), [N_0])
     _3_0 = _v.lift(lambda indices: (B_0[indices[0]]), [N_0])
     _1_0 = _v.lift(lambda indices: sum_1, [N_0])
-    _v.vectorized_assign(temp_2, [N_0], [None], (_v.vectorized_access(_2_0, [N_0], [None]) * _v.vectorized_access(_3_0, [N_0], [None])))
+    _v.vectorized_assign(temp_2, [N_0], [None], (_v.vectorized_access_simd(_2_0, [N_0], [None]) * _v.vectorized_access_simd(_3_0, [N_0], [None])))
     for _5_0 in range(0, N_0):
         # Set ϕ value
         if _5_0 == 0:
             _v.vectorized_assign(sum_2, [N_0], [_5_0], _v.vectorized_access(_1_0, [N_0], [_5_0]))
         else:
             _v.vectorized_assign(sum_2, [N_0], [_5_0], _v.vectorized_access(sum_3, [N_0], [(_5_0 - 1)]))
-        _v.vectorized_assign(sum_3, [N_0], [_5_0], (_v.vectorized_access(sum_2, [N_0], [_5_0]) + _v.vectorized_access(temp_2, [N_0], [_5_0])))
+        _v.vectorized_assign(sum_3, [N_0], [_5_0], (_v.vectorized_access_simd(sum_2, [N_0], [_5_0]) + _v.vectorized_access_simd(temp_2, [N_0], [_5_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(sum_2, [N_0], [_5_0], _v.vectorized_access(sum_3, [N_0], [(_5_0 - 1)]))
     _4_0 = _v.drop_dim(sum_3, [N_0])
@@ -5083,28 +4888,28 @@ def longest_102(Seq_0, N_0, Syms_0):
     _9_0 = _v.lift(lambda indices: s0_1, [N_0])
     _10_0 = _v.lift(lambda indices: max_len_1, [N_0])
     _11_0 = _v.lift(lambda indices: length_1, [N_0])
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_12_0, [N_0], [None]) == _v.vectorized_access(_13_0, [N_0], [None])))
-    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access(_14_0, [N_0], [None]) == _v.vectorized_access(_15_0, [N_0], [None])))
-    _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access(_16_0, [N_0], [None]) == _v.vectorized_access(_17_0, [N_0], [None])))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_12_0, [N_0], [None]) == _v.vectorized_access_simd(_13_0, [N_0], [None])))
+    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access_simd(_14_0, [N_0], [None]) == _v.vectorized_access_simd(_15_0, [N_0], [None])))
+    _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access_simd(_16_0, [N_0], [None]) == _v.vectorized_access_simd(_17_0, [N_0], [None])))
     for _19_0 in range(0, N_0):
         # Set ϕ value
         if _19_0 == 0:
             _v.vectorized_assign(s0_2, [N_0], [_19_0], _v.vectorized_access(_9_0, [N_0], [_19_0]))
         else:
             _v.vectorized_assign(s0_2, [N_0], [_19_0], _v.vectorized_access(s0_3, [N_0], [(_19_0 - 1)]))
-        _v.vectorized_assign(_5_2, [N_0], [_19_0], _v.vectorized_access(s0_2, [N_0], [_19_0]).bit_and(_v.vectorized_access(_4_2, [N_0], [_19_0])))
-        _v.vectorized_assign(s0_3, [N_0], [_19_0], OR(_v.vectorized_access(_2_2, [N_0], [_19_0]), _v.vectorized_access(_5_2, [N_0], [_19_0])))
+        _v.vectorized_assign(_5_2, [N_0], [_19_0], _v.vectorized_access_simd(s0_2, [N_0], [_19_0]).bit_and(_v.vectorized_access_simd(_4_2, [N_0], [_19_0])))
+        _v.vectorized_assign(s0_3, [N_0], [_19_0], OR(_v.vectorized_access_simd(_2_2, [N_0], [_19_0]), _v.vectorized_access_simd(_5_2, [N_0], [_19_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(s0_2, [N_0], [_19_0], _v.vectorized_access(s0_3, [N_0], [(_19_0 - 1)]))
-    _v.vectorized_assign(s1_2, [N_0], [None], _v.vectorized_access(s0_2, [N_0], [None]).bit_and(_v.vectorized_access(_1_2, [N_0], [None])))
-    _v.vectorized_assign(_6_2, [N_0], [None], OR(_v.vectorized_access(s1_2, [N_0], [None]), _v.vectorized_access(s0_3, [N_0], [None])))
+    _v.vectorized_assign(s1_2, [N_0], [None], _v.vectorized_access_simd(s0_2, [N_0], [None]).bit_and(_v.vectorized_access_simd(_1_2, [N_0], [None])))
+    _v.vectorized_assign(_6_2, [N_0], [None], OR(_v.vectorized_access_simd(s1_2, [N_0], [None]), _v.vectorized_access_simd(s0_3, [N_0], [None])))
     for _20_0 in range(0, N_0):
         # Set ϕ value
         if _20_0 == 0:
             _v.vectorized_assign(length_2, [N_0], [_20_0], _v.vectorized_access(_11_0, [N_0], [_20_0]))
         else:
             _v.vectorized_assign(length_2, [N_0], [_20_0], _v.vectorized_access(length_5, [N_0], [(_20_0 - 1)]))
-        _v.vectorized_assign(length_3, [N_0], [_20_0], (_v.vectorized_access(length_2, [N_0], [_20_0]) + sint(1)))
+        _v.vectorized_assign(length_3, [N_0], [_20_0], (_v.vectorized_access_simd(length_2, [N_0], [_20_0]) + sint(1)))
         _v.iterative_mux(length_5,_6_2,length_3,length_4,[N_0],[_20_0])
     # Loop exit ϕ values
     _v.vectorized_assign(length_2, [N_0], [_20_0], _v.vectorized_access(length_5, [N_0], [(_20_0 - 1)]))
@@ -5115,8 +4920,8 @@ def longest_102(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(max_len_2, [N_0], [_21_0], _v.vectorized_access(_10_0, [N_0], [_21_0]))
         else:
             _v.vectorized_assign(max_len_2, [N_0], [_21_0], _v.vectorized_access(max_len_4, [N_0], [(_21_0 - 1)]))
-        _v.vectorized_assign(_7_2, [N_0], [_21_0], (_v.vectorized_access(max_len_2, [N_0], [_21_0]) < _v.vectorized_access(length_5, [N_0], [_21_0])))
-        _v.vectorized_assign(_8_2, [N_0], [_21_0], _v.vectorized_access(s1_2, [N_0], [_21_0]).bit_and(_v.vectorized_access(_7_2, [N_0], [_21_0])))
+        _v.vectorized_assign(_7_2, [N_0], [_21_0], (_v.vectorized_access_simd(max_len_2, [N_0], [_21_0]) < _v.vectorized_access_simd(length_5, [N_0], [_21_0])))
+        _v.vectorized_assign(_8_2, [N_0], [_21_0], _v.vectorized_access_simd(s1_2, [N_0], [_21_0]).bit_and(_v.vectorized_access_simd(_7_2, [N_0], [_21_0])))
         _v.iterative_mux(max_len_4,_8_2,max_len_3,max_len_2,[N_0],[_21_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_len_2, [N_0], [_21_0], _v.vectorized_access(max_len_4, [N_0], [(_21_0 - 1)]))
@@ -5531,8 +5336,8 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
     _8_0 = _v.lift(lambda indices: current_length_1, [N_0])
     _9_0 = _v.lift(lambda indices: max_length_1, [N_0])
     _10_0 = _v.lift(lambda indices: s2_1, [N_0])
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_11_0, [N_0], [None]) == _v.vectorized_access(_12_0, [N_0], [None])))
-    _v.vectorized_assign(s2_3, [N_0], [None], (_v.vectorized_access(_13_0, [N_0], [None]) == _v.vectorized_access(_14_0, [N_0], [None])))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_11_0, [N_0], [None]) == _v.vectorized_access_simd(_12_0, [N_0], [None])))
+    _v.vectorized_assign(s2_3, [N_0], [None], (_v.vectorized_access_simd(_13_0, [N_0], [None]) == _v.vectorized_access_simd(_14_0, [N_0], [None])))
     for _16_0 in range(0, N_0):
         # Set ϕ value
         if _16_0 == 0:
@@ -5541,8 +5346,8 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(s2_2, [N_0], [_16_0], _v.vectorized_access(s2_3, [N_0], [(_16_0 - 1)]))
     # Loop exit ϕ values
     _v.vectorized_assign(s2_2, [N_0], [_16_0], _v.vectorized_access(s2_3, [N_0], [(_16_0 - 1)]))
-    _v.vectorized_assign(s1_2, [N_0], [None], _v.vectorized_access(s2_2, [N_0], [None]).bit_and(_v.vectorized_access(_1_2, [N_0], [None])))
-    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access(s2_2, [N_0], [None]).bit_not()))
+    _v.vectorized_assign(s1_2, [N_0], [None], _v.vectorized_access_simd(s2_2, [N_0], [None]).bit_and(_v.vectorized_access_simd(_1_2, [N_0], [None])))
+    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access_simd(s2_2, [N_0], [None]).bit_not()))
     for _17_0 in range(0, N_0):
         # Set ϕ value
         if _17_0 == 0:
@@ -5550,21 +5355,21 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
         else:
             _v.vectorized_assign(current_length_2, [N_0], [_17_0], _v.vectorized_access(current_length_6, [N_0], [(_17_0 - 1)]))
         _v.iterative_mux(current_length_5,_2_2,current_length_4,current_length_2,[N_0],[_17_0])
-        _v.vectorized_assign(current_length_3, [N_0], [_17_0], (_v.vectorized_access(current_length_2, [N_0], [_17_0]) + sint(1)))
+        _v.vectorized_assign(current_length_3, [N_0], [_17_0], (_v.vectorized_access_simd(current_length_2, [N_0], [_17_0]) + sint(1)))
         _v.iterative_mux(current_length_6,s1_2,current_length_3,current_length_5,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_length_2, [N_0], [_17_0], _v.vectorized_access(current_length_6, [N_0], [(_17_0 - 1)]))
-    _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access(current_length_6, [N_0], [None]) & sint(1)))
+    _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access_simd(current_length_6, [N_0], [None]) & sint(1)))
     _v.vectorized_assign(max_length_3, [N_0], [None], _v.vectorized_access(current_length_6, [N_0], [None]))
-    _v.vectorized_assign(_5_2, [N_0], [None], (_v.vectorized_access(_4_2, [N_0], [None]) == sint(1)))
+    _v.vectorized_assign(_5_2, [N_0], [None], (_v.vectorized_access_simd(_4_2, [N_0], [None]) == sint(1)))
     for _18_0 in range(0, N_0):
         # Set ϕ value
         if _18_0 == 0:
             _v.vectorized_assign(max_length_2, [N_0], [_18_0], _v.vectorized_access(_9_0, [N_0], [_18_0]))
         else:
             _v.vectorized_assign(max_length_2, [N_0], [_18_0], _v.vectorized_access(max_length_4, [N_0], [(_18_0 - 1)]))
-        _v.vectorized_assign(_6_2, [N_0], [_18_0], (_v.vectorized_access(current_length_6, [N_0], [_18_0]) > _v.vectorized_access(max_length_2, [N_0], [_18_0])))
-        _v.vectorized_assign(_7_2, [N_0], [_18_0], _v.vectorized_access(_5_2, [N_0], [_18_0]).bit_and(_v.vectorized_access(_6_2, [N_0], [_18_0])))
+        _v.vectorized_assign(_6_2, [N_0], [_18_0], (_v.vectorized_access_simd(current_length_6, [N_0], [_18_0]) > _v.vectorized_access_simd(max_length_2, [N_0], [_18_0])))
+        _v.vectorized_assign(_7_2, [N_0], [_18_0], _v.vectorized_access_simd(_5_2, [N_0], [_18_0]).bit_and(_v.vectorized_access_simd(_6_2, [N_0], [_18_0])))
         _v.iterative_mux(max_length_4,_7_2,max_length_3,max_length_2,[N_0],[_18_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_length_2, [N_0], [_18_0], _v.vectorized_access(max_length_4, [N_0], [(_18_0 - 1)]))
@@ -5857,15 +5662,15 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
     current_dist_4 = sint(0)
     _4_0 = _v.lift(lambda indices: max_dist_1, [N_0])
     _5_0 = _v.lift(lambda indices: current_dist_1, [N_0])
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_6_0, [N_0], [None]) == _v.vectorized_access(_7_0, [N_0], [None])))
-    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access(_1_2, [N_0], [None]).bit_not()))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_6_0, [N_0], [None]) == _v.vectorized_access_simd(_7_0, [N_0], [None])))
+    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access_simd(_1_2, [N_0], [None]).bit_not()))
     for _9_0 in range(0, N_0):
         # Set ϕ value
         if _9_0 == 0:
             _v.vectorized_assign(current_dist_2, [N_0], [_9_0], _v.vectorized_access(_5_0, [N_0], [_9_0]))
         else:
             _v.vectorized_assign(current_dist_2, [N_0], [_9_0], _v.vectorized_access(current_dist_5, [N_0], [(_9_0 - 1)]))
-        _v.vectorized_assign(current_dist_3, [N_0], [_9_0], (_v.vectorized_access(current_dist_2, [N_0], [_9_0]) + sint(1)))
+        _v.vectorized_assign(current_dist_3, [N_0], [_9_0], (_v.vectorized_access_simd(current_dist_2, [N_0], [_9_0]) + sint(1)))
         _v.iterative_mux(current_dist_5,_2_2,current_dist_3,current_dist_4,[N_0],[_9_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_dist_2, [N_0], [_9_0], _v.vectorized_access(current_dist_5, [N_0], [(_9_0 - 1)]))
@@ -5876,7 +5681,7 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
             _v.vectorized_assign(max_dist_2, [N_0], [_10_0], _v.vectorized_access(_4_0, [N_0], [_10_0]))
         else:
             _v.vectorized_assign(max_dist_2, [N_0], [_10_0], _v.vectorized_access(max_dist_4, [N_0], [(_10_0 - 1)]))
-        _v.vectorized_assign(_3_2, [N_0], [_10_0], (_v.vectorized_access(current_dist_5, [N_0], [_10_0]) > _v.vectorized_access(max_dist_2, [N_0], [_10_0])))
+        _v.vectorized_assign(_3_2, [N_0], [_10_0], (_v.vectorized_access_simd(current_dist_5, [N_0], [_10_0]) > _v.vectorized_access_simd(max_dist_2, [N_0], [_10_0])))
         _v.iterative_mux(max_dist_4,_3_2,max_dist_3,max_dist_2,[N_0],[_10_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_dist_2, [N_0], [_10_0], _v.vectorized_access(max_dist_4, [N_0], [(_10_0 - 1)]))
@@ -6175,15 +5980,15 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
     current_sum_4 = sint(0)
     _4_0 = _v.lift(lambda indices: max_sum_1, [N_0])
     _5_0 = _v.lift(lambda indices: current_sum_1, [N_0])
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_6_0, [N_0], [None]) == _v.vectorized_access(_7_0, [N_0], [None])))
-    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access(_1_2, [N_0], [None]).bit_not()))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_6_0, [N_0], [None]) == _v.vectorized_access_simd(_7_0, [N_0], [None])))
+    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access_simd(_1_2, [N_0], [None]).bit_not()))
     for _10_0 in range(0, N_0):
         # Set ϕ value
         if _10_0 == 0:
             _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(_5_0, [N_0], [_10_0]))
         else:
             _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(current_sum_5, [N_0], [(_10_0 - 1)]))
-        _v.vectorized_assign(current_sum_3, [N_0], [_10_0], (_v.vectorized_access(current_sum_2, [N_0], [_10_0]) + _v.vectorized_access(_8_0, [N_0], [_10_0])))
+        _v.vectorized_assign(current_sum_3, [N_0], [_10_0], (_v.vectorized_access_simd(current_sum_2, [N_0], [_10_0]) + _v.vectorized_access_simd(_8_0, [N_0], [_10_0])))
         _v.iterative_mux(current_sum_5,_2_2,current_sum_3,current_sum_4,[N_0],[_10_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(current_sum_5, [N_0], [(_10_0 - 1)]))
@@ -6194,7 +5999,7 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
             _v.vectorized_assign(max_sum_2, [N_0], [_11_0], _v.vectorized_access(_4_0, [N_0], [_11_0]))
         else:
             _v.vectorized_assign(max_sum_2, [N_0], [_11_0], _v.vectorized_access(max_sum_4, [N_0], [(_11_0 - 1)]))
-        _v.vectorized_assign(_3_2, [N_0], [_11_0], (_v.vectorized_access(current_sum_5, [N_0], [_11_0]) > _v.vectorized_access(max_sum_2, [N_0], [_11_0])))
+        _v.vectorized_assign(_3_2, [N_0], [_11_0], (_v.vectorized_access_simd(current_sum_5, [N_0], [_11_0]) > _v.vectorized_access_simd(max_sum_2, [N_0], [_11_0])))
         _v.iterative_mux(max_sum_4,_3_2,max_sum_3,max_sum_2,[N_0],[_11_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_sum_2, [N_0], [_11_0], _v.vectorized_access(max_sum_4, [N_0], [(_11_0 - 1)]))
@@ -6565,20 +6370,20 @@ def minimal_points(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
     _v.vectorized_assign(val_X_3, [N_0], [None], _v.vectorized_access(_16_0, [N_0], [None]))
     _v.vectorized_assign(val_Y_3, [N_0], [None], _v.vectorized_access(_17_0, [N_0], [None]))
     _10_0 = _v.lift(lambda indices: bx_2, [N_0, N_0])
-    _v.vectorized_assign(_3_3, [N_0, N_0], [None, None], (_v.vectorized_access(_11_0, [N_0, N_0], [None, None]) < _v.vectorized_access(_12_0, [N_0, N_0], [None, None])))
-    _v.vectorized_assign(_4_3, [N_0, N_0], [None, None], (_v.vectorized_access(_13_0, [N_0, N_0], [None, None]) < _v.vectorized_access(_14_0, [N_0, N_0], [None, None])))
-    _v.vectorized_assign(_5_3, [N_0, N_0], [None, None], _v.vectorized_access(_3_3, [N_0, N_0], [None, None]).bit_and(_v.vectorized_access(_4_3, [N_0, N_0], [None, None])))
+    _v.vectorized_assign(_3_3, [N_0, N_0], [None, None], (_v.vectorized_access_simd(_11_0, [N_0, N_0], [None, None]) < _v.vectorized_access_simd(_12_0, [N_0, N_0], [None, None])))
+    _v.vectorized_assign(_4_3, [N_0, N_0], [None, None], (_v.vectorized_access_simd(_13_0, [N_0, N_0], [None, None]) < _v.vectorized_access_simd(_14_0, [N_0, N_0], [None, None])))
+    _v.vectorized_assign(_5_3, [N_0, N_0], [None, None], _v.vectorized_access_simd(_3_3, [N_0, N_0], [None, None]).bit_and(_v.vectorized_access_simd(_4_3, [N_0, N_0], [None, None])))
     for _18_0 in range(0, N_0):
         # Set ϕ value
         if _18_0 == 0:
             _v.vectorized_assign(bx_3, [N_0, N_0], [None, _18_0], _v.vectorized_access(_10_0, [N_0, N_0], [None, _18_0]))
         else:
             _v.vectorized_assign(bx_3, [N_0, N_0], [None, _18_0], _v.vectorized_access(bx_4, [N_0, N_0], [None, (_18_0 - 1)]))
-        _v.vectorized_assign(bx_4, [N_0, N_0], [None, _18_0], OR(_v.vectorized_access(bx_3, [N_0, N_0], [None, _18_0]), _v.vectorized_access(_5_3, [N_0, N_0], [None, _18_0])))
+        _v.vectorized_assign(bx_4, [N_0, N_0], [None, _18_0], OR(_v.vectorized_access_simd(bx_3, [N_0, N_0], [None, _18_0]), _v.vectorized_access_simd(_5_3, [N_0, N_0], [None, _18_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(bx_3, [N_0, N_0], [None, _18_0], _v.vectorized_access(bx_4, [N_0, N_0], [None, (_18_0 - 1)]))
     _v.vectorized_assign(_15_0, [N_0], [None], _v.drop_dim(bx_4, [N_0, N_0]))
-    _v.vectorized_assign(_6_2, [N_0], [None], (_v.vectorized_access(_15_0, [N_0], [None]).bit_not()))
+    _v.vectorized_assign(_6_2, [N_0], [None], (_v.vectorized_access_simd(_15_0, [N_0], [None]).bit_not()))
     _v.iterative_mux(val_X_4,_6_2,val_X_3,val_X_2,[N_0],[None])
     _v.iterative_mux(val_Y_4,_6_2,val_Y_3,val_Y_2,[N_0],[None])
     _v.vectorized_assign(_8_0, [N_0], [None], _v.vectorized_access(val_X_4, [N_0], [None])); _v.vectorized_assign(result_X_2, [N_0], [None], _v.vectorized_access(_8_0, [N_0], [None]))
@@ -6599,14 +6404,14 @@ from UTIL import shared
 # OUTPUT_res is array of 0's
 def mnist_relu(
     input: shared[list[int]],
-    OUTPUT_res: shared[list[int]],
+    OUTPUT_res: list[int],
     len_outer: int,
     len_inner: int,
 ) -> shared[list[int]]:
     for i in range(len_outer):
         for j in range(len_inner):
             val = 1
-            if input[i * len_inner + j] > 1:
+            if input[i * len_inner + j] > val:
                 val = input[i * len_inner + j]
             OUTPUT_res[i * len_inner + j] = val
     return OUTPUT_res
@@ -6621,11 +6426,11 @@ print(mnist_relu(input, OUTPUT_res, len_outer, len_inner))
 ```
 #### Restricted AST
 ```python
-def mnist_relu(input: shared[list[int; ?]], OUTPUT_res: shared[list[int; ?]], len_outer: plaintext[int], len_inner: plaintext[int]) -> shared[list[int; ?]]:
+def mnist_relu(input: shared[list[int; ?]], OUTPUT_res: plaintext[list[int; ?]], len_outer: plaintext[int], len_inner: plaintext[int]) -> shared[list[int; ?]]:
     for i: plaintext[int] in range(0, len_outer):
         for j: plaintext[int] in range(0, len_inner):
             val = 1
-            if (input[((i * len_inner) + j)] > 1):
+            if (input[((i * len_inner) + j)] > val):
                 val = input[((i * len_inner) + j)]
             OUTPUT_res[((i * len_inner) + j)] = val
     return OUTPUT_res
@@ -6640,13 +6445,13 @@ def mnist_relu(input: shared[list[int; ?]], OUTPUT_res: shared[list[int; ?]], le
 ![](images/mnist_relu_dead_code_elim.png)
 #### Linear code with loops
 ```python
-def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
+def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: plaintext[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
     for i!1 in range(0, len_outer!0):
         OUTPUT_res!1 = Φ(OUTPUT_res!0, OUTPUT_res!2)
         for j!1 in range(0, len_inner!0):
             OUTPUT_res!2 = Φ(OUTPUT_res!1, OUTPUT_res!3)
             val!3 = 1
-            !1!3 = (input!0[((i!1 * len_inner!0) + j!1)] > 1)
+            !1!3 = (input!0[((i!1 * len_inner!0) + j!1)] > val!3)
             val!4 = input!0[((i!1 * len_inner!0) + j!1)]
             val!5 = MUX(!1!3, val!4, val!3)
             OUTPUT_res!3 = Update(OUTPUT_res!2, ((i!1 * len_inner!0) + j!1), val!5)
@@ -6660,7 +6465,7 @@ def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]]
 | Variable | Type |
 | - | - |
 | `input!0` | `shared[list[int; ?]]` |
-| `OUTPUT_res!0` | `shared[list[int; ?]]` |
+| `OUTPUT_res!0` | `plaintext[list[int; ?]]` |
 | `len_outer!0` | `plaintext[int]` |
 | `len_inner!0` | `plaintext[int]` |
 | `i!1` | `plaintext[int]` |
@@ -6674,7 +6479,7 @@ def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]]
 | `val!3` | `plaintext[int]` |
 #### Basic Vectorization Phase 1
 ```python
-def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
+def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: plaintext[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
     !2!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(OUTPUT_res!0, (_:len_outer!0, _:len_inner!0))
     for i!1 in range(0, len_outer!0):
         OUTPUT_res!1{LEN_OUTER!0, LEN_INNER!0}[] = Φ(!2!0{LEN_OUTER!0, LEN_INNER!0}[], OUTPUT_res!2{LEN_OUTER!0, LEN_INNER!0}[]) (targetless)
@@ -6684,7 +6489,7 @@ def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]]
         for j!1 in range(0, len_inner!0):
             OUTPUT_res!2{LEN_OUTER!0, LEN_INNER!0}[] = Φ(!3!0{LEN_OUTER!0, LEN_INNER!0}[], OUTPUT_res!3{LEN_OUTER!0, LEN_INNER!0}[]) (targetless)
             val!3 = 1
-            !1!3{LEN_OUTER!0, LEN_INNER!0}[] = (!4!0{LEN_OUTER!0, LEN_INNER!0}[] > 1)
+            !1!3{LEN_OUTER!0, LEN_INNER!0}[] = (!4!0{LEN_OUTER!0, LEN_INNER!0}[] > val!3)
             val!4{LEN_OUTER!0, LEN_INNER!0}[] = !5!0{LEN_OUTER!0, LEN_INNER!0}[]
             val!5{LEN_OUTER!0, LEN_INNER!0}[] = MUX(!1!3{LEN_OUTER!0, LEN_INNER!0}[], val!4{LEN_OUTER!0, LEN_INNER!0}[], val!3)
             OUTPUT_res!3{LEN_OUTER!0, LEN_INNER!0}[] = VectorizedUpdate(OUTPUT_res!2{LEN_OUTER!0, LEN_INNER!0}[], [I!1, J!1], val!5{LEN_OUTER!0, LEN_INNER!0}[])
@@ -6694,14 +6499,14 @@ def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]]
 ![](images/mnist_relu_bv_phase_1_dep_graph.png)
 #### Basic Vectorization Phase 2
 ```python
-def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
+def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: plaintext[list[int; ?]], len_outer!0: plaintext[int], len_inner!0: plaintext[int]) -> shared[list[int; ?]]:
     !2!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(OUTPUT_res!0, (_:len_outer!0, _:len_inner!0))
     !4!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(input!0[((i!1 * len_inner!0) + j!1)], (i!1:len_outer!0, j!1:len_inner!0))
     !5!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(input!0[((i!1 * len_inner!0) + j!1)], (i!1:len_outer!0, j!1:len_inner!0))
     val!3 = 1
     !3!0{LEN_OUTER!0, LEN_INNER!0}[] = lift(!2!0{LEN_OUTER!0, LEN_INNER!0}[], (i!1:len_outer!0, j!1:len_inner!0))
-    !1!3{LEN_OUTER!0, LEN_INNER!0}[] = (!4!0{LEN_OUTER!0, LEN_INNER!0}[] > 1)
     val!4{LEN_OUTER!0, LEN_INNER!0}[] = !5!0{LEN_OUTER!0, LEN_INNER!0}[]
+    !1!3{LEN_OUTER!0, LEN_INNER!0}[] = (!4!0{LEN_OUTER!0, LEN_INNER!0}[] > val!3)
     val!5{LEN_OUTER!0, LEN_INNER!0}[] = MUX(!1!3{LEN_OUTER!0, LEN_INNER!0}[], val!4{LEN_OUTER!0, LEN_INNER!0}[], val!3)
     OUTPUT_res!3{LEN_OUTER!0, LEN_INNER!0}[] = VectorizedUpdate(!3!0{LEN_OUTER!0, LEN_INNER!0}[], [I!1, J!1], val!5{LEN_OUTER!0, LEN_INNER!0}[])
     return OUTPUT_res!3
@@ -6712,13 +6517,13 @@ def mnist_relu(input!0: shared[list[int; ?]], OUTPUT_res!0: shared[list[int; ?]]
 | Variable | Type |
 | - | - |
 | `input!0` | `shared[list[int; ?]]` |
-| `OUTPUT_res!0` | `shared[list[int; ?]]` |
+| `OUTPUT_res!0` | `plaintext[list[int; ?]]` |
 | `len_outer!0` | `plaintext[int]` |
 | `len_inner!0` | `plaintext[int]` |
 | `OUTPUT_res!3` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
 | `val!5` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
-| `val!4` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
 | `!1!3` | `shared[list[list[bool; (len_outer!0)]; (len_inner!0)]]` |
+| `val!4` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
 | `!3!0` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
 | `val!3` | `plaintext[int]` |
 | `!5!0` | `shared[list[list[int; (len_outer!0)]; (len_inner!0)]]` |
@@ -6730,7 +6535,7 @@ template <encrypto::motion::MpcProtocol Protocol>
 std::vector<encrypto::motion::SecureUnsignedInteger> mnist_relu(
     encrypto::motion::PartyPointer &party,
     std::vector<encrypto::motion::SecureUnsignedInteger> input_0,
-    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_0,
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_OUTPUT_res_0,
     std::uint32_t _MPC_PLAINTEXT_len_outer_0,
     std::uint32_t _MPC_PLAINTEXT_len_inner_0
 ) {
@@ -6740,6 +6545,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> mnist_relu(
     std::vector<encrypto::motion::SecureUnsignedInteger> _3_0((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> _4_0((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> _5_0((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_3((_MPC_PLAINTEXT_len_outer_0) * (_MPC_PLAINTEXT_len_inner_0));
     encrypto::motion::SecureUnsignedInteger len_inner_0;
     encrypto::motion::SecureUnsignedInteger len_outer_0;
@@ -6754,6 +6560,8 @@ std::vector<encrypto::motion::SecureUnsignedInteger> mnist_relu(
     encrypto::motion::SecureUnsignedInteger _MPC_CONSTANT_1 = party->In<Protocol>(encrypto::motion::ToInput(std::uint32_t(1)), 0);
 
     // Plaintext parameter assignments
+    OUTPUT_res_0.clear();
+    std::transform(_MPC_PLAINTEXT_OUTPUT_res_0.begin(), _MPC_PLAINTEXT_OUTPUT_res_0.end(), std::back_inserter(OUTPUT_res_0), [&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });
     len_inner_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_len_inner_0), 0);
     len_outer_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_len_outer_0), 0);
 
@@ -6764,8 +6572,8 @@ std::vector<encrypto::motion::SecureUnsignedInteger> mnist_relu(
     val_3 = _MPC_CONSTANT_1;
     _MPC_PLAINTEXT_val_3 = std::uint32_t(1);
     vectorized_assign(_3_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return vectorized_access(_2_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}).Unsimdify();}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}));
-    vectorized_assign(_1_3, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, (vectorized_access(_4_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}) > decltype(_MPC_CONSTANT_1)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return _MPC_CONSTANT_1;}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}))));
     vectorized_assign(val_4, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_access(_5_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}));
+    vectorized_assign(_1_3, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, (vectorized_access(_4_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}) > decltype(val_3)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return val_3;}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}))));
     vectorized_assign(val_5, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_access(_1_3, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}).Mux(vectorized_access(val_4, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}).Get(), decltype(val_3)::Simdify(lift(std::function([&](const std::vector<std::uint32_t> &indices){return val_3;}), {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0})).Get()));
     vectorized_assign(OUTPUT_res_3, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_update(_3_0, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {}, vectorized_access(val_5, {_MPC_PLAINTEXT_len_outer_0, _MPC_PLAINTEXT_len_inner_0}, {true, true}, {})));
     return OUTPUT_res_3;
@@ -6790,8 +6598,8 @@ def mnist_relu(input_0, OUTPUT_res_0, len_outer_0, len_inner_0):
     _5_0 = _v.lift(lambda indices: (input_0[((indices[0] * len_inner_0) + indices[1])]), [len_outer_0, len_inner_0])
     val_3 = sint(1)
     _3_0 = _v.lift(lambda indices: _v.vectorized_access(_2_0, [len_outer_0, len_inner_0], [None, None]), [len_outer_0, len_inner_0])
-    _v.vectorized_assign(_1_3, [len_outer_0, len_inner_0], [None, None], (_v.vectorized_access(_4_0, [len_outer_0, len_inner_0], [None, None]) > sint(1)))
     _v.vectorized_assign(val_4, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(_5_0, [len_outer_0, len_inner_0], [None, None]))
+    _v.vectorized_assign(_1_3, [len_outer_0, len_inner_0], [None, None], (_v.vectorized_access_simd(_4_0, [len_outer_0, len_inner_0], [None, None]) > val_3))
     _v.iterative_mux(val_5,_1_3,val_4,val_3,[len_outer_0, len_inner_0],[None, None])
     _v.vectorized_assign(_3_0, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(val_5, [len_outer_0, len_inner_0], [None, None])); _v.vectorized_assign(OUTPUT_res_3, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(_3_0, [len_outer_0, len_inner_0], [None, None]))
     return OUTPUT_res_3
@@ -7070,7 +6878,7 @@ def psi(A_0, SA_0, B_0, SB_0, result_0):
     _v.vectorized_assign(val_2, [SA_0], [None], _v.vectorized_access(_2_0, [SA_0], [None]))
     _v.vectorized_assign(val_3, [SA_0], [None], _v.vectorized_access(_6_0, [SA_0], [None]))
     _3_0 = _v.lift(lambda indices: flag_2, [SA_0, SB_0])
-    _v.vectorized_assign(_1_3, [SA_0, SB_0], [None, None], (_v.vectorized_access(_4_0, [SA_0, SB_0], [None, None]) == _v.vectorized_access(_5_0, [SA_0, SB_0], [None, None])))
+    _v.vectorized_assign(_1_3, [SA_0, SB_0], [None, None], (_v.vectorized_access_simd(_4_0, [SA_0, SB_0], [None, None]) == _v.vectorized_access_simd(_5_0, [SA_0, SB_0], [None, None])))
     for _8_0 in range(0, SB_0):
         # Set ϕ value
         if _8_0 == 0:
