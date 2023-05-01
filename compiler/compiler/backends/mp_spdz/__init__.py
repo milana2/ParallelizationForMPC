@@ -47,7 +47,7 @@ VALID_PROTOCOLS = [
     # "spdz2k",
     # "tiny",
     # "tinier",
-    "semi-bmr",
+    #"semi-bmr",
     # "cowgear",
     # "chaigear",
     "semi",
@@ -293,6 +293,9 @@ def render_statement(stmt: Statement, containing_loop: Optional[For]) -> str:
             )
             return f"{assign1}; {assign2}"
         elif isinstance(stmt.lhs, VectorizedAccess):
+            # TODO: Cludgy fix for SPDZ vectorized MUX, 2 lines
+            if isinstance(stmt.rhs,Mux):
+                return render_iterative_mux(stmt.lhs, stmt.rhs)
             return render_vectorized_assign(stmt.lhs, stmt.rhs)
         else:
             rhs = render_assign_rhs(stmt.rhs, dict())
@@ -319,6 +322,27 @@ def render_statement(stmt: Statement, containing_loop: Optional[For]) -> str:
 def render_statements(stmts: list[Statement], containing_loop: Optional[For]) -> str:
     return "\n".join(render_statement(stmt, containing_loop) for stmt in stmts)
 
+#TODO: Check. Cludgy fix for SPDZ vectorized MUX (in binary)
+def render_iterative_mux(lhs: VectorizedAccess, rhs: Mux):
+    assert isinstance(rhs,Mux), "Expected Mux rhs, found"+type(rhs)
+    lhs = normalize_vectorized_access(lhs)
+    dest_array = render_var(lhs.array, dict())
+    shape = render_array_shape(lhs.dim_sizes)
+    indices = render_vec_indices(lhs, dict())
+    # TODO: We need an assertions to make sure Vectorized accesses use same dimenstions and indices
+    if isinstance(rhs.condition,VectorizedAccess):
+       cond = render_var(normalize_vectorized_access(rhs.condition).array, dict())
+    else:
+       cond = render_assign_rhs(rhs.condition, dict())
+    if isinstance(rhs.true_value,VectorizedAccess):   
+       true_value = render_var(normalize_vectorized_access(rhs.true_value).array, dict())
+    else: # rendering a constant or a variable
+       true_value = render_assign_rhs(rhs.true_value, dict())
+    if isinstance(rhs.false_value,VectorizedAccess):   
+       false_value = render_var(normalize_vectorized_access(rhs.false_value).array, dict())
+    else:
+       false_value = render_assign_rhs(rhs.false_value, dict())
+    return f"_v.iterative_mux({dest_array},{cond},{true_value},{false_value},{shape},{indices})"
 
 def render_shared_array_decl(
     var: Var, datatype: Optional[DataType], dim_sizes: list[LoopBound]

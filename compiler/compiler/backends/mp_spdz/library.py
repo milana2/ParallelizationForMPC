@@ -73,7 +73,7 @@ class VectorizationLibrary:
     def __init__(self, globals):
         self._print_str = globals["print_str"]
         self._sint = globals["sint"]
-        self._sbits = globals["sbits"]
+        self._sbits = globals["sbits"].get_type(32)
 
         try:
             self.sbool = globals["sintbit"]
@@ -87,6 +87,7 @@ class VectorizationLibrary:
         if len(values) == 1:
             return first
         element_type = self.sbool if isinstance(first, self.sbool) else self._sint
+
         try:
             return element_type(values)
         except:
@@ -237,3 +238,15 @@ class VectorizationLibrary:
         self._print_str("MPC BENCHMARK OUTPUT ")
         rec(x)
         self._print_str("\n")
+
+    # TODO: Cludgy fix for SPDZ Mux (binary)
+    def iterative_mux(self, dest_array: list, cond: typing.Union[list,typing.Any],
+                    op1: typing.Union[list,typing.Any], op2: typing.Union[list,typing.Any],
+                    shape: list[int], indices: tuple[typing.Optional[int]]) -> None:
+        indices_full = _expand_vectorized_indices(shape, indices)
+        for index in indices_full:
+            flat_index = _compute_flat_index(index,shape)
+            cond_value = cond[flat_index] if isinstance(cond,list) else cond
+            op1_value = op1[flat_index] if isinstance(op1,list) else op1
+            op2_value = op2[flat_index] if isinstance(op2,list) else op2
+            dest_array[flat_index] = cond_value.if_else(op1_value,op2_value)
