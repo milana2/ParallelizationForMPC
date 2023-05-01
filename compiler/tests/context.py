@@ -24,35 +24,26 @@ SKIPPED_TESTS = {
     Backend.MOTION: [],
     # Skipped only in SPDZ
     Backend.MP_SPDZ: [
-        # what():  SPDZ gfp memory overflow: 8872/8872
-        "cryptonets_max_pooling",
-        # Compiler.exceptions.CompilerError: Mismatch of instruction and register size: 75 != 375
-        "db_cross_join_trivial",
         # AssertionError: '23926103924128485712268527085046455810' != '2'
         "db_variance",
         # AssertionError: assert all(array.vectorized_dims)
         "histogram",
         # TypeError: unsupported operand type(s) for &: 'sint' and 'sint'
         "longest_odd_10",
-        # AssertionError: '([1, 2, 3], [4, 5, 6])' != '([1, 0, 0], [4, 0, 0])'
-        "minimal_points",
-        # what():  SPDZ gfp memory overflow: 10992/10992
-        "mnist_relu",
-        # AssertionError: '[0, 0, 0, 0, 0]' != '[4, 2, 3, 0, 10]'
-        "psi",
         "chapterfour_figure_12",
-        # Wrong result with semi-bin
-        "convex_hull",
-        # ANA: These all work. Skipping just to test ideas
+        # These benchmarks work now
+        #"db_cross_join_trivial",
+        #"mnist_relu",
+        #"cryptonets_max_pooling",
+        #"minimal_points",
+        #"psi",
+        #"convex_hull",
         #"longest_102",
         #"count_102",
-        #"longest_odd_10",
         #"biometric_fast",
-        #"cryptonets_max_pooling",
         #"max_dist_between_syms",
         #"count_123",
         #"max_sum_between_syms",
-        #"chapterfour_figure_12",
         #"inner_product",
         #"biometric",
         #"count_10s"
