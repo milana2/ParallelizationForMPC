@@ -61,7 +61,7 @@ def longest_102(Seq_0, N_0, Syms_0):
         else:
             _v.vectorized_assign(length_2, [N_0], [_20_0], _v.vectorized_access(length_5, [N_0], [(_20_0 - 1)]))
         _v.vectorized_assign(length_3, [N_0], [_20_0], (_v.vectorized_access(length_2, [N_0], [_20_0]) + sint(1)))
-        _v.vectorized_assign(length_5, [N_0], [_20_0], _v.vectorized_access(_6_2, [N_0], [_20_0]).if_else(_v.vectorized_access(length_3, [N_0], [_20_0]), length_4))
+        _v.iterative_mux(length_5,_6_2,length_3,length_4,[N_0],[_20_0])
     # Loop exit ϕ values
     _v.vectorized_assign(length_2, [N_0], [_20_0], _v.vectorized_access(length_5, [N_0], [(_20_0 - 1)]))
     _v.vectorized_assign(max_len_3, [N_0], [None], _v.vectorized_access(length_5, [N_0], [None]))
@@ -73,7 +73,7 @@ def longest_102(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(max_len_2, [N_0], [_21_0], _v.vectorized_access(max_len_4, [N_0], [(_21_0 - 1)]))
         _v.vectorized_assign(_7_2, [N_0], [_21_0], (_v.vectorized_access(max_len_2, [N_0], [_21_0]) < _v.vectorized_access(length_5, [N_0], [_21_0])))
         _v.vectorized_assign(_8_2, [N_0], [_21_0], _v.vectorized_access(s1_2, [N_0], [_21_0]).bit_and(_v.vectorized_access(_7_2, [N_0], [_21_0])))
-        _v.vectorized_assign(max_len_4, [N_0], [_21_0], _v.vectorized_access(_8_2, [N_0], [_21_0]).if_else(_v.vectorized_access(max_len_3, [N_0], [_21_0]), _v.vectorized_access(max_len_2, [N_0], [_21_0])))
+        _v.iterative_mux(max_len_4,_8_2,max_len_3,max_len_2,[N_0],[_21_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_len_2, [N_0], [_21_0], _v.vectorized_access(max_len_4, [N_0], [(_21_0 - 1)]))
     _18_0 = _v.drop_dim(max_len_4, [N_0])

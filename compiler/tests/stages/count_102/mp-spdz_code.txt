@@ -50,7 +50,7 @@ def count_102(Seq_0, N_0, Syms_0):
         else:
             _v.vectorized_assign(c_2, [N_0], [_17_0], _v.vectorized_access(c_4, [N_0], [(_17_0 - 1)]))
         _v.vectorized_assign(c_3, [N_0], [_17_0], (_v.vectorized_access(c_2, [N_0], [_17_0]) + sint(1)))
-        _v.vectorized_assign(c_4, [N_0], [_17_0], _v.vectorized_access(_2_2, [N_0], [_17_0]).if_else(_v.vectorized_access(c_3, [N_0], [_17_0]), _v.vectorized_access(c_2, [N_0], [_17_0])))
+        _v.iterative_mux(c_4,_2_2,c_3,c_2,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(c_2, [N_0], [_17_0], _v.vectorized_access(c_4, [N_0], [(_17_0 - 1)]))
     _15_0 = _v.drop_dim(c_4, [N_0])

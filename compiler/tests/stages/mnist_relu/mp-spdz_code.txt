@@ -16,6 +16,6 @@ def mnist_relu(input_0, OUTPUT_res_0, len_outer_0, len_inner_0):
     _3_0 = _v.lift(lambda indices: _v.vectorized_access(_2_0, [len_outer_0, len_inner_0], [None, None]), [len_outer_0, len_inner_0])
     _v.vectorized_assign(_1_3, [len_outer_0, len_inner_0], [None, None], (_v.vectorized_access(_4_0, [len_outer_0, len_inner_0], [None, None]) > sint(1)))
     _v.vectorized_assign(val_4, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(_5_0, [len_outer_0, len_inner_0], [None, None]))
-    _v.vectorized_assign(val_5, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(_1_3, [len_outer_0, len_inner_0], [None, None]).if_else(_v.vectorized_access(val_4, [len_outer_0, len_inner_0], [None, None]), val_3))
+    _v.iterative_mux(val_5,_1_3,val_4,val_3,[len_outer_0, len_inner_0],[None, None])
     _v.vectorized_assign(_3_0, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(val_5, [len_outer_0, len_inner_0], [None, None])); _v.vectorized_assign(OUTPUT_res_3, [len_outer_0, len_inner_0], [None, None], _v.vectorized_access(_3_0, [len_outer_0, len_inner_0], [None, None]))
     return OUTPUT_res_3

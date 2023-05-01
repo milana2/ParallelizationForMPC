@@ -65,13 +65,13 @@ def convex_hull(X_coords_0, Y_coords_0, N_0, result_X_0, result_Y_0):
             _v.vectorized_assign(is_hull_3, [N_0, N_0], [None, _21_0], _v.vectorized_access(_15_0, [N_0, N_0], [None, _21_0]))
         else:
             _v.vectorized_assign(is_hull_3, [N_0, N_0], [None, _21_0], _v.vectorized_access(is_hull_5, [N_0, N_0], [None, (_21_0 - 1)]))
-        _v.vectorized_assign(is_hull_5, [N_0, N_0], [None, _21_0], _v.vectorized_access(_9_3, [N_0, N_0], [None, _21_0]).if_else(is_hull_4, _v.vectorized_access(is_hull_3, [N_0, N_0], [None, _21_0])))
+        _v.iterative_mux(is_hull_5,_9_3,is_hull_4,is_hull_3,[N_0, N_0],[None, _21_0])
     # Loop exit ϕ values
     _v.vectorized_assign(is_hull_3, [N_0, N_0], [None, _21_0], _v.vectorized_access(is_hull_5, [N_0, N_0], [None, (_21_0 - 1)]))
     _v.vectorized_assign(_20_0, [N_0], [None], _v.drop_dim(is_hull_5, [N_0, N_0]))
-    _v.vectorized_assign(is_hull_6, [N_0], [None], _v.vectorized_access(_3_2, [N_0], [None]).if_else(_v.vectorized_access(_20_0, [N_0], [None]), is_hull_2))
-    _v.vectorized_assign(val_X_4, [N_0], [None], _v.vectorized_access(is_hull_6, [N_0], [None]).if_else(_v.vectorized_access(val_X_3, [N_0], [None]), _v.vectorized_access(val_X_2, [N_0], [None])))
-    _v.vectorized_assign(val_Y_4, [N_0], [None], _v.vectorized_access(is_hull_6, [N_0], [None]).if_else(_v.vectorized_access(val_Y_3, [N_0], [None]), _v.vectorized_access(val_Y_2, [N_0], [None])))
+    _v.iterative_mux(is_hull_6,_3_2,_20_0,is_hull_2,[N_0],[None])
+    _v.iterative_mux(val_X_4,is_hull_6,val_X_3,val_X_2,[N_0],[None])
+    _v.iterative_mux(val_Y_4,is_hull_6,val_Y_3,val_Y_2,[N_0],[None])
     _v.vectorized_assign(_11_0, [N_0], [None], _v.vectorized_access(val_X_4, [N_0], [None])); _v.vectorized_assign(result_X_2, [N_0], [None], _v.vectorized_access(_11_0, [N_0], [None]))
     _v.vectorized_assign(_12_0, [N_0], [None], _v.vectorized_access(val_Y_4, [N_0], [None])); _v.vectorized_assign(result_Y_2, [N_0], [None], _v.vectorized_access(_12_0, [N_0], [None]))
     _10_1 = (result_X_2,result_Y_2,)

@@ -62,7 +62,7 @@ def count_10s(Seq_0, N_0, Syms_0):
         else:
             _v.vectorized_assign(scount_2, [N_0], [_17_0], _v.vectorized_access(scount_4, [N_0], [(_17_0 - 1)]))
         _v.vectorized_assign(scount_3, [N_0], [_17_0], (_v.vectorized_access(scount_2, [N_0], [_17_0]) + sint(1)))
-        _v.vectorized_assign(scount_4, [N_0], [_17_0], _v.vectorized_access(_2_2, [N_0], [_17_0]).if_else(_v.vectorized_access(scount_3, [N_0], [_17_0]), _v.vectorized_access(scount_2, [N_0], [_17_0])))
+        _v.iterative_mux(scount_4,_2_2,scount_3,scount_2,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(scount_2, [N_0], [_17_0], _v.vectorized_access(scount_4, [N_0], [(_17_0 - 1)]))
     _14_0 = _v.drop_dim(scount_4, [N_0])

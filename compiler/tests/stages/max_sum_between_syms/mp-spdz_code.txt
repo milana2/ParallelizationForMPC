@@ -32,7 +32,7 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
         else:
             _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(current_sum_5, [N_0], [(_10_0 - 1)]))
         _v.vectorized_assign(current_sum_3, [N_0], [_10_0], (_v.vectorized_access(current_sum_2, [N_0], [_10_0]) + _v.vectorized_access(_8_0, [N_0], [_10_0])))
-        _v.vectorized_assign(current_sum_5, [N_0], [_10_0], _v.vectorized_access(_2_2, [N_0], [_10_0]).if_else(_v.vectorized_access(current_sum_3, [N_0], [_10_0]), current_sum_4))
+        _v.iterative_mux(current_sum_5,_2_2,current_sum_3,current_sum_4,[N_0],[_10_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(current_sum_5, [N_0], [(_10_0 - 1)]))
     _v.vectorized_assign(max_sum_3, [N_0], [None], _v.vectorized_access(current_sum_5, [N_0], [None]))
@@ -43,7 +43,7 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
         else:
             _v.vectorized_assign(max_sum_2, [N_0], [_11_0], _v.vectorized_access(max_sum_4, [N_0], [(_11_0 - 1)]))
         _v.vectorized_assign(_3_2, [N_0], [_11_0], (_v.vectorized_access(current_sum_5, [N_0], [_11_0]) > _v.vectorized_access(max_sum_2, [N_0], [_11_0])))
-        _v.vectorized_assign(max_sum_4, [N_0], [_11_0], _v.vectorized_access(_3_2, [N_0], [_11_0]).if_else(_v.vectorized_access(max_sum_3, [N_0], [_11_0]), _v.vectorized_access(max_sum_2, [N_0], [_11_0])))
+        _v.iterative_mux(max_sum_4,_3_2,max_sum_3,max_sum_2,[N_0],[_11_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_sum_2, [N_0], [_11_0], _v.vectorized_access(max_sum_4, [N_0], [(_11_0 - 1)]))
     _9_0 = _v.drop_dim(max_sum_4, [N_0])

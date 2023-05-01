@@ -30,10 +30,10 @@ def psi(A_0, SA_0, B_0, SB_0, result_0):
             _v.vectorized_assign(flag_3, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(_3_0, [SA_0, SB_0], [None, _8_0]))
         else:
             _v.vectorized_assign(flag_3, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(flag_5, [SA_0, SB_0], [None, (_8_0 - 1)]))
-        _v.vectorized_assign(flag_5, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(_1_3, [SA_0, SB_0], [None, _8_0]).if_else(flag_4, _v.vectorized_access(flag_3, [SA_0, SB_0], [None, _8_0])))
+        _v.iterative_mux(flag_5,_1_3,flag_4,flag_3,[SA_0, SB_0],[None, _8_0])
     # Loop exit ϕ values
     _v.vectorized_assign(flag_3, [SA_0, SB_0], [None, _8_0], _v.vectorized_access(flag_5, [SA_0, SB_0], [None, (_8_0 - 1)]))
     _v.vectorized_assign(_7_0, [SA_0], [None], _v.drop_dim(flag_5, [SA_0, SB_0]))
-    _v.vectorized_assign(val_4, [SA_0], [None], _v.vectorized_access(_7_0, [SA_0], [None]).if_else(_v.vectorized_access(val_3, [SA_0], [None]), _v.vectorized_access(val_2, [SA_0], [None])))
+    _v.iterative_mux(val_4,_7_0,val_3,val_2,[SA_0],[None])
     _v.vectorized_assign(_2_0, [SA_0], [None], _v.vectorized_access(val_4, [SA_0], [None])); _v.vectorized_assign(result_2, [SA_0], [None], _v.vectorized_access(_2_0, [SA_0], [None]))
     return result_2

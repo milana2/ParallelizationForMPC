@@ -35,10 +35,10 @@ def cryptonets_max_pooling(vals_0, cols_0, rows_0, cols_res_0, rows_res_0, OUTPU
     _v.vectorized_assign(max_6, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_10_0, [rows_res_0, cols_res_0], [None, None]))
     _v.vectorized_assign(max_8, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_12_0, [rows_res_0, cols_res_0], [None, None]))
     _v.vectorized_assign(_1_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access(_7_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access(max_3, [rows_res_0, cols_res_0], [None, None])))
-    _v.vectorized_assign(max_5, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_1_3, [rows_res_0, cols_res_0], [None, None]).if_else(_v.vectorized_access(max_4, [rows_res_0, cols_res_0], [None, None]), _v.vectorized_access(max_3, [rows_res_0, cols_res_0], [None, None])))
+    _v.iterative_mux(max_5,_1_3,max_4,max_3,[rows_res_0, cols_res_0],[None, None])
     _v.vectorized_assign(_2_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access(_9_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access(max_5, [rows_res_0, cols_res_0], [None, None])))
-    _v.vectorized_assign(max_7, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_2_3, [rows_res_0, cols_res_0], [None, None]).if_else(_v.vectorized_access(max_6, [rows_res_0, cols_res_0], [None, None]), _v.vectorized_access(max_5, [rows_res_0, cols_res_0], [None, None])))
+    _v.iterative_mux(max_7,_2_3,max_6,max_5,[rows_res_0, cols_res_0],[None, None])
     _v.vectorized_assign(_3_3, [rows_res_0, cols_res_0], [None, None], (_v.vectorized_access(_11_0, [rows_res_0, cols_res_0], [None, None]) > _v.vectorized_access(max_7, [rows_res_0, cols_res_0], [None, None])))
-    _v.vectorized_assign(max_9, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_3_3, [rows_res_0, cols_res_0], [None, None]).if_else(_v.vectorized_access(max_8, [rows_res_0, cols_res_0], [None, None]), _v.vectorized_access(max_7, [rows_res_0, cols_res_0], [None, None])))
+    _v.iterative_mux(max_9,_3_3,max_8,max_7,[rows_res_0, cols_res_0],[None, None])
     _v.vectorized_assign(_5_0, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(max_9, [rows_res_0, cols_res_0], [None, None])); _v.vectorized_assign(OUTPUT_res_3, [rows_res_0, cols_res_0], [None, None], _v.vectorized_access(_5_0, [rows_res_0, cols_res_0], [None, None]))
     return OUTPUT_res_3

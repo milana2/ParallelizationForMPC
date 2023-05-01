@@ -30,7 +30,7 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
         else:
             _v.vectorized_assign(current_dist_2, [N_0], [_9_0], _v.vectorized_access(current_dist_5, [N_0], [(_9_0 - 1)]))
         _v.vectorized_assign(current_dist_3, [N_0], [_9_0], (_v.vectorized_access(current_dist_2, [N_0], [_9_0]) + sint(1)))
-        _v.vectorized_assign(current_dist_5, [N_0], [_9_0], _v.vectorized_access(_2_2, [N_0], [_9_0]).if_else(_v.vectorized_access(current_dist_3, [N_0], [_9_0]), current_dist_4))
+        _v.iterative_mux(current_dist_5,_2_2,current_dist_3,current_dist_4,[N_0],[_9_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_dist_2, [N_0], [_9_0], _v.vectorized_access(current_dist_5, [N_0], [(_9_0 - 1)]))
     _v.vectorized_assign(max_dist_3, [N_0], [None], _v.vectorized_access(current_dist_5, [N_0], [None]))
@@ -41,7 +41,7 @@ def max_dist_between_syms(Seq_0, N_0, Sym_0):
         else:
             _v.vectorized_assign(max_dist_2, [N_0], [_10_0], _v.vectorized_access(max_dist_4, [N_0], [(_10_0 - 1)]))
         _v.vectorized_assign(_3_2, [N_0], [_10_0], (_v.vectorized_access(current_dist_5, [N_0], [_10_0]) > _v.vectorized_access(max_dist_2, [N_0], [_10_0])))
-        _v.vectorized_assign(max_dist_4, [N_0], [_10_0], _v.vectorized_access(_3_2, [N_0], [_10_0]).if_else(_v.vectorized_access(max_dist_3, [N_0], [_10_0]), _v.vectorized_access(max_dist_2, [N_0], [_10_0])))
+        _v.iterative_mux(max_dist_4,_3_2,max_dist_3,max_dist_2,[N_0],[_10_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_dist_2, [N_0], [_10_0], _v.vectorized_access(max_dist_4, [N_0], [(_10_0 - 1)]))
     _8_0 = _v.drop_dim(max_dist_4, [N_0])

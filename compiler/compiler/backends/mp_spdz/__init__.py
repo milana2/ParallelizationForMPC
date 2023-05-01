@@ -47,7 +47,7 @@ VALID_PROTOCOLS = [
     # "spdz2k",
     # "tiny",
     # "tinier",
-    #"semi-bmr",
+    "semi-bmr",
     # "cowgear",
     # "chaigear",
     "semi",
@@ -324,7 +324,7 @@ def render_statements(stmts: list[Statement], containing_loop: Optional[For]) ->
 
 #TODO: Check. Cludgy fix for SPDZ vectorized MUX (in binary)
 def render_iterative_mux(lhs: VectorizedAccess, rhs: Mux):
-    assert isinstance(rhs,Mux), "Expected Mux rhs, found"+type(rhs)
+    assert isinstance(rhs,Mux), f"Expected Mux rhs, found {type(rhs)}"
     lhs = normalize_vectorized_access(lhs)
     dest_array = render_var(lhs.array, dict())
     shape = render_array_shape(lhs.dim_sizes)

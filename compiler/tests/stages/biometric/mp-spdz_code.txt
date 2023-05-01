@@ -49,7 +49,7 @@ def biometric(C_0, D_0, S_0, N_0):
         else:
             _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(min_sum_4, [N_0], [(_14_0 - 1)]))
         _v.vectorized_assign(_1_2, [N_0], [_14_0], (_v.vectorized_access(_8_0, [N_0], [_14_0]) < _v.vectorized_access(min_sum_2, [N_0], [_14_0])))
-        _v.vectorized_assign(min_sum_4, [N_0], [_14_0], _v.vectorized_access(_1_2, [N_0], [_14_0]).if_else(_v.vectorized_access(min_sum_3, [N_0], [_14_0]), _v.vectorized_access(min_sum_2, [N_0], [_14_0])))
+        _v.iterative_mux(min_sum_4,_1_2,min_sum_3,min_sum_2,[N_0],[_14_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(min_sum_4, [N_0], [(_14_0 - 1)]))
     for _15_0 in range(0, N_0):
@@ -58,7 +58,7 @@ def biometric(C_0, D_0, S_0, N_0):
             _v.vectorized_assign(min_index_2, [N_0], [_15_0], _v.vectorized_access(_4_0, [N_0], [_15_0]))
         else:
             _v.vectorized_assign(min_index_2, [N_0], [_15_0], _v.vectorized_access(min_index_4, [N_0], [(_15_0 - 1)]))
-        _v.vectorized_assign(min_index_4, [N_0], [_15_0], _v.vectorized_access(_1_2, [N_0], [_15_0]).if_else(_v.vectorized_access(_13_0, [N_0], [_15_0]), _v.vectorized_access(min_index_2, [N_0], [_15_0])))
+        _v.iterative_mux(min_index_4,_1_2,_13_0,min_index_2,[N_0],[_15_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_index_2, [N_0], [_15_0], _v.vectorized_access(min_index_4, [N_0], [(_15_0 - 1)]))
     _10_0 = _v.drop_dim(min_sum_4, [N_0])
