@@ -39,28 +39,28 @@ def longest_102(Seq_0, N_0, Syms_0):
     _9_0 = _v.lift(lambda indices: s0_1, [N_0])
     _10_0 = _v.lift(lambda indices: max_len_1, [N_0])
     _11_0 = _v.lift(lambda indices: length_1, [N_0])
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_12_0, [N_0], [None]) == _v.vectorized_access(_13_0, [N_0], [None])))
-    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access(_14_0, [N_0], [None]) == _v.vectorized_access(_15_0, [N_0], [None])))
-    _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access(_16_0, [N_0], [None]) == _v.vectorized_access(_17_0, [N_0], [None])))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_12_0, [N_0], [None]) == _v.vectorized_access_simd(_13_0, [N_0], [None])))
+    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access_simd(_14_0, [N_0], [None]) == _v.vectorized_access_simd(_15_0, [N_0], [None])))
+    _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access_simd(_16_0, [N_0], [None]) == _v.vectorized_access_simd(_17_0, [N_0], [None])))
     for _19_0 in range(0, N_0):
         # Set ϕ value
         if _19_0 == 0:
             _v.vectorized_assign(s0_2, [N_0], [_19_0], _v.vectorized_access(_9_0, [N_0], [_19_0]))
         else:
             _v.vectorized_assign(s0_2, [N_0], [_19_0], _v.vectorized_access(s0_3, [N_0], [(_19_0 - 1)]))
-        _v.vectorized_assign(_5_2, [N_0], [_19_0], _v.vectorized_access(s0_2, [N_0], [_19_0]).bit_and(_v.vectorized_access(_4_2, [N_0], [_19_0])))
-        _v.vectorized_assign(s0_3, [N_0], [_19_0], OR(_v.vectorized_access(_2_2, [N_0], [_19_0]), _v.vectorized_access(_5_2, [N_0], [_19_0])))
+        _v.vectorized_assign(_5_2, [N_0], [_19_0], _v.vectorized_access_simd(s0_2, [N_0], [_19_0]).bit_and(_v.vectorized_access_simd(_4_2, [N_0], [_19_0])))
+        _v.vectorized_assign(s0_3, [N_0], [_19_0], OR(_v.vectorized_access_simd(_2_2, [N_0], [_19_0]), _v.vectorized_access_simd(_5_2, [N_0], [_19_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(s0_2, [N_0], [_19_0], _v.vectorized_access(s0_3, [N_0], [(_19_0 - 1)]))
-    _v.vectorized_assign(s1_2, [N_0], [None], _v.vectorized_access(s0_2, [N_0], [None]).bit_and(_v.vectorized_access(_1_2, [N_0], [None])))
-    _v.vectorized_assign(_6_2, [N_0], [None], OR(_v.vectorized_access(s1_2, [N_0], [None]), _v.vectorized_access(s0_3, [N_0], [None])))
+    _v.vectorized_assign(s1_2, [N_0], [None], _v.vectorized_access_simd(s0_2, [N_0], [None]).bit_and(_v.vectorized_access_simd(_1_2, [N_0], [None])))
+    _v.vectorized_assign(_6_2, [N_0], [None], OR(_v.vectorized_access_simd(s1_2, [N_0], [None]), _v.vectorized_access_simd(s0_3, [N_0], [None])))
     for _20_0 in range(0, N_0):
         # Set ϕ value
         if _20_0 == 0:
             _v.vectorized_assign(length_2, [N_0], [_20_0], _v.vectorized_access(_11_0, [N_0], [_20_0]))
         else:
             _v.vectorized_assign(length_2, [N_0], [_20_0], _v.vectorized_access(length_5, [N_0], [(_20_0 - 1)]))
-        _v.vectorized_assign(length_3, [N_0], [_20_0], (_v.vectorized_access(length_2, [N_0], [_20_0]) + sint(1)))
+        _v.vectorized_assign(length_3, [N_0], [_20_0], (_v.vectorized_access_simd(length_2, [N_0], [_20_0]) + sint(1)))
         _v.iterative_mux(length_5,_6_2,length_3,length_4,[N_0],[_20_0])
     # Loop exit ϕ values
     _v.vectorized_assign(length_2, [N_0], [_20_0], _v.vectorized_access(length_5, [N_0], [(_20_0 - 1)]))
@@ -71,8 +71,8 @@ def longest_102(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(max_len_2, [N_0], [_21_0], _v.vectorized_access(_10_0, [N_0], [_21_0]))
         else:
             _v.vectorized_assign(max_len_2, [N_0], [_21_0], _v.vectorized_access(max_len_4, [N_0], [(_21_0 - 1)]))
-        _v.vectorized_assign(_7_2, [N_0], [_21_0], (_v.vectorized_access(max_len_2, [N_0], [_21_0]) < _v.vectorized_access(length_5, [N_0], [_21_0])))
-        _v.vectorized_assign(_8_2, [N_0], [_21_0], _v.vectorized_access(s1_2, [N_0], [_21_0]).bit_and(_v.vectorized_access(_7_2, [N_0], [_21_0])))
+        _v.vectorized_assign(_7_2, [N_0], [_21_0], (_v.vectorized_access_simd(max_len_2, [N_0], [_21_0]) < _v.vectorized_access_simd(length_5, [N_0], [_21_0])))
+        _v.vectorized_assign(_8_2, [N_0], [_21_0], _v.vectorized_access_simd(s1_2, [N_0], [_21_0]).bit_and(_v.vectorized_access_simd(_7_2, [N_0], [_21_0])))
         _v.iterative_mux(max_len_4,_8_2,max_len_3,max_len_2,[N_0],[_21_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_len_2, [N_0], [_21_0], _v.vectorized_access(max_len_4, [N_0], [(_21_0 - 1)]))

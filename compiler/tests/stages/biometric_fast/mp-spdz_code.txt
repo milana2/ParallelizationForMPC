@@ -35,9 +35,9 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
     min_diff_1 = sint(99999)
     _16_0 = _v.lift(lambda indices: indices[0], [N_0])
     _3_0 = _v.lift(lambda indices: min_index_1, [N_0])
-    _v.vectorized_assign(a_sqr_plus_b_sqr_2, [N_0], [None], (_v.vectorized_access(_5_0, [N_0], [None]) + _v.vectorized_access(_6_0, [N_0], [None])))
+    _v.vectorized_assign(a_sqr_plus_b_sqr_2, [N_0], [None], (_v.vectorized_access_simd(_5_0, [N_0], [None]) + _v.vectorized_access_simd(_6_0, [N_0], [None])))
     _7_0 = _v.lift(lambda indices: two_a_b_2, [N_0, D_0])
-    _v.vectorized_assign(tmp_3, [N_0, D_0], [None, None], (_v.vectorized_access(_8_0, [N_0, D_0], [None, None]) * _v.vectorized_access(_9_0, [N_0, D_0], [None, None])))
+    _v.vectorized_assign(tmp_3, [N_0, D_0], [None, None], (_v.vectorized_access_simd(_8_0, [N_0, D_0], [None, None]) * _v.vectorized_access_simd(_9_0, [N_0, D_0], [None, None])))
     _11_0 = _v.lift(lambda indices: min_diff_1, [N_0])
     for _15_0 in range(0, N_0):
         # Set ϕ value
@@ -53,11 +53,11 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
             _v.vectorized_assign(two_a_b_3, [N_0, D_0], [None, _14_0], _v.vectorized_access(_7_0, [N_0, D_0], [None, _14_0]))
         else:
             _v.vectorized_assign(two_a_b_3, [N_0, D_0], [None, _14_0], _v.vectorized_access(two_a_b_4, [N_0, D_0], [None, (_14_0 - 1)]))
-        _v.vectorized_assign(two_a_b_4, [N_0, D_0], [None, _14_0], (_v.vectorized_access(two_a_b_3, [N_0, D_0], [None, _14_0]) + _v.vectorized_access(tmp_3, [N_0, D_0], [None, _14_0])))
+        _v.vectorized_assign(two_a_b_4, [N_0, D_0], [None, _14_0], (_v.vectorized_access_simd(two_a_b_3, [N_0, D_0], [None, _14_0]) + _v.vectorized_access_simd(tmp_3, [N_0, D_0], [None, _14_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(two_a_b_3, [N_0, D_0], [None, _14_0], _v.vectorized_access(two_a_b_4, [N_0, D_0], [None, (_14_0 - 1)]))
     _v.vectorized_assign(_10_0, [N_0], [None], _v.drop_dim(two_a_b_4, [N_0, D_0]))
-    _v.vectorized_assign(this_diff_2, [N_0], [None], (_v.vectorized_access(a_sqr_plus_b_sqr_2, [N_0], [None]) - _v.vectorized_access(_10_0, [N_0], [None])))
+    _v.vectorized_assign(this_diff_2, [N_0], [None], (_v.vectorized_access_simd(a_sqr_plus_b_sqr_2, [N_0], [None]) - _v.vectorized_access_simd(_10_0, [N_0], [None])))
     _v.vectorized_assign(_4_0, [N_0], [None], _v.vectorized_access(this_diff_2, [N_0], [None])); _v.vectorized_assign(differences_2, [N_0], [None], _v.vectorized_access(_4_0, [N_0], [None]))
     _v.vectorized_assign(min_diff_3, [N_0], [None], _v.vectorized_access(differences_2, [N_0], [None]))
     for _17_0 in range(0, N_0):
@@ -66,7 +66,7 @@ def biometric_fast(D_0, N_0, C_0, C_sqr_sum_0, two_C_0, S_0, S_sqr_sum_0, differ
             _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(_11_0, [N_0], [_17_0]))
         else:
             _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(min_diff_4, [N_0], [(_17_0 - 1)]))
-        _v.vectorized_assign(_1_2, [N_0], [_17_0], (_v.vectorized_access(differences_2, [N_0], [_17_0]) < _v.vectorized_access(min_diff_2, [N_0], [_17_0])))
+        _v.vectorized_assign(_1_2, [N_0], [_17_0], (_v.vectorized_access_simd(differences_2, [N_0], [_17_0]) < _v.vectorized_access_simd(min_diff_2, [N_0], [_17_0])))
         _v.iterative_mux(min_diff_4,_1_2,min_diff_3,min_diff_2,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_diff_2, [N_0], [_17_0], _v.vectorized_access(min_diff_4, [N_0], [(_17_0 - 1)]))

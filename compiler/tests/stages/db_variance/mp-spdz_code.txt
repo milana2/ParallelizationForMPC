@@ -27,14 +27,14 @@ def db_variance(A_0, V_0, len_0):
             _v.vectorized_assign(sum_2, [len_0], [_10_0], _v.vectorized_access(_2_0, [len_0], [_10_0]))
         else:
             _v.vectorized_assign(sum_2, [len_0], [_10_0], _v.vectorized_access(sum_3, [len_0], [(_10_0 - 1)]))
-        _v.vectorized_assign(sum_3, [len_0], [_10_0], (_v.vectorized_access(sum_2, [len_0], [_10_0]) + _v.vectorized_access(_3_0, [len_0], [_10_0])))
+        _v.vectorized_assign(sum_3, [len_0], [_10_0], (_v.vectorized_access_simd(sum_2, [len_0], [_10_0]) + _v.vectorized_access_simd(_3_0, [len_0], [_10_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(sum_2, [len_0], [_10_0], _v.vectorized_access(sum_3, [len_0], [(_10_0 - 1)]))
     _4_0 = _v.drop_dim(sum_3, [len_0])
     exp_1 = (_4_0 / len_0)
     _7_0 = _v.lift(lambda indices: exp_1, [len_0])
-    _v.vectorized_assign(dist_2, [len_0], [None], (_v.vectorized_access(_6_0, [len_0], [None]) - _v.vectorized_access(_7_0, [len_0], [None])))
-    _v.vectorized_assign(_1_2, [len_0], [None], (_v.vectorized_access(dist_2, [len_0], [None]) * _v.vectorized_access(dist_2, [len_0], [None])))
+    _v.vectorized_assign(dist_2, [len_0], [None], (_v.vectorized_access_simd(_6_0, [len_0], [None]) - _v.vectorized_access_simd(_7_0, [len_0], [None])))
+    _v.vectorized_assign(_1_2, [len_0], [None], (_v.vectorized_access_simd(dist_2, [len_0], [None]) * _v.vectorized_access_simd(dist_2, [len_0], [None])))
     _v.vectorized_assign(_5_0, [len_0], [None], _v.vectorized_access(_1_2, [len_0], [None])); _v.vectorized_assign(V_2, [len_0], [None], _v.vectorized_access(_5_0, [len_0], [None]))
     for _11_0 in range(0, len_0):
         # Set ϕ value
@@ -42,7 +42,7 @@ def db_variance(A_0, V_0, len_0):
             _v.vectorized_assign(res_2, [len_0], [_11_0], _v.vectorized_access(_8_0, [len_0], [_11_0]))
         else:
             _v.vectorized_assign(res_2, [len_0], [_11_0], _v.vectorized_access(res_3, [len_0], [(_11_0 - 1)]))
-        _v.vectorized_assign(res_3, [len_0], [_11_0], (_v.vectorized_access(res_2, [len_0], [_11_0]) + _v.vectorized_access(V_2, [len_0], [_11_0])))
+        _v.vectorized_assign(res_3, [len_0], [_11_0], (_v.vectorized_access_simd(res_2, [len_0], [_11_0]) + _v.vectorized_access_simd(V_2, [len_0], [_11_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(res_2, [len_0], [_11_0], _v.vectorized_access(res_3, [len_0], [(_11_0 - 1)]))
     _9_0 = _v.drop_dim(res_3, [len_0])

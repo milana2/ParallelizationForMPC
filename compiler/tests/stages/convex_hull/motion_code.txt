@@ -4,8 +4,8 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     std::vector<encrypto::motion::SecureUnsignedInteger> X_coords_0,
     std::vector<encrypto::motion::SecureUnsignedInteger> Y_coords_0,
     std::uint32_t _MPC_PLAINTEXT_N_0,
-    std::vector<encrypto::motion::SecureUnsignedInteger> result_X_0,
-    std::vector<encrypto::motion::SecureUnsignedInteger> result_Y_0
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_result_X_0,
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_result_Y_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::ShareWrapper> _1_2((_MPC_PLAINTEXT_N_0));
@@ -37,7 +37,9 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
     std::vector<encrypto::motion::SecureUnsignedInteger> p1_Y_2((_MPC_PLAINTEXT_N_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> p2_X_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> p2_Y_3((_MPC_PLAINTEXT_N_0) * (_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_X_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_X_2((_MPC_PLAINTEXT_N_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> result_Y_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> result_Y_2((_MPC_PLAINTEXT_N_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> val_X_2((_MPC_PLAINTEXT_N_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> val_X_3((_MPC_PLAINTEXT_N_0));
@@ -59,6 +61,10 @@ std::tuple<std::vector<encrypto::motion::SecureUnsignedInteger>, std::vector<enc
 
     // Plaintext parameter assignments
     N_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_N_0), 0);
+    result_X_0.clear();
+    std::transform(_MPC_PLAINTEXT_result_X_0.begin(), _MPC_PLAINTEXT_result_X_0.end(), std::back_inserter(result_X_0), [&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });
+    result_Y_0.clear();
+    std::transform(_MPC_PLAINTEXT_result_Y_0.begin(), _MPC_PLAINTEXT_result_Y_0.end(), std::back_inserter(result_Y_0), [&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });
 
     // Function body
     vectorized_assign(_11_0, {_MPC_PLAINTEXT_N_0}, {true}, {}, lift(std::function([&](const std::vector<std::uint32_t> &indices){return result_X_0;}), {_MPC_PLAINTEXT_N_0}));

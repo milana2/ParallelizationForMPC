@@ -23,7 +23,7 @@ def psi(A_0, SA_0, B_0, SB_0, result_0):
     _v.vectorized_assign(val_2, [SA_0], [None], _v.vectorized_access(_2_0, [SA_0], [None]))
     _v.vectorized_assign(val_3, [SA_0], [None], _v.vectorized_access(_6_0, [SA_0], [None]))
     _3_0 = _v.lift(lambda indices: flag_2, [SA_0, SB_0])
-    _v.vectorized_assign(_1_3, [SA_0, SB_0], [None, None], (_v.vectorized_access(_4_0, [SA_0, SB_0], [None, None]) == _v.vectorized_access(_5_0, [SA_0, SB_0], [None, None])))
+    _v.vectorized_assign(_1_3, [SA_0, SB_0], [None, None], (_v.vectorized_access_simd(_4_0, [SA_0, SB_0], [None, None]) == _v.vectorized_access_simd(_5_0, [SA_0, SB_0], [None, None])))
     for _8_0 in range(0, SB_0):
         # Set ϕ value
         if _8_0 == 0:

@@ -1,4 +1,4 @@
-def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: shared[list[int; ?]], result_Y!0: shared[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
+def convex_hull(X_coords!0: shared[list[int; ?]], Y_coords!0: shared[list[int; ?]], N!0: plaintext[int], result_X!0: plaintext[list[int; ?]], result_Y!0: plaintext[list[int; ?]]) -> tuple[shared[list[int; ?]], shared[list[int; ?]]]:
     for i!1 in range(0, N!0):
         result_X!1 = Φ(result_X!0, result_X!2)
         result_Y!1 = Φ(result_Y!0, result_Y!2)

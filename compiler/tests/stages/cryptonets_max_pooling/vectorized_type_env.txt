@@ -10,7 +10,7 @@
 !7!0: shared[list[list[int; (rows_res!0)]; (cols_res!0)]]
 !8!0: shared[list[list[int; (rows_res!0)]; (cols_res!0)]]
 !9!0: shared[list[list[int; (rows_res!0)]; (cols_res!0)]]
-OUTPUT_res!0: shared[list[int; ?]]
+OUTPUT_res!0: plaintext[list[int; ?]]
 OUTPUT_res!3: shared[list[list[int; (rows_res!0)]; (cols_res!0)]]
 cols!0: plaintext[int]
 cols_res!0: plaintext[int]

@@ -18,7 +18,7 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
     _6_0 = _v.lift(lambda indices: indices[0], [num_bins_0, N_0])
     _7_0 = _v.lift(lambda indices: (B_0[indices[1]]), [num_bins_0, N_0])
     _4_0 = _v.lift(lambda indices: _v.vectorized_access(_2_0, [num_bins_0], [None]), [num_bins_0, N_0])
-    _v.vectorized_assign(_1_3, [num_bins_0, N_0], [None, None], (_v.vectorized_access(_5_0, [num_bins_0, N_0], [None, None]) == _v.vectorized_access(_6_0, [num_bins_0, N_0], [None, None])))
+    _v.vectorized_assign(_1_3, [num_bins_0, N_0], [None, None], (_v.vectorized_access_simd(_5_0, [num_bins_0, N_0], [None, None]) == _v.vectorized_access_simd(_6_0, [num_bins_0, N_0], [None, None])))
     for _8_0 in range(0, N_0):
         # Set ϕ value
         if _8_0 == 0:
@@ -26,7 +26,7 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
         else:
             _v.vectorized_assign(result_2, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(result_3, [num_bins_0, N_0], [None, (_8_0 - 1)]))
         _v.vectorized_assign(val_4, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(result_2, [num_bins_0, N_0], [None, _8_0]))
-        _v.vectorized_assign(val_3, [num_bins_0, N_0], [None, _8_0], (_v.vectorized_access(result_2, [num_bins_0, N_0], [None, _8_0]) + _v.vectorized_access(_7_0, [num_bins_0, N_0], [None, _8_0])))
+        _v.vectorized_assign(val_3, [num_bins_0, N_0], [None, _8_0], (_v.vectorized_access_simd(result_2, [num_bins_0, N_0], [None, _8_0]) + _v.vectorized_access_simd(_7_0, [num_bins_0, N_0], [None, _8_0])))
         _v.iterative_mux(val_5,_1_3,val_3,val_4,[num_bins_0, N_0],[None, _8_0])
         _v.vectorized_assign((TODO: fix this case), [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(val_5, [num_bins_0, N_0], [None, _8_0])); _v.vectorized_assign(result_3, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access((TODO: fix this case), [num_bins_0, N_0], [None, _8_0]))
     # Loop exit ϕ values

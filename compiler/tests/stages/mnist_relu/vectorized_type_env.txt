@@ -3,7 +3,7 @@
 !3!0: shared[list[list[int; (len_outer!0)]; (len_inner!0)]]
 !4!0: shared[list[list[int; (len_outer!0)]; (len_inner!0)]]
 !5!0: shared[list[list[int; (len_outer!0)]; (len_inner!0)]]
-OUTPUT_res!0: shared[list[int; ?]]
+OUTPUT_res!0: plaintext[list[int; ?]]
 OUTPUT_res!3: shared[list[list[int; (len_outer!0)]; (len_inner!0)]]
 input!0: shared[list[int; ?]]
 len_inner!0: plaintext[int]

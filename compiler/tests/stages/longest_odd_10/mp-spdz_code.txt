@@ -35,8 +35,8 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
     _8_0 = _v.lift(lambda indices: current_length_1, [N_0])
     _9_0 = _v.lift(lambda indices: max_length_1, [N_0])
     _10_0 = _v.lift(lambda indices: s2_1, [N_0])
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_11_0, [N_0], [None]) == _v.vectorized_access(_12_0, [N_0], [None])))
-    _v.vectorized_assign(s2_3, [N_0], [None], (_v.vectorized_access(_13_0, [N_0], [None]) == _v.vectorized_access(_14_0, [N_0], [None])))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_11_0, [N_0], [None]) == _v.vectorized_access_simd(_12_0, [N_0], [None])))
+    _v.vectorized_assign(s2_3, [N_0], [None], (_v.vectorized_access_simd(_13_0, [N_0], [None]) == _v.vectorized_access_simd(_14_0, [N_0], [None])))
     for _16_0 in range(0, N_0):
         # Set ϕ value
         if _16_0 == 0:
@@ -45,8 +45,8 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(s2_2, [N_0], [_16_0], _v.vectorized_access(s2_3, [N_0], [(_16_0 - 1)]))
     # Loop exit ϕ values
     _v.vectorized_assign(s2_2, [N_0], [_16_0], _v.vectorized_access(s2_3, [N_0], [(_16_0 - 1)]))
-    _v.vectorized_assign(s1_2, [N_0], [None], _v.vectorized_access(s2_2, [N_0], [None]).bit_and(_v.vectorized_access(_1_2, [N_0], [None])))
-    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access(s2_2, [N_0], [None]).bit_not()))
+    _v.vectorized_assign(s1_2, [N_0], [None], _v.vectorized_access_simd(s2_2, [N_0], [None]).bit_and(_v.vectorized_access_simd(_1_2, [N_0], [None])))
+    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access_simd(s2_2, [N_0], [None]).bit_not()))
     for _17_0 in range(0, N_0):
         # Set ϕ value
         if _17_0 == 0:
@@ -54,21 +54,21 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
         else:
             _v.vectorized_assign(current_length_2, [N_0], [_17_0], _v.vectorized_access(current_length_6, [N_0], [(_17_0 - 1)]))
         _v.iterative_mux(current_length_5,_2_2,current_length_4,current_length_2,[N_0],[_17_0])
-        _v.vectorized_assign(current_length_3, [N_0], [_17_0], (_v.vectorized_access(current_length_2, [N_0], [_17_0]) + sint(1)))
+        _v.vectorized_assign(current_length_3, [N_0], [_17_0], (_v.vectorized_access_simd(current_length_2, [N_0], [_17_0]) + sint(1)))
         _v.iterative_mux(current_length_6,s1_2,current_length_3,current_length_5,[N_0],[_17_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_length_2, [N_0], [_17_0], _v.vectorized_access(current_length_6, [N_0], [(_17_0 - 1)]))
-    _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access(current_length_6, [N_0], [None]) & sint(1)))
+    _v.vectorized_assign(_4_2, [N_0], [None], (_v.vectorized_access_simd(current_length_6, [N_0], [None]) & sint(1)))
     _v.vectorized_assign(max_length_3, [N_0], [None], _v.vectorized_access(current_length_6, [N_0], [None]))
-    _v.vectorized_assign(_5_2, [N_0], [None], (_v.vectorized_access(_4_2, [N_0], [None]) == sint(1)))
+    _v.vectorized_assign(_5_2, [N_0], [None], (_v.vectorized_access_simd(_4_2, [N_0], [None]) == sint(1)))
     for _18_0 in range(0, N_0):
         # Set ϕ value
         if _18_0 == 0:
             _v.vectorized_assign(max_length_2, [N_0], [_18_0], _v.vectorized_access(_9_0, [N_0], [_18_0]))
         else:
             _v.vectorized_assign(max_length_2, [N_0], [_18_0], _v.vectorized_access(max_length_4, [N_0], [(_18_0 - 1)]))
-        _v.vectorized_assign(_6_2, [N_0], [_18_0], (_v.vectorized_access(current_length_6, [N_0], [_18_0]) > _v.vectorized_access(max_length_2, [N_0], [_18_0])))
-        _v.vectorized_assign(_7_2, [N_0], [_18_0], _v.vectorized_access(_5_2, [N_0], [_18_0]).bit_and(_v.vectorized_access(_6_2, [N_0], [_18_0])))
+        _v.vectorized_assign(_6_2, [N_0], [_18_0], (_v.vectorized_access_simd(current_length_6, [N_0], [_18_0]) > _v.vectorized_access_simd(max_length_2, [N_0], [_18_0])))
+        _v.vectorized_assign(_7_2, [N_0], [_18_0], _v.vectorized_access_simd(_5_2, [N_0], [_18_0]).bit_and(_v.vectorized_access_simd(_6_2, [N_0], [_18_0])))
         _v.iterative_mux(max_length_4,_7_2,max_length_3,max_length_2,[N_0],[_18_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_length_2, [N_0], [_18_0], _v.vectorized_access(max_length_4, [N_0], [(_18_0 - 1)]))

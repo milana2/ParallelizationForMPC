@@ -6,7 +6,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
     std::uint32_t _MPC_PLAINTEXT_rows_0,
     std::uint32_t _MPC_PLAINTEXT_cols_res_0,
     std::uint32_t _MPC_PLAINTEXT_rows_res_0,
-    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_0
+    std::vector<std::uint32_t> _MPC_PLAINTEXT_OUTPUT_res_0
 ) {
     // Shared variable declarations
     std::vector<encrypto::motion::ShareWrapper> _1_3((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
@@ -21,6 +21,7 @@ std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
     std::vector<encrypto::motion::SecureUnsignedInteger> _7_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> _8_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
     std::vector<encrypto::motion::SecureUnsignedInteger> _9_0((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
+    std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_0;
     std::vector<encrypto::motion::SecureUnsignedInteger> OUTPUT_res_3((_MPC_PLAINTEXT_rows_res_0) * (_MPC_PLAINTEXT_cols_res_0));
     encrypto::motion::SecureUnsignedInteger cols_0;
     encrypto::motion::SecureUnsignedInteger cols_res_0;
@@ -41,6 +42,8 @@ std::vector<encrypto::motion::SecureUnsignedInteger> cryptonets_max_pooling(
 
 
     // Plaintext parameter assignments
+    OUTPUT_res_0.clear();
+    std::transform(_MPC_PLAINTEXT_OUTPUT_res_0.begin(), _MPC_PLAINTEXT_OUTPUT_res_0.end(), std::back_inserter(OUTPUT_res_0), [&](const auto &val) { return party->In<Protocol>(encrypto::motion::ToInput(val), 0); });
     cols_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_cols_0), 0);
     cols_res_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_cols_res_0), 0);
     rows_0 = party->In<Protocol>(encrypto::motion::ToInput(_MPC_PLAINTEXT_rows_0), 0);

@@ -23,15 +23,15 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
     current_sum_4 = sint(0)
     _4_0 = _v.lift(lambda indices: max_sum_1, [N_0])
     _5_0 = _v.lift(lambda indices: current_sum_1, [N_0])
-    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access(_6_0, [N_0], [None]) == _v.vectorized_access(_7_0, [N_0], [None])))
-    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access(_1_2, [N_0], [None]).bit_not()))
+    _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_6_0, [N_0], [None]) == _v.vectorized_access_simd(_7_0, [N_0], [None])))
+    _v.vectorized_assign(_2_2, [N_0], [None], (_v.vectorized_access_simd(_1_2, [N_0], [None]).bit_not()))
     for _10_0 in range(0, N_0):
         # Set ϕ value
         if _10_0 == 0:
             _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(_5_0, [N_0], [_10_0]))
         else:
             _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(current_sum_5, [N_0], [(_10_0 - 1)]))
-        _v.vectorized_assign(current_sum_3, [N_0], [_10_0], (_v.vectorized_access(current_sum_2, [N_0], [_10_0]) + _v.vectorized_access(_8_0, [N_0], [_10_0])))
+        _v.vectorized_assign(current_sum_3, [N_0], [_10_0], (_v.vectorized_access_simd(current_sum_2, [N_0], [_10_0]) + _v.vectorized_access_simd(_8_0, [N_0], [_10_0])))
         _v.iterative_mux(current_sum_5,_2_2,current_sum_3,current_sum_4,[N_0],[_10_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(current_sum_5, [N_0], [(_10_0 - 1)]))
@@ -42,7 +42,7 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
             _v.vectorized_assign(max_sum_2, [N_0], [_11_0], _v.vectorized_access(_4_0, [N_0], [_11_0]))
         else:
             _v.vectorized_assign(max_sum_2, [N_0], [_11_0], _v.vectorized_access(max_sum_4, [N_0], [(_11_0 - 1)]))
-        _v.vectorized_assign(_3_2, [N_0], [_11_0], (_v.vectorized_access(current_sum_5, [N_0], [_11_0]) > _v.vectorized_access(max_sum_2, [N_0], [_11_0])))
+        _v.vectorized_assign(_3_2, [N_0], [_11_0], (_v.vectorized_access_simd(current_sum_5, [N_0], [_11_0]) > _v.vectorized_access_simd(max_sum_2, [N_0], [_11_0])))
         _v.iterative_mux(max_sum_4,_3_2,max_sum_3,max_sum_2,[N_0],[_11_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_sum_2, [N_0], [_11_0], _v.vectorized_access(max_sum_4, [N_0], [(_11_0 - 1)]))

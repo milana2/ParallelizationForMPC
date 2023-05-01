@@ -28,15 +28,15 @@ def biometric(C_0, D_0, S_0, N_0):
     _3_0 = _v.lift(lambda indices: min_sum_1, [N_0])
     _4_0 = _v.lift(lambda indices: min_index_1, [N_0])
     _5_0 = _v.lift(lambda indices: sum_2, [N_0, D_0])
-    _v.vectorized_assign(d_3, [N_0, D_0], [None, None], (_v.vectorized_access(_6_0, [N_0, D_0], [None, None]) - _v.vectorized_access(_7_0, [N_0, D_0], [None, None])))
-    _v.vectorized_assign(p_3, [N_0, D_0], [None, None], (_v.vectorized_access(d_3, [N_0, D_0], [None, None]) * _v.vectorized_access(d_3, [N_0, D_0], [None, None])))
+    _v.vectorized_assign(d_3, [N_0, D_0], [None, None], (_v.vectorized_access_simd(_6_0, [N_0, D_0], [None, None]) - _v.vectorized_access_simd(_7_0, [N_0, D_0], [None, None])))
+    _v.vectorized_assign(p_3, [N_0, D_0], [None, None], (_v.vectorized_access_simd(d_3, [N_0, D_0], [None, None]) * _v.vectorized_access_simd(d_3, [N_0, D_0], [None, None])))
     for _12_0 in range(0, D_0):
         # Set ϕ value
         if _12_0 == 0:
             _v.vectorized_assign(sum_3, [N_0, D_0], [None, _12_0], _v.vectorized_access(_5_0, [N_0, D_0], [None, _12_0]))
         else:
             _v.vectorized_assign(sum_3, [N_0, D_0], [None, _12_0], _v.vectorized_access(sum_4, [N_0, D_0], [None, (_12_0 - 1)]))
-        _v.vectorized_assign(sum_4, [N_0, D_0], [None, _12_0], (_v.vectorized_access(sum_3, [N_0, D_0], [None, _12_0]) + _v.vectorized_access(p_3, [N_0, D_0], [None, _12_0])))
+        _v.vectorized_assign(sum_4, [N_0, D_0], [None, _12_0], (_v.vectorized_access_simd(sum_3, [N_0, D_0], [None, _12_0]) + _v.vectorized_access_simd(p_3, [N_0, D_0], [None, _12_0])))
     # Loop exit ϕ values
     _v.vectorized_assign(sum_3, [N_0, D_0], [None, _12_0], _v.vectorized_access(sum_4, [N_0, D_0], [None, (_12_0 - 1)]))
     _v.vectorized_assign(_8_0, [N_0], [None], _v.drop_dim(sum_4, [N_0, D_0]))
@@ -48,7 +48,7 @@ def biometric(C_0, D_0, S_0, N_0):
             _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(_3_0, [N_0], [_14_0]))
         else:
             _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(min_sum_4, [N_0], [(_14_0 - 1)]))
-        _v.vectorized_assign(_1_2, [N_0], [_14_0], (_v.vectorized_access(_8_0, [N_0], [_14_0]) < _v.vectorized_access(min_sum_2, [N_0], [_14_0])))
+        _v.vectorized_assign(_1_2, [N_0], [_14_0], (_v.vectorized_access_simd(_8_0, [N_0], [_14_0]) < _v.vectorized_access_simd(min_sum_2, [N_0], [_14_0])))
         _v.iterative_mux(min_sum_4,_1_2,min_sum_3,min_sum_2,[N_0],[_14_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(min_sum_4, [N_0], [(_14_0 - 1)]))
