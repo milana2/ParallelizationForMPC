@@ -17,5 +17,5 @@ def max_dist_between_syms(
     return max_dist
 
 
-seq = [1, 2, 1, 1, 2, 3, 4, 1]
-print(max_dist_between_syms(seq, 8, 1))
+seq = [1, 2, 1, 1, 2, 3, 4, 1]*100
+print(max_dist_between_syms(seq, 8*100, 1))

@@ -23,6 +23,6 @@ def psi(
 
 
 A = [4, 2, 3, 1, 10]
-B = [2, 10, 3, 4, 5, 6, 7]
+B = [2, 10, 3, 4, 5, 6, 7]*100
 result = [0 for i in range(len(A))]
-print(psi(A, 5, B, 7, result))
+print(psi(A, 5, B, 7*100, result))
