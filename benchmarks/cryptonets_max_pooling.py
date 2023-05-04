@@ -48,9 +48,9 @@ def cryptonets_max_pooling(
     return OUTPUT_res
 
 
-cols = 10
+cols = 10*10
 cols_res = cols // 2
-rows = 8
+rows = 8*2
 rows_res = rows // 2
 vals = [i + 2 for i in range(rows * cols)]
 output_size = int(cols * rows / 4)

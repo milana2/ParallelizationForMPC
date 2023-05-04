@@ -20,5 +20,5 @@ def count_10s(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared
     return scount
 
 
-seq = [1, 0, 0, 1, 1, 0, 2]
-print(count_10s(seq, 7, [0, 1]))
+seq = [1, 0, 0, 1, 1, 0, 2]*100
+print(count_10s(seq, 7*100, [0, 1]))
