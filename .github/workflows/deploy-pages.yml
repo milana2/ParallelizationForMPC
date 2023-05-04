@@ -33,21 +33,10 @@ jobs:
 
           sudo apt-get -y install graphviz
 
-          # Install LaTeX dependencies
-          sudo apt-get -y install \
-            texlive-base \
-            texlive-latex-extra \
-            texlive-bibtex-extra \
-            texlive-publishers \
-            texlive-science
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Build results markdown
         run: ./compiler/make_results_markdown.py static
-      - name: Build paper
-        run: |
-          yes '' | make -C overleaf || true
-          mv overleaf/paper_SIMD.pdf static || true
       - name: Push to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
