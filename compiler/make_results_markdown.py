@@ -252,7 +252,6 @@ def main():
     os.makedirs(circuits_path, exist_ok=True)
 
     md = "# Compiler results data\n"
-    md = "## [View the current version of the paper here](paper_SIMD.pdf)\n"
 
     md += build_motion_benchmark_tables(circuits_path) + "\n"
     md += build_spdz_benchmark_tables() + "\n"
