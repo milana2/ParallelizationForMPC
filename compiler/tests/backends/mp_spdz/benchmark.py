@@ -55,6 +55,12 @@ class CompileStatsBin:
         self.vm_rounds = _parse_int_pattern(r"(\d+) virtual machine rounds", stdout)
 
 
+def get_mpc_file_name(benchmark_name: str, vectorized: bool) -> str:
+    postfix = ""
+    if vectorized:
+        postfix = "_vec"
+    return f"{benchmark_name}{postfix}"
+
 def bmr_workaround() -> None:
     """
     Workaround to get `make semi-bmr-party.x` to succeed
@@ -70,7 +76,7 @@ def bmr_workaround() -> None:
 
 def set_up_spdz_compile(
     benchmark_name: str, benchmark_path: str, vectorized: bool
-) -> None:
+) -> str:
     input_fname = os.path.join(benchmark_path, "input.py")
 
     with open(input_fname, "r") as f:
@@ -78,7 +84,8 @@ def set_up_spdz_compile(
 
     submodule_path = Backend.MP_SPDZ.submodule_path()
 
-    app_path = os.path.join(submodule_path, "Programs", "Source", "benchmark.mpc")
+    mpc_file = get_mpc_file_name(benchmark_name, vectorized)
+    app_path = os.path.join(submodule_path, "Programs", "Source", f"{mpc_file}.mpc")
 
     compiler.compile(
         f"{benchmark_name}.py",
@@ -105,17 +112,19 @@ def set_up_spdz_compile(
         ),
         os.path.join(submodule_path, "vectorization_library.py"),
     )
+    return app_path
 
 
 def _get_compile_stats_common(
     benchmark_name: str, benchmark_path: str, binary: Optional[int], vectorized: bool
 ) -> tuple[float, str]:
     set_up_spdz_compile(benchmark_name, benchmark_path, vectorized)
+    mpc_file = get_mpc_file_name(benchmark_name, vectorized)
     submodule_path = Backend.MP_SPDZ.submodule_path()
 
     start_time = time()
     p = subprocess.Popen(
-        ["./compile.py", "benchmark"] + ([] if binary is None else ["-B", str(binary)]),
+        ["./compile.py", mpc_file] + ([] if binary is None else ["-B", str(binary)]),
         cwd=submodule_path,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -160,6 +169,7 @@ def run_benchmark(
     timeout=60 * 60,
 ) -> BenchmarkOutput:
     set_up_spdz_compile(benchmark_name, benchmark_path, vectorized)
+    mpc_file = get_mpc_file_name(benchmark_name, vectorized)
     submodule_path = Backend.MP_SPDZ.submodule_path()
 
     print("RUNNING BENCH",benchmark_name,benchmark_path,submodule_path)    
@@ -178,7 +188,7 @@ def run_benchmark(
     # Adding compile time stats
     start_time = time()
     p = subprocess.Popen(
-	["./compile.py", "benchmark"] + ([] if protocol != "semi-bin" else ["-B", str(32)]),
+    ["./compile.py", mpc_file] + ([] if protocol != "semi-bin" else ["-B", str(32)]),
         cwd=submodule_path,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -192,7 +202,7 @@ def run_benchmark(
     # End of compile time status
     
     p = subprocess.Popen(
-        ["Scripts/compile-run.py", "-v", "-E", protocol, "benchmark"],
+        ["Scripts/compile-run.py", "-v", "-E", protocol, mpc_file],
         cwd=submodule_path,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
