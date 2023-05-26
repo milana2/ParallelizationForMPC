@@ -10,6 +10,9 @@ import itertools
 import functools
 
 
+_BIT_LENGTH = 32
+
+
 def _expand_vectorized_indices(
     array_shape: list[int], indices: tuple[typing.Optional[int]]
 ) -> list[list[int]]:
@@ -73,7 +76,7 @@ class VectorizationLibrary:
     def __init__(self, globals):
         self._print_str = globals["print_str"]
         self._sint = globals["sint"]
-        self._sbits = globals["sbits"].get_type(32)
+        self._sbits = globals["sbits"].get_type(_BIT_LENGTH)
 
         try:
             self.sbool = globals["sintbit"]
@@ -243,6 +246,11 @@ class VectorizationLibrary:
         self._print_str("MPC BENCHMARK OUTPUT ")
         rec(x)
         self._print_str("\n")
+
+    def div(self, a, b):
+        sa = self._sint(a) if isinstance(a, int) else a
+        sb = self._sint(b) if isinstance(b, int) else b
+        return sa.int_div(sb, bit_length=_BIT_LENGTH)
 
     # TODO: Cludgy fix for SPDZ Mux (binary)
     def iterative_mux(self, dest_array: list, cond: typing.Union[list,typing.Any],
