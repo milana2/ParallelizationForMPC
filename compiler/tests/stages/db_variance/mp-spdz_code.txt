@@ -31,7 +31,7 @@ def db_variance(A_0, V_0, len_0):
     # Loop exit ϕ values
     _v.vectorized_assign(sum_2, [len_0], [_10_0], _v.vectorized_access(sum_3, [len_0], [(_10_0 - 1)]))
     _4_0 = _v.drop_dim(sum_3, [len_0])
-    exp_1 = (_4_0 / len_0)
+    exp_1 = _v.div(_4_0, len_0)
     _7_0 = _v.lift(lambda indices: exp_1, [len_0])
     _v.vectorized_assign(dist_2, [len_0], [None], (_v.vectorized_access_simd(_6_0, [len_0], [None]) - _v.vectorized_access_simd(_7_0, [len_0], [None])))
     _v.vectorized_assign(_1_2, [len_0], [None], (_v.vectorized_access_simd(dist_2, [len_0], [None]) * _v.vectorized_access_simd(dist_2, [len_0], [None])))
@@ -46,5 +46,5 @@ def db_variance(A_0, V_0, len_0):
     # Loop exit ϕ values
     _v.vectorized_assign(res_2, [len_0], [_11_0], _v.vectorized_access(res_3, [len_0], [(_11_0 - 1)]))
     _9_0 = _v.drop_dim(res_3, [len_0])
-    variance_1 = (_9_0 / len_0)
+    variance_1 = _v.div(_9_0, len_0)
     return variance_1

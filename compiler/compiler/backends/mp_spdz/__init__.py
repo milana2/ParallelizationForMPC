@@ -160,6 +160,8 @@ def render_bin_op(left: str, op: BinOpKind, right: str) -> str:
         return f"{left}.bit_and({right})"
     elif op == BinOpKind.OR:
         return f"OR({left}, {right})"
+    elif op == BinOpKind.DIV:
+        return f"_v.div({left}, {right})"
     else:
         return f"({left} {op} {right})"
 
