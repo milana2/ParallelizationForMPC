@@ -396,8 +396,9 @@ def render_load_args(func: Function) -> str:
                 ret.append(f"{var} = int(program.args[{program_args_index}])")
                 #program_args_index += 1
             else:
-                ret.append(f"{var} = sint.get_input_from({party})")
-            program_args_index += 1     
+                ret.append(f"{var} = sint()")
+                ret.append(f"{var}.input_from({party})")
+            program_args_index += 1
         else:
             assert dims == 1
             if arg.var_type.is_plaintext():
