@@ -156,7 +156,7 @@ def render_atom(atom: Atom, make_shared: bool, var_mappings: dict[Var, str], sim
 
 
 def render_bin_op(left: str, op: BinOpKind, right: str) -> str:
-    if op == BinOpKind.AND:
+    if op in (BinOpKind.AND, BinOpKind.BIT_AND):
         return f"{left}.bit_and({right})"
     elif op == BinOpKind.OR:
         return f"OR({left}, {right})"

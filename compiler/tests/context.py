@@ -28,8 +28,6 @@ SKIPPED_TESTS = {
         "db_variance",
         # AssertionError: assert all(array.vectorized_dims)
         "histogram",
-        # TypeError: unsupported operand type(s) for &: 'sint' and 'sint'
-        "longest_odd_10",
         # These benchmarks work now
         #"db_cross_join_trivial",
         #"mnist_relu", 
@@ -47,5 +45,6 @@ SKIPPED_TESTS = {
         #"biometric", 
         #"count_10s"
         #"chapterfour_figure_12",
+        #"longest_odd_10",
     ],
 }
