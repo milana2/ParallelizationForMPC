@@ -24,10 +24,10 @@ SKIPPED_TESTS = {
     Backend.MOTION: [],
     # Skipped only in SPDZ
     Backend.MP_SPDZ: [
+        # AssertionError: '23926103924128485712268527085046455810' != '2'
+        "db_variance",
         # AssertionError: assert all(array.vectorized_dims)
         "histogram",
-        # TypeError: unsupported operand type(s) for &: 'sint' and 'sint'
-        "longest_odd_10",
         # These benchmarks work now
         #"db_cross_join_trivial",
         #"mnist_relu", 
@@ -44,7 +44,7 @@ SKIPPED_TESTS = {
         #"inner_product", 
         #"biometric", 
         #"count_10s"
-        #"db_variance",
         #"chapterfour_figure_12",
+        #"longest_odd_10",
     ],
 }
