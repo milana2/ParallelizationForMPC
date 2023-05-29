@@ -24,8 +24,6 @@ SKIPPED_TESTS = {
     Backend.MOTION: [],
     # Skipped only in SPDZ
     Backend.MP_SPDZ: [
-        # AssertionError: '23926103924128485712268527085046455810' != '2'
-        "db_variance",
         # AssertionError: assert all(array.vectorized_dims)
         "histogram",
         # These benchmarks work now
@@ -46,5 +44,6 @@ SKIPPED_TESTS = {
         #"count_10s"
         #"chapterfour_figure_12",
         #"longest_odd_10",
+        #"db_variance",
     ],
 }

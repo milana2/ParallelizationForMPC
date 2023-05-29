@@ -54,7 +54,7 @@ VALID_PROTOCOLS = [
     "hemi",
     "temi",
     "soho",
-    "semi2k",
+    # "semi2k",
     "semi-bin",
     # "yao-gc",
     # "yao-bmr",
