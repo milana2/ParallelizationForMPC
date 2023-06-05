@@ -1,4 +1,6 @@
-## Authors
+Authors
+========
+
 Benjamin Levy 2021-current
 
 Muhammad Ishaq 2021-current
