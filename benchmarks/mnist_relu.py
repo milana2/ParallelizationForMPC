@@ -22,7 +22,7 @@ def mnist_relu(
 
 
 len_inner = 10
-len_outer = 20*10
+len_outer = 20
 input = [i if i % 2 == 0 else 0 for i in range(len_inner * len_outer)]
 OUTPUT_res = [0 for i in range(len_inner * len_outer)]
 print(mnist_relu(input, OUTPUT_res, len_outer, len_inner))

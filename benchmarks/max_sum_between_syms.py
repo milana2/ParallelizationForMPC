@@ -17,5 +17,5 @@ def max_sum_between_syms(
     return max_sum
 
 
-seq = [1, 2, 1, 1, 2, 3, 4, 1]*100
-print(max_sum_between_syms(seq, 8*100, 1))
+seq = [1, 2, 1, 1, 2, 3, 4, 1]
+print(max_sum_between_syms(seq, 8, 1))

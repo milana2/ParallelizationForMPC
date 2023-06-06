@@ -23,8 +23,8 @@ def minimal_points(
     return (result_X, result_Y)
 
 
-X_coords = [1, 2, 3]*20 #20 for 10^3 experiments
-Y_coords = [4, 5, 6]*20
+X_coords = [1, 2, 3]
+Y_coords = [4, 5, 6]
 result_X = [0 for i in range(len(X_coords))]
 result_Y = [0 for i in range(len(Y_coords))]
-print(minimal_points(X_coords, Y_coords, 3*20, result_X, result_Y))
+print(minimal_points(X_coords, Y_coords, 3, result_X, result_Y))
