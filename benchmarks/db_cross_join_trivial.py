@@ -53,9 +53,9 @@ def db_cross_join_trivial(
 
 
 # Ana: DOUNBLE CHECK! I don't quite understand this
-A = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]*20
+A = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 B = [1, 9, 8, 4, 5, 5, 4, 3, 2, 1]
-Len_A = 5*20
+Len_A = 5
 Len_B = 5
 res = [0] * (Len_A * Len_B * 3)
 print(db_cross_join_trivial(A, Len_A, B, Len_B, res))

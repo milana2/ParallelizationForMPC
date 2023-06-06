@@ -21,5 +21,5 @@ def count_123(Seq: shared[list[int]], N: int, Syms: shared[list[int]]) -> shared
     return c
 
 
-seq = [1, 2, 3, 1, 3, 3, 4]*100
-print(count_123(seq, 7*100, [1, 2, 3]))
+seq = [1, 2, 3, 1, 3, 3, 4]
+print(count_123(seq, 7, [1, 2, 3]))
