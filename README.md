@@ -17,8 +17,7 @@
 
    MP-SPDZ dependencies:
    ```sh
-   sudo apt-get install automake build-essential clang cmake git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 texinfo yasm
-   ```
+   sudo apt-get install automake build-essential clang cmake git libboost-dev libboost-thread-dev libgmp-dev libntl-dev libsodium-dev libssl-dev libtool python3```
 2. Clone the repo (the `--recursive` is required for the backend submodules)
    ```sh
    git clone --recursive https://github.com/milana2/ParallelizationForMPC.git
