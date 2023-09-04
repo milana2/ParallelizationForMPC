@@ -16,7 +16,7 @@ jobs:
       matrix:
         check-command: ["pytest", "mypy -m compiler"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -38,7 +38,7 @@ jobs:
       matrix:
         mpc-backend: ["MOTION", "MP-SPDZ"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Set up Python
@@ -73,7 +73,7 @@ jobs:
   results-page:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Set up Python
