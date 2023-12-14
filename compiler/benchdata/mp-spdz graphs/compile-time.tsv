@@ -1,0 +1,13 @@
+x	"Benchmark"	"Without COMBINE"	"With COMBINE"	"Improvement"
+1	"Biometric Matching"	824	32	96.11650485
+2	"Convex Hull"	157	18	88.53503185
+3	"Count 10s"	35	26	25.71428571
+4	"Count 102"	34	26	23.52941176
+5	"Cryptonets (Max Pooling)"	83	33	60.24096386
+6	"Database Join"	176	150	14.77272727
+7	"Inner Product"	170	19	88.82352941
+8	"Longest 102"	51	39	23.52941176
+9	"Max Dist btw Syms"	41	36	12.19512195
+10	"Minimal Points"	166	21	87.34939759
+11	"MNIST ReLU"	266	94	64.66165414
+12	"Private Set Intersection"	118	23	80.50847458
