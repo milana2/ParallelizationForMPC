@@ -184,3 +184,6 @@ class DepGraph:
                 for use_stmt in self.def_use_graph.successors(src)
                 if use_stmt not in visited
             )
+
+    def get_uses(self, v: llc.Var) -> Iterator[DepNode]:
+        return self.def_use_graph[self.var_to_assignment[v]]

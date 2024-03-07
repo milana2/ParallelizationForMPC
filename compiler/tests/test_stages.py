@@ -80,6 +80,11 @@ class StagesTestCase(unittest.TestCase):
             self.assertEqual(str(loop_linear), stages["vectorized_linear.txt"])
             self.assertEqual(str(type_env), stages["vectorized_type_env.txt"])
 
+            (loop_linear, dep_graph, type_env) = compiler.copy_propagation(
+                loop_linear, dep_graph, type_env
+            )
+            self.assertEqual(str(loop_linear), stages["copy_prop_linear.txt"])
+
             for backend in Backend:
                 backend_code = backend.render_function(loop_linear, type_env, True)
                 self.assertEqual(
@@ -205,6 +210,12 @@ def regenerate_stages():
             f.write(f"{loop_linear}\n")
         with open(os.path.join(test_case_dir, "vectorized_type_env.txt"), "w") as f:
             f.write(f"{type_env}\n")
+
+        (loop_linear, dep_graph, type_env) = compiler.copy_propagation(
+            loop_linear, dep_graph, type_env
+        )
+        with open(os.path.join(test_case_dir, "copy_prop_linear.txt"), "w") as f:
+            f.write(f"{loop_linear}\n")
 
         for backend in Backend:
             backend_code = backend.render_function(loop_linear, type_env, True)

@@ -353,6 +353,12 @@ def main():
         md += "#### Type Environment After Vectorization\n"
         md += f"{type_env_to_table(type_env)}\n"
 
+        (loop_linear_code, dep_graph, type_env) = compiler.copy_propagation(
+            loop_linear_code, dep_graph, type_env
+        )
+        md += "#### Copy propagation\n"
+        md += f"```python\n{loop_linear_code}\n```\n"
+
         for backend in Backend:
             if backend is Backend.MOTION:
                 lang = "cpp"

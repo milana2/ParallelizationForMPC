@@ -18,7 +18,6 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
     current_length_5 = [None] * (N_0)
     current_length_6 = [None] * (N_0)
     max_length_2 = [None] * (N_0)
-    max_length_3 = [None] * (N_0)
     max_length_4 = [None] * (N_0)
     s1_2 = [None] * (N_0)
     s2_2 = [None] * (N_0)
@@ -59,7 +58,6 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
     # Loop exit ϕ values
     _v.vectorized_assign(current_length_2, [N_0], [_17_0], _v.vectorized_access(current_length_6, [N_0], [(_17_0 - 1)]))
     _v.vectorized_assign(_4_2, [N_0], [None], _v.vectorized_access_simd(current_length_6, [N_0], [None]).bit_and(sint(1)))
-    _v.vectorized_assign(max_length_3, [N_0], [None], _v.vectorized_access(current_length_6, [N_0], [None]))
     _v.vectorized_assign(_5_2, [N_0], [None], (_v.vectorized_access_simd(_4_2, [N_0], [None]) == sint(1)))
     for _18_0 in range(0, N_0):
         # Set ϕ value
@@ -69,7 +67,7 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
             _v.vectorized_assign(max_length_2, [N_0], [_18_0], _v.vectorized_access(max_length_4, [N_0], [(_18_0 - 1)]))
         _v.vectorized_assign(_6_2, [N_0], [_18_0], (_v.vectorized_access_simd(current_length_6, [N_0], [_18_0]) > _v.vectorized_access_simd(max_length_2, [N_0], [_18_0])))
         _v.vectorized_assign(_7_2, [N_0], [_18_0], _v.vectorized_access_simd(_5_2, [N_0], [_18_0]).bit_and(_v.vectorized_access_simd(_6_2, [N_0], [_18_0])))
-        _v.iterative_mux(max_length_4,_7_2,max_length_3,max_length_2,[N_0],[_18_0])
+        _v.iterative_mux(max_length_4,_7_2,current_length_6,max_length_2,[N_0],[_18_0])
     # Loop exit ϕ values
     _v.vectorized_assign(max_length_2, [N_0], [_18_0], _v.vectorized_access(max_length_4, [N_0], [(_18_0 - 1)]))
     _15_0 = _v.drop_dim(max_length_4, [N_0])
