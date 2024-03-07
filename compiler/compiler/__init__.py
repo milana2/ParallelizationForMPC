@@ -11,6 +11,7 @@ from .dead_code_elim import dead_code_elim
 from .ssa_to_loop_linear_code import ssa_to_loop_linear_code
 from .dep_graph import DepGraph
 from .type_analysis import type_check
+from .copy_propagation import copy_propagation
 from . import loop_linear_code
 from .backends import Backend
 from . import vectorize
@@ -104,6 +105,12 @@ def compile(
             print("Vectorized type environment:")
             print(type_env)
             print()
+
+    (linear, dep_graph, type_env) = copy_propagation(linear, dep_graph, type_env)
+    if not quiet:
+        print("Copy propagation:")
+        print(linear)
+        print()
 
     if backend:
         backend_code = backend.render_function(linear, type_env, run_vectorization)

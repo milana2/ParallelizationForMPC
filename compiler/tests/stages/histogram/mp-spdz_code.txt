@@ -10,7 +10,6 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
     result_2 = [None] * (num_bins_0 * N_0)
     result_3 = [None] * (num_bins_0 * N_0)
     val_3 = [None] * (num_bins_0 * N_0)
-    val_4 = [None] * (num_bins_0 * N_0)
     val_5 = [None] * (num_bins_0 * N_0)
     # Function body
     _2_0 = _v.lift(lambda indices: result_0, [num_bins_0])
@@ -25,9 +24,8 @@ def histogram(A_0, B_0, N_0, num_bins_0, result_0):
             _v.vectorized_assign(result_2, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(_4_0, [num_bins_0, N_0], [None, _8_0]))
         else:
             _v.vectorized_assign(result_2, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(result_3, [num_bins_0, N_0], [None, (_8_0 - 1)]))
-        _v.vectorized_assign(val_4, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(result_2, [num_bins_0, N_0], [None, _8_0]))
         _v.vectorized_assign(val_3, [num_bins_0, N_0], [None, _8_0], (_v.vectorized_access_simd(result_2, [num_bins_0, N_0], [None, _8_0]) + _v.vectorized_access_simd(_7_0, [num_bins_0, N_0], [None, _8_0])))
-        _v.iterative_mux(val_5,_1_3,val_3,val_4,[num_bins_0, N_0],[None, _8_0])
+        _v.iterative_mux(val_5,_1_3,val_3,result_2,[num_bins_0, N_0],[None, _8_0])
         _v.vectorized_assign((TODO: fix this case), [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(val_5, [num_bins_0, N_0], [None, _8_0])); _v.vectorized_assign(result_3, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access((TODO: fix this case), [num_bins_0, N_0], [None, _8_0]))
     # Loop exit ϕ values
     _v.vectorized_assign(result_2, [num_bins_0, N_0], [None, _8_0], _v.vectorized_access(result_3, [num_bins_0, N_0], [None, (_8_0 - 1)]))
