@@ -12,6 +12,7 @@ from .ssa_to_loop_linear_code import ssa_to_loop_linear_code
 from .dep_graph import DepGraph
 from .type_analysis import type_check
 from .copy_propagation import copy_propagation
+from .common_subexpression_elimination import common_subexpression_elimination
 from . import loop_linear_code
 from .backends import Backend
 from . import vectorize
@@ -109,6 +110,12 @@ def compile(
     (linear, dep_graph, type_env) = copy_propagation(linear, dep_graph, type_env)
     if not quiet:
         print("Copy propagation:")
+        print(linear)
+        print()
+
+    (linear, dep_graph, type_env) = common_subexpression_elimination(linear, dep_graph, type_env)
+    if not quiet:
+        print("Common subexpression elimination:")
         print(linear)
         print()
 
