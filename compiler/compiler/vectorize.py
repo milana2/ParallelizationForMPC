@@ -908,7 +908,7 @@ def _update_vectorized_accesses(
     elif dc.is_dataclass(expr):
         return dc.replace(
             expr,
-            **{
+            **{  # type: ignore
                 field.name: _update_vectorized_accesses(
                     getattr(expr, field.name), vectorized_accesses
                 )

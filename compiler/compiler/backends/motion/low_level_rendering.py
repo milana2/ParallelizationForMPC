@@ -471,7 +471,7 @@ def render_expr(expr: Union[AssignRHS, SubscriptIndex], ctx: RenderContext) -> s
         if expr.operator == BinOpKind.LT:
             return render_expr(
                 dc.replace(
-                    expr, left=expr.right, right=expr.left, operator=BinOpKind.GT
+                    expr, left=expr.right, right=expr.left, operator=BinOpKind.GT  # type: ignore
                 ),
                 ctx,
             )
