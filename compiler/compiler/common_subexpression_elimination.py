@@ -30,7 +30,7 @@ def _check_and_modify_rhs(stmt,dag,changes):
             changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].array
         
         if isinstance(stmt.rhs,LiftExpr):
-            changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].expr.array
+            changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].array
 
         if isinstance(stmt.rhs,BinOp) and isinstance(stmt.lhs,VectorizedAccess):
             changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].array
