@@ -15,9 +15,12 @@ from .loop_linear_code import (
     Return,
     VectorizedAccess,
     Constant,
-    Mux
+    Mux,
+    VectorizedUpdate,
+    Subscript,
+    Update
 )
-from .tac_cfg import LiftExpr, DropDim,BinOp,Tuple
+from .tac_cfg import LiftExpr, DropDim,BinOp,Tuple,UnaryOp
 
 from typing import Optional
 import dataclasses as dc
@@ -40,6 +43,17 @@ def _check_and_modify_rhs(stmt,dag,changes):
 
         if isinstance(stmt.rhs,Mux) and isinstance(stmt.lhs,VectorizedAccess):
             changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].array
+
+        if isinstance(stmt.rhs,VectorizedUpdate):
+            changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].array
+
+        
+        if isinstance(stmt.rhs,UnaryOp) and isinstance(stmt.lhs,VectorizedAccess):
+            changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].array
+
+        if isinstance(stmt.rhs,Subscript) or isinstance(stmt.rhs,Update):
+            changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].array
+
         
         dag[str(stmt.lhs)] = dag[str(stmt.rhs)]
         return None
@@ -146,10 +160,39 @@ def _check_and_modify_rhs(stmt,dag,changes):
                 dag[str(stmt.lhs)] = dag[str(stmt.rhs)]
                 return None
             return stmt
+        elif isinstance(stmt.rhs,VectorizedUpdate):
+            if str(stmt.rhs.array) in changes:
+                stmt.rhs.array = changes[str(stmt.rhs.array)]
+            if str(stmt.rhs.value) in changes:
+                stmt.rhs.value = changes[str(stmt.rhs.value)]
+            
+            if str(stmt.rhs) in dag:
+                dag[str(stmt.lhs)] = dag[str(stmt.rhs)]
+                return None
+            return stmt
+        elif isinstance(stmt.rhs,UnaryOp):
+            # [TODO] understand  better the conditions here
+            if isinstance(stmt.lhs,VectorizedAccess) and str(stmt.rhs.operand.array) in changes:
+                stmt.rhs.operand.array = changes[str(stmt.rhs.operand.array)]
+            
+            if str(stmt.rhs) in dag:
+                dag[str(stmt.lhs)] = dag[str(stmt.rhs)]
+                return None
+            return stmt
+        elif isinstance(stmt.rhs,Subscript) or isinstance(stmt.rhs,Update):
+            # [TODO] understand  better the conditions here
+            if str(stmt.rhs.array) in changes:
+                stmt.rhs.array = changes[str(stmt.rhs.array)]
+            
+            if str(stmt.rhs) in dag:
+                dag[str(stmt.lhs)] = dag[str(stmt.rhs)]
+                return None
+            return stmt
         else:
 
             print("Terminated need to handle case =>",stmt)
-            exit()
+            print(type(stmt.rhs))
+            exit(1)
 
 def traverse_and_optimize(dag,changes,statements):
     ret = []

@@ -85,6 +85,12 @@ class StagesTestCase(unittest.TestCase):
             )
             self.assertEqual(str(loop_linear), stages["copy_prop_linear.txt"])
 
+            (loop_linear, dep_graph, type_env) = compiler.common_subexpression_elimination(
+                loop_linear, dep_graph, type_env
+            )
+            self.assertEqual(str(loop_linear), stages["copy_subexp_linear.txt"])
+            
+
             for backend in Backend:
                 backend_code = backend.render_function(loop_linear, type_env, True)
                 self.assertEqual(
@@ -215,6 +221,12 @@ def regenerate_stages():
             loop_linear, dep_graph, type_env
         )
         with open(os.path.join(test_case_dir, "copy_prop_linear.txt"), "w") as f:
+            f.write(f"{loop_linear}\n")
+
+        (loop_linear, dep_graph, type_env) = compiler.common_subexpression_elimination(
+            loop_linear, dep_graph, type_env
+        )
+        with open(os.path.join(test_case_dir, "copy_subexp_linear.txt"), "w") as f:
             f.write(f"{loop_linear}\n")
 
         for backend in Backend:
