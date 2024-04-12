@@ -85,7 +85,6 @@ def _check_and_modify_rhs(stmt,dag,changes):
                 stmt.value = dag[str(stmt.value)]
             return stmt
         elif isinstance(stmt.rhs,Constant):
-            dag[str(stmt.rhs)] = stmt.lhs
             return stmt
         elif isinstance(stmt.rhs,LiftExpr):
             
