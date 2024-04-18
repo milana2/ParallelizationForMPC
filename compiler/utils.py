@@ -1,22 +1,24 @@
 from dataclasses import dataclass
-from tests.benchmark import BenchmarkOutput
-from tests.statistics import CircuitStatistics, TimingStatistics, CommunicationStatistics, TimingDatapoint
+from tests.backends.motion.benchmark import BenchmarkOutput as CombineBenchmarkOutput
+from tests.backends.motion.benchmark import CircuitStatistics as CombineCircuitStatistics
+from tests.backends.motion.benchmark import TimingStatistics as CombineTimingStatistics
+from tests.backends.motion.benchmark import CommunicationStatistics as CombineCommunicationStatistics 
+from tests.backends.motion.benchmark import TimingDatapoint as CombineTimingDatapoint
 
 import struct
 import json
-import socket
 
 @dataclass
 class StatsForInputConfig:
     label: str
-    gmw_p0: BenchmarkOutput
-    gmw_p1: BenchmarkOutput
-    gmw_vec_p0: BenchmarkOutput
-    gmw_vec_p1: BenchmarkOutput
-    bmr_p0: BenchmarkOutput
-    bmr_p1: BenchmarkOutput
-    bmr_vec_p0: BenchmarkOutput
-    bmr_vec_p1: BenchmarkOutput
+    gmw_p0: CombineBenchmarkOutput
+    gmw_p1: CombineBenchmarkOutput
+    gmw_vec_p0: CombineBenchmarkOutput
+    gmw_vec_p1: CombineBenchmarkOutput
+    bmr_p0: CombineBenchmarkOutput
+    bmr_p1: CombineBenchmarkOutput
+    bmr_vec_p0: CombineBenchmarkOutput
+    bmr_vec_p1: CombineBenchmarkOutput
 
     @classmethod
     def from_dictionary(cls, params):
@@ -88,7 +90,7 @@ class GetAddressReq:
 
 @dataclass
 class GetAddressResp:
-    client_address: (str, int) # (address, port)
+    client_address: tuple[str, int] # [address, port]
 
     @classmethod
     def from_dictionary(cls, params):
@@ -175,20 +177,20 @@ def write_message(conn, obj):
 # --- Private Functions --
 
 def _to_json(python_object):
-    if isinstance(python_object, TimingDatapoint):
-        return  {'__class__': 'TimingDatapoint',
+    if isinstance(python_object, CombineTimingDatapoint):
+        return  {'__class__': 'CombineTimingDatapoint',
                  '__value__': python_object.to_dictionary()}
-    elif isinstance(python_object, CommunicationStatistics):
-        return {'__class__': 'CommunicationStatistics',
+    elif isinstance(python_object, CombineCommunicationStatistics):
+        return {'__class__': 'CombineCommunicationStatistics',
                 '__value__': python_object.to_dictionary()}
-    elif isinstance(python_object, TimingStatistics):
-        return {'__class__': 'TimingStatistics',
+    elif isinstance(python_object, CombineTimingStatistics):
+        return {'__class__': 'CombineTimingStatistics',
                 '__value__': python_object.to_dictionary()}
-    elif isinstance(python_object, CircuitStatistics):
-        return {'__class__': 'CircuitStatistics',
+    elif isinstance(python_object, CombineCircuitStatistics):
+        return {'__class__': 'CombineCircuitStatistics',
                 '__value__': python_object.to_dictionary()}
-    elif isinstance(python_object, BenchmarkOutput):
-        return {'__class__': 'BenchmarkOutput',
+    elif isinstance(python_object, CombineBenchmarkOutput):
+        return {'__class__': 'CombineBenchmarkOutput',
                 '__value__': python_object.to_dictionary()}
     elif isinstance(python_object, StatsForTask):
         return {'__class__': 'StatsForTask',
@@ -211,16 +213,16 @@ def _to_json(python_object):
 
 def _from_json(json_object):
     if '__class__' in json_object:
-        if json_object['__class__'] == 'TimingDatapoint':
-            return TimingDatapoint.from_dictionary(json_object['__value__'])
-        elif json_object['__class__'] == 'CommunicationStatistics':
-            return CommunicationStatistics.from_dictionary(json_object['__value__'])
-        elif json_object['__class__'] == 'TimingStatistics':
-            return TimingStatistics.from_dictionary(json_object['__value__'])
-        elif json_object['__class__'] == 'CircuitStatistics':
-            return CircuitStatistics.from_dictionary(json_object['__value__'])
-        elif json_object['__class__'] == 'BenchmarkOutput':
-            return BenchmarkOutput.from_dictionary(json_object['__value__'])
+        if json_object['__class__'] == 'TimingDatapoint' or json_object['__class__'] == 'CombineTimingDatapoint':
+            return CombineTimingDatapoint.from_dictionary(json_object['__value__'])
+        elif json_object['__class__'] == 'CommunicationStatistics' or json_object['__class__'] == 'CombineCommunicationStatistics':
+            return CombineCommunicationStatistics.from_dictionary(json_object['__value__'])
+        elif json_object['__class__'] == 'TimingStatistics' or json_object['__class__'] == 'CombineTimingStatistics':
+            return CombineTimingStatistics.from_dictionary(json_object['__value__'])
+        elif json_object['__class__'] == 'CircuitStatistics' or json_object['__class__'] == 'CombineCircuitStatistics':
+            return CombineCircuitStatistics.from_dictionary(json_object['__value__'])
+        elif json_object['__class__'] == 'BenchmarkOutput' or json_object['__class__'] == 'CombineBenchmarkOutput':
+            return CombineBenchmarkOutput.from_dictionary(json_object['__value__'])
         elif json_object['__class__'] == 'StatsForTask':
             return StatsForTask.from_dictionary(json_object['__value__'])
         elif json_object['__class__'] == 'StatsForInputConfig':

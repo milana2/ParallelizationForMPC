@@ -2,20 +2,18 @@
 from argparse import ArgumentParser
 from dataclasses import dataclass
 import os
-import sys
 import subprocess
 
 import logging
 import logging.handlers
 import random
-import json
 import socket
 
-
-import compiler
-
 from tests import context as test_context
-from tests.benchmark import run_benchmark, compile_benchmark, run_benchmark_for_party, BenchmarkOutput
+from tests.backends import run_benchmark
+from tests.backends.motion.benchmark import compile_benchmark as combine_compile_benchmark
+from tests.backends.motion.benchmark import run_benchmark_for_party as combine_run_benchmark_for_party
+from tests.backends.motion.benchmark import BenchmarkOutput as CombineBenchmarkOutput
 
 from utils import json_serialize, json_deserialize, StatsForInputConfig, StatsForTask, RunBenchmarkReq
 from utils import GetAddressReq, GetAddressResp
@@ -63,7 +61,7 @@ console.setLevel(logging.INFO)
 console.setFormatter(formatter)
 
 log = logging.getLogger(__name__)
-log.addHandler(console);
+log.addHandler(console)
 
 @dataclass
 class InputArgs:
@@ -334,7 +332,7 @@ def get_inner_product_inputs()-> tuple[list[InputArgs], int]:
 
 def get_kmeans_iteration_inputs():
     all_args = []
-    num_bins = 5
+    # num_bins = 5
     non_vec_up_to = 0
     #for config in [[32, 5], [32, 8], [64, 8], [128, 8], [200, 5], [256, 8]]:
     for config in [[32, 5], [256, 8]]:
@@ -537,7 +535,7 @@ def print_benchmark_data(all_stats):
     for task_stats in all_stats:
         log.info("="*80)
         log.info(task_stats.label)
-        log.info("="*80);
+        log.info("="*80)
         for v in task_stats.input_configs:
             log.info("-"*40)
             log.info("{} - GMW".format(v.label))
@@ -559,18 +557,18 @@ def run_paper_benchmarks():
 
         all_args, non_vec_up_to = get_inputs(test_case_dir.name)
         if len(all_args) == 0:
-            continue;
+            continue
 
         task_stats = StatsForTask(test_case_dir.name, [])
         compile = True
         i = 0
         non_vec_failed = False
         for args in all_args:
-            log.info("\n{} - arguments: {}".format(test_case_dir.name, args.args));
+            log.info("\n{} - arguments: {}".format(test_case_dir.name, args.args))
 
             gmw_p0 = gmw_p1 = None
             if (i < non_vec_up_to) and not non_vec_failed:
-                log.info("Running GMW Non Vectorized {} {}".format(test_case_dir.name, args.label));           
+                log.info("Running GMW Non Vectorized {} {}".format(test_case_dir.name, args.label))       
                 gmw_p0, gmw_p1 = run_benchmark(
                     test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, False, None, args.args, compile,
                     continue_on_error=True
@@ -583,7 +581,7 @@ def run_paper_benchmarks():
                     log.warning("GMW Non Vectorized FAILED! Will not run Non-Vectorized from now.")
                     non_vec_failed = True
             
-            log.info("Running GMW Vectorized {} {}".format(test_case_dir.name, args.label));
+            log.info("Running GMW Vectorized {} {}".format(test_case_dir.name, args.label))
             gmw_vec_p0, gmw_vec_p1 = run_benchmark(
                 test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True, None, args.args, compile,
                 continue_on_error=True
@@ -598,7 +596,7 @@ def run_paper_benchmarks():
 
             bmr_p0 = bmr_p1 = None
             if (i < non_vec_up_to) and not non_vec_failed:
-                log.info("Running BMR Non Vectorized {} {}".format(test_case_dir.name, args.label));
+                log.info("Running BMR Non Vectorized {} {}".format(test_case_dir.name, args.label))
                 bmr_p0, bmr_p1 = run_benchmark(
                     test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, False, None, args.args, compile,
                     continue_on_error=True
@@ -611,7 +609,7 @@ def run_paper_benchmarks():
                     log.warning("BMR Non Vectorized FAILED! Will not run Non-Vectorized from now.")
                     non_vec_failed = True
             
-            log.info("Running BMR Vectorized {} {}".format(test_case_dir.name, args.label));
+            log.info("Running BMR Vectorized {} {}".format(test_case_dir.name, args.label))
             bmr_vec_p0, bmr_vec_p1 = run_benchmark(
                 test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, True, None, args.args, compile,
                 continue_on_error=True
@@ -654,10 +652,10 @@ def compile_all_benchmarks():
         if len(all_args) == 0:
             continue
         log.info("Compiling {} ...".format(test_case_dir.name))        
-        compile_benchmark(test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, False)
-        compile_benchmark(test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True)
-        compile_benchmark(test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, False)
-        compile_benchmark(test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, True)
+        combine_compile_benchmark(test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, False)
+        combine_compile_benchmark(test_case_dir.name, test_case_dir.path, GMW_PROTOCOL, True)
+        combine_compile_benchmark(test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, False)
+        combine_compile_benchmark(test_case_dir.name, test_case_dir.path, BMR_PROTOCOL, True)
 
 def run_server_role(address):
     # log.info("Compiling All benchmarks")
@@ -685,10 +683,10 @@ def run_server_role(address):
                 log.info("Request to run: {} {} {}".format(msg.benchmark_name, msg.protocol, msg.vectorized))
                 for dir in os.scandir(test_context.STAGES_DIR):
                     if dir.name == msg.benchmark_name:
-                        test_case_dir = dir;
+                        test_case_dir = dir
                         break
                 log.info("path is {}".format(test_case_dir.path))
-                resp = run_benchmark_for_party(
+                resp = combine_run_benchmark_for_party(
                         MPC_PARTY_SERVER_ID, msg.party0_mpc_addr, msg.party1_mpc_addr, test_case_dir.name,
                         test_case_dir.path, msg.protocol, msg.vectorized, None, msg.cmd_args
                     )
@@ -715,15 +713,15 @@ def run_client_role(address):
 
         all_args, non_vec_up_to = get_inputs(test_case_dir.name)
         if len(all_args) == 0:
-            continue;
+            continue
 
         task_stats = StatsForTask(test_case_dir.name, [])
 
         i = 0
         for args in all_args:
-            log.info("\n{} - arguments: {}".format(test_case_dir.name, args.args));
+            log.info("\n{} - arguments: {}".format(test_case_dir.name, args.args))
 
-            outputs = [];
+            outputs = []
             for protocol in [GMW_PROTOCOL, BMR_PROTOCOL]:
                 for vectorized in [False, True]:
                     if i > non_vec_up_to and vectorized is False:
@@ -734,7 +732,7 @@ def run_client_role(address):
                     accum_p0 = accum_p1 = None
                     for j in range(NUM_ITERS):
                         log.info("Running Iteration {} {} {} {} {}".format(j+1, test_case_dir.name, protocol,
-                            ("vec" if vectorized else "non-vec"), args.label)); 
+                            ("vec" if vectorized else "non-vec"), args.label)) 
                         request = RunBenchmarkReq(
                             party0_mpc_addr=mpc_party_server,
                             party1_mpc_addr=mpc_party_client,
@@ -745,7 +743,7 @@ def run_client_role(address):
                             )
 
                         write_message(server_sock, request)          
-                        p1 = run_benchmark_for_party(
+                        p1 = combine_run_benchmark_for_party(
                             MPC_PARTY_CLIENT_ID, mpc_party_server, mpc_party_client, test_case_dir.name, 
                             test_case_dir.path, protocol, vectorized, None, args.args
                         )
@@ -764,8 +762,8 @@ def run_client_role(address):
                             accum_p0 = p0
                             accum_p1 = p1
                         else:
-                            accum_p0 = BenchmarkOutput.by_accumulating_readings(accum_p0, p0)
-                            accum_p1 = BenchmarkOutput.by_accumulating_readings(accum_p1, p1)
+                            accum_p0 = CombineBenchmarkOutput.by_accumulating_readings(accum_p0, p0)
+                            accum_p1 = CombineBenchmarkOutput.by_accumulating_readings(accum_p1, p1)
 
                     pair = (accum_p0, accum_p1)
                     outputs.append(pair)
@@ -860,7 +858,7 @@ def generate_graph_for_attr(all_stats, get_val, get_sd, y_label, dir):
     for task_stat in all_stats:
         fname = "{}-{}.txt".format(task_stat.label, y_label_simple)
         hist_graph_file = "{}-hist-{}{}".format(task_stat.label, y_label_simple, GRAPH_EXT)
-        line_graph_file = "{}-line-{}{}".format(task_stat.label, y_label_simple, GRAPH_EXT)
+        # line_graph_file = "{}-line-{}{}".format(task_stat.label, y_label_simple, GRAPH_EXT)
         file_path = os.path.join(dir, fname)
         with open(file_path, mode='w', encoding='utf-8') as f:
             line = '\t'.join(['x', 
@@ -922,11 +920,11 @@ def generate_graph_for_attr(all_stats, get_val, get_sd, y_label, dir):
                 f.write(line)
                 x += 1
 
-        title = task_stat.label
+        # title = task_stat.label
         hist_script = os.path.join(FILE_DIR, 'plt_histogram.gnu')
         if get_sd is not None:
             hist_script = os.path.join(FILE_DIR, 'plt_histogram_with_errorbars.gnu')
-        line_script = os.path.join(FILE_DIR, 'plt_linegraph.gnu')
+        # line_script = os.path.join(FILE_DIR, 'plt_linegraph.gnu')
         run_gnuplot(hist_script, file_path, hist_graph_file, task_stat.label, 
             y_label, dir, other_args = [])
         # run_gnuplot(line_script, file_path, line_graph_file, task_stat.label, 
@@ -936,7 +934,7 @@ def generate_cumulative_graph_for_attr(all_stats, get_val, get_sd, y_label, dir)
     y_label_simple = ''.join(c for c in y_label if c.isalnum())
     fname = "all-{}.txt".format(y_label_simple)
     hist_graph_file = "all-hist-{}{}".format(y_label_simple, GRAPH_EXT)
-    line_graph_file = "all-line-{}{}".format(y_label_simple, GRAPH_EXT)
+    # line_graph_file = "all-line-{}{}".format(y_label_simple, GRAPH_EXT)
     file_path = os.path.join(dir, fname)
     with open(file_path, mode='w', encoding='utf-8') as f:
         line = '\t'.join(['x', 
@@ -1012,30 +1010,39 @@ def generate_cumulative_graph_for_attr(all_stats, get_val, get_sd, y_label, dir)
 def generate_single_network_graphs(all_stats, dir):
     log.info("generating graphs for {} benchmarks in {}".format(len(all_stats), dir))
 
-    get_num_gates = lambda x: x.circuit_stats.num_gates if x is not None else 0
+    def get_num_gates(x):
+        return x.circuit_stats.num_gates if x is not None else 0
     generate_graph_for_attr(all_stats, get_num_gates, None, 'Total Gates', dir)
     generate_cumulative_graph_for_attr(all_stats, get_num_gates, None, 'Total Gates', dir)
     
-    get_circ_gen_time = lambda x: (x.circuit_stats.circuit_gen_time/1000) if x is not None else 0
+    def get_circ_gen_time(x):
+        return x.circuit_stats.circuit_gen_time / 1000 if x is not None else 0
     generate_graph_for_attr(all_stats, get_circ_gen_time, None, 'Circuit Generation Time (sec)', dir)
     generate_cumulative_graph_for_attr(all_stats, get_circ_gen_time, None, 'Circuit Generation Time (sec)', dir)
     
-    get_online_time = lambda x: (x.timing_stats.gates_online.mean/1000) if x is not None else 0
-    get_online_time_sd = lambda x: (x.timing_stats.gates_online.stddev/1000) if x is not None else 0
+    def get_online_time(x):
+        return x.timing_stats.gates_online.mean / 1000 if x is not None else 0
+    def get_online_time_sd(x):
+        return x.timing_stats.gates_online.stddev / 1000 if x is not None else 0
     generate_graph_for_attr(all_stats, get_online_time, get_online_time_sd, 'Online Time (sec)', dir)  
     generate_cumulative_graph_for_attr(all_stats, get_online_time, get_online_time_sd, 'Online Time (sec)', dir)
 
-    get_setup_time = lambda x: ((x.timing_stats.gates_setup.mean + x.timing_stats.preprocess_total.mean)/1000) if x is not None else 0
-    get_setup_time_sd = lambda x: ((x.timing_stats.gates_setup.stddev + x.timing_stats.preprocess_total.stddev)/1000) if x is not None else 0
+    def get_setup_time(x):
+        return (x.timing_stats.gates_setup.mean + x.timing_stats.preprocess_total.mean) / 1000 if x is not None else 0
+    def get_setup_time_sd(x):
+        return (x.timing_stats.gates_setup.stddev + x.timing_stats.preprocess_total.stddev) / 1000 if x is not None else 0
     generate_graph_for_attr(all_stats, get_setup_time, get_setup_time_sd, 'Setup Time (sec)', dir)    
     generate_cumulative_graph_for_attr(all_stats, get_setup_time, get_setup_time_sd, 'Setup Time (sec)', dir)
 
-    get_eval_time = lambda x: (x.timing_stats.circuit_evaluation.mean/1000) if x is not None else 0
-    get_eval_time_sd = lambda x: (x.timing_stats.circuit_evaluation.stddev/1000) if x is not None else 0
+    def get_eval_time(x):
+        return x.timing_stats.circuit_evaluation.mean / 1000 if x is not None else 0
+    def get_eval_time_sd(x):
+        return x.timing_stats.circuit_evaluation.stddev / 1000 if x is not None else 0
     generate_graph_for_attr(all_stats, get_eval_time, get_eval_time_sd, 'Online + Setup Time (sec)', dir)  
     generate_cumulative_graph_for_attr(all_stats, get_eval_time, get_eval_time_sd, 'Online + Setup Time (sec)', dir)
 
-    get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
+    def get_send_size(x):
+        return x.timing_stats.communication.send_size if x is not None else 0
     generate_graph_for_attr(all_stats, get_send_size, None, 'Communication (MiB)', dir)
     generate_cumulative_graph_for_attr(all_stats, get_send_size, None, 'Communication (MiB)', dir)
 
@@ -1203,27 +1210,33 @@ def generate_graphs(lan, wan):
         generate_single_network_graphs(wan_stats, WAN_GRAPHS_DIR)
 
     if lan is True and wan is True:
-        get_num_gates = lambda x: x.circuit_stats.num_gates if x is not None else 0
+        def get_num_gates(x):
+            return x.circuit_stats.num_gates if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_num_gates, 'Total Gates',
             COMPARISON_GRAPHS_DIR)
 
-        get_circ_gen_time = lambda x: int(x.circuit_stats.circuit_gen_time/1000) if x is not None else 0
+        def get_circ_gen_time(x):
+            return int(x.circuit_stats.circuit_gen_time / 1000) if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_circ_gen_time, 
             'Circuit Generation Time (sec)', COMPARISON_GRAPHS_DIR)
 
-        get_online_time = lambda x: int(x.timing_stats.circuit_evaluation.mean/1000) if x is not None else 0
+        def get_online_time(x):
+            return int(x.timing_stats.circuit_evaluation.mean / 1000) if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_online_time, 'Online + Setup Time (sec)',
             COMPARISON_GRAPHS_DIR)
 
-        get_online_time = lambda x: int(x.timing_stats.gates_online.mean/1000) if x is not None else 0
+        def get_online_time(x):
+            return int(x.timing_stats.gates_online.mean / 1000) if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_online_time, 'Online Time (sec)',
             COMPARISON_GRAPHS_DIR)
 
-        get_setup_time = lambda x: int((x.timing_stats.gates_setup.mean+x.timing_stats.preprocess_total.mean)/1000) if x is not None else 0
+        def get_setup_time(x):
+            return int((x.timing_stats.gates_setup.mean + x.timing_stats.preprocess_total.mean) / 1000) if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_setup_time, 'Setup Time (sec)',
             COMPARISON_GRAPHS_DIR)
 
-        get_send_size = lambda x: x.timing_stats.communication.send_size if x is not None else 0
+        def get_send_size(x):
+            return x.timing_stats.communication.send_size if x is not None else 0
         generate_comparison_graphs(lan_stats, wan_stats, get_send_size, 'Communication (MiB)',
             COMPARISON_GRAPHS_DIR)
 
