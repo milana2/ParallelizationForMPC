@@ -246,6 +246,3 @@ def _read_socket_buf(conn, n):
         buf += new_data
     return buf
 
-
-
-

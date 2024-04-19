@@ -4,6 +4,29 @@ import argparse
 import compiler
 from compiler.backends import Backend
 
+import logging
+import logging.handlers
+import os
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
+    handlers=[
+        logging.handlers.RotatingFileHandler(
+            "{0}.log".format(os.path.basename(__file__)),
+             maxBytes=(1048576*5), backupCount=10
+        )
+    ])
+
+fmt_str = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
+formatter = logging.Formatter(fmt_str)
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+console.setFormatter(formatter)
+
+logging.getLogger().addHandler(console)
+log = logging.getLogger('combine')
+
 
 def parse_args():
     parser = argparse.ArgumentParser()

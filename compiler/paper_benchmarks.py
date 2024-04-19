@@ -1,11 +1,11 @@
+from main import logging
 
 from argparse import ArgumentParser
 from dataclasses import dataclass
 import os
 import subprocess
 
-import logging
-import logging.handlers
+
 import random
 import socket
 
@@ -18,6 +18,8 @@ from tests.backends.motion.benchmark import BenchmarkOutput as CombineBenchmarkO
 from utils import json_serialize, json_deserialize, StatsForInputConfig, StatsForTask, RunBenchmarkReq
 from utils import GetAddressReq, GetAddressResp
 from utils import read_message, write_message
+
+log = logging.getLogger('combine.paper_benchmarks')
 
 SERVER_PORT = 42142
 CONNECTION_TIMEOUT = 3000
@@ -43,25 +45,6 @@ os.makedirs(LAN_GRAPHS_DIR, exist_ok=True)
 os.makedirs(WAN_DIR, exist_ok=True)
 os.makedirs(WAN_GRAPHS_DIR, exist_ok=True)
 os.makedirs(COMPARISON_GRAPHS_DIR, exist_ok=True)
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
-    handlers=[
-        logging.handlers.RotatingFileHandler(
-            "{0}.log".format(os.path.basename(__file__)),
-             maxBytes=(1048576*5), backupCount=10
-        )
-    ])
-
-fmt_str = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
-formatter = logging.Formatter(fmt_str)
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-console.setFormatter(formatter)
-
-log = logging.getLogger(__name__)
-log.addHandler(console)
 
 @dataclass
 class InputArgs:
