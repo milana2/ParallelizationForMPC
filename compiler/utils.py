@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from tests.backends.motion.benchmark import BenchmarkOutput as CombineBenchmarkOutput
-from tests.backends.motion.benchmark import CircuitStatistics as CombineCircuitStatistics
-from tests.backends.motion.benchmark import TimingStatistics as CombineTimingStatistics
-from tests.backends.motion.benchmark import CommunicationStatistics as CombineCommunicationStatistics 
-from tests.backends.motion.benchmark import TimingDatapoint as CombineTimingDatapoint
+from tests.backends.motion.statistics import CircuitStatistics as CombineCircuitStatistics
+from tests.backends.motion.statistics import TimingStatistics as CombineTimingStatistics
+from tests.backends.motion.statistics import CommunicationStatistics as CombineCommunicationStatistics 
+from tests.backends.motion.statistics import TimingDatapoint as CombineTimingDatapoint
 
 import struct
 import json
