@@ -3,6 +3,7 @@ from .dep_graph import DepGraph
 from .loop_linear_code import (
     Function,
     Statement,
+    Assign,
     TypeEnv,
     Phi,
     For,
@@ -14,20 +15,20 @@ from .loop_linear_code import (
     Subscript,
     Update
 )
-from .tac_cfg import LiftExpr, DropDim,BinOp,Tuple,UnaryOp
+from .tac_cfg import LiftExpr, DropDim,BinOp,Tuple,UnaryOp,Var
 
-from typing import Optional
+from typing import Any,Optional,Union,Sequence
 import dataclasses as dc
 
 
 def _check_and_modify_rhs(
     stmt: Statement,
-    dag:dict[Statement, Optional[Statement]],
-    changes:dict[Statement, Optional[Statement]],
+    dag:dict[str, Any],
+    changes: dict[str, Any],
 ) -> Optional[Statement]:
     
-    if hasattr(stmt,'rhs') and str(stmt.rhs) in dag:
-        if isinstance(stmt.rhs,DropDim) and isinstance(stmt.rhs.array,VectorizedAccess):
+    if not isinstance(stmt,(Return)) and (hasattr(stmt,'rhs') and str(stmt.rhs) in dag):
+        if isinstance(stmt.rhs,DropDim)  and isinstance(stmt.rhs.array,VectorizedAccess):
             changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].array
         if isinstance(stmt.rhs,LiftExpr):
             changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].array
@@ -47,12 +48,17 @@ def _check_and_modify_rhs(
         dag[str(stmt.lhs)] = dag[str(stmt.rhs)]
         return None
     elif isinstance(stmt,Phi) and str(stmt).split(" = ")[1] in dag:
-        if isinstance(stmt.lhs,VectorizedAccess):
-            changes[str(stmt.lhs.array)] = dag[str(stmt.rhs)].array
-        dag[str(stmt.lhs)] = str(stmt).split(" = ")[1]
+        stmt_splits = str(stmt).split(" = ")
+        if isinstance(stmt.lhs,VectorizedAccess) and hasattr(dag[stmt_splits[1]],'array'):
+            changes[stmt_splits[0]] = getattr(dag[stmt_splits[1]], 'array', None)
+            if changes[stmt_splits[0]] == None:
+                del changes[stmt_splits[0]]
+            # dag[stmt_splits[0]] = str(stmt).split(" = ")[1]
         return None
     else:
-        if isinstance(stmt,Phi):
+        if isinstance(stmt,For):
+            return None
+        elif isinstance(stmt,Phi):
             if isinstance(stmt.rhs_true,VectorizedAccess) and str(stmt.rhs_true.array) in changes:
                 stmt.rhs_true.array = changes[str(stmt.rhs_true.array)]
             if isinstance(stmt.rhs_false,VectorizedAccess) and str(stmt.rhs_false.array) in changes:
@@ -162,13 +168,15 @@ def _check_and_modify_rhs(
                 dag[str(stmt.lhs)] = dag[str(stmt.rhs)]
                 return None
             return stmt
+    
+    return None
 
 def traverse_and_optimize(
-    dag:dict[Statement, Optional[Statement]],
-    changes:dict[Statement, Optional[Statement]],
+    dag:dict[str, Any],
+    changes: dict[str, Any],
     statements:list[Statement]
-) -> list[Statement]:
-    ret = []
+) -> list[Union[Statement,None]]:
+    ret:list[Union[Statement,None]] = []
     for stmt in statements:
         if isinstance(stmt, For):
             stmt = dc.replace(stmt, body=traverse_and_optimize(dag,changes,stmt.body))
@@ -182,8 +190,8 @@ def traverse_and_optimize(
 def common_subexpression_elimination(
     func: Function, dep_graph: DepGraph, type_env: TypeEnv
 ) -> tuple[Function, DepGraph, TypeEnv]:
-    dag: dict[Statement, Optional[Statement]] = dict()
-    changes: dict[Statement, Optional[Statement]] = dict()
+    dag: dict[str, Any] = dict()
+    changes: dict[str, Any] = dict()
     func = dc.replace(func, body=traverse_and_optimize(dag,changes,func.body))
     dep_graph = DepGraph(func)
     func, type_env = type_check(func, dep_graph)
