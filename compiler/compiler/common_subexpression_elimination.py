@@ -3,6 +3,7 @@ from .dep_graph import DepGraph
 from .loop_linear_code import (
     Function,
     Statement,
+    Assign,
     TypeEnv,
     Phi,
     For,
@@ -168,8 +169,8 @@ def traverse_and_optimize(
     dag: dict[str, Any],
     changes: dict[str, Any],
     statements: list[Statement]
-) -> list[Union[Statement, None]]:
-    ret: list[Union[Statement, None]] = []
+) -> list[Union[Phi, Assign, For, Return]]:
+    ret: list[Union[Phi, Assign, For, Return]] = []
     for stmt in statements:
         if isinstance(stmt, For):
             stmt = dc.replace(stmt, body=traverse_and_optimize(dag, changes, stmt.body))
