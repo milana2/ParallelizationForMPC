@@ -1,7 +1,6 @@
 def db_cross_join_trivial(A_0, Len_A_0, B_0, Len_B_0, res_0):
     # Shared array declarations
     _1_4 = [None] * (Len_A_0 * Len_B_0 * 3)
-    _10_0 = [None] * (Len_A_0 * Len_B_0 * 3)
     _11_0 = [None] * (Len_A_0 * Len_B_0 * 3)
     _12_0 = [None] * (Len_A_0 * Len_B_0 * 3)
     _13_0 = [None] * (Len_A_0 * Len_B_0 * 3)
@@ -21,7 +20,6 @@ def db_cross_join_trivial(A_0, Len_A_0, B_0, Len_B_0, res_0):
     _5_0 = _v.lift(lambda indices: res_0, [Len_A_0, Len_B_0, 3])
     _8_0 = _v.lift(lambda indices: (A_0[(indices[0] * 2)]), [Len_A_0, Len_B_0, 3])
     _9_0 = _v.lift(lambda indices: (B_0[(indices[1] * 2)]), [Len_A_0, Len_B_0, 3])
-    _10_0 = _v.lift(lambda indices: (A_0[(indices[0] * 2)]), [Len_A_0, Len_B_0, 3])
     _11_0 = _v.lift(lambda indices: (A_0[((indices[0] * 2) + 1)]), [Len_A_0, Len_B_0, 3])
     _12_0 = _v.lift(lambda indices: (B_0[((indices[1] * 2) + 1)]), [Len_A_0, Len_B_0, 3])
     v_4 = sint(0)
@@ -31,7 +29,7 @@ def db_cross_join_trivial(A_0, Len_A_0, B_0, Len_B_0, res_0):
     _6_0 = _v.lift(lambda indices: _v.vectorized_access(_5_0, [Len_A_0, Len_B_0, 3], [None, None, None]), [Len_A_0, Len_A_0, Len_B_0, 3])
     _v.vectorized_assign(_1_4, [Len_A_0, Len_B_0, 3], [None, None, None], (_v.vectorized_access_simd(_8_0, [Len_A_0, Len_B_0, 3], [None, None, None]) == _v.vectorized_access_simd(_9_0, [Len_A_0, Len_B_0, 3], [None, None, None])))
     _7_0 = _v.lift(lambda indices: _v.vectorized_access(_6_0, [Len_A_0, Len_B_0, 3], [None, None, None]), [Len_A_0, Len_B_0, 3])
-    _v.iterative_mux(v_6,_13_0,_10_0,v_4,[Len_A_0, Len_B_0, 3],[None, None, None])
+    _v.iterative_mux(v_6,_13_0,_8_0,v_4,[Len_A_0, Len_B_0, 3],[None, None, None])
     _v.iterative_mux(v_8,_14_0,_11_0,v_6,[Len_A_0, Len_B_0, 3],[None, None, None])
     _v.iterative_mux(v_10,_15_0,_12_0,v_8,[Len_A_0, Len_B_0, 3],[None, None, None])
     _v.iterative_mux(v_11,_1_4,v_10,v_4,[Len_A_0, Len_B_0, 3],[None, None, None])
