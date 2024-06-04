@@ -7,7 +7,6 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
     _5_0 = [None] * (N_0)
     _6_0 = [None] * (N_0)
     _7_0 = [None] * (N_0)
-    _8_0 = [None] * (N_0)
     current_sum_2 = [None] * (N_0)
     current_sum_3 = [None] * (N_0)
     current_sum_5 = [None] * (N_0)
@@ -18,7 +17,6 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
     current_sum_1 = sint(0)
     _6_0 = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
     _7_0 = _v.lift(lambda indices: Sym_0, [N_0])
-    _8_0 = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
     current_sum_4 = sint(0)
     _4_0 = _v.lift(lambda indices: max_sum_1, [N_0])
     _5_0 = _v.lift(lambda indices: current_sum_1, [N_0])
@@ -30,7 +28,7 @@ def max_sum_between_syms(Seq_0, N_0, Sym_0):
             _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(_5_0, [N_0], [_10_0]))
         else:
             _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(current_sum_5, [N_0], [(_10_0 - 1)]))
-        _v.vectorized_assign(current_sum_3, [N_0], [_10_0], (_v.vectorized_access_simd(current_sum_2, [N_0], [_10_0]) + _v.vectorized_access_simd(_8_0, [N_0], [_10_0])))
+        _v.vectorized_assign(current_sum_3, [N_0], [_10_0], (_v.vectorized_access_simd(current_sum_2, [N_0], [_10_0]) + _v.vectorized_access_simd(_6_0, [N_0], [_10_0])))
         _v.iterative_mux(current_sum_5,_2_2,current_sum_3,current_sum_4,[N_0],[_10_0])
     # Loop exit ϕ values
     _v.vectorized_assign(current_sum_2, [N_0], [_10_0], _v.vectorized_access(current_sum_5, [N_0], [(_10_0 - 1)]))

@@ -8,7 +8,6 @@ def biometric(C_0, D_0, S_0, N_0):
     _6_0 = [None] * (N_0 * D_0)
     _7_0 = [None] * (N_0 * D_0)
     _8_0 = [None] * (N_0)
-    _9_0 = [None] * (N_0)
     d_3 = [None] * (N_0 * D_0)
     min_index_2 = [None] * (N_0)
     min_index_4 = [None] * (N_0)
@@ -39,7 +38,6 @@ def biometric(C_0, D_0, S_0, N_0):
     # Loop exit ϕ values
     _v.vectorized_assign(sum_3, [N_0, D_0], [None, _12_0], _v.vectorized_access(sum_4, [N_0, D_0], [None, (_12_0 - 1)]))
     _v.vectorized_assign(_8_0, [N_0], [None], _v.drop_dim(sum_4, [N_0, D_0]))
-    _v.vectorized_assign(_9_0, [N_0], [None], _v.drop_dim(sum_4, [N_0, D_0]))
     for _14_0 in range(0, N_0):
         # Set ϕ value
         if _14_0 == 0:
@@ -47,7 +45,7 @@ def biometric(C_0, D_0, S_0, N_0):
         else:
             _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(min_sum_4, [N_0], [(_14_0 - 1)]))
         _v.vectorized_assign(_1_2, [N_0], [_14_0], (_v.vectorized_access_simd(_8_0, [N_0], [_14_0]) < _v.vectorized_access_simd(min_sum_2, [N_0], [_14_0])))
-        _v.iterative_mux(min_sum_4,_1_2,_9_0,min_sum_2,[N_0],[_14_0])
+        _v.iterative_mux(min_sum_4,_1_2,_8_0,min_sum_2,[N_0],[_14_0])
     # Loop exit ϕ values
     _v.vectorized_assign(min_sum_2, [N_0], [_14_0], _v.vectorized_access(min_sum_4, [N_0], [(_14_0 - 1)]))
     for _15_0 in range(0, N_0):

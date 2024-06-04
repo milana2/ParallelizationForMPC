@@ -359,6 +359,12 @@ def main():
         md += "#### Copy propagation\n"
         md += f"```python\n{loop_linear_code}\n```\n"
 
+        (loop_linear_code, dep_graph, type_env) = compiler.common_subexpression_elimination(
+            loop_linear_code, dep_graph, type_env
+        )
+        md += "#### Common subexpression elimination\n"
+        md += f"```python\n{loop_linear_code}\n```\n"
+
         for backend in Backend:
             if backend is Backend.MOTION:
                 lang = "cpp"

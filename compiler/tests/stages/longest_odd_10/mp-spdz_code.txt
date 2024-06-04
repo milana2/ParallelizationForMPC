@@ -4,7 +4,6 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
     _10_0 = [None] * (N_0)
     _11_0 = [None] * (N_0)
     _12_0 = [None] * (N_0)
-    _13_0 = [None] * (N_0)
     _14_0 = [None] * (N_0)
     _2_2 = [None] * (N_0)
     _4_2 = [None] * (N_0)
@@ -28,14 +27,13 @@ def longest_odd_10(Seq_0, N_0, Syms_0):
     s2_1 = _v.sbool(False)
     _11_0 = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
     _12_0 = _v.lift(lambda indices: (Syms_0[1]), [N_0])
-    _13_0 = _v.lift(lambda indices: (Seq_0[indices[0]]), [N_0])
     _14_0 = _v.lift(lambda indices: (Syms_0[0]), [N_0])
     current_length_4 = sint(0)
     _8_0 = _v.lift(lambda indices: current_length_1, [N_0])
     _9_0 = _v.lift(lambda indices: max_length_1, [N_0])
     _10_0 = _v.lift(lambda indices: s2_1, [N_0])
     _v.vectorized_assign(_1_2, [N_0], [None], (_v.vectorized_access_simd(_11_0, [N_0], [None]) == _v.vectorized_access_simd(_12_0, [N_0], [None])))
-    _v.vectorized_assign(s2_3, [N_0], [None], (_v.vectorized_access_simd(_13_0, [N_0], [None]) == _v.vectorized_access_simd(_14_0, [N_0], [None])))
+    _v.vectorized_assign(s2_3, [N_0], [None], (_v.vectorized_access_simd(_11_0, [N_0], [None]) == _v.vectorized_access_simd(_14_0, [N_0], [None])))
     for _16_0 in range(0, N_0):
         # Set ϕ value
         if _16_0 == 0:
